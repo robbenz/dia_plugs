@@ -1,0 +1,249 @@
+**** WooCommerce Email Inquiry and Cart Options Changelog ****
+
+= 1.2.5 - 2015/03/19 =
+* Tweak - Tested and Tweaked for full compatibility with WooCommerce Version 2.3.7
+* Tweak - Tested and Tweaked for full compatibility with WordPress Version 4.1.1
+
+= 1.2.4 - 2015/02/13 =
+* Feature - Added Email Inquiry form pop-up dynamic and responsive width and height function.
+* Feature - Manually set the maximum width and height in px value that the pop up can open too in large screens.
+* Tweak - Major upgrade for full compatibility with WooCommerce major version release 2.3.0 with backward compatibility to WC 2.2.0
+* Tweak - Tested fully compatible with WooCommerce just released version 2.3.3
+* Tweak - Changed WP_CONTENT_DIR to WP_PLUGIN_DIR. When an admin sets a custom WordPress file structure then it can get the correct path of plugin
+
+= 1.2.3 - 2015/02/02 =
+* Tweak - Removed CSS Class input box from the Default Email form button style settings.
+* Tweak - Tested for 100% compatibility with WooCommerce version 2.2.11
+* Tweak - Tested and Tweaked for 100% compatibility with WordPress version 4.1.0
+* Fix - Applied Google fonts for Product Name, Product URL, From Content on Default Form
+* Fix - Show the new version in the Core Update page that disappear on WP 4.1
+* Fix - Sass compile path not saving on windows xampp.
+
+= 1.2.2 - 2014/11/12 =
+* Fix - a3rev License code now recognises domain with and without the www. We believe that this will solve Licenses auto deactivating on some sites.
+
+= 1.2.1 - 2014/09/12 =
+* Tweak - Tested 100% compatible with WooCommerce 2.2.2
+* Fix - Changed __DIR__ to dirname( __FILE__ ) for Sass script so that on some server __DIR___ is not defined
+
+= 1.2.0 - 2014/09/03 =
+* Feature - Converted all front end CSS #dynamic {stylesheets} to Sass #dynamic {stylesheets} for faster loading.
+* Feature - Convert all back end CSS to Sass.
+* Tweak - Updated google font face in plugin framework.
+* Tweak - Tested 100% compatible with WooCommerce Version 2.2 and backwards to v2.1
+
+= 1.1.5.5 - 2014/07/02 =
+* Tweak - Updated plugins dashboard text for the 2 plugin upgrade version.
+* Tweak - Checked for full compatibility with WooCommerce Version 2.1.12
+
+= 1.1.5.4 - 2014/06/28 =
+* Tweak - Change wp_register_script( 'a3rev-chosen') to wp_register_script( 'a3rev-chosen-new')
+* Tweak - Added all Quotes and Orders settings to admin dashboard for full upgrade compatibility
+* Tweak - Added Italian Translation thanks to Fabio Biocchetti
+* Fix - Add @ for called session_start() function to fix uncaught header warning message.
+
+= 1.1.5.3 - 2014/06/17 =
+* Tweak - Updated chosen js script to latest version 1.0.1 on the a3rev Plugin Framework
+* Tweak - Added support for placeholder feature for input, email , password , text area types
+* Tweak - Convert Lifetime License to single site purchase with add sites at discount feature.
+* Tweak - Tested 100% compatible with WooCommerce version 2.1.11
+
+= 1.1.5.2 - 2014/05/26 =
+* Feature - Show uploaded files as Hyplerlinked File name on Order Received page and customer email. WooCommerce by default shows URL.
+* Tweak - Changed add_filter( 'gettext', array( $this, 'change_button_text' ), null, 2 ); to add_filter( 'gettext', array( $this, 'change_button_text' ), null, 3 );
+* Tweak - Update change_button_text() function from ( $original == 'Insert into Post' ) to ( is_admin() && $original === 'Insert into Post' )
+* Tweak - Tested 100% compatible with WooCommerce Version 2.1.9
+* Tweak - Tested 100% compatible with WordPress Version 3.9.1
+
+= 1.1.5.1 - 2014/04/28 =
+* Tweak - Checked and updated for full compatibility with WooCommerce Version 2.1.7 and WordPress version 3.9
+* Tweak - Updated Framework help text font for consistency.
+* Tweak - Added remove_all_filters('mce_external_plugins'); before call to wp_editor to remove extension scripts from other plugins.
+* Fix - Filter 'woocommerce_cart_product_subtotal' to hide the price on widget cart popup
+
+= 1.1.5 - 2014/01/25 =
+* Feature - Upgraded for 100% compatibility with WooCommerce Version 2.1 with backward compatibility to Version 2.0
+* Feature - Added all required code so plugin can work with WooCommerce Version 2.1 refactored code.
+* Tweak - Added Custom encode to prevent email clients automatically adding <a> tag to URL's in form message.
+* Tweak - Edited Grid View text on admin panel to Product Card for consistency.
+* Tweak - Added description text to the top of each Pro Version yellow border section
+* Tweak - Tested for compatibility with WordPress version 3.8.1
+* Fix - Email Inquiry sending duplicate emails on themes that have script that duplicate the click event
+
+= 1.1.4.6 - 2013/12/24 =
+* Tweak - a3rev Plugin Framework upgrade - all switch text show UPPERCASE
+* Tweak - Updated plugins wp-admin menu item vector image.
+
+= 1.1.4.5 - 2013/12/17 =
+* Fix - Update make_compatibility function with  isset( $args->slug ) and isset( $args['body']['request'] ) so that our plugin can work together with other developers plugin (eg Backupbuddy) that adds filter on the WordPress plugins_api (bad thing to do)
+* Fix - Plugins wp-admin menu icon display in all versions prior to WordPress 3.8.0.
+
+= 1.1.4.4 - 2013/12/16 =
+* Feature - a3rev Plugin Framework admin interface upgraded to 100% Compatibility with WordPress v3.8.0 with backward compatibility.
+* Feature - a3rev framework 100% mobile and tablet responsive, portrait and landscape viewing.
+* Tweak - Upgraded dashboard switch and slider to Vector based display that shows when WordPress version 3.8.0 is activated.
+* Tweak - Upgraded all plugin .jpg icons and images to Vector based display for full compatibility with new WordPress version.
+* Tweak - Yellow sidebar on Quotes & Orders, Read More and Email Inquiry Ulimate Menus doe not show in Mobile screens to optimize screen space.
+* Tweak - Tested 100% compatible with WP 3.8.0
+* Fix - Upgraded array_textareas type for Padding, Margin settings on the a3rev plugin framework
+
+= 1.1.4.3 - 2013/11/20 =
+* Fix - add filter to 'single_add_to_cart_text' for hide Add to Cart button for Child Products in Grouped Product when Hide Add to Cart Rule is activated.
+* Fix - add action to 'woocommerce_before_template_part' and 'woocommerce_after_template_part' for hide Child Products Quantity selector in Grouped Product when Hide Add to Cart is activated.
+* Fix - $args->slug depreciated in WordPress 3.7, replace with $request = unserialize( $args['body']['request'] ); $request->slug
+* Credit - Thanks to Marc Schwinges Underdog Productions South Africa for alerting us to the issue and wp-admin and ftp access to find and fix the bug.
+
+= 1.1.4.2 - 2013/11/18 =
+* Feature - Added Button Border Corner Settings to the a3rev Plugin Framework. Square to Rounded Corner settings for each corner.
+* Tweak - Moved - Hide Add to Cart and Hide Price Rules and Roles to the top of the Rules and Roles menu.
+* Tweak - Moved the Email Inquiry Rules & Roles settings from Rules & Roles menu to Email Inquiry menu > Settings tab.
+* Tweak - Moved the show Email Inquiry feature on Product Cards settings from Button Style tab to settings tab.
+* Tweak - Changed Product Cards activation syntax - ON is enables, OFF is disabled.
+* Tweak - Product Page Email & Cart Meta UI design upgrade. New tabs layout - Cart & Price | Email Inquiry | Read More - for ease of navigation.
+* Tweak - Added new main Menu Item - Read More with Tabs - Settings | Button Style (Active for Ultimate Inquiry Ultimate and Quotes & Orders Versions)
+* Tweak - Added WPML capability for all new features.
+* Fix - Google fonts preview changes conflict.
+
+= 1.1.4.1 - 2013/11/06 =
+* Tweak - Stricter sanitization of Default Form Message input field. Only allow input of plain text with auto paragraph on line break.
+* Tweak - Added function .replace(/^\s+|\s+$/g, '') to check form for empty spaces for required fields Name, Email and Phone.
+* Tweak - Default Form Success Message Pop-up auto resizes to whatever the tall of the success message content is.
+* Tweak - Added class .email_inquiry_cb for Colorbox Pop-up tool content custom background display.
+
+= 1.1.4 - 2013/11/01 =
+* Feature - Default Form Style - added form background colour setting.
+* Feature - Default Form Style - added Product Title font editor.
+* Feature - Default Form Style - added Product URL font editor.
+* Feature - Default Form Style - added Email Subject font editor.
+* Feature - Default Form Style - added Form Input Fields border settings including corner styler.
+* Feature - Default Form Style - added Form Input Fields font editor.
+* Feature - Default Form Style - added Form Input Fields cell background colour settings
+* Tweak - Removed dynamic pop-up wide setting and replaced with static pop-up max wide.
+* Tweak - Pop-up tools wide under 520px shows 100% wide of the screen for mobiles in portrait or landscape.
+* Tweak - Default Form breaks down for greatly enhanced display in tablets and mobiles.
+* Tweak - Default Form - added static 20px content padding that auto reduces to 5px in tablets and mobiles.
+* Tweak - Default From - vertical alignment of the text fields
+* Tweak - Default Form - changed the default form fonts on install from Bold to Normal.
+* Tweak - Default Form Success Message uses form custom background colour.
+* Tweak - Button Style - changed default button padding on install from 0px to 5px
+* Tweak - Button Style - added blue box help text and fixed a small typo.
+* Tweak - Rules & Roles - added blue box help text for Product Page Rule 'Show Email Inquiry'
+* Fix - Default form success message showing HTML tags with text.
+
+= 1.1.3 - 2013/10/29 =
+* Feature - Added full WPML compatibility. Includes strings for all static and dynamic text.
+
+= 1.1.2 - 2013/10/25 =
+* Feature - Major plugin upgrade. Full code rework.
+* Feature - Upgraded the plugin to the newly developed a3rev admin Framework with app style interface.
+* Feature - Moved admin from WooCommerce settings tab onto its own Email Inquiry & Cart Options main menu item with sidebar sub menu.
+* Feature - Email Inquiry & cart Options sub menus, Rules & Roles | Email Inquiry | Quotes Mode | Orders Mode
+* Feature - Email Inquiry menu broken up into tabs - Settings | Default Form | Custom Form | Button Style | Pop-Up Style
+* Feature - New admin UI features check boxes replaced by switches, some dropdowns replaced by sliders.
+* Feature - Replaced colour picker with new WordPress 3.6.0 colour picker.
+* Feature - Added choice of 350 Google fonts to the existing 17 websafe fonts in all new single row font editor.
+* Feature - New Border / Button shadow features. Create shadow external or internal, set wide of shadow.
+* Feature - New on page instant previews for Fonts editor, create border and shadow style.
+* Feature - Added intuitive triggers for admin panel settings. When selected corresponding feature settings appear.
+* Feature - Added Colorbox pop-up tool as an option to Fancybox pop-up tool.
+* Feature - Added Fancybox and Colorbox pop-up size, style and transition settings
+* Feature - Added Default Form Title font editor.
+* Feature - Added Default Form title font editor
+* Feature - Added House Keeping function to settings. Clean up on Deletion. Option - If ever deleted (not decativated) this plugin it will completely remove all tables and data it has created.	.
+* Tweak - Rules & Roles - Activate any Rule for logged in user Role by adding the Role to the Rule.
+* Tweak - Rules and Roles - incorporate help message under each Rules Roles. Show when the Rule is turned on.
+* Fix - Fixed up all existing typos on admin panel.
+* Fix - Plugins admin script and style not loading in Firefox with SSL on admin. Stripped http// and https// protocols so browser will use the protocol that the page was loaded with.
+
+= 1.1.1 - 2013/08/09 =
+* Feature - Default Contact Form new open option on Product pages - Open default contact form 'on page'. Use ajax to show and hide the contact form on click.
+* Feature - Default Contact Form new options for 'Email Pop-up Font Styling'.
+* Tweak - Open Default Contact Form options added to the Email Inquiry tab > Settings sub nav.
+* Tweak - Tested for full compatibility with WordPress v3.6.0
+* Fix - Script validate email for default contact form. Old script conflicted with WordPress 3.6.0 jQuery 1.10.2. Conflict caused the popup tools to break.
+* Fix - Added box-sizing:content-box class attribute for compatibility with new WordPress Twenty Thirteen default theme.
+
+= 1.1.0 - 2013/07/01 =
+* Fix - Longer product names pushed below product image in default email po-up. In product name + product URL container replaced display:inline-block; with display:block; and conditionals.
+
+= 1.0.9 - 2013/06/28 =
+* Tweak - Greatly improved the display of Product Email Inquiry po-up form.
+* Tweak - Show Product Information including Product Image, Product Name, Product URL on default pop-up form.
+* Fix - Replaced hardcode iso-8859-1 charset to dynamic get_option('blog_charset')
+
+= 1.0.8 - 2013/06/22 =
+* Tweak - Email Inquiry - Settings. Added option to set padding in px above and below the Email Inquiry button / Hyperlink.
+
+= 1.0.7 - 2013/06/21 =
+* Tweak - Updated admin Yellow sidebar with information and links for the new upgrade version - WooCommerce Email Inquiry Ultimate.
+* Fix - Email Inquiry- Show Inquiry button on product when the WooCommerce price field is empty.
+
+= 1.0.6.2 - 2013/06/08 =
+* Fix- On Email and Cart product page meta, the select Button or Hyperlink text check box was not showing as active when selected and the post updated. The Hyperlink text was working on the front end, but just not showing as the activated selection on the meta.
+* Credit - Thanks to Craig Paterson for reporting it.
+
+= 1.0.6.1 - 2013/06/05 =
+* Tweak - Upgraded and synched the plugins code to be inline with the new WooCommerce Quotes and Orders plugin. This allows users to seamlessly upgrade to that plugin at any time.
+* Tweak - Updated the plugins support links to the new a3rev support forum.
+
+= 1.0.6 - 2013/05/03 =
+* Tweak - Moved plugin admin panel from a single tab on WooCommerce Settings to its own link ' Email & Cart Options' on the WooCommerce wp-admin menu.
+* Tweak - Added main tab for Rules & Roles settings.
+* Tweak - Rules and Roles Global reset options now just apply to Rules and Roles not all.
+* Tweak - Added Email Inquiry main tab with related sub tabs.
+* Tweak - Added Global reset for Button or Hyperlink text settings.
+* Tweak - Added new button styling features, make gradient colour, border size, border style and button font style.
+* Tweak - Added new email pop-up button styling features, make gradient colour, border size, border style and button font style.
+* Tweak - Added when install and activate plugin link redirects to License Key validation page instead of the wp-plugins dashboard.
+* Fix - Updated all JavaScript functions so that the plugin is compatible with jQuery Version1.9 and backwards to version 1.6. WordPress still uses jQuery version 1.8.3. In themes that use Google js Library instead of the WordPress jQuery then there was trouble because Google uses the latest jQuery version 1.9. There are a number of functions in jQuery Version 1.9 that have been depreciated and hence this was causing errors with the jQuery function in the plugin.
+* Fix - Did a full WP_DEBUG. All uncaught exceptions, notices, warnings and errors fixed.
+
+= 1.0.5 - 2013/04/10 =
+* Tweak - Replaced dated Lightbox pop-up script with new ColorBox script.
+* Tweak - Updated Error message that displays when plugin cannot temporarily connect with a3API when validating the license key.
+* Fix - WooCommerce Reviews form opening in duplicate popup tools, PrettyPhoto and Fancybox caused by our old WooCommerce v1.6 fancybox lib.
+* Fix - Bug for users who have https: (SSL) on their sites wp-admin but have http on sites front end. This was causing a -1 to show when email pop-up form is called. wp-admin with SSL applied only allows https: but the url of admin-ajax.php is http: and it is denied hence returning the ajax -1 error. Fixed by writing a filter to recognize when https is configured on wp-admin and parsing correctly.
+
+
+= 1.0.4 - 2013/03/06 =
+* Feature: Added 'Send Copy to sender' option. When activated this option auto adds '[ ] Send a copy of this email to myself' to the bottom of the pop-up email form.
+* Feature: Added Email Sender Options - Set the email 'From Name' and 'From Email Address' - essential addition now with the addition of the "Send Copy to Sender' feature.
+* Feature - Added PrettyPhoto pop-up tool as the default and now 3rd Email form pop-up tool option. We have retained support for the 'Fancybox' and 'Lightbox' pop up tools. PrettyPhoto is now the default pop-up tool of WordPress since v3.5 and WooCommerce since V2.0
+* Tweak - Upgraded all plugin code for 100% compatibility with WooCommerce V2.0 and backwards.
+* Tweak - UI enhancement. Created a new tab 'Email Options' and moved 'Email Sender' and 'Email Delivery' options to it for ease of managing those features.
+* Tweak - UI Enhancement. Changed main tab on sub nav bar from Email & Cart to 'Visibility Options' and rewrote the help notes to Clarify Rules and Roles.
+* Tweak - UI Enhancement. Changed help text on product page meta to be the same as the 'Visibility Options' admin tab.
+* Tweak - Added readme file to the plugins zip download.
+* WordPress Free Lite Version: Created a basic functionality version of the plugin for download on wordpress.org
+
+= 1.0.3.2 - 2013/02/15 =
+* Fix - Updated the Chosen script url. This was causing the drop downs and option selectors not to work on some admin panels.
+* Tweak - Remove define tinymce plugins for the email pop-up Success Message text editor. This allows the Success Message text editor to use use all current plugins of tinymce in use on the site the plugin is installed on.
+
+= 1.0.3.1 - 2013/02/02 =
+* Fix - Product page shows duplicate add to cart buttons when a certain  combination of hide cart and hide price selected. Missed the function for this one combination the major feature upgrade in v1.0.3.
+* Fix - New dropdown lib does not have <empty> as value and was setting the Button font size as 0px. Fixed now with default button font text size.
+
+= 1.0.3 - 2013/02/01 =
+* Feature - Added 'Hide Price' function as a Global Store wide option from the WooCommerce > Store > Email & Cart tab. Added option to over-ride this Global Setting from each product page.
+* Feature - Option to apply rules (Hide Cart, Show Email Inquiry button and Hide Price) to individual WordPress user roles, including WooCommerce Customer and Store Manager roles. Global setting added to WooCommerce > Store > Email & Cart tab. Added option to over-ride these Global settings from each product page.
+* Feature -  Added option to Reset all single Product Page Email & Cart settings back to the current Global Site setting. This enables admins to be sure there are now stray custom page settings that they may have made - but forgotten about. Also added the option to reset a single product page to the global settings from the product page.
+* Feature - Added the option to be able to completely style the Email Inquiry button and the email pop-up form send button. Before this upgrade the styling options where very basic. Now both buttons can be completely styled from the admin panel.
+* Feature - Complete rework of the plugins admin UI - Split the Content in to 3 tabs. Still located on the WooCommerce > Store > Email & Cart tab. Now features > Email and Cart landing tab with all Global Settings | Email Button/Link Style | Email Pop-Up Style . The tab links work the same as the Tab links on the WooCommerce > Store > Payment Gateways tab.
+* Feature - Added a new lib for admin dropdowns. Looks great - works even better.
+
+= 1.0.2 - 2012/12/31 =
+* Tweak - Updated plugin API to allow Pro Version License holders to manage their Licenses from the all new "My Account" dashboard on a3rev. Includes the option to see which domains each plugin is installed and activated on and the ability to deactivate the plugin on any domain from the 'My Account' > Manage Licenses dashboard.
+
+= 1.0.1 - 2012/12/01 =
+* Feature - Added option to Select 'Lightbox' popup tool for Email Inquiry button popup. Fancybox is the default WooCommerce popup tool but some bespoke theme use 'lightbox' which causes a conflict with both scripts trying to work on a single product page.
+* Feature - Now supports WPMU - Pro Version Single License now works on any domain or sub domain that the Plugin is installed on with the WPMU environment. Note it only works on 1 domain.
+* Tweak - Change Pro Version plugin API call from cURL to now use WordPress auto update wp_remote_request function. This is to fix Pro License user who do not have cURL activated on their host not being able to install and activate the plugin.
+* Tweak - Built new Amazon EC2 plugin API to increase connection and download speed as well as reliability and uptime - plugin from this version calls to the new API..
+* Tweak - Change Pro Version plugin API call so that it only calls from the WP-Plugins page and not from every admin page.
+* Tweak - Changed Pro Version plugin API call so that if it calls once to the API and it does not connect it auto aborts instead of keeping on trying to call.
+* Fix - Conflict with WordPress Domain Mapping plugin.
+* Credit - Thanks to Johannes for access to his WPMU install to find and fix this issue.
+
+= 1.0.0 - 2012/09/05 =
+* First working release
