@@ -1,5 +1,20 @@
 *** WooCommerce Predictive Search Changelog ***
 
+= 2.4.1 - 2015/04/03 =
+* Tweak - Made the product thumbnail a clickable link to the product on All Results Search pages. Before only the product title was linked
+* Tweak - Update underscore template with link to Product set for the image from All Results Search page
+* Tweak - Add support for add filter_tag so search can get correct legacy api URL when admin make custom permalink link index.php/%postname%/
+* Tweak - add_filter to 'pre_get_posts' to set the post type again to 'product' search from Products if have 3rd party plugin set query post type wpshock_search_filter on 'post' or 'page'
+* Dev - Defined filter tag 'wc_ps_legacy_api_url' for developer can update the legacy api url
+* Dev - Defined filter tag 'wc_ps_vars' and 'wc_ps_results_vars' so Developer can add to global vars to PS JavaScript
+* Fix - Changed 'p' argument name to 'psp' argument name inside legacy api url to fix conflict with WordPress 'p' Post ID argument
+* Fix - Update backbone script for new 'psp' argument name. Important! Clear cache if have cached plugin to reload new backbone script
+* Fix - Compatibility text for current version of WordPress on the Core Update page. Feature stopped working with WordPress version 4.1
+
+= 2.4.0 - 2015/03/19 =
+* Tweak - Tested and Tweaked for full compatibility with WooCommerce Version 2.3.7
+* Tweak - Tested and Tweaked for full compatibility with WordPress Version 4.1.1
+
 = 2.3.9 - 2015/02/13 =
 * Tweak - Maintenance update for full compatibility with WooCommerce major version release 2.3.0 with backward compatibility to WC 2.2.0
 * Tweak - Tested fully compatible with WooCommerce just released version 2.3.3

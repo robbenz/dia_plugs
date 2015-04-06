@@ -41,7 +41,7 @@ class WC_Predictive_Search_Hook_Backbone
     
     <script type="text/template" id="wc_psearch_footerTpl">
 		<div rel="more_result" class="more_result">
-			<span><?php wc_ps_ict_t_e( 'More result Text', __('Click Here To View Results', 'woops') ); ?> '{{= title }}' <?php wc_ps_ict_t_e( 'in', __('in', 'woops') ); ?>:</span>
+			<span><?php wc_ps_ict_t_e( 'More result Text', __('See more search results for', 'woops') ); ?> '{{= title }}' <?php wc_ps_ict_t_e( 'in', __('in', 'woops') ); ?>:</span>
 			{{ if ( description != null && description != '' ) { }}{{= description }}{{ } }}
 		</div>
 	</script>
@@ -65,7 +65,7 @@ class WC_Predictive_Search_Hook_Backbone
 		}
 		$min_characters = get_option( 'woocommerce_search_min_characters', 1 );
 		$delay_time = get_option( 'woocommerce_search_delay_time', 600 );
-		wp_localize_script( 'wc-predictive-search-popup-backbone', 'wc_ps_vars', array( 'minChars' => $min_characters, 'delay' => $delay_time, 'legacy_api_url' => $legacy_api_url, 'search_page_url' => get_permalink( $woocommerce_search_page_id ), 'permalink_structure' => get_option('permalink_structure' ) ) );
+		wp_localize_script( 'wc-predictive-search-popup-backbone', 'wc_ps_vars', apply_filters( 'wc_ps_vars', array( 'minChars' => $min_characters, 'delay' => $delay_time, 'legacy_api_url' => $legacy_api_url, 'search_page_url' => get_permalink( $woocommerce_search_page_id ), 'permalink_structure' => get_option('permalink_structure' ) ) ) );
 	}
 	
 	public function include_result_shortcode_script() {
@@ -188,6 +188,8 @@ class WC_Predictive_Search_Hook_Backbone
 	</script>
     
     
+    
+    
     <?php
 		wp_enqueue_script( 'jquery' );
 		wp_enqueue_script( 'underscore' );
@@ -218,7 +220,7 @@ class WC_Predictive_Search_Hook_Backbone
 			$default_navigate = 'keyword/'.urlencode($search_keyword).'/search-in/'.$search_in.$extra_parameter_product.$extra_parameter_post.'/search-other/'.$search_other;
 		}
 		
-		wp_localize_script( 'wc-predictive-search-results-backbone', 'wc_ps_results_vars', array( 'default_navigate' => $default_navigate, 'search_in' => $search_in, 'legacy_api_url' => $legacy_api_url, 'search_page_path' => $search_page_path ) );
+		wp_localize_script( 'wc-predictive-search-results-backbone', 'wc_ps_results_vars', apply_filters( 'wc_ps_results_vars', array( 'default_navigate' => $default_navigate, 'search_in' => $search_in, 'legacy_api_url' => $legacy_api_url, 'search_page_path' => $search_page_path ) ) );
 	}
 }
 

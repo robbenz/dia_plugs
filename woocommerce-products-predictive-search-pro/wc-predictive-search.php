@@ -2,11 +2,11 @@
 /*
 Plugin Name: WooCommerce Predictive Search PRO
 Description: WooCommerce Predictive Search - featuring "Smart Search" technology. Give your store customers the most awesome search experience on the web via widgets, shortcodes, Search results pages and the Predictive Search function.
-Version: 2.3.9
+Version: 2.4.1
 Author: A3 Revolution
 Author URI: http://www.a3rev.com/
 Requires at least: 3.7
-Tested up to: 4.1
+Tested up to: 4.1.1
 License: GPLv2 or later
 
 	WooCommerce Predictive Search. Plugin for the WooCommerce plugin.
@@ -28,7 +28,7 @@ define( 'WOOPS_URL', untrailingslashit( plugins_url( '/', __FILE__ ) ) );
 define( 'WOOPS_JS_URL',  WOOPS_URL . '/assets/js' );
 define( 'WOOPS_CSS_URL',  WOOPS_URL . '/assets/css' );
 define( 'WOOPS_IMAGES_URL',  WOOPS_URL . '/assets/images' );
-define( 'WOOPS_WP_TESTED', '4.1' );
+define( 'WOOPS_WP_TESTED', '4.1.1' );
 if(!defined("WOO_PREDICTIVE_SEARCH_MANAGER_URL"))
     define("WOO_PREDICTIVE_SEARCH_MANAGER_URL", "http://a3api.com/plugins");
 if(!defined("WOO_PREDICTIVE_SEARCH_DOCS_URI"))

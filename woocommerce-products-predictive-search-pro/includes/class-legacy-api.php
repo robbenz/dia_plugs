@@ -30,7 +30,7 @@ class WC_Predictive_Search_Legacy_API {
 			$legacy_api_url .= 'wc-api' . $this->base;
 		}
 
-		return $legacy_api_url;
+		return apply_filters( 'wc_ps_legacy_api_url', $legacy_api_url );
 	}
 
 	public function wc_ps_api_handler() {
@@ -286,7 +286,7 @@ class WC_Predictive_Search_Legacy_API {
 			$current_lang = $_REQUEST['lang'];
 		}
 
-		$p = 1;
+		$psp = 1;
 		$row = 10;
 		$search_keyword = '';
 		$pcat_slug = '';
@@ -298,7 +298,7 @@ class WC_Predictive_Search_Legacy_API {
 
 		if ( get_option('woocommerce_search_result_items') > 0  ) $row = get_option('woocommerce_search_result_items');
 
-		if ( isset( $_REQUEST['p'] ) && $_REQUEST['p'] > 0 ) $p = stripslashes( strip_tags( $_REQUEST['p'] ) );
+		if ( isset( $_REQUEST['psp'] ) && $_REQUEST['psp'] > 0 ) $psp = stripslashes( strip_tags( $_REQUEST['psp'] ) );
 		if ( isset( $_REQUEST['q'] ) && trim( $_REQUEST['q'] ) != '' ) $search_keyword = stripslashes( strip_tags( $_REQUEST['q'] ) );
 		if ( isset( $_REQUEST['pcat'] ) && trim( $_REQUEST['pcat'] ) != '' ) $pcat_slug = stripslashes( strip_tags( $_REQUEST['pcat'] ) );
 		if ( isset( $_REQUEST['ptag'] ) && trim( $_REQUEST['ptag'] ) != '' ) $ptag_slug = stripslashes( strip_tags( $_REQUEST['ptag'] ) );
@@ -336,7 +336,7 @@ class WC_Predictive_Search_Legacy_API {
 				$args_post['tag'] = $tag_slug;
 			}
 
-			$start = ( $p - 1) * $row;
+			$start = ( $psp - 1) * $row;
 
 			$woocommerce_search_focus_enable = get_option('woocommerce_search_focus_enable');
 			$woocommerce_search_focus_plugin = get_option('woocommerce_search_focus_plugin');
@@ -383,7 +383,7 @@ class WC_Predictive_Search_Legacy_API {
 	public function get_product_results( $search_keyword, $row, $start = 0, $exclude_products = '', $meta_query_args = array(), $args_product = array(), $text_lenght = 100, $include_header = true , $show_price = true, $show_sku = false, $show_addtocart = false, $show_categories = false, $show_tags = false ) {
 
 		$end_row = $row;
-		$args = array( 's' => $search_keyword, 'numberposts' => $row+1, 'offset'=> $start, 'orderby' => 'predictive', 'order' => 'ASC', 'post_type' => 'product', 'post_status' => 'publish', 'exclude' => $exclude_products, 'suppress_filters' => FALSE);
+		$args = array( 's' => $search_keyword, 'numberposts' => $row+1, 'offset'=> $start, 'orderby' => 'predictive', 'order' => 'ASC', 'post_type' => 'product', 'post_status' => 'publish', 'exclude' => $exclude_products, 'suppress_filters' => FALSE, 'ps_post_type' => 'product' );
 
 		$args = array_merge( $args, $args_product );
 
@@ -440,7 +440,7 @@ class WC_Predictive_Search_Legacy_API {
 	public function get_product_sku_results( $search_keyword, $row, $start = 0, $exclude_products = '', $args_product = array(), $text_lenght = 100, $include_header = true , $show_price = true, $show_sku = true, $show_addtocart = false, $show_categories = false, $show_tags = false ) {
 
 		$end_row = $row;
-		$args = array( 's' => $search_keyword, 'numberposts' => $row+1, 'offset'=> $start, 'orderby' => 'predictive', 'order' => 'ASC', 'post_type' => 'product', 'post_status' => 'publish', 'meta_key' => '_sku', 'exclude' => $exclude_products, 'suppress_filters' => FALSE);
+		$args = array( 's' => $search_keyword, 'numberposts' => $row+1, 'offset'=> $start, 'orderby' => 'predictive', 'order' => 'ASC', 'post_type' => 'product', 'post_status' => 'publish', 'meta_key' => '_sku', 'exclude' => $exclude_products, 'suppress_filters' => FALSE, 'ps_post_type' => 'product');
 
 		$args = array_merge( $args, $args_product );
 
@@ -493,7 +493,7 @@ class WC_Predictive_Search_Legacy_API {
 	public function get_post_results( $search_keyword, $row, $start = 0, $exclude_posts = '', $meta_query_args = array(), $args_post = array(), $text_lenght = 100, $post_type = 'post', $include_header = true , $show_categories = false, $show_tags = false ) {
 
 		$end_row = $row;
-		$args = array( 's' => $search_keyword, 'numberposts' => $row+1, 'offset'=> $start, 'orderby' => 'predictive', 'order' => 'ASC', 'post_type' => $post_type, 'post_status' => 'publish', 'exclude' => $exclude_posts, 'suppress_filters' => FALSE);
+		$args = array( 's' => $search_keyword, 'numberposts' => $row+1, 'offset'=> $start, 'orderby' => 'predictive', 'order' => 'ASC', 'post_type' => $post_type, 'post_status' => 'publish', 'exclude' => $exclude_posts, 'suppress_filters' => FALSE, 'ps_post_type' => $post_type );
 
 		$args = array_merge( $args, $args_post );
 

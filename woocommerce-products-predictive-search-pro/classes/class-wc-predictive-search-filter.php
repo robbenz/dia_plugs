@@ -33,6 +33,14 @@ class WC_Predictive_Search_Hook_Filter
 		wp_enqueue_style( 'ajax-woo-autocomplete-style', WOOPS_JS_URL . '/ajax-autocomplete/jquery.autocomplete.css' );
 	}
 
+	public static function pre_get_posts( $query ) {
+		$q = $query->query_vars;
+		if ( isset( $q['ps_post_type'] ) ) {
+	        $query->set( 'post_type', $q['ps_post_type'] );
+	    }
+	    return $query;
+	}
+
 	public static function add_query_vars($aVars) {
 		$aVars[] = "keyword";    // represents the name of the product category as shown in the URL
 		$aVars[] = "search-in";

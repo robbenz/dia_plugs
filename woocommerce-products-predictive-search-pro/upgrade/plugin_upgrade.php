@@ -173,8 +173,9 @@ class WC_Predictive_Search_Upgrade
 	public static function is_external( $external, $action, $args ) {
 		if ( 'plugin_information' == $action ) {
 			if ( is_object( $args ) && isset( $args->slug ) &&  get_option('wc_predictive_search_plugin') == $args->slug ) {
+				global $wp_version;
 				$external = array(
-					'tested'  => '4.1.0'
+					'tested'  => $wp_version
 				);
 				$external = (object) $external;
 			}
