@@ -75,6 +75,7 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
 		<?php do_action( 'woocommerce_before_add_to_cart_button' ); ?>
 
 		<button type="submit" class="single_add_to_cart_button button alt"><?php echo $product->single_add_to_cart_text(); ?></button>
+    <div id="viewprice-detail"><a href="#">View Price</a></div>
 
 		<?php do_action( 'woocommerce_after_add_to_cart_button' ); ?>
 

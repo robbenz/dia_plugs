@@ -75,11 +75,20 @@ global $product, $post;
 			<div class="single_variation"></div>
 
 			<div class="variations_button">
+                
+                
 				<?php woocommerce_quantity_input(); ?>
+                
+                
 				<button type="submit" class="single_add_to_cart_button button alt"><?php echo $product->single_add_to_cart_text(); ?></button>
+                
+
+                
 			</div>
 
 			<input type="hidden" name="add-to-cart" value="<?php echo $product->id; ?>" />
+            
+            
 			<input type="hidden" name="product_id" value="<?php echo esc_attr( $post->ID ); ?>" />
 			<input type="hidden" name="variation_id" class="variation_id" value="" />
 

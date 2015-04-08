@@ -183,7 +183,7 @@ class WC_Predictive_Search_Hook_Backbone
 		{{ if ( next_page_number > 1 ) { }}
 		<div id="ps_more_check"></div>
 		{{ } else if ( total_items == 0 && first_load ) { }}
-		<p><?php wc_ps_ict_t_e( 'No Result Text', __('<?php PopupContact(); ?>To Request A Quote For A Part That Hasn\'t Made It To Our Site Yet.', 'woops') ); ?></p>
+		<p><?php wc_ps_ict_t_e( 'No Result Text', __('<a href="#" class="popmake-32594">Click Here</a> To Request A Quote For A Part That Hasn\'t Made It To Our Site Yet.', 'woops') ); ?></p>
 		{{ } }}
 	</script>
     
