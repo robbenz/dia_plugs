@@ -46,7 +46,7 @@ if ( ! $product->is_purchasable() ) {
 
 	 	<button type="submit" class="single_add_to_cart_button button alt"><?php echo $product->single_add_to_cart_text(); ?></button>
         
-       
+<div id="viewprice-detail"><a href="#" class="popmake-32596">View Price</a></div>
         
 
 
@@ -59,5 +59,5 @@ if ( ! $product->is_purchasable() ) {
 
 <?php endif; ?>
 
-<div id="viewprice-detail"><a href="#" class="popmake-32596">View Price</a></div>
+
 
