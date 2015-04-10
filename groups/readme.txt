@@ -3,8 +3,8 @@ Contributors: itthinx
 Donate link: http://www.itthinx.com/plugins/groups
 Tags: access, access control, capability, capabilities, content, download, downloads, file, file access, files, group, groups, member, members, membership, memberships, paypal, permission, permissions, subscription, subscriptions, woocommerce
 Requires at least: 3.5
-Tested up to: 4.1
-Stable tag: 1.4.13
+Tested up to: 4.1.1
+Stable tag: 1.4.15
 License: GPLv3
 
 Groups is an efficient and powerful solution, providing group-based user membership management, group-based capabilities and content access control.
@@ -21,7 +21,7 @@ Enhanced functionality is available via official [extensions](http://www.itthinx
 
 ### Documentation ###
 
-The official documentation is located at the [Groups documentation pages](http://www.itthinx.com/documentation/groups/).
+The official documentation is located at the [Groups documentation pages](http://docs.itthinx.com/document/groups/).
 
 ### Features ###
 
@@ -116,7 +116,7 @@ Many thanks for your help!
 
 = Where is the documentation? =
 
-The official documentation is located at the [Groups documentation pages](http://www.itthinx.com/documentation/groups/).
+The official documentation is located at the [Groups documentation pages](http://docs.itthinx.com/document/groups/).
 
 = I have a question, where do I ask? =
 
@@ -160,7 +160,7 @@ The Groups plugin provides an extensive framework to handle memberships, group-b
 
 The API documentation is available here: [Groups API](http://api.itthinx.com/groups).
 
-Also refer to the official [Groups](http://www.itthinx.com/plugins/groups/) plugin page and the [Groups documentation](http://www.itthinx.com/documentation/groups/) pages.
+Also refer to the official [Groups](http://www.itthinx.com/plugins/groups/) plugin page and the [Groups documentation](http://docs.itthinx.com/document/groups/) pages.
 
 == Screenshots ==
 
@@ -176,6 +176,22 @@ See also [Groups](http://www.itthinx.com/plugins/groups/)
 8. More options.
 
 == Changelog ==
+
+= 1.4.15 =
+* Due to changes in versions 1.4.14 and 1.4.15, it's important to **MAKE A BACKUP** of the site & database, test the site, extensions & theme PRIOR to updating.
+* Fixes a cache incompatibility with caching mechanisms that do not implement wp_cache_get()'s function signature fully.
+This addresses cases specifically where the fourth parameter $found is not initialized as expected upon return.
+The performance improvements included in this release are lessened with caching plugins that fail to implement the return value disambiguation via $found.
+
+= 1.4.14 =
+* Now not using Groups' the_posts filter by default as results are already filtered by Groups' posts_where filter.
+* Added the groups_filter_the_posts filter which can be used to 'reactivate' Groups' the_posts filter where needed.
+* Added caching for capabilities read by capability name.
+* Added caching for groups read by name.
+* Added caching for results obtained in Groups_Post_Access::user_can_read_post(...).
+* Added the groups_post_access_user_can_read_post filter.
+* Admin override is disabled by default (existing installs need to disable manually if options were saved).
+* Swedish translation by [Andréas Lundgren](http://adevade.com) added.
 
 = 1.4.13 =
 * WordPress 4.1 compatible.
@@ -409,135 +425,6 @@ Some installations wouldn't work correctly, showing no capabilities and making i
 
 == Upgrade Notice ==
 
-= 1.4.13 =
-* WordPress 4.1 compatible.
-
-= 1.4.12 =
-* Fixes a missing resource required for access restrictions in the media uploader.
-
-= 1.4.11 =
-* WordPress 4.0 compatible.
-
-= 1.4.10 =
-* WordPress 3.9 compatibility checked, improvements and fixes.
-
-= 1.4.9 =
-* UI improvements and API additions.
-
-= 1.4.8 =
-* Several minor fixes and giving more feedback on the admin side for groups and capabilities.
-
-= 1.4.7 =
-* This update provides a low-priority security improvement and a fix related to output obtained through the_content and get_the_excerpt filters.
-
-= 1.4.6 =
-* Security fix : Certain capabilities could be granted to users instead of being denied with a change introduced in version 1.4.5.
-
-= 1.4.5 =
-* Fixed incompatible access restriction checks on some custom post types. Taking role-based capabilities into account.
-
-= 1.4.4 =
-* WordPress 3.8 compatibility checked and fixed a minor bug.
-
-= 1.4.3 =
-* Added bulk editing (add/remove) of post access restriction capabilities, restricted use of access restriction box on posts, fixed some bugs.
-
-= 1.4.2 =
-* Improved views and filters regarding access restrictions which are now shown in overviews for enabled post types. Checked WordPress 3.7.1 compatibility. Some bug fixes and internal improvements.
-
-= 1.4.1 =
-* From this release on, Groups requires at least WordPress 3.5. It includes improved group-actions for the Users admin screen, where multiple users can now be added to or removed from multiple groups at once.
-
-= 1.4.0 =
-* This release brings User Interface improvements mainly directed at working with groups and capabilities. This includes bulk actions for groups and capabilities and capability assignments when editing groups along with other improvements.
-
-= 1.3.14 =
-* New useful features, UI and workflow improvements. Quick-create group and capability directly on posts (access restriction); groups are shown along with access restriction capabilities (can be toggled).
-
-= 1.3.13 =
-* Minor fixes (also tested WordPress 3.6.1 compatibility).
-
-= 1.3.12 =
-* WordPress 3.6 compatibility checked and minor fixes.
-
-= 1.3.11 =
-* Fixes too restrictive access: the capabilities used to restrict access to posts should be disjunctive. Adds the option to show and edit group memberships in user profiles. 
-
-= 1.3.10 =
-* Improves performance slightly more and fixes potential issues with caching.
-
-= 1.3.9 =
-* Brings a substantial performance improvement and solves pagination issues due to post filters among other fixes.
-
-= 1.3.8 =
-* This release includes several fixes and improvements, including more limiting features for access restrictions.
-
-= 1.3.7 =
-* Please update, this includes fixes: missing argument for meta box when saving a post; Groups conflicting with other plugins adding columns to the Users screen.
-
-= 1.3.6 =
-* Fixed performance issues with large user bases on plugin activation and improved flexibility with meta boxes.
-
-= 1.3.5 =
-* Fixed out of memory issues with large user bases on Users > All Users page.
-
-= 1.3.4 =
-* Please upgrade for WordPress 3.5 compatibility & cosmetics.
-
-= 1.3.3 =
-* Compatibility update for WordPress 3.5.
-
-= 1.3.2 =
-* Please update if you are or will be using a localized installation (bug fixes).
-
-= 1.3.1 =
-* Now you can filter the users section by group. This release also brings API enhancements and fixes.
-
-= 1.3.0 =
-* New access restriction features and fixes, adds support for access restrictions depending on post type and for Media
-
-= 1.2.5 =
-* Added Spanish translation
-
-= 1.2.4 =
-* Minor improvements on Options screen
-* Added show="users" option to [groups_group_info] shortcode
-
-= 1.2.3 =
-* This release provides new shortcodes to let users join or leave groups by clicking a button.
-
-= 1.2.2 =
-* Revised styles on admin UI.
-
-= 1.2.1 =
-* Added Lithuanian translation.
-* Slight performance improvement.
-* Improved the way help sectiosn are handled.
-
-= 1.2.0 =
-* New: Different groups can be granted access to different sets of pages or posts: Any capability - including custom capabilities - can be used to limit access.
-
-= 1.1.5 =
-* New shortcodes.
-
-= 1.1.4 =
-* Several bug fixes and improvements.
-
-= 1.0.0-beta-3d =
-* The capability DB table had a ridiculously long index, this update fixes it.
-
-= 1.0.0-beta-3c =
-* Groups shortcodes now allow nesting: [groups_member], [groups_non_member], [groups_can], [groups_can_not]
-
-= 1.0.0-beta-3b =
-* Admin override fix and DB tables checked individually to create them.
-
-= 1.0.0-beta-3 =
-* New shortcode to show group info & WP <= 3.2.1 compatibility fix.
-
-= 1.0.0-beta-2 =
-* Increased length of capability.capability, capability.class and capability.object columns from to 255 => you need to update your DB manually if you want that updated.
-* Improved some admin CSS.
-
-= 1.0.0-beta-1 =
-* This is the first public beta release.
+= 1.4.15 =
+Fixes a cache incompatibility with some object caching implementations.
+Due to changes in versions 1.4.14 and 1.4.15, it's important to **MAKE A BACKUP** of the site & database, test the site, extensions & theme PRIOR to updating.
