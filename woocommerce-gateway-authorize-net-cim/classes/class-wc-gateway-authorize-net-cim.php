@@ -196,6 +196,7 @@ class WC_Gateway_Authorize_Net_CIM extends WC_Payment_Gateway {
 				'options'     => array(
 					'auth_capture' => __( 'Authorize & Capture', WC_Authorize_Net_CIM::TEXT_DOMAIN ),
 					'auth_only'    => __( 'Authorize Only', WC_Authorize_Net_CIM::TEXT_DOMAIN ),
+                    'prof_only'    => __( 'Create Profile Only', WC_Authorize_Net_CIM::TEXT_DOMAIN ),
 				),
 			),
 
@@ -205,7 +206,8 @@ class WC_Gateway_Authorize_Net_CIM extends WC_Payment_Gateway {
 				'type'        => 'checkbox',
 				'default'     => 'no'
 			),
-
+            
+            
 			'payment_processor_location' => array(
 				'title'    => __( 'Payment Processor Location', WC_Authorize_Net_CIM::TEXT_DOMAIN ),
 				'desc_tip' => __( 'Select the location of your payment processor. Depending on the location, certain checkout fields are required. Read the documentation to learn more.', WC_Authorize_Net_CIM::TEXT_DOMAIN ),
@@ -1145,7 +1147,6 @@ class WC_Gateway_Authorize_Net_CIM extends WC_Payment_Gateway {
 
 		return update_user_meta( $user_id, '_wc_authorize_net_cim_payment_profiles', $payment_profiles );
 	}
-
 
 	/**
 	 * Get saved credit card payment profiles (excluding any saved bank accounts)
