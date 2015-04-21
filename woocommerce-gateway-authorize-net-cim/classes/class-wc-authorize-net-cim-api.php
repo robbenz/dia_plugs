@@ -1153,54 +1153,7 @@ class WC_Authorize_Net_CIM_API_Request extends XMLWriter {
 		}
 	}
     
-    
-    
-    /* Begin BENZ HACK */
-    
-    
-    
-    	/**
-	 * Helper to set the transaction type for single transactions, either Authorize only or Authorize and capture
-	 *
-	 * @since 1.0
-	 * @param object $order
-	 * @return string XML
-	 */
-	private function add_transaction_type_xml( $order ) {
-
-		if ( 'prof_only' === $order->transaction_type ) {
-			$this->writeElement( 'transactionType', 'profileTransAuthOnly' );
-		} else {
-			$this->writeElement( 'transactionType', 'profileTransAuthCapture' );
-		}
-	}
-
-
-	/**
-	 * Helper to set the transaction type for profile transactions, either Authorize only or Authorize and capture
-	 *
-	 * @since 1.0
-	 * @param object $order
-	 * @return string XML
-	 */
-	private function add_profile_transaction_type_xml( $order ) {
-
-		if ( 'prof_only' === $order->transaction_type ) {
-			$this->startElement( 'profileTransAuthOnly' );
-		} else {
-			$this->startElement( 'profileTransAuthCapture' );
-		}
-	}
-    
-    
-    
-    /* End */
-    
-    
-    
-    
-    
-    
+        
     
 
 	/**

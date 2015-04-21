@@ -196,7 +196,6 @@ class WC_Gateway_Authorize_Net_CIM extends WC_Payment_Gateway {
 				'options'     => array(
 					'auth_capture' => __( 'Authorize & Capture', WC_Authorize_Net_CIM::TEXT_DOMAIN ),
 					'auth_only'    => __( 'Authorize Only', WC_Authorize_Net_CIM::TEXT_DOMAIN ),
-                    'prof_only'    => __( 'Create Profile Only', WC_Authorize_Net_CIM::TEXT_DOMAIN ),
 				),
 			),
 
