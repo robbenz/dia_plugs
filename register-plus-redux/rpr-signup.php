@@ -177,7 +177,7 @@ if ( !class_exists( 'RPR_Signup' ) ) {
 				$user_url = isset( $_REQUEST['user_url'] ) ? (string) $_REQUEST['user_url'] : '';
 				echo "\n", '<label id="user_url-label" for="user_url">';
 				if ( '1' === $register_plus_redux->rpr_get_option( 'required_fields_asterisk' ) && is_array( $register_plus_redux->rpr_get_option( 'required_fields' ) ) && in_array( 'user_url', $register_plus_redux->rpr_get_option( 'required_fields' ) ) ) echo '*';
-				echo __( 'Website', 'register-plus-redux' ), ':</label>';
+				echo __( 'Phone Number', 'register-plus-redux' ), ':</label>';
 				if ( $errmsg = $errors->get_error_message('user_url') ) {
 					echo '<p class="error">', $errmsg, '</p>';
 				}
