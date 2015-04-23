@@ -89,6 +89,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<label for="reg_password"><?php _e( 'Password', 'woocommerce' ); ?> <span class="required">*</span></label>
 					<input type="password" class="input-text" name="password" id="reg_password" />
 				</p>
+            
+        <!--    <p class="form-row form-row-wide">
+<label for="password_2"><span class="required">*</span> </label>
+<input id="password_2" class="input-text" type="password" name="password_2">
+</p> -->
 
 			<?php endif; ?>
 
