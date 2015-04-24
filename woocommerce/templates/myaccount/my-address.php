@@ -28,8 +28,10 @@ if ( ! wc_ship_to_billing_address_only() && get_option( 'woocommerce_calc_shippi
 
 $col = 1;
 ?>
-
-<h2><a href="https://partsonline.diamedicalusa.com/my-account/multiple-shipping-addresses/">Manage My Addresses</a></h2>
+<div id="address-myac-wrap" class="border-dash">
+    
+   <div id="myaddress-header-orange">Manage My Addresses</div> 
+<!--<h2><a href="https://partsonline.diamedicalusa.com/my-account/multiple-shipping-addresses/">Manage My Addresses</a></h2> -->
 <!--<h2><a href="#" class="popmake-34552">Manage My Addresses</a></h2> -->
 
 <p class="myaccount_address">
@@ -68,7 +70,7 @@ $col = 1;
 			?>
 		</address>
 	</div>
-
+</div>
 <?php endforeach; ?>
 
 <?php if ( ! wc_ship_to_billing_address_only() && get_option( 'woocommerce_calc_shipping' ) !== 'no' ) echo '</div>'; ?>

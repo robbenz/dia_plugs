@@ -32,14 +32,18 @@ wc_print_notices(); ?>
 	//?>
 </p> -->
 
-
+<div id="clear-account-margin">&nbsp;</div>
 
 <?php wc_print_notices(); ?>
+
+<div id="name-stuff-wrap-myac" class="border-dash">
 
 <form action="" method="post">
 
 	<?php do_action( 'woocommerce_edit_account_form_start' ); ?>
 
+    <div id="account-setting-header-orange">Account Details</div>
+    
 	<p class="form-row form-row-first">
 		<label for="account_first_name"><?php _e( 'First name', 'woocommerce' ); ?> <span class="required">*</span></label>
 		<input type="text" class="input-text" name="account_first_name" id="account_first_name" value="<?php echo esc_attr( $user->first_name ); ?>" />
@@ -54,9 +58,27 @@ wc_print_notices(); ?>
 		<label for="account_email"><?php _e( 'Email address', 'woocommerce' ); ?> <span class="required">*</span></label>
 		<input type="email" class="input-text" name="account_email" id="account_email" value="<?php echo esc_attr( $user->user_email ); ?>" />
 	</p>
+    
+    	<?php do_action( 'woocommerce_edit_account_form' ); ?>
+
+	<p>
+		<?php wp_nonce_field( 'save_account_details' ); ?>
+		<input type="submit" class="button" name="save_account_details" value="<?php _e( 'Save changes', 'woocommerce' ); ?>" />
+		<input type="hidden" name="action" value="save_account_details" />
+	</p>
+
+	<?php do_action( 'woocommerce_edit_account_form_end' ); ?>
+    </form>
+</div>
+
+
+<div id="changepassword-wrap-myac" class="border-dash">
+<form action="" method="post">
+    <?php do_action( 'woocommerce_edit_account_form_start' ); ?>
+    
 
 	<fieldset>
-		<legend><?php _e( 'Password Change', 'woocommerce' ); ?></legend>
+		<div id="password-change-header-orange">Change Password</div>
 
 		<p class="form-row form-row-wide">
 			<label for="password_current"><?php _e( 'Current Password (leave blank to leave unchanged)', 'woocommerce' ); ?></label>
@@ -71,7 +93,10 @@ wc_print_notices(); ?>
 			<input type="password" class="input-text" name="password_2" id="password_2" />
 		</p>
 	</fieldset>
+
+    
 	<div class="clear"></div>
+
 
 	<?php do_action( 'woocommerce_edit_account_form' ); ?>
 
@@ -82,8 +107,9 @@ wc_print_notices(); ?>
 	</p>
 
 	<?php do_action( 'woocommerce_edit_account_form_end' ); ?>
+    </form>
+</div><!-- changepassword-wrap-myac -->
 
-</form>
 
 
 
@@ -92,8 +118,9 @@ wc_print_notices(); ?>
 
 <?php wc_get_template( 'myaccount/my-downloads.php' ); ?>
 
+<?php wc_get_template( 'myaccount/my-address.php' ); ?>
+
 <?php wc_get_template( 'myaccount/my-orders.php', array( 'order_count' => $order_count ) ); ?>
 
-<?php wc_get_template( 'myaccount/my-address.php' ); ?>
 
 <?php do_action( 'woocommerce_after_my_account' ); ?>

@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 
 <?php wc_print_notices(); ?>
-<div id="lost-pass-wrap">
+<div id="lost-pass-wrap" class="border-dash">
 <form method="post" class="lost_reset_password">
 
 	<?php if( 'lost_password' == $args['form'] ) : ?>
