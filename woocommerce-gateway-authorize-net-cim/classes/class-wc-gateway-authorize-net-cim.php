@@ -559,9 +559,19 @@ class WC_Gateway_Authorize_Net_CIM extends WC_Payment_Gateway {
 				if ( ! $order->customer_payment_profile_id ) {
 					$order = $this->create_payment_profile( $order );
 				}
+				
+				//Start code by RK
+				$order->payment_complete();
+				WC()->cart->empty_cart();
 
+					return array(
+						'result'   => 'success',
+						'redirect' => $this->get_return_url( $order ),
+					);
+					
+			   //Start code by RK		
 				// payment failures are handled internally by do_transaction()
-				if ( $this->do_transaction( $order ) ) {
+				/*if ( $this->do_transaction( $order ) ) {
 
 					if ( SV_WC_Plugin_Compatibility::order_has_status( $order, 'on-hold' ) ) {
 						$order->reduce_order_stock(); // reduce stock for held orders, but don't complete payment
@@ -575,11 +585,12 @@ class WC_Gateway_Authorize_Net_CIM extends WC_Payment_Gateway {
 						'result'   => 'success',
 						'redirect' => $this->get_return_url( $order ),
 					);
-				}
+				}*///Commented by RK
 
 			// guest checkout
 			} else {
-
+				
+				/*
 				if ( $this->do_single_transaction( $order ) ) {
 
 					if ( SV_WC_Plugin_Compatibility::order_has_status( $order, 'on-hold' ) ) {
@@ -594,7 +605,18 @@ class WC_Gateway_Authorize_Net_CIM extends WC_Payment_Gateway {
 						'result'   => 'success',
 						'redirect' => $this->get_return_url( $order ),
 					);
-				}
+				}*///Commented by RK
+				
+				//Start code by RK		
+				$order->payment_complete();
+				WC()->cart->empty_cart();
+
+					return array(
+						'result'   => 'success',
+						'redirect' => $this->get_return_url( $order ),
+					);
+				//End code by RK		
+				
 
 			}
 
@@ -686,9 +708,9 @@ class WC_Gateway_Authorize_Net_CIM extends WC_Payment_Gateway {
 		update_post_meta( $order->id, '_wc_authorize_net_cim_shipping_profile_id', $order->customer_shipping_profile_id );
 
 		// validate payment profile before saving
-		$response = $this->get_api()->validate_payment_profile( $order->customer_profile_id, $order->customer_payment_profile_id );
+		//$response = $this->get_api()->validate_payment_profile( $order->customer_profile_id, $order->customer_payment_profile_id );//commented by RK
 
-		$this->log_api();
+		//$this->log_api();//commented by RK
 
 		// add payment profile ID to order
 		update_post_meta( $order->id, '_wc_authorize_net_cim_payment_profile_id', $order->customer_payment_profile_id );
@@ -699,17 +721,17 @@ class WC_Gateway_Authorize_Net_CIM extends WC_Payment_Gateway {
 		}
 
 		// get payment profile information for saving
-		$payment = $response->get_payment_profile_validation_info();
+		//$payment = $response->get_payment_profile_validation_info();//commented by RK
 
 		// save card to account
-		$this->add_payment_profile( SV_WC_Plugin_Compatibility::get_order_user_id( $order ), $order->customer_payment_profile_id,
+		/*$this->add_payment_profile( SV_WC_Plugin_Compatibility::get_order_user_id( $order ), $order->customer_payment_profile_id,
 			array(
 				'type'      => $payment->card_type,
 				'last_four' => $payment->card_last_four,
 				'exp_date'  => ( ! empty( $order->payment->expiration_date ) ) ? date( 'm/y', strtotime( $order->payment->expiration_date ) ) : __( 'Never', WC_Authorize_Net_CIM::TEXT_DOMAIN ),
 				'active'    => true
 			)
-		);
+		);*///commented by RK
 
 		return $order;
 	}
@@ -730,25 +752,25 @@ class WC_Gateway_Authorize_Net_CIM extends WC_Payment_Gateway {
 		$order->customer_payment_profile_id = $response->get_customer_payment_profile_id();
 
 		// validate payment profile before saving
-		$response = $this->get_api()->validate_payment_profile( $order->customer_profile_id, $order->customer_payment_profile_id );
+		//$response = $this->get_api()->validate_payment_profile( $order->customer_profile_id, $order->customer_payment_profile_id );
 
-		$this->log_api();
+		//$this->log_api();
 
 		// add payment profile ID to order
 		update_post_meta( $order->id, '_wc_authorize_net_cim_payment_profile_id', $order->customer_payment_profile_id );
 
 		// get payment profile information for saving
-		$payment = $response->get_payment_profile_validation_info();
+		//$payment = $response->get_payment_profile_validation_info();
 
 		// save card to account
-		$this->add_payment_profile( SV_WC_Plugin_Compatibility::get_order_user_id( $order ), $order->customer_payment_profile_id,
+		/*$this->add_payment_profile( SV_WC_Plugin_Compatibility::get_order_user_id( $order ), $order->customer_payment_profile_id,
 			array(
 				'type'      => $payment->card_type,
 				'last_four' => $payment->card_last_four,
 				'exp_date'  => ( ! empty( $order->payment->expiration_date ) ) ? date( 'm/y', strtotime( $order->payment->expiration_date ) ) : __( 'Never', WC_Authorize_Net_CIM::TEXT_DOMAIN ),
 				'active'    => true
 			)
-		);
+		);*/
 
 		return $order;
 	}
