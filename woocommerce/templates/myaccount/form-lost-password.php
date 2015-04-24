@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<p class="lost-pass-copy"><?php echo apply_filters( 'woocommerce_lost_password_message', __( 'Please enter your username or email address. You will receive a link to create a new password via email.', 'woocommerce' ) ); ?></p>
 
 <div id="lost-pass-input-field">   
-		<p class="form-row form-row-first"><label for="user_login"><?php _e( 'Username or email', 'woocommerce' ); ?></label> <input class="input-text" type="text" name="user_login" id="user_login" /></p>
+		<p class="form-row form-row-first"><label for="user_login"><?php _e( 'Email Address', 'woocommerce' ); ?></label> <input class="input-text" type="text" name="user_login" id="user_login" /></p>
 </div> <!-- lost-pass-input-field -->
     
 	<?php else : ?>
