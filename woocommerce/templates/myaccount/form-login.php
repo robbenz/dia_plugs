@@ -41,7 +41,7 @@ if ( ! defined( 'ABSPATH' ) ) {
             
 <div id="left-col-reg-email">
 			<p class="form-row form-row-wide">
-				<label for="reg_email"><?php _e( 'Email address', 'woocommerce' ); ?> <span class="required">*</span></label>
+				<label for="reg_email"><?php _e( 'Email Address', 'woocommerce' ); ?> <span class="required">*</span></label>
 				<input type="email" class="input-text" name="email" id="reg_email" value="<?php if ( ! empty( $_POST['email'] ) ) echo esc_attr( $_POST['email'] ); ?>" />
 			</p>
 </div>
@@ -91,7 +91,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<?php do_action( 'woocommerce_login_form_start' ); ?>
 
 			<p class="form-row form-row-wide">
-				<label for="username"><?php _e( 'Username or email address', 'woocommerce' ); ?> <span class="required">*</span></label>
+				<label for="username"><?php _e( 'Email Address', 'woocommerce' ); ?> <span class="required">*</span></label>
 				<input type="text" class="input-text" name="username" id="username" value="<?php if ( ! empty( $_POST['username'] ) ) echo esc_attr( $_POST['username'] ); ?>" />
 			</p>
 			<p class="form-row form-row-wide">

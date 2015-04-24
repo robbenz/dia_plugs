@@ -122,5 +122,6 @@ wc_print_notices(); ?>
 
 <?php wc_get_template( 'myaccount/my-orders.php', array( 'order_count' => $order_count ) ); ?>
 
-
+<div id="manage-payments-wrap">
 <?php do_action( 'woocommerce_after_my_account' ); ?>
+</div>

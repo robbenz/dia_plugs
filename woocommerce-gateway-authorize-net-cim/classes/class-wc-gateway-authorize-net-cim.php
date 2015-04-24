@@ -1237,7 +1237,7 @@ class WC_Gateway_Authorize_Net_CIM extends WC_Payment_Gateway {
 		// get available saved payment methods
 		$payment_methods = $this->get_payment_profiles( $user_id );
 
-		?> <h2 id="cim-my-payment-methods" style="margin-top:40px;"><?php _e( 'Manage My Payment Methods', WC_Authorize_Net_CIM::TEXT_DOMAIN ); ?></h2><?php
+		?> <div id="manage-payments-header-orange"><?php _e( 'Manage My Payment Methods', WC_Authorize_Net_CIM::TEXT_DOMAIN ); ?></div><?php
 
 		if ( ! empty( $payment_methods ) ) :
 			?>
