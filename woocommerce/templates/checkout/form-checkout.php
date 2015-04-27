@@ -32,23 +32,57 @@ $get_checkout_url = apply_filters( 'woocommerce_get_checkout_url', WC()->cart->g
 
 		<div class="col2-set" id="customer_details">
 			<div class="col-1">
-				<?php do_action( 'woocommerce_checkout_billing' ); ?>
+				<?php do_action( 'woocommerce_checkout_billing' ); ?>    
+                
+       <!-- <h3 id="ship-to-different-address">
+			<label for="ship-to-different-address-checkbox" class="checkbox"><?php _e( 'Ship to a different address?', 'woocommerce' ); ?></label>
+			<input id="ship-to-different-address-checkbox" class="input-checkbox" <?php checked( $ship_to_different_address, 1 ); ?> type="checkbox" name="ship_to_different_address" value="1" />
+		</h3> -->
 			</div>
 
 			<div class="col-2">
+                
+                <div id="shipping-header-orange"><h3>Shipping Address</h3></div>
+                
 				<?php do_action( 'woocommerce_checkout_shipping' ); ?>
 			</div>
 		</div>
+    
+    <div id="order-notes-spcial-box">
+    <?php do_action( 'woocommerce_before_order_notes', $checkout ); ?>
+
+	<?php if ( apply_filters( 'woocommerce_enable_order_notes_field', get_option( 'woocommerce_enable_order_comments', 'yes' ) === 'yes' ) ) : ?>
+
+		<?php if ( ! WC()->cart->needs_shipping() || WC()->cart->ship_to_billing_address_only() ) : ?>
+
+			<h3><?php _e( 'Additional Information', 'woocommerce' ); ?></h3>
+
+		<?php endif; ?>
+
+		<?php foreach ( $checkout->checkout_fields['order'] as $key => $field ) : ?>
+
+			<?php woocommerce_form_field( $key, $field, $checkout->get_value( $key ) ); ?>
+
+		<?php endforeach; ?>
+
+	<?php endif; ?>
+
+	<?php do_action( 'woocommerce_after_order_notes', $checkout ); ?>
+
+</div>
 
 		<?php do_action( 'woocommerce_checkout_after_customer_details' ); ?>
 
-		<h3 id="order_review_heading"><?php _e( 'Your order', 'woocommerce' ); ?></h3>
+		
 
 	<?php endif; ?>
 
 	<?php do_action( 'woocommerce_checkout_before_order_review' ); ?>
 
 	<div id="order_review" class="woocommerce-checkout-review-order">
+        
+        <h3 id="order_review_heading"><?php _e( 'Order Summary', 'woocommerce' ); ?></h3>
+        
 		<?php do_action( 'woocommerce_checkout_order_review' ); ?>
 	</div>
 
