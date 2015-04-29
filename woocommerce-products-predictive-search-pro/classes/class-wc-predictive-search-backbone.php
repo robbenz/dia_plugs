@@ -173,7 +173,7 @@ class WC_Predictive_Search_Hook_Backbone
             {{ if ( description != null && description != '' ) { }}<div class="rs_rs_description">{{= description }}</div>{{ } }}
             
             {{ if ( addtocart != null && addtocart != '' ) { }}<div class="rs_rs_addtocart">{{= addtocart }}</div>{{ } }}
-                 
+            <div id="viewprice-detail-search"><a class="popmake-32596" href="#" style="cursor: pointer;">View Price</a></div>  
 		</div>
         
 	</script>

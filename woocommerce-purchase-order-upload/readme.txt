@@ -3,7 +3,7 @@ Contributors: bheadrick
 Tags: WooCommerce, Invoice, Payment Gateway, Payment
 Requires at least: 3.0.1
 Tested up to: 3.5
-Stable tag: 4.3
+Stable tag: 2.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -28,9 +28,11 @@ specified shipping method is selected.
 
 == Installation ==
 
-This section describes how to install the plugin and get it working.
-
-e.g.
+In the WordPress dashboard, go to plugins>add, click upload, navigate to the zip
+    file and select it. Then click activate.
+Alternatively, you can unzip the plugin and upload the resulting folder to the 
+    /wp-content/plugins/ directory and then activate it through Plugins in the 
+    Dashboard.
 
 == Changelog ==
 

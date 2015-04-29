@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
  *
  */
 
-class API_Manager_wcpo_Update_API_Check {
+class API_Manager_wcpou_Update_API_Check {
 
 	/**
 	 * @var The single instance of the class

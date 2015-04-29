@@ -12,7 +12,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-class Api_Manager_wcpo_Key {
+class Api_Manager_wcpou_Key {
 
     /**
      * @var The single instance of the class

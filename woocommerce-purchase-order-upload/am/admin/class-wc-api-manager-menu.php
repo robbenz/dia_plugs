@@ -12,7 +12,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-class API_Manager_wcpo_MENU {
+class API_Manager_wcpou_MENU {
 
 	// Load admin menu
 	public function __construct() {
@@ -376,4 +376,4 @@ class API_Manager_wcpo_MENU {
 
 }
 
-new API_Manager_wcpo_MENU();
+new API_Manager_wcpou_MENU();

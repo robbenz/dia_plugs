@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
  *
  */
 
-class API_Manager_wcpo_Password_Management {
+class API_Manager_wcpou_Password_Management {
 
 	private function rand( $min = 0, $max = 0 ) {
 		global $rnd_value;
