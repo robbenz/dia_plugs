@@ -30,7 +30,7 @@ class Profile_Builder_Form_Creator{
 		$this->wppb_retrieve_custom_settings();
 
 		add_action( 'wp_footer', array( &$this, 'wppb_print_script' ) ); //print scripts
-        if( current_user_can( 'manage_options' ) )
+        if( ( !is_multisite() && current_user_can( 'edit_users' ) ) || ( is_multisite() && current_user_can( 'manage_network' ) ) )
             add_action( 'wppb_before_edit_profile_fields', array( &$this, 'wppb_edit_profile_select_user_to_edit' ) );
 	}
 	
@@ -160,12 +160,8 @@ class Profile_Builder_Form_Creator{
             $username = trim( $_POST['username'] );
         $password = trim( $_POST['passw1'] );
 
-        if( isset( $wppb_general_settings['loginWith'] ) && ( $wppb_general_settings['loginWith'] == 'email' ) ){
-            $username = apply_filters( 'wppb_generated_random_username', Wordpress_Creation_Kit_PB::wck_generate_slug( trim( $_POST['email'] ) ), $_POST['email'] );
-        }
-
         /* get user id */
-        $user = get_user_by( 'login', $username );
+        $user = get_user_by( 'email', trim( $_POST['email'] ) );
         $nonce = wp_create_nonce( 'autologin-'.$user->ID.'-'.(int)( time() / 60 ) );
 
         /* define redirect location */
@@ -277,13 +273,13 @@ class Profile_Builder_Form_Creator{
         ?>
         <form enctype="multipart/form-data" method="post" id="<?php if( $this->args['form_type'] == 'register' ) echo 'wppb-register-user';  else if( $this->args['form_type'] == 'edit_profile' ) echo 'wppb-edit-user'; if( isset($this->args['form_name']) && $this->args['form_name'] != "unspecified" ) echo '-' . $this->args['form_name']; ?>" class="wppb-user-forms<?php if( $this->args['form_type'] == 'register' ) echo ' wppb-register-user';  else if( $this->args['form_type'] == 'edit_profile' ) echo ' wppb-edit-user';?>" action="<?php echo apply_filters( 'wppb_form_action', '' ); ?>">
 			<?php
-			echo apply_filters( 'wppb_before_form_fields', '<ul>' );
+			echo apply_filters( 'wppb_before_form_fields', '<ul>', $this->args['form_type'] );
 			$this->wppb_output_form_fields( $_REQUEST, $field_check_errors );
-			echo apply_filters( 'wppb_after_form_fields', '</ul>' );
+			echo apply_filters( 'wppb_after_form_fields', '</ul>', $this->args['form_type'] );
 			
-			echo apply_filters( 'wppb_before_send_credentials_checkbox', '<ul>' );
+			echo apply_filters( 'wppb_before_send_credentials_checkbox', '<ul>', $this->args['form_type'] );
 			$this->wppb_add_send_credentials_checkbox( $_REQUEST, $this->args['form_type'] );
-			echo apply_filters( 'wppb_after_send_credentials_checkbox', '</ul>' );
+			echo apply_filters( 'wppb_after_send_credentials_checkbox', '</ul>', $this->args['form_type'] );
 			?>
 			<p class="form-submit">
 				<?php 
@@ -319,7 +315,8 @@ class Profile_Builder_Form_Creator{
                 if( $display_field == false )
                     continue;
 
-				$output_fields .= apply_filters( 'wppb_output_before_form_field', '<li class="wppb-form-field wppb-'. Wordpress_Creation_Kit_PB::wck_generate_slug( $field['field'] ) .$error_var.'" id="wppb-form-element-'. $field['id'] .'">', $field, $error_var );
+                $css_class = apply_filters( 'wppb_field_css_class', 'wppb-form-field wppb-'. Wordpress_Creation_Kit_PB::wck_generate_slug( $field['field'] ) .$error_var, $field, $error_var );
+				$output_fields .= apply_filters( 'wppb_output_before_form_field', '<li class="'. $css_class .'" id="wppb-form-element-'. $field['id'] .'">', $field, $error_var );
 				$output_fields .= apply_filters( 'wppb_output_form_field_'.Wordpress_Creation_Kit_PB::wck_generate_slug( $field['field'] ), '', $this->args['form_type'], $field, $this->wppb_get_desired_user_id(), $field_check_errors, $global_request, $this->args['role'] );
 				$output_fields .= apply_filters( 'wppb_output_specific_error_message', $specific_message );
 				$output_fields .= apply_filters( 'wppb_output_after_form_field', '</li>', $field );
@@ -468,8 +465,12 @@ class Profile_Builder_Form_Creator{
      */
     function wppb_get_desired_user_id(){
         if( $this->args['form_type'] == 'edit_profile' ){
+            $display_edit_users_dropdown = apply_filters( 'wppb_display_edit_other_users_dropdown', true );
+            if( !$display_edit_users_dropdown )
+                return get_current_user_id();
+
             //only admins
-            if ( current_user_can( 'manage_options' ) ) {
+            if( ( !is_multisite() && current_user_can( 'edit_users' ) ) || ( is_multisite() && current_user_can( 'manage_network' ) ) ) {
                 if( isset( $_GET['edit_user'] ) && ! empty( $_GET['edit_user'] ) ){
                     return $_GET['edit_user'];
                 }
@@ -481,6 +482,10 @@ class Profile_Builder_Form_Creator{
 
     function wppb_edit_profile_select_user_to_edit(){
 
+        $display_edit_users_dropdown = apply_filters( 'wppb_display_edit_other_users_dropdown', true );
+        if( !$display_edit_users_dropdown )
+            return;
+
         /* add a hard cap: if we have more than 5000 users don't display the dropdown for performance considerations */
         $user_count = count_users();
         if( $user_count['total_users'] > apply_filters( 'wppb_edit_other_users_count_limit', 5000 ) )
@@ -490,14 +495,31 @@ class Profile_Builder_Form_Creator{
             $selected = $_GET['edit_user'];
         else
             $selected = get_current_user_id();
-        ?>
-        <form method="GET" action="" id="select_user_to_edit_form">
-            <p class="wppb-form-field">
-                <label for="edit_user"><?php _e( 'User to edit:', 'profilebuilder' ) ?></label><?php wp_dropdown_users( array( 'name' => 'edit_user', 'id' => 'wppb-edit-user', 'selected' => $selected ) ); ?>
-            </p>
-            <script type="text/javascript">jQuery( '#wppb-edit-user' ).change( function(){ window.location.href = "<?php echo add_query_arg( array( 'edit_user' => '=' ) ) ?>"+jQuery(this).val(); });</script>
-        </form>
+
+        $query_args['fields'] = array( 'ID', 'user_login', 'display_name' );
+        $query_args['role'] = apply_filters( 'wppb_edit_profile_user_dropdown_role', '' );
+        $users = get_users( $query_args );
+        if( !empty( $users ) ) {
+            ?>
+            <form method="GET" action="" id="select_user_to_edit_form">
+                <p class="wppb-form-field">
+                    <label for="edit_user"><?php _e('User to edit:', 'profilebuilder') ?></label>
+                    <select id="wppb-edit-user" name="edit_user">
+                        <?php
+                        foreach( $users as $user ){
+                            ?>
+                            <option value="<?php echo $user->ID ?>" <?php selected( $selected, $user->ID ); ?>><?php echo $user->display_name ?></option>
+                            <?php
+                        }
+                        ?>
+                    </select>
+                </p>
+                <script type="text/javascript">jQuery('#wppb-edit-user').change(function () {
+                        window.location.href = "<?php echo add_query_arg( array( 'edit_user' => '=' ) ) ?>" + jQuery(this).val();
+                    });</script>
+            </form>
         <?php
+        }
     }
 
     /**

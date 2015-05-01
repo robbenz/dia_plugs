@@ -1,3 +1,0 @@
-<?php $x0 = $this->xml;
-$v6_0 = $x0->xpath("img[1]");
-echo $this->getValue($v6_0);

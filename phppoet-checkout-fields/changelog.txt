@@ -1,0 +1,47 @@
+***CHANGELOG***
+
+Version 1.0.6 - 15 February 2015
+
+* replaced chosen with select2 on frontend.
+
+
+Version 1.0.5 - 14 February 2015
+
+* fixed compatibility issues with woocommerce 2.3.3.
+* Added option to disable selection of past dates in datepicker.
+* Fixed bug that shows wrong field key for additional fields.
+* Fixed bug related to shop manager role on order edition page.
+
+
+Version 1.0.4 - 21 January 2015
+
+* fixed bug related to datepicker arrows.
+* displays array into comma separated string into order edition page.
+* Fixed bug that prevents additional fields display on order edition page.
+* Fixed bug related to additional fields required validation.
+
+
+Version 1.0.3 - 09 January 2015
+
+* Added less opacity for hidden core fields. 
+* minor tweak in backend css and js code. 
+
+
+Version 1.0.2 - 24 December 2014
+
+* Support for Additional Fields
+* Admin side Visual Preview
+* Fixed Few minor bugs
+* Major Change/Improvement on Admin side as well as frontend side code.
+* Verified functionality of all features. 
+* Added Chosen select for single dropdown select
+
+Version 1.0.1 - 15 December 2014
+
+* Fixed one minor bug
+* Shows custom fields details along with order email
+
+Version 1.0.0 - 12 December 2014
+
+* Initial release
+

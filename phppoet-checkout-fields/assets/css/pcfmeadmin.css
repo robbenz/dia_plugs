@@ -1,0 +1,88 @@
+.form-table th {
+  width:auto;
+  padding: 0 0 0 0;
+}
+.form-table td {
+  font-size: 11px;
+}
+.form-table tbody {
+  cursor: default;
+}
+
+.form-table .tableheading {
+ float:left;
+ font-size:24px;
+}
+.form-table td {
+  
+  padding: 0 0 0 0;
+}
+
+.noticerow {
+    display:none;
+}
+.bs-example{
+      margin: 100px 50px;
+    }
+.accordionheading {
+   font-weight:bold;
+}
+
+
+.pcfme-sortable-list {
+cursor:move;
+width:80%;
+ 
+}
+
+
+
+.settings_label {
+ font-size: 14px;
+ 
+}
+.glyphicon-remove-circle {
+ cursor:default;
+ font-size: 15px;
+ 
+}
+
+.glyphicon-edit {
+  cursor:default;
+  font-size: 15px;
+  
+}
+
+.heading-table {
+  border-spacing: 0;
+  border-collapse: collapse;
+  width: 90%;
+}
+
+.buttondiv {
+ width:70%;
+ margin-top:10px;
+ margin-bottom:30px;
+}
+
+.additional-buttondiv {
+  width:70%;
+ margin-top:10px;
+ margin-bottom:30px;
+}
+
+.pcmfe-required {
+  color: red;
+  font-weight: 700;
+  border: 0;
+}
+
+
+.pcfme_field_key {
+  cursor:copy;
+}
+
+.pcfme-hidden-row {
+ opacity:0.3;
+}
+

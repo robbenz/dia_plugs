@@ -117,7 +117,7 @@ class WC_Checkout {
 			'order_comments' => array(
 				'type' => 'textarea',
 				'class' => array('notes'),
-				'label' => __( 'Shipping and Order Notes', 'woocommerce' ),
+				'label' => __( 'Order Notes', 'woocommerce' ),
 				'placeholder' => _x('Notes about your order, e.g. special notes for delivery.', 'placeholder', 'woocommerce')
 			)
 		);
@@ -186,7 +186,8 @@ class WC_Checkout {
 			$order_data = array(
 				'status'        => apply_filters( 'woocommerce_default_order_status', 'pending' ),
 				'customer_id'   => $this->customer_id,
-				'customer_note' => isset( $this->posted['order_comments'] ) ? $this->posted['order_comments'] : ''
+				'customer_note' => isset( $this->posted['order_comments'] ) ? $this->posted['order_comments'] : '',
+				'created_via'   => 'checkout'
 			);
 
 			// Insert or update the post data

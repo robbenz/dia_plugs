@@ -22,7 +22,7 @@ global $product, $post;
 			<tbody>
 				<?php $loop = 0; foreach ( $attributes as $name => $options ) : $loop++; ?>
 					<tr>
-						<td class="label"><label for="<?php echo sanitize_title( $name ); ?>"><?php echo wc_attribute_label( $name ); ?></label><br></td>
+					<td class="label"><label for="<?php echo sanitize_title( $name ); ?>"><?php echo wc_attribute_label( $name ); ?></label><br></td>
 						<td class="value" style="float:left;"><select id="<?php echo esc_attr( sanitize_title( $name ) ); ?>" name="attribute_<?php echo sanitize_title( $name ); ?>" data-attribute_name="attribute_<?php echo sanitize_title( $name ); ?>">
 							<option value=""><?php echo __( 'Select Configuration', 'woocommerce' ) ?>&hellip;</option>
 							<?php
@@ -59,7 +59,7 @@ global $product, $post;
 							?>
 						</select> <?php
 							if ( sizeof( $attributes ) === $loop ) {
-								echo '<a class="reset_variations" style="display:none;" href="#reset">' . __( 'Clear selection', 'woocommerce' ) . '</a>';
+									echo '<a class="reset_variations" style="display:none;" href="#reset">' . __( 'Clear selection', 'woocommerce' ) . '</a>';
 							}
 						?></td>
 					</tr>
@@ -75,20 +75,11 @@ global $product, $post;
 			<div class="single_variation"></div>
 
 			<div class="variations_button">
-                
-                
 				<?php woocommerce_quantity_input(); ?>
-                
-                
 				<button type="submit" class="single_add_to_cart_button button alt"><?php echo $product->single_add_to_cart_text(); ?></button>
-                
-
-                
 			</div>
 
 			<input type="hidden" name="add-to-cart" value="<?php echo $product->id; ?>" />
-            
-            
 			<input type="hidden" name="product_id" value="<?php echo esc_attr( $post->ID ); ?>" />
 			<input type="hidden" name="variation_id" class="variation_id" value="" />
 
@@ -106,6 +97,5 @@ global $product, $post;
 </form>
 
 <div id="viewprice-detail"><a href="#" class="popmake-32596">View Price</a></div>
-
 
 <?php do_action( 'woocommerce_after_add_to_cart_form' ); ?>

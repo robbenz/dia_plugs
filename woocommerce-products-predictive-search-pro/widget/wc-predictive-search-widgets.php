@@ -153,6 +153,9 @@ class WC_Predictive_Search_Widgets extends WP_Widget
 			}
 			?>
             <input type="hidden" name="search_other" value="<?php echo implode(",", $search_list); ?>"  />
+            <!-- begin rob hack -->
+            <span data-ps-id="<?php echo $id;?>" class="bt_search predictive_search_bt" id="bt_pp_search_100"></span>
+            <!-- end rob hack -->
 		</form>
         </div>
         <?php if (trim($style) == '') { ?>

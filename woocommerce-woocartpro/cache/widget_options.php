@@ -1,1 +1,0 @@
-<?php return 'a:1:{s:5:"title";s:4:"Cart";}';

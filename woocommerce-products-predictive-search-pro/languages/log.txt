@@ -1,4 +1,0 @@
-Fri Dec  5 12:38:33 2014: /Applications/Poedit.app/Contents/PlugIns/GettextTools.bundle/Contents/MacOS/bin/xgettext: Non-ASCII string at ./includes/feature-data/class-a3-portfolio-feature-page.php:275.
-Fri Dec  5 12:38:33 2014:                                                                                            Please specify the source encoding through --from-code.
-Fri Dec  5 12:38:33 2014: Entries in the catalog are probably incorrect.
-Fri Dec  5 12:38:33 2014: Updating the catalog failed. Click on 'Details >>' for details.

@@ -1,3 +1,0 @@
-<?php $x0 = $this->xml;
-$v8_0 = $x0->xpath("cost[1]");
-echo $this->getValue($v8_0);
