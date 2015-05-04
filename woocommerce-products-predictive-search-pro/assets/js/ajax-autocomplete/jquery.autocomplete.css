@@ -35,6 +35,6 @@
 
 .ctr_search, .ctr_search .txt_livesearch,#wrap .ctr_search .txt_livesearch, .livesearch, .bt_search, .ajax_search_content_title,.more_result, .predictive_results, .predictive_results ul li .rs_content_popup, .rs_avatar, .ajax_search_content, .ajax_no_result {box-sizing:content-box !important; -moz-box-sizing:content-box !important; -webkit-box-sizing:content-box !important;}
 @media screen and (-webkit-min-device-pixel-ratio:0) {
-.fr_search_widget .ctr_search .txt_livesearch {line-height:17px !important;border-left: 0px solid #FFF !important;left: 0px !important;}
+.fr_search_widget .ctr_search .txt_livesearch {line-height:17px !important;border-left: 0px solid #FFF !important;}
 .ajax_search_content_title,.more_result { width: 91% !important;}
 }
