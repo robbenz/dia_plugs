@@ -305,8 +305,7 @@ if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<' ) ) {
         'type'          => 'text',
         'class'         => array('purchase-order-number form-row-wide'),
         'label'         => isset($option['ponumtitle'])?$option['ponumtitle']:__('Purchase Order Number'),
-       // 'required'      => (isset($option['porequired']) && $option['porequired']=='yes'),
-        'required'      => true,
+        'required'      => (isset($option['porequired']) && $option['porequired']=='yes'),
         'placeholder'       => 'Enter ' . (isset($option['ponumtitle'])?$option['ponumtitle']:'Purchase Order Number'). ' ('.$required.')',
         ), '');   
             

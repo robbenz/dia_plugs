@@ -33,8 +33,9 @@ if ( $order ) : ?>
 
 	<?php else : ?>
 
-		<p><?php echo apply_filters( 'woocommerce_thankyou_order_received_text', __( 'Thank you. Your order has been received.', 'woocommerce' ), $order ); ?></p>
-
+		<div id="order-recieved-wrap"><p class="order-recieved-copy"><?php echo apply_filters( 'woocommerce_thankyou_order_received_text', __( 'Thank you. Your order has been received.', 'woocommerce' ), $order ); ?></p>
+</div>
+<div id="order-details-wrap">
 		<ul class="order_details">
 			<li class="order">
 				<?php _e( 'Order Number:', 'woocommerce' ); ?>
@@ -55,6 +56,8 @@ if ( $order ) : ?>
 			</li>
 			<?php endif; ?>
 		</ul>
+    
+    </div>
 		<div class="clear"></div>
 
 	<?php endif; ?>
@@ -64,6 +67,8 @@ if ( $order ) : ?>
 
 <?php else : ?>
 
-	<p><?php echo apply_filters( 'woocommerce_thankyou_order_received_text', __( 'Thank you. Your order has been received.', 'woocommerce' ), null ); ?></p>
+	<div id="order-recieved-wrap"><p class="order-recieved-copy"><?php echo apply_filters( 'woocommerce_thankyou_order_received_text', __( 'Thank you. Your order has been received.', 'woocommerce' ), null ); ?></p>
+
+</div>
 
 <?php endif; ?>
