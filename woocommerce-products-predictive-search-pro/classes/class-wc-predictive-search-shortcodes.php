@@ -290,7 +290,7 @@ class WC_Predictive_Search_Shortcodes
 			ob_start();
 		?>
 		<div id="ps_results_container" class="woocommerce">
-					<style type="text/css">
+			<style type="text/css">
 				.rs_result_heading{margin:15px 0;}
 				.ajax-wait{display: none; position: absolute; width: 100%; height: 100%; top: 0px; left: 0px; background:url("<?php echo WOOPS_IMAGES_URL; ?>/ajax-loader.gif") no-repeat center center #EDEFF4; opacity: 1;text-align:center;}
 				.ajax-wait img{margin-top:14px;}

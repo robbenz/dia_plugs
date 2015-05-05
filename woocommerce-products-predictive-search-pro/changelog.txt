@@ -1,5 +1,10 @@
 *** WooCommerce Predictive Search Changelog ***
 
+= 2.4.2 - 2015/04/21 =
+* Tweak - Tested and Tweaked for full compatibility with WordPress Version 4.2.0
+* Tweak - Tested and Tweaked for full compatibility with WooCommerce Version 2.3.8
+* Tweak - Update style of plugin framework. Removed the [data-icon] selector to prevent conflict with other plugins that have font awesome icons
+
 = 2.4.1 - 2015/04/03 =
 * Tweak - Made the product thumbnail a clickable link to the product on All Results Search pages. Before only the product title was linked
 * Tweak - Update underscore template with link to Product set for the image from All Results Search page

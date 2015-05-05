@@ -72,11 +72,14 @@ class WC_Predictive_Search
 		$wc_predictive_id_excludes['exclude_p_tags'] = $exclude_p_tags;
 		$wc_predictive_id_excludes['exclude_posts'] = $exclude_posts;
 		if ( class_exists('SitePress') && get_option('woocommerce_search_page_id', 0 ) > 0 ) {
-			global $wpdb;
-			$translation_page_data = $wpdb->get_results( $wpdb->prepare( "SELECT element_id FROM " . $wpdb->prefix . "icl_translations WHERE trid = %d AND element_type='post_page'", get_option('woocommerce_search_page_id') ) );
-			if ( is_array( $translation_page_data ) && count( $translation_page_data ) > 0 ) {
-				foreach ( $translation_page_data as $translation_page ) {
-					$exclude_pages .= ",".$translation_page->element_id;
+			global $wpdb, $sitepress;
+			$trid = $sitepress->get_element_trid( get_option('woocommerce_search_page_id'), 'post_page' );
+			if ( $trid ) {
+				$translation_page_data = $wpdb->get_results( $wpdb->prepare( "SELECT element_id FROM " . $wpdb->prefix . "icl_translations WHERE trid = %d AND element_type='post_page'", $trid ) );
+				if ( is_array( $translation_page_data ) && count( $translation_page_data ) > 0 ) {
+					foreach ( $translation_page_data as $translation_page ) {
+						$exclude_pages .= ",".$translation_page->element_id;
+					}
 				}
 			}
 		}
@@ -138,7 +141,10 @@ class WC_Predictive_Search
 		if ( class_exists('SitePress') ) {
 			global $sitepress;
 			$source_lang_code = $sitepress->get_default_language();
-			$wpdb->query( "UPDATE ".$wpdb->prefix . "icl_translations SET trid=".$page_id." WHERE element_id=".$page_id." AND language_code='".$source_lang_code."' AND element_type='post_page' " );
+			$trid = $sitepress->get_element_trid( $page_id, 'post_page' );
+			if ( ! $trid ) {
+				$wpdb->query( "UPDATE ".$wpdb->prefix . "icl_translations SET trid=".$page_id." WHERE element_id=".$page_id." AND language_code='".$source_lang_code."' AND element_type='post_page' " );
+			}
 		}
 
 		update_option( $option, $page_id );
@@ -182,12 +188,13 @@ class WC_Predictive_Search
 		return $element_id;
 	}
 
-	public static function auto_create_page_for_wpml(  $trid, $slug, $page_title = '', $page_content = '' ) {
+	public static function auto_create_page_for_wpml(  $original_id, $slug, $page_title = '', $page_content = '' ) {
 		if ( class_exists('SitePress') ) {
 			global $sitepress;
 			$active_languages = $sitepress->get_active_languages();
 			if ( is_array($active_languages)  && count($active_languages) > 0 ) {
 				$source_lang_code = $sitepress->get_default_language();
+				$trid = $sitepress->get_element_trid( $original_id, 'post_page' );
 				foreach ( $active_languages as $language ) {
 					if ( $language['code'] == $source_lang_code ) continue;
 					WC_Predictive_Search::create_page_wpml( $trid, $language['code'], $source_lang_code, $slug.'-'.$language['code'], $page_title.' '.$language['display_name'], $page_content );
@@ -217,9 +224,12 @@ class WC_Predictive_Search
 		if ( class_exists('SitePress') ) {
 			global $sitepress;
 			$translation_page_data = null;
-			$translation_page_data = $wpdb->get_row( $wpdb->prepare( "SELECT element_id FROM " . $wpdb->prefix . "icl_translations WHERE trid = %d AND element_type='post_page' AND language_code = %s LIMIT 1", $page_id , $sitepress->get_current_language() ) );
-			if ( $translation_page_data != null )
-				$page_id = $translation_page_data->element_id;
+			$trid = $sitepress->get_element_trid( $page_id, 'post_page' );
+			if ( $trid ) {
+				$translation_page_data = $wpdb->get_row( $wpdb->prepare( "SELECT element_id FROM " . $wpdb->prefix . "icl_translations WHERE trid = %d AND element_type='post_page' AND language_code = %s LIMIT 1", $trid , $sitepress->get_current_language() ) );
+				if ( $translation_page_data != null )
+					$page_id = $translation_page_data->element_id;
+			}
 		}
 
 		return $page_id;
