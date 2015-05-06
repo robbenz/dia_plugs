@@ -526,7 +526,7 @@
 								</tbody>
 							</table>
 
-							<input type="hidden" id="existing_meta_keys" value="<?php echo implode(',', $meta_keys); ?>"/>
+							<input type="hidden" id="existing_meta_keys" value="<?php echo esc_html(implode(',', $meta_keys)); ?>"/>
 													
 						</td>
 					</tr>

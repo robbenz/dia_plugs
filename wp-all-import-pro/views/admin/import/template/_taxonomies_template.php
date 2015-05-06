@@ -3,7 +3,7 @@
 $custom_type = get_post_type_object( $post_type ); 
 
 $exclude_taxonomies = apply_filters('pmxi_exclude_taxonomies', (class_exists('PMWI_Plugin')) ? array('post_format', 'product_type', 'product_shipping_class') : array('post_format'));	
-$post_taxonomies = array_diff_key(get_taxonomies_by_object_type(array($post_type), 'object'), array_flip($exclude_taxonomies));
+$post_taxonomies = array_diff_key(get_taxonomies_by_object_type($post['is_override_post_type'] ? array_keys(get_post_types( '', 'names' )) : array($post_type), 'object'), array_flip($exclude_taxonomies));
 
 if ( ! empty($post_taxonomies)): 
 ?>
@@ -98,10 +98,21 @@ if ( ! empty($post_taxonomies)):
 																		<div class="input">
 																			<input type="hidden" name="tax_hierarchical_last_level_assign[<?php echo $ctx->name; ?>]" value="0" />
 																			<input type="checkbox" id="tax_hierarchical_last_level_assign_<?php echo $ctx->name; ?>" name="tax_hierarchical_last_level_assign[<?php echo $ctx->name; ?>]" value="1" <?php echo ( ! empty($post['tax_hierarchical_last_level_assign'][$ctx->name])) ? 'checked="checked"': '' ?> />
-																			<label for="tax_hierarchical_last_level_assign_<?php echo $ctx->name; ?>"><?php printf(__('Only assign %s to the bottom level term in the hierarchy.', 'wp_all_import_plugin'), $ctx->labels->name) ?></label>			
+																			<label for="tax_hierarchical_last_level_assign_<?php echo $ctx->name; ?>"><?php printf(__('Only assign %s to the bottom level term in the hierarchy', 'wp_all_import_plugin'), $custom_type->label) ?></label>			
+																		</div>
+																		<div class="input">
+																			<input type="hidden" name="is_tax_hierarchical_group_delim[<?php echo $ctx->name; ?>]" value="0" />
+																			<input type="checkbox" id="is_tax_hierarchical_group_delim_<?php echo $ctx->name; ?>" name="is_tax_hierarchical_group_delim[<?php echo $ctx->name; ?>]" value="1" class="switcher" <?php echo ( ! empty($post['is_tax_hierarchical_group_delim'][$ctx->name])) ? 'checked="checked"': '' ?> />
+																			<label for="is_tax_hierarchical_group_delim_<?php echo $ctx->name; ?>"><?php printf(__('Separate hierarchy groups via symbol', 'wp_all_import_plugin'), $custom_type->label) ?></label>			
+																			<div class="switcher-target-is_tax_hierarchical_group_delim_<?php echo $ctx->name;?> sub_input">
+																				<label><?php _e('Separated by', 'wp_all_import_plugin'); ?></label>										
+																				<input type="text" class="small tax_delim" name="tax_hierarchical_group_delim[<?php echo $ctx->name; ?>]" value="<?php echo ( ! empty($post['tax_hierarchical_group_delim'][$ctx->name]) ) ? str_replace("&amp;","&", htmlentities(htmlentities($post['tax_hierarchical_group_delim'][$ctx->name]))) : '|' ?>" />
+																			</div>
 																		</div>
 																		<a class="preview_taxonomies" href="javascript:void(0);" style="top:-35px; float: right; position: relative;" rel="preview_taxonomies"><?php _e('Preview', 'wp_all_import_plugin'); ?></a>
-																		<a href="javascript:void(0);" class="icon-item add-new-cat"><?php _e('Add Another','wp_all_import_plugin');?></a>																		
+																		<div class="input">
+																			<a href="javascript:void(0);" class="icon-item add-new-cat" style="width: 200px;"><?php _e('Add Another Hierarchy Group','wp_all_import_plugin');?></a> 																			
+																		</div>
 																	</div>
 																</div>
 																<div class="input">
@@ -150,11 +161,15 @@ if ( ! empty($post_taxonomies)):
 																		    	<a href="javascript:void(0);" class="icon-item remove-ico"></a>
 																		    </li>
 
-																		</ol>
-																		<a href="javascript:void(0);" class="icon-item add-new-ico"><?php _e('Add Another','wp_all_import_plugin');?></a>
+																		</ol>																		
 																		<input type="hidden" class="hierarhy-output" name="post_taxonomies[<?php echo $ctx->name; ?>]" value="<?php echo esc_attr($post['post_taxonomies'][$ctx->name]) ?>"/>									
 																		<?php do_action('pmxi_category_options_view', ((!empty($post['post_taxonomies'][$ctx->name])) ? $post['post_taxonomies'][$ctx->name] : false), $ctx->name, $post_type, $ctx->labels->name); ?>														
-																	</div>
+																		<div class="input" style="margin-left:17px;">
+																			<label><?php _e('Separated by', 'wp_all_import_plugin'); ?></label>										
+																			<input type="text" class="small tax_delim" name="tax_manualhierarchy_delim[<?php echo $ctx->name; ?>]" value="<?php echo ( ! empty($post['tax_manualhierarchy_delim'][$ctx->name]) ) ? str_replace("&amp;","&", htmlentities(htmlentities($post['tax_manualhierarchy_delim'][$ctx->name]))) : ',' ?>" />
+																		</div>
+																		<a href="javascript:void(0);" class="icon-item add-new-ico"><?php _e('Add Another','wp_all_import_plugin');?></a>
+																	</div>																	
 																</div>
 															</div>
 														</div>

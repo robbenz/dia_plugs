@@ -1,7 +1,21 @@
 <?php
+
 function pmxi_wp_ajax_upload_resource(){
 
-	extract($_POST);
+	if ( ! check_ajax_referer( 'wp_all_import_secure', 'security', false )){
+		exit( json_encode(array('success' => false, 'errors' => '<div class="error inline"><p>' . __('Security check', 'wp_all_import_plugin') . '</p></div>')) );
+	}
+
+	if ( ! current_user_can('manage_options') ){
+		exit( json_encode(array('success' => false, 'errors' => '<div class="error inline"><p>' . __('Security check', 'wp_all_import_plugin') . '</p></div>')) );
+	}
+	
+	$input = new PMXI_Input();
+
+	$post = $input->post(array(
+		'type' => '',
+		'file' => ''
+	));		
 
 	$response = array(
 		'success' => true,
@@ -10,11 +24,26 @@ function pmxi_wp_ajax_upload_resource(){
 		'filesize' => 0
 	);
 
-	if ($type == 'url'){
+	if ($post['type'] == 'url'){
+
+		$filesXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<data><node></node></data>";
+
+		$files = XmlImportParser::factory($filesXML, '/data/node', $post['file'], $file)->parse(); $tmp_files[] = $file;	
+
+		foreach ($tmp_files as $tmp_file) { // remove all temporary files created
+			@unlink($tmp_file);
+		}
+
+		$file_to_import = $post['file'];
+
+		if ( ! empty($files) and is_array($files) )
+		{
+			$file_to_import = array_shift($files);
+		}
 
 		$errors = new WP_Error;
-		$uploader = new PMXI_Upload(trim($file), $errors);			
-		$upload_result = $uploader->url();			
+		$uploader = new PMXI_Upload(trim($file_to_import), $errors);			
+		$upload_result = $uploader->url('', $post['file']);			
 
 		if ($upload_result instanceof WP_Error){
 			$errors = $upload_result;

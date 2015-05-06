@@ -1,5 +1,13 @@
 <?php
 function pmxi_wp_ajax_auto_detect_cf(){
+
+	if ( ! check_ajax_referer( 'wp_all_import_secure', 'security', false )){
+		exit( json_encode(array('result' => array(), 'msg' => __('Security check', 'wp_all_import_plugin'))) );
+	}
+
+	if ( ! current_user_can('manage_options') ){
+		exit( json_encode(array('result' => array(), 'msg' => __('Security check', 'wp_all_import_plugin'))) );
+	}
 	
 	$input = new PMXI_Input();
 	$fields = $input->post('fields', array());

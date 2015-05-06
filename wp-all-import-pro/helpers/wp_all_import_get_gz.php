@@ -4,7 +4,7 @@ if ( ! function_exists('wp_all_import_get_gz')){
 
 		$type = 'csv';
 		$uploads = wp_upload_dir();	
-		$targetDir = (!$targetDir) ? wp_all_import_secure_file($uploads['basedir'] . '/wpallimport/uploads', 'uploads') : $targetDir;
+		$targetDir = ( ! $targetDir ) ? wp_all_import_secure_file($uploads['basedir'] . DIRECTORY_SEPARATOR . PMXI_Plugin::UPLOADS_DIRECTORY ) : $targetDir;
 
 		$tmpname = wp_unique_filename($targetDir, (strlen(basename($filename)) < 30) ? basename($filename) : time() );	
 		$localPath = $targetDir  .'/'. urldecode(sanitize_file_name($tmpname));
@@ -16,7 +16,7 @@ if ( ! function_exists('wp_all_import_get_gz')){
 	        $first_chunk = true;
 	        while (!gzeof($file)) {
 	            $chunk = gzread($file, 1024);		            
-	            if ($first_chunk and strpos($chunk, "<?") !== false) { $type = 'xml'; $first_chunk = false; } // if it's a 1st chunk, then chunk <? symbols to detect XML file
+	            if ($first_chunk and strpos($chunk, "<?") !== false and strpos($chunk, "</") !== false) { $type = 'xml'; $first_chunk = false; } // if it's a 1st chunk, then chunk <? symbols to detect XML file
 	            @fwrite($fp, $chunk);
 	        }
 	        gzclose($file);
@@ -35,7 +35,7 @@ if ( ! function_exists('wp_all_import_get_gz')){
 			        $first_chunk = true;
 			        while (!gzeof($file)) {
 			            $chunk = gzread($file, 1024);			            
-			            if ($first_chunk and strpos($chunk, "<?") !== false) { $type = 'xml'; $first_chunk = false; } // if it's a 1st chunk, then chunk <? symbols to detect XML file
+			            if ($first_chunk and strpos($chunk, "<?") !== false and strpos($chunk, "</") !== false) { $type = 'xml'; $first_chunk = false; } // if it's a 1st chunk, then chunk <? symbols to detect XML file
 			            @fwrite($fp, $chunk);
 			        }
 			        gzclose($file);

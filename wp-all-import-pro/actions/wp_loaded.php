@@ -71,7 +71,7 @@ function pmxi_wp_loaded() {
 									'import_id' => $import->id,
 									'date' => date('Y-m-d H:i:s'),
 									'type' => 'trigger',
-									'summary' => __("triggered by cron", "pmxi_plugin")
+									'summary' => __("triggered by cron", "wp_all_import_plugin")
 								))->save();	
 
 								$logger and call_user_func($logger, sprintf(__('#%s Cron job triggered.', 'wp_all_import_plugin'), $id));
@@ -126,12 +126,12 @@ function pmxi_wp_loaded() {
 									'import_id' => $import->id,
 									'date' => date('Y-m-d H:i:s'),
 									'type' => 'processing',
-									'summary' => __("cron processing", "pmxi_plugin")
+									'summary' => __("cron processing", "wp_all_import_plugin")
 								))->save();	
 
 								if ($log_storage){
 									$wp_uploads = wp_upload_dir();	
-									$log_file = wp_all_import_secure_file( $wp_uploads['basedir'] . "/wpallimport/logs", 'logs', $history_log->id ) . '/' . $history_log->id . '.html';
+									$log_file = wp_all_import_secure_file( $wp_uploads['basedir'] . DIRECTORY_SEPARATOR . PMXI_Plugin::LOGS_DIRECTORY, $history_log->id ) . DIRECTORY_SEPARATOR . $history_log->id . '.html';
 									if ( @file_exists($log_file) ) wp_all_import_remove_source($log_file, false);	
 								}
 

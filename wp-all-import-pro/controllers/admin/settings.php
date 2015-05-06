@@ -22,7 +22,7 @@ class PMXI_Admin_Settings extends PMXI_Controller_Admin {
 		
 		if ( ! $is_secure_import ){
 
-			self::$path = wp_all_import_secure_file($uploads['basedir'] . '/wpallimport/uploads', 'uploads');
+			self::$path = wp_all_import_secure_file($uploads['basedir'] . DIRECTORY_SEPARATOR . PMXI_Plugin::UPLOADS_DIRECTORY );
 			
 		}
 		else {			
@@ -30,7 +30,7 @@ class PMXI_Admin_Settings extends PMXI_Controller_Admin {
 			self::$path = get_transient( self::$upload_transient );
 
 			if ( empty(self::$path) ) {
-				self::$path = wp_all_import_secure_file($uploads['basedir'] . '/wpallimport/uploads', 'uploads');
+				self::$path = wp_all_import_secure_file($uploads['basedir'] . DIRECTORY_SEPARATOR . PMXI_Plugin::UPLOADS_DIRECTORY );
 				set_transient( self::$upload_transient, self::$path);
 			}
 
@@ -94,6 +94,8 @@ class PMXI_Admin_Settings extends PMXI_Controller_Admin {
 
 		if ($this->input->post('is_templates_submitted')) { // delete templates form
 
+			check_admin_referer('delete-templates', '_wpnonce_delete-templates');
+
 			if ($this->input->post('import_templates')){
 
 				if (!empty($_FILES)){
@@ -156,7 +158,7 @@ class PMXI_Admin_Settings extends PMXI_Controller_Admin {
 						}	
 						
 						$uploads = wp_upload_dir();
-						$targetDir = $uploads['basedir'] . '/wpallimport/uploads';
+						$targetDir = $uploads['basedir'] . DIRECTORY_SEPARATOR . PMXI_Plugin::UPLOADS_DIRECTORY;
 						$export_file_name = "templates_".uniqid().".txt";
 						file_put_contents($targetDir . DIRECTORY_SEPARATOR . $export_file_name, json_encode($export_data));
 						
@@ -195,10 +197,10 @@ class PMXI_Admin_Settings extends PMXI_Controller_Admin {
 							'edd_action'=> 'activate_license', 
 							'license' 	=> $options['licenses'][$class], 
 							'item_name' => urlencode( $product_name ) // the name of our product in EDD
-						);
+						);						
 						
 						// Call the custom API.
-						$response = wp_remote_get( add_query_arg( $api_params, $options['info_api_url'] ), array( 'timeout' => 15, 'sslverify' => false ) );
+						$response = wp_remote_get( add_query_arg( $api_params, $options['info_api_url'] ), array( 'timeout' => 15, 'sslverify' => false ) );						
 
 						// make sure the response came back okay
 						if ( is_wp_error( $response ) )
@@ -252,14 +254,7 @@ class PMXI_Admin_Settings extends PMXI_Controller_Admin {
 				$license_data = json_decode( wp_remote_retrieve_body( $response ) );
 
 				return $license_data->license;
-
-				/*if( $license_data->license == 'valid' ) {
-					return true;
 				
-				} else {
-					return false;
-				
-				}*/
 			}
 		}
 
@@ -273,7 +268,7 @@ class PMXI_Admin_Settings extends PMXI_Controller_Admin {
 
 		$wp_uploads = wp_upload_dir();
 
-		$dir = $wp_uploads['basedir'] . '/wpallimport/temp';
+		$dir = $wp_uploads['basedir'] . DIRECTORY_SEPARATOR . PMXI_Plugin::TEMP_DIRECTORY;
 
 		$cacheDir = PMXI_Plugin::ROOT_DIR . '/libraries/cache';
 
@@ -303,6 +298,14 @@ class PMXI_Admin_Settings extends PMXI_Controller_Admin {
 	}
 	
 	public function meta_values(){
+
+		if ( ! PMXI_Plugin::getInstance()->getAdminCurrentScreen()->is_ajax) { // call is only valid when send with ajax
+			exit('nice try!');
+		}				
+
+		if ( ! check_ajax_referer( 'wp_all_import_secure', 'security', false ) ){
+			exit( json_encode(array('meta_values' => array())) );
+		}
 
 		global $wpdb;
 
@@ -334,7 +337,11 @@ class PMXI_Admin_Settings extends PMXI_Controller_Admin {
 	 * License: http://www.plupload.com/license
 	 * Contributing: http://www.plupload.com/contributing
 	 */
-	public function upload(){	
+	public function upload(){			
+
+		if ( ! check_ajax_referer( 'wp_all_import_secure', '_wpnonce', false )){
+			exit(json_encode(array("jsonrpc" => "2.0", "error" => array("code" => 100, "message" => __('Security check', 'wp_all_import_plugin')), "id" => "id")));
+		}
 		
 		// HTTP headers for no cache etc
 		header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
@@ -347,11 +354,11 @@ class PMXI_Admin_Settings extends PMXI_Controller_Admin {
 		//$targetDir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
 		//$uploads = wp_upload_dir();	
 
-		$targetDir = self::$path;//wp_all_import_secure_file($uploads['basedir'] . '/wpallimport/uploads', 'uploads');
+		$targetDir = self::$path;
 
 		if (! is_dir($targetDir) || ! is_writable($targetDir)){
 			delete_transient( self::$upload_transient );
-			exit(json_encode(array("jsonrpc" => "2.0", "error" => array("code" => 100, "message" => __("Uploads folder is not writable.", "pmxi_plugin")), "id" => "id")));
+			exit(json_encode(array("jsonrpc" => "2.0", "error" => array("code" => 100, "message" => __("Uploads folder is not writable.", "wp_all_import_plugin")), "id" => "id")));
 		}
 
 		$cleanupTargetDir = true; // Remove old files
@@ -370,6 +377,10 @@ class PMXI_Admin_Settings extends PMXI_Controller_Admin {
 
 		// Clean the fileName for security reasons
 		$fileName = preg_replace('/[^\w\._]+/', '_', $fileName);
+
+		if ( ! preg_match('%\W(xml|gzip|zip|csv|gz|json|txt|dat|psv|sql)$%i', trim(basename($fileName)))) {	
+			exit(json_encode(array("jsonrpc" => "2.0", "error" => array("code" => 100, "message" => __("Uploaded file must be XML, CSV, ZIP, GZIP, GZ, JSON, SQL, TXT, DAT or PSV", "wp_all_import_plugin")), "id" => "id")));
+		}
 
 		// Make sure the fileName is unique but only if chunking is disabled
 		if ($chunks < 2 && file_exists($targetDir . DIRECTORY_SEPARATOR . $fileName)) {
@@ -404,7 +415,7 @@ class PMXI_Admin_Settings extends PMXI_Controller_Admin {
 			closedir($dir);
 		} else{
 			delete_transient( self::$upload_transient );
-			exit(json_encode(array("jsonrpc" => "2.0", "error" => array("code" => 100, "message" => __("Failed to open temp directory.", "pmxi_plugin")), "id" => "id")));
+			exit(json_encode(array("jsonrpc" => "2.0", "error" => array("code" => 100, "message" => __("Failed to open temp directory.", "wp_all_import_plugin")), "id" => "id")));
 		}
 			
 
@@ -429,18 +440,18 @@ class PMXI_Admin_Settings extends PMXI_Controller_Admin {
 							fwrite($out, $buff);
 					} else{
 						delete_transient( self::$upload_transient );
-						exit(json_encode(array("jsonrpc" => "2.0", "error" => array("code" => 101, "message" => __("Failed to open input stream.", "pmxi_plugin")), "id" => "id")));
+						exit(json_encode(array("jsonrpc" => "2.0", "error" => array("code" => 101, "message" => __("Failed to open input stream.", "wp_all_import_plugin")), "id" => "id")));
 					}
 					fclose($in);
 					fclose($out);
 					@unlink($_FILES['file']['tmp_name']);
 				} else{
 					delete_transient( self::$upload_transient );					
-					exit(json_encode(array("jsonrpc" => "2.0", "error" => array("code" => 102, "message" => __("Failed to open output stream.", "pmxi_plugin")), "id" => "id")));
+					exit(json_encode(array("jsonrpc" => "2.0", "error" => array("code" => 102, "message" => __("Failed to open output stream.", "wp_all_import_plugin")), "id" => "id")));
 				}
 			} else{
 				delete_transient( self::$upload_transient );
-				exit(json_encode(array("jsonrpc" => "2.0", "error" => array("code" => 103, "message" => __("Failed to move uploaded file.", "pmxi_plugin")), "id" => "id")));
+				exit(json_encode(array("jsonrpc" => "2.0", "error" => array("code" => 103, "message" => __("Failed to move uploaded file.", "wp_all_import_plugin")), "id" => "id")));
 			}
 		} else {
 			// Open temp file
@@ -454,14 +465,14 @@ class PMXI_Admin_Settings extends PMXI_Controller_Admin {
 						fwrite($out, $buff);
 				} else{
 					delete_transient( self::$upload_transient );
-					exit(json_encode(array("jsonrpc" => "2.0", "error" => array("code" => 101, "message" => __("Failed to open input stream.", "pmxi_plugin")), "id" => "id")));
+					exit(json_encode(array("jsonrpc" => "2.0", "error" => array("code" => 101, "message" => __("Failed to open input stream.", "wp_all_import_plugin")), "id" => "id")));
 				}
 
 				fclose($in);
 				fclose($out);
 			} else{
 				delete_transient( self::$upload_transient );
-				exit(json_encode(array("jsonrpc" => "2.0", "error" => array("code" => 102, "message" => __("Failed to open output stream.", "pmxi_plugin")), "id" => "id")));
+				exit(json_encode(array("jsonrpc" => "2.0", "error" => array("code" => 102, "message" => __("Failed to open output stream.", "wp_all_import_plugin")), "id" => "id")));
 			}
 		}
 
@@ -532,6 +543,8 @@ class PMXI_Admin_Settings extends PMXI_Controller_Admin {
 				}
 
 				unset($file);
+
+				//@unlink($upload_result['filePath']);
 				
 				if ( ! $is_valid )
 				{
@@ -553,9 +566,5 @@ class PMXI_Admin_Settings extends PMXI_Controller_Admin {
 		exit(json_encode(array("jsonrpc" => "2.0", "error" => null, "result" => null, "id" => "id", "name" => $filePath)));
 
 	}		
-
-	public function download(){
-		PMXI_download::csv(PMXI_Plugin::ROOT_DIR.'/logs/'.$_GET['file'].'.txt');
-	}
 
 }

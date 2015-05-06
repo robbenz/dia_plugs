@@ -1,4 +1,4 @@
-<form class="settings" method="post" action="<?php echo $this->baseUrl ?>" enctype="multipart/form-data">
+<form class="settings" method="post" action="" enctype="multipart/form-data">
 
 	<div class="wpallimport-header">
 		<div class="wpallimport-logo"></div>
@@ -17,6 +17,7 @@
 		
 		<h3><?php _e('Import/Export Templates', 'wp_all_import_plugin') ?></h3>
 		<?php $templates = new PMXI_Template_List(); $templates->getBy()->convertRecords() ?>
+		<?php wp_nonce_field('delete-templates', '_wpnonce_delete-templates') ?>				
 		<?php if ($templates->total()): ?>
 			<table>
 				<?php foreach ($templates as $t): ?>
@@ -27,8 +28,7 @@
 					</tr>
 				<?php endforeach ?>
 			</table>
-			<p class="submit-buttons">
-				<?php wp_nonce_field('delete-templates', '_wpnonce_delete-templates') ?>		
+			<p class="submit-buttons">				
 				<input type="submit" class="button-primary" name="delete_templates" value="<?php _e('Delete Selected', 'wp_all_import_plugin') ?>" />
 				<input type="submit" class="button-primary" name="export_templates" value="<?php _e('Export Selected', 'wp_all_import_plugin') ?>" />
 			</p>	
@@ -44,7 +44,7 @@
 
 </form>
 
-<form name="settings" method="post" action="<?php echo $this->baseUrl ?>" class="settings">
+<form name="settings" method="post" action="" class="settings">
 
 	<h3><?php _e('Cron Imports', 'wp_all_import_plugin') ?></h3>
 	
@@ -92,7 +92,7 @@
 						<?php
 							$wp_uploads = wp_upload_dir();
 						?>
-						<?php printf(__('Imported files, chunks, logs and temporary files will be placed in a folder with a randomized name inside of %s.', 'wp_all_import_plugin'), $wp_uploads['basedir'] . '/wpallimport' ); ?>
+						<?php printf(__('Imported files, chunks, logs and temporary files will be placed in a folder with a randomized name inside of %s.', 'wp_all_import_plugin'), $wp_uploads['basedir'] . DIRECTORY_SEPARATOR . WP_ALL_IMPORT_UPLOADS_BASE_DIRECTORY ); ?>
 					</p>
 				</td>
 			</tr>

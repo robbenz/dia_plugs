@@ -84,23 +84,25 @@ $l10n = array(
 							<div class="wpallimport-file-type-options">								
 								
 								<?php
+									$files_directory = DIRECTORY_SEPARATOR . PMXI_Plugin::FILES_DIRECTORY . DIRECTORY_SEPARATOR;
+
 									$local_files = array_merge(
-										PMXI_Helper::safe_glob($upload_dir['basedir'] . '/wpallimport/files/*.xml', PMXI_Helper::GLOB_RECURSE),
-										PMXI_Helper::safe_glob($upload_dir['basedir'] . '/wpallimport/files/*.gz', PMXI_Helper::GLOB_RECURSE),
-										PMXI_Helper::safe_glob($upload_dir['basedir'] . '/wpallimport/files/*.zip', PMXI_Helper::GLOB_RECURSE),
-										PMXI_Helper::safe_glob($upload_dir['basedir'] . '/wpallimport/files/*.gzip', PMXI_Helper::GLOB_RECURSE),
-										PMXI_Helper::safe_glob($upload_dir['basedir'] . '/wpallimport/files/*.csv', PMXI_Helper::GLOB_RECURSE),
-										PMXI_Helper::safe_glob($upload_dir['basedir'] . '/wpallimport/files/*.dat', PMXI_Helper::GLOB_RECURSE),
-										PMXI_Helper::safe_glob($upload_dir['basedir'] . '/wpallimport/files/*.psv', PMXI_Helper::GLOB_RECURSE),
-										PMXI_Helper::safe_glob($upload_dir['basedir'] . '/wpallimport/files/*.json', PMXI_Helper::GLOB_RECURSE),
-										PMXI_Helper::safe_glob($upload_dir['basedir'] . '/wpallimport/files/*.txt', PMXI_Helper::GLOB_RECURSE),
-										PMXI_Helper::safe_glob($upload_dir['basedir'] . '/wpallimport/files/*.sql', PMXI_Helper::GLOB_RECURSE)
+										PMXI_Helper::safe_glob($upload_dir['basedir'] . $files_directory . '*.xml', PMXI_Helper::GLOB_NODIR),
+										PMXI_Helper::safe_glob($upload_dir['basedir'] . $files_directory . '*.gz', PMXI_Helper::GLOB_NODIR),
+										PMXI_Helper::safe_glob($upload_dir['basedir'] . $files_directory . '*.zip', PMXI_Helper::GLOB_NODIR),
+										PMXI_Helper::safe_glob($upload_dir['basedir'] . $files_directory . '*.gzip', PMXI_Helper::GLOB_NODIR),
+										PMXI_Helper::safe_glob($upload_dir['basedir'] . $files_directory . '*.csv', PMXI_Helper::GLOB_NODIR),
+										PMXI_Helper::safe_glob($upload_dir['basedir'] . $files_directory . '*.dat', PMXI_Helper::GLOB_NODIR),
+										PMXI_Helper::safe_glob($upload_dir['basedir'] . $files_directory . '*.psv', PMXI_Helper::GLOB_NODIR),
+										PMXI_Helper::safe_glob($upload_dir['basedir'] . $files_directory . '*.json', PMXI_Helper::GLOB_NODIR),
+										PMXI_Helper::safe_glob($upload_dir['basedir'] . $files_directory . '*.txt', PMXI_Helper::GLOB_NODIR),
+										PMXI_Helper::safe_glob($upload_dir['basedir'] . $files_directory . '*.sql', PMXI_Helper::GLOB_NODIR)
 									);
 									sort($local_files);
 									$sizes = array();
 									if ( ! empty($local_files)){
 										foreach ($local_files as $file) {
-											$sizes[] = filesize($upload_dir['basedir'] . '/wpallimport/files/' . $file);
+											$sizes[] = filesize($upload_dir['basedir'] . $files_directory . $file);
 										}
 									}
 								?>
@@ -121,7 +123,7 @@ $l10n = array(
 									var existing_file_sizes = <?php echo json_encode($sizes) ?>;
 								</script>
 								<div class="wpallimport-note" style="width:60%; margin: 0 auto; ">
-									<?php printf(__('Upload files to <strong>%s</strong> and they will appear in this list', 'wp_all_import_plugin'), $upload_dir['basedir'] . '/wpallimport/files') ?>
+									<?php printf(__('Upload files to <strong>%s</strong> and they will appear in this list', 'wp_all_import_plugin'), $upload_dir['basedir'] . $files_directory) ?>
 								</div>
 							</div>
 						</div>						

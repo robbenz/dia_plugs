@@ -197,7 +197,7 @@ final class XmlImportTemplateScanner
   {
     $accum = $input->read();    
     while (($ch = $input->peek()) !== false)
-    {      
+    {            
       if ($ch == '{' && $accum[strlen($accum) - 1] != "\\")
       {
         $this->currentState = XmlImportTemplateScanner::STATE_XPATH;
@@ -207,7 +207,7 @@ final class XmlImportTemplateScanner
       }
       elseif ($ch == '[' && $accum[strlen($accum) - 1] != "\\")
       {                   
-        $this->previous_ch = '[';
+        
         $this->currentState = XmlImportTemplateScanner::STATE_LANG;
         $this->isLangBegin = true;
         //omit [
@@ -216,10 +216,11 @@ final class XmlImportTemplateScanner
       }
       elseif ($accum == '/' && $this->previous_ch == "["){        
         $accum = "[" . $accum . $input->read();
-        $this->previous_ch = false;
+        //$this->previous_ch = false;
       }
       else
         $accum .= $input->read();
+      $this->previous_ch = $ch;
     }
     $accum = str_replace(array("\\[", "\\{"), array('[', '{'), $accum);
     return new XmlImportToken(XmlImportToken::KIND_TEXT, $accum);

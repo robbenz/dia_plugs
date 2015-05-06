@@ -13,7 +13,7 @@ if ( ! function_exists('wp_all_import_get_url')){
 
 		$uploads = wp_upload_dir();
 		
-		$targetDir = ( ! $targetDir ) ? wp_all_import_secure_file($uploads['basedir'] . '/wpallimport/uploads', 'uploads') : $targetDir;
+		$targetDir = ( ! $targetDir ) ? wp_all_import_secure_file($uploads['basedir'] . DIRECTORY_SEPARATOR . PMXI_Plugin::UPLOADS_DIRECTORY) : $targetDir;
 
 		$tmpname   = wp_unique_filename($targetDir, ($type and strlen(basename($filePath)) < 30) ? basename($filePath) : time());	
 		$localPath = $targetDir  .'/'. urldecode(sanitize_file_name($tmpname)) . ((!$type) ? '.tmp' : '');							

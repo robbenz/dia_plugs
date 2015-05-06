@@ -52,18 +52,7 @@ $l10n = array(
 				
 				<?php if ($this->errors->get_error_codes()): ?>
 					<?php $this->error() ?>
-				<?php endif ?>
-
-				<?php
-					if ( ! $reimported_import->isEmpty()):
-					?>
-						<div class="wpallimport-reimported-notify">
-							<p><?php _e( 'You are importing a new file for: <b>' . $reimported_import->name . '</b>' , 'wp_all_import_plugin' );?></p>
-							<p><span><?php _e( 'Last imported on ' . date("m-d-Y H:i:s", strtotime($reimported_import->registered_on)) , 'wp_all_import_plugin' ); ?></span></p>
-						</div>
-					<?php
-					endif;
-				?>
+				<?php endif ?>				
 
 				<?php //do_action('pmxi_choose_file_header'); ?>
 
@@ -71,14 +60,17 @@ $l10n = array(
 		        	
 		        	<div class="wpallimport-upload-resource-step-one">
 
-						<input type="hidden" name="is_submitted" value="1" />
-
-						<?php wp_nonce_field('upload-xml', '_wpnonce_upload-xml') ?>
+						<input type="hidden" name="is_submitted" value="1" />						
 						
 						<div class="clear"></div>											
 						
 						<div class="wpallimport-import-types">
+							<?php if (empty($_GET['deligate'])): ?>	
 							<h2><?php _e('First, specify how you want to import your data', 'wp_all_import_plugin'); ?></h2>
+							<?php else: ?>
+							<h2 style="margin-bottom: 10px;"><?php _e('First, specify previously exported file', 'wp_all_import_plugin'); ?></h2>
+							<h2 class="wp_all_import_subheadline"><?php _e('The data in this file can be modified, but the structure of the file (column/element names) should not change.', 'wp_all_import_plugin'); ?></h2>
+							<?php endif; ?>
 							<a class="wpallimport-import-from wpallimport-upload-type <?php echo ('upload' == $post['type'] and ! empty($_POST)) ? 'selected' : '' ?>" rel="upload_type" href="javascript:void(0);">
 								<span class="wpallimport-icon"></span>
 								<span class="wpallimport-icon-label"><?php _e('Upload a file', 'wp_all_import_plugin'); ?></span>
@@ -92,7 +84,7 @@ $l10n = array(
 								<span class="wpallimport-icon-label"><?php _e('Use existing file', 'wp_all_import_plugin'); ?></span>
 							</a>
 						</div>
-						
+												
 						<input type="hidden" value="<?php echo $post['type']; ?>" name="type"/>
 
 						<div class="wpallimport-upload-type-container" rel="upload_type">						
@@ -126,23 +118,25 @@ $l10n = array(
 							<div class="wpallimport-file-type-options">
 								
 								<?php
+									$files_directory = DIRECTORY_SEPARATOR . PMXI_Plugin::FILES_DIRECTORY . DIRECTORY_SEPARATOR;
+
 									$local_files = array_merge(
-										PMXI_Helper::safe_glob($upload_dir['basedir'] . '/wpallimport/files/*.xml', PMXI_Helper::GLOB_RECURSE),
-										PMXI_Helper::safe_glob($upload_dir['basedir'] . '/wpallimport/files/*.gz', PMXI_Helper::GLOB_RECURSE),
-										PMXI_Helper::safe_glob($upload_dir['basedir'] . '/wpallimport/files/*.zip', PMXI_Helper::GLOB_RECURSE),
-										PMXI_Helper::safe_glob($upload_dir['basedir'] . '/wpallimport/files/*.gzip', PMXI_Helper::GLOB_RECURSE),
-										PMXI_Helper::safe_glob($upload_dir['basedir'] . '/wpallimport/files/*.csv', PMXI_Helper::GLOB_RECURSE),
-										PMXI_Helper::safe_glob($upload_dir['basedir'] . '/wpallimport/files/*.dat', PMXI_Helper::GLOB_RECURSE),
-										PMXI_Helper::safe_glob($upload_dir['basedir'] . '/wpallimport/files/*.psv', PMXI_Helper::GLOB_RECURSE),
-										PMXI_Helper::safe_glob($upload_dir['basedir'] . '/wpallimport/files/*.json', PMXI_Helper::GLOB_RECURSE),
-										PMXI_Helper::safe_glob($upload_dir['basedir'] . '/wpallimport/files/*.txt', PMXI_Helper::GLOB_RECURSE),
-										PMXI_Helper::safe_glob($upload_dir['basedir'] . '/wpallimport/files/*.sql', PMXI_Helper::GLOB_RECURSE)
+										PMXI_Helper::safe_glob($upload_dir['basedir'] . $files_directory . '*.xml', PMXI_Helper::GLOB_NODIR),
+										PMXI_Helper::safe_glob($upload_dir['basedir'] . $files_directory . '*.gz', PMXI_Helper::GLOB_NODIR),
+										PMXI_Helper::safe_glob($upload_dir['basedir'] . $files_directory . '*.zip', PMXI_Helper::GLOB_NODIR),
+										PMXI_Helper::safe_glob($upload_dir['basedir'] . $files_directory . '*.gzip', PMXI_Helper::GLOB_NODIR),
+										PMXI_Helper::safe_glob($upload_dir['basedir'] . $files_directory . '*.csv', PMXI_Helper::GLOB_NODIR),
+										PMXI_Helper::safe_glob($upload_dir['basedir'] . $files_directory . '*.dat', PMXI_Helper::GLOB_NODIR),
+										PMXI_Helper::safe_glob($upload_dir['basedir'] . $files_directory . '*.psv', PMXI_Helper::GLOB_NODIR),
+										PMXI_Helper::safe_glob($upload_dir['basedir'] . $files_directory . '*.json', PMXI_Helper::GLOB_NODIR),
+										PMXI_Helper::safe_glob($upload_dir['basedir'] . $files_directory . '*.txt', PMXI_Helper::GLOB_NODIR),
+										PMXI_Helper::safe_glob($upload_dir['basedir'] . $files_directory . '*.sql', PMXI_Helper::GLOB_NODIR)
 									);
 									sort($local_files);
 									$sizes = array();
 									if ( ! empty($local_files)){
 										foreach ($local_files as $file) {
-											$sizes[] = filesize($upload_dir['basedir'] . '/wpallimport/files/' . $file);
+											$sizes[] = filesize($upload_dir['basedir'] . $files_directory . $file);
 										}
 									}
 								?>
@@ -160,89 +154,91 @@ $l10n = array(
 								<input type="hidden" name="file" value="<?php echo esc_attr($post['file']); ?>"/>									
 								
 								<div class="wpallimport-note" style="margin: 0 auto; font-size: 13px;">
-									<?php printf(__('Upload files to <strong>%s</strong> and they will appear in this list', 'wp_all_import_plugin'), $upload_dir['basedir'] . '/wpallimport/files') ?>
+									<?php printf(__('Upload files to <strong>%s</strong> and they will appear in this list', 'wp_all_import_plugin'), $upload_dir['basedir'] . $files_directory) ?>
 								</div>
 							</div>
 						</div>		
 						<div id="wpallimport-url-upload-status"></div>				
 
+						<?php if (empty($_GET['deligate'])): ?>	
+						
 						<div class="wpallimport-upload-resource-step-two">
 						
-						<div class="wpallimport-choose-post-type">
+							<div class="wpallimport-choose-post-type">
 
-							<input type="hidden" name="wizard_type" value="<?php echo $post['wizard_type']; ?>"/>
+								<input type="hidden" name="wizard_type" value="<?php echo $post['wizard_type']; ?>"/>
 
-							<h2 style="margin-top:0;"><?php _e('Import data from this file into...', 'wp_all_import_plugin'); ?></h2>
-							
-							<div class="wpallimport-choose-data-type">
-								<a class="wpallimport-import-to rad4 wpallimport-to-new-items <?php if ($post['wizard_type'] == 'new') echo 'wpallimport-import-to-checked'; ?>" rel="new" href="javascript:void(0);">
-									<span class="wpallimport-import-to-title"><?php _e('New Items', 'wp_all_import_plugin'); ?></span>
-									<span class="wpallimport-import-to-arrow"></span>
-								</a>
-								<a class="wpallimport-import-to rad4 wpallimport-to-existing-items <?php if ($post['wizard_type'] == 'matching') echo 'wpallimport-import-to-checked'; ?>" rel="matching" href="javascript:void(0);">
-									<span class="wpallimport-import-to-title"><?php _e('Existing Items', 'wp_all_import_plugin'); ?></span>
-									<span class="wpallimport-import-to-arrow"></span>
-								</a>
-							</div>
-
-							<?php
+								<h2 style="margin-top:0;"><?php _e('Import data from this file into...', 'wp_all_import_plugin'); ?></h2>
 								
-								$custom_types = get_post_types(array('_builtin' => true), 'objects') + get_post_types(array('_builtin' => false, 'show_ui' => true), 'objects'); 
-								foreach ($custom_types as $key => $ct) {
-									if (in_array($key, array('attachment', 'revision', 'nav_menu_item'))) unset($custom_types[$key]);
-								}
-								$custom_types = apply_filters( 'pmxi_custom_types', $custom_types );
-
-								$hidden_post_types = get_post_types(array('_builtin' => false, 'show_ui' => false), 'objects');
-								foreach ($hidden_post_types as $key => $ct) {
-									if (in_array($key, array('attachment', 'revision', 'nav_menu_item'))) unset($hidden_post_types[$key]);
-								}
-								$hidden_post_types = apply_filters( 'pmxi_custom_types', $hidden_post_types );
-
-							?>	
-							<div class="wpallimport-choose-import-direction">
-								<div class="wpallimport-extra-text-left">
-									<div class="wpallimport-new-records"><?php _e('Create new', 'wp_all_import_plugin'); ?></div>
-									<div class="wpallimport-existing-records"><?php _e('Import to existing', 'wp_all_import_plugin'); ?></div>
+								<div class="wpallimport-choose-data-type">
+									<a class="wpallimport-import-to rad4 wpallimport-to-new-items <?php if ($post['wizard_type'] == 'new') echo 'wpallimport-import-to-checked'; ?>" rel="new" href="javascript:void(0);">
+										<span class="wpallimport-import-to-title"><?php _e('New Items', 'wp_all_import_plugin'); ?></span>
+										<span class="wpallimport-import-to-arrow"></span>
+									</a>
+									<a class="wpallimport-import-to rad4 wpallimport-to-existing-items <?php if ($post['wizard_type'] == 'matching') echo 'wpallimport-import-to-checked'; ?>" rel="matching" href="javascript:void(0);">
+										<span class="wpallimport-import-to-title"><?php _e('Existing Items', 'wp_all_import_plugin'); ?></span>
+										<span class="wpallimport-import-to-arrow"></span>
+									</a>
 								</div>
-								<div class="wpallimport-extra-text-right">
-									<div class="wpallimport-new-records"><?php _e('for each record in my data file.', 'wp_all_import_plugin'); ?></div>
-									<div class="wpallimport-existing-records"><?php _e('and update some or all of their data.', 'wp_all_import_plugin'); ?>
-										<a class="wpallimport-help" href="#help" style="position: relative; top: -2px;" original-title="The Existing Items option is commonly used to update existing products with new stock quantities while leaving all their other data alone, update properties on your site with new pricing, etc. <br/><br/> In Step 4, you will map the records in your file to the existing items on your site and specify which data points will be updated and which will be left alone.">?</a>								
+
+								<?php
+									
+									$custom_types = get_post_types(array('_builtin' => true), 'objects') + get_post_types(array('_builtin' => false, 'show_ui' => true), 'objects'); 
+									foreach ($custom_types as $key => $ct) {
+										if (in_array($key, array('attachment', 'revision', 'nav_menu_item'))) unset($custom_types[$key]);
+									}
+									$custom_types = apply_filters( 'pmxi_custom_types', $custom_types );
+
+									$hidden_post_types = get_post_types(array('_builtin' => false, 'show_ui' => false), 'objects');
+									foreach ($hidden_post_types as $key => $ct) {
+										if (in_array($key, array('attachment', 'revision', 'nav_menu_item'))) unset($hidden_post_types[$key]);
+									}
+									$hidden_post_types = apply_filters( 'pmxi_custom_types', $hidden_post_types );
+
+								?>	
+								<div class="wpallimport-choose-import-direction">
+									<div class="wpallimport-extra-text-left">
+										<div class="wpallimport-new-records"><?php _e('Create new', 'wp_all_import_plugin'); ?></div>
+										<div class="wpallimport-existing-records"><?php _e('Import to existing', 'wp_all_import_plugin'); ?></div>
 									</div>
+									<div class="wpallimport-extra-text-right">
+										<div class="wpallimport-new-records"><?php _e('for each record in my data file.', 'wp_all_import_plugin'); ?></div>
+										<div class="wpallimport-existing-records"><?php _e('and update some or all of their data.', 'wp_all_import_plugin'); ?>
+											<a class="wpallimport-help" href="#help" style="position: relative; top: -2px;" original-title="The Existing Items option is commonly used to update existing products with new stock quantities while leaving all their other data alone, update properties on your site with new pricing, etc. <br/><br/> In Step 4, you will map the records in your file to the existing items on your site and specify which data points will be updated and which will be left alone.">?</a>								
+										</div>
+									</div>
+									<select name="custom_type_selector" id="custom_type_selector" class="wpallimport-post-types">								
+										<?php if ( ! empty($custom_types)): ?>							
+											<?php foreach ($custom_types as $key => $cpt) :?>	
+												<?php 
+													$image_src = 'dashicon-cpt';
+													if (  in_array($key, array('post', 'page', 'product', 'import_users') ) )
+														$image_src = 'dashicon-' . $key;										
+												?>
+											<option value="<?php echo $key; ?>" data-imagesrc="dashicon <?php echo $image_src; ?>"><?php echo $cpt->labels->name; ?></option>
+											<?php endforeach; ?>
+										<?php endif; ?>
+										<?php if ( ! empty($hidden_post_types)): ?>							
+											<?php foreach ($hidden_post_types as $key => $cpt) :?>	
+												<?php 
+													$image_src = 'dashicon-cpt';
+													if (  in_array($key, array('post', 'page', 'product') ) )
+														$image_src = 'dashicon-' . $key;
+												?>
+											<option value="<?php echo $key; ?>" data-imagesrc="dashicon <?php echo $image_src; ?>"><?php echo $cpt->labels->name; ?></option>								
+											<?php endforeach; ?>
+										<?php endif; ?>			
+									</select>							
 								</div>
-								<select name="custom_type_selector" id="custom_type_selector" class="wpallimport-post-types">								
-									<?php if ( ! empty($custom_types)): ?>							
-										<?php foreach ($custom_types as $key => $cpt) :?>	
-											<?php 
-												$image_src = 'dashicon-cpt';
-												if (  in_array($key, array('post', 'page', 'product', 'import_users') ) )
-													$image_src = 'dashicon-' . $key;										
-											?>
-										<option value="<?php echo $key; ?>" data-imagesrc="dashicon <?php echo $image_src; ?>"><?php echo $cpt->labels->name; ?></option>
-										<?php endforeach; ?>
-									<?php endif; ?>
-									<?php if ( ! empty($hidden_post_types)): ?>							
-										<?php foreach ($hidden_post_types as $key => $cpt) :?>	
-											<?php 
-												$image_src = 'dashicon-cpt';
-												if (  in_array($key, array('post', 'page', 'product') ) )
-													$image_src = 'dashicon-' . $key;
-											?>
-										<option value="<?php echo $key; ?>" data-imagesrc="dashicon <?php echo $image_src; ?>"><?php echo $cpt->labels->name; ?></option>								
-										<?php endforeach; ?>
-									<?php endif; ?>			
-								</select>							
-							</div>
-							<div class="clear wpallimport-extra-text-below">
-								<!--div class="wpallimport-existing-records">
-									<p><?php _e('In Step 4, you will map the records in your file to the existing items on your site and specify which data points will be updated and which will be left alone.', 'wp_all_import_plugin'); ?></p>
-									<p><?php _e('The Existing Items option is commonly used to update existing products with new stock quantities while leaving all their other data alone, update properties on your site with new pricing, etc.', 'wp_all_import_plugin'); ?></p>
-								</div-->
+								<div class="clear wpallimport-extra-text-below">
+									<!--div class="wpallimport-existing-records">
+										<p><?php _e('In Step 4, you will map the records in your file to the existing items on your site and specify which data points will be updated and which will be left alone.', 'wp_all_import_plugin'); ?></p>
+										<p><?php _e('The Existing Items option is commonly used to update existing products with new stock quantities while leaving all their other data alone, update properties on your site with new pricing, etc.', 'wp_all_import_plugin'); ?></p>
+									</div-->
+								</div>
 							</div>
 						</div>
-					</div>
-
+						<?php endif; ?>
 					</div>					
 
 					<p class="wpallimport-submit-buttons">

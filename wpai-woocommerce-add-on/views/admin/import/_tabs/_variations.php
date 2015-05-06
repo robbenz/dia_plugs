@@ -682,7 +682,7 @@
 		<p class="form-field wpallimport-radio-field">
 			<input type="radio" id="variation_stock_status_auto" class="switcher" name="variation_stock_status" value="auto" <?php echo 'auto' == $post['variation_stock_status'] ? 'checked="checked"': '' ?>/>
 			<label for="variation_stock_status_auto" style="width:100px;"><?php _e("Set automatically"); ?></label>
-			<a href="#help" class="wpallimport-help" title="<?php _e('Set the stock status to In Stock for positive or blank Stock Qty values, and Out Of Stock if Stock Qty is 0.', 'wp_all_import_plugin') ?>" style="position:relative; top:3px;">?</a>
+			<a href="#help" class="wpallimport-help" title="<?php _e('Set the stock status to In Stock for positive Stock Qty values, and Out Of Stock if Stock Qty is 0 or blank.', 'wp_all_import_plugin') ?>" style="position:relative; top:3px;">?</a>
 		</p>
 		<div class="form-field wpallimport-radio-field">
 			<input type="radio" id="variation_stock_status_xpath" class="switcher" name="variation_stock_status" value="xpath" <?php echo 'xpath' == $post['variation_stock_status'] ? 'checked="checked"': '' ?>/>

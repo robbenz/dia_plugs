@@ -208,7 +208,7 @@ class PMXI_API
 					<div class="input" style="margin: 0px;">
 						<?php $wp_uploads = wp_upload_dir(); ?>																					
 						<input type="radio" name="<?php echo $params['addon_prefix'];?>[download_image][<?php echo $params['field_key'];?>]" value="no" id="<?php echo sanitize_title($params['field_name']); ?>_no" <?php echo ("yes" != $params['download_image']) ? 'checked="checked"' : '';?>/>
-						<label for="<?php echo sanitize_title($params['field_name']); ?>_no"><?php printf(__('Use image(s) currently uploaded in %s/wpallimport/files/', 'wp_all_import_plugin'), $wp_uploads['basedir']); ?></label>
+						<label for="<?php echo sanitize_title($params['field_name']); ?>_no"><?php printf(__('Use image(s) currently uploaded in %s', 'wp_all_import_plugin'), $wp_uploads['basedir'] . DIRECTORY_SEPARATOR . PMXI_Plugin::FILES_DIRECTORY . DIRECTORY_SEPARATOR); ?></label>
 					</div>						
 					<div class="input">						
 						<input type="text" name="<?php echo $params['field_name']; ?>" style="width:100%;" placeholder="" value="<?php echo esc_attr($params['field_value']); ?>"/>
@@ -241,6 +241,16 @@ class PMXI_API
 		$download_image = true;
 		$result = false;
 
+		global $wpdb;
+
+		$attch = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . $wpdb->posts . " WHERE (post_title = %s OR post_title = %s) AND post_type = %s;", $image_name, preg_replace('/\\.[^.\\s]{3,4}$/', '', $image_name), "attachment" ) );
+
+		if ( $attch != null ){			
+
+			return $attch->ID;
+
+		}	
+
 		$image_filename = wp_unique_filename($targetDir, $image_name);
 		$image_filepath = $targetDir . '/' . $image_filename;		
 
@@ -250,7 +260,7 @@ class PMXI_API
 			$image_filename = $image_name;
 			$image_filepath = $targetDir . '/' . $image_filename;									
 																																																																
-			$wpai_uploads = $uploads['basedir'] . '/wpallimport/files/';
+			$wpai_uploads = $uploads['basedir'] . DIRECTORY_SEPARATOR . PMXI_Plugin::FILES_DIRECTORY . DIRECTORY_SEPARATOR;
 			$wpai_image_path = $wpai_uploads . str_replace('%20', ' ', $url);
 
 			$logger and call_user_func($logger, sprintf(__('- Searching for existing image `%s` in `%s` folder', 'wp_all_import_plugin'), $wpai_image_path, $wpai_uploads));
@@ -280,19 +290,21 @@ class PMXI_API
 				$result = true;
 			}																	
 
-			$url = str_replace(" ", "%20", trim(pmxi_convert_encoding($img_url)));
-			
-			$request = get_file_curl($url, $image_filepath);
+			if (!$result){
+				$url = str_replace(" ", "%20", trim(pmxi_convert_encoding($img_url)));
+				
+				$request = get_file_curl($url, $image_filepath);
 
-			if ( (is_wp_error($request) or $request === false) and ! @file_put_contents($image_filepath, @file_get_contents($url))) {
-				$logger and call_user_func($logger, sprintf(__('- <b>WARNING</b>: File %s cannot be saved locally as %s', 'wp_all_import_plugin'), $url, $image_filepath));				
-				@unlink($image_filepath); // delete file since failed upload may result in empty file created										
-			} elseif( ! ($image_info = @getimagesize($image_filepath)) or ! in_array($image_info[2], array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG))) {
-				$logger and call_user_func($logger, sprintf(__('- <b>WARNING</b>: File %s is not a valid image and cannot be set as featured one', 'wp_all_import_plugin'), $url));		
-				@unlink($image_filepath);
-			} else {				
-				$logger and call_user_func($logger, sprintf(__('- Image `%s` has been successfully downloaded', 'wp_all_import_plugin'), $url));											
-				$result = true;
+				if ( (is_wp_error($request) or $request === false) and ! @file_put_contents($image_filepath, @file_get_contents($url))) {
+					$logger and call_user_func($logger, sprintf(__('- <b>WARNING</b>: File %s cannot be saved locally as %s', 'wp_all_import_plugin'), $url, $image_filepath));				
+					@unlink($image_filepath); // delete file since failed upload may result in empty file created										
+				} elseif( ! ($image_info = @getimagesize($image_filepath)) or ! in_array($image_info[2], array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG))) {
+					$logger and call_user_func($logger, sprintf(__('- <b>WARNING</b>: File %s is not a valid image and cannot be set as featured one', 'wp_all_import_plugin'), $url));		
+					@unlink($image_filepath);
+				} else {				
+					$logger and call_user_func($logger, sprintf(__('- Image `%s` has been successfully downloaded', 'wp_all_import_plugin'), $url));											
+					$result = true;
+				}
 			}			
 		}
 

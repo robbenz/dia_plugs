@@ -62,9 +62,7 @@ $.fn.wplupload  = function($options) {
 			
 			if (r.error !== null){
 
-				$('.wpallimport-choose-file').find('.wpallimport-submit-buttons').hide();										
-				/*$('.wpallimport-choose-file').find('.wpallimport-uploaded-file-name').html('');
-				$('.wpallimport-choose-file').find('.wpallimport-uploaded-file-size').html('');		*/		
+				$('.wpallimport-choose-file').find('.wpallimport-submit-buttons').hide();														
 				$('.wpallimport-import-from.selected').click();
 				$('#wpallimport-url-upload-status').html('');
 
@@ -72,7 +70,7 @@ $.fn.wplupload  = function($options) {
 				$('#progressbar').html('<span></span>');
 				$('#select-files').fadeIn();
 
-				$('.wpallimport-header').next('.clear').after(r.error.message);
+				$('.wpallimport-header').next('.clear').after('<div class="error inline"><p>' + r.error.message + '</p></div>');
 
 			}
 			else{
@@ -83,9 +81,9 @@ $.fn.wplupload  = function($options) {
 
 				setTimeout(function() {
 					
-					$('.wpallimport-choose-file').find('.wpallimport-upload-resource-step-two').slideDown(400, function(){
-						$('.wpallimport-choose-file').find('.wpallimport-submit-buttons').show();			
-					});			
+					$('.wpallimport-choose-file').find('.wpallimport-upload-resource-step-two').slideDown();	
+
+					$('.wpallimport-choose-file').find('.wpallimport-submit-buttons').show();		
 
 					if (r.OK) {					
 

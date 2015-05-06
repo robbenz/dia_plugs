@@ -105,8 +105,8 @@ class XmlImportTemplateCodeGenerator
     }
 	  if ( ! $filename or ! @is_writable($filename) ){
       $uploads  = wp_upload_dir();
-      $targetDir = $uploads['basedir'] . '/wpallimport/temp';
-      $filename = $targetDir . '/' . wp_unique_filename($targetDir, 'tmpfile');
+      $targetDir = $uploads['basedir'] . DIRECTORY_SEPARATOR . PMXI_Plugin::TEMP_DIRECTORY;
+      $filename = $targetDir . DIRECTORY_SEPARATOR . wp_unique_filename($targetDir, 'tmpfile');
     }
     
     file_put_contents($filename, $result);

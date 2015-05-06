@@ -14,7 +14,7 @@ class PMXI_SQLParser{
 		
 		$wp_uploads = wp_upload_dir();		
 
-		$this->targetDir = (!$targetDir) ? wp_all_import_secure_file($wp_uploads['basedir'] . '/wpallimport/uploads', 'uploads') : $targetDir;
+		$this->targetDir = ( ! $targetDir ) ? wp_all_import_secure_file($wp_uploads['basedir'] . DIRECTORY_SEPARATOR . PMXI_Plugin::UPLOADS_DIRECTORY ) : $targetDir;
 	}
 
 	public function parse(){		

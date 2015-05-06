@@ -30,15 +30,23 @@ abstract class PMXI_Controller_Admin extends PMXI_Controller {
 
 		$url = $p_url['scheme'] . '://' . $p_url['host'];
 
-		$port = PMXI_Plugin::getInstance()->getOption('port');
+		if (!empty($_POST['is_settings_submitted'])) { // save settings form			
+			$post = array(
+				'port' => $_POST['port']
+			);
+			PMXI_Plugin::getInstance()->updateOption($post);
+		}
 		
-		if (!empty($port) and is_numeric($port) and ! empty($_GET['page']) and $_GET['page'] != 'pmxi-admin-settings') $url .= ':' . $port;
+		$port = PMXI_Plugin::getInstance()->getOption('port');	
+		
+		if (!empty($port) and is_numeric($port)) $url .= ':' . $port;
 
 		if ($remove) {
 			$this->baseUrl = $url . remove_query_arg($remove);
 		} else {
 			$this->baseUrl = $url . $_SERVER['REQUEST_URI'];
 		}
+		
 		parent::__construct();
 		
 		// add special filter for url fields
@@ -85,7 +93,7 @@ abstract class PMXI_Controller_Admin extends PMXI_Controller {
 		/* load plupload scripts */
 		wp_deregister_script('swfupload-all');
 		wp_deregister_script('swfupload-handlers');
-		wp_enqueue_script('swfupload-handlers', get_option('siteurl') . "/wp-includes/js/swfupload/handlers.js", array('jquery'), '2201-20100523');
+		wp_enqueue_script('swfupload-handlers', site_url() . "/wp-includes/js/swfupload/handlers.js", array('jquery'), '2201-20100523');
 
 		wp_enqueue_script('jquery-browserplus-min', WP_ALL_IMPORT_ROOT_URL . '/static/js/jquery/browserplus-min.js', array('jquery'));
 		wp_enqueue_script('full-plupload', WP_ALL_IMPORT_ROOT_URL . '/static/js/plupload/plupload.full.js', array('jquery-browserplus-min'));

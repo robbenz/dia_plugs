@@ -58,8 +58,8 @@ class XmlImportParser {
 			} catch (Exception $e){ 
 				throw new XmlImportException($e->getMessage());
 			}
-		}
-		
+		}			
+
 		$this->rootNodeXPath = $rootNodeXPath;
 		$this->cachedTemplate = $cachedTemplate;
 	}
@@ -83,7 +83,7 @@ class XmlImportParser {
 	    		
 		for ($i = 0; $i < count($rootNodes); $i++) {
 			if (empty($records) or in_array($i + 1, $records)) {                
-				$rootNode = $rootNodes[$i];				
+				$rootNode = apply_filters('wpallimport_xml_row', $rootNodes[$i]);
 				$template = new XmlImportTemplate($rootNode, $this->cachedTemplate);
 				$result[] = $template->parse();
 			}

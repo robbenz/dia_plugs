@@ -3,34 +3,42 @@
 Plugin Name: WP All Import Pro
 Plugin URI: http://www.wpallimport.com/
 Description: The most powerful solution for importing XML and CSV files to WordPress. Import to Posts, Pages, and Custom Post Types. Support for imports that run on a schedule, ability to update existing imports, and much more.
-Version: 4.0.9
+Version: 4.1.4
 Author: Soflyy
 */
 
-/**
- * Plugin root dir with forward slashes as directory separator regardless of actuall DIRECTORY_SEPARATOR value
- * @var string
- */
-if ( class_exists('PMXI_Plugin') and PMXI_EDITION == "free"){
+if ( ! function_exists( 'is_plugin_active' ) ) {
+	require_once ABSPATH . 'wp-admin/includes/plugin.php';
+}
 
-	function wp_all_import_notice(){
-		
+if ( is_plugin_active('wp-all-import/plugin.php') ){
+
+	function wp_all_import_notice(){		
+
 		?>
 		<div class="error"><p>
 			<?php printf(__('Please de-activate and remove the free version of WP All Import before activating the paid version.', 'wp_all_import_plugin'));
 			?>
 		</p></div>
-		<?php				
+		<?php								
 
-		deactivate_plugins(str_replace('\\', '/', dirname(__FILE__)) . '/plugin.php');
+		deactivate_plugins( str_replace('\\', '/', dirname(__FILE__)) . '/wp-all-import-pro.php' );
 
 	}
 
 	add_action('admin_notices', 'wp_all_import_notice');	
 
 }
-else {
+else {		
 
+	define('PMXI_VERSION', '4.1.4');
+
+	define('PMXI_EDITION', 'paid');
+
+	/**
+	 * Plugin root dir with forward slashes as directory separator regardless of actuall DIRECTORY_SEPARATOR value
+	 * @var string
+	 */
 	define('WP_ALL_IMPORT_ROOT_DIR', str_replace('\\', '/', dirname(__FILE__)));
 	/**
 	 * Plugin root url for referencing static content
@@ -43,11 +51,38 @@ else {
 	 * names composed using this prefix)
 	 * @var string
 	 */
-	define('WP_ALL_IMPORT_PREFIX', 'pmxi_');	
+	define('WP_ALL_IMPORT_PREFIX', 'pmxi_');
 
-	define('PMXI_VERSION', '4.0.9');
-
-	define('PMXI_EDITION', 'paid');
+	/**
+	 * Plugin root uploads folder name
+	 * @var string
+	 */
+	define('WP_ALL_IMPORT_UPLOADS_BASE_DIRECTORY', 'wpallimport');
+	/**
+	 * Plugin logs folder name
+	 * @var string
+	 */
+	define('WP_ALL_IMPORT_LOGS_DIRECTORY', WP_ALL_IMPORT_UPLOADS_BASE_DIRECTORY . DIRECTORY_SEPARATOR . 'logs');
+	/**
+	 * Plugin files folder name
+	 * @var string
+	 */
+	define('WP_ALL_IMPORT_FILES_DIRECTORY', WP_ALL_IMPORT_UPLOADS_BASE_DIRECTORY . DIRECTORY_SEPARATOR . 'files');
+	/**
+	 * Plugin uploads folder name
+	 * @var string
+	 */
+	define('WP_ALL_IMPORT_UPLOADS_DIRECTORY', WP_ALL_IMPORT_UPLOADS_BASE_DIRECTORY . DIRECTORY_SEPARATOR . 'uploads');
+	/**
+	 * Plugin history folder name
+	 * @var string
+	 */
+	define('WP_ALL_IMPORT_HISTORY_DIRECTORY', WP_ALL_IMPORT_UPLOADS_BASE_DIRECTORY . DIRECTORY_SEPARATOR . 'history');
+	/**
+	 * Plugin temp folder name
+	 * @var string
+	 */
+	define('WP_ALL_IMPORT_TEMP_DIRECTORY', WP_ALL_IMPORT_UPLOADS_BASE_DIRECTORY . DIRECTORY_SEPARATOR . 'temp');	
 
 	/**
 	 * Main plugin file, Introduces MVC pattern
@@ -94,14 +129,39 @@ else {
 		 */
 		const LARGE_SIZE = 0; // all files will importing in large import mode	
 
-		public static $session = null;
-
-		public static $encodings = array('UTF-8', 'UTF-16', 'Windows-1250', 'Windows-1251', 'Windows-1252', 'Windows-1253', 'Windows-1254', 'Windows-1255', 'Windows-1256', 'Windows-1257', 'Windows-1258', 'ISO-8859-1', 'ISO-8859-2', 'ISO-8859-3', 'ISO-8859-4', 'ISO-8859-5', 'ISO-8859-6', 'ISO-8859-7', 'ISO-8859-8', 'ISO-8859-9', 'ISO-8859-10', 'KOI8-R', 'KOI8-U');
+		public static $session = null;		
 
 		public static $is_csv = false;
 
-		public static $csv_path = false;		
+		public static $csv_path = false;	
 
+		/**
+		 * WP All Import logs folder
+		 * @var string
+		 */
+		const LOGS_DIRECTORY =  WP_ALL_IMPORT_LOGS_DIRECTORY;
+		/**
+		 * WP All Import files folder
+		 * @var string
+		 */
+		const FILES_DIRECTORY =  WP_ALL_IMPORT_FILES_DIRECTORY;
+		/**
+		 * WP All Import temp folder
+		 * @var string
+		 */
+		const TEMP_DIRECTORY =  WP_ALL_IMPORT_TEMP_DIRECTORY;
+		/**
+		 * WP All Import uploads folder
+		 * @var string
+		 */
+		const UPLOADS_DIRECTORY =  WP_ALL_IMPORT_UPLOADS_DIRECTORY;
+
+		/**
+		 * WP All Import history folder
+		 * @var string
+		 */
+		const HISTORY_DIRECTORY =  WP_ALL_IMPORT_HISTORY_DIRECTORY;
+		 
 		/**
 		 * Return singletone instance
 		 * @return PMXI_Plugin
@@ -203,21 +263,7 @@ else {
 			// register helpers
 			if (is_dir(self::ROOT_DIR . '/helpers')) foreach (PMXI_Helper::safe_glob(self::ROOT_DIR . '/helpers/*.php', PMXI_Helper::GLOB_RECURSE | PMXI_Helper::GLOB_PATH) as $filePath) {
 				require_once $filePath;
-			}			
-
-			// create history folder
-			$uploads = wp_upload_dir();
-
-			$wpallimportDirs = array('wpallimport', 'wpallimport/logs', 'wpallimport/files', 'wpallimport/temp', 'wpallimport/uploads');
-			
-			foreach ($wpallimportDirs as $dir) {
-				
-				if ( !is_dir($uploads['basedir'] . '/' . $dir)) wp_mkdir_p($uploads['basedir'] . '/' . $dir);			
-
-				if ( ! @file_exists($uploads['basedir'] . '/' . $dir . '/index.php') )
-					@touch( $uploads['basedir'] . '/' . $dir . '/index.php' );	
-				
-			}
+			}						
 			
 			// init plugin options
 			$option_name = get_class($this) . '_Options';
@@ -291,6 +337,8 @@ else {
 		 * compatibility with version 4.0
 		 */
 		public function _fix_options(){
+
+			global $wpdb;
 			
 			$imports = new PMXI_Import_List();
 			$post    = new PMXI_Post_Record();
@@ -303,6 +351,8 @@ else {
 			$uploads = wp_upload_dir();
 			
 			if ( empty($is_migrated) or version_compare($is_migrated, PMXI_VERSION) < 0 ){ //PMXI_VERSION
+
+				$commit_migration = true;
 
 				if ( empty($is_migrated) ){ // plugin version less than 4.0.0
 
@@ -325,7 +375,7 @@ else {
 							
 							if ($imp->type == 'file'){									
 								$imp->set(array(
-									'path' => $uploads['basedir'] . '/wpallimport/files/' . basename($imp->path)
+									'path' => $uploads['basedir'] . DIRECTORY_SEPARATOR . self::FILES_DIRECTORY . DIRECTORY_SEPARATOR . basename($imp->path)
 								))->update();
 							}
 						}
@@ -357,7 +407,7 @@ else {
 
 					}					
 
-					$this->__fix_db_schema(); // feature to version 4.0.0
+					$commit_migration = $this->__fix_db_schema(); // feature to version 4.0.0
 					
 				}
 				else {
@@ -371,7 +421,7 @@ else {
 						case '4.0.0':
 						case '4.0.1':													
 
-							$this->__fix_db_schema(); // feature to version 4.0.0
+							$commit_migration = $this->__fix_db_schema(); // feature to version 4.0.0
 
 							break;
 
@@ -420,7 +470,7 @@ else {
 
 					}
 				}
-				update_option('pmxi_is_migrated', PMXI_VERSION);
+				if ($commit_migration) update_option('pmxi_is_migrated', PMXI_VERSION);
 			}			
 		}
 
@@ -513,8 +563,23 @@ else {
 		 * pre-dispatching logic for admin page controllers
 		 */
 		public function __adminInit() {
+
+			// create history folder
+			$uploads = wp_upload_dir();				
+
+			$wpallimportDirs = array( WP_ALL_IMPORT_UPLOADS_BASE_DIRECTORY, self::LOGS_DIRECTORY, self::FILES_DIRECTORY, self::TEMP_DIRECTORY, self::UPLOADS_DIRECTORY, self::HISTORY_DIRECTORY);			
+
+			foreach ($wpallimportDirs as $destination) {
+
+				$dir = $uploads['basedir'] . DIRECTORY_SEPARATOR . $destination;
+				
+				if ( !is_dir($dir)) wp_mkdir_p($dir);			
+
+				if ( ! @file_exists($dir . DIRECTORY_SEPARATOR . 'index.php') ) @touch( $dir . DIRECTORY_SEPARATOR . 'index.php' );						
+				
+			}
 			
-			self::$session = new PMXI_Handler();
+			self::$session = new PMXI_Handler();				
 
 			$input = new PMXI_Input();
 			$page = strtolower($input->getpost('page', ''));						
@@ -533,38 +598,48 @@ else {
 				}
 				$actionName = str_replace('-', '_', $action);
 				if (method_exists($controllerName, $actionName)) {
-					$this->_admin_current_screen = (object)array(
-						'id' => $controllerName,
-						'base' => $controllerName,
-						'action' => $actionName,
-						'is_ajax' => strpos($_SERVER["HTTP_ACCEPT"], 'json') !== false,
-						'is_network' => is_network_admin(),
-						'is_user' => is_user_admin(),
-					);
-					add_filter('current_screen', array($this, 'getAdminCurrentScreen'));
-					add_filter('admin_body_class', create_function('', 'return "' . 'wpallimport-plugin";'));
 
-					$controller = new $controllerName();
-					if ( ! $controller instanceof PMXI_Controller_Admin) {
-						throw new Exception("Administration page `$page` matches to a wrong controller type.");
-					}
+					if ( ! get_current_user_id() or ! current_user_can('manage_options')) {
+					    // This nonce is not valid.
+					    die( 'Security check' ); 
 
-					if ($this->_admin_current_screen->is_ajax) { // ajax request						
-						$controller->$action();
-						do_action('pmxi_action_after');
-						die(); // stop processing since we want to output only what controller is randered, nothing in addition
-					} elseif ( ! $controller->isInline) {																																		
-						@ob_start();
-						$controller->$action();
-						self::$buffer = @ob_get_clean();													
 					} else {
-						self::$buffer_callback = array($controller, $action);
+
+						$this->_admin_current_screen = (object)array(
+							'id' => $controllerName,
+							'base' => $controllerName,
+							'action' => $actionName,
+							'is_ajax' => strpos($_SERVER["HTTP_ACCEPT"], 'json') !== false,
+							'is_network' => is_network_admin(),
+							'is_user' => is_user_admin(),
+						);
+						add_filter('current_screen', array($this, 'getAdminCurrentScreen'));
+						add_filter('admin_body_class', create_function('', 'return "' . 'wpallimport-plugin";'));
+
+						$controller = new $controllerName();
+						if ( ! $controller instanceof PMXI_Controller_Admin) {
+							throw new Exception("Administration page `$page` matches to a wrong controller type.");
+						}
+
+						if ($this->_admin_current_screen->is_ajax) { // ajax request						
+							$controller->$action();
+							do_action('pmxi_action_after');
+							die(); // stop processing since we want to output only what controller is randered, nothing in addition
+						} elseif ( ! $controller->isInline) {																																		
+							@ob_start();
+							$controller->$action();
+							self::$buffer = @ob_get_clean();													
+						} else {
+							self::$buffer_callback = array($controller, $action);
+						}
+
 					}
+					
 				} else { // redirect to dashboard if requested page and/or action don't exist
 					wp_redirect(admin_url()); die();
 				}
 
-			}
+			}			
 
 		}
 
@@ -595,7 +670,8 @@ else {
 		 * The method is called twice: 1st time as handler `parse_header` action and then as admin menu item handler
 		 * @param string[optional] $page When $page set to empty string ealier buffered content is outputted, otherwise controller is called based on $page value
 		 */
-		public function adminDispatcher($page = '', $action = 'index') {
+		public function adminDispatcher($page = '', $action = 'index') {			
+
 			if ('' === $page) {				
 				if ( ! is_null(self::$buffer)) {
 					echo '<div class="wrap">';
@@ -611,6 +687,7 @@ else {
 					throw new Exception('There is no previousely buffered content to display.');
 				}
 			} 
+			
 		}
 
 		public function replace_callback($matches){
@@ -750,20 +827,24 @@ else {
 			load_plugin_textdomain( 'wp_all_import_plugin', false, dirname( plugin_basename( __FILE__ ) ) . "/i18n/languages" );
 		}		
 
-		public function __fix_db_schema(){
+		public function __fix_db_schema(){			
 
-			$uploads = wp_upload_dir();			
+			$uploads = wp_upload_dir();		
 
-			if ( ! is_dir($uploads['basedir'] . '/wpallimport/logs') or ! is_writable($uploads['basedir'] . '/wpallimport/logs')) {
-				die(sprintf(__('Uploads folder %s must be writable', 'wp_all_import_plugin'), $uploads['basedir'] . '/wpallimport/logs'));
+			if ( ! is_dir($uploads['basedir'] . DIRECTORY_SEPARATOR . self::LOGS_DIRECTORY) or ! is_writable($uploads['basedir'] . DIRECTORY_SEPARATOR . self::LOGS_DIRECTORY)) {
+				die(sprintf(__('Uploads folder %s must be writable', 'wp_all_import_plugin'), $uploads['basedir'] . DIRECTORY_SEPARATOR . self::LOGS_DIRECTORY));
 			}
 
-			if ( ! is_dir($uploads['basedir'] . '/wpallimport') or ! is_writable($uploads['basedir'] . '/wpallimport')) {
-				die(sprintf(__('Uploads folder %s must be writable', 'wp_all_import_plugin'), $uploads['basedir'] . '/wpallimport'));
+			if ( ! is_dir($uploads['basedir'] . DIRECTORY_SEPARATOR . WP_ALL_IMPORT_UPLOADS_BASE_DIRECTORY) or ! is_writable($uploads['basedir'] . DIRECTORY_SEPARATOR . WP_ALL_IMPORT_UPLOADS_BASE_DIRECTORY)) {
+				die(sprintf(__('Uploads folder %s must be writable', 'wp_all_import_plugin'), $uploads['basedir'] . DIRECTORY_SEPARATOR . WP_ALL_IMPORT_UPLOADS_BASE_DIRECTORY));
 			}
 
-			$table = $table = $this->getTablePrefix() . 'files';
 			global $wpdb;
+			// do not execute ALTER TABLE queries if sql user doesn't have ALTER privileges
+			$grands = $wpdb->get_results("SELECT * FROM information_schema.user_privileges WHERE grantee LIKE \"'" . DB_USER . "'%\" AND PRIVILEGE_TYPE = 'ALTER' AND IS_GRANTABLE = 'YES';");
+			
+			$table = $table = $this->getTablePrefix() . 'files';
+			
 			$tablefields = $wpdb->get_results("DESCRIBE {$table};");
 			// For every field in the table
 			foreach ($tablefields as $tablefield) {
@@ -775,7 +856,8 @@ else {
 						}
 					}
 
-					$wpdb->query("ALTER TABLE {$table} DROP " . $tablefield->Field);
+					if (!empty($grands)) $wpdb->query("ALTER TABLE {$table} DROP " . $tablefield->Field);
+
 					break;
 				}
 			}
@@ -783,41 +865,69 @@ else {
 			$table = $this->getTablePrefix() . 'imports';
 			
 			$tablefields = $wpdb->get_results("DESCRIBE {$table};");
-			$parent_import_id = false;
-			$iteration = false;
-			$deleted = false;
-			$executing = false;
-			$canceled = false;
-			$canceled_on = false;
-			$failed = false;
-			$failed_on = false;
-			$settings_update_on = false;
-			$last_activity = false;
+			$fields_to_alter = array(
+				'parent_import_id',
+				'iteration',
+				'deleted',
+				'executing',
+				'canceled',
+				'canceled_on',
+				'failed',
+				'failed_on',
+				'settings_update_on',
+				'last_activity'
+			);					
 
 			// Check if field exists
 			foreach ($tablefields as $tablefield) {
-				if ('parent_import_id' == $tablefield->Field) $parent_import_id = true;				
-				if ('iteration' == $tablefield->Field) $iteration = true;				
-				if ('deleted' == $tablefield->Field) $deleted = true;				
-				if ('executing' == $tablefield->Field) $executing = true;				
-				if ('canceled' == $tablefield->Field) $canceled = true;				
-				if ('canceled_on' == $tablefield->Field) $canceled_on = true;				
-				if ('failed' == $tablefield->Field) $failed = true;				
-				if ('failed_on' == $tablefield->Field) $failed_on = true;				
-				if ('settings_update_on' == $tablefield->Field) $settings_update_on = true;				
-				if ('last_activity' == $tablefield->Field) $last_activity = true;				
+				if (in_array($tablefield->Field, $fields_to_alter)){
+					$fields_to_alter = array_diff($fields_to_alter, array($tablefield->Field));
+				} 
 			}
 			
-			if (!$parent_import_id) $wpdb->query("ALTER TABLE {$table} ADD `parent_import_id` BIGINT(20) NOT NULL DEFAULT 0;");						
-			if (!$iteration) $wpdb->query("ALTER TABLE {$table} ADD `iteration` BIGINT(20) NOT NULL DEFAULT 0;");						
-			if (!$deleted) $wpdb->query("ALTER TABLE {$table} ADD `deleted` BIGINT(20) NOT NULL DEFAULT 0;");						
-			if (!$executing) $wpdb->query("ALTER TABLE {$table} ADD `executing` BOOL NOT NULL DEFAULT 0;");						
-			if (!$canceled) $wpdb->query("ALTER TABLE {$table} ADD `canceled` BOOL NOT NULL DEFAULT 0;");						
-			if (!$canceled_on) $wpdb->query("ALTER TABLE {$table} ADD `canceled_on` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00';");						
-			if (!$failed) $wpdb->query("ALTER TABLE {$table} ADD `failed` BOOL NOT NULL DEFAULT 0;");						
-			if (!$failed_on) $wpdb->query("ALTER TABLE {$table} ADD `failed_on` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00';");						
-			if (!$settings_update_on) $wpdb->query("ALTER TABLE {$table} ADD `settings_update_on` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00';");						
-			if (!$last_activity) $wpdb->query("ALTER TABLE {$table} ADD `last_activity` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00';");						
+			if ( ! empty($fields_to_alter) ){								
+
+				if (empty($grands)) return false;																		
+				
+				foreach ($fields_to_alter as $field) {
+					switch ($field) {
+						case 'parent_import_id':
+							$wpdb->query("ALTER TABLE {$table} ADD `parent_import_id` BIGINT(20) NOT NULL DEFAULT 0;");		
+							break;
+						case 'iteration':
+							$wpdb->query("ALTER TABLE {$table} ADD `iteration` BIGINT(20) NOT NULL DEFAULT 0;");	
+							break;
+						case 'deleted':
+							$wpdb->query("ALTER TABLE {$table} ADD `deleted` BIGINT(20) NOT NULL DEFAULT 0;");						
+							break;
+						case 'executing':
+							$wpdb->query("ALTER TABLE {$table} ADD `executing` BOOL NOT NULL DEFAULT 0;");						
+							break;
+						case 'canceled':
+							$wpdb->query("ALTER TABLE {$table} ADD `canceled` BOOL NOT NULL DEFAULT 0;");						
+							break;
+						case 'canceled_on':
+							$wpdb->query("ALTER TABLE {$table} ADD `canceled_on` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00';");						
+							break;
+						case 'failed':
+							$wpdb->query("ALTER TABLE {$table} ADD `failed` BOOL NOT NULL DEFAULT 0;");		
+							break;
+						case 'failed_on':
+							$wpdb->query("ALTER TABLE {$table} ADD `failed_on` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00';");			
+							break;
+						case 'settings_update_on':
+							$wpdb->query("ALTER TABLE {$table} ADD `settings_update_on` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00';");						
+							break;
+						case 'last_activity':
+							$wpdb->query("ALTER TABLE {$table} ADD `last_activity` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00';");		
+							break;
+
+						default:
+							# code...
+							break;
+					}
+				}				
+			}							
 
 			$table = $this->getTablePrefix() . 'posts';
 			$tablefields = $wpdb->get_results("DESCRIBE {$table};");
@@ -828,7 +938,23 @@ else {
 				if ('iteration' == $tablefield->Field) $iteration = true;				
 			}
 
-			if (!$iteration) $wpdb->query("ALTER TABLE {$table} ADD `iteration` BIGINT(20) NOT NULL DEFAULT 0;");
+			if (!$iteration){ 
+				
+				if (empty($grands)) {					
+					?>
+					<div class="error"><p>
+						<?php printf(
+								__('<b>%s Plugin</b>: Current sql user %s doesn\'t have ALTER privileges', 'pmwi_plugin'),
+								self::getInstance()->getName(), DB_USER
+						) ?>
+					</p></div>
+					<?php
+					return false;
+				}
+				
+				$wpdb->query("ALTER TABLE {$table} ADD `iteration` BIGINT(20) NOT NULL DEFAULT 0;");
+				
+			}
 
 			if ( ! empty($wpdb->charset))
 				$charset_collate = "DEFAULT CHARACTER SET $wpdb->charset";
@@ -846,6 +972,8 @@ else {
 				summary TEXT,
 				PRIMARY KEY  (id)
 			) $charset_collate;");
+
+			return true;
 		}	
 
 		/**
@@ -855,10 +983,14 @@ else {
 		public static function get_default_import_options() {
 			return array(
 				'type' => 'post',
+				'is_override_post_type' => 0,
+				'post_type_xpath' => '',
+				'deligate' => '',
 				'wizard_type' => 'new',
 				'custom_type' => '',				
 				'featured_delim' => ',',
 				'atch_delim' => ',',
+				'is_search_existing_attach' => 0,
 				'post_taxonomies' => array(),
 				'parent' => 0,
 				'is_multiple_page_parent' => 'yes',
@@ -895,7 +1027,7 @@ else {
 				'unique_key' => '',
 				'tmp_unique_key' => '',
 				'feed_type' => 'auto',
-				'search_existing_images' => 0,
+				'search_existing_images' => 1,
 
 				'create_new_records' => 1,
 				'is_delete_missing' => 0,
@@ -961,6 +1093,7 @@ else {
 				'is_fast_mode' => 0,
 				'chuncking' => 1,
 				'import_processing' => 'ajax',
+				'save_template_as' => 0,
 
 				'title' => '',
 				'content' => '',
@@ -990,11 +1123,14 @@ else {
 				'tax_hierarchical_xpath' => array(),
 				'tax_multiple_delim' => array(),
 				'tax_hierarchical_delim' => array(),
+				'tax_manualhierarchy_delim' => array(),
 				'tax_hierarchical_logic_entire' => array(),
 				'tax_hierarchical_logic_manual' => array(),
 				'tax_enable_mapping' => array(),
 				'tax_mapping' => array(),
 				'tax_logic_mapping' => array(),
+				'is_tax_hierarchical_group_delim' => array(),
+				'tax_hierarchical_group_delim' => array(),
 				'nested_files' => array()
 			);
 		}

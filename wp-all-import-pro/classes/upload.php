@@ -20,7 +20,7 @@ if ( ! class_exists('PMXI_Upload')){
 			if ( $uploads['error'] )
 				$this->uploadsPath = false;			
 			else
-				$this->uploadsPath = (!$targetDir) ? wp_all_import_secure_file($uploads['basedir'] . '/wpallimport/uploads', 'uploads') : $targetDir;
+				$this->uploadsPath = ( ! $targetDir ) ? wp_all_import_secure_file($uploads['basedir'] . DIRECTORY_SEPARATOR . PMXI_Plugin::UPLOADS_DIRECTORY) : $targetDir;
 		}
 
 		public function upload(){
@@ -245,7 +245,7 @@ if ( ! class_exists('PMXI_Upload')){
 			);
 		}
 
-		public function url( $feed_type = ''){
+		public function url( $feed_type = '', $feed_xpath = ''){
 
 			$uploads = wp_upload_dir();
 
@@ -321,7 +321,7 @@ if ( ! class_exists('PMXI_Upload')){
 						$source = array(
 							'name' => basename(parse_url($this->file, PHP_URL_PATH)),
 							'type' => 'url',
-							'path' => $this->file,							
+							'path' => $feed_xpath,							
 						);  
 
 						if (preg_match('%\W(csv|txt|dat|psv)$%i', trim($filePath))){														
@@ -379,7 +379,7 @@ if ( ! class_exists('PMXI_Upload')){
 					$source = array(
 						'name' => basename(parse_url($this->file, PHP_URL_PATH)),
 						'type' => 'url',
-						'path' => $this->file,					
+						'path' => $feed_xpath,					
 					); 
 					
 					// copy remote file in binary mode
@@ -410,7 +410,7 @@ if ( ! class_exists('PMXI_Upload')){
 					$source = array(
 						'name' => basename(parse_url($this->file, PHP_URL_PATH)),
 						'type' => 'url',
-						'path' => $this->file,					
+						'path' => $feed_xpath,					
 					); 
 
 					// copy remote file in binary mode
@@ -442,7 +442,7 @@ if ( ! class_exists('PMXI_Upload')){
 					$source = array(
 						'name' => basename($this->file),
 						'type' => 'url',
-						'path' => $this->file,					
+						'path' => $feed_xpath,					
 					);					
 
 					// copy remote file in binary mode
@@ -460,9 +460,9 @@ if ( ! class_exists('PMXI_Upload')){
 						$fileInfo = wp_all_import_get_gz($this->file, 0, $this->uploadsPath);
 					}
 					else{
-						$headers = wp_all_import_get_feed_type($this->file);
+						$headers = wp_all_import_get_feed_type($this->file);						
 
-						if ($headers['Content-Type'] and in_array($headers['Content-Type'], array('gz', 'gzip'))){
+						if ($headers['Content-Type'] and in_array($headers['Content-Type'], array('gz', 'gzip')) or $headers['Content-Encoding'] and in_array($headers['Content-Encoding'], array('gz', 'gzip'))){
 							$fileInfo = wp_all_import_get_gz($this->file, 0, $this->uploadsPath);
 						}
 						else{
@@ -482,8 +482,10 @@ if ( ! class_exists('PMXI_Upload')){
 						$source = array(
 							'name' => basename(parse_url($this->file, PHP_URL_PATH)),
 							'type' => 'url',
-							'path' => $this->file,					
+							'path' => $feed_xpath,					
 						);				
+
+						$fileInfo['type'] = apply_filters('wp_all_import_feed_type', $fileInfo['type'], $this->file);
 
 						// detect CSV or XML 
 						switch ($fileInfo['type']) {
@@ -554,7 +556,7 @@ if ( ! class_exists('PMXI_Upload')){
 
 			$wp_uploads = wp_upload_dir();
 
-			$uploads = $wp_uploads['basedir'] . '/wpallimport/files/';
+			$uploads = $wp_uploads['basedir'] . DIRECTORY_SEPARATOR . PMXI_Plugin::FILES_DIRECTORY . DIRECTORY_SEPARATOR;
 
 			if (empty($this->file)) {
 				$this->errors->add('form-validation', __('Please specify a file to import.', 'wp_all_import_plugin'));

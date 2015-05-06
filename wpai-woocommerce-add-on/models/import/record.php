@@ -46,9 +46,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 	 */
 	public function parse($parsing_data = array()) { //$import, $count, $xml, $logger = NULL, $chunk = false, $xpath_prefix = ""
 
-		extract($parsing_data);
-
-		if ($import->options['custom_type'] != 'product') return;
+		extract($parsing_data);		
 
 		add_filter('user_has_cap', array($this, '_filter_has_cap_unfiltered_html')); kses_init(); // do not perform special filtering for imported content
 		
@@ -64,7 +62,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 
 		// Composing product types
 		if ($import->options['is_multiple_product_type'] != 'yes' and "" != $import->options['single_product_type']){
-			$this->data['product_types'] = XmlImportParser::factory($xml, $cxpath, $import->options['single_product_type'], $file)->parse($records); $tmp_files[] = $file;						
+			$this->data['product_types'] = XmlImportParser::factory($xml, $cxpath, $import->options['single_product_type'], $file)->parse($records); $tmp_files[] = $file;									
 		}
 		else{
 			$count and $this->data['product_types'] = array_fill(0, $count, $import->options['multiple_product_type']);
@@ -240,7 +238,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 			$count and $this->data['product_stock_status'] = array_fill(0, $count, $import->options['product_stock_status']);
 			foreach ($this->data['product_stock_qty'] as $key => $value) {
 				if ($this->data['product_manage_stock'][$key] == 'yes'){
-					$this->data['product_stock_status'][$key] = ((int) $value === 0 and $value != "") ? 'outofstock' : 'instock';
+					$this->data['product_stock_status'][$key] = (( (int) $value === 0 or (int) $value < 0 ) and $value != "") ? 'outofstock' : 'instock';					
 				}
 				else{
 					$this->data['product_stock_status'][$key] = 'instock';
@@ -420,7 +418,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 			$count and $this->data['v_stock_status'] = array_fill(0, $count, $import->options['variation_stock_status']);
 			foreach ($this->data['v_stock'] as $key => $value) {
 				if ($this->data['v_product_manage_stock'][$key] == 'yes'){
-					$this->data['v_stock_status'][$key] = ( (int) $value === 0 and $value != "") ? 'outofstock' : 'instock';
+					$this->data['v_stock_status'][$key] = ( ( (int) $value === 0 or (int) $value < 0 ) and $value != "") ? 'outofstock' : 'instock';
 				}
 				else{
 					$this->data['v_stock_status'][$key] = 'instock';
@@ -518,7 +516,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 
 		extract($importData); 
 
-		if ( empty($this->options['custom_type']) or $this->options['custom_type'] != 'product') return;
+		if ( ! in_array($importData['post_type'], array('product', 'product_variation'))) return;
 
 		$cxpath = $xpath_prefix . $import->xpath;
 
@@ -534,7 +532,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 		if ($this->options['update_all_data'] == 'no' and ! $this->options['is_update_product_type'] and ! $is_new_product ){			
 			$product 	  = get_product($pid);
 			$product_type = $product->product_type;			
-		}
+		}		
 
 		$this->existing_meta_keys = array();
 		foreach (get_post_meta($pid, '') as $cur_meta_key => $cur_meta_val) $this->existing_meta_keys[] = $cur_meta_key;
@@ -549,15 +547,20 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 		$is_featured 		= $product_featured[$i];
 
 		// Product type + Downloadable/Virtual
-		if ($is_new_product or $this->options['update_all_data'] == 'no' and $this->options['is_update_product_type']) 			
-			wp_set_object_terms( $pid, $product_type, 'product_type' );
+		if ($is_new_product or $this->options['update_all_data'] == 'no' and $this->options['is_update_product_type']){ 			
+			//wp_set_object_terms( $pid, $product_type, 'product_type' );
+			$product_type_term = term_exists($product_type, 'product_type', 0);	
+			if ( ! empty($product_type_term) and ! is_wp_error($product_type_term) ){					
+				$this->associate_terms( $pid, array( (int) $product_type_term['term_taxonomy_id'] ), 'product_type' );	
+			}			
+		}
 
 		$this->pushmeta($pid, '_downloadable', ($is_downloadable == "yes") ? 'yes' : 'no' );
 		$this->pushmeta($pid, '_virtual', ($is_virtual == "yes") ? 'yes' : 'no' );
 
 		// Update post meta
-		$this->pushmeta($pid, '_regular_price', (empty($product_regular_price[$i])) ? '' : stripslashes( $product_regular_price[$i] ) );
-		$this->pushmeta($pid, '_sale_price', (empty($product_sale_price[$i])) ? '' : stripslashes( $product_sale_price[$i] ) );
+		$this->pushmeta($pid, '_regular_price', ($product_regular_price[$i] == "") ? '' : stripslashes( $product_regular_price[$i] ) );
+		$this->pushmeta($pid, '_sale_price', ($product_sale_price[$i] == "") ? '' : stripslashes( $product_sale_price[$i] ) );
 		$this->pushmeta($pid, '_tax_status', stripslashes( $product_tax_status[$i] ) );
 		$this->pushmeta($pid, '_tax_class', stripslashes( $product_tax_class[$i] ) );
 		$this->pushmeta($pid, '_visibility', stripslashes( $product_visibility[$i] ) );
@@ -588,6 +591,13 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 
 				$p_shipping_class = $product_shipping_class[$i] > 0 && $product_type != 'external' ? absint( $product_shipping_class[$i] ) : '';			
 
+				$t_shipping_class = get_term_by('slug', $p_shipping_class, 'product_shipping_class');									
+
+				if ( $t_shipping_class !== 0 && $t_shipping_class !== null) {
+
+					$p_shipping_class = (int) $t_shipping_class->term_taxonomy_id; 	
+					
+				}
 			}
 			else{
 
@@ -596,10 +606,12 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 					$t_shipping_class = term_exists(htmlspecialchars(strtolower($product_shipping_class[$i])), 'product_shipping_class', 0);						
 				}
 				if ( ! is_wp_error($t_shipping_class) )												
-					$p_shipping_class = (int) $t_shipping_class['term_id']; 				
+					$p_shipping_class = (int) $t_shipping_class['term_taxonomy_id']; 				
 			}
 			
-			wp_set_object_terms( $pid, $p_shipping_class, 'product_shipping_class');
+			$this->associate_terms( $pid, array( $p_shipping_class ), 'product_shipping_class' );	
+
+			//wp_set_object_terms( $pid, $p_shipping_class, 'product_shipping_class');
 
 		}
 
@@ -658,9 +670,9 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 
 				foreach ($serialized_attributes as $anum => $attr_data) {	$attr_name = $attr_data['names'][$i];
 
-					if ( in_array( $attr_name, $this->reserved_terms ) ) {
-						$attr_name .= 's';
-					}
+					// if ( in_array( $attr_name, $this->reserved_terms ) ) {
+					// 	$attr_name .= 's';
+					// }
 
 					if (empty($attr_name) or in_array($attr_name, $attr_names)) continue;
 
@@ -760,8 +772,10 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 
 				 	} else {
 
-				 		if ( taxonomy_exists( wc_attribute_taxonomy_name( $attr_name ) ))
-				 			wp_set_object_terms( $pid, NULL, wc_attribute_taxonomy_name( $attr_name ) );			 		
+				 		if ( taxonomy_exists( wc_attribute_taxonomy_name( $attr_name ) )){
+				 			//wp_set_object_terms( $pid, NULL, wc_attribute_taxonomy_name( $attr_name ) );			 		
+				 			$this->associate_terms( $pid, NULL, wc_attribute_taxonomy_name( $attr_name ) );	
+				 		}
 
 				 		if (!empty($attr_data['value'][$i])){
 
@@ -825,7 +839,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 				$this->pushmeta($pid, '_price', (empty($product_sale_price[$i])) ? '' : stripslashes( $product_sale_price[$i] ));						
 			}
 			else{
-				$this->pushmeta($pid, '_price', (empty($product_regular_price[$i])) ? '' : stripslashes( $product_regular_price[$i] ));						
+				$this->pushmeta($pid, '_price', ($product_regular_price[$i] == "") ? '' : stripslashes( $product_regular_price[$i] ));						
 			}
 
 			if ( $product_sale_price[$i] != '' && $date_from && strtotime( $date_from ) < strtotime( 'NOW', current_time( 'timestamp' ) ) ){				
@@ -833,7 +847,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 			}
 
 			if ( $date_to && strtotime( $date_to ) < strtotime( 'NOW', current_time( 'timestamp' ) ) ) {
-				$this->pushmeta($pid, '_price', (empty($product_regular_price[$i])) ? '' : stripslashes( $product_regular_price[$i] ));				
+				$this->pushmeta($pid, '_price', ($product_regular_price[$i] == "") ? '' : stripslashes( $product_regular_price[$i] ));				
 				$this->pushmeta($pid, '_sale_price_dates_from', '');				
 				$this->pushmeta($pid, '_sale_price_dates_to', '');													
 			}
@@ -942,18 +956,18 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 			$this->pushmeta($pid, '_manage_stock', $manage_stock);	
 			$this->pushmeta($pid, '_backorders', $backorders);	
 
-			if ( $stock_status and $this->is_update_cf('_stock_status') ) {				
-				wc_update_product_stock_status( $pid, $stock_status );
+			if ( $stock_status and $this->is_update_cf('_stock_status') ) {							
+				update_post_meta( $pid, '_stock_status', $stock_status );
 			}
 
 			if ( $product_manage_stock[$i] == 'yes' ) {
-				$this->is_update_cf('_stock') and wc_update_product_stock( $pid, wc_stock_amount( $product_stock_qty[$i] ) );
+				$this->is_update_cf('_stock') and update_post_meta( $pid, '_stock', wc_stock_amount( $product_stock_qty[$i] ) );
 			} else {
 				$this->pushmeta($pid, '_stock', '');					
 			}
 
 		} else {
-			wc_update_product_stock_status( $pid, wc_clean( $product_stock_status[$i] ) );
+			update_post_meta( $pid, '_stock_status', wc_clean( $product_stock_status[$i] ) );
 		}		
 
 		// Upsells
@@ -1076,9 +1090,18 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 			if ("manual" != $this->options['duplicate_matching']){					
 				
 				// find corresponding article among previously imported
-				$postRecord = $this->wpdb->get_row($this->wpdb->prepare("SELECT * FROM " . $this->wpdb->prefix . "pmxi_posts WHERE `import_id` = %d AND `product_key` = %s ORDER BY post_id ASC", $import->id, $single_product_parent_ID[$i]));
+				if ( ! empty($single_product_parent_ID[$i]) ){
 
-				$product_parent_post = ( ! empty($postRecord) ) ? get_post($product_parent_post_id = $postRecord->post_id) : false;
+					$postRecord = $this->wpdb->get_row($this->wpdb->prepare("SELECT * FROM " . $this->wpdb->prefix . "pmxi_posts WHERE `import_id` = %d AND `product_key` = %s ORDER BY post_id ASC", $import->id, $single_product_parent_ID[$i]));
+
+					$product_parent_post = ( ! empty($postRecord) ) ? get_post($product_parent_post_id = $postRecord->post_id) : false;
+					
+				}
+				else{
+
+					$product_parent_post = false;
+					
+				}
 			
 			}
 			else{											
@@ -1204,9 +1227,13 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 						
 						$pid = wp_insert_post( $variation );	
 
+						//$logger and call_user_func($logger, sprintf(__('<b>CREATED</b>: %s variation from parent product %s.', 'pmxi_plugin'), $variation_post_title, $articleData['post_title']));	
+
 						if ($create_new_variation){															
 							
 							$this->duplicate_post_meta($pid, $product_parent_post_id);
+
+							$this->pushmeta($pid, '_sku', 'v' . get_post_meta($pid, '_sku', true));	
 
 							// associate variation with import
 							$postRecord->isEmpty() and $postRecord->set(array(
@@ -1226,17 +1253,21 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 
 					if ($create_new_variation) {							
 						
-						$this->duplicate_post_meta($pid, $product_parent_post_id);										
+						$this->duplicate_post_meta($pid, $product_parent_post_id);		
+
+						$this->pushmeta($pid, '_sku', 'v' . get_post_meta($pid, '_sku', true));	
 
 						$postRecord->set(array('iteration' => $import->iteration))->update();
 
 					}
 
-					$this->wpdb->update( $this->wpdb->posts, $variation, array( 'ID' => $pid ) );				
+					$this->wpdb->update( $this->wpdb->posts, $variation, array( 'ID' => $pid ) );			
+
+					//$logger and call_user_func($logger, sprintf(__('<b>UPDATED</b>: %s variation for parent product %s.', 'pmxi_plugin'), $variation_post_title, $articleData['post_title']));		
 
 				}								
 
-				if ($pid){					
+				if ($pid){										
 
 					if ( $first_is_parent == "no" ){
 
@@ -1244,26 +1275,34 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 						$this->pushmeta($pid, '_manage_stock', $v_product_manage_stock[$i]);	
 
 						// Only update stock status to user setting if changed by the user, but do so before looking at stock levels at variation level
-						if ( ! empty( $v_stock_status[ $i ] ) and $this->is_update_cf('_stock_status') ) {							
-							wc_update_product_stock_status( $pid, $v_stock_status[ $i ] );
+						if ( ! empty( $v_stock_status[ $i ] ) and $this->is_update_cf('_stock_status') ) {														
+							update_post_meta( $pid, '_stock_status', $v_stock_status[ $i ] );
 						}
 
 						if ( 'yes' === $v_product_manage_stock[$i] ) {							
-							$this->is_update_cf('_stock') and wc_update_product_stock( $pid, wc_stock_amount( $v_stock[ $i ] ) );
+							$this->is_update_cf('_stock') and update_post_meta( $pid, '_stock', wc_stock_amount( $v_stock[ $i ] ) );
 						} else {
 							$this->is_update_cf('_backorders') and delete_post_meta( $pid, '_backorders' );
 							$this->is_update_cf('_stock') and delete_post_meta( $pid, '_stock' );
-						}
+						}		
+
+						if ( pmwi_is_update_taxonomy($articleData, $this->options, 'product_shipping_class') ){							
+							
+							//wp_set_object_terms( $pid, $p_shipping_class, 'product_shipping_class');
+							$this->associate_terms( $pid, array( $p_shipping_class ), 'product_shipping_class' );	
+
+						}				
 
 					}					
 					else{
 						
 						$stock_status = wc_clean( $product_stock_status[$i] );	
 
-						if ( $stock_status and $this->is_update_cf('_stock_status') ) {				
-							wc_update_product_stock_status( $pid, $stock_status );
+						if ( $stock_status and $this->is_update_cf('_stock_status') ) {								
+							update_post_meta( $pid, '_stock_status', $stock_status );
 						}
-					}
+
+					}					
 
 					if (empty($articleData['ID']) or $this->is_update_cf('_tax_class'))
 					{
@@ -1299,8 +1338,10 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 						$this->pushmeta($pid, '_downloadable_files', '');									
 					}
 
-					if ($this->options['update_all_data'] == 'yes' or $this->options['update_all_data'] == 'no' and $this->options['is_update_product_type'])
-						wp_set_object_terms( $pid, NULL, 'product_type' );
+					if ($this->options['update_all_data'] == 'yes' or $this->options['update_all_data'] == 'no' and $this->options['is_update_product_type']){
+						//wp_set_object_terms( $pid, NULL, 'product_type' );
+						$this->associate_terms( $pid, NULL, 'product_type' );	
+					}
 
 					// Remove old taxonomies attributes so data is kept up to date
 					if ( $pid and ($import->options['update_all_data'] == "yes" or ( $import->options['update_all_data'] == "no" and $import->options['is_update_attributes']))) {
@@ -1389,13 +1430,13 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 
 			// [execute only for parent products]
 
-			if ( ! empty($previousID) and ( empty($product_parent_post_id) or $product_parent_post_id != $previousID or ! isset($product_types[$i + 1])) ){				
+			if ( ! empty($previousID) and ( empty($product_parent_post_id) or $product_parent_post_id != $previousID or ! isset($product_types[$i + 1])) ){
 
-				$parent_product_ids = array($previousID);
+				$parent_product_ids = array($previousID);				
 				
 				if ( ! isset($product_types[$i + 1]) and !empty($product_parent_post_id) and ! in_array($product_parent_post_id, $parent_product_ids)) $parent_product_ids[] = $product_parent_post_id;
 
-				foreach ($parent_product_ids as $post_parent) {													
+				foreach ($parent_product_ids as $post_parent) {																		
 
 					$children = get_posts( array(
 						'post_parent' 	=> $post_parent,
@@ -1409,7 +1450,12 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 					
 					if (count($children)){
 
-						wp_set_object_terms( $post_parent, 'variable', 'product_type' );
+						//wp_set_object_terms( $post_parent, 'variable', 'product_type' );
+
+						$product_type_term = term_exists('variable', 'product_type', 0);	
+						if ( ! empty($product_type_term) and ! is_wp_error($product_type_term) ){	
+							$this->associate_terms( $post_parent, array( (int) $product_type_term['term_taxonomy_id'] ), 'product_type' );	
+						}
 
 						$lowest_price = $lowest_regular_price = $lowest_sale_price = $highest_price = $highest_regular_price = $highest_sale_price = '';
 						$lowest_price_id = $lowest_regular_price_id = $lowest_sale_price_id = $highest_price_id = $highest_regular_price_id = $highest_sale_price_id = '';						
@@ -1523,7 +1569,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 
 									if ( $attribute['is_variation'] ) {							
 
-										if (!empty($value) and empty($default_attributes[ $attribute['name'] ])){
+										if ( ! empty($values) and empty($default_attributes[ $attribute['name'] ])){
 											switch ($import->options['default_attributes_type']) {
 												case 'instock':
 													$is_instock = get_post_meta($child, '_stock_status', true);
@@ -1532,7 +1578,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 													}
 													break;
 												case 'first':
-													$default_attributes[ sanitize_title($attribute['name']) ] = sanitize_title((is_array($value)) ? $value[0] : $value);
+													$default_attributes[ sanitize_title($attribute['name']) ] = sanitize_title((is_array($values)) ? $values[0] : $values);
 													break;
 												
 												default:
@@ -1679,6 +1725,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 					do_action('wp_all_import_variable_product_imported', $post_parent);
 
 				}
+
 			}
 			// \[execute only for parent products]
 
@@ -2389,9 +2436,9 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 
 							$attr_name = $a_name;
 
-							if ( in_array( $attr_name, $this->reserved_terms ) ) {
-								$attr_name .= 's';
-							}
+							// if ( in_array( $attr_name, $this->reserved_terms ) ) {
+							// 	$attr_name .= 's';
+							// }
 
 							// Update only these Attributes, leave the rest alone
 							if ($import->options['update_all_data'] == 'no' and $import->options['update_attributes_logic'] == 'only'){
@@ -2687,9 +2734,9 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 
 							$attr_name = $a_name;
 
-							if ( in_array( $attr_name, $this->reserved_terms ) ) {
-								$attr_name .= 's';
-							}
+							// if ( in_array( $attr_name, $this->reserved_terms ) ) {
+							// 	$attr_name .= 's';
+							// }
 							
 							$values = array();
 
@@ -2879,7 +2926,13 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 		// 	}
 		// }
 
-		wp_set_object_terms( $post_parent, 'simple', 'product_type' );
+		//wp_set_object_terms( $post_parent, 'simple', 'product_type' );
+
+		$product_type_term = term_exists('simple', 'product_type', 0);	
+		if ( ! empty($product_type_term) and ! is_wp_error($product_type_term) ){	
+			$this->associate_terms( $post_parent, array( (int) $product_type_term['term_taxonomy_id'] ), 'product_type' );	
+		}
+
 		$this->pmwi_update_prices( $post_parent );
 	}
 
@@ -2931,7 +2984,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 
 		//$table = _get_meta_table( 'post' );
 		
-		if ( empty($this->articleData['ID']) or $this->is_update_cf($meta_key)){
+		if ( empty($this->articleData['ID']) or $this->is_update_cf($meta_key)){			
 			
 			update_post_meta($pid, $meta_key, $meta_value);
 
@@ -2965,7 +3018,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 	*/
 	protected function is_update_cf( $meta_key ){
 
-		if ($this->options['update_all_data'] == 'yes') return true;
+		if ( $this->options['update_all_data'] == 'yes') return true;
 
 		if ( ! $this->options['is_update_custom_fields'] ) return false;			
 
@@ -2981,6 +3034,8 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 
 		$terms = wp_get_object_terms( $pid, $tx_name );
 		$term_ids = array();        
+
+		$assign_taxes = array_filter($assign_taxes);
 
 		if ( ! empty($terms) ){
 			if ( ! is_wp_error( $terms ) ) {				
@@ -2998,7 +3053,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 			return;
 		}
 
-		foreach ($assign_taxes as $tt) {
+		foreach ($assign_taxes as $tt) {			
 			$this->wpdb->insert( $this->wpdb->term_relationships, array( 'object_id' => $pid, 'term_taxonomy_id' => $tt ) );
 			$this->wpdb->query( "UPDATE {$this->wpdb->term_taxonomy} SET count = count + 1 WHERE term_taxonomy_id = $tt" );
 			delete_transient( 'wc_ln_count_' . md5( sanitize_key( $tx_name ) . sanitize_key( $tt ) ) );
@@ -3006,11 +3061,12 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 
 		$values = array();
         $term_order = 0;
-		foreach ( $assign_taxes as $tt )			                        	
+		foreach ( $assign_taxes as $tt ){			                        				
     		$values[] = $this->wpdb->prepare( "(%d, %d, %d)", $pid, $tt, ++$term_order);
+    	}
 		                					
 
-		if ( $values ){
+		if ( $values ){			
 			if ( false === $this->wpdb->query( "INSERT INTO {$this->wpdb->term_relationships} (object_id, term_taxonomy_id, term_order) VALUES " . join( ',', $values ) . " ON DUPLICATE KEY UPDATE term_order = VALUES(term_order)" ) ){
 				$logger and call_user_func($logger, __('<b>ERROR</b> Could not insert term relationship into the database', 'pmxi_plugin') . ': '. $this->wpdb->last_error);				
 			}
@@ -3032,16 +3088,17 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 			$sql_query = "INSERT INTO $table (post_id, meta_key, meta_value) ";
 			foreach ($post_meta_infos as $meta_info) {
 				if ($this->is_update_cf($meta_info->meta_key)){					
-					$meta_key = $meta_info->meta_key;
-					$this->wpdb->query($this->wpdb->prepare("DELETE FROM $table WHERE `post_id` = $new_id AND `meta_key` = %s", $meta_key));
-					$meta_value = addslashes($meta_info->meta_value);
-					$sql_query_sel[]= "SELECT $new_id, '$meta_key', '$meta_value'";
+					update_post_meta($new_id, $meta_info->meta_key, $meta_info->meta_value);
+					//$meta_key = $meta_info->meta_key;
+					// $this->wpdb->query($this->wpdb->prepare("DELETE FROM $table WHERE `post_id` = $new_id AND `meta_key` = %s", $meta_key));
+					// $meta_value = addslashes($meta_info->meta_value);
+					// $sql_query_sel[]= "SELECT $new_id, '$meta_key', '$meta_value'";
 				}
 			}
-			if ( ! empty($sql_query_sel) ){
-				$sql_query.= implode(" UNION ALL ", $sql_query_sel);
-				$this->wpdb->query($sql_query);
-			}
+			// if ( ! empty($sql_query_sel) ){
+			// 	$sql_query.= implode(" UNION ALL ", $sql_query_sel);
+			// 	$this->wpdb->query($sql_query);
+			// }
 		}
 
 	}
@@ -3091,14 +3148,15 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 			$attribute_type    = 'select';
 			$attribute_orderby = 'menu_order';			
 
-			if ( in_array( $attribute_name, $this->reserved_terms ) ) {
-				$attribute_name .= 's';
-			}
+			// if ( in_array( $attribute_name, $this->reserved_terms ) ) {
+			// 	$attribute_name .= 's';
+			// }
 
 			if ( in_array( $attribute_name, $this->reserved_terms ) ) {
 				$logger and call_user_func($logger, sprintf(__('- <b>WARNING</b>: Slug “%s” is not allowed because it is a reserved term. Change it, please.', 'pmxi_plugin'), wc_attribute_taxonomy_name( $attribute_name )));
 			}			
-			else{
+			else{				
+
 				// Register the taxonomy now so that the import works!
 				$domain = wc_attribute_taxonomy_name( $attr_name );
 				if (strlen($domain) <= 32){
@@ -3133,10 +3191,8 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 				}
 				else{
 					$logger and call_user_func($logger, sprintf(__('- <b>WARNING</b>: Taxonomy “%s” name is more than 32 characters. Change it, please.', 'pmxi_plugin'), $attr_name));
-				}
-
+				}				
 			}
-
 	 	}
 	}
 

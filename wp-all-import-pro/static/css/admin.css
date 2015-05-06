@@ -501,6 +501,9 @@
 	position: absolute;
 	top: 15px;
 }
+.wpallimport-plugin .wpallimport-delete-posts-warning{
+	display: none;
+}
 /*--------------------------------------------------------------------------
 *
 *	Helpers
@@ -1682,6 +1685,11 @@
 	padding-top: 17px; 
 	margin-right: 10px;
 }
+.wpallimport-plugin .wp_all_import_subheadline{
+	color: #777 !important;
+	font-size: 1em !important;
+	margin-bottom: 20px !important;
+}
 /*--------------------------------------------------------------------------
 *
 *	Step 3 - Template Builder
@@ -2762,7 +2770,6 @@
 	border-spacing:0;
 }
 /*@*/
-
 /*--------------------------------------------------------------------------
 *
 *	Manage Imports

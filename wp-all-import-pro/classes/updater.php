@@ -40,7 +40,7 @@ if( ! class_exists('PMXI_Updater') ) {
          */
         public function init() {
 
-            add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'check_update' ) );
+            add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'check_update' ), 20 );
             add_filter( 'plugins_api', array( $this, 'plugins_api_filter' ), 10, 3 );
 
             add_action( 'after_plugin_row_' . $this->name, array( $this, 'show_update_notification' ), 10, 2 );
@@ -73,7 +73,7 @@ if( ! class_exists('PMXI_Updater') ) {
 
             if ( empty( $_transient_data->response ) || empty( $_transient_data->response[ $this->name ] ) ) {
 
-                $version_info = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug ) );
+                $version_info = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug ), true );                
 
                 if ( false !== $version_info && is_object( $version_info ) && isset( $version_info->new_version ) ) {
 
@@ -116,7 +116,7 @@ if( ! class_exists('PMXI_Updater') ) {
             }
 
             // Remove our filter on the site transient
-            remove_filter( 'pre_set_site_transient_update_plugins', array( $this, 'check_update' ), 10 );
+            remove_filter( 'pre_set_site_transient_update_plugins', array( $this, 'check_update' ), 20 );
 
             $update_cache = get_site_transient( 'update_plugins' );
 
@@ -155,7 +155,7 @@ if( ! class_exists('PMXI_Updater') ) {
             }
 
             // Restore our filter
-            add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'check_update' ) );
+            add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'check_update' ), 20 );
 
             if ( ! empty( $update_cache->response[ $this->name ] ) && version_compare( $this->version, $version_info->new_version, '<' ) ) {
 
@@ -259,7 +259,7 @@ if( ! class_exists('PMXI_Updater') ) {
          * @param array   $_data   Parameters for the API action.
          * @return false||object
          */
-        private function api_request( $_action, $_data ) {
+        private function api_request( $_action, $_data, $debug = false ) {
 
             global $wp_version;
 
@@ -268,8 +268,8 @@ if( ! class_exists('PMXI_Updater') ) {
             if ( $data['slug'] != $this->slug )
                 return;
 
-            if ( empty( $data['license'] ) )
-                return;
+            /*if ( empty( $data['license'] ) )
+                return;*/
 
             if( $this->api_url == home_url() ) {
                 return false; // Don't allow a plugin to ping itself
@@ -287,10 +287,10 @@ if( ! class_exists('PMXI_Updater') ) {
             );
 
             $request = wp_remote_post( $this->api_url, array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
-
+            
             if ( ! is_wp_error( $request ) ) {
                 $request = json_decode( wp_remote_retrieve_body( $request ) );
-            }
+            }            
 
             if ( $request && isset( $request->sections ) ) {
                 $request->sections = maybe_unserialize( $request->sections );

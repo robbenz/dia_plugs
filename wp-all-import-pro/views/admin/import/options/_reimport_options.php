@@ -3,6 +3,9 @@
 	<input type="hidden" name="create_new_records" value="0" />
 	<input type="checkbox" id="create_new_records" name="create_new_records" value="1" <?php echo $post['create_new_records'] ? 'checked="checked"' : '' ?> />
 	<label for="create_new_records"><?php _e('Create new posts from records newly present in your file', 'wp_all_import_plugin') ?></label>
+	<?php if ( ! empty(PMXI_Plugin::$session->deligate) and PMXI_Plugin::$session->deligate == 'wpallexport' ): ?>
+	<a href="#help" class="wpallimport-help" title="<?php _e('New posts will only be created when ID column is present and value in ID column is unique.', 'wp_all_import_plugin') ?>" style="top: -1px;">?</a>
+	<?php endif; ?>
 </div>
 <?php if ( "new" == $post['wizard_type']): ?>
 <div class="switcher-target-auto_matching">
@@ -146,16 +149,16 @@
 						<input type="radio" id="update_custom_fields_logic_only" name="update_custom_fields_logic" value="only" <?php echo ( "only" == $post['update_custom_fields_logic'] ) ? 'checked="checked"': '' ?> class="switcher"/>
 						<label for="update_custom_fields_logic_only"><?php _e('Update only these Custom Fields, leave the rest alone', 'wp_all_import_plugin') ?></label>														
 						<div class="switcher-target-update_custom_fields_logic_only pmxi_choosen" style="padding-left:17px;">								
-							<span class="hidden choosen_values"><?php if (!empty($existing_meta_keys)) echo implode(',', $existing_meta_keys);?></span>
-							<input class="choosen_input" value="<?php if (!empty($post['custom_fields_list']) and "only" == $post['update_custom_fields_logic']) echo implode(',', $post['custom_fields_list']); ?>" type="hidden" name="custom_fields_only_list"/>										
+							<span class="hidden choosen_values"><?php if (!empty($existing_meta_keys)) echo esc_html(implode(',', $existing_meta_keys));?></span>
+							<input class="choosen_input" value="<?php if (!empty($post['custom_fields_list']) and "only" == $post['update_custom_fields_logic']) echo esc_html(implode(',', $post['custom_fields_list'])); ?>" type="hidden" name="custom_fields_only_list"/>										
 						</div>						
 					</div>
 					<div class="input">
 						<input type="radio" id="update_custom_fields_logic_all_except" name="update_custom_fields_logic" value="all_except" <?php echo ( "all_except" == $post['update_custom_fields_logic'] ) ? 'checked="checked"': '' ?> class="switcher"/>
 						<label for="update_custom_fields_logic_all_except"><?php _e('Leave these fields alone, update all other Custom Fields', 'wp_all_import_plugin') ?></label>														
 						<div class="switcher-target-update_custom_fields_logic_all_except pmxi_choosen" style="padding-left:17px;">						
-							<span class="hidden choosen_values"><?php if (!empty($existing_meta_keys)) echo implode(',', $existing_meta_keys);?></span>
-							<input class="choosen_input" value="<?php if (!empty($post['custom_fields_list']) and "all_except" == $post['update_custom_fields_logic']) echo implode(',', $post['custom_fields_list']); ?>" type="hidden" name="custom_fields_except_list"/>																				
+							<span class="hidden choosen_values"><?php if (!empty($existing_meta_keys)) echo esc_html(implode(',', $existing_meta_keys));?></span>
+							<input class="choosen_input" value="<?php if (!empty($post['custom_fields_list']) and "all_except" == $post['update_custom_fields_logic']) echo esc_html(implode(',', $post['custom_fields_list'])); ?>" type="hidden" name="custom_fields_except_list"/>																				
 						</div>						
 					</div>
 				</div>
@@ -169,7 +172,7 @@
 					<?php
 					$existing_taxonomies = array();
 					$hide_taxonomies = (class_exists('PMWI_Plugin')) ? array('product_type') : array();
-					$post_taxonomies = array_diff_key(get_taxonomies_by_object_type(array($post_type), 'object'), array_flip($hide_taxonomies));
+					$post_taxonomies = array_diff_key(get_taxonomies_by_object_type($post['is_override_post_type'] ? array_keys(get_post_types( '', 'names' )) : array($post_type), 'object'), array_flip($hide_taxonomies));
 					if (!empty($post_taxonomies)): 
 						foreach ($post_taxonomies as $ctx):  if ("" == $ctx->labels->name or (class_exists('PMWI_Plugin') and $post_type == "product" and strpos($ctx->name, "pa_") === 0)) continue;
 							$existing_taxonomies[] = $ctx->name;												
@@ -180,16 +183,16 @@
 						<input type="radio" id="update_categories_logic_all_except" name="update_categories_logic" value="all_except" <?php echo ( "all_except" == $post['update_categories_logic'] ) ? 'checked="checked"': '' ?> class="switcher"/>
 						<label for="update_categories_logic_all_except"><?php _e('Leave these taxonomies alone, update all others', 'wp_all_import_plugin') ?></label>						
 						<div class="switcher-target-update_categories_logic_all_except pmxi_choosen" style="padding-left:17px;">					
-							<span class="hidden choosen_values"><?php if (!empty($existing_taxonomies)) echo implode(',', $existing_taxonomies);?></span>
-							<input class="choosen_input" value="<?php if (!empty($post['taxonomies_list']) and "all_except" == $post['update_categories_logic']) echo implode(',', $post['taxonomies_list']); ?>" type="hidden" name="taxonomies_except_list"/>																				
+							<span class="hidden choosen_values"><?php if (!empty($existing_taxonomies)) echo esc_html(implode(',', $existing_taxonomies));?></span>
+							<input class="choosen_input" value="<?php if (!empty($post['taxonomies_list']) and "all_except" == $post['update_categories_logic']) echo esc_html(implode(',', $post['taxonomies_list'])); ?>" type="hidden" name="taxonomies_except_list"/>																				
 						</div>						
 					</div>
 					<div class="input" style="margin-bottom:3px;">								
 						<input type="radio" id="update_categories_logic_only" name="update_categories_logic" value="only" <?php echo ( "only" == $post['update_categories_logic'] ) ? 'checked="checked"': '' ?> class="switcher"/>
 						<label for="update_categories_logic_only"><?php _e('Update only these taxonomies, leave the rest alone', 'wp_all_import_plugin') ?></label>						
 						<div class="switcher-target-update_categories_logic_only pmxi_choosen" style="padding-left:17px;">							
-							<span class="hidden choosen_values"><?php if (!empty($existing_taxonomies)) echo implode(',', $existing_taxonomies);?></span>
-							<input class="choosen_input" value="<?php if (!empty($post['taxonomies_list']) and "only" == $post['update_categories_logic']) echo implode(',', $post['taxonomies_list']); ?>" type="hidden" name="taxonomies_only_list"/>										
+							<span class="hidden choosen_values"><?php if (!empty($existing_taxonomies)) echo esc_html(implode(',', $existing_taxonomies));?></span>
+							<input class="choosen_input" value="<?php if (!empty($post['taxonomies_list']) and "only" == $post['update_categories_logic']) echo esc_html(implode(',', $post['taxonomies_list'])); ?>" type="hidden" name="taxonomies_only_list"/>										
 						</div>						
 					</div>
 					<div class="input" style="margin-bottom:3px;">								

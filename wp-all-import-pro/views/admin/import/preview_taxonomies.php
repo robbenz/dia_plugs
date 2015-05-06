@@ -21,7 +21,7 @@
 				$tax_info = get_taxonomy($ctx);			
 				?>
 				<p><?php echo $tax_info->labels->name; ?></p>
-				<?php				
+				<?php						
 				if (!empty($terms_arr) and is_array($terms_arr)){
 					foreach ($terms_arr as $terms) {
 										

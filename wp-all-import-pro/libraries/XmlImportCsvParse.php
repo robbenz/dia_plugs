@@ -112,7 +112,7 @@ class PMXI_CsvParser
 
         $wp_uploads = wp_upload_dir();
         
-        $this->targetDir = (empty($options['targetDir'])) ? wp_all_import_secure_file($wp_uploads['basedir'] . '/wpallimport/uploads', 'uploads') : $options['targetDir'];
+        $this->targetDir = (empty($options['targetDir'])) ? wp_all_import_secure_file($wp_uploads['basedir'] . DIRECTORY_SEPARATOR . PMXI_Plugin::UPLOADS_DIRECTORY) : $options['targetDir'];
 
         $this->load($options['filename']);
     }
@@ -976,8 +976,8 @@ class PMXI_CsvParser
                 $buf_keys = $keys;
                 foreach ($keys as $key => $value) {    
                     if (!$create_new_headers and (preg_match('%\W(http:|https:|ftp:)$%i', $value) or is_numeric($value))) $create_new_headers = true;                                                                    
-                    $value = trim(strtolower(preg_replace('/^[0-9]{1}/','el_', preg_replace('/[^a-z0-9_]/i', '', $value))));                    
-                    $keys[$key] = (!empty($value) and strlen($value) <= 30) ? $value : 'undefined' . $key;
+                    $value = trim(strtolower(preg_replace('/^[0-9]{1}/','el_', preg_replace('/[^a-z0-9_]/i', '', $value))));
+                    $keys[$key] = (!empty($value)) ? $value : 'undefined' . $key;
                 }            
                 $this->headers = $keys;                                
                 if ($create_new_headers){ 
@@ -1000,6 +1000,7 @@ class PMXI_CsvParser
                         foreach ($chunk as $header => $value) 
                         {
                             $xmlWriter->startElement($header);
+                                $value = preg_replace('/\]\]>/s', '', preg_replace('/<!\[CDATA\[/s', '', $value ));
                                 if ($fixBrokenSymbols){
                                     // Remove non ASCII symbols and write CDATA
                                     $xmlWriter->writeCData(preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', ' ', $value));                                

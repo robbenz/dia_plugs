@@ -23,19 +23,22 @@
 								<div class="input">
 									<?php $wp_uploads = wp_upload_dir(); ?>																					
 									<input type="radio" name="download_images" value="no" class="switcher" id="download_images_no" <?php echo ("yes" != $post['download_images']) ? 'checked="checked"' : '';?>/>
-									<label for="download_images_no"><?php printf(__('Use image(s) currently uploaded in %s/wpallimport/files/', 'wp_all_import_plugin'), $wp_uploads['basedir']); ?></label>
+									<label for="download_images_no"><?php printf(__('Use image(s) currently uploaded in %s', 'wp_all_import_plugin'), $wp_uploads['basedir'] . DIRECTORY_SEPARATOR . PMXI_Plugin::FILES_DIRECTORY . DIRECTORY_SEPARATOR); ?></label>
 								</div>
 								<div class="switcher-target-download_images_no" style="padding-left:27px;">
 									<label for="featured_delim"><?php _e('Enter image filenames one per line, or separate them with a ', 'wp_all_import_plugin');?></label>
 									<input type="text" class="small" id="featured_delim" name="featured_delim" value="<?php echo esc_attr($post['featured_delim']) ?>" style="width:5%; text-align:center;"/>
 									<textarea name="featured_image" class="newline rad4" style="clear: both; display:block; "><?php echo esc_attr($post['featured_image']) ?></textarea>			
-								</div>
-								<a class="preview_images" href="javascript:void(0);" rel="preview_images"><?php _e('Preview & Test', 'wp_all_import_plugin'); ?></a>
+								</div>								
 							</div>
 							<div class="input" style="margin:3px;">
 								<input type="hidden" name="search_existing_images" value="0" />
 								<input type="checkbox" id="search_existing_images" name="search_existing_images" value="1" <?php echo $post['search_existing_images'] ? 'checked="checked"' : '' ?> class="fix_checkbox"/>
-								<label for="search_existing_images"><?php _e('Search for existing images through attachments','wp_all_import_plugin');?> </label>						
+								<label for="search_existing_images"><?php _e('Search through the Media Library for existing images before importing new images','wp_all_import_plugin');?> </label>						
+								<a href="#help" class="wpallimport-help" title="<?php _e('If an image with the same file name is found in the Media Library then that image will be attached to this record instead of importing a new image. Disable this setting if your import has different images with the same file name.', 'wp_all_import_plugin') ?>" style="position: relative; top: -2px;">?</a>
+							</div>
+							<div class="input">
+								<a class="preview_images" href="javascript:void(0);" rel="preview_images"><?php _e('Preview & Test', 'wp_all_import_plugin'); ?></a>
 							</div>
 							<h4><?php _e('Featured Image', 'wp_all_import_plugin'); ?></h4>
 							<div class="input" style="margin:3px 0px;">

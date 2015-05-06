@@ -74,7 +74,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 		<?php do_action( 'woocommerce_cart_totals_before_order_total' ); ?>
 
-		 <tr class="order-total">
+		<tr class="order-total">
 			<th><?php _e( 'Total Before Shipping:', 'woocommerce' ); ?></th>
 			<td><?php wc_cart_totals_order_total_html(); ?></td>
 		</tr>
@@ -95,7 +95,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		?></small></p>
 	<?php endif; ?>
 
- <div class="wc-proceed-to-checkout"> 
+	<div class="wc-proceed-to-checkout">
 
 		<?php do_action( 'woocommerce_proceed_to_checkout' ); ?>
 

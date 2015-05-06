@@ -5,11 +5,11 @@ function pmxi_admin_notices() {
 	$uploads = wp_upload_dir();	
 
 	// compare woocommerce add-on version	
-	if ( class_exists( 'PMWI_Plugin' ) and ( defined('PMWI_VERSION') and version_compare(PMWI_VERSION, '2.0.0-beta1') < 0 and PMWI_EDITION == 'paid' or defined('PMWI_FREE_VERSION') and version_compare(PMWI_FREE_VERSION, '1.1.4') <= 0 and PMWI_EDITION == 'free') ) {
+	if ( class_exists( 'PMWI_Plugin' ) and ( defined('PMWI_VERSION') and version_compare(PMWI_VERSION, '2.1.3 RC5') < 0 and PMWI_EDITION == 'paid' or defined('PMWI_FREE_VERSION') and version_compare(PMWI_FREE_VERSION, '1.2.1') <= 0 and PMWI_EDITION == 'free') ) {
 		?>
 		<div class="error"><p>
 			<?php printf(
-					__('<b>%s Plugin</b>: Please update your WP All Import WooCommerce add-on to the latest version</a>', 'pmwi_plugin'),
+					__('<b>%s Plugin</b>: Please update your WP All Import WooCommerce add-on to the latest version', 'pmwi_plugin'),
 					PMWI_Plugin::getInstance()->getName()
 			) ?>
 		</p></div>
@@ -31,7 +31,7 @@ function pmxi_admin_notices() {
 		?>
 		<div class="error"><p>
 			<?php printf(
-					__('<b>%s Plugin</b>: Please update your WP All Import ACF add-on to the latest version</a>', 'pmwi_plugin'),
+					__('<b>%s Plugin</b>: Please update your WP All Import ACF add-on to the latest version', 'pmwi_plugin'),
 					PMAI_Plugin::getInstance()->getName()
 			) ?>
 		</p></div>
@@ -48,7 +48,7 @@ function pmxi_admin_notices() {
 		?>
 		<div class="error"><p>
 			<?php printf(
-					__('<b>%s Plugin</b>: Please update your WP All Import Linkcloak add-on to the latest version</a>', 'pmwi_plugin'),
+					__('<b>%s Plugin</b>: Please update your WP All Import Linkcloak add-on to the latest version', 'pmwi_plugin'),
 					PMLCA_Plugin::getInstance()->getName()
 			) ?>
 		</p></div>
@@ -65,7 +65,7 @@ function pmxi_admin_notices() {
 		?>
 		<div class="error"><p>
 			<?php printf(
-					__('<b>%s Plugin</b>: Please update your WP All Import User add-on to the latest version</a>', 'pmwi_plugin'),
+					__('<b>%s Plugin</b>: Please update your WP All Import User add-on to the latest version', 'pmwi_plugin'),
 					PMUI_Plugin::getInstance()->getName()
 			) ?>
 		</p></div>
@@ -82,7 +82,7 @@ function pmxi_admin_notices() {
 		?>
 		<div class="error"><p>
 			<?php printf(
-					__('<b>%s Plugin</b>: Please update your WP All Import WPML add-on to the latest version</a>', 'pmwi_plugin'),
+					__('<b>%s Plugin</b>: The WPML Add-On Plugin is no longer compatible with this version of WP All Import - please contact support@wpallimport.com and we will supply the latest version of WP All Import that is compatible with the WPML Add-On.', 'pmwi_plugin'),
 					PMLI_Plugin::getInstance()->getName()
 			) ?>
 		</p></div>
