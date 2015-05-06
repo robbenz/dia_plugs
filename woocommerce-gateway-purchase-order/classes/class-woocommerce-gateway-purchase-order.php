@@ -171,7 +171,7 @@ final class Woocommerce_Gateway_Purchase_Order extends WC_Payment_Gateway {
 		if ( $order->payment_method !== $this->id ) return;
 		$po_number = get_post_meta( $order->id, '_po_number', true ) ;
 		if ( '' != $po_number ) {
-			echo '<p><strong>' . __( 'Purchase Order Number:', 'woocommerce-gateway-purchase-order' ) . '</strong> ' . $po_number . '</p>';
+           echo '<p><strong>' . __( 'Purchase Order Number:', 'woocommerce-gateway-purchase-order' ) . '</strong> ' . $po_number . '</p>';
 		}
 	} // End my_custom_checkout_field_order_details()
 

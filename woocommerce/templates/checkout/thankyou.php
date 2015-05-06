@@ -34,6 +34,9 @@ if ( $order ) : ?>
 	<?php else : ?>
 
 		<div id="order-recieved-wrap"><p class="order-recieved-copy"><?php echo apply_filters( 'woocommerce_thankyou_order_received_text', __( 'Thank you. Your order has been received.', 'woocommerce' ), $order ); ?></p>
+        <p class="shipping-details-text">You will contacted as soon as shipping costs are calculated to arrange payment.</p>
+            
+            
 </div>
 <div id="order-details-wrap">
 		<ul class="order_details">
