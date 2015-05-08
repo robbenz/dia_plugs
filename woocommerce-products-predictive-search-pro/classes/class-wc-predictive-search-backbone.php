@@ -183,7 +183,7 @@ class WC_Predictive_Search_Hook_Backbone
 		{{ if ( next_page_number > 1 ) { }}
 		<div id="ps_more_check"></div>
 		{{ } else if ( total_items == 0 && first_load ) { }}
-		<p><?php wc_ps_ict_t_e( 'No Result Text', __('<span class="sorry-you-cant-find">Sorry, we dont have that part yet.</span><br /><br /><a href="#" class="popmake-32594 click-here-parts-link">Click Here To Request A Quote</a>', 'woops') ); ?></p>
+		<p><?php wc_ps_ict_t_e( 'No Result Text', __('<span class="sorry-you-cant-find">Sorry, we don\'t have that part yet.</span><br /><br /><a href="#" class="popmake-32594 click-here-parts-link">Click Here To Request A Quote</a>', 'woops') ); ?></p>
 		{{ } }}
 	</script>
     
