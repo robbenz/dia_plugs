@@ -188,8 +188,6 @@ class WC_Predictive_Search_Hook_Backbone
 	</script>
     
     
-    
-    
     <?php
 		wp_enqueue_script( 'jquery' );
 		wp_enqueue_script( 'underscore' );
