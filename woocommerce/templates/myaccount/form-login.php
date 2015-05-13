@@ -42,7 +42,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div id="left-col-reg-email">
 			<p class="form-row form-row-wide">
 				<label for="reg_email"><?php _e( 'Email Address', 'woocommerce' ); ?> <span class="required">*</span></label>
-				<input type="email" class="input-text" name="email" id="reg_email" value="<?php if ( ! empty( $_POST['email'] ) ) echo esc_attr( $_POST['email'] ); ?>" />
+				<input type="email" tabindex="4" class="input-text" name="email" id="reg_email" value="<?php if ( ! empty( $_POST['email'] ) ) echo esc_attr( $_POST['email'] ); ?>" />
 			</p>
 </div>
 			<?php if ( 'no' === get_option( 'woocommerce_registration_generate_password' ) ) : ?>
@@ -68,7 +68,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div id="left-col-submit-button">
 			<p class="form-row">
 				<?php wp_nonce_field( 'woocommerce-register' ); ?>
-				<input type="submit" class="button" name="register" value="<?php _e( 'Submit', 'woocommerce' ); ?>" />
+				<input type="submit" tabindex="8" class="button" name="register" value="<?php _e( 'Submit', 'woocommerce' ); ?>" />
 			</p>
 </div>
 			<?php do_action( 'woocommerce_register_form_end' ); ?>
@@ -92,20 +92,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 			<p class="form-row form-row-wide">
 				<label for="username"><?php _e( 'Email Address', 'woocommerce' ); ?> <span class="required">*</span></label>
-				<input type="text" class="input-text" name="username" id="username" value="<?php if ( ! empty( $_POST['username'] ) ) echo esc_attr( $_POST['username'] ); ?>" />
+				<input type="text" tabindex="9" class="input-text" name="username" id="username" value="<?php if ( ! empty( $_POST['username'] ) ) echo esc_attr( $_POST['username'] ); ?>" />
 			</p>
 			<p class="form-row form-row-wide">
 				<label for="password"><?php _e( 'Password', 'woocommerce' ); ?> <span class="required">*</span></label>
-				<input class="input-text" type="password" name="password" id="password" />
+				<input class="input-text" tabindex="10" type="password" name="password" id="password" />
 			</p>
 
 			<?php do_action( 'woocommerce_login_form' ); ?>
 
 			<p class="form-row">
 				<?php wp_nonce_field( 'woocommerce-login' ); ?>
-				<input type="submit" class="button" name="login" value="<?php _e( 'Submit', 'woocommerce' ); ?>" />
+				<input type="submit" tabindex="12" class="button" name="login" value="<?php _e( 'Submit', 'woocommerce' ); ?>" />
 				<label for="rememberme" class="inline">
-					<input name="rememberme" type="checkbox" id="rememberme" value="forever" /> <?php _e( 'Remember me', 'woocommerce' ); ?>
+					<input name="rememberme" tabindex="11" type="checkbox" id="rememberme" value="forever" /> <?php _e( 'Remember me', 'woocommerce' ); ?>
 				</label>
 			</p>
 			<p class="lost_password">

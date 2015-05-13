@@ -147,8 +147,8 @@ if ( !class_exists( 'RPR_Login' ) ) {
 				$user_url = isset( $_REQUEST['user_url'] ) ? (string) $_REQUEST['user_url'] : '';
 				echo "\n", '<p id="user_url-p"><label id="user_url-label" for="user_url">';
 				if ( '1' === $register_plus_redux->rpr_get_option( 'required_fields_asterisk' ) && is_array( $register_plus_redux->rpr_get_option( 'required_fields' ) ) && in_array( 'user_url', $register_plus_redux->rpr_get_option( 'required_fields' ) ) ) echo '*';
-				echo __( 'Phone Number', 'register-plus-redux' ), '<br /><input type="text" name="user_url" id="user_url" class="input" value="', esc_attr( $user_url ), '" ';
-				if ( 0 !== $tabindex ) echo 'tabindex="', $tabindex++, '" ';
+				echo __( 'Phone Number', 'register-plus-redux' ), '<br /><input type="text" tabindex="5" name="user_url" id="user_url" class="input" value="', esc_attr( $user_url ), '" ';
+				//if ( 0 !== $tabindex ) echo 'tabindex="', $tabindex++, '" ';
 				echo '/></label></p>';
 			}
 			if ( is_array( $register_plus_redux->rpr_get_option( 'show_fields' ) ) && in_array( 'aim', $register_plus_redux->rpr_get_option( 'show_fields' ) ) ) {

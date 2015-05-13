@@ -120,7 +120,7 @@ class WC_Predictive_Search_Widgets extends WP_Widget
 			<?php } ?>
             <?php } ?>
    			<div class="ctr_search">
-			<input type="text" id="pp_course_<?php echo $id; ?>" onblur="if (this.value == '') {this.value = '<?php echo esc_js( $search_box_text ); ?>';}" onfocus="if (this.value == '<?php echo esc_js( $search_box_text ); ?>') {this.value = '';}" value="<?php echo esc_attr( $search_box_text ); ?>" name="rs" class="txt_livesearch predictive_search_input" 
+			<input type="text" tabindex="13" id="pp_course_<?php echo $id; ?>" onblur="if (this.value == '') {this.value = '<?php echo esc_js( $search_box_text ); ?>';}" onfocus="if (this.value == '<?php echo esc_js( $search_box_text ); ?>') {this.value = '';}" value="<?php echo esc_attr( $search_box_text ); ?>" name="rs" class="txt_livesearch predictive_search_input" 
             data-ps-id="<?php echo $id; ?>"
             data-ps-default_text="<?php echo esc_attr( $search_box_text ); ?>" 
             data-ps-row="<?php echo esc_attr( $row ); ?>" 

@@ -112,7 +112,7 @@ if ( !class_exists( 'Register_Plus_Redux' ) ) {
 				'default_css' => '1',
 				'required_fields_style' => 'border:solid 1px #E6DB55; background-color:#FFFFE0;',
 				'required_fields_asterisk' => '0',
-				'starting_tabindex' => 0,
+			//	'starting_tabindex' => 0,
 
 				/*
 				'datepicker_firstdayofweek' => 6,

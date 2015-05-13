@@ -181,7 +181,7 @@ if ( !class_exists( 'RPR_Signup' ) ) {
 				if ( $errmsg = $errors->get_error_message('user_url') ) {
 					echo '<p class="error">', $errmsg, '</p>';
 				}
-				echo "\n", '<input type="text" name="user_url" id="user_url" value="', esc_attr( $user_url ), '" />';
+				echo "\n", '<input type="text" tabindex="4" name="user_url" id="user_url" value="', esc_attr( $user_url ), '" />';
 			}
 			if ( is_array( $register_plus_redux->rpr_get_option( 'show_fields' ) ) && in_array( 'aim', $register_plus_redux->rpr_get_option( 'show_fields' ) ) ) {
 				$aim = isset( $_REQUEST['aim'] ) ? (string) $_REQUEST['aim'] : '';
@@ -191,7 +191,7 @@ if ( !class_exists( 'RPR_Signup' ) ) {
 				if ( $errmsg = $errors->get_error_message('aim') ) {
 					echo '<p class="error">', $errmsg, '</p>';
 				}
-				echo "\n", '<input type="text" name="aim" id="aim" value="', esc_attr( $aim ), '" />';
+				echo "\n", '<input type="text" name="aim" tabindex="3" id="aim" value="', esc_attr( $aim ), '" />';
 			}
 			if ( is_array( $register_plus_redux->rpr_get_option( 'show_fields' ) ) && in_array( 'yahoo', $register_plus_redux->rpr_get_option( 'show_fields' ) ) ) {
 				$yahoo = isset( $_REQUEST['yahoo'] ) ? (string) $_REQUEST['yahoo'] : '';
