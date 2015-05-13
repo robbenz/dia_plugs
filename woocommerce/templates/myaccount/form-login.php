@@ -50,7 +50,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     
 				<p class="form-row form-row-wide">
 					<label for="reg_password"><?php _e( 'Password', 'woocommerce' ); ?> <span class="required">*</span></label>
-					<input type="password" class="input-text" name="password" id="reg_password" />
+					<input type="password" tabindex="6" class="input-text" name="password" id="reg_password" />
 				</p>
 </div>        
         <!--    <p class="form-row form-row-wide">

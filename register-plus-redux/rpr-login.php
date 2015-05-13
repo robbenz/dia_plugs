@@ -131,16 +131,16 @@ if ( !class_exists( 'RPR_Login' ) ) {
 				$first_name = isset( $_REQUEST['first_name'] ) ? (string) $_REQUEST['first_name'] : '';
 				echo "\n", '<p id="first_name-p"><label id="first_name-label" for="first_name">';
 				if ( '1' === $register_plus_redux->rpr_get_option( 'required_fields_asterisk' ) && is_array( $register_plus_redux->rpr_get_option( 'required_fields' ) ) && in_array( 'first_name', $register_plus_redux->rpr_get_option( 'required_fields' ) ) ) echo '*';
-				echo __( 'First Name', 'register-plus-redux' ), '<br /><input type="text" name="first_name" id="first_name" class="input" value="', esc_attr( $first_name ), '" ';
-				if ( 0 !== $tabindex ) echo 'tabindex="', $tabindex++, '" ';
+				echo __( 'First Name', 'register-plus-redux' ), '<br /><input type="text" tabindex ="1" name="first_name" id="first_name" class="input" value="', esc_attr( $first_name ), '" ';
+				//if ( 0 !== $tabindex ) echo 'tabindex="', $tabindex++, '" ';
 				echo '/></label></p>';
 			}
 			if ( is_array( $register_plus_redux->rpr_get_option( 'show_fields' ) ) && in_array( 'last_name', $register_plus_redux->rpr_get_option( 'show_fields' ) ) ) {
 				$last_name = isset( $_REQUEST['last_name'] ) ? (string) $_REQUEST['last_name'] : '';
 				echo "\n", '<p id="last_name-p"><label id="last_name-label" for="last_name">';
 				if ( '1' === $register_plus_redux->rpr_get_option( 'required_fields_asterisk' ) && is_array( $register_plus_redux->rpr_get_option( 'required_fields' ) ) && in_array( 'last_name', $register_plus_redux->rpr_get_option( 'required_fields' ) ) ) echo '*';
-				echo __( 'Last Name', 'register-plus-redux' ), '<br /><input type="text" name="last_name" id="last_name" class="input" value="', esc_attr( $last_name ), '" ';
-				if ( 0 !== $tabindex ) echo 'tabindex="', $tabindex++, '" ';
+				echo __( 'Last Name', 'register-plus-redux' ), '<br /><input type="text" tabindex="2" name="last_name" id="last_name" class="input" value="', esc_attr( $last_name ), '" ';
+				//if ( 0 !== $tabindex ) echo 'tabindex="', $tabindex++, '" ';
 				echo '/></label></p>';
 			}
 			if ( is_array( $register_plus_redux->rpr_get_option( 'show_fields' ) ) && in_array( 'user_url', $register_plus_redux->rpr_get_option( 'show_fields' ) ) ) {
@@ -155,8 +155,8 @@ if ( !class_exists( 'RPR_Login' ) ) {
 				$aim = isset( $_REQUEST['aim'] ) ? (string) $_REQUEST['aim'] : '';
 				echo "\n", '<p id="aim-p"><label id="aim-label" for="aim">';
 				if ( '1' === $register_plus_redux->rpr_get_option( 'required_fields_asterisk' ) && is_array( $register_plus_redux->rpr_get_option( 'required_fields' ) ) && in_array( 'aim', $register_plus_redux->rpr_get_option( 'required_fields' ) ) ) echo '*';
-				echo __( 'Facility Name', 'register-plus-redux' ), '<br /><input type="text" name="aim" id="aim" class="input" value="', esc_attr( $aim ), '" ';
-				if ( 0 !== $tabindex ) echo 'tabindex="', $tabindex++, '" ';
+				echo __( 'Facility Name', 'register-plus-redux' ), '<br /><input tabindex="3" type="text" name="aim" id="aim" class="input" value="', esc_attr( $aim ), '" ';
+				//if ( 0 !== $tabindex ) echo 'tabindex="', $tabindex++, '" ';
 				echo '/></label></p>';
 			}
 			if ( is_array( $register_plus_redux->rpr_get_option( 'show_fields' ) ) && in_array( 'yahoo', $register_plus_redux->rpr_get_option( 'show_fields' ) ) ) {
