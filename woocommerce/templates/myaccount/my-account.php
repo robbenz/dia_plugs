@@ -76,11 +76,11 @@ wc_print_notices(); ?>
 		<div id="password-change-header-orange">Change Password</div>
 
 		<p class="form-row form-row-wide">
-			<label for="password_current"><?php _e( 'Current Password (leave blank to leave unchanged)', 'woocommerce' ); ?></label>
+			<label for="password_current"><?php _e( 'Current Password', 'woocommerce' ); ?></label>
 			<input type="password" class="input-text" name="password_current" id="password_current" />
 		</p>
 		<p class="form-row form-row-wide">
-			<label for="password_1"><?php _e( 'New Password (leave blank to leave unchanged)', 'woocommerce' ); ?></label>
+			<label for="password_1"><?php _e( 'New Password', 'woocommerce' ); ?></label>
 			<input type="password" class="input-text" name="password_1" id="password_1" />
 		</p>
 		<p class="form-row form-row-wide">
