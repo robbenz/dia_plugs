@@ -593,10 +593,17 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 
 				$t_shipping_class = get_term_by('slug', $p_shipping_class, 'product_shipping_class');									
 
-				if ( $t_shipping_class !== 0 && $t_shipping_class !== null) {
+				if ( ! empty($t_shipping_class) and ! is_wp_error($t_shipping_class) ) {
 
 					$p_shipping_class = (int) $t_shipping_class->term_taxonomy_id; 	
 					
+				}
+				else{
+					
+					$t_shipping_class = term_exists( (int) $product_shipping_class[$i], 'product_shipping_class', 0);	
+										
+					if ( ! is_wp_error($t_shipping_class) )												
+						$p_shipping_class = (int) $t_shipping_class['term_taxonomy_id']; 	
 				}
 			}
 			else{
@@ -1113,7 +1120,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 						'meta_query' => array(
 							array(
 								'key' => '_sku',
-								'value' => get_post_meta($pid, '_sku', true),						
+								'value' => get_post_meta($pid, '_sku', true),
 							)
 						)
 					);			
@@ -1233,7 +1240,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 							
 							$this->duplicate_post_meta($pid, $product_parent_post_id);
 
-							$this->pushmeta($pid, '_sku', 'v' . get_post_meta($pid, '_sku', true));	
+							//$this->pushmeta($pid, '_sku', 'v' . get_post_meta($pid, '_sku', true));	
 
 							// associate variation with import
 							$postRecord->isEmpty() and $postRecord->set(array(
@@ -1255,7 +1262,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 						
 						$this->duplicate_post_meta($pid, $product_parent_post_id);		
 
-						$this->pushmeta($pid, '_sku', 'v' . get_post_meta($pid, '_sku', true));	
+						//$this->pushmeta($pid, '_sku', 'v' . get_post_meta($pid, '_sku', true));	
 
 						$postRecord->set(array('iteration' => $import->iteration))->update();
 
@@ -1516,19 +1523,20 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 						$this->pushmeta($post_parent, '_stock_status', ($total_instock > 0) ? 'instock' : 'outofstock');
 						
 						$this->pushmeta($post_parent, '_price', $lowest_price);		
-						$this->pushmeta($post_parent, '_min_variation_price', $lowest_price);		
-						$this->pushmeta($post_parent, '_max_variation_price', $highest_price);		
-						$this->pushmeta($post_parent, '_min_variation_regular_price', $lowest_regular_price);		
-						$this->pushmeta($post_parent, '_max_variation_regular_price', $highest_regular_price);		
-						$this->pushmeta($post_parent, '_min_variation_sale_price', $lowest_sale_price);		
-						$this->pushmeta($post_parent, '_max_variation_sale_price', $highest_sale_price);									
 
-						$this->pushmeta($post_parent, '_min_price_variation_id', $lowest_price_id);
-						$this->pushmeta($post_parent, '_max_price_variation_id', $highest_price_id);
-						$this->pushmeta($post_parent, '_min_regular_price_variation_id', $lowest_regular_price_id);
-						$this->pushmeta($post_parent, '_max_regular_price_variation_id', $highest_regular_price_id);
-						$this->pushmeta($post_parent, '_min_sale_price_variation_id', $lowest_sale_price_id);
-						$this->pushmeta($post_parent, '_max_sale_price_variation_id', $highest_sale_price_id);
+						update_post_meta($post_parent, '_min_variation_price', $lowest_price);		
+						update_post_meta($post_parent, '_max_variation_price', $highest_price);		
+						update_post_meta($post_parent, '_min_variation_regular_price', $lowest_regular_price);		
+						update_post_meta($post_parent, '_max_variation_regular_price', $highest_regular_price);		
+						update_post_meta($post_parent, '_min_variation_sale_price', $lowest_sale_price);		
+						update_post_meta($post_parent, '_max_variation_sale_price', $highest_sale_price);									
+
+						update_post_meta($post_parent, '_min_price_variation_id', $lowest_price_id);
+						update_post_meta($post_parent, '_max_price_variation_id', $highest_price_id);
+						update_post_meta($post_parent, '_min_regular_price_variation_id', $lowest_regular_price_id);
+						update_post_meta($post_parent, '_max_regular_price_variation_id', $highest_regular_price_id);
+						update_post_meta($post_parent, '_min_sale_price_variation_id', $lowest_sale_price_id);
+						update_post_meta($post_parent, '_max_sale_price_variation_id', $highest_sale_price_id);
 
 						// Update default attribute options setting
 						if ( $import->options['update_all_data'] == "yes" or ( $import->options['update_all_data'] == "no" and $import->options['is_update_attributes'] ) or $is_new_product ){

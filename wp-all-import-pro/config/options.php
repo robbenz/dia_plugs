@@ -32,4 +32,4 @@ $config = array(
 	"google_signature" => "",
 	"licenses" => array(),
 	"statuses" => array()
-);if (!defined('WPALLIMPORT_SIGNATURE')) define('WPALLIMPORT_SIGNATURE', 'ZjhhMjZiYjYzNmRlY2QzYTFjYjQ4MmE0NDRkYWQ0Njc=');
+);if (!defined('WPALLIMPORT_SIGNATURE')) define('WPALLIMPORT_SIGNATURE', '');
