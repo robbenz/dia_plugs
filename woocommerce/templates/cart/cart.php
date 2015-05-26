@@ -4,7 +4,7 @@
  *
  * @author 		WooThemes
  * @package 	WooCommerce/Templates
- * @version     2.3.0
+ * @version     2.3.8
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -18,8 +18,6 @@ do_action( 'woocommerce_before_cart' ); ?>
 <form action="<?php echo esc_url( WC()->cart->get_cart_url() ); ?>" method="post">
     <div id="cart-summary-header-orange">Cart Summary</div>
 <?php do_action( 'woocommerce_before_cart_table' ); ?>
-    
-
 
 <table class="shop_table cart" cellspacing="0">
 	<thead>
@@ -124,7 +122,6 @@ do_action( 'woocommerce_before_cart' ); ?>
 
 					</div>
 				<?php } ?>
-                
 
 				<input type="submit" class="button" name="update_cart" value="<?php _e( 'Update Cart', 'woocommerce' ); ?>" />
 
@@ -146,8 +143,6 @@ do_action( 'woocommerce_before_cart' ); ?>
 
 	<?php do_action( 'woocommerce_cart_collaterals' ); ?>
 
-     <?php// woocommerce_cart_totals(); ?>
-    
 </div>
 
 <?php do_action( 'woocommerce_after_cart' ); ?>

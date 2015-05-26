@@ -162,7 +162,6 @@ $order = wc_get_order( $order_id );
 	</tfoot>
 </table>
 
-
 <?php do_action( 'woocommerce_order_details_after_order_table', $order ); ?>
     
     </div>
@@ -224,14 +223,11 @@ $order = wc_get_order( $order_id );
 				}
 			?>
 		</address>
-        
-        
 
 	</div><!-- /.col-2 -->
 
 </div><!-- /.col2-set -->
 </div>
-    
     
 <?php endif; ?>
 

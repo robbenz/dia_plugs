@@ -126,3 +126,4 @@ if ( ! defined( 'ABSPATH' ) ) {
 <?php endif; ?>
 
 <?php do_action( 'woocommerce_after_customer_login_form' ); ?>
+

@@ -29,3 +29,4 @@ if ( ! defined( 'ABSPATH' ) ) {
 <p><?php _e( 'If this was a mistake, just ignore this email and nothing will happen.', 'woocommerce' ); ?></p>
 
 <?php do_action( 'woocommerce_email_footer' ); ?>
+

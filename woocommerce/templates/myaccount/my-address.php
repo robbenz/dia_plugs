@@ -71,6 +71,7 @@ $col = 1;
 		</address>
 	</div>
 
+
 </div>
 
 <?php endforeach; ?>

@@ -27,6 +27,7 @@ if ( $customer_orders ) : ?>
 
 	<div id="recent-orders-header-orange"><?php echo apply_filters( 'woocommerce_my_account_my_orders_title', __( 'Recent Orders', 'woocommerce' ) ); ?></div>
 
+
 	<table class="shop_table shop_table_responsive my_account_orders">
 
 		<thead>
