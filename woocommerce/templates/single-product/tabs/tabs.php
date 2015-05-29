@@ -53,7 +53,9 @@ if ( ! empty( $tabs ) ) :
 
         <?php foreach ( $tabs as $key => $tab ) : ?>
           <div class="panel x-tab-pane" id="tab-<?php echo $key ?>">
+              <ul class="tab-desc-list-type">
             <?php call_user_func( $tab['callback'], $key, $tab ) ?>
+            </ul>
           </div>
         <?php endforeach; ?>
 
