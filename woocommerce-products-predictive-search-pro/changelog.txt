@@ -1,5 +1,15 @@
 *** WooCommerce Predictive Search Changelog ***
 
+= 2.4.4 - 2015/06/05 =
+* Fix - Don't show the full search result URL on Google Analytics search results dashboard, now truncated path url /search?ps=keyword
+* Credit - Thanks again to Derek https://a3rev.com/forums/topic/strange-results-in-google-analytics/ for the heads up about the issue.
+
+= 2.4.3 - 2015/06/04 =
+* Tweak - Tested and Tweaked for full compatibility with WordPress Version 4.2.2
+* Tweak - Tested and Tweaked for full compatibility with WooCommerce Version 2.3.10
+* Fix - Update search result page URL to the format //domain.com/ so it's always is correct when loaded as http or https
+* Credit - Thanks to Lifetime License owner Derek https://a3rev.com/forums/topic/insecure-form-call/ for the heads up about the issue.
+
 = 2.4.2 - 2015/04/21 =
 * Tweak - Tested and Tweaked for full compatibility with WordPress Version 4.2.0
 * Tweak - Tested and Tweaked for full compatibility with WooCommerce Version 2.3.8

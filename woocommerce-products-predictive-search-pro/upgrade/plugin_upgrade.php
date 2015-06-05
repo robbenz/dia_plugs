@@ -63,6 +63,20 @@ class WC_Predictive_Search_Upgrade
 				
 			//caching responses.
             set_transient("woo_predictive_search_update_info", $respone_api, 86400); //caching for 24 hours
+
+            /* save check new version to log
+            $current_datetime = gmdate( 'Y-m-d H:i:s' );
+            $called_log = dirname(__FILE__) . '/check_version_log.txt';
+			$log_content = "\n". $current_datetime.' : Checking version - Key: '.get_option('a3rev_auth_woo_predictive_search'). ' - Pin: '. get_option('a3rev_pin_woo_predictive_search'). ' - Domain: '.$_SERVER['SERVER_NAME']. ' - IP: '. $_SERVER['SERVER_ADDR']. ' - Plugin: '.get_option('wc_predictive_search_plugin'). ' - Status: '.$respone_api ;
+			// write new log time
+			if ( function_exists('fopen') ) {
+				$fh = @fopen($called_log, 'a+');
+				@fwrite($fh, $log_content);
+				@fclose($fh); 
+			} else {
+				@file_put_contents($called_log, $log_content, FILE_APPEND | LOCK_EX);
+			}
+			*/
 		}
 		
 		$version_info = explode('||', $respone_api);

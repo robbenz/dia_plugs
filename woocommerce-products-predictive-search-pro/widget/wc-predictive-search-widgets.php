@@ -110,7 +110,7 @@ class WC_Predictive_Search_Widgets extends WP_Widget
 		?>
         <div class="pp_search_container" id="pp_search_container_<?php echo $id;?>" style=" <?php echo $style; ?> ">
         <div style="display:none" class="chrome_xp"></div>
-		<form data-ps-id="<?php echo $id;?>" autocomplete="off" action="<?php echo get_permalink( $woocommerce_search_page_id );?>" method="get" class="fr_search_widget" id="fr_pp_search_widget_<?php echo $id;?>">
+		<form data-ps-id="<?php echo $id;?>" autocomplete="off" action="<?php echo str_replace(array('http:','https:'), '', get_permalink( $woocommerce_search_page_id ) ); ?>" method="get" class="fr_search_widget" id="fr_pp_search_widget_<?php echo $id;?>">
         	<?php
 			if (get_option('permalink_structure') == '') {
 			?>

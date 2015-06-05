@@ -203,7 +203,7 @@ class WC_Predictive_Search_Shortcodes
         })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
         ga('create', '<?php echo $woocommerce_search_google_analytic_id; ?>', 'auto');
         ga('send', 'pageview', {
-		  'page': '<?php echo add_query_arg( array( $woocommerce_search_google_analytic_query_parameter => $search_keyword ) , get_permalink( $woocommerce_search_page_id ) ); ?>',
+		  'page': '/<?php echo add_query_arg( array( $woocommerce_search_google_analytic_query_parameter => $search_keyword ) , get_page_uri( $woocommerce_search_page_id ) ); ?>',
 		  'title': '<?php echo get_the_title( $woocommerce_search_page_id ); ?>'
 		});
         </script>
