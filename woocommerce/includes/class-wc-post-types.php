@@ -230,7 +230,7 @@ class WC_Post_types {
 			apply_filters( 'woocommerce_register_post_type_product',
 				array(
 					'labels'              => array(
-							'name'               => __( 'Medical Equipment', 'woocommerce' ),
+							'name'               => __( 'Products', 'woocommerce' ),
 							'singular_name'      => __( 'Product', 'woocommerce' ),
 							'menu_name'          => _x( 'Products', 'Admin menu name', 'woocommerce' ),
 							'add_new'            => __( 'Add Product', 'woocommerce' ),
