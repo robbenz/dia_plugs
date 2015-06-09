@@ -540,7 +540,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 		$this->post_meta_to_update = array(); // for bulk UPDATE SQL query
 		$this->post_meta_to_insert = array(); // for bulk INSERT SQL query
 		$this->articleData = $articleData;
-		$this->pushmeta($pid, 'total_sales', '0');
+		//$this->pushmeta($pid, 'total_sales', '0');
 
 		$is_downloadable 	= $product_downloadable[$i];
 		$is_virtual 		= $product_virtual[$i];
@@ -683,7 +683,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 
 					if (empty($attr_name) or in_array($attr_name, $attr_names)) continue;
 
-					$attr_names[] = $attr_name;					
+					$attr_names[] = $attr_name; 
 
 					$is_visible 	= intval( $attr_data['is_visible'][$i] );
 					$is_variation 	= intval( $attr_data['in_variation'][$i] );
@@ -732,12 +732,14 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 
 						 		$attr_values = array();						 								 		
 						 			
-						 		foreach ($values as $key => $value) {
+						 		foreach ($values as $key => $val) {
 
-						 			$term = term_exists($value, wc_attribute_taxonomy_name( $attr_name ), 0);	
+						 			$value = substr($val, 0, 199);
+
+						 			$term = term_exists($value, wc_attribute_taxonomy_name( $attr_name ));	
 
 						 			if ( empty($term) and !is_wp_error($term) ){																																
-										$term = term_exists(htmlspecialchars($value), wc_attribute_taxonomy_name( $attr_name ), 0);	
+										$term = term_exists(htmlspecialchars($value), wc_attribute_taxonomy_name( $attr_name ));	
 										if ( empty($term) and !is_wp_error($term) and intval($attr_data['is_create_taxonomy_terms'][$i])){		
 											
 											$term = wp_insert_term(
@@ -1396,16 +1398,16 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 						if ($is_variation){
 							
 							// Don't use woocommerce_clean as it destroys sanitized characters																								
-							$values = (intval($attr_data['in_taxonomy'][$i])) ? $attr_data['value'][$i] : $attr_data['value'][$i];	
+							$values = substr((intval($attr_data['in_taxonomy'][$i])) ? $attr_data['value'][$i] : $attr_data['value'][$i], 0, 199);	
 							
 							if (intval($attr_data['in_taxonomy'][$i])){
 								
 								$cname = wc_attribute_taxonomy_name( preg_replace("%^pa_%", "", $attr_name) );
 
-								$term = term_exists($values, $cname, 0);
+								$term = term_exists($values, $cname);
 
 								if ( empty($term) and !is_wp_error($term) ){																																
-									$term = term_exists(htmlspecialchars($values), $cname, 0);																
+									$term = term_exists(htmlspecialchars($values), $cname);
 								}															
 								if ( ! empty($term) and ! is_wp_error($term) ){	
 									$term = get_term_by('id', $term['term_id'], $cname);									
@@ -1634,10 +1636,10 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 
 								 		foreach ($values as $key => $value) {
 								 			
-								 			$term = term_exists($value, $attribute['name'], 0);	
+								 			$term = term_exists($value, $attribute['name']);	
 
 								 			if ( empty($term) and !is_wp_error($term) ){																																
-												$term = term_exists(htmlspecialchars($value), $attribute['name'], 0);	
+												$term = term_exists(htmlspecialchars($value), $attribute['name']);	
 												if ( empty($term) and !is_wp_error($term) and $attribute['is_create_taxonomy_terms']){													
 													$term = wp_insert_term(
 														$value, // the term 
@@ -2258,7 +2260,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 						}
 
 					// Add any default post meta
-					add_post_meta( $variation_to_update_id, 'total_sales', '0', true );
+					//add_post_meta( $variation_to_update_id, 'total_sales', '0', true );
 					
 					// Product type + Downloadable/Virtual
 					wp_set_object_terms( $variation_to_update_id, NULL, 'product_type' );
@@ -2462,7 +2464,9 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 									if ( in_array( ( (intval($attr_data['in_taxonomy'][$j])) ? wc_attribute_taxonomy_name( $attr_name ) : $attr_name ) , array_filter($import->options['attributes_list'], 'trim'))) continue;								
 								}
 							}	
-															
+												
+							if ( intval($attr_data['in_taxonomy'][$j]) and ( strpos($attr_name, "pa_") === false or strpos($attr_name, "pa_") !== 0 ) ) $attr_name = "pa_" . $attr_name;	
+
 							$is_variation 	= intval( $attr_data['in_variation'][$j]);													
 								
 							// Don't use woocommerce_clean as it destroys sanitized characters																								
@@ -2480,7 +2484,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 									if ( count($terms) > 0 ){	
 								    	foreach ( $terms as $term ) {									    										    										    	
 									    	if ( strtolower($term->name) == trim(strtolower($values)) or $term->slug == sanitize_title(trim(strtolower($values))) ) {										    		
-									    		update_post_meta( $variation_to_update_id, 'attribute_' . wc_attribute_taxonomy_name( $attr_name ), $term->slug );
+									    		update_post_meta( $variation_to_update_id, 'attribute_' . sanitize_title( $attr_name ), $term->slug );
 									    		$term_founded = true;	
 									    		break;
 									    	}
@@ -2492,8 +2496,8 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 										  	wc_attribute_taxonomy_name( $attr_name ) // the taxonomy										  	
 										);		
 										if ( ! is_wp_error($term) ){
-											$term = get_term_by( 'id', $term['term_id'], wc_attribute_taxonomy_name( $attr_name ));
-											update_post_meta( $variation_to_update_id, 'attribute_' . wc_attribute_taxonomy_name( $attr_name ), $term->slug );
+											$term = get_term_by( 'id', $term['term_id'], sanitize_title( $attr_name ));
+											update_post_meta( $variation_to_update_id, 'attribute_' . sanitize_title( $attr_name ), $term->slug );
 										}
 								    }
 							 		
@@ -3043,7 +3047,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 		$terms = wp_get_object_terms( $pid, $tx_name );
 		$term_ids = array();        
 
-		$assign_taxes = array_filter($assign_taxes);
+		$assign_taxes = (is_array($assign_taxes)) ? array_filter($assign_taxes) : false;   
 
 		if ( ! empty($terms) ){
 			if ( ! is_wp_error( $terms ) ) {				

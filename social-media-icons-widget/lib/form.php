@@ -1,24 +1,20 @@
 <?php 
 global $siw_social_accounts;
 
-$siw_data = array();
-
 foreach ($siw_social_accounts as $site => $id) {
-	if($instance[$id] == '') { $siw_data[$id] = 'http://'; }
-	else { $siw_data[$id] = $instance[$id]; }
+	if(!isset($instance[$id])) { $instance[$id] = 'http://'; }
 }
 
-$siw_data['title'] = $instance['title'];
-$siw_data['icons'] = $instance['icons'];
-$siw_data['labels'] = $instance['labels'];
-$siw_data['show_title'] = $instance['show_title'];
-
+if(!isset($instance['title'])) { $instance['title'] = ''; }
+if(!isset($instance['icons'])) { $instance['icons'] = 'medium'; }
+if(!isset($instance['labels'])) { $instance['labels'] = ''; }
+if(!isset($instance['show_title'])) { $instance['show_title'] = ''; }
 ?>
 
 <div class="social_icons_widget">
 
 <p><label for="<?php echo $this->get_field_id('title'); ?>">Title:</label>
-<input class="widefat" type="text" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" value="<?php echo esc_attr($siw_data['title']); ?>" /></p>
+<input class="widefat" type="text" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" value="<?php echo esc_attr($instance['title']); ?>" /></p>
 
 <?php
 $siw_sizes = array(
@@ -37,7 +33,7 @@ $siw_sizes = array(
 	<?php
 	foreach($siw_sizes as $option => $value) :
 
-		if(esc_attr($siw_data['icons'] == $value)) { $selected = ' selected="selected"'; }
+		if(esc_attr($instance['icons'] == $value)) { $selected = ' selected="selected"'; }
 		else { $selected = ''; }
 	?>
 	
@@ -47,16 +43,16 @@ $siw_sizes = array(
 	</select>
 </p>
 
-<?php if(esc_attr($siw_data['labels'] == 'show')) { $checked = ' checked="checked"'; } else { $checked = ''; } ?>
+<?php if(esc_attr($instance['labels'] == 'show')) { $checked = ' checked="checked"'; } else { $checked = ''; } ?>
 <p class="label_options"><input type="checkbox" id="<?php echo $this->get_field_id('labels'); ?>" name="<?php echo $this->get_field_name('labels'); ?>" value="show"<?php echo $checked; ?> /> <label for="<?php echo $this->get_field_id('labels'); ?>">Show Labels</label></p>
 
-<?php if(esc_attr($siw_data['show_title'] == 'show')) { $checked = ' checked="checked"'; } else { $checked = ''; } ?>
+<?php if(esc_attr($instance['show_title'] == 'show')) { $checked = ' checked="checked"'; } else { $checked = ''; } ?>
 <p class="label_options"><input type="checkbox" id="<?php echo $this->get_field_id('show_title'); ?>" name="<?php echo $this->get_field_name('show_title'); ?>" value="show"<?php echo $checked; ?> /> <label for="<?php echo $this->get_field_id('show_title'); ?>">Hide Title</label></p>
 
 <ul class="social_accounts">
 	<?php foreach ($siw_social_accounts as $site => $id) : ?>
 		<li><label for="<?php echo $this->get_field_id($id); ?>" class="<?php echo $id; ?>"><?php echo $site; ?>:</label>
-			<input class="widefat" type="text" id="<?php echo $this->get_field_id($id); ?>" name="<?php echo $this->get_field_name($id); ?>" value="<?php echo esc_attr($siw_data[$id]); ?>" /></li>
+			<input class="widefat" type="text" id="<?php echo $this->get_field_id($id); ?>" name="<?php echo $this->get_field_name($id); ?>" value="<?php echo esc_attr($instance[$id]); ?>" /></li>
 	<?php endforeach; ?>
 </ul>
 

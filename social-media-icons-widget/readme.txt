@@ -4,7 +4,7 @@ Tags: social, media, widget, follow, profile, icons, 500px, About.me, Behance, D
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CJN7XU3Z7XHDL
 Requires at least: 3.5.1
 Tested up to: 4.0
-Stable tag: 14.10
+Stable tag: 15.06
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -74,16 +74,21 @@ The opening and closing unordered list tags can be edited or changed with the so
 
 == Changelog ==
 
+= 15.06 =
+* Fixed Undefined index errors.
+* Removed Technorati profile field.
+* Added dailymotion and Twitch profile fields.
+
 = 14.10 =
-* Added Soundcloud to default list of services
-* Implemented slash fix for those running the plugin on XAMMP/Windows (Thanks VictoriousK)
+* Added Soundcloud to default list of services.
+* Implemented slash fix for those running the plugin on XAMMP/Windows (Thanks VictoriousK).
 
 = 14.08 =
 * Added prefixes to PHP variables to prevent conflicts with other plugins.
 
 = 14.07 =
-* Added 500px, Codepen, Envato, Kickstarter, Speaker Deck, Vine
-* Removed Forrst
+* Added 500px, Codepen, Envato, Kickstarter, Speaker Deck, Vine.
+* Removed Forrst.
 * Added ability to filter opening, closing tags and HTML for icon output.
 * Added target="_blank" for links to open in a new window by default.
 
@@ -91,21 +96,21 @@ The opening and closing unordered list tags can be edited or changed with the so
 * Fixed broken image links when WordPress is installed under a directory.
 
 = 14.04 =
-* Added new options for About.me, Email, GitHub, Medium, and WordPress profile links
-* Updated all icons to Simple Icons set
+* Added new options for About.me, Email, GitHub, Medium, and WordPress profile links.
+* Updated all icons to Simple Icons set.
 
 = 14.03 =
-* Removed @getimagesize function for compatibility purposes
-* New accounts are now added via WordPress filter rather than editing core plugin code
+* Removed @getimagesize function for compatibility purposes.
+* New accounts are now added via WordPress filter rather than editing core plugin code.
 
 = 13.05 =
-* Fixed image and CSS paths
+* Fixed image and CSS paths.
 
 = 13.04 =
-* Initial commit
+* Initial commit.
 
 = trunk =
-* Initial commit
+* Initial commit.
 
 == Upgrade Notice ==
 
@@ -113,7 +118,7 @@ The opening and closing unordered list tags can be edited or changed with the so
 Removed @getimagesize function for compatibility purposes. New accounts are now added via WordPress filter rather than editing core plugin code.
 
 = 13.05 =
-Fixed image and CSS paths
+Fixed image and CSS paths.
 
 = 13.04 =
-Initial commit to WordPress plugin repository
+Initial commit to WordPress plugin repository.

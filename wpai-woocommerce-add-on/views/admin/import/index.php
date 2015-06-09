@@ -71,7 +71,7 @@
 
 											<li class="options_tab advanced_options"><a title="Variations for variable products are defined here." href="javascript:void(0);" rel="add_on_options"><?php _e('Add-On Options', 'pmxi_plugin');?></a></li>
 
-											<?php //do_action('pmwi_tab_header'); ?>
+											<?php do_action('pmwi_tab_header'); ?>
 
 										</ul>
 

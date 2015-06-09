@@ -19,9 +19,14 @@ function pmxi_admin_notices() {
 		{
 			deactivate_plugins( PMWI_ROOT_DIR . '/wpai-woocommerce-add-on.php');
 		}
-		else 
+		else
 		{	
-			deactivate_plugins( PMWI_FREE_ROOT_DIR . '/plugin.php');		
+			if (defined('PMWI_FREE_ROOT_DIR')){ 
+				deactivate_plugins( PMWI_FREE_ROOT_DIR . '/plugin.php');		
+			}
+			else{
+				deactivate_plugins( PMWI_ROOT_DIR . '/plugin.php');		
+			}
 		}
 		
 	}

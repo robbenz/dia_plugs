@@ -25,6 +25,8 @@ if ( ! function_exists('wp_all_import_get_url')){
 			$file = @fopen($filePath, "rb");
 		}
 
+		$is_valid = false;
+
    		if (is_resource($file)){   				   			
    			
    			$fp = @fopen($localPath, 'w');
@@ -38,9 +40,43 @@ if ( ! function_exists('wp_all_import_get_url')){
 			@fclose($file);
 			@fclose($fp); 	   	
 			
+			$chunk = new PMXI_Chunk($localPath);										    					    					   												
+
+			$is_valid = true;
+
+			if ( ! empty($chunk->options['element']) ) 						
+				$defaultXpath = "/". $chunk->options['element'];																			    		  
+			else
+				$is_valid = false;
+			
+			if ( $is_valid ){
+
+				while ($xml = $chunk->read()) {
+
+			    	if ( ! empty($xml) ) { 
+
+			      		PMXI_Import_Record::preprocessXml($xml);
+			      		$xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" . "\n" . $xml;
+			    	
+				      	$dom = new DOMDocument( '1.0', 'UTF-8' );
+						$old = libxml_use_internal_errors(true);
+						$dom->loadXML($xml);
+						libxml_use_internal_errors($old);
+						$xpath = new DOMXPath($dom);									
+						if (($elements = $xpath->query($defaultXpath)) and $elements->length){
+							break;
+						}												
+				    }	
+				}
+
+				if ( empty($xml) ) $is_valid = false;
+			}
+
+			unset($chunk);
+
 		}									
 		
-	   	if ( ! file_exists($localPath) ) {
+	   	if ( ! $is_valid ) {
 	   		
 	   		$request = get_file_curl($filePath, $localPath);
 	   		
