@@ -1,0 +1,897 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Responsive Menu WordPress\n"
+"POT-Creation-Date: 2015-02-18 13:02-0000\n"
+"PO-Revision-Date: 2015-02-18 13:02-0000\n"
+"Last-Translator: Peter Featherstone <hello@peterfeatherstone.com>\n"
+"Language-Team: Peter Featherstone <peter.featherstone@networkintellect.com>\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.4\n"
+"X-Poedit-Basepath: ..\\\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-KeywordsList: __;_e;_\n"
+"X-Poedit-SearchPath-0: app\n"
+
+#: app/config.php:88 app/views/admin/page.phtml:538
+msgid "Menu Title"
+msgstr ""
+
+#: app/controllers/AdminController.php:56
+#: app/controllers/AdminController.php:57
+msgid "Responsive Menu"
+msgstr ""
+
+#: app/controllers/AdminController.php:147
+msgid "Settings"
+msgstr ""
+
+#: app/controllers/GlobalController.php:57
+msgid ""
+"Highly Customisable Responsive Menu Plugin Created By Peter Featherstone"
+msgstr ""
+
+#: app/library/responsive-menu/Export.php:23
+msgid "Could not create export file, please check plugin folder permissions"
+msgstr ""
+
+#: app/library/responsive-menu/Export.php:43
+msgid "You can download your exported file by clicking here"
+msgstr ""
+
+#: app/library/responsive-menu/Import.php:17
+msgid "No Import File Attached"
+msgstr ""
+
+#: app/library/responsive-menu/Import.php:20
+msgid "Incorrect Import File Format"
+msgstr ""
+
+#: app/library/responsive-menu/Import.php:23
+msgid "Import File Too Large"
+msgstr ""
+
+#: app/library/responsive-menu/Import.php:26
+msgid "Import File Not Valid"
+msgstr ""
+
+#: app/library/responsive-menu/View.php:94
+msgid "Search"
+msgstr ""
+
+#: app/models/AdminModel.php:356
+msgid "You have successfully updated the Responsive Menu options"
+msgstr ""
+
+#: app/models/CSSModel.php:24
+msgid "Unable to create CSS file"
+msgstr ""
+
+#: app/models/FolderModel.php:26
+msgid "Unable to create data folders"
+msgstr ""
+
+#: app/models/FolderModel.php:29
+msgid "Unable to create CSS folders"
+msgstr ""
+
+#: app/models/FolderModel.php:32
+msgid "Unable to create JS folders"
+msgstr ""
+
+#: app/models/JSModel.php:24
+msgid "Unable to create JS file"
+msgstr ""
+
+#: app/views/admin/page.phtml:159
+msgid "Version"
+msgstr ""
+
+#: app/views/admin/page.phtml:166
+msgid "Responsive Menu Options"
+msgstr ""
+
+#: app/views/admin/page.phtml:173
+msgid "Meta Tag Check"
+msgstr ""
+
+#: app/views/admin/page.phtml:178
+msgid "Viewport Meta Tag Check"
+msgstr ""
+
+#: app/views/admin/page.phtml:182
+msgid "Below Viewport Meta Tag Found"
+msgstr ""
+
+#: app/views/admin/page.phtml:200
+msgid "Viewport Meta Tag Not Found"
+msgstr ""
+
+#: app/views/admin/page.phtml:206
+msgid "Recommended Metaport Tag"
+msgstr ""
+
+#: app/views/admin/page.phtml:218 app/views/admin/page.phtml:1040
+#: app/views/admin/page.phtml:1438
+msgid "Note"
+msgstr ""
+
+#: app/views/admin/page.phtml:219
+msgid ""
+"This is only a reference guide and is not critical if you are seeing errors, "
+"these can usually be ignored"
+msgstr ""
+
+#: app/views/admin/page.phtml:225
+msgid "Transient Caching"
+msgstr ""
+
+#: app/views/admin/page.phtml:232
+msgid "Turn on transient caching"
+msgstr ""
+
+#: app/views/admin/page.phtml:235
+#, php-format
+msgid ""
+"Transient caching will save you ~80% on load times, however please note that "
+"this will break active links etc."
+msgstr ""
+
+#: app/views/admin/page.phtml:250
+msgid "Shortcode Support"
+msgstr ""
+
+#: app/views/admin/page.phtml:259
+msgid "Click to use shortcode"
+msgstr ""
+
+#: app/views/admin/page.phtml:261
+msgid ""
+"Tick if you would like to use a shortcode instead of the default behaviour"
+msgstr ""
+
+#: app/views/admin/page.phtml:275
+msgid ""
+"For a list of available shortcode options please visit the following page:"
+msgstr ""
+
+#: app/views/admin/page.phtml:326
+msgid "Click Button Settings"
+msgstr ""
+
+#: app/views/admin/page.phtml:332
+msgid "Click Button Title"
+msgstr ""
+
+#: app/views/admin/page.phtml:334
+msgid "This is the title under the 3 lines of the click button"
+msgstr ""
+
+#: app/views/admin/page.phtml:344
+msgid "Click Button Image"
+msgstr ""
+
+#: app/views/admin/page.phtml:346
+msgid ""
+"This is the click button that replaces the 3 lines. If empty, the 3 lines "
+"will be used"
+msgstr ""
+
+#: app/views/admin/page.phtml:358 app/views/admin/page.phtml:396
+#: app/views/admin/page.phtml:565 app/views/admin/page.phtml:1010
+#: app/views/admin/page.phtml:1030
+msgid "Upload Image"
+msgstr ""
+
+#: app/views/admin/page.phtml:367
+msgid "Change click menu to an X on click"
+msgstr ""
+
+#: app/views/admin/page.phtml:370
+msgid "Tick this if you would like the 3 lines to turn into an x once clicked"
+msgstr ""
+
+#: app/views/admin/page.phtml:382
+msgid "Click Button Image When Clicked"
+msgstr ""
+
+#: app/views/admin/page.phtml:384
+msgid ""
+"This is the click button image that replaces the 3 lines when clicked. If "
+"empty, the 3 lines will be used"
+msgstr ""
+
+#: app/views/admin/page.phtml:408
+msgid "Fixed Positioning"
+msgstr ""
+
+#: app/views/admin/page.phtml:410
+msgid ""
+"Tick this if you would like the click button to remain in the same place "
+"when scrolling"
+msgstr ""
+
+#: app/views/admin/page.phtml:423
+msgid "Click Trigger"
+msgstr ""
+
+#: app/views/admin/page.phtml:425
+msgid "You can set a custom ID or class for custom triggers here if you wish."
+msgstr ""
+
+#: app/views/admin/page.phtml:438
+msgid "Click Button Size Settings"
+msgstr ""
+
+#: app/views/admin/page.phtml:444
+msgid "Width"
+msgstr ""
+
+#: app/views/admin/page.phtml:446
+msgid "This is the width of the individual 3 lines"
+msgstr ""
+
+#: app/views/admin/page.phtml:453 app/views/admin/page.phtml:467
+#: app/views/admin/page.phtml:483 app/views/admin/page.phtml:511
+#: app/views/admin/page.phtml:705 app/views/admin/page.phtml:1356
+#: app/views/admin/page.phtml:1373 app/views/admin/page.phtml:1387
+#: app/views/admin/page.phtml:1431 app/views/admin/page.phtml:1458
+#: app/views/admin/page.phtml:1472
+msgid "px"
+msgstr ""
+
+#: app/views/admin/page.phtml:458
+msgid "Height"
+msgstr ""
+
+#: app/views/admin/page.phtml:460
+msgid "This is the height of the individual 3 lines"
+msgstr ""
+
+#: app/views/admin/page.phtml:474
+msgid "Margin"
+msgstr ""
+
+#: app/views/admin/page.phtml:476
+msgid "This is the margin between the individual 3 lines"
+msgstr ""
+
+#: app/views/admin/page.phtml:496
+msgid "Click Button Location Settings"
+msgstr ""
+
+#: app/views/admin/page.phtml:502 app/views/admin/page.phtml:625
+msgid "Top"
+msgstr ""
+
+#: app/views/admin/page.phtml:504
+msgid ""
+"This is the distance from the top of the page in px that the click button "
+"will be displayed"
+msgstr ""
+
+#: app/views/admin/page.phtml:516 app/views/admin/page.phtml:619
+#: app/views/admin/page.phtml:1414
+msgid "Right"
+msgstr ""
+
+#: app/views/admin/page.phtml:518
+msgid ""
+"This is the distance from the right of the page in % that the menu will be "
+"displayed"
+msgstr ""
+
+#: app/views/admin/page.phtml:531
+msgid "Menu Settings"
+msgstr ""
+
+#: app/views/admin/page.phtml:540
+msgid "This is the title at the top of the responsive menu"
+msgstr ""
+
+#: app/views/admin/page.phtml:551
+msgid "Menu Image"
+msgstr ""
+
+#: app/views/admin/page.phtml:553
+msgid ""
+"This is the image that sits next to the responsive menu title. The best size "
+"is 32px x 32px"
+msgstr ""
+
+#: app/views/admin/page.phtml:575
+msgid "Choose Menu To Responsify"
+msgstr ""
+
+#: app/views/admin/page.phtml:577
+msgid "This is the menu that will be used responsively"
+msgstr ""
+
+#: app/views/admin/page.phtml:597
+msgid "You haven't set up any site menus yet"
+msgstr ""
+
+#: app/views/admin/page.phtml:604
+msgid "Slide Side"
+msgstr ""
+
+#: app/views/admin/page.phtml:606
+msgid "This is the side of the screen from which the menu will slide"
+msgstr ""
+
+#: app/views/admin/page.phtml:613 app/views/admin/page.phtml:1397
+#: app/views/admin/page.phtml:1404
+msgid "Left"
+msgstr ""
+
+#: app/views/admin/page.phtml:631
+msgid "Bottom"
+msgstr ""
+
+#: app/views/admin/page.phtml:641
+msgid "Menu Title Link"
+msgstr ""
+
+#: app/views/admin/page.phtml:643
+msgid "This is the link location for the title"
+msgstr ""
+
+#: app/views/admin/page.phtml:653
+msgid "Menu Title Link Location"
+msgstr ""
+
+#: app/views/admin/page.phtml:655
+msgid "This is where your title page will be opened once clicked"
+msgstr ""
+
+#: app/views/admin/page.phtml:662
+msgid "New Tab"
+msgstr ""
+
+#: app/views/admin/page.phtml:668
+msgid "Same Page"
+msgstr ""
+
+#: app/views/admin/page.phtml:674
+msgid "Parent Page"
+msgstr ""
+
+#: app/views/admin/page.phtml:680
+msgid "Full Window Body"
+msgstr ""
+
+#: app/views/admin/page.phtml:690
+msgid "Menu Advanced Settings"
+msgstr ""
+
+#: app/views/admin/page.phtml:696
+msgid "Menu Breakpoint"
+msgstr ""
+
+#: app/views/admin/page.phtml:698
+msgid ""
+"This is the point where the responsive menu will be visible in px width of "
+"the browser"
+msgstr ""
+
+#: app/views/admin/page.phtml:710
+msgid "CSS of Menu To Hide"
+msgstr ""
+
+#: app/views/admin/page.phtml:712
+msgid ""
+"This is the CSS of the menu you want to hide once the responsive menu shows"
+msgstr ""
+
+#: app/views/admin/page.phtml:712 app/views/admin/page.phtml:1524
+msgid "e.g"
+msgstr ""
+
+#: app/views/admin/page.phtml:726
+msgid "Menu Depth"
+msgstr ""
+
+#: app/views/admin/page.phtml:728
+msgid "This is how deep into your menu tree will be visible (max"
+msgstr ""
+
+#: app/views/admin/page.phtml:747
+msgid "Menu Width"
+msgstr ""
+
+#: app/views/admin/page.phtml:749
+msgid "This is the width the menu takes up across the page once expanded"
+msgstr ""
+
+#: app/views/admin/page.phtml:750 app/views/admin/page.phtml:1349
+#: app/views/admin/page.phtml:1366 app/views/admin/page.phtml:1380
+#: app/views/admin/page.phtml:1397 app/views/admin/page.phtml:1424
+#: app/views/admin/page.phtml:1540 app/views/admin/page.phtml:1554
+msgid "default"
+msgstr ""
+
+#: app/views/admin/page.phtml:770
+msgid "Remove Search Box"
+msgstr ""
+
+#: app/views/admin/page.phtml:772
+msgid "Tick if you would like to remove the search box"
+msgstr ""
+
+#: app/views/admin/page.phtml:785
+msgid "Search Box Positioning"
+msgstr ""
+
+#: app/views/admin/page.phtml:787
+msgid "Select where you would like the search box to appear"
+msgstr ""
+
+#: app/views/admin/page.phtml:794 app/views/admin/page.phtml:1628
+msgid "Above Menu Links"
+msgstr ""
+
+#: app/views/admin/page.phtml:799 app/views/admin/page.phtml:1633
+msgid "Below Menu Links"
+msgstr ""
+
+#: app/views/admin/page.phtml:809
+msgid "Click to Close Menu on Link Click"
+msgstr ""
+
+#: app/views/admin/page.phtml:811
+msgid ""
+"Tick if you would like to close the menu on each link click, useful for "
+"single page sites"
+msgstr ""
+
+#: app/views/admin/page.phtml:824
+msgid "Auto Expand Current Parent Items"
+msgstr ""
+
+#: app/views/admin/page.phtml:826
+msgid ""
+"Tick if you would like to make the current pages children expanded "
+"automatically"
+msgstr ""
+
+#: app/views/admin/page.phtml:840
+msgid "Auto Expand Sub-Menus"
+msgstr ""
+
+#: app/views/admin/page.phtml:842
+msgid "Tick if you would like sub-menus to be automatically expanded"
+msgstr ""
+
+#: app/views/admin/page.phtml:855
+msgid "Ignore Parent Clicks"
+msgstr ""
+
+#: app/views/admin/page.phtml:857
+msgid "Tick if you would like to ignore clicks on parent links"
+msgstr ""
+
+#: app/views/admin/page.phtml:871
+msgid "Click to Close Menu on Page Click"
+msgstr ""
+
+#: app/views/admin/page.phtml:873
+msgid "Tick if you would like to close the current menu on page clicks"
+msgstr ""
+
+#: app/views/admin/page.phtml:894
+msgid "Technical Settings"
+msgstr ""
+
+#: app/views/admin/page.phtml:900
+msgid "Minify output"
+msgstr ""
+
+#: app/views/admin/page.phtml:902
+msgid ""
+"Tick if you would like to minify the script/style output. Saves up to 50% in "
+"file size"
+msgstr ""
+
+#: app/views/admin/page.phtml:915
+msgid "Include script in footer"
+msgstr ""
+
+#: app/views/admin/page.phtml:917
+msgid "Tick if you would like to include your jQuery script in footer"
+msgstr ""
+
+#: app/views/admin/page.phtml:931
+msgid "Include CSS/JS as external files"
+msgstr ""
+
+#: app/views/admin/page.phtml:933
+msgid "Tick if you would like to include CSS and jQuery as external files"
+msgstr ""
+
+#: app/views/admin/page.phtml:944
+msgid "Remove CSS !important tags"
+msgstr ""
+
+#: app/views/admin/page.phtml:947
+msgid "Tick this if you would like to remove the !important tags from the CSS"
+msgstr ""
+
+#: app/views/admin/page.phtml:948
+msgid ""
+"Ticking this will make it easier to over-ride the styles but may make the "
+"default settings not display well"
+msgstr ""
+
+#: app/views/admin/page.phtml:962
+msgid "Sub Menu Arrow Settings"
+msgstr ""
+
+#: app/views/admin/page.phtml:968
+msgid "Active Geometric Shape"
+msgstr ""
+
+#: app/views/admin/page.phtml:979
+msgid "Inactive Gemetric Shape"
+msgstr ""
+
+#: app/views/admin/page.phtml:992
+msgid "You can find a list of Geometric HTML shape codes below"
+msgstr ""
+
+#: app/views/admin/page.phtml:998
+msgid "Active Image"
+msgstr ""
+
+#: app/views/admin/page.phtml:1018
+msgid "Inactive Image"
+msgstr ""
+
+#: app/views/admin/page.phtml:1041
+msgid ""
+"Images have preference over shapes, to use HTML shapes please leave the "
+"image field blank"
+msgstr ""
+
+#: app/views/admin/page.phtml:1048
+msgid "Colour Settings"
+msgstr ""
+
+#: app/views/admin/page.phtml:1050
+msgid "Background Colours"
+msgstr ""
+
+#: app/views/admin/page.phtml:1054
+msgid "Click Button"
+msgstr ""
+
+#: app/views/admin/page.phtml:1062
+msgid "Click Button Line & Text Colour"
+msgstr ""
+
+#: app/views/admin/page.phtml:1064
+msgid "This is the colour of the 3 lines and text for the click button"
+msgstr ""
+
+#: app/views/admin/page.phtml:1077
+msgid "Click Button Background Colour"
+msgstr ""
+
+#: app/views/admin/page.phtml:1079
+msgid "This is the background colour of the 3 lines container"
+msgstr ""
+
+#: app/views/admin/page.phtml:1094
+msgid "Click Button Background Transparent"
+msgstr ""
+
+#: app/views/admin/page.phtml:1096
+msgid ""
+"Tick this if you would like a transparent background on the click button"
+msgstr ""
+
+#: app/views/admin/page.phtml:1116
+msgid "Main Menu"
+msgstr ""
+
+#: app/views/admin/page.phtml:1124
+msgid "Menu Background Colour"
+msgstr ""
+
+#: app/views/admin/page.phtml:1126
+msgid "This is the background colour of the expanded menu"
+msgstr ""
+
+#: app/views/admin/page.phtml:1139
+msgid "Menu Background Hover Colour"
+msgstr ""
+
+#: app/views/admin/page.phtml:1141
+msgid "This is the hover background colour of the expanded menu"
+msgstr ""
+
+#: app/views/admin/page.phtml:1156
+msgid "Menu Link Border Colour"
+msgstr ""
+
+#: app/views/admin/page.phtml:1158
+msgid "This is the border colour of the  menu links"
+msgstr ""
+
+#: app/views/admin/page.phtml:1171
+msgid "Title Background Colour"
+msgstr ""
+
+#: app/views/admin/page.phtml:1173
+msgid "This is the background colour of the menu title"
+msgstr ""
+
+#: app/views/admin/page.phtml:1188
+msgid "Current Page Link Background Colour"
+msgstr ""
+
+#: app/views/admin/page.phtml:1190
+msgid "This is the background colour of the current page link"
+msgstr ""
+
+#: app/views/admin/page.phtml:1203
+msgid "Current Page Link Background Hover Colour"
+msgstr ""
+
+#: app/views/admin/page.phtml:1205
+msgid "This is the hover background colour of the current page link"
+msgstr ""
+
+#: app/views/admin/page.phtml:1219
+msgid "Text Colours"
+msgstr ""
+
+#: app/views/admin/page.phtml:1228
+msgid "Menu Title Colour"
+msgstr ""
+
+#: app/views/admin/page.phtml:1230
+msgid "This is the text colour of the menu title"
+msgstr ""
+
+#: app/views/admin/page.phtml:1243
+msgid "Menu Title Hover Colour"
+msgstr ""
+
+#: app/views/admin/page.phtml:1245
+msgid "This is the hover colour of the menu title"
+msgstr ""
+
+#: app/views/admin/page.phtml:1260
+msgid "Menu Link Colour"
+msgstr ""
+
+#: app/views/admin/page.phtml:1262
+msgid "This is the text colour of the menu links"
+msgstr ""
+
+#: app/views/admin/page.phtml:1275
+msgid "Menu Link Hover Colour"
+msgstr ""
+
+#: app/views/admin/page.phtml:1277
+msgid "This is the text hover colour of the menu links"
+msgstr ""
+
+#: app/views/admin/page.phtml:1293
+msgid "Current Page Link Colour"
+msgstr ""
+
+#: app/views/admin/page.phtml:1295
+msgid "This is the text colour of the current page link"
+msgstr ""
+
+#: app/views/admin/page.phtml:1308
+msgid "Current Page Link Hover Colour"
+msgstr ""
+
+#: app/views/admin/page.phtml:1310
+msgid "This is the text hover colour of the current page link"
+msgstr ""
+
+#: app/views/admin/page.phtml:1327
+msgid "Style Settings"
+msgstr ""
+
+#: app/views/admin/page.phtml:1334
+msgid "Font"
+msgstr ""
+
+#: app/views/admin/page.phtml:1336
+msgid "Enter a font name below, if empty your default site font will be used"
+msgstr ""
+
+#: app/views/admin/page.phtml:1347
+msgid "Font Size"
+msgstr ""
+
+#: app/views/admin/page.phtml:1349
+msgid "Enter a font size in pixels below"
+msgstr ""
+
+#: app/views/admin/page.phtml:1364
+msgid "Click Button Font Size"
+msgstr ""
+
+#: app/views/admin/page.phtml:1366
+msgid "Enter a click button font size in pixels below"
+msgstr ""
+
+#: app/views/admin/page.phtml:1378
+msgid "Title Font Size"
+msgstr ""
+
+#: app/views/admin/page.phtml:1380
+msgid "Enter a title font size in pixels below"
+msgstr ""
+
+#: app/views/admin/page.phtml:1395
+msgid "Text Alignment"
+msgstr ""
+
+#: app/views/admin/page.phtml:1397
+msgid "Enter a text alignment option below"
+msgstr ""
+
+#: app/views/admin/page.phtml:1409
+msgid "Centre"
+msgstr ""
+
+#: app/views/admin/page.phtml:1422
+msgid "Links Height"
+msgstr ""
+
+#: app/views/admin/page.phtml:1424
+msgid "Enter a link height size in pixels below"
+msgstr ""
+
+#: app/views/admin/page.phtml:1439
+msgid ""
+"Setting the below two values to the same number will give you a fixed width "
+"effect"
+msgstr ""
+
+#: app/views/admin/page.phtml:1449
+msgid "Minimum Width"
+msgstr ""
+
+#: app/views/admin/page.phtml:1451
+msgid "Enter a minimum menu width size in pixels below"
+msgstr ""
+
+#: app/views/admin/page.phtml:1463
+msgid "Maximum Width"
+msgstr ""
+
+#: app/views/admin/page.phtml:1465
+msgid "Enter a maximum menu width size in pixels below"
+msgstr ""
+
+#: app/views/admin/page.phtml:1480
+msgid "Animation Settings"
+msgstr ""
+
+#: app/views/admin/page.phtml:1485
+msgid ""
+"Warning: The Push Animation requires you to place the following meta tag in "
+"your site header"
+msgstr ""
+
+#: app/views/admin/page.phtml:1500
+msgid "Slide Animation"
+msgstr ""
+
+#: app/views/admin/page.phtml:1502
+msgid "Choose the type of animation applied to the menu"
+msgstr ""
+
+#: app/views/admin/page.phtml:1509
+msgid "Overlay"
+msgstr ""
+
+#: app/views/admin/page.phtml:1514
+msgid "Push"
+msgstr ""
+
+#: app/views/admin/page.phtml:1522
+msgid "Page Wrappers CSS"
+msgstr ""
+
+#: app/views/admin/page.phtml:1524
+msgid ""
+"This is the CSS of the wrapper you want to push when using the push animation"
+msgstr ""
+
+#: app/views/admin/page.phtml:1538
+msgid "Animation Speed"
+msgstr ""
+
+#: app/views/admin/page.phtml:1540
+msgid "Enter a speed in seconds below of the slide animation"
+msgstr ""
+
+#: app/views/admin/page.phtml:1547 app/views/admin/page.phtml:1561
+msgid "seconds"
+msgstr ""
+
+#: app/views/admin/page.phtml:1552
+msgid "Transition Speed"
+msgstr ""
+
+#: app/views/admin/page.phtml:1554
+msgid "Enter a speed in seconds below of the hover transition effect"
+msgstr ""
+
+#: app/views/admin/page.phtml:1568
+msgid "Accordion Animation For Sub-Menus"
+msgstr ""
+
+#: app/views/admin/page.phtml:1570
+msgid "Tick to enable the accordion animation for sub-menu items"
+msgstr ""
+
+#: app/views/admin/page.phtml:1583
+msgid "Push button with Animation"
+msgstr ""
+
+#: app/views/admin/page.phtml:1585
+msgid "Tick to enable the click button to be pushed with animation"
+msgstr ""
+
+#: app/views/admin/page.phtml:1603
+msgid "Additional HTML Content Settings"
+msgstr ""
+
+#: app/views/admin/page.phtml:1610
+msgid "Additional HTML Content"
+msgstr ""
+
+#: app/views/admin/page.phtml:1612
+msgid ""
+"Enter any additional HTML you may want below, useful for advertisement "
+"banners etc. (accepts shortcodes)"
+msgstr ""
+
+#: app/views/admin/page.phtml:1619
+msgid "Additional HTML Content Positioning"
+msgstr ""
+
+#: app/views/admin/page.phtml:1621
+msgid "Select where you would like the additional HTML content to appear"
+msgstr ""
+
+#: app/views/admin/page.phtml:1643
+msgid "Custom Walker"
+msgstr ""
+
+#: app/views/admin/page.phtml:1651
+msgid "Specify you own Walker for the menu (wp_nav_menu parameter)"
+msgstr ""
+
+#: app/views/admin/page.phtml:1652
+msgid ""
+"For advanced users only - if you don't know what you're doing please leave "
+"alone"
+msgstr ""
+
+#: app/views/admin/page.phtml:1672
+msgid "Update Responsive Menu Options"
+msgstr ""
+
+#: app/views/admin/page.phtml:1679
+msgid "Export Options"
+msgstr ""
+
+#: app/views/admin/page.phtml:1698
+msgid "Import File"
+msgstr ""
+
+#: app/views/admin/page.phtml:1705
+msgid "Import Options"
+msgstr ""
