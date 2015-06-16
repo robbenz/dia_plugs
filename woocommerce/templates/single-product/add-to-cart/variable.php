@@ -22,9 +22,9 @@ global $product, $post;
 			<tbody>
 				<?php $loop = 0; foreach ( $attributes as $name => $options ) : $loop++; ?>
 					<tr>
-	<td class="label"><label for="<?php echo sanitize_title( $name ); ?>"><?php echo wc_attribute_label( $name ); ?></label><br></td>
-						<td class="value" style="float:left;"><select id="<?php echo esc_attr( sanitize_title( $name ) ); ?>" name="attribute_<?php echo sanitize_title( $name ); ?>" data-attribute_name="attribute_<?php echo sanitize_title( $name ); ?>">
-							<option value=""><?php echo __( 'Select Configuration', 'woocommerce' ) ?>&hellip;</option>
+						<td class="label"><label for="<?php echo sanitize_title( $name ); ?>"><?php echo wc_attribute_label( $name ); ?></label></td>
+						<td class="value"><select id="<?php echo esc_attr( sanitize_title( $name ) ); ?>" name="attribute_<?php echo sanitize_title( $name ); ?>" data-attribute_name="attribute_<?php echo sanitize_title( $name ); ?>">
+							<option value=""><?php echo __( 'Choose an option', 'woocommerce' ) ?>&hellip;</option>
 							<?php
 								if ( is_array( $options ) ) {
 
@@ -59,7 +59,7 @@ global $product, $post;
 							?>
 						</select> <?php
 							if ( sizeof( $attributes ) === $loop ) {
-		                         echo '<a class="reset_variations" style="display:none;" href="#reset">' . __( 'Clear selection', 'woocommerce' ) . '</a>';
+								echo '<a class="reset_variations" href="#reset">' . __( 'Clear selection', 'woocommerce' ) . '</a>';
 							}
 						?></td>
 					</tr>
@@ -96,5 +96,4 @@ global $product, $post;
 
 </form>
 
-<div id="viewprice-detail"><a href="#" class="popmake-32596">View Price</a></div>
 <?php do_action( 'woocommerce_after_add_to_cart_form' ); ?>

@@ -23,10 +23,7 @@ $customer_orders = get_posts( apply_filters( 'woocommerce_my_account_my_orders_q
 
 if ( $customer_orders ) : ?>
 
-<div id="recent-orders-wrap-stuff">
-
-	<div id="recent-orders-header-orange"><?php echo apply_filters( 'woocommerce_my_account_my_orders_title', __( 'Recent Orders', 'woocommerce' ) ); ?></div>
-
+	<h2><?php echo apply_filters( 'woocommerce_my_account_my_orders_title', __( 'Recent Orders', 'woocommerce' ) ); ?></h2>
 
 	<table class="shop_table shop_table_responsive my_account_orders">
 
@@ -98,5 +95,5 @@ if ( $customer_orders ) : ?>
 		?></tbody>
 
 	</table>
-</div><!-- recent-orders-wrap-stuff -->
+
 <?php endif; ?>

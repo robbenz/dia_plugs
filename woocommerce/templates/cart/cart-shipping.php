@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		if ( $show_package_details ) {
 			printf( __( 'Shipping #%d', 'woocommerce' ), $index + 1 );
 		} else {
-			_e( 'Select Shipping Method (Charges Added To Invoice)', 'woocommerce' );
+			_e( 'Shipping', 'woocommerce' );
 		}
 	?></th>
 	<td>

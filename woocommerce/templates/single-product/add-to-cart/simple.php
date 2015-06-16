@@ -45,9 +45,6 @@ if ( ! $product->is_purchasable() ) {
 	 	<input type="hidden" name="add-to-cart" value="<?php echo esc_attr( $product->id ); ?>" />
 
 	 	<button type="submit" class="single_add_to_cart_button button alt"><?php echo $product->single_add_to_cart_text(); ?></button>
-        
-<div id="viewprice-detail"><a href="#" class="popmake-32596">View Price</a></div>
-        
 
 		<?php do_action( 'woocommerce_after_add_to_cart_button' ); ?>
 	</form>

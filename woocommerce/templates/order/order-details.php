@@ -14,7 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 $order = wc_get_order( $order_id );
 
 ?>
-<div id="order-details-shop-wrap">
 <h2><?php _e( 'Order Details', 'woocommerce' ); ?></h2>
 <table class="shop_table order_details">
 	<thead>
@@ -163,9 +162,7 @@ $order = wc_get_order( $order_id );
 </table>
 
 <?php do_action( 'woocommerce_order_details_after_order_table', $order ); ?>
-    
-    </div>
-<div id="customer-details-shop-wrap">
+
 <header>
 	<h2><?php _e( 'Customer details', 'woocommerce' ); ?></h2>
 </header>
@@ -227,8 +224,7 @@ $order = wc_get_order( $order_id );
 	</div><!-- /.col-2 -->
 
 </div><!-- /.col2-set -->
-</div>
-    
+
 <?php endif; ?>
 
 <div class="clear"></div>
