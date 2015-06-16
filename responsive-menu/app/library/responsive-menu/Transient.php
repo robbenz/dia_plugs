@@ -48,8 +48,11 @@ class RM_Transient {
      */
     
     static function createTransientMenu( $data ) {
-        
+        if ( $data['RMThemeLocation'] ) { // if theme_location is used, menu is no used 
+            $data['RM'] = null;
+        }
         $cachedMenu = wp_nav_menu( array(
+                'theme_location' => $data['RMThemeLocation'], 
                 'menu' => $data['RM'],
                 'menu_class' => 'responsive-menu',
                 'depth' => $data['RMDepth'] ,

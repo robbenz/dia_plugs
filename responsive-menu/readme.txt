@@ -1,18 +1,18 @@
 === Responsive Menu ===
-Contributors: peter.featherstone
-Donate link: http://www.peterfeatherstone.com/donate/
-Tags: responsive, menu, responsive menu, mobile menu, tablet menu, mobile, tablet, 3 lines, 3 line, three line, three lines
+Contributors: ResponsiveMenu
+Donate link: http://responsive.menu/donate/
+Tags: responsive, menu, responsive menu, mobile menu, wordpress responsive menu, wp responsive menu, tablet menu, mobile, tablet, 3 lines, 3 line, three line, three lines
 Requires at least: 3.5.0
 Tested up to: 4.2.2
-Stable tag: 2.6
+Stable tag: 2.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-This is a Highly Customisable Responsive Menu Created By Peter Featherstone
+This is a Highly Customisable Responsive Menu Plugin for WordPress
 
 == Description ==
 
-This is a Highly Customisable Responsive Menu Plugin, with 70 customisable options for a nice mobile menu or tablet menu experience enabling you to change the: 
+This is a Highly Customisable Responsive Menu Plugin for WordPress, with 70 customisable options for a nice mobile menu or tablet menu experience enabling you to change the: 
 <br />
 <ul>
 <li> - Menu Title</li>
@@ -98,7 +98,7 @@ It also includes the following functionality:
 </ul>
 Please see the current development list on the below page:
 
-<a href="http://peterfeatherstone.com/wordpress/responsive-menu/responsive-menu-development-list/">Development List</a>
+<a href="http://responsive.menu/development-list/">Development List</a>
 
 If you would like to see any other options added to the plugin or would like to help with translating the plugin into various versions then please email me or place them in a support ticket.
 <br />
@@ -119,7 +119,7 @@ Alternatively:
 
 == Frequently Asked Questions ==
 
-<a target="_blank" href="http://peterfeatherstone.com/wordpress/responsive-menu/faq/">http://peterfeatherstone.com/wordpress/responsive-menu/faq/</a>
+<a target="_blank" href="http://responsive.menu/faq/">http://responsive.menu/faq/</a>
 
 == Screenshots ==
 
@@ -129,11 +129,11 @@ Alternatively:
 
 3. Example Front End Expanded Menu
 
-4. Example Custom Front End Menu Button Image
-
-5. Example Custom Front End Expanded Menu
-
 == Changelog ==
+
+= 2.7 (14th June 2015) =
+* Added Navigation Tabs for Admin Pages -thanks to mkdgs for this!
+* Bugfixes
 
 = 2.6 (26th May 2015) =
 * Added Theme Location options - useful for Polylang - Thanks to mkdgs for this

@@ -54,7 +54,7 @@ class RM_GlobalController extends RM_BaseController {
     static function Internationalise() {
 
         
-        __( 'Highly Customisable Responsive Menu Plugin Created By Peter Featherstone', 'responsive-menu' );
+        __( 'Highly Customisable Responsive Menu Plugin for WordPress', 'responsive-menu' );
         
         load_plugin_textdomain( 'responsive-menu', false, 'responsive-menu/translations/' );
 
