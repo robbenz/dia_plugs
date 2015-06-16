@@ -864,8 +864,9 @@ var PopMakeAdmin;
             }
 
 
+
             $overlay.removeAttr('style').css({
-                backgroundColor: rgba(0, 0, 0, 0.4)
+                backgroundColor: this.convert_hex(theme.overlay_background_color, theme.overlay_background_opacity)
             });
             $container.removeAttr('style').css({
                 padding: theme.container_padding + 'px',
