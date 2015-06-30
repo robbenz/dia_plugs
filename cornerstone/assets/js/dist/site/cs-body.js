@@ -3807,7 +3807,9 @@ xData.api.map('column', function( params ) {
 xData.api.map('counter', function( params ) {
 
   $(this).waypoint(function() {
-    $(this).find('.number').animateNumber({ 'number' : params.numEnd }, params.numSpeed);
+    var $number = $(this).find('.number');
+    if (params.numStart && params.numStart > 0) $number.prop( 'number', params.numStart );
+    $number.animateNumber({ 'number' : params.numEnd }, params.numSpeed);
   }, { offset : '85%', triggerOnce : true });
 
 });
@@ -4132,7 +4134,11 @@ xData.api.map('lightbox', function( params ) {
 
 xData.api.map('x_mejs', function( params ) {
 
-  var element = this;
+  var element      = this;
+  var isBackground = $(element).hasClass('bg');
+  var isAdvanced   = $(element).find('.x-mejs').hasClass('advanced-controls');
+  var pFeatures;
+
 
   //
   // Add Silverlight types (only once).
@@ -4144,52 +4150,113 @@ xData.api.map('x_mejs', function( params ) {
     }
   });
 
-  if ( $(element).find('.x-mejs').hasClass('advanced-controls') ) {
-    enabledFeatures = ['playpause', 'current', 'progress', 'duration', 'tracks', 'volume', 'fullscreen'];
+
+  //
+  // Conditionals.
+  //
+
+  if ( isBackground ) {
+
+    pFeatures = [];
+
+    if ( Modernizr && Modernizr.touchevents ) {
+      $(element).addClass('poster').css({'background-image' : 'url(' + params.poster + ')'});
+      setTimeout(function() {
+        $(element).removeClass('transparent');
+      }, 500);
+    } else {
+      var $template = $(element).find('script[type="text/template"]');
+      $template.after($template.html()).remove();
+    }
+
+    $(element).on('xmejs:bgvideoready', setBackgroundVideoSize);
+
+    $(window).on('resize', function() {
+      if ( element ) {
+        setBackgroundVideoSize.call(element);
+      }
+    });
+
+  } else if ( isAdvanced ) {
+
+    pFeatures = ['playpause', 'current', 'progress', 'duration', 'tracks', 'volume', 'fullscreen'];
+
   } else {
-    enabledFeatures = ['playpause', 'progress'];
+
+    pFeatures = ['playpause', 'progress'];
+
   }
+
+
+  //
+  // Initialize.
+  //
 
   $(element).find('.x-mejs').mediaelementplayer({
 
     pluginPath         : _wpmejsSettings.pluginPath,
     startVolume        : 1,
-    features           : enabledFeatures,
+    features           : pFeatures,
     audioWidth         : '100%',
     audioHeight        : '32',
     audioVolume        : 'vertical',
     videoWidth         : '100%',
     videoHeight        : '100%',
     videoVolume        : 'vertical',
-    pauseOtherPlayers  : true,
+    pauseOtherPlayers  : false,
     alwaysShowControls : true,
+    setDimensions      : false,
+    backgroundPlayer   : isBackground,
 
-    success : function( mejs ) {
-
-      var play        = true;
-      var $container  = $(element).find('.mejs-container');
-      var $controls   = $(element).find('.mejs-controls');
-      var controlsOn  = function() { $controls.stop().animate({ opacity : 1 }, 150); };
-      var controlsOff = function() { $controls.stop().animate({ opacity : 0 }, 150); };
-
+    success : function( media, domNode, player ) {
 
       //
-      // Autoplay, muting, and looping.
+      // Autoplay and muting.
       //
 
-      mejs.addEventListener( 'canplay', function() {
-        if ( mejs.attributes.autoplay && play ) {
-          mejs.play();
+      var play    = true;
+      var mute    = true;
+      var $volume = player.controls.find('.mejs-volume-button');
+
+      media.addEventListener( 'canplay', function() {
+        if ( media.attributes.hasOwnProperty('autoplay') && play ) {
+          media.play();
           play = false;
         }
-        if ( mejs.attributes.muted ) {
-          mejs.setMuted(true);
+        if ( media.attributes.hasOwnProperty('muted') && mute ) {
+          media.setMuted(true);
+          mute = false;
         }
       });
 
-      mejs.addEventListener( 'ended', function() {
-        if ( mejs.attributes.loop ) {
-          mejs.play();
+      if ( media.attributes.hasOwnProperty('muted') && $volume.hasClass('mejs-mute') ) {
+        $volume.removeClass('mejs-mute').addClass('mejs-unmute');
+      }
+
+
+      //
+      // Looping.
+      //
+
+      media.addEventListener( 'ended', function() {
+        if ( media.attributes.hasOwnProperty('loop') ) {
+          media.play();
+        }
+      });
+
+
+      //
+      // Pausing.
+      //
+
+      media.addEventListener( 'play', function() {
+        var playerIndex;
+        for ( playerIndex in mejs.players ) {
+          var player = mejs.players[playerIndex];
+          if ( player.id != player.id && ! player.options.backgroundPlayer && ! player.paused && ! player.ended ) {
+            player.pause();
+          }
+          player.hasFocus = false;
         }
       });
 
@@ -4198,14 +4265,49 @@ xData.api.map('x_mejs', function( params ) {
       // Video only.
       //
 
-      if ( $container.hasClass('mejs-video') ) {
-        mejs.addEventListener( 'playing', function() {
-          $container.hover( controlsOn, controlsOff );
+      if ( player.isVideo === true && ! player.options.backgroundPlayer ) {
+
+        var controlsOn  = function() { player.controls.stop().animate({ opacity : 1 }, 150); };
+        var controlsOff = function() { player.controls.stop().animate({ opacity : 0 }, 150); };
+
+        media.addEventListener( 'playing', function() {
+          player.container.hover( controlsOn, controlsOff );
         });
-        mejs.addEventListener( 'pause', function() {
-          $container.off( 'mouseenter mouseleave' );
+
+        media.addEventListener( 'pause', function() {
+          player.container.off( 'mouseenter mouseleave' );
           controlsOn();
         });
+
+      }
+
+      if ( player.isVideo === true && player.options.backgroundPlayer ) {
+
+        media.addEventListener( 'playing', function() {
+          media.setMuted(true);
+          $(element).trigger('xmejs:bgvideoready');
+        });
+
+      }
+
+
+      //
+      // Set fallback video size.
+      //
+
+      if ( player.isVideo === true ) {
+        if ( media.pluginType === 'flash' || media.pluginType == 'silverlight' ) {
+          setFallbackVideoSize();
+          $(element).on('xmejs:bgvideosize', setFallbackVideoSize);
+          $(window).on('resize', setFallbackVideoSize);
+        }
+      }
+
+      function setFallbackVideoSize() {
+        var $fallbackContainer = $('#' + media.id + '_container');
+        var width              = $fallbackContainer.outerWidth();
+        var height             = $fallbackContainer.outerHeight();
+        media.setVideoSize(width, height);
       }
 
     },
@@ -4213,6 +4315,48 @@ xData.api.map('x_mejs', function( params ) {
     error : function() { console.log( 'MEJS media error.' ); }
 
   });
+
+
+  //
+  // Set background video size.
+  //
+
+  function setBackgroundVideoSize() {
+
+    var $container    = $(this); // .x-video
+    var player        = mejs.players[$container.find('.mejs-container').attr('id')];
+    var isThirdParty  = $container.hasClass('vimeo') || $container.hasClass('youtube');
+    var targetElement = ( isThirdParty ) ? '.me-plugin' : 'video';
+    var w_mejs        = player.media.videoWidth;
+    var h_mejs        = player.media.videoHeight;
+    var w_video       = ( isThirdParty || w_mejs === 0 ) ? 1280 : w_mejs;
+    var h_video       = ( isThirdParty || h_mejs === 0 ) ? 720 : h_mejs;
+    var w_container   = $container.outerWidth();
+    var h_container   = $container.outerHeight();
+    var w_scale       = w_container / w_video;
+    var h_scale       = h_container / h_video; 
+    var scale_used    = w_scale > h_scale ? w_scale : h_scale;
+    var w_video_new   = Math.ceil((scale_used * w_video) + 20);
+    var h_video_new   = Math.ceil((scale_used * h_video) + 20);
+    var l_scroll      = Math.ceil((w_video_new - w_container) / 2);
+    var t_scroll      = Math.ceil((h_video_new - h_container) / 2);
+    var l_scroll_alt  = ( w_container < l_scroll + 20 ) ? w_container - 20 : l_scroll;
+    var t_scroll_alt  = ( h_container < t_scroll + 20 ) ? h_container - 20 : t_scroll;
+
+    $container.find(targetElement).width(w_video_new);
+    $container.find(targetElement).height(h_video_new);
+
+    $container.find('.mejs-mediaelement').scrollLeft(l_scroll_alt);
+    $container.find('.mejs-mediaelement').scrollTop(t_scroll_alt);
+
+    if ( $container.hasClass('transparent') ) {
+      player.media.addEventListener( 'timeupdate', function showBackgroundVideo() {
+        $container.trigger('xmejs:bgvideosize').removeClass('transparent');
+        player.media.removeEventListener( 'timeupdate', showBackgroundVideo );
+      });
+    }
+
+  }
 
 });
 // =============================================================================
@@ -4315,17 +4459,6 @@ function sectionSetup( params ) {
       }
     }
 
-    if ( $this.hasClass('bg-video') ) {
-      if ( ! $.BigVideo ) return;
-      var BV = new $.BigVideo();
-      BV.init();
-      if ( Modernizr && Modernizr.touchevents ) {
-        BV.show(params.poster);
-      } else {
-        BV.show(params.video, { ambient : true });
-      }
-    }
-
   };
 
   if ( document.readyState === 'complete' ) {
@@ -4391,9 +4524,9 @@ xData.api.map('slider', function( params ) {
       animationSpeed : params.slideSpeed,
       slideshow      : params.slideshow,
       randomize      : params.random,
+      touch          : params.touch,
       pauseOnHover   : true,
       useCSS         : true,
-      touch          : true,
       video          : true,
       smoothHeight   : true,
       easing         : 'easeInOutExpo'

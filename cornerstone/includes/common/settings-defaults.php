@@ -6,8 +6,9 @@
  */
 
 return array(
-  'allowed_post_types'        => array( 'post', 'page' ),
-  'permitted_roles'           => array( 'administrator' ),
-  'visual_enhancements'       => true,
-  'api_key'                   => ''
+  'allowed_post_types'  => array( 'post', 'page' ),
+  'permitted_roles'     => array( 'administrator' ),
+  'visual_enhancements' => true,
+  'show_wp_toolbar'     => false,
+  'api_key'             => ''
 );

@@ -15,7 +15,8 @@ function x_shortcode_slider( $atts, $content = null ) {
     'random'        => '',
     'control_nav'   => '',
     'prev_next_nav' => '',
-    'no_container'  => ''
+    'no_container'  => '',
+    'touch'         => ''
   ), $atts, 'x_slider' ) );
 
   static $count = 0; $count++;
@@ -33,6 +34,7 @@ function x_shortcode_slider( $atts, $content = null ) {
     'prevNextNav' => ( $prev_next_nav == 'true' ),
     'slideshow'   => ( $slideshow     == 'true' ),
     'random'      => ( $random        == 'true' ),
+    'touch'       => ( $touch != 'false')
   );
 
   $data = cs_generate_data_attributes( 'slider', $js_params );

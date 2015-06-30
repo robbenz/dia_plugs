@@ -33,9 +33,12 @@ class Cornerstone_Builder {
 		if ( $this->isPreview() || !$this->isEditing() )
 			return;
 
+		add_action( 'wp_clean_slate_options', array( $this, 'slateConfig' ) );
 		WP_Clean_Slate::init();
 
 		do_action( 'cornerstone_load_builder' );
+
+		add_action( 'admin_bar_menu', array( $this, 'adminBarMenu'), 9999 );
 
 		// Enqueue Styles & Scripts
 		add_action( 'wp_enqueue_scripts_clean', array( $this, 'dependencyEnqueues' ) );
@@ -52,6 +55,14 @@ class Cornerstone_Builder {
 		add_filter( '_cornerstone_front_end', '__return_false' );
 	}
 
+	public function slateConfig( $options ) {
+
+		$settings = CS()->settings();
+
+		$options['showAdminBar'] = ($settings['show_wp_toolbar'] == '1');
+
+		return $options;
+	}
 
 	/**
 	 * Enqueue dependency libraries. These won't load in the preview window
@@ -137,7 +148,7 @@ class Cornerstone_Builder {
 				'ajaxUrl' => admin_url( 'admin-ajax.php', 'relative' ),
 				'fontAwesome' => CS()->common()->getFontIcons(),
 				'editor' => $this->getWPeditor(),
-				'remoteRenderDelay' => apply_filters( 'cornerstone_render_debounce', 100 ),
+				'remoteRenderDelay' => apply_filters( 'cornerstone_render_debounce', 200 ),
 				'debug' => ( CS()->common()->isDebug() ) ? 'true' : 'false',
 				'loginURL' => wp_login_url( get_permalink() ),
 				'scrollTopSelector' => apply_filters( 'cornerstone_scrolltop_selector', null ),
@@ -208,6 +219,20 @@ class Cornerstone_Builder {
 	 */
 	public function primeEditor() {
 
+		// Remove all 3rd party integrations to prevent plugin conflicts.
+		remove_all_actions('before_wp_tiny_mce');
+		remove_all_filters('mce_external_plugins');
+		remove_all_filters('mce_buttons');
+		remove_all_filters('tiny_mce_before_init');
+		add_filter( 'tiny_mce_before_init', '_mce_set_direction' );
+
+		if( apply_filters( 'cornerstone_use_br_tags', false ) ) {
+			add_filter('tiny_mce_before_init', array( $this, 'allowBrTags' ) );
+		}
+
+		// Allow integrations to use hooks above before the editor is primed.
+		do_action('cornerstone_before_wp_editor');
+
 		ob_start();
 		wp_editor( '%%PLACEHOLDER%%','cswpeditor', array(
 			//'quicktags' => false,
@@ -231,6 +256,16 @@ class Cornerstone_Builder {
 	}
 
 	/**
+	 * Depending on workflow, users may wish to allow <br> tags.
+	 * This can be conditionally enabled with a filter.
+	 * add_filter( 'cornerstone_use_br_tags', '__return_true' );
+	 */
+	public function allowBrTags( $init ) {
+    $init['forced_root_block'] = false;
+    return $init;
+	}
+
+	/**
 	 * Check if the proper conditions are met to load Cornerstone
 	 * @return boolean
 	 */
@@ -245,6 +280,25 @@ class Cornerstone_Builder {
 	 */
 	public function intendsToEdit() {
 		return ( isset($_GET['cornerstone']) && $_GET['cornerstone'] == 1 );
+	}
+
+	/**
+	 * Remove the Cornerstone edit link from the toolbar.
+	 * @return none
+	 */
+	public function adminBarMenu() {
+
+		global $wp_admin_bar;
+
+		$wp_admin_bar->remove_menu( 'cornerstone-edit-link' );
+
+		$type = get_post_type_object( get_post_type() );
+		$wp_admin_bar->add_menu( array(
+			'id' => 'cornerstone-view-link',
+			'title' => $type->labels->view_item,
+			'href' => get_the_permalink(),
+			'meta' => array( 'class' => 'cornerstone-view-link' )
+		) );
 	}
 
 	/**

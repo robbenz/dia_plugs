@@ -93,14 +93,13 @@ function x_shortcode_content_band( $atts, $content = null ) {
   if ( $bg_video != '' ) {
 
     $js_params = array(
-      'type'   => 'video',
-      'poster' => $bg_video_poster,
-      'video'  => $bg_video
+      'type' => 'video'
     );
 
     $data = cs_generate_data_attributes( 'content_band', $js_params );
 
     $output = "<div id=\"x-content-band-{$count}\" class=\"{$class}{$bg_video_class}{$marginless_columns_class}{$border}{$no_margin}\" {$data} style=\"{$padding_top}{$padding_bottom}{$style}\">"
+              . cs_bg_video( $bg_video, $bg_video_poster )
               . $container_start . do_shortcode( $content ) . $container_end
             . '</div>';
 

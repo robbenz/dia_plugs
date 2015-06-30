@@ -101,6 +101,14 @@ class CS_Slider extends Cornerstone_Element_Base {
       false
     );
 
+    $this->addControl(
+      'touch',
+      'toggle',
+      __( 'Touch Navigation', csl18n() ),
+      __( 'Allow touch devices to navigate with a swipe guesture.', csl18n() ),
+      true
+    );
+
   }
 
   public function render( $atts ) {
@@ -121,7 +129,9 @@ class CS_Slider extends Cornerstone_Element_Base {
 
     }
 
-    $shortcode = "[x_slider animation=\"$animation\" slide_time=\"$slide_time\" slide_speed=\"$slide_speed\" slideshow=\"$slideshow\" random=\"$random\" control_nav=\"$control_nav\" prev_next_nav=\"$prev_next_nav\" no_container=\"$no_container\"{$extra}]{$contents}[/x_slider]";
+    $touch = ($touch == 'false') ? 'touch="false"' : '';
+
+    $shortcode = "[x_slider animation=\"$animation\" slide_time=\"$slide_time\" slide_speed=\"$slide_speed\" slideshow=\"$slideshow\" random=\"$random\" control_nav=\"$control_nav\" prev_next_nav=\"$prev_next_nav\" no_container=\"$no_container\" {$touch}{$extra}]{$contents}[/x_slider]";
 
     return $shortcode;
 

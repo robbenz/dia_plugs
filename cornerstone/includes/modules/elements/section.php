@@ -103,13 +103,14 @@ class CS_Section extends Cornerstone_Element_Base {
       'bg_video',
       'text',
       __( 'Background Video URL &amp; Poster', csl18n() ),
-      __( 'Include a direct URL to your self hosted video file. For performance reasons, videos are not loaded into the editor. They will be shown live however. Below you can specify an image to be displayed on mobile devices.', csl18n() ),
+      __( 'Include your video URL(s) here. If using multiple sources, separate them using the pipe character (|) and place fallbacks towards the end (i.e. .webm then .mp4 then .ogv). For performance reasons, videos are not loaded into the editor but are shown live.', csl18n() ),
       '',
       array(
         'condition' => array(
           'bg_type' => 'video'
         ),
-        'placeholder' => home_url( __( 'self-hosted-video.mp4', csl18n() ) )
+        'expandable' => false,
+        'placeholder' => home_url( __( 'video.mp4', csl18n() ) )
       )
     );
 

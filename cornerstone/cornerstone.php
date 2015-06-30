@@ -1,14 +1,17 @@
 <?php
+
 /*
+
 Plugin Name: Cornerstone
 Plugin URI: http://theme.co/cornerstone
 Description: The WordPress Page Builder
 Author: Themeco
 Author URI: http://theme.co/
-Version: 1.0.2
+Version: 1.0.3
 X Plugin: cornerstone
 Text Domain: cornerstone
 Domain Path: lang
+
 */
 
 // Prevent direct access

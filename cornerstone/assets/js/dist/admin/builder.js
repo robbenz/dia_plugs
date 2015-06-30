@@ -14,12 +14,13 @@ require('../vendor/string_score');
 require('../vendor/pointer-events-polyfill');
 require('../vendor/rgbaster');
 require('../vendor/jquery.growl');
+require('./utility/string-replace-all');
 
 /**
  * Fire it up
  */
 require('./app')();
-},{"../vendor/color":133,"../vendor/html.sortable":134,"../vendor/jquery.growl":135,"../vendor/pointer-events-polyfill":136,"../vendor/rgbaster":137,"../vendor/string_score":138,"./app":2,"backbone.marionette":140,"backbone.radio":141,"backbone.stickit":142,"moment":144,"nprogress":145,"perfect-scrollbar/jquery":146}],2:[function(require,module,exports){
+},{"../vendor/color":135,"../vendor/html.sortable":136,"../vendor/jquery.growl":137,"../vendor/pointer-events-polyfill":138,"../vendor/rgbaster":139,"../vendor/string_score":140,"./app":2,"./utility/string-replace-all":36,"backbone.marionette":142,"backbone.radio":143,"backbone.stickit":144,"moment":146,"nprogress":147,"perfect-scrollbar/jquery":148}],2:[function(require,module,exports){
 var App = Mn.Application.extend({
 
   initialize: function() {
@@ -50,7 +51,7 @@ var App = Mn.Application.extend({
      * Load Templates & Icons
      */
     this.Templates = (this.Config.isPreview == "true") ? require('../tmp/templates-elements.js') : require('../tmp/templates-builder.js');
-    this.Icons = require('../tmp/templates-icons.js');
+    this.Icons = require('../tmp/templates-svg.js');
 
     this.bootTime = new Date().getTime();
   },
@@ -267,7 +268,7 @@ var App = Mn.Application.extend({
 module.exports = function(){
   ( window.cs = new App( { Config: window.cs() } ) ).start({});
 }
-},{"../tmp/templates-builder.js":130,"../tmp/templates-elements.js":131,"../tmp/templates-icons.js":132,"./behaviors":5,"./data/models":18,"./data/models/collection-index":9,"./data/models/element-base":14,"./data/models/sortable-collection":28,"./modules/editor":29,"./modules/preview":30,"./utility/custom-media-manager":32,"./utility/messenger":33,"./utility/render-queue":34,"./utility/renderer":35,"./views/controls":51,"./views/controls/base":37,"./views/elements":96,"./views/elements/base":82}],3:[function(require,module,exports){
+},{"../tmp/templates-builder.js":132,"../tmp/templates-elements.js":133,"../tmp/templates-svg.js":134,"./behaviors":5,"./data/models":18,"./data/models/collection-index":9,"./data/models/element-base":14,"./data/models/sortable-collection":28,"./modules/editor":29,"./modules/preview":30,"./utility/custom-media-manager":32,"./utility/messenger":33,"./utility/render-queue":34,"./utility/renderer":35,"./views/controls":52,"./views/controls/base":38,"./views/elements":97,"./views/elements/base":83}],3:[function(require,module,exports){
 module.exports = Mn.Behavior.extend({
 
   defaults: {
@@ -1575,7 +1576,7 @@ module.exports = Mn.Module.extend({
   }
 
 });
-},{"../data/models/block-collection":6,"../data/models/block-manager":7,"../data/models/control-collection":12,"../data/models/element-stub-collection":15,"../data/models/options":19,"../data/models/post":20,"../data/models/setting-section-collection":26,"../utility/ajax.js":31,"../views/main/editor":122}],30:[function(require,module,exports){
+},{"../data/models/block-collection":6,"../data/models/block-manager":7,"../data/models/control-collection":12,"../data/models/element-stub-collection":15,"../data/models/options":19,"../data/models/post":20,"../data/models/setting-section-collection":26,"../utility/ajax.js":31,"../views/main/editor":124}],30:[function(require,module,exports){
 var PreviewView = require('../views/main/preview.js');
 module.exports = Mn.Module.extend({
 
@@ -1675,7 +1676,7 @@ module.exports = Mn.Module.extend({
   }
 
 });
-},{"../views/main/preview.js":126}],31:[function(require,module,exports){
+},{"../views/main/preview.js":128}],31:[function(require,module,exports){
 module.exports = {
 
 	/**
@@ -2229,7 +2230,12 @@ module.exports = {
     return templateFunc( _.extend( data, this.templateHelpers ) );
   }
 }
-},{"./template-helpers":36}],36:[function(require,module,exports){
+},{"./template-helpers":37}],36:[function(require,module,exports){
+String.prototype.replaceAll = function (find, replace) {
+  console.log(this,find,replace);
+  return this.replace(new RegExp(find.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1"), 'g'), replace);
+}
+},{}],37:[function(require,module,exports){
 var TemplateHelpers = {
 	/**
 	 * Wrapper for global l18n
@@ -2271,7 +2277,7 @@ if ( cs.config.request('debug') ) {
 
 module.exports = TemplateHelpers;
 
-},{}],37:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 module.exports = Mn.CompositeView.extend({
 	tagName: 'li',
 	template: 'controls/base',
@@ -2481,6 +2487,7 @@ module.exports = Mn.CompositeView.extend({
 	},
 
   expandControl: function() {
+    this.triggerMethod( 'before:expand' );
     this.$el.addClass( 'cs-control-expanded' );
     cs.extra.trigger( 'expand:control', this );
   },
@@ -2490,7 +2497,7 @@ module.exports = Mn.CompositeView.extend({
   },
 
 });
-},{}],38:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 module.exports = Mn.ItemView.extend({
 	tagName: 'li',
   className: 'cs-control cs-control-breadcrumbs cs-control-divider',
@@ -2551,7 +2558,7 @@ module.exports = Mn.ItemView.extend({
     }
   },
 });
-},{}],39:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 	module.exports = cs.ControlViews.Base.extend({
 	controlName: 'choose',
 	binding: {
@@ -2605,7 +2612,7 @@ module.exports = Mn.ItemView.extend({
     }
   }
 });
-},{}],40:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 module.exports = Mn.ItemView.extend({
 	tagName: 'div',
 	className: 'cs-control-external cs-control-code-editor',
@@ -2645,7 +2652,7 @@ module.exports = Mn.ItemView.extend({
 	}
 
 });
-},{}],41:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 module.exports = cs.ControlViews.Base.extend({
 controlName: 'color',
 	binding: {
@@ -2691,7 +2698,7 @@ controlName: 'color',
 		}
 	},
 });
-},{}],42:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 module.exports = Mn.ItemView.extend({
 	tagName: 'li',
   className: 'cs-control cs-control-actions cs-control-divider',
@@ -2726,7 +2733,7 @@ module.exports = Mn.ItemView.extend({
   },
 
 });
-},{}],43:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 module.exports = Mn.CollectionView.extend({
 	tagName: 'ul',
 	className: 'cs-controls',
@@ -2745,7 +2752,7 @@ module.exports = Mn.CollectionView.extend({
 
 	}
 })
-},{}],44:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 module.exports = cs.ControlViews.Base.extend({
 	template: 'controls/custom-markup',
 	controlName: 'custom-markup',
@@ -2755,7 +2762,7 @@ module.exports = cs.ControlViews.Base.extend({
 		return { message: message };
 	},
 });
-},{}],45:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 module.exports = cs.ControlViews.Base.extend({
 	controlName: 'dimensions',
 	binding: {
@@ -2864,13 +2871,15 @@ module.exports = cs.ControlViews.Base.extend({
     }
 	}
 });
-},{}],46:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 module.exports = cs.ControlViews.Base.extend({
   controlName: 'editor',
   controlTemplate: 'controls/textarea',
-  bindingSelector: 'textarea',
+  bindingSelector: 'textarea.cs-wp-editor',
   binding: {
-    events: [ 'keyup', 'change', 'cut', 'paste', 'focus' ]
+    events: [ 'keyup', 'change', 'cut', 'paste', 'focus' ],
+    onSet: function(value) { return this.textReplace( value ); },
+    onGet: function(value) { return this.textReplace( value ); }
   },
   onProxyReady: function() {
 
@@ -2886,15 +2895,19 @@ module.exports = cs.ControlViews.Base.extend({
     }
 
     tinyMCEPreInit.mceInit[ this.editorID ].setup = _.bind(function(editor) {
-      editor.on( 'keyup change', _.bind( function() {
+      editor.on( 'keyup change', _.debounce( _.bind( function() {
         editor.save(); // Commit editor contents to original textarea
-        this.proxy.set( this.model.get('name'), editor.targetElm.value );
-      }, this ) );
+        this.$('.cs-wp-editor').trigger('change'); // Trigger stickit
+      }, this ), 150 ) );
     }, this );
 
     this.markup = cs.config.request('editor')
       .replace( new RegExp('cswpeditor', 'g'), this.editorID )
       .replace( new RegExp('%%PLACEHOLDER%%', 'g'), this.proxy.get('content') );
+
+  },
+
+  updateContent: function() {
 
   },
 
@@ -2918,6 +2931,7 @@ module.exports = cs.ControlViews.Base.extend({
       // Initialize QuickTags with cloned settings, and set as the default mode.
       quicktags( tinyMCEPreInit.qtInit[this.editorID] );
       switchEditors.go( this.editorID, 'html' );
+      wpActiveEditor = this.editorID;
 
       // Remove default instance after initializes. This allows reinitializion an unlimited amount of times.
       _.defer(function(){
@@ -2938,10 +2952,29 @@ module.exports = cs.ControlViews.Base.extend({
     delete tinyMCEPreInit.mceInit[ this.editorID ];
     delete tinyMCEPreInit.qtInit[ this.editorID ];
 
+  },
+
+  replacements: {
+    '<!--nextpage-->': '<!--!nextpage-->',
+    '<!--more-->': '<!--!more-->'
+  },
+
+  textReplace: function( content ) {
+
+    _.each(this.replacements, function(replace, find){
+      content = content.replaceAll( find, replace );
+    });
+
+    return content;
+
+  },
+
+  onBeforeExpand: function() {
+    switchEditors.go( this.editorID, 'html' );
   }
 
 });
-},{}],47:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 module.exports = Mn.ItemView.extend({
 	tagName: 'li',
   className: 'cs-control cs-control-actions cs-control-divider',
@@ -2979,7 +3012,7 @@ module.exports = Mn.ItemView.extend({
   },
 
 });
-},{}],48:[function(require,module,exports){
+},{}],49:[function(require,module,exports){
 module.exports = cs.ControlViews.Base.extend({
 	template: 'controls/element-info',
 	controlName: 'element-info',
@@ -2987,7 +3020,7 @@ module.exports = cs.ControlViews.Base.extend({
 		this.$el.toggleClass( 'hide', !cs.options.request( 'help:text' ) );
 	}
 });
-},{}],49:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 module.exports = cs.ControlViews.Base.extend({
 	controlName: 'icon-choose',
   childViewContainer: 'ul.cs-choose',
@@ -3123,7 +3156,7 @@ module.exports = cs.ControlViews.Base.extend({
   }
 
 });
-},{}],50:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 
 var ImageControl = cs.ControlViews.Base.extend({
   controlName: 'image',
@@ -3215,7 +3248,7 @@ var ImageControl = cs.ControlViews.Base.extend({
 });
 
 module.exports = ImageControl;
-},{}],51:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
 module.exports = {
 
 	// General Purpose
@@ -3264,7 +3297,7 @@ module.exports = {
 	'template-save-dialog'    : require('./layout/template-save-dialog'),
 	'template-upload-dialog'  : require('./layout/template-upload-dialog')
 }
-},{"./breadcrumbs":38,"./choose":39,"./code-editor":40,"./color":41,"./column-actions":42,"./custom-markup":44,"./dimensions":45,"./editor":46,"./element-actions":47,"./element-info":48,"./icon-choose":49,"./image":50,"./layout/column-layout":52,"./layout/column-order":54,"./layout/layout-actions":55,"./layout/sortable-columns":56,"./layout/sortable-rows":58,"./layout/sortable-sections":59,"./layout/template-actions":60,"./layout/template-remove":61,"./layout/template-save-dialog":62,"./layout/template-select":63,"./layout/template-upload-dialog":64,"./multi-choose":65,"./number":66,"./row-actions":67,"./section-actions":68,"./select":69,"./settings-actions":70,"./sortable":73,"./text":74,"./textarea":75,"./title":76,"./toggle":77,"./wpselect":78}],52:[function(require,module,exports){
+},{"./breadcrumbs":39,"./choose":40,"./code-editor":41,"./color":42,"./column-actions":43,"./custom-markup":45,"./dimensions":46,"./editor":47,"./element-actions":48,"./element-info":49,"./icon-choose":50,"./image":51,"./layout/column-layout":53,"./layout/column-order":55,"./layout/layout-actions":56,"./layout/sortable-columns":57,"./layout/sortable-rows":59,"./layout/sortable-sections":60,"./layout/template-actions":61,"./layout/template-remove":62,"./layout/template-save-dialog":63,"./layout/template-select":64,"./layout/template-upload-dialog":65,"./multi-choose":66,"./number":67,"./row-actions":68,"./section-actions":69,"./select":70,"./settings-actions":71,"./sortable":74,"./text":75,"./textarea":76,"./title":77,"./toggle":78,"./wpselect":79}],53:[function(require,module,exports){
 var RowValidator = require('../../../data/models/row-validator');
 module.exports = cs.ControlViews.Base.extend({
 	controlName: 'column-layout',
@@ -3372,7 +3405,7 @@ module.exports = cs.ControlViews.Base.extend({
   }
 
 });
-},{"../../../data/models/row-validator":22}],53:[function(require,module,exports){
+},{"../../../data/models/row-validator":22}],54:[function(require,module,exports){
 module.exports = Mn.ItemView.extend({
 	tagName: 'li',
 	template: 'controls/column-order-item',
@@ -3417,7 +3450,7 @@ module.exports = Mn.ItemView.extend({
   }
 
 })
-},{}],54:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 var Sortable = require('../sortable');
 module.exports = Sortable.extend({
 
@@ -3465,7 +3498,7 @@ module.exports = Sortable.extend({
   },
 
 });
-},{"../sortable":73,"./column-order-item":53}],55:[function(require,module,exports){
+},{"../sortable":74,"./column-order-item":54}],56:[function(require,module,exports){
 module.exports = Mn.ItemView.extend({
 	tagName: 'li',
   className: 'cs-control cs-control-actions cs-control-divider',
@@ -3499,7 +3532,7 @@ module.exports = Mn.ItemView.extend({
   }
 
 });
-},{}],56:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
 var Sortable = require('../sortable');
 module.exports = Sortable.extend({
 
@@ -3527,7 +3560,7 @@ module.exports = Sortable.extend({
   },
 
 });
-},{"../sortable":73}],57:[function(require,module,exports){
+},{"../sortable":74}],58:[function(require,module,exports){
 var SortableItemWide = require('../sortable-item-wide');
 
 module.exports = SortableItemWide.extend({
@@ -3539,7 +3572,7 @@ module.exports = SortableItemWide.extend({
   },
 
 });
-},{"../sortable-item-wide":71}],58:[function(require,module,exports){
+},{"../sortable-item-wide":72}],59:[function(require,module,exports){
 var Sortable = require('../sortable');
 module.exports = Sortable.extend({
 
@@ -3587,7 +3620,7 @@ module.exports = Sortable.extend({
   }
 
 });
-},{"../sortable":73,"./sortable-item-rows":57}],59:[function(require,module,exports){
+},{"../sortable":74,"./sortable-item-rows":58}],60:[function(require,module,exports){
 var Sortable = require('../sortable');
 module.exports = Sortable.extend({
 
@@ -3605,7 +3638,7 @@ module.exports = Sortable.extend({
   }
 
 });
-},{"../sortable":73}],60:[function(require,module,exports){
+},{"../sortable":74}],61:[function(require,module,exports){
 module.exports = Mn.ItemView.extend({
 	tagName: 'li',
   className: 'cs-control cs-control-template-actions cs-control-divider',
@@ -3637,7 +3670,7 @@ module.exports = Mn.ItemView.extend({
   }
 
 });
-},{}],61:[function(require,module,exports){
+},{}],62:[function(require,module,exports){
 module.exports = cs.ControlViews.Base.extend({
   //template: 'layout/sub-templates/template-select',
   controlName: 'template-select',
@@ -3668,7 +3701,7 @@ module.exports = cs.ControlViews.Base.extend({
   },
 
 });
-},{}],62:[function(require,module,exports){
+},{}],63:[function(require,module,exports){
 module.exports = cs.ControlViews.Base.extend({
 
   template: 'layout/sub-templates/save-dialog',
@@ -3722,7 +3755,7 @@ module.exports = cs.ControlViews.Base.extend({
   }
 
 });
-},{}],63:[function(require,module,exports){
+},{}],64:[function(require,module,exports){
 module.exports = cs.ControlViews.Base.extend({
 	//template: 'layout/sub-templates/template-select',
   controlName: 'template-select',
@@ -3769,7 +3802,7 @@ module.exports = cs.ControlViews.Base.extend({
 
 
 });
-},{}],64:[function(require,module,exports){
+},{}],65:[function(require,module,exports){
 module.exports = cs.ControlViews.Base.extend({
 
   template: 'layout/sub-templates/upload-dialog',
@@ -3848,7 +3881,7 @@ module.exports = cs.ControlViews.Base.extend({
   }
 
 });
-},{}],65:[function(require,module,exports){
+},{}],66:[function(require,module,exports){
 module.exports = cs.ControlViews.Base.extend({
 	controlName: 'multi-choose',
   controlTemplate: 'controls/choose',
@@ -3907,12 +3940,12 @@ module.exports = cs.ControlViews.Base.extend({
     }
   }
 });
-},{}],66:[function(require,module,exports){
+},{}],67:[function(require,module,exports){
 module.exports = cs.ControlViews.Base.extend({
 	controlName: 'number',
 	bindingSelector: 'input[type=number]'
 });
-},{}],67:[function(require,module,exports){
+},{}],68:[function(require,module,exports){
 module.exports = Mn.ItemView.extend({
 	tagName: 'li',
   className: 'cs-control cs-control-actions cs-control-divider',
@@ -3950,7 +3983,7 @@ module.exports = Mn.ItemView.extend({
   },
 
 });
-},{}],68:[function(require,module,exports){
+},{}],69:[function(require,module,exports){
 module.exports = Mn.ItemView.extend({
 	tagName: 'li',
   className: 'cs-control cs-control-actions cs-control-divider',
@@ -3988,7 +4021,7 @@ module.exports = Mn.ItemView.extend({
   },
 
 });
-},{}],69:[function(require,module,exports){
+},{}],70:[function(require,module,exports){
 module.exports = cs.ControlViews.Base.extend({
 	controlName: 'select',
 	bindingSelector: 'select',
@@ -4005,7 +4038,7 @@ module.exports = cs.ControlViews.Base.extend({
 		}, this );
 	}
 });
-},{}],70:[function(require,module,exports){
+},{}],71:[function(require,module,exports){
 module.exports = Mn.ItemView.extend({
 	tagName: 'li',
   className: 'cs-control cs-control-actions cs-control-divider',
@@ -4054,7 +4087,7 @@ module.exports = Mn.ItemView.extend({
   },
 
 });
-},{}],71:[function(require,module,exports){
+},{}],72:[function(require,module,exports){
 var SortableItem = require('./sortable-item');
 
 module.exports = SortableItem.extend({
@@ -4080,7 +4113,7 @@ module.exports = SortableItem.extend({
   },
 
 });
-},{"./sortable-item":72}],72:[function(require,module,exports){
+},{"./sortable-item":73}],73:[function(require,module,exports){
 module.exports = Mn.ItemView.extend({
 
   tagName: 'li',
@@ -4137,7 +4170,7 @@ module.exports = Mn.ItemView.extend({
   }
 
 });
-},{}],73:[function(require,module,exports){
+},{}],74:[function(require,module,exports){
 module.exports = cs.ControlViews.Base.extend({
 	controlName: 'sortable',
 	childViewContainer: 'ul',
@@ -4285,7 +4318,7 @@ module.exports = cs.ControlViews.Base.extend({
   },
 
 });
-},{"./sortable-item":72,"./sortable-item-wide":71}],74:[function(require,module,exports){
+},{"./sortable-item":73,"./sortable-item-wide":72}],75:[function(require,module,exports){
 module.exports = cs.ControlViews.Base.extend({
 	controlName: 'text',
 	bindingSelector: 'input[type=text]',
@@ -4298,7 +4331,7 @@ module.exports = cs.ControlViews.Base.extend({
 			this.$('input[type=text]').attr('placeholder', options.placeholder );
 	}
 });
-},{}],75:[function(require,module,exports){
+},{}],76:[function(require,module,exports){
 module.exports = cs.ControlViews.Base.extend({
 	controlName: 'textarea',
 	bindingSelector: 'textarea',
@@ -4308,9 +4341,14 @@ module.exports = cs.ControlViews.Base.extend({
       opts.expandable = opts.controlTitle || true;
       this.model.set('options', opts);
     }
+  },
+  onRender: function() {
+    var options = this.model.get('options');
+    if ( options.placeholder )
+      this.$('textarea').attr('placeholder', options.placeholder );
   }
 });
-},{}],76:[function(require,module,exports){
+},{}],77:[function(require,module,exports){
 module.exports = cs.ControlViews.Base.extend({
 	controlName: 'title',
 	divider: true,
@@ -4333,7 +4371,7 @@ module.exports = cs.ControlViews.Base.extend({
     cs.navigate.trigger( 'inspector', { model: this.model } );
   },
 });
-},{}],77:[function(require,module,exports){
+},{}],78:[function(require,module,exports){
 module.exports = cs.ControlViews.Base.extend({
 	controlName: 'toggle',
   binding: {
@@ -4363,7 +4401,7 @@ module.exports = cs.ControlViews.Base.extend({
     }
   }
 })
-},{}],78:[function(require,module,exports){
+},{}],79:[function(require,module,exports){
 module.exports = cs.ControlViews.Base.extend({
 	controlName: 'wpselect',
 	bindingSelector: 'select',
@@ -4377,7 +4415,7 @@ module.exports = cs.ControlViews.Base.extend({
 		this.$( '.cs-wp-select' ).append( this.$select );
 	}
 });
-},{}],79:[function(require,module,exports){
+},{}],80:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 
 	toggle: function( e ) {
@@ -4406,7 +4444,7 @@ module.exports = cs.ElementViews.Base.extend({
 	},
 
 });
-},{}],80:[function(require,module,exports){
+},{}],81:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	autoFocus: {
 		'.x-alert .h-alert': 'heading',
@@ -4421,13 +4459,13 @@ module.exports = cs.ElementViews.Base.extend({
 		e.preventDefault();
 	}
 });
-},{}],81:[function(require,module,exports){
+},{}],82:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	autoFocus: {
 		'.x-author-box': 'heading'
 	}
 });
-},{}],82:[function(require,module,exports){
+},{}],83:[function(require,module,exports){
 var BaseShared = {
 	template: 'loading',
 	className: 'cs-preview-element-wrapper',
@@ -4556,7 +4594,7 @@ var BaseShared = {
 
   emptyDetection: function() {
 
-    if ( this.$el.height() == 0 ) {
+    if ( this.$el.outerHeight() < 1 ) {
       this.$el.html( cs.template('empty-element')({ name: this.model.elType.get('name') }) );
     }
 
@@ -4583,20 +4621,20 @@ module.exports.Base = Mn.CompositeView.extend( _.extend( BaseShared, {
 	},
 
 } ) );
-},{}],83:[function(require,module,exports){
+},{}],84:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	autoFocus: {
 		'.x-blockquote .x-cite': 'cite',
 		'.x-blockquote': 'content'
 	}
 });
-},{}],84:[function(require,module,exports){
+},{}],85:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	autoFocus: {
 		'.x-btn': 'content'
 	}
 });
-},{}],85:[function(require,module,exports){
+},{}],86:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	autoFocus: {
 		'.h-callout': 'heading',
@@ -4604,7 +4642,7 @@ module.exports = cs.ElementViews.Base.extend({
 		'.x-btn': 'button_text'
 	}
 });
-},{}],86:[function(require,module,exports){
+},{}],87:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	autoFocus: {
 		'.x-face-outer.front .x-face-title': 'front_title',
@@ -4622,13 +4660,13 @@ module.exports = cs.ElementViews.Base.extend({
 
 	}
 });
-},{}],87:[function(require,module,exports){
+},{}],88:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	autoFocus: {
 		'.x-code': 'content'
 	}
 });
-},{}],88:[function(require,module,exports){
+},{}],89:[function(require,module,exports){
 module.exports = Mn.CollectionView.extend({
 
 	emptyView: Mn.ItemView.extend({
@@ -5029,38 +5067,38 @@ module.exports = Mn.CollectionView.extend({
 	}
 
 });
-},{}],89:[function(require,module,exports){
+},{}],90:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	autoFocus: {
 		'.x-columnize': 'content'
 	}
 });
-},{}],90:[function(require,module,exports){
+},{}],91:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	autoFocus: {
 		'.text-above': 'text_above',
 		'.text-below': 'text_below'
 	}
 });
-},{}],91:[function(require,module,exports){
+},{}],92:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	autoFocus: {
 		'.x-creative-cta': 'text'
 	}
 });
-},{}],92:[function(require,module,exports){
+},{}],93:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	autoFocus: {
 		'.h-custom-headline': 'content'
 	}
 });
-},{}],93:[function(require,module,exports){
+},{}],94:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	autoFocus: {
 		'.h-feature-headline': 'content'
 	}
 });
-},{}],94:[function(require,module,exports){
+},{}],95:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 
 	template: _.template('<div></div>'),
@@ -5143,7 +5181,7 @@ module.exports = cs.ElementViews.Base.extend({
 	}
 
 });
-},{}],95:[function(require,module,exports){
+},{}],96:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	onAfterElementRender: function(){
 
@@ -5164,7 +5202,7 @@ module.exports = cs.ElementViews.Base.extend({
 		this.model.markupCache = '';
 	}
 });
-},{}],96:[function(require,module,exports){
+},{}],97:[function(require,module,exports){
 module.exports = {
   'accordion'         : require('./accordion'),
   'alert'             : require('./alert'),
@@ -5201,19 +5239,19 @@ module.exports = {
 //'self-hosted-audio' : require('./self-hosted-audio'),
 //'self-hosted-video' : require('./self-hosted-video'),
   'skill-bar'         : require('./skill-bar'),
-//'slider'            : require('./slider'),
+  'slider'            : require('./slider'),
   'social-sharing'    : require('./social-sharing'),
   'tabs'              : require('./tabs'),
   'text-type'         : require('./text-type'),
   'text'              : require('./text'),
 }
-},{"./accordion":79,"./alert":80,"./author":81,"./blockquote":83,"./button":84,"./callout":85,"./card":86,"./code":87,"./column":88,"./columnize":89,"./counter":90,"./creative-cta":91,"./custom-headline":92,"./feature-headline":93,"./gap":94,"./google-map":95,"./promo":97,"./prompt":98,"./pullquote":99,"./row":100,"./skill-bar":102,"./social-sharing":103,"./tabs":104,"./text":106,"./text-type":105}],97:[function(require,module,exports){
+},{"./accordion":80,"./alert":81,"./author":82,"./blockquote":84,"./button":85,"./callout":86,"./card":87,"./code":88,"./column":89,"./columnize":90,"./counter":91,"./creative-cta":92,"./custom-headline":93,"./feature-headline":94,"./gap":95,"./google-map":96,"./promo":98,"./prompt":99,"./pullquote":100,"./row":101,"./skill-bar":103,"./slider":104,"./social-sharing":105,"./tabs":106,"./text":108,"./text-type":107}],98:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	autoFocus: {
 		'.x-promo-content': 'content'
 	}
 });
-},{}],98:[function(require,module,exports){
+},{}],99:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	autoFocus: {
 		'.h-prompt': 'heading',
@@ -5221,14 +5259,14 @@ module.exports = cs.ElementViews.Base.extend({
 		'.x-btn': 'button_text'
 	}
 });
-},{}],99:[function(require,module,exports){
+},{}],100:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	autoFocus: {
 		'.x-pullquote .x-cite': 'cite',
 		'.x-pullquote': 'content'
 	}
 });
-},{}],100:[function(require,module,exports){
+},{}],101:[function(require,module,exports){
 module.exports = cs.ElementViews.BaseCore.extend( {
 
 	childView: require('./column'),
@@ -5319,7 +5357,7 @@ module.exports = cs.ElementViews.BaseCore.extend( {
 	}
 
 } );
-},{"./column":88}],101:[function(require,module,exports){
+},{"./column":89}],102:[function(require,module,exports){
 module.exports = cs.ElementViews.BaseCore.extend( {
 
 	childView: require('./row'),
@@ -5513,20 +5551,26 @@ module.exports = cs.ElementViews.BaseCore.extend( {
 
 
 } );
-},{"./row":100}],102:[function(require,module,exports){
+},{"./row":101}],103:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	autoFocus: {
 		'.h-skill-bar': 'heading',
 		'.x-skill-bar': 'bar_text'
 	}
 });
-},{}],103:[function(require,module,exports){
+},{}],104:[function(require,module,exports){
+module.exports = cs.ElementViews.Base.extend({
+	emptyDetection: function() {
+    // Prevent empty detection
+  }
+});
+},{}],105:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	autoFocus: {
 		'.x-entry-share': 'heading'
 	}
 });
-},{}],104:[function(require,module,exports){
+},{}],106:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 
 	onClickBeforeInspect: function( e ) {
@@ -5537,7 +5581,7 @@ module.exports = cs.ElementViews.Base.extend({
 	},
 
 });
-},{}],105:[function(require,module,exports){
+},{}],107:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	autoFocus: {
 		'.x-text-type .prefix': 'prefix',
@@ -5545,13 +5589,13 @@ module.exports = cs.ElementViews.Base.extend({
 		'.x-text-type .suffix': 'suffix'
 	}
 });
-},{}],106:[function(require,module,exports){
+},{}],108:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	autoFocus: {
 		'.x-text': 'content'
 	}
 });
-},{}],107:[function(require,module,exports){
+},{}],109:[function(require,module,exports){
 // Confirm
 module.exports = Mn.ItemView.extend({
   className: 'cs-confirm',
@@ -5616,7 +5660,7 @@ module.exports = Mn.ItemView.extend({
   },
 
 });
-},{}],108:[function(require,module,exports){
+},{}],110:[function(require,module,exports){
 // Expand
 module.exports = Mn.ItemView.extend({
   tagName: 'button',
@@ -5651,7 +5695,7 @@ module.exports = Mn.ItemView.extend({
 
   }
 });
-},{}],109:[function(require,module,exports){
+},{}],111:[function(require,module,exports){
 // Expansion
 var ControlListView = require('../controls/control-collection')
   , ControlCollection = require('../../data/models/control-collection');
@@ -5667,6 +5711,7 @@ module.exports = Mn.ItemView.extend({
 
   initialize: function( options ) {
     this.listenTo( cs.extra, 'expand:control', this.incoming );
+    this.listenTo( cs.extra, 'set:collapse', this.collape );
     this.controls = new ControlCollection( [], { proxy: null } );
     this.controlView = new ControlListView( { collection: this.controls } );
     this.linkedView = null;
@@ -5706,6 +5751,12 @@ module.exports = Mn.ItemView.extend({
     }
   },
 
+  collape: function( state ) {
+    if (state) {
+      this.shutdown();
+    }
+  },
+
   shutdown: function() {
 
     // Animate out
@@ -5726,7 +5777,7 @@ module.exports = Mn.ItemView.extend({
   }
 
 });
-},{"../../data/models/control-collection":12,"../controls/control-collection":43}],110:[function(require,module,exports){
+},{"../../data/models/control-collection":12,"../controls/control-collection":44}],112:[function(require,module,exports){
 // Home
 module.exports = Mn.ItemView.extend({
   className: 'cs-home',
@@ -5749,7 +5800,7 @@ module.exports = Mn.ItemView.extend({
     return data;
   }
 });
-},{}],111:[function(require,module,exports){
+},{}],113:[function(require,module,exports){
 // Options
 var ControlCollection = require('../../data/models/control-collection');
 
@@ -5784,7 +5835,7 @@ module.exports = Mn.CompositeView.extend({
   }
 
 });
-},{"../../data/models/control-collection":12}],112:[function(require,module,exports){
+},{"../../data/models/control-collection":12}],114:[function(require,module,exports){
 // Respond
 module.exports = Mn.ItemView.extend({
   className: 'cs-respond',
@@ -5830,7 +5881,7 @@ module.exports = Mn.ItemView.extend({
   }
 
 });
-},{}],113:[function(require,module,exports){
+},{}],115:[function(require,module,exports){
 // SaveComplete
 module.exports = Mn.ItemView.extend({
   className: 'cs-saved',
@@ -5869,7 +5920,7 @@ module.exports = Mn.ItemView.extend({
 
 });
 
-},{}],114:[function(require,module,exports){
+},{}],116:[function(require,module,exports){
 // InspectorPane
 
 var ControlListView = require('../controls/control-collection');
@@ -5952,7 +6003,7 @@ module.exports = Mn.LayoutView.extend({
   }
 
 });
-},{"../controls/control-collection":43}],115:[function(require,module,exports){
+},{"../controls/control-collection":44}],117:[function(require,module,exports){
 // LayoutPane
 var ManageRowsView = require('./sub-row/layout-sub-rows')
   , ControlListView = require('../controls/control-collection')
@@ -6025,7 +6076,7 @@ module.exports = Mn.LayoutView.extend({
   },
 
 });
-},{"../controls/control-collection":43,"./sub-row/layout-sub-rows":116,"./sub-templates/layout-sub-templates":117}],116:[function(require,module,exports){
+},{"../controls/control-collection":44,"./sub-row/layout-sub-rows":118,"./sub-templates/layout-sub-templates":119}],118:[function(require,module,exports){
 // RowSubPane
 
 var ViewControlCollection = require('../../controls/control-collection')
@@ -6137,7 +6188,7 @@ module.exports = Mn.LayoutView.extend({
     this.columnControls.reset();
   }
 });
-},{"../../../data/models/control-collection":12,"../../controls/control-collection":43}],117:[function(require,module,exports){
+},{"../../../data/models/control-collection":12,"../../controls/control-collection":44}],119:[function(require,module,exports){
 // TemplatesSubPane
 
 var ViewControlCollection = require('../../controls/control-collection')
@@ -6257,7 +6308,7 @@ module.exports = Mn.LayoutView.extend({
     this.controls.reset();
   }
 });
-},{"../../../data/models/control-collection":12,"../../controls/control-collection":43}],118:[function(require,module,exports){
+},{"../../../data/models/control-collection":12,"../../controls/control-collection":44}],120:[function(require,module,exports){
 // ElementLibraryPane
 
 var ViewBasePane = require('../main/base-pane')
@@ -6290,7 +6341,7 @@ module.exports = ViewBasePane.extend({
     this.$('#elements-search').focus();
   }
 });
-},{"../main/base-pane":121,"./library-list":120}],119:[function(require,module,exports){
+},{"../main/base-pane":123,"./library-list":122}],121:[function(require,module,exports){
 // ElementLibraryItem
 
 module.exports = Mn.ItemView.extend({
@@ -6337,7 +6388,7 @@ module.exports = Mn.ItemView.extend({
 	// 	this.$el.attr( 'data-tooltip-message', this.model.get( 'description' ) );
 	// }
 });
-},{}],120:[function(require,module,exports){
+},{}],122:[function(require,module,exports){
 module.exports = Mn.CollectionView.extend({
 	tagName: 'ul',
 	className: 'cs-elements',
@@ -6379,7 +6430,7 @@ module.exports = Mn.CollectionView.extend({
 		this.query = '';
 	}
 });
-},{"./element-stub":119}],121:[function(require,module,exports){
+},{"./element-stub":121}],123:[function(require,module,exports){
 // BasePane
 var BasePane = Mn.LayoutView.extend({
 
@@ -6420,7 +6471,7 @@ BasePane.extend = function(child) {
 
 module.exports = BasePane;
 
-},{}],122:[function(require,module,exports){
+},{}],124:[function(require,module,exports){
 // Editor
 
 var ViewHeader    = require('./header')
@@ -6580,7 +6631,7 @@ module.exports = Mn.LayoutView.extend({
   }
 
 });
-},{"../extra/expansion":109,"../inspector/inspector":114,"../layout/layout":115,"../library/element-library":118,"../settings/settings":129,"./footer":123,"./header":124}],123:[function(require,module,exports){
+},{"../extra/expansion":111,"../inspector/inspector":116,"../layout/layout":117,"../library/element-library":120,"../settings/settings":131,"./footer":125,"./header":126}],125:[function(require,module,exports){
 var ViewExpand  = require('../extra/expand')
   , ViewConfirm = require('../extra/confirm')
   , ViewHome    = require('../extra/home')
@@ -6766,7 +6817,7 @@ module.exports = Mn.ItemView.extend({
 
 
 });
-},{"../extra/confirm":107,"../extra/expand":108,"../extra/home":110,"../extra/options":111,"../extra/respond":112,"../extra/save-complete":113}],124:[function(require,module,exports){
+},{"../extra/confirm":109,"../extra/expand":110,"../extra/home":112,"../extra/options":113,"../extra/respond":114,"../extra/save-complete":115}],126:[function(require,module,exports){
 // EditorHeader
 module.exports = Mn.ItemView.extend({
   tagName: 'nav',
@@ -6807,7 +6858,7 @@ module.exports = Mn.ItemView.extend({
     this.$( '.' + pane ).addClass('active').siblings().removeClass('active');
   }
 });
-},{}],125:[function(require,module,exports){
+},{}],127:[function(require,module,exports){
 module.exports = Mn.ItemView.extend({
 	template: 'observer',
 	className: 'cs-observer',
@@ -6991,7 +7042,7 @@ module.exports = Mn.ItemView.extend({
 
 	// }
 });
-},{}],126:[function(require,module,exports){
+},{}],128:[function(require,module,exports){
 var Observer = require('./observer.js');
 module.exports = Mn.CollectionView.extend({
 
@@ -7013,13 +7064,13 @@ module.exports = Mn.CollectionView.extend({
 	},
 
 	onBeforeRender: function() {
+
+		this.scrollTopCache = Backbone.$('body').scrollTop();
+
 		Backbone.$('a').click( function( e ) {
 			cs.preview.trigger('click:theme:a', e );
 		}).attr('target','_blank');
-	},
 
-	onBeforeRender: function() {
-		this.scrollTopCache = Backbone.$('body').scrollTop();
 	},
 
 	onRender: function() {
@@ -7062,7 +7113,7 @@ module.exports = Mn.CollectionView.extend({
 	}
 
 })
-},{"../elements/section":101,"./observer.js":125}],127:[function(require,module,exports){
+},{"../elements/section":102,"./observer.js":127}],129:[function(require,module,exports){
 module.exports = Mn.CollectionView.extend({
   // className: 'cs-pane-content-inner',
 	childView: require('./settings-section'),
@@ -7090,7 +7141,7 @@ module.exports = Mn.CollectionView.extend({
 
   }
 });
-},{"./settings-section":128}],128:[function(require,module,exports){
+},{"./settings-section":130}],130:[function(require,module,exports){
 module.exports = Mn.CompositeView.extend({
 	template: 'settings/section',
 	className: 'cs-settings-section',
@@ -7104,7 +7155,7 @@ module.exports = Mn.CompositeView.extend({
 			this.$el.addClass('empty');
 	}
 });
-},{}],129:[function(require,module,exports){
+},{}],131:[function(require,module,exports){
 // Views.SettingsPane
 
 var ViewControlCollection = require('../controls/control-collection');
@@ -7210,8 +7261,35 @@ module.exports = ViewBasePane.extend({
   }
 
 });
-},{"../../data/models/control-collection":12,"../controls/control-collection":43,"../main/base-pane":121,"./settings-collection":127}],130:[function(require,module,exports){
-var templates={};templates['controls/base']=function (obj) {
+},{"../../data/models/control-collection":12,"../controls/control-collection":44,"../main/base-pane":123,"./settings-collection":129}],132:[function(require,module,exports){
+var templates={};templates['layout/actions']=function (obj) {
+obj || (obj = {});
+var __t, __p = '';
+with (obj) {
+__p += '<ul class="cs-actions">\n  <li class="action new">\n    <i class="cs-icon" data-cs-icon="&#xf0fe;"></i>\n    <span>' +
+((__t = ( l18n('layout-add-section') )) == null ? '' : __t) +
+'</span>\n  </li>\n  <li class="action templates">\n    <i class="cs-icon" data-cs-icon="&#xf15b;"></i>\n    <span>' +
+((__t = ( l18n('layout-templates') )) == null ? '' : __t) +
+'</span>\n  </li>\n</ul>';
+
+}
+return __p
+};templates['layout/layout']=function (obj) {
+obj || (obj = {});
+var __t, __p = '', __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+
+ //builder/layout/layout ;
+__p += '\n<h2>' +
+((__t = ( l18n('layout-heading') )) == null ? '' : __t) +
+'</h2>\n<div class="cs-pane-content-outer">\n  <div id="layout-controls" class="cs-pane-content-inner" style="right:0px;">\n    <div class="cs-pane-section"></div>\n  </div>\n</div>\n<div class="cs-builder-sub layout">\n  <button class="cs-builder-sub-back">\n    <i class="cs-icon" data-cs-icon="&#xf053;"></i> <span>' +
+((__t = ( l18n('layout-return') )) == null ? '' : __t) +
+'</span>\n  </button>\n  <div id="layout-sub" class="cs-pane-content-outer"></div>\n</div>';
+
+}
+return __p
+};templates['controls/base']=function (obj) {
 obj || (obj = {});
 var __t, __p = '', __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
@@ -7642,6 +7720,111 @@ __p += '\n<div class="cs-wp-select"></div>';
 
 }
 return __p
+};templates['inspector/blank-state']=function (obj) {
+obj || (obj = {});
+var __t, __p = '', __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+
+ //builder/inspector/blank-state ;
+__p += '\n' +
+((__t = ( cs.icon('logo-flat-custom') )) == null ? '' : __t) +
+'\n<span class="title">Nothing Selected</span>\n<span>Click on an element in the site preview to begin inspecting it.</span>';
+
+}
+return __p
+};templates['inspector/breadcrumbs']=function (obj) {
+obj || (obj = {});
+var __t, __p = '', __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+
+ if ( count > 0 ) { ;
+__p += '\n<button data-level="0" ';
+ if ( items.length == 1 ) { print('disabled') } ;
+__p += '>';
+ print((items.length == 1) ? _.first( items ).title : _.first( items ).label ) ;
+__p += '</button>\n';
+ _.each( _.rest( items ), function(item,index) { ;
+__p += '\n	<span><i class="cs-icon" data-cs-icon="' +
+((__t = ( fontIcon( (rtl) ? 'angle-left' : 'angle-right' ) )) == null ? '' : __t) +
+'"></i></span>\n	<button ';
+ if ( count == index+2 ) { print('disabled') } ;
+__p += ' data-level="' +
+((__t = ( index + 1 )) == null ? '' : __t) +
+'" >' +
+((__t = ( item.label )) == null ? '' : __t) +
+'</button>\n';
+ }) ;
+__p += '\n';
+ } ;
+
+
+}
+return __p
+};templates['inspector/column-actions']=function (obj) {
+obj || (obj = {});
+var __t, __p = '';
+with (obj) {
+__p += '<ul class="cs-actions">\n  <li class="action manage-layout">\n    <i class="cs-icon" data-cs-icon="' +
+((__t = ( fontIcon('bars') )) == null ? '' : __t) +
+'"></i>\n    <span>' +
+((__t = ( l18n('inspector-manage-layout') )) == null ? '' : __t) +
+'</span>\n  </li>\n  <li class="action erase">\n    <i class="cs-icon" data-cs-icon="' +
+((__t = ( fontIcon('eraser') )) == null ? '' : __t) +
+'"></i>\n    <span>' +
+((__t = ( l18n('inspector-erase') )) == null ? '' : __t) +
+'</span>\n  </li>\n</ul>';
+
+}
+return __p
+};templates['inspector/element-actions']=function (obj) {
+obj || (obj = {});
+var __t, __p = '';
+with (obj) {
+__p += '<ul class="cs-actions">\n  <li class="action duplicate">\n    <i class="cs-icon" data-cs-icon="' +
+((__t = ( fontIcon('copy') )) == null ? '' : __t) +
+'"></i>\n    <span>' +
+((__t = ( l18n('inspector-duplicate') )) == null ? '' : __t) +
+'</span>\n  </li>\n  <li class="action delete">\n    <i class="cs-icon" data-cs-icon="' +
+((__t = ( fontIcon('trash-o') )) == null ? '' : __t) +
+'"></i>\n    <span>' +
+((__t = ( l18n('inspector-delete') )) == null ? '' : __t) +
+'</span>\n  </li>\n</ul>';
+
+}
+return __p
+};templates['inspector/inspector']=function (obj) {
+obj || (obj = {});
+var __t, __p = '', __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+
+ //builder/inspector/inspector ;
+__p += '\n<h2>' +
+((__t = ( heading )) == null ? '' : __t) +
+'</h2>\n<div class="cs-pane-content-outer">\n	<div id="inspector-controls" class="cs-pane-content-inner"></div>\n</div>\n<div class="cs-builder-sub inspector ">\n  <button class="cs-builder-sub-back">\n  <i class="cs-icon" data-cs-icon="&#xf053;"></i>\n  <span>' +
+((__t = ( l18n('inspector-return') )) == null ? '' : __t) +
+'</span>\n	</button>\n	<div class="cs-pane-content-outer">\n		<div class="cs-pane-content-inner">\n			<div id="inspector-sub" class="cs-pane-section"></div>\n		</div>\n	</div>\n</div>\n';
+
+}
+return __p
+};templates['inspector/row-actions']=function (obj) {
+obj || (obj = {});
+var __t, __p = '';
+with (obj) {
+__p += '<ul class="cs-actions">\n  <li class="action manage-layout">\n    <i class="cs-icon" data-cs-icon="' +
+((__t = ( fontIcon('bars') )) == null ? '' : __t) +
+'"></i>\n    <span>' +
+((__t = ( l18n('inspector-manage-layout') )) == null ? '' : __t) +
+'</span>\n  </li>\n  <li class="action delete">\n    <i class="cs-icon" data-cs-icon="' +
+((__t = ( fontIcon('trash-o') )) == null ? '' : __t) +
+'"></i>\n    <span>' +
+((__t = ( l18n('inspector-delete') )) == null ? '' : __t) +
+'</span>\n  </li>\n</ul>';
+
+}
+return __p
 };templates['extra/confirm']=function (obj) {
 obj || (obj = {});
 var __t, __p = '', __j = Array.prototype.join;
@@ -7765,169 +7948,44 @@ __p += '\n<p class="message">' +
 
 }
 return __p
-};templates['layout/actions']=function (obj) {
+};templates['settings/actions']=function (obj) {
 obj || (obj = {});
 var __t, __p = '';
 with (obj) {
-__p += '<ul class="cs-actions">\n  <li class="action new">\n    <i class="cs-icon" data-cs-icon="&#xf0fe;"></i>\n    <span>' +
-((__t = ( l18n('layout-add-section') )) == null ? '' : __t) +
-'</span>\n  </li>\n  <li class="action templates">\n    <i class="cs-icon" data-cs-icon="&#xf15b;"></i>\n    <span>' +
-((__t = ( l18n('layout-templates') )) == null ? '' : __t) +
+__p += '<ul class="cs-actions">\n  <li class="action css">\n    <i class="cs-icon" data-cs-icon="' +
+((__t = ( fontIcon('paint-brush') )) == null ? '' : __t) +
+'"></i>\n    <span>' +
+((__t = ( l18n('settings-css-editor') )) == null ? '' : __t) +
+'</span>\n  </li>\n  <li class="action js">\n    <i class="cs-icon" data-cs-icon="' +
+((__t = ( fontIcon('code') )) == null ? '' : __t) +
+'"></i>\n    <span>' +
+((__t = ( l18n('settings-js-editor') )) == null ? '' : __t) +
 '</span>\n  </li>\n</ul>';
 
 }
 return __p
-};templates['layout/layout']=function (obj) {
+};templates['settings/page-settings']=function (obj) {
 obj || (obj = {});
 var __t, __p = '', __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
 
- //builder/layout/layout ;
+ //builder/settings/page-settings ;
 __p += '\n<h2>' +
-((__t = ( l18n('layout-heading') )) == null ? '' : __t) +
-'</h2>\n<div class="cs-pane-content-outer">\n  <div id="layout-controls" class="cs-pane-content-inner" style="right:0px;">\n    <div class="cs-pane-section"></div>\n  </div>\n</div>\n<div class="cs-builder-sub layout">\n  <button class="cs-builder-sub-back">\n    <i class="cs-icon" data-cs-icon="&#xf053;"></i> <span>' +
-((__t = ( l18n('layout-return') )) == null ? '' : __t) +
-'</span>\n  </button>\n  <div id="layout-sub" class="cs-pane-content-outer"></div>\n</div>';
+((__t = ( l18n('settings-heading') )) == null ? '' : __t) +
+'</h2>\n<div class="cs-pane-content-outer">\n	<div class="cs-pane-content-inner">\n  	<div id="setting-controls"></div>\n  	<div id="setting-sections"></div>\n	</div>\n<div class="cs-builder-sub settings ">\n  <button class="cs-builder-sub-back">\n  <i class="cs-icon" data-cs-icon="&#xf053;"></i>\n  <span>' +
+((__t = ( l18n('settings-return') )) == null ? '' : __t) +
+'</span>\n	</button>\n	<div class="cs-pane-content-outer">\n		<div class="cs-pane-content-inner">\n			<div id="settings-sub" class="cs-pane-section"></div>\n		</div>\n	</div>\n</div>';
 
 }
 return __p
-};templates['inspector/blank-state']=function (obj) {
-obj || (obj = {});
-var __t, __p = '', __j = Array.prototype.join;
-function print() { __p += __j.call(arguments, '') }
-with (obj) {
-
- //builder/inspector/blank-state ;
-__p += '\n' +
-((__t = ( cs.icon('logo-flat-custom') )) == null ? '' : __t) +
-'\n<span class="title">Nothing Selected</span>\n<span>Click on an element in the site preview to begin inspecting it.</span>';
-
-}
-return __p
-};templates['inspector/breadcrumbs']=function (obj) {
-obj || (obj = {});
-var __t, __p = '', __j = Array.prototype.join;
-function print() { __p += __j.call(arguments, '') }
-with (obj) {
-
- if ( count > 0 ) { ;
-__p += '\n<button data-level="0" ';
- if ( items.length == 1 ) { print('disabled') } ;
-__p += '>';
- print((items.length == 1) ? _.first( items ).title : _.first( items ).label ) ;
-__p += '</button>\n';
- _.each( _.rest( items ), function(item,index) { ;
-__p += '\n	<span><i class="cs-icon" data-cs-icon="' +
-((__t = ( fontIcon( (rtl) ? 'angle-left' : 'angle-right' ) )) == null ? '' : __t) +
-'"></i></span>\n	<button ';
- if ( count == index+2 ) { print('disabled') } ;
-__p += ' data-level="' +
-((__t = ( index + 1 )) == null ? '' : __t) +
-'" >' +
-((__t = ( item.label )) == null ? '' : __t) +
-'</button>\n';
- }) ;
-__p += '\n';
- } ;
-
-
-}
-return __p
-};templates['inspector/column-actions']=function (obj) {
+};templates['settings/section']=function (obj) {
 obj || (obj = {});
 var __t, __p = '';
 with (obj) {
-__p += '<ul class="cs-actions">\n  <li class="action manage-layout">\n    <i class="cs-icon" data-cs-icon="' +
-((__t = ( fontIcon('bars') )) == null ? '' : __t) +
-'"></i>\n    <span>' +
-((__t = ( l18n('inspector-manage-layout') )) == null ? '' : __t) +
-'</span>\n  </li>\n  <li class="action erase">\n    <i class="cs-icon" data-cs-icon="' +
-((__t = ( fontIcon('eraser') )) == null ? '' : __t) +
-'"></i>\n    <span>' +
-((__t = ( l18n('inspector-erase') )) == null ? '' : __t) +
-'</span>\n  </li>\n</ul>';
-
-}
-return __p
-};templates['inspector/element-actions']=function (obj) {
-obj || (obj = {});
-var __t, __p = '';
-with (obj) {
-__p += '<ul class="cs-actions">\n  <li class="action duplicate">\n    <i class="cs-icon" data-cs-icon="' +
-((__t = ( fontIcon('copy') )) == null ? '' : __t) +
-'"></i>\n    <span>' +
-((__t = ( l18n('inspector-duplicate') )) == null ? '' : __t) +
-'</span>\n  </li>\n  <li class="action delete">\n    <i class="cs-icon" data-cs-icon="' +
-((__t = ( fontIcon('trash-o') )) == null ? '' : __t) +
-'"></i>\n    <span>' +
-((__t = ( l18n('inspector-delete') )) == null ? '' : __t) +
-'</span>\n  </li>\n</ul>';
-
-}
-return __p
-};templates['inspector/inspector']=function (obj) {
-obj || (obj = {});
-var __t, __p = '', __j = Array.prototype.join;
-function print() { __p += __j.call(arguments, '') }
-with (obj) {
-
- //builder/inspector/inspector ;
-__p += '\n<h2>' +
-((__t = ( heading )) == null ? '' : __t) +
-'</h2>\n<div class="cs-pane-content-outer">\n	<div id="inspector-controls" class="cs-pane-content-inner"></div>\n</div>\n<div class="cs-builder-sub inspector ">\n  <button class="cs-builder-sub-back">\n  <i class="cs-icon" data-cs-icon="&#xf053;"></i>\n  <span>' +
-((__t = ( l18n('inspector-return') )) == null ? '' : __t) +
-'</span>\n	</button>\n	<div class="cs-pane-content-outer">\n		<div class="cs-pane-content-inner">\n			<div id="inspector-sub" class="cs-pane-section"></div>\n		</div>\n	</div>\n</div>\n';
-
-}
-return __p
-};templates['inspector/row-actions']=function (obj) {
-obj || (obj = {});
-var __t, __p = '';
-with (obj) {
-__p += '<ul class="cs-actions">\n  <li class="action manage-layout">\n    <i class="cs-icon" data-cs-icon="' +
-((__t = ( fontIcon('bars') )) == null ? '' : __t) +
-'"></i>\n    <span>' +
-((__t = ( l18n('inspector-manage-layout') )) == null ? '' : __t) +
-'</span>\n  </li>\n  <li class="action delete">\n    <i class="cs-icon" data-cs-icon="' +
-((__t = ( fontIcon('trash-o') )) == null ? '' : __t) +
-'"></i>\n    <span>' +
-((__t = ( l18n('inspector-delete') )) == null ? '' : __t) +
-'</span>\n  </li>\n</ul>';
-
-}
-return __p
-};templates['library/element-library']=function (obj) {
-obj || (obj = {});
-var __t, __p = '', __j = Array.prototype.join;
-function print() { __p += __j.call(arguments, '') }
-with (obj) {
-
- //builder/library/element-library ;
-__p += '\n<h2>' +
-((__t = ( l18n('elements-heading') )) == null ? '' : __t) +
-'</h2>\n<div class="cs-pane-content-outer">\n	<div class="cs-search-section">\n    <div class="cs-search">\n      <input type="search" placeholder="' +
-((__t = ( l18n('elements-search') )) == null ? '' : __t) +
-'" id="elements-search">\n      <i class="cs-icon" data-cs-icon="' +
-((__t = ( fontIcon('search') )) == null ? '' : __t) +
-'"></i>\n    </div>\n  </div>\n	<div class="cs-pane-content-inner" style="right:0px;">\n\n		<div id="elements-library" class="cs-pane-section"></div>\n\n\n		<div class="cs-builder-sub elements">\n			<button class="cs-builder-sub-back">\n		  	<i class="cs-icon" data-cs-icon="&#xf053;"></i>\n		  	<span>' +
-((__t = ( l18n('elements-return') )) == null ? '' : __t) +
-'</span>\n		  </button>\n			<div id="elements-sub" class="cs-pane-content"></div>\n		</div>\n	</div>\n</div>';
-
-}
-return __p
-};templates['library/element-stub']=function (obj) {
-obj || (obj = {});
-var __t, __p = '', __j = Array.prototype.join;
-function print() { __p += __j.call(arguments, '') }
-with (obj) {
-
- //builder/library/element-stub ;
-__p += '\n<span class="icon">' +
-((__t = ( icon )) == null ? '' : __t) +
-'</span>\n<span class="name"><span>' +
+__p += '<h3 class="cs-pane-section-toggle">' +
 ((__t = ( title )) == null ? '' : __t) +
-'</span></span>';
+'</h3>\n<div class="cs-pane-section">\n	<ul class="cs-controls"></ul>\n</div>';
 
 }
 return __p
@@ -7990,44 +8048,37 @@ __p += '\n<button class="layout">' +
 
 }
 return __p
-};templates['settings/actions']=function (obj) {
-obj || (obj = {});
-var __t, __p = '';
-with (obj) {
-__p += '<ul class="cs-actions">\n  <li class="action css">\n    <i class="cs-icon" data-cs-icon="' +
-((__t = ( fontIcon('paint-brush') )) == null ? '' : __t) +
-'"></i>\n    <span>' +
-((__t = ( l18n('settings-css-editor') )) == null ? '' : __t) +
-'</span>\n  </li>\n  <li class="action js">\n    <i class="cs-icon" data-cs-icon="' +
-((__t = ( fontIcon('code') )) == null ? '' : __t) +
-'"></i>\n    <span>' +
-((__t = ( l18n('settings-js-editor') )) == null ? '' : __t) +
-'</span>\n  </li>\n</ul>';
-
-}
-return __p
-};templates['settings/page-settings']=function (obj) {
+};templates['library/element-library']=function (obj) {
 obj || (obj = {});
 var __t, __p = '', __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
 
- //builder/settings/page-settings ;
+ //builder/library/element-library ;
 __p += '\n<h2>' +
-((__t = ( l18n('settings-heading') )) == null ? '' : __t) +
-'</h2>\n<div class="cs-pane-content-outer">\n	<div class="cs-pane-content-inner">\n  	<div id="setting-controls"></div>\n  	<div id="setting-sections"></div>\n	</div>\n<div class="cs-builder-sub settings ">\n  <button class="cs-builder-sub-back">\n  <i class="cs-icon" data-cs-icon="&#xf053;"></i>\n  <span>' +
-((__t = ( l18n('settings-return') )) == null ? '' : __t) +
-'</span>\n	</button>\n	<div class="cs-pane-content-outer">\n		<div class="cs-pane-content-inner">\n			<div id="settings-sub" class="cs-pane-section"></div>\n		</div>\n	</div>\n</div>';
+((__t = ( l18n('elements-heading') )) == null ? '' : __t) +
+'</h2>\n<div class="cs-pane-content-outer">\n	<div class="cs-search-section">\n    <div class="cs-search">\n      <input type="search" placeholder="' +
+((__t = ( l18n('elements-search') )) == null ? '' : __t) +
+'" id="elements-search">\n      <i class="cs-icon" data-cs-icon="' +
+((__t = ( fontIcon('search') )) == null ? '' : __t) +
+'"></i>\n    </div>\n  </div>\n	<div class="cs-pane-content-inner" style="right:0px;">\n\n		<div id="elements-library" class="cs-pane-section"></div>\n\n\n		<div class="cs-builder-sub elements">\n			<button class="cs-builder-sub-back">\n		  	<i class="cs-icon" data-cs-icon="&#xf053;"></i>\n		  	<span>' +
+((__t = ( l18n('elements-return') )) == null ? '' : __t) +
+'</span>\n		  </button>\n			<div id="elements-sub" class="cs-pane-content"></div>\n		</div>\n	</div>\n</div>';
 
 }
 return __p
-};templates['settings/section']=function (obj) {
+};templates['library/element-stub']=function (obj) {
 obj || (obj = {});
-var __t, __p = '';
+var __t, __p = '', __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
 with (obj) {
-__p += '<h3 class="cs-pane-section-toggle">' +
+
+ //builder/library/element-stub ;
+__p += '\n<span class="icon">' +
+((__t = ( icon )) == null ? '' : __t) +
+'</span>\n<span class="name"><span>' +
 ((__t = ( title )) == null ? '' : __t) +
-'</h3>\n<div class="cs-pane-section">\n	<ul class="cs-controls"></ul>\n</div>';
+'</span></span>';
 
 }
 return __p
@@ -8114,7 +8165,7 @@ __p += '<input id="template-upload" type="file" name="blockUpload"/>\n<button cl
 }
 return __p
 };module.exports=templates;
-},{}],131:[function(require,module,exports){
+},{}],133:[function(require,module,exports){
 var templates={};templates['dragging-placeholder']=function (obj) {
 obj || (obj = {});
 var __t, __p = '';
@@ -8188,7 +8239,7 @@ __p += '<div class="cs-observer-tooltip top left">' +
 }
 return __p
 };module.exports=templates;
-},{}],132:[function(require,module,exports){
+},{}],134:[function(require,module,exports){
 var templates={};templates['element-accordion']=function (obj) {
 obj || (obj = {});
 var __t, __p = '', __j = Array.prototype.join;
@@ -8949,7 +9000,7 @@ __p += '\n<svg class="cs-custom-icon" version="1.1" xmlns="http://www.w3.org/200
 }
 return __p
 };module.exports=templates;
-},{}],133:[function(require,module,exports){
+},{}],135:[function(require,module,exports){
 /*! Color.js - v0.9.11 - 2013-08-09
 * https://github.com/Automattic/Color.js
 * Copyright (c) 2013 Matt Wiebe; Licensed GPLv2 */
@@ -9542,7 +9593,7 @@ return __p
 		global.Color = Color;
 
 }(this));
-},{}],134:[function(require,module,exports){
+},{}],136:[function(require,module,exports){
 /*
  * HTML5 Sortable jQuery Plugin
  * https://github.com/voidberg/html5sortable
@@ -9683,7 +9734,7 @@ return __p
     });
   };
 })(jQuery);
-},{}],135:[function(require,module,exports){
+},{}],137:[function(require,module,exports){
 // Generated by CoffeeScript 1.9.2
 
 /*
@@ -9913,7 +9964,7 @@ Copyright 2015 Kevin Sylvestre
   };
 
 }).call(this);
-},{}],136:[function(require,module,exports){
+},{}],138:[function(require,module,exports){
 //https://github.com/kmewhort/pointer_events_polyfill
 /*
  * Pointer Events Polyfill: Adds support for the style attribute "pointer-events: none" to browsers without this feature (namely, IE).
@@ -9983,7 +10034,7 @@ PointerEventsPolyfill.prototype.register_mouse_events = function(){
         return true;
     });
 };
-},{}],137:[function(require,module,exports){
+},{}],139:[function(require,module,exports){
 // Modified to fix transparent pixels being calculated as black (https://github.com/briangonzalez/rgbaster.js/issues/8)
 ;(function(window, undefined){
 
@@ -10107,7 +10158,7 @@ PointerEventsPolyfill.prototype.register_mouse_events = function(){
   window.RGBaster = window.RGBaster || RGBaster;
 
 })(window);
-},{}],138:[function(require,module,exports){
+},{}],140:[function(require,module,exports){
 /*!
  * string_score.js: String Scoring Algorithm 0.1.22
  *
@@ -10212,10 +10263,10 @@ String.prototype.score = function (word, fuzziness) {
 
   return finalScore;
 };
-},{}],139:[function(require,module,exports){
+},{}],141:[function(require,module,exports){
 // Backbone.BabySitter
 // -------------------
-// v0.1.7
+// v0.1.6
 //
 // Copyright (c)2015 Derick Bailey, Muted Solutions, LLC.
 // Distributed under MIT license
@@ -10393,7 +10444,7 @@ String.prototype.score = function (word, fuzziness) {
   })(Backbone, _);
   
 
-  Backbone.ChildViewContainer.VERSION = '0.1.7';
+  Backbone.ChildViewContainer.VERSION = '0.1.6';
 
   Backbone.ChildViewContainer.noConflict = function () {
     Backbone.ChildViewContainer = previousChildViewContainer;
@@ -10404,7 +10455,7 @@ String.prototype.score = function (word, fuzziness) {
 
 }));
 
-},{"backbone":"backbone","underscore":"underscore"}],140:[function(require,module,exports){
+},{"backbone":"backbone","underscore":"underscore"}],142:[function(require,module,exports){
 // MarionetteJS (Backbone.Marionette)
 // ----------------------------------
 // v2.4.1
@@ -13767,7 +13818,7 @@ String.prototype.score = function (word, fuzziness) {
   return Marionette;
 }));
 
-},{"backbone":"backbone","backbone.babysitter":139,"backbone.wreqr":143,"underscore":"underscore"}],141:[function(require,module,exports){
+},{"backbone":"backbone","backbone.babysitter":141,"backbone.wreqr":145,"underscore":"underscore"}],143:[function(require,module,exports){
 // Backbone.Radio v0.9.0
 (function(root, factory) {
   if (typeof define === 'function' && define.amd) {
@@ -14195,8 +14246,8 @@ String.prototype.score = function (word, fuzziness) {
   return Radio;
 }));
 
-},{"backbone":"backbone","underscore":"underscore"}],142:[function(require,module,exports){
-// Backbone.Stickit v0.9.2, MIT Licensed
+},{"backbone":"backbone","underscore":"underscore"}],144:[function(require,module,exports){
+// Backbone.Stickit v0.9.0, MIT Licensed
 // Copyright (c) 2012-2015 The New York Times, CMS Group, Matthew DeLambo <delambo@gmail.com>
 
 (function (factory) {
@@ -14889,11 +14940,11 @@ String.prototype.score = function (word, fuzziness) {
 
 }));
 
-},{"backbone":"backbone","underscore":"underscore"}],143:[function(require,module,exports){
+},{"backbone":"backbone","underscore":"underscore"}],145:[function(require,module,exports){
 
-},{}],144:[function(require,module,exports){
+},{}],146:[function(require,module,exports){
 //! moment.js
-//! version : 2.10.3
+//! version : 2.10.2
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
 //! license : MIT
 //! momentjs.com
@@ -14916,12 +14967,28 @@ String.prototype.score = function (word, fuzziness) {
         hookCallback = callback;
     }
 
+    function defaultParsingFlags() {
+        // We need to deep clone this object.
+        return {
+            empty           : false,
+            unusedTokens    : [],
+            unusedInput     : [],
+            overflow        : -2,
+            charsLeftOver   : 0,
+            nullInput       : false,
+            invalidMonth    : null,
+            invalidFormat   : false,
+            userInvalidated : false,
+            iso             : false
+        };
+    }
+
     function isArray(input) {
         return Object.prototype.toString.call(input) === '[object Array]';
     }
 
     function isDate(input) {
-        return input instanceof Date || Object.prototype.toString.call(input) === '[object Date]';
+        return Object.prototype.toString.call(input) === '[object Date]' || input instanceof Date;
     }
 
     function map(arr, fn) {
@@ -14958,45 +15025,21 @@ String.prototype.score = function (word, fuzziness) {
         return createLocalOrUTC(input, format, locale, strict, true).utc();
     }
 
-    function defaultParsingFlags() {
-        // We need to deep clone this object.
-        return {
-            empty           : false,
-            unusedTokens    : [],
-            unusedInput     : [],
-            overflow        : -2,
-            charsLeftOver   : 0,
-            nullInput       : false,
-            invalidMonth    : null,
-            invalidFormat   : false,
-            userInvalidated : false,
-            iso             : false
-        };
-    }
-
-    function getParsingFlags(m) {
-        if (m._pf == null) {
-            m._pf = defaultParsingFlags();
-        }
-        return m._pf;
-    }
-
     function valid__isValid(m) {
         if (m._isValid == null) {
-            var flags = getParsingFlags(m);
             m._isValid = !isNaN(m._d.getTime()) &&
-                flags.overflow < 0 &&
-                !flags.empty &&
-                !flags.invalidMonth &&
-                !flags.nullInput &&
-                !flags.invalidFormat &&
-                !flags.userInvalidated;
+                m._pf.overflow < 0 &&
+                !m._pf.empty &&
+                !m._pf.invalidMonth &&
+                !m._pf.nullInput &&
+                !m._pf.invalidFormat &&
+                !m._pf.userInvalidated;
 
             if (m._strict) {
                 m._isValid = m._isValid &&
-                    flags.charsLeftOver === 0 &&
-                    flags.unusedTokens.length === 0 &&
-                    flags.bigHour === undefined;
+                    m._pf.charsLeftOver === 0 &&
+                    m._pf.unusedTokens.length === 0 &&
+                    m._pf.bigHour === undefined;
             }
         }
         return m._isValid;
@@ -15005,10 +15048,10 @@ String.prototype.score = function (word, fuzziness) {
     function valid__createInvalid (flags) {
         var m = create_utc__createUTC(NaN);
         if (flags != null) {
-            extend(getParsingFlags(m), flags);
+            extend(m._pf, flags);
         }
         else {
-            getParsingFlags(m).userInvalidated = true;
+            m._pf.userInvalidated = true;
         }
 
         return m;
@@ -15044,7 +15087,7 @@ String.prototype.score = function (word, fuzziness) {
             to._offset = from._offset;
         }
         if (typeof from._pf !== 'undefined') {
-            to._pf = getParsingFlags(from);
+            to._pf = from._pf;
         }
         if (typeof from._locale !== 'undefined') {
             to._locale = from._locale;
@@ -15079,7 +15122,7 @@ String.prototype.score = function (word, fuzziness) {
     }
 
     function isMoment (obj) {
-        return obj instanceof Moment || (obj != null && obj._isAMomentObject != null);
+        return obj instanceof Moment || (obj != null && hasOwnProp(obj, '_isAMomentObject'));
     }
 
     function toInt(argumentForCoercion) {
@@ -15517,7 +15560,7 @@ String.prototype.score = function (word, fuzziness) {
         if (month != null) {
             array[MONTH] = month;
         } else {
-            getParsingFlags(config).invalidMonth = input;
+            config._pf.invalidMonth = input;
         }
     });
 
@@ -15601,7 +15644,7 @@ String.prototype.score = function (word, fuzziness) {
         var overflow;
         var a = m._a;
 
-        if (a && getParsingFlags(m).overflow === -2) {
+        if (a && m._pf.overflow === -2) {
             overflow =
                 a[MONTH]       < 0 || a[MONTH]       > 11  ? MONTH :
                 a[DATE]        < 1 || a[DATE]        > daysInMonth(a[YEAR], a[MONTH]) ? DATE :
@@ -15611,11 +15654,11 @@ String.prototype.score = function (word, fuzziness) {
                 a[MILLISECOND] < 0 || a[MILLISECOND] > 999 ? MILLISECOND :
                 -1;
 
-            if (getParsingFlags(m)._overflowDayOfYear && (overflow < YEAR || overflow > DATE)) {
+            if (m._pf._overflowDayOfYear && (overflow < YEAR || overflow > DATE)) {
                 overflow = DATE;
             }
 
-            getParsingFlags(m).overflow = overflow;
+            m._pf.overflow = overflow;
         }
 
         return m;
@@ -15628,12 +15671,10 @@ String.prototype.score = function (word, fuzziness) {
     }
 
     function deprecate(msg, fn) {
-        var firstTime = true,
-            msgWithStack = msg + '\n' + (new Error()).stack;
-
+        var firstTime = true;
         return extend(function () {
             if (firstTime) {
-                warn(msgWithStack);
+                warn(msg);
                 firstTime = false;
             }
             return fn.apply(this, arguments);
@@ -15678,7 +15719,7 @@ String.prototype.score = function (word, fuzziness) {
             match = from_string__isoRegex.exec(string);
 
         if (match) {
-            getParsingFlags(config).iso = true;
+            config._pf.iso = true;
             for (i = 0, l = isoDates.length; i < l; i++) {
                 if (isoDates[i][1].exec(string)) {
                     // match[5] should be 'T' or undefined
@@ -15958,7 +15999,7 @@ String.prototype.score = function (word, fuzziness) {
             yearToUse = defaults(config._a[YEAR], currentDate[YEAR]);
 
             if (config._dayOfYear > daysInYear(yearToUse)) {
-                getParsingFlags(config)._overflowDayOfYear = true;
+                config._pf._overflowDayOfYear = true;
             }
 
             date = createUTCDate(yearToUse, 0, config._dayOfYear);
@@ -16054,7 +16095,7 @@ String.prototype.score = function (word, fuzziness) {
         }
 
         config._a = [];
-        getParsingFlags(config).empty = true;
+        config._pf.empty = true;
 
         // This array is used to make a Date, either with `new Date` or `Date.UTC`
         var string = '' + config._i,
@@ -16070,7 +16111,7 @@ String.prototype.score = function (word, fuzziness) {
             if (parsedInput) {
                 skipped = string.substr(0, string.indexOf(parsedInput));
                 if (skipped.length > 0) {
-                    getParsingFlags(config).unusedInput.push(skipped);
+                    config._pf.unusedInput.push(skipped);
                 }
                 string = string.slice(string.indexOf(parsedInput) + parsedInput.length);
                 totalParsedInputLength += parsedInput.length;
@@ -16078,29 +16119,27 @@ String.prototype.score = function (word, fuzziness) {
             // don't parse if it's not a known token
             if (formatTokenFunctions[token]) {
                 if (parsedInput) {
-                    getParsingFlags(config).empty = false;
+                    config._pf.empty = false;
                 }
                 else {
-                    getParsingFlags(config).unusedTokens.push(token);
+                    config._pf.unusedTokens.push(token);
                 }
                 addTimeToArrayFromToken(token, parsedInput, config);
             }
             else if (config._strict && !parsedInput) {
-                getParsingFlags(config).unusedTokens.push(token);
+                config._pf.unusedTokens.push(token);
             }
         }
 
         // add remaining unparsed input length to the string
-        getParsingFlags(config).charsLeftOver = stringLength - totalParsedInputLength;
+        config._pf.charsLeftOver = stringLength - totalParsedInputLength;
         if (string.length > 0) {
-            getParsingFlags(config).unusedInput.push(string);
+            config._pf.unusedInput.push(string);
         }
 
         // clear _12h flag if hour is <= 12
-        if (getParsingFlags(config).bigHour === true &&
-                config._a[HOUR] <= 12 &&
-                config._a[HOUR] > 0) {
-            getParsingFlags(config).bigHour = undefined;
+        if (config._pf.bigHour === true && config._a[HOUR] <= 12) {
+            config._pf.bigHour = undefined;
         }
         // handle meridiem
         config._a[HOUR] = meridiemFixWrap(config._locale, config._a[HOUR], config._meridiem);
@@ -16144,7 +16183,7 @@ String.prototype.score = function (word, fuzziness) {
             currentScore;
 
         if (config._f.length === 0) {
-            getParsingFlags(config).invalidFormat = true;
+            config._pf.invalidFormat = true;
             config._d = new Date(NaN);
             return;
         }
@@ -16155,6 +16194,7 @@ String.prototype.score = function (word, fuzziness) {
             if (config._useUTC != null) {
                 tempConfig._useUTC = config._useUTC;
             }
+            tempConfig._pf = defaultParsingFlags();
             tempConfig._f = config._f[i];
             configFromStringAndFormat(tempConfig);
 
@@ -16163,12 +16203,12 @@ String.prototype.score = function (word, fuzziness) {
             }
 
             // if there is any input that was not parsed add a penalty for that format
-            currentScore += getParsingFlags(tempConfig).charsLeftOver;
+            currentScore += tempConfig._pf.charsLeftOver;
 
             //or tokens
-            currentScore += getParsingFlags(tempConfig).unusedTokens.length * 10;
+            currentScore += tempConfig._pf.unusedTokens.length * 10;
 
-            getParsingFlags(tempConfig).score = currentScore;
+            tempConfig._pf.score = currentScore;
 
             if (scoreToBeat == null || currentScore < scoreToBeat) {
                 scoreToBeat = currentScore;
@@ -16211,8 +16251,6 @@ String.prototype.score = function (word, fuzziness) {
             configFromStringAndArray(config);
         } else if (format) {
             configFromStringAndFormat(config);
-        } else if (isDate(input)) {
-            config._d = input;
         } else {
             configFromInput(config);
         }
@@ -16265,6 +16303,7 @@ String.prototype.score = function (word, fuzziness) {
         c._i = input;
         c._f = format;
         c._strict = strict;
+        c._pf = defaultParsingFlags();
 
         return createFromConfig(c);
     }
@@ -16838,25 +16877,11 @@ String.prototype.score = function (word, fuzziness) {
     }
 
     function from (time, withoutSuffix) {
-        if (!this.isValid()) {
-            return this.localeData().invalidDate();
-        }
         return create__createDuration({to: this, from: time}).locale(this.locale()).humanize(!withoutSuffix);
     }
 
     function fromNow (withoutSuffix) {
         return this.from(local__createLocal(), withoutSuffix);
-    }
-
-    function to (time, withoutSuffix) {
-        if (!this.isValid()) {
-            return this.localeData().invalidDate();
-        }
-        return create__createDuration({from: this, to: time}).locale(this.locale()).humanize(!withoutSuffix);
-    }
-
-    function toNow (withoutSuffix) {
-        return this.to(local__createLocal(), withoutSuffix);
     }
 
     function locale (key) {
@@ -16961,11 +16986,11 @@ String.prototype.score = function (word, fuzziness) {
     }
 
     function parsingFlags () {
-        return extend({}, getParsingFlags(this));
+        return extend({}, this._pf);
     }
 
     function invalidAt () {
-        return getParsingFlags(this).overflow;
+        return this._pf.overflow;
     }
 
     addFormatToken(0, ['gg', 2], 0, function () {
@@ -17116,7 +17141,7 @@ String.prototype.score = function (word, fuzziness) {
         if (weekday != null) {
             week.d = weekday;
         } else {
-            getParsingFlags(config).invalidWeekday = input;
+            config._pf.invalidWeekday = input;
         }
     });
 
@@ -17241,7 +17266,7 @@ String.prototype.score = function (word, fuzziness) {
     });
     addParseToken(['h', 'hh'], function (input, array, config) {
         array[HOUR] = toInt(input);
-        getParsingFlags(config).bigHour = true;
+        config._pf.bigHour = true;
     });
 
     // LOCALES
@@ -17358,8 +17383,6 @@ String.prototype.score = function (word, fuzziness) {
     momentPrototype__proto.format       = format;
     momentPrototype__proto.from         = from;
     momentPrototype__proto.fromNow      = fromNow;
-    momentPrototype__proto.to           = to;
-    momentPrototype__proto.toNow        = toNow;
     momentPrototype__proto.get          = getSet;
     momentPrototype__proto.invalidAt    = invalidAt;
     momentPrototype__proto.isAfter      = isAfter;
@@ -17548,7 +17571,7 @@ String.prototype.score = function (word, fuzziness) {
         }
         // Lenient ordinal parsing accepts just a number in addition to
         // number + (possibly) stuff coming from _ordinalParseLenient.
-        this._ordinalParseLenient = new RegExp(this._ordinalParse.source + '|' + (/\d{1,2}/).source);
+        this._ordinalParseLenient = new RegExp(this._ordinalParse.source + '|' + /\d{1,2}/.source);
     }
 
     var prototype__proto = Locale.prototype;
@@ -17765,13 +17788,13 @@ String.prototype.score = function (word, fuzziness) {
             // handle milliseconds separately because of floating point math errors (issue #1867)
             days = this._days + Math.round(yearsToDays(this._months / 12));
             switch (units) {
-                case 'week'   : return days / 7     + milliseconds / 6048e5;
-                case 'day'    : return days         + milliseconds / 864e5;
-                case 'hour'   : return days * 24    + milliseconds / 36e5;
-                case 'minute' : return days * 1440  + milliseconds / 6e4;
-                case 'second' : return days * 86400 + milliseconds / 1000;
+                case 'week'   : return days / 7            + milliseconds / 6048e5;
+                case 'day'    : return days                + milliseconds / 864e5;
+                case 'hour'   : return days * 24           + milliseconds / 36e5;
+                case 'minute' : return days * 24 * 60      + milliseconds / 6e4;
+                case 'second' : return days * 24 * 60 * 60 + milliseconds / 1000;
                 // Math.floor prevents floating point math errors here
-                case 'millisecond': return Math.floor(days * 864e5) + milliseconds;
+                case 'millisecond': return Math.floor(days * 24 * 60 * 60 * 1000) + milliseconds;
                 default: throw new Error('Unknown unit ' + units);
             }
         }
@@ -17972,7 +17995,7 @@ String.prototype.score = function (word, fuzziness) {
     // Side effect imports
 
 
-    utils_hooks__hooks.version = '2.10.3';
+    utils_hooks__hooks.version = '2.10.2';
 
     setHookCallback(local__createLocal);
 
@@ -18003,7 +18026,7 @@ String.prototype.score = function (word, fuzziness) {
     return _moment;
 
 }));
-},{}],145:[function(require,module,exports){
+},{}],147:[function(require,module,exports){
 /* NProgress, (c) 2013, 2014 Rico Sta. Cruz - http://ricostacruz.com/nprogress
  * @license MIT */
 
@@ -18481,7 +18504,7 @@ String.prototype.score = function (word, fuzziness) {
 });
 
 
-},{}],146:[function(require,module,exports){
+},{}],148:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -18489,7 +18512,7 @@ String.prototype.score = function (word, fuzziness) {
 
 module.exports = require('./src/js/adaptor/jquery');
 
-},{"./src/js/adaptor/jquery":147}],147:[function(require,module,exports){
+},{"./src/js/adaptor/jquery":149}],149:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -18537,7 +18560,7 @@ if (typeof define === 'function' && define.amd) {
 
 module.exports = mountJQuery;
 
-},{"../main":153,"../plugin/instances":164}],148:[function(require,module,exports){
+},{"../main":155,"../plugin/instances":166}],150:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -18584,7 +18607,7 @@ exports.list = function (element) {
   }
 };
 
-},{}],149:[function(require,module,exports){
+},{}],151:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -18663,7 +18686,7 @@ exports.remove = function (element) {
   }
 };
 
-},{}],150:[function(require,module,exports){
+},{}],152:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -18739,7 +18762,7 @@ EventManager.prototype.once = function (element, eventName, handler) {
 
 module.exports = EventManager;
 
-},{}],151:[function(require,module,exports){
+},{}],153:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -18757,7 +18780,7 @@ module.exports = (function () {
   };
 })();
 
-},{}],152:[function(require,module,exports){
+},{}],154:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -18843,7 +18866,7 @@ exports.env = {
   supportsIePointer: window.navigator.msMaxTouchPoints !== null
 };
 
-},{"./class":148,"./dom":149}],153:[function(require,module,exports){
+},{"./class":150,"./dom":151}],155:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -18859,7 +18882,7 @@ module.exports = {
   destroy: destroy
 };
 
-},{"./plugin/destroy":155,"./plugin/initialize":163,"./plugin/update":166}],154:[function(require,module,exports){
+},{"./plugin/destroy":157,"./plugin/initialize":165,"./plugin/update":168}],156:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -18879,7 +18902,7 @@ module.exports = {
   scrollYMarginOffset: 0
 };
 
-},{}],155:[function(require,module,exports){
+},{}],157:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -18902,7 +18925,7 @@ module.exports = function (element) {
   instances.remove(element);
 };
 
-},{"../lib/dom":149,"../lib/helper":152,"./instances":164}],156:[function(require,module,exports){
+},{"../lib/dom":151,"../lib/helper":154,"./instances":166}],158:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -18962,7 +18985,7 @@ module.exports = function (element) {
   bindClickRailHandler(element, i);
 };
 
-},{"../../lib/helper":152,"../instances":164,"../update-geometry":165}],157:[function(require,module,exports){
+},{"../../lib/helper":154,"../instances":166,"../update-geometry":167}],159:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -19069,7 +19092,7 @@ module.exports = function (element) {
   bindMouseScrollYHandler(element, i);
 };
 
-},{"../../lib/dom":149,"../../lib/helper":152,"../instances":164,"../update-geometry":165}],158:[function(require,module,exports){
+},{"../../lib/dom":151,"../../lib/helper":154,"../instances":166,"../update-geometry":167}],160:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -19189,7 +19212,7 @@ module.exports = function (element) {
   bindKeyboardHandler(element, i);
 };
 
-},{"../../lib/helper":152,"../instances":164,"../update-geometry":165}],159:[function(require,module,exports){
+},{"../../lib/helper":154,"../instances":166,"../update-geometry":167}],161:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -19335,7 +19358,7 @@ module.exports = function (element) {
   bindMouseWheelHandler(element, i);
 };
 
-},{"../../lib/helper":152,"../instances":164,"../update-geometry":165}],160:[function(require,module,exports){
+},{"../../lib/helper":154,"../instances":166,"../update-geometry":167}],162:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -19355,7 +19378,7 @@ module.exports = function (element) {
   bindNativeScrollHandler(element, i);
 };
 
-},{"../instances":164,"../update-geometry":165}],161:[function(require,module,exports){
+},{"../instances":166,"../update-geometry":167}],163:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -19468,7 +19491,7 @@ module.exports = function (element) {
   bindSelectionHandler(element, i);
 };
 
-},{"../../lib/helper":152,"../instances":164,"../update-geometry":165}],162:[function(require,module,exports){
+},{"../../lib/helper":154,"../instances":166,"../update-geometry":167}],164:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -19640,7 +19663,7 @@ module.exports = function (element, supportsTouch, supportsIePointer) {
   bindTouchHandler(element, i, supportsTouch, supportsIePointer);
 };
 
-},{"../instances":164,"../update-geometry":165}],163:[function(require,module,exports){
+},{"../instances":166,"../update-geometry":167}],165:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -19686,7 +19709,7 @@ module.exports = function (element, userSettings) {
   updateGeometry(element);
 };
 
-},{"../lib/class":148,"../lib/helper":152,"./handler/click-rail":156,"./handler/drag-scrollbar":157,"./handler/keyboard":158,"./handler/mouse-wheel":159,"./handler/native-scroll":160,"./handler/selection":161,"./handler/touch":162,"./instances":164,"./update-geometry":165}],164:[function(require,module,exports){
+},{"../lib/class":150,"../lib/helper":154,"./handler/click-rail":158,"./handler/drag-scrollbar":159,"./handler/keyboard":160,"./handler/mouse-wheel":161,"./handler/native-scroll":162,"./handler/selection":163,"./handler/touch":164,"./instances":166,"./update-geometry":167}],166:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -19786,7 +19809,7 @@ exports.get = function (element) {
   return instances[getId(element)];
 };
 
-},{"../lib/dom":149,"../lib/event-manager":150,"../lib/guid":151,"../lib/helper":152,"./default-setting":154}],165:[function(require,module,exports){
+},{"../lib/dom":151,"../lib/event-manager":152,"../lib/guid":153,"../lib/helper":154,"./default-setting":156}],167:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -19895,7 +19918,7 @@ module.exports = function (element) {
   cls[i.scrollbarYActive ? 'add' : 'remove'](element, 'ps-active-y');
 };
 
-},{"../lib/class":148,"../lib/dom":149,"../lib/helper":152,"./instances":164}],166:[function(require,module,exports){
+},{"../lib/class":150,"../lib/dom":151,"../lib/helper":154,"./instances":166}],168:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -19925,12 +19948,13 @@ module.exports = function (element) {
   d.css(i.scrollbarYRail, 'display', '');
 };
 
-},{"../lib/dom":149,"../lib/helper":152,"./instances":164,"./update-geometry":165}],"backbone":[function(require,module,exports){
+},{"../lib/dom":151,"../lib/helper":154,"./instances":166,"./update-geometry":167}],"backbone":[function(require,module,exports){
 module.exports = window.Backbone;
 },{}],"jquery":[function(require,module,exports){
 module.exports = window.jQuery;
 },{}],"underscore":[function(require,module,exports){
 module.exports = window._;
-},{}]},{},[1]);
+},{}]},{},[1])
+//# sourceMappingURL=builder.map
 
 /* Modules bundled with Browserify */

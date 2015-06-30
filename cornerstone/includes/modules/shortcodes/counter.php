@@ -37,6 +37,10 @@ function x_shortcode_counter( $atts ) {
     'numSpeed' => floatval($num_speed)
   );
 
+  if ( floatval($num_start) > 0 ) {
+    $js_params['numStart'] = floatval($num_start);
+  }
+
   $data = cs_generate_data_attributes( 'counter', $js_params );
 
   $output = "<div {$id} class=\"{$class}\" {$data} {$style}>"

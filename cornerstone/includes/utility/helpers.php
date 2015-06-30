@@ -8,6 +8,7 @@ function CS() {
 	return Cornerstone::instance();
 }
 
+
 /**
  * Text Domain helper method
  * @return string  text domain
@@ -25,6 +26,7 @@ function fa_all_unicode() {
   return CS()->common()->getFontIcons();
 }
 
+
 /**
  * Returns a unicode value for a font icon
  * @param  string $key Icon to lookup
@@ -33,6 +35,7 @@ function fa_all_unicode() {
 function fa_unicode( $key ) {
   return CS()->common()->getFontIcon( $key );
 }
+
 
 /**
  * Get an HTML entity for an icon
@@ -51,8 +54,6 @@ function fa_entity( $key ) {
 function fa_data_icon( $key ) {
   return 'data-x-icon="' . fa_icon( $key ) . '"';
 }
-
-
 
 
 /**
@@ -81,6 +82,7 @@ function wp_script_data_function( $handle, $function_name, $data ) {
 
   return $wp_scripts->add_data( $handle, 'data', $script );
 }
+
 
 
 // Data Attribute Generator
@@ -118,5 +120,18 @@ function cs_generate_data_attributes_extra( $type, $trigger, $placement, $title 
   );
 
   return cs_generate_data_attributes( 'extra', $js_params );
+
+}
+
+
+
+// Background Video Output
+// =============================================================================
+
+function cs_bg_video( $video, $poster ) {
+
+  $output = do_shortcode( '[x_video_player class="bg transparent" src="' . $video . '" poster="' . $poster . '" hide_controls="true" autoplay="true" loop="true" muted="true" no_container="true"]' );
+
+  return $output;
 
 }

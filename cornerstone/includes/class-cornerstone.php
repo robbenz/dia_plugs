@@ -286,7 +286,7 @@ class Cornerstone {
 
 	public function devENV() {
 
-		foreach ( glob(CS()->path('includes/_dev/*.php')) as $filename ) {
+		foreach ( glob(CS()->path('_dev/*.php')) as $filename ) {
 
 			if ( !file_exists( $filename) )
 				continue;

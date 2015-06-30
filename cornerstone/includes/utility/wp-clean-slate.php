@@ -39,11 +39,12 @@ class WP_Clean_Slate {
 			'addTitle' => true,
 			'addCharset' => true,
 			'addViewport' => true,
-			'addBodyClasses' => false,
+			'addBodyClasses' => true,
 			'injectTemplate' => true, // Set false if you are filtering template_include yourself
 			'removejQueryMigrate' => false, // We have full control, so we can probaly be sure we're using up to date jQuery APIs
 			'mediaTemplates' => true,
-			'resetFooter' => false
+			'resetFooter' => false,
+			'showAdminBar' => false
 		));
 
 		if ($this->options['removejQueryMigrate'])
@@ -72,8 +73,6 @@ class WP_Clean_Slate {
 		// Override Theme
 		add_filter( 'template_include', array( $this, 'injectTemplate' ) );
 
-		// No Toolbar
-		add_filter( 'show_admin_bar', '__return_false' );
 
 		// Remove ALL actions to strip 3rd party plugins and unwanted WP functions
 		remove_all_actions( 'wp_head' );
@@ -88,6 +87,14 @@ class WP_Clean_Slate {
 		add_action( 'wp_head', 'wp_enqueue_scripts', 1 );
 		add_action( 'wp_head', 'wp_print_styles', 8 );
 		add_action( 'wp_head', 'wp_print_head_scripts', 9 );
+
+		// No Toolbar
+		if ($this->options['showAdminBar'] == false) {
+			add_filter( 'show_admin_bar', '__return_false' );
+		} else {
+			_wp_admin_bar_init();
+			add_action('wp_enqueue_scripts_clean', array( $this, 'adminBarEnqueue' ));
+		}
 
 		// Strip all scripts and styles
 		add_action( 'wp_enqueue_scripts', array( $this, 'reset' ), 999999 );
@@ -111,7 +118,7 @@ class WP_Clean_Slate {
 	 * @return none
 	 */
 	public function renderHeader() {
-		?><!DOCTYPE html><html <?php language_attributes(); ?>><head><?php do_action( 'wp_clean_slate_head' ); wp_head(); ?></head><body<?php if ( $this->options['addBodyClasses'] ) : body_class(); endif; ?>><?php
+		?><!DOCTYPE html><html <?php language_attributes(); ?>><head><?php do_action( 'wp_clean_slate_head' ); wp_head(); ?></head><body <?php if ( $this->options['addBodyClasses'] ) : body_class(); endif; ?>><?php
 	}
 
 	/**
@@ -178,6 +185,7 @@ class WP_Clean_Slate {
 		remove_all_actions( 'wp_footer' );
 
 		add_action( 'wp_footer', 'wp_print_footer_scripts', 20 );
+		add_action( 'wp_footer', 'wp_admin_bar_render', 1000 );
 
 		if ($this->options['mediaTemplates']) {
 			add_action( 'wp_footer', 'wp_underscore_playlist_templates', 0 );
@@ -185,6 +193,15 @@ class WP_Clean_Slate {
 		}
 
 		do_action( 'wp_footer' );
+	}
+
+	/**
+	 * Re-enqueue the Admin bar scripts and styles
+	 * @return none
+	 */
+	public function adminBarEnqueue() {
+		wp_enqueue_script( 'admin-bar' );
+		wp_enqueue_style( 'admin-bar' );
 	}
 
 	/**

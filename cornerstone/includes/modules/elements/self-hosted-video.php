@@ -5,37 +5,49 @@ class CS_Self_Hosted_Video extends Cornerstone_Element_Base {
   public function data() {
     return array(
       'name'        => 'self-hosted-video',
-      'title'       => __( 'Self Hosted Video', csl18n() ),
+      'title'       => __( 'Video Player', csl18n() ),
       'section'     => 'media',
-      'description' => __( 'Self Hosted Video description.', csl18n() ),
+      'description' => __( 'Video Player description.', csl18n() ),
       'supports'    => array( 'id', 'class', 'style' ),
-      'empty'       => array( 'm4v' => '', 'ogv' => '' )
+      'empty'       => array( 'src' => '' )
     );
   }
 
   public function controls() {
 
     $this->addControl(
-      'm4v',
+      'src',
       'text',
-      __( 'MP4', csl18n() ),
-      __( 'Include a .mp4 version of your video.', csl18n() ),
-      ''
+      __( 'Src &amp; Poster', csl18n() ),
+      __( 'Include your video URL(s) here. If using multiple sources, separate them using the pipe character (|) and place fallbacks towards the end (i.e. .webm then .mp4 then .ogv).', csl18n() ),
+      '',
+      array(
+        'expandable' => false,
+        'placeholder' => home_url( __( 'video.mp4', csl18n() ) )
+      )
     );
 
-    $this->addControl(
-      'ogv',
-      'text',
-      __( 'OGV', csl18n() ),
-      __( 'Include a .ogv version of your video for additional native browser support.', csl18n() ),
-      ''
-    );
+    // $this->addControl(
+    //   'm4v',
+    //   'text',
+    //   __( 'MP4', csl18n() ),
+    //   __( 'Include a .mp4 version of your video.', csl18n() ),
+    //   ''
+    // );
+
+    // $this->addControl(
+    //   'ogv',
+    //   'text',
+    //   __( 'OGV', csl18n() ),
+    //   __( 'Include a .ogv version of your video for additional native browser support.', csl18n() ),
+    //   ''
+    // );
 
     $this->addControl(
       'poster',
       'image',
-      __( 'Poster Image', csl18n() ),
-      __( 'Include a poster image for your self-hosted video.', csl18n() ),
+      NULL,
+      NULL,
       ''
     );
 
@@ -117,7 +129,7 @@ class CS_Self_Hosted_Video extends Cornerstone_Element_Base {
 
     extract( $atts );
 
-    $shortcode = "[x_video_player type=\"$aspect_ratio\" m4v=\"$m4v\" ogv=\"$ogv\" hide_controls=\"$hide_controls\" autoplay=\"$autoplay\" no_container=\"$no_container\" preload=\"$preload\" advanced_controls=\"$advanced_controls\" muted=\"$muted\"{$extra}]";
+    $shortcode = "[x_video_player type=\"$aspect_ratio\" src=\"$src\" hide_controls=\"$hide_controls\" autoplay=\"$autoplay\" no_container=\"$no_container\" preload=\"$preload\" advanced_controls=\"$advanced_controls\" muted=\"$muted\"{$extra}]";
 
     return $shortcode;
 

@@ -215,6 +215,7 @@ module.exports = window.Backbone;
 module.exports = window.jQuery;
 },{}],"underscore":[function(require,module,exports){
 module.exports = window._;
-},{}]},{},[1]);
+},{}]},{},[1])
+//# sourceMappingURL=dashboard.map
 
 /* Modules bundled with Browserify */

@@ -51,8 +51,6 @@ class CS_Contact_Form_7 extends Cornerstone_Element_Base {
 
     // Hookup the shortcode
     if ( $this->isActive() ) {
-      require_once WPCF7_PLUGIN_DIR . '/includes/controller.php';
-      wpcf7_add_shortcodes();
       $items = WPCF7_ContactForm::find( array( 'p' => $form_id ) );
     }
 

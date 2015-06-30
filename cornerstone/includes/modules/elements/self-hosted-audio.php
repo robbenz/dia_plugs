@@ -5,31 +5,43 @@ class CS_Self_Hosted_Audio extends Cornerstone_Element_Base {
   public function data() {
     return array(
       'name'        => 'self-hosted-audio',
-      'title'       => __( 'Self Hosted Audio', csl18n() ),
+      'title'       => __( 'Audio Player', csl18n() ),
       'section'     => 'media',
-      'description' => __( 'Self Hosted Audio description.', csl18n() ),
+      'description' => __( 'Audio Player description.', csl18n() ),
       'supports'    => array( 'id', 'class', 'style' ),
-      'empty'       => array( 'mp3' => '', 'oga' => '' )
+      'empty'       => array( 'src' => '' )
     );
   }
 
   public function controls() {
 
     $this->addControl(
-      'mp3',
+      'src',
       'text',
-      __( 'MP3', csl18n() ),
-      __( 'Include a .mp3 version of your audio.', csl18n() ),
-      ''
+      __( 'Src', csl18n() ),
+      __( 'Include your audio URL(s) here. If using multiple sources, separate them using the pipe character (|) and place fallbacks towards the end (i.e. .mp3 then .ogg).', csl18n() ),
+      '',
+      array(
+        'expandable' => false,
+        'placeholder' => home_url( __( 'audio.mp3', csl18n() ) )
+      )
     );
 
-    $this->addControl(
-      'oga',
-      'text',
-      __( 'OGA', csl18n() ),
-      __( 'Include a .oga version of your audio for additional native browser support.', csl18n() ),
-      ''
-    );
+    // $this->addControl(
+    //   'mp3',
+    //   'text',
+    //   __( 'MP3', csl18n() ),
+    //   __( 'Include a .mp3 version of your audio.', csl18n() ),
+    //   ''
+    // );
+
+    // $this->addControl(
+    //   'oga',
+    //   'text',
+    //   __( 'OGA', csl18n() ),
+    //   __( 'Include a .oga version of your audio for additional native browser support.', csl18n() ),
+    //   ''
+    // );
 
     $this->addControl(
       'advanced_controls',
@@ -76,7 +88,7 @@ class CS_Self_Hosted_Audio extends Cornerstone_Element_Base {
 
     extract( $atts );
 
-    $shortcode = "[x_audio_player mp3=\"$mp3\" oga=\"$oga\" advanced_controls=\"$advanced_controls\" preload=\"$preload\" autoplay=\"$autoplay\" loop=\"$loop\"{$extra}]";
+    $shortcode = "[x_audio_player src=\"$src\" advanced_controls=\"$advanced_controls\" preload=\"$preload\" autoplay=\"$autoplay\" loop=\"$loop\"{$extra}]";
 
     return $shortcode;
 

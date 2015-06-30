@@ -24,7 +24,7 @@ class CS_Widget_Area extends Cornerstone_Element_Base {
 
     foreach ($registered_sidebars as $id => $widgets) {
 
-      if ($id == 'wp_inactive_widgets') continue;
+      if ($id == 'wp_inactive_widgets' || !isset($wp_registered_sidebars[$id])) continue;
 
       $choice = array( 'value' => $id, 'label' => $wp_registered_sidebars[$id]['name'] );
 
