@@ -3,7 +3,7 @@
 Plugin Name: CategoryTinymce
 Plugin URI: http://wp.ypraise.com/2014/boost-your-categories-with-categorytinymce-4-0/
 Description: Adds a tinymce enable box to the category descriptions and taxonomy page.
-Version: 3.6.2
+Version: 3.6.3
 Author: Kevin Heath
 Author URI: http://wp.ypraise.com/
 License: GPL
@@ -97,7 +97,7 @@ if ( $current_screen->id == 'edit-category' OR 'edit-tag' ) {
 ?>
 <style type="text/css">
   .quicktags-toolbar input{float:left !important; width:auto !important;}
-  [for="description"], textarea#description  {display:none!important;}
+ .taxonomy-category .term-description-wrap [for="description"], .taxonomy-category .term-description-wrap textarea#description, .term-description-wrap p.description {display:none!important;}
   </style>
   
 <?php	} }

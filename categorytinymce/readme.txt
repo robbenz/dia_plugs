@@ -4,8 +4,8 @@ Donate link: http://wp.ypraise.com/2014/boost-your-categories-with-categorytinym
 Tags: category description, wp_editor, tag description
 Requires at least: 3.3
 Tested up to: 4.1
-Stable tag: 3.6.2
-Version: 3.6.2
+Stable tag: 3.6.3
+Version: 3.6.3
 
 Provides the ability to add a fully functional tinymce editor to the category and tag editor to style up the introductory information for category archives.
 
@@ -73,6 +73,9 @@ just before the get template part.
 
 
 == Changelog ==
+
+= 3.6.3
+* added css fix provided by hafman to prevent unwanted hiding of editor boxes.
 
 = 3.6.2 =
 * security enhancement
@@ -158,6 +161,9 @@ just before the get template part.
 
 
 == Upgrade Notice ==
+
+= 3.6.3
+* added css fix provided by hafman to prevent unwanted hiding of editor boxes.
 
 = 3.6.2 =
 * security enhancement
