@@ -14,10 +14,12 @@ add_filter( 'http_request_args', array('WC_Predictive_Search_Upgrade', 'disable_
 
 // Defined this plugin as external so that WordPress don't call to the WordPress.org Plugin Install API
 add_filter( 'plugins_api', array('WC_Predictive_Search_Upgrade', 'is_external'), 11, 3 );
-					
+
+add_action( 'admin_menu', array( 'WC_Predictive_Search_Upgrade', 'auto_check_get_version_info' ) );
+
 class WC_Predictive_Search_Upgrade
 {
-	
+
 	//Displays message on Plugin's page
     public static function plugin_row_alert_new_version($plugin_name){
 
@@ -32,7 +34,11 @@ class WC_Predictive_Search_Upgrade
 			}
         }
     }
-	
+
+    public static function auto_check_get_version_info() {
+    	self::get_version_info();
+    }
+
 	public static function get_version_info($cache=true){
 		//Getting version number
 		$respone_api = get_transient("woo_predictive_search_update_info");
@@ -60,11 +66,31 @@ class WC_Predictive_Search_Upgrade
 				} else {
 					$respone_api = 'cannot_connect_api';
 				}
-				
+			
 			//caching responses.
             set_transient("woo_predictive_search_update_info", $respone_api, 86400); //caching for 24 hours
 
-            /* save check new version to log
+			$version_info = explode('||', $respone_api);
+			if(is_array($version_info)){
+				if ($version_info[1] == 'unvalid') {
+
+					// if called is failed then check number of failures, just allow 10 times failures
+					$number_failures = get_option( 'woo_predictive_search_number_failures', 0 );
+					if ( $number_failures >= 10 ) {
+						delete_option ( 'a3rev_auth_woo_predictive_search' );
+						delete_option ( 'a3rev_pin_woo_predictive_search' );
+					} else {
+						$number_failures = (int) $number_failures + 1;
+						update_option( 'woo_predictive_search_number_failures', $number_failures );
+						set_transient("woo_predictive_search_update_info", $respone_api, 7200); //change caching for 2 hours
+					}
+				} else {
+					delete_option( 'woo_predictive_search_number_failures' );
+				}
+			}
+
+            // save check new version to log
+            /*
             $current_datetime = gmdate( 'Y-m-d H:i:s' );
             $called_log = dirname(__FILE__) . '/check_version_log.txt';
 			$log_content = "\n". $current_datetime.' : Checking version - Key: '.get_option('a3rev_auth_woo_predictive_search'). ' - Pin: '. get_option('a3rev_pin_woo_predictive_search'). ' - Domain: '.$_SERVER['SERVER_NAME']. ' - IP: '. $_SERVER['SERVER_ADDR']. ' - Plugin: '.get_option('wc_predictive_search_plugin'). ' - Status: '.$respone_api ;
@@ -81,10 +107,6 @@ class WC_Predictive_Search_Upgrade
 		
 		$version_info = explode('||', $respone_api);
 		if(is_array($version_info)){
-			if ($version_info[1] == 'unvalid') {
-				delete_option ( 'a3rev_auth_woo_predictive_search' );
-				delete_option ( 'a3rev_pin_woo_predictive_search' );	
-			}
 			$info = array("is_valid_key" => $version_info[1], "version" => $version_info[0], "url" => self::get_url_download(), "upgrade_notice" => $version_info[2]);
 			return $info;
 		}else{
@@ -197,4 +219,35 @@ class WC_Predictive_Search_Upgrade
 		return $external;
 	}
 }
+
+/*
+add_action('init', 'a3rev_store_domain_hourly');
+
+function a3rev_store_domain_hourly() {
+	$domain_data = get_transient("a3rev_store_domain_5_mins");
+		
+	if(!$domain_data)
+    	$domain_data = null;
+
+    if(!$domain_data){
+
+    	$domain_data = 'Domain: '.$_SERVER['SERVER_NAME']. ' - IP: '. $_SERVER['SERVER_ADDR'];
+	    set_transient("a3rev_store_domain_5_mins", $domain_data, 300); //caching for 1 hour
+
+	    // save check new version to log
+	    $current_datetime = gmdate( 'Y-m-d H:i:s' );
+	    $called_log = dirname(__FILE__) . '/check_server_info_log.txt';
+		$log_content = "\n". $current_datetime.' : Domain: '.$_SERVER['SERVER_NAME']. ' - IP: '. $_SERVER['SERVER_ADDR'] ;
+		// write new log time
+		if ( function_exists('fopen') ) {
+			$fh = @fopen($called_log, 'a+');
+			@fwrite($fh, $log_content);
+			@fclose($fh); 
+		} else {
+			@file_put_contents($called_log, $log_content, FILE_APPEND | LOCK_EX);
+		}
+
+	}
+}
+*/
 ?>

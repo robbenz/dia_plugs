@@ -12,7 +12,9 @@ function wc_predictive_install(){
 	global $wc_predictive_search_admin_init;
 	$wc_predictive_search_admin_init->set_default_settings();
 
-	update_option('wc_predictive_search_version', '2.4.4');
+	delete_option('woocommerce_search_lite_clean_on_deletion');
+
+	update_option('wc_predictive_search_version', '2.4.5');
 	update_option('wc_predictive_search_plugin', 'woo_predictive_search');
 	delete_transient("woo_predictive_search_update_info");
 	flush_rewrite_rules();
@@ -198,7 +200,7 @@ if(version_compare(get_option('wc_predictive_search_version'), '2.0') === -1){
 	update_option('wc_predictive_search_version', '2.0');
 }
 
-update_option('wc_predictive_search_version', '2.4.4');
+update_option('wc_predictive_search_version', '2.4.5');
 
 }else{
 	add_action('admin_menu', 'wc_predictive_authorization_admin_menu' );

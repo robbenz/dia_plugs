@@ -1,5 +1,12 @@
 *** WooCommerce Predictive Search Changelog ***
 
+= 2.4.5 - 2015/06/27 =
+* Tweak - Tested for full compatibility with WooCommerce Version 2.3.11
+* Tweak - Updated legacy API url for when a site admin has set index.php permalinks
+* Tweak - Automatic delete the house keeping option of Lite version when upgrading from Lite to Pro version. Prevents data from being deleted on upgrade if the Lite Version Clean Up On Deletion option is was left switched ON before deactivating it to install the Pro version
+* Fix - Added fallback cron job schedule to fix License Key deactivation bug that occurs when call to server returns null for server name when checking key status for auto Maintenance and Feature upgrades
+* Credit - Thanks to Amir https://a3rev.com/forums/topic/predictive-search-pro-losing-licence-activation-every-day/ for full access to live site and for Beta Testing the new call for updates fallback cron job
+
 = 2.4.4 - 2015/06/05 =
 * Fix - Don't show the full search result URL on Google Analytics search results dashboard, now truncated path url /search?ps=keyword
 * Credit - Thanks again to Derek https://a3rev.com/forums/topic/strange-results-in-google-analytics/ for the heads up about the issue.

@@ -2,7 +2,7 @@
 /*
 Plugin Name: WooCommerce Predictive Search PRO
 Description: WooCommerce Predictive Search - featuring "Smart Search" technology. Give your store customers the most awesome search experience on the web via widgets, shortcodes, Search results pages and the Predictive Search function.
-Version: 2.4.4
+Version: 2.4.5
 Author: A3 Revolution
 Author URI: http://www.a3rev.com/
 Requires at least: 3.7
