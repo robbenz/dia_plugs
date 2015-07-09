@@ -2298,9 +2298,12 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 
 			if ( $log_storage ){
 				$log_file = wp_all_import_secure_file( $wp_uploads['basedir'] . DIRECTORY_SEPARATOR . PMXI_Plugin::LOGS_DIRECTORY, $history_log->id ) . DIRECTORY_SEPARATOR . $history_log->id . '.html'; 
-				if ( PMXI_Plugin::$session->action != 'continue' and file_exists($log_file)){
-					wp_all_import_remove_source($log_file, false);	
-				}
+				if ( PMXI_Plugin::$session->action != 'continue'){
+					if (file_exists($log_file)) 
+						wp_all_import_remove_source($log_file, false);	
+
+					//@file_put_contents($log_file, sprintf(__('<p>Source path `%s`</p>', 'wp_all_import_plugin'), $import->path));					
+				}				
 			}			
 			
 			$this->data['ajax_processing'] = ("ajax" == $import->options['import_processing']) ? true : false;
@@ -2515,9 +2518,7 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 			}									
 		}			
 		
-		if ( ( PMXI_Plugin::is_ajax() and empty(PMXI_Plugin::$session->local_paths) ) or ! $ajax_processing or ! empty($import->canceled) ) {			
-						
-			do_action( 'pmxi_after_xml_import', $import->id );									
+		if ( ( PMXI_Plugin::is_ajax() and empty(PMXI_Plugin::$session->local_paths) ) or ! $ajax_processing or ! empty($import->canceled) ) {
 			
 			if ("ajax" != $import->options['import_processing'] and $log_storage ){
 				$log_file = wp_all_import_secure_file( $wp_uploads['basedir'] . DIRECTORY_SEPARATOR . PMXI_Plugin::LOGS_DIRECTORY, $history_log->id ) . DIRECTORY_SEPARATOR . $history_log->id . '.html';
@@ -2556,6 +2557,8 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 			$msg = ( ! empty($import->canceled) ) ? addcslashes(__('Canceled', 'wp_all_import_plugin'), "\n\r") : addcslashes(__('Complete', 'wp_all_import_plugin'), "\n\r");	
 
 			if ( $ajax_processing ) ob_start();			
+
+			do_action( 'pmxi_after_xml_import', $import->id );
 
 			$import->options['is_import_specified'] and $logger and call_user_func($logger, 'Done');	
 

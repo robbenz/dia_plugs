@@ -358,7 +358,10 @@ class PMXI_Admin_Manage extends PMXI_Controller_Admin {
 			
 			do_action('pmxi_before_import_delete', $item, $this->input->post('is_delete_posts'));
 
-			$item->delete( ! $this->input->post('is_delete_posts'));
+			$is_deleted_images = $this->input->post('is_delete_images');
+			$is_delete_attachments = $this->input->post('is_delete_attachments');
+
+			$item->delete( ! $this->input->post('is_delete_posts'), $is_deleted_images, $is_delete_attachments);
 			wp_redirect(add_query_arg('pmxi_nt', urlencode(__('Import deleted', 'wp_all_import_plugin')), $this->baseUrl)); die();
 		}
 		

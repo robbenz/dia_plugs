@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Profile Builder package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2015-04-08 09:10:00+0000\n"
+"PO-Revision-Date: 2015-07-07 13:21:49+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12,7 +12,7 @@ msgstr ""
 
 #: ../admin/add-ons.php:144
 msgid "Download Now"
-msgstr ""
+msgstr "现在下载"
 
 #: ../admin/admin-functions.php:175
 msgid "If you enjoy using <strong> %1$s </strong> please <a href=\"%2$s\" target=\"_blank\">rate us on WordPress.org</a>. More happy users means more features, less bugs and better support for everyone. "
@@ -20,19 +20,19 @@ msgstr ""
 
 #: ../admin/manage-fields.php:68
 msgid "Choose one of the supported field types"
-msgstr ""
+msgstr "请选择其中一个支持的类型"
 
 #: ../admin/manage-fields.php:70
 msgid ". Extra Field Types are available in <a href=\"%s\">Hobbyist or PRO versions</a>."
-msgstr ""
+msgstr "网站秘钥"
 
 #: ../admin/manage-fields.php:98
 msgid "Site Key"
-msgstr ""
+msgstr "网站秘钥"
 
 #: ../admin/manage-fields.php:98
 msgid "The site key from Google, <a href=\"http://www.google.com/recaptcha\" target=\"_blank\">www.google.com/recaptcha</a>"
-msgstr ""
+msgstr "网站秘钥"
 
 #: ../admin/manage-fields.php:99
 msgid "Secret Key"
@@ -60,19 +60,19 @@ msgstr "激活"
 
 #: ../admin/add-ons.php:36
 msgid "Downloading and installing..."
-msgstr ""
+msgstr "正在下载并安装..."
 
 #: ../admin/add-ons.php:37
 msgid "Installation complete"
-msgstr ""
+msgstr "安装完成"
 
 #: ../admin/add-ons.php:39
 msgid "Add-On is Active"
-msgstr ""
+msgstr "插件已激活"
 
 #: ../admin/add-ons.php:40
 msgid "Add-On has been activated"
-msgstr ""
+msgstr "插件已激活"
 
 #: ../admin/add-ons.php:41
 msgid "Retry Install"
@@ -88,11 +88,11 @@ msgstr ""
 
 #: ../admin/add-ons.php:46 ../admin/add-ons.php:128
 msgid "Deactivate"
-msgstr ""
+msgstr "未启用"
 
 #: ../admin/add-ons.php:47
 msgid "Add-On has been deactivated."
-msgstr ""
+msgstr "插件已关闭"
 
 #: ../admin/add-ons.php:59
 msgid "Something went wrong, we could not connect to the server. Please try again later."
@@ -108,27 +108,27 @@ msgstr "立即安装"
 
 #: ../admin/add-ons.php:153
 msgid "Compatible with your version of Profile Builder."
-msgstr ""
+msgstr "与您现版本的Profile Builder兼容"
 
 #: ../admin/add-ons.php:162
 msgid "Upgrade Profile Builder"
-msgstr ""
+msgstr "更新Profile Builder"
 
 #: ../admin/add-ons.php:163
 msgid "Not compatible with Profile Builder"
-msgstr ""
+msgstr "与Profile Builder不兼容"
 
 #: ../admin/add-ons.php:171
 msgid "Not compatible with your version of Profile Builder."
-msgstr ""
+msgstr "于您现版本的Profile Builder不兼容"
 
 #: ../admin/add-ons.php:172
 msgid "Minimum required Profile Builder version:"
-msgstr ""
+msgstr "所需Profile Builder最低版本"
 
 #: ../admin/add-ons.php:177
 msgid "Could not install add-on. Retry or <a href=\"%s\" target=\"_blank\">install manually</a>."
-msgstr ""
+msgstr "无法安装插件，请重试或 <a href=\"%s\" target=\"_blank\">install manually</a>."
 
 #: ../front-end/default-fields/email/email.php:46
 msgid "You must enter a valid email address."
@@ -136,7 +136,7 @@ msgstr "请输入有效的邮箱地址"
 
 #: ../front-end/default-fields/username/username.php:47
 msgid "This username is invalid because it uses illegal characters."
-msgstr ""
+msgstr "用户名无效，因为含有非法字符"
 
 #: ../front-end/default-fields/username/username.php:47
 msgid "Please enter a valid username."
@@ -145,7 +145,7 @@ msgstr "请输入有效的用户名"
 #: ../front-end/extra-fields/user-role/user-role.php:65
 #: ../front-end/extra-fields/user-role/user-role.php:78
 msgid "Only administrators can see this field on edit profile forms."
-msgstr ""
+msgstr "只有管理员才能看到编辑信息的表格项"
 
 #: ../front-end/extra-fields/user-role/user-role.php:74
 msgid "As an administrator you cannot change your role."
@@ -204,7 +204,7 @@ msgstr ""
 
 #: ../modules/email-customizer/user-email-customizer.php:256
 msgid "Password Reset Success Email"
-msgstr ""
+msgstr "密码重设成功确认邮件"
 
 #: ../modules/user-listing/userlisting.php:134
 msgid "User Nicename"
@@ -338,11 +338,11 @@ msgstr "查看其他的断码参数"
 
 #: ../modules/user-listing/userlisting.php:1206
 msgid "displays only the users that you specified the user_id for"
-msgstr ""
+msgstr "仅向指定用户ID显示"
 
 #: ../modules/user-listing/userlisting.php:1212
 msgid "displays all users except the ones you specified the user_id for"
-msgstr ""
+msgstr "向除了指定用户ID之外的所有用户显示"
 
 #: ../features/functions.php:506
 msgid "Minimum length of %d characters"
@@ -354,7 +354,7 @@ msgstr "只有管理员可以查看该信息"
 
 #: ../front-end/extra-fields/avatar/avatar.php:124
 msgid "The image file set in the %s field for this user could not be found on the server. The default WordPress avatar is being used at the moment."
-msgstr ""
+msgstr "服务器无法找到用户指定项中的图像文件，使用WordPress的默认图片"
 
 #: ../modules/user-listing/userlisting.php:364
 msgid "User not found"
@@ -371,7 +371,7 @@ msgstr "选择哪个用户角色可以产看网站前台的管理员工具栏"
 
 #: ../admin/manage-fields.php:96
 msgid "Enter a comma separated list of values<br/>This can be anything, as it is hidden from the user, but should not contain special characters or apostrophes"
-msgstr ""
+msgstr "因为用户无法看到您所输入的字符，您可以输入任意字符并以逗号“,\" 隔开，但这些字符不能包括特殊符号"
 
 #: ../admin/manage-fields.php:394
 msgid "The meta-name cannot be empty\n"

@@ -130,6 +130,9 @@ function pmxi_wp_loaded() {
 									$wp_uploads = wp_upload_dir();	
 									$log_file = wp_all_import_secure_file( $wp_uploads['basedir'] . DIRECTORY_SEPARATOR . PMXI_Plugin::LOGS_DIRECTORY, $history_log->id ) . DIRECTORY_SEPARATOR . $history_log->id . '.html';
 									if ( @file_exists($log_file) ) wp_all_import_remove_source($log_file, false);	
+
+									//@file_put_contents($log_file, sprintf(__('<p>Source path `%s`</p>', 'wp_all_import_plugin'), $import->path));
+									
 								}
 
 								ob_start();

@@ -378,7 +378,7 @@ class PMXI_Admin_Settings extends PMXI_Controller_Admin {
 		// Clean the fileName for security reasons
 		$fileName = preg_replace('/[^\w\._]+/', '_', $fileName);
 
-		if ( ! preg_match('%\W(xml|gzip|zip|csv|gz|json|txt|dat|psv|sql)$%i', trim(basename($fileName)))) {	
+		if ( ! preg_match('%\W(xml|gzip|zip|csv|gz|json|txt|dat|psv|sql|xls|xlsx)$%i', trim(basename($fileName)))) {	
 			exit(json_encode(array("jsonrpc" => "2.0", "error" => array("code" => 100, "message" => __("Uploaded file must be XML, CSV, ZIP, GZIP, GZ, JSON, SQL, TXT, DAT or PSV", "wp_all_import_plugin")), "id" => "id")));
 		}
 
@@ -544,7 +544,7 @@ class PMXI_Admin_Settings extends PMXI_Controller_Admin {
 
 				unset($file);
 
-				//@unlink($upload_result['filePath']);
+				if ( ! preg_match('%\W(xml)$%i', trim($upload_result['source']['path']))) @unlink($upload_result['filePath']);
 				
 				if ( ! $is_valid )
 				{

@@ -5,7 +5,8 @@
 	</script>	
 	<div class="wpallimport-content-section">
 		<div class="wpallimport-collapsed-header">					
-		<?php if ( "new" == $post['wizard_type']): ?>	
+		<?php 		
+		if ( "new" == $post['wizard_type']): ?>	
 			<?php 
 				if ( ! $this->isWizard )
 				{
@@ -14,7 +15,7 @@
 					<?php 
 				}
 				else
-				{ 
+				{ 					
 					if ( ! empty(PMXI_Plugin::$session->deligate) and PMXI_Plugin::$session->deligate == 'wpallexport' )
 					{
 						?>
@@ -62,7 +63,8 @@
 										<p class="info_ico"><?php printf(__('If you run this import again with an updated file, the Unique Identifier allows WP All Import to correctly link the records in your updated file with the %s it will create right now. If multiple records in this file have the same Unique Identifier, only the first will be created. The others will be detected as duplicates.', 'wp_all_import_plugin'), $custom_type->labels->name); ?></p>
 									<?php endif; ?>
 								</div>					
-								<?php if ( ! $this->isWizard  or ! empty(PMXI_Plugin::$session->deligate) and PMXI_Plugin::$session->deligate == 'wpallexport'):?>
+								<?php 
+								if ( ! $this->isWizard  or ! empty(PMXI_Plugin::$session->deligate) and PMXI_Plugin::$session->deligate == 'wpallexport'):?>
 									
 									<?php include( '_reimport_options.php' ); ?>
 

@@ -36,18 +36,18 @@
 								<input type="checkbox" id="<?php echo $section_slug; ?>search_existing_images" name="<?php echo $section_slug; ?>search_existing_images" value="1" <?php echo $post[$section_slug . 'search_existing_images'] ? 'checked="checked"' : '' ?> class="fix_checkbox"/>
 								<label for="<?php echo $section_slug; ?>search_existing_images"><?php _e('Search through the Media Library for existing images before importing new images','wp_all_import_plugin');?> </label>						
 								<a href="#help" class="wpallimport-help" title="<?php _e('If an image with the same file name is found in the Media Library then that image will be attached to this record instead of importing a new image. Disable this setting if your import has different images with the same file name.', 'wp_all_import_plugin') ?>" style="position: relative; top: -2px;">?</a>
-							</div>
+							</div>							
 							<?php if ($section_type == 'images'): ?>
 							<div class="input">
 								<input type="hidden" value="<?php echo $section_slug; ?>" class="wp_all_import_section_slug"/>
 								<a class="preview_images" href="javascript:void(0);" rel="preview_images"><?php _e('Preview & Test', 'wp_all_import_plugin'); ?></a>
-							</div>							
+							</div>														
 							<h4><?php _e('Featured Image', 'wp_all_import_plugin'); ?></h4>
 							<div class="input" style="margin:3px 0px;">
 								<input type="hidden" name="<?php echo $section_slug; ?>is_featured" value="0" />
 								<input type="checkbox" id="<?php echo $section_slug; ?>is_featured" name="<?php echo $section_slug; ?>is_featured" value="1" <?php echo $post[$section_slug . 'is_featured'] ? 'checked="checked"' : '' ?> class="fix_checkbox"/>
 								<label for="<?php echo $section_slug; ?>is_featured"><?php _e('Set the first image to the Featured Image (_thumbnail_id)','wp_all_import_plugin');?> </label>						
-							</div>							
+							</div>														
 							<h4><?php _e('Other', 'wp_all_import_plugin'); ?></h4>
 							<div class="input">
 								<input type="hidden" name="<?php echo $section_slug; ?>create_draft" value="no" />

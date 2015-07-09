@@ -7,6 +7,7 @@ if( ! class_exists('PMWI_Updater') ) {
         private $api_data = array();
         private $name     = '';
         private $slug     = '';
+        private $did_check = false;
 
         /**
          * Class constructor.
@@ -44,7 +45,7 @@ if( ! class_exists('PMWI_Updater') ) {
             add_filter( 'plugins_api', array( $this, 'plugins_api_filter' ), 10, 3 );
 
             add_action( 'after_plugin_row_' . $this->name, array( $this, 'show_update_notification' ), 10, 2 );
-        }      
+        }
 
         /**
          * Check for Updates at the defined API endpoint and modify the update array.
@@ -71,9 +72,23 @@ if( ! class_exists('PMWI_Updater') ) {
                 return $_transient_data;
             }
 
+            if( empty( $_transient_data ) ) return $_transient_data;
+
             if ( empty( $_transient_data->response ) || empty( $_transient_data->response[ $this->name ] ) ) {
 
-                $version_info = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug ) );
+                $cache_key    = md5( 'edd_plugin_' . sanitize_key( $this->name ) . '_version_info' );
+                $version_info = get_transient( $cache_key );
+
+                if( false === $version_info ) {
+
+                    $version_info = $this->api_request( 'check_update', array( 'slug' => $this->slug ) );
+                    set_transient( $cache_key, $version_info, 3600 );
+
+                }
+
+                if( ! is_object( $version_info ) ) {
+                    return $_transient_data;
+                }
 
                 if ( false !== $version_info && is_object( $version_info ) && isset( $version_info->new_version ) ) {
 
@@ -94,7 +109,7 @@ if( ! class_exists('PMWI_Updater') ) {
 
             return $_transient_data;
         }
-        
+
         /**
          * show update nofication row -- needed for multisite subsites, because WP won't tell you otherwise!
          *
@@ -211,19 +226,27 @@ if( ! class_exists('PMWI_Updater') ) {
 
             }
 
-            $to_send = array(
-                'slug'   => $this->slug,
-                'is_ssl' => is_ssl(),
-                'fields' => array(
-                    'banners' => false, // These will be supported soon hopefully
-                    'reviews' => false
-                )
-            );
+            $cache_key    = md5( 'edd_plugin_' .sanitize_key( $this->name ) . '_version_info' );
+            $_data = get_transient( $cache_key );
 
-            $api_response = $this->api_request( 'plugin_information', $to_send );
+            if( false === $_data ) {
 
-            if ( false !== $api_response ) {
-                $_data = $api_response;
+                $to_send = array(
+                    'slug'   => $this->slug,
+                    'is_ssl' => is_ssl(),
+                    'fields' => array(
+                        'banners' => false, // These will be supported soon hopefully
+                        'reviews' => false
+                    )
+                );
+
+                $api_response = $this->api_request( 'plugin_information', $to_send );
+
+                if ( false !== $api_response ) {
+                    $_data = $api_response;
+                    set_transient( $cache_key, $_data, 3600 );
+                }                            
+
             }
 
             return $_data;
@@ -237,7 +260,7 @@ if( ! class_exists('PMWI_Updater') ) {
          * @param string  $url
          * @return object $array
          */
-        function http_request_args( $args, $url ) {                    
+        function http_request_args( $args, $url ) {
             // If it is an https request and we are performing a package download, disable ssl verification
             if ( strpos( $url, 'https://' ) !== false && strpos( $url, 'edd_action=package_download' ) ) {
                 $args['sslverify'] = false;
@@ -270,7 +293,7 @@ if( ! class_exists('PMWI_Updater') ) {
 
             if( $this->api_url == home_url() ) {
                 return false; // Don't allow a plugin to ping itself
-            }
+            }                                
 
             $api_params = array(
                 'edd_action' => 'get_version',
@@ -279,7 +302,7 @@ if( ! class_exists('PMWI_Updater') ) {
                 'item_id'    => isset( $data['item_id'] ) ? $data['item_id'] : false,
                 'slug'       => $data['slug'],
                 'author'     => $data['author'],
-                'url'        => home_url(),                
+                'url'        => home_url(),
             );
 
             $request = wp_remote_post( $this->api_url, array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
@@ -287,7 +310,11 @@ if( ! class_exists('PMWI_Updater') ) {
             if ( ! is_wp_error( $request ) ) {
                 $request = json_decode( wp_remote_retrieve_body( $request ) );
             }
- 
+
+            if ( $request && isset( $request->banners ) ) {
+                $request->banners = maybe_unserialize( $request->banners );
+            }
+
             if ( $request && isset( $request->sections ) ) {
                 $request->sections = maybe_unserialize( $request->sections );
             } else {
@@ -316,7 +343,7 @@ if( ! class_exists('PMWI_Updater') ) {
                 wp_die( __( 'You do not have permission to install plugin updates', 'edd' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
             }
 
-            $response = $this->api_request( 'plugin_latest_version', array( 'slug' => $_REQUEST['slug'] ) );
+            $response = $this->api_request( 'show_changelog', array( 'slug' => $_REQUEST['slug'] ) );
 
             if( $response && isset( $response->sections['changelog'] ) ) {
                 echo '<div style="background:#fff;padding:10px;">' . $response->sections['changelog'] . '</div>';
@@ -325,6 +352,6 @@ if( ! class_exists('PMWI_Updater') ) {
 
             exit;
         }
-    }    
+    }
 
 }

@@ -7,7 +7,7 @@ function pmxi_wp_ajax_test_images(){
 	}
 
 	if ( ! current_user_can('manage_options') ){
-		exit( json_encode(array('result' => array(), 'failed_msgs' => __('Security check', 'wp_all_import_plugin'))) );
+		exit( json_encode(array('result' => array(), 'failed_msgs' => array(__('Security check', 'wp_all_import_plugin')))));
 	}
 
 	$input = new PMXI_Input();

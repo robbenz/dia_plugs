@@ -31,7 +31,7 @@ if ( ! class_exists('PMXI_Upload')){
 				$this->errors->add('form-validation', __('Please specify a file to import.<br/><br/>If you are uploading the file from your computer, please wait for it to finish uploading (progress bar at 100%), before trying to continue.', 'wp_all_import_plugin'));				
 			} elseif (!is_file($this->file)) {
 				$this->errors->add('form-validation', __('Uploaded file is empty', 'wp_all_import_plugin'));
-			} elseif ( ! preg_match('%\W(xml|gzip|zip|csv|gz|json|txt|dat|psv|sql)$%i', trim(basename($this->file)))) {				
+			} elseif ( ! preg_match('%\W(xml|gzip|zip|csv|gz|json|txt|dat|psv|sql|xls|xlsx)$%i', trim(basename($this->file)))) {				
 				$this->errors->add('form-validation', __('Uploaded file must be XML, CSV, ZIP, GZIP, GZ, JSON, SQL, TXT, DAT or PSV', 'wp_all_import_plugin'));
 			} elseif (preg_match('%\W(zip)$%i', trim(basename($this->file)))) {
 										
@@ -47,7 +47,7 @@ if ( ! class_exists('PMXI_Upload')){
 
 					if (!empty($v_result_list)){
 						foreach ($v_result_list as $unzipped_file) {							
-							if ($unzipped_file['status'] == 'ok' and preg_match('%\W(xml|csv|txt|dat|psv|json)$%i', trim($unzipped_file['stored_filename']))) { $filePath = $unzipped_file['filename']; break; }
+							if ($unzipped_file['status'] == 'ok' and preg_match('%\W(xml|csv|txt|dat|psv|json|xls|xlsx)$%i', trim($unzipped_file['stored_filename']))) { $filePath = $unzipped_file['filename']; break; }
 						}
 					}
 			    	if ( $this->uploadsPath === false ){
@@ -126,7 +126,17 @@ if ( ! class_exists('PMXI_Upload')){
 						$sql = new PMXI_SQLParser( $localSQLPath, $this->uploadsPath );
 						$filePath = $sql->parse();
 						wp_all_import_remove_source($localSQLPath, false);
-					}					
+					}		
+					elseif (preg_match('%\W(xls|xlsx)$%i', trim($filePath))){
+
+						include_once( PMXI_Plugin::ROOT_DIR . '/libraries/XmlImportXLSParse.php' );	
+
+						$localXLSPath = $filePath;						
+						$xls = new PMXI_XLSParser( $localXLSPath, $this->uploadsPath );							
+						$filePath = $xls->parse();				
+						wp_all_import_remove_source($localXLSPath, false);
+
+					}			
 				}
 
 			} elseif ( preg_match('%\W(csv|txt|dat|psv)$%i', trim($this->file))) { // If CSV file uploaded
@@ -223,6 +233,19 @@ if ( ! class_exists('PMXI_Upload')){
 				$filePath = $sql->parse();		
 				//@unlink($this->file);		
 
+			} elseif (preg_match('%\W(xls|xlsx)$%i', trim($this->file))){
+
+				$source = array(
+					'name' => basename($this->file),
+					'type' => 'upload',
+					'path' => $this->file,					
+				);
+
+				include_once( PMXI_Plugin::ROOT_DIR . '/libraries/XmlImportXLSParse.php' );	
+				
+				$xls = new PMXI_XLSParser( $this->file, $this->uploadsPath );
+				$filePath = $xls->parse();								
+
 			} else { // If XML file uploaded				
 
 				// Detect if file is very large
@@ -263,7 +286,7 @@ if ( ! class_exists('PMXI_Upload')){
 
 			if ( empty($this->errors->errors) ){
 
-				if( '' == $feed_type and ! preg_match('%\W(xml|csv|zip|gz)$%i', trim($this->file))) $feed_type = wp_all_import_get_remote_file_name(trim($this->file));
+				if( '' == $feed_type and ! preg_match('%\W(xml|csv|zip|gz|xls|xlsx)$%i', trim($this->file))) $feed_type = wp_all_import_get_remote_file_name(trim($this->file));
 				
 				if ('zip' == $feed_type or empty($feed_type) and preg_match('%\W(zip)$%i', trim($this->file))) {							
 					
@@ -289,7 +312,7 @@ if ( ! class_exists('PMXI_Upload')){
 
 						if (!empty($v_result_list)){
 							foreach ($v_result_list as $unzipped_file) {
-								if ($unzipped_file['status'] == 'ok' and preg_match('%\W(xml|csv|txt|dat|psv|json)$%i', trim($unzipped_file['stored_filename']))) { $filePath = $unzipped_file['filename']; break; }								
+								if ($unzipped_file['status'] == 'ok' and preg_match('%\W(xml|csv|txt|dat|psv|json|xls|xlsx)$%i', trim($unzipped_file['stored_filename']))) { $filePath = $unzipped_file['filename']; break; }								
 							}
 						}
 				    	if($this->uploadsPath === false){
@@ -369,7 +392,19 @@ if ( ! class_exists('PMXI_Upload')){
 							$sql = new PMXI_SQLParser( $localSQLPath, $this->uploadsPath );							
 							$filePath = $sql->parse();				
 							wp_all_import_remove_source($localSQLPath, false);
-						} 						
+
+						} 			
+						elseif (preg_match('%\W(xls|xlsx)$%i', trim($filePath))){
+
+							include_once( PMXI_Plugin::ROOT_DIR . '/libraries/XmlImportXLSParse.php' );	
+
+							$localXLSPath = $filePath;
+							
+							$xls = new PMXI_XLSParser( $localXLSPath, $this->uploadsPath );							
+							$filePath = $xls->parse();				
+							wp_all_import_remove_source($localXLSPath, false);
+
+						}			
 					}
 
 					if (file_exists($tmpname)) wp_all_import_remove_source($tmpname, false);
@@ -453,6 +488,23 @@ if ( ! class_exists('PMXI_Upload')){
 					$sql = new PMXI_SQLParser( $localSQLPath, $this->uploadsPath );					
 					$filePath = $sql->parse();				
 					wp_all_import_remove_source($localSQLPath, false);
+
+				} elseif (preg_match('%\W(xls|xlsx)$%i', trim($this->file))){
+
+					$source = array(
+						'name' => basename($this->file),
+						'type' => 'url',
+						'path' => $feed_xpath,					
+					);
+
+					// copy remote file in binary mode
+					$localXLSPath = wp_all_import_get_url($this->file, $this->uploadsPath, 'xls');
+
+					include_once( PMXI_Plugin::ROOT_DIR . '/libraries/XmlImportXLSParse.php' );	
+
+					$xls = new PMXI_XLSParser( $localXLSPath, $this->uploadsPath );					
+					$filePath = $xls->parse();				
+					wp_all_import_remove_source($localXLSPath, false);
 
 				} else {
 					
@@ -584,7 +636,7 @@ if ( ! class_exists('PMXI_Upload')){
 
 					if (!empty($v_result_list)){
 						foreach ($v_result_list as $unzipped_file) {							
-							if ($unzipped_file['status'] == 'ok' and preg_match('%\W(xml|csv|txt|dat|psv|json)$%i', trim($unzipped_file['stored_filename']))) { $filePath = $unzipped_file['filename']; break; }	
+							if ($unzipped_file['status'] == 'ok' and preg_match('%\W(xml|csv|txt|dat|psv|json|xls|xlsx)$%i', trim($unzipped_file['stored_filename']))) { $filePath = $unzipped_file['filename']; break; }	
 						}
 					}
 			    	if($this->uploadsPath === false){
@@ -664,7 +716,17 @@ if ( ! class_exists('PMXI_Upload')){
 						$sql = new PMXI_SQLParser( $localSQLPath, $this->uploadsPath );						
 						$filePath = $sql->parse();				
 						wp_all_import_remove_source($localSQLPath, false);
-					}				
+					}	
+					elseif (preg_match('%\W(xls|xlsx)$%i', trim($filePath))){
+
+						include_once( PMXI_Plugin::ROOT_DIR . '/libraries/XmlImportXLSParse.php' );	
+						
+						$localXLSPath = $filePath;					
+						$xls = new PMXI_XLSParser( $localXLSPath, $this->uploadsPath );					
+						$filePath = $xls->parse();				
+						wp_all_import_remove_source($localXLSPath, false);
+
+					}			
 				}
 
 				if (file_exists($zipfilePath)) wp_all_import_remove_source($zipfilePath, false);
@@ -759,8 +821,31 @@ if ( ! class_exists('PMXI_Upload')){
 				$filePath = $sql->parse();		
 				wp_all_import_remove_source($localSQLPath, false);		
 
-			}
-			else {
+			} elseif (preg_match('%\W(xls|xlsx)$%i', trim($this->file))){
+
+				if($this->uploadsPath === false){
+					 $this->errors->add('form-validation', __('WP All Import can\'t access your WordPress uploads folder.', 'wp_all_import_plugin'));
+				}		
+				// copy file in temporary folder
+				// hide warning message
+				echo '<span style="display:none">';
+				copy( $uploads . $this->file, $this->uploadsPath  . '/' . basename($this->file));
+				echo '</span>';	
+
+				$localXLSPath = $this->uploadsPath . '/' . basename($this->file);
+				$source = array(
+					'name' => basename($this->file),
+					'type' => 'file',
+					'path' => $uploads . $this->file,
+				);				
+
+				include_once( PMXI_Plugin::ROOT_DIR . '/libraries/XmlImportXLSParse.php' );	
+
+				$xls = new PMXI_XLSParser( $localXLSPath, $this->uploadsPath );				
+				$filePath = $xls->parse();		
+				wp_all_import_remove_source($localXLSPath, false);				
+
+			} else {
 				
 				if($this->uploadsPath === false){
 					$this->errors->add('form-validation', __('WP All Import can\'t access your WordPress uploads folder.', 'wp_all_import_plugin'));

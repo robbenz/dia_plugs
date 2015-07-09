@@ -208,7 +208,7 @@
 						<td>
 							<?php if ( 'page' == $post_type ):?>	
 
-								<h4><?php _e('Page Parent', 'wp_all_import_plugin') ?></h4>
+								<h4><?php _e('Page Parent', 'wp_all_import_plugin') ?><a href="#help" class="wpallimport-help" title="<?php _e('Enter the slug of the desired page parent. If adding the child and parent pages in the same import, set \'Records per Iteration\' to 1, run the import twice, or run separate imports for child and parent pages.', 'wp_all_import_plugin') ?>" style="position:relative; top:-1px;">?</a></h4>
 
 								<div class="input">
 									<input type="radio" id="is_multiple_page_parent_yes" name="is_multiple_page_parent" value="yes" <?php echo 'yes' == $post['is_multiple_page_parent'] ? 'checked="checked"' : '' ?> class="switcher" style="margin-left:0;"/>
@@ -238,7 +238,7 @@
 								
 								<div class="input">
 									<input type="radio" id="is_multiple_page_parent_yes" name="is_multiple_page_parent" value="yes" <?php echo 'yes' == $post['is_multiple_page_parent'] ? 'checked="checked"' : '' ?> class="switcher" style="margin-left:0;"/>
-									<label for="is_multiple_page_parent_yes"><?php _e('Select page parent', 'wp_all_import_plugin') ?></label>
+									<label for="is_multiple_page_parent_yes"><?php _e('Set post parent', 'wp_all_import_plugin') ?></label>
 									<div class="switcher-target-is_multiple_page_parent_yes">
 										<div class="input">
 											<input type="text" class="" name="parent" value="<?php echo esc_attr($post['parent']) ?>" />									
