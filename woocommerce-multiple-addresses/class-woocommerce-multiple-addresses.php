@@ -442,7 +442,7 @@ class WC_Multiple_addresses {
 		echo '</div>';
 		?>
 		<script type="text/javascript">
-			var tmpl = '<div class="shipping_address address_block"><p align="right"><a href="#" class="delete"><?php _e( "delete", self::$plugin_slug ); ?></a></p>';
+			var tmpl = '<div class="shipping_address address_block"><p align="right"><a href="#" class="delete"><?php _e( "Delete", self::$plugin_slug ); ?></a></p>';
 
             tmpl += '<?php $label['id'] = 'label';
                 $label['label'] = __( 'Label', self::$plugin_slug );
