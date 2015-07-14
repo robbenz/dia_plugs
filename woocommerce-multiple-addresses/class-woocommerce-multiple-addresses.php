@@ -382,10 +382,11 @@ class WC_Multiple_addresses {
 			foreach ( $otherAddr as $idx => $address ) {
 				$wma_current_address = $address;
 				echo '<div class="shipping_address address_block" id="shipping_address_' . $idx . '">';
-				echo '<p align="right"><a href="#" class="delete">' . __( 'delete', self::$plugin_slug ) . '</a></p>';
+				echo '<p align="right"><a href="#" class="delete">' . __( 'Delete', self::$plugin_slug ) . '</a></p>';
 				do_action( 'woocommerce_before_checkout_shipping_form', $checkout );
 
                 $label['id'] = 'label';
+                $label['placeholder'] = 'Home, Office, etc.';
                 $label['label'] = __( 'Label', self::$plugin_slug );
                 woocommerce_form_field( 'label[]', $label, $address['label'] );
 
