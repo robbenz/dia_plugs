@@ -135,3 +135,47 @@ function cs_bg_video( $video, $poster ) {
   return $output;
 
 }
+
+
+
+// Build Shortcode
+// =============================================================================
+
+function cs_build_shortcode( $name, $attributes, $extra = '', $content = '' ) {
+
+  $output = "[{$name}";
+
+  foreach ($attributes as $attribute => $value) {
+    $output .= " {$attribute}=\"{$value}\"";
+  }
+
+  if ($extra != '') {
+    $output .= " {$extra}";
+  }
+
+  if ( $content == '' ) {
+    $output .= "]";
+  } else {
+    $output .= "]{$content}[/{$name}]";
+  }
+
+  return $output;
+
+}
+
+
+
+// Animation Base Class
+// =============================================================================
+
+function cs_animation_base_class( $animation_string ) {
+
+  if ( strpos( $animation_string, 'In' ) !== false ) {
+    $base_class = ' animated-hide';
+  } else {
+    $base_class = '';
+  }
+
+  return $base_class;
+
+}

@@ -20,7 +20,7 @@ require('./utility/string-replace-all');
  * Fire it up
  */
 require('./app')();
-},{"../vendor/color":135,"../vendor/html.sortable":136,"../vendor/jquery.growl":137,"../vendor/pointer-events-polyfill":138,"../vendor/rgbaster":139,"../vendor/string_score":140,"./app":2,"./utility/string-replace-all":36,"backbone.marionette":142,"backbone.radio":143,"backbone.stickit":144,"moment":146,"nprogress":147,"perfect-scrollbar/jquery":148}],2:[function(require,module,exports){
+},{"../vendor/color":136,"../vendor/html.sortable":137,"../vendor/jquery.growl":138,"../vendor/pointer-events-polyfill":139,"../vendor/rgbaster":140,"../vendor/string_score":141,"./app":2,"./utility/string-replace-all":36,"backbone.marionette":143,"backbone.radio":144,"backbone.stickit":145,"moment":147,"nprogress":148,"perfect-scrollbar/jquery":149}],2:[function(require,module,exports){
 var App = Mn.Application.extend({
 
   initialize: function() {
@@ -268,7 +268,7 @@ var App = Mn.Application.extend({
 module.exports = function(){
   ( window.cs = new App( { Config: window.cs() } ) ).start({});
 }
-},{"../tmp/templates-builder.js":132,"../tmp/templates-elements.js":133,"../tmp/templates-svg.js":134,"./behaviors":5,"./data/models":18,"./data/models/collection-index":9,"./data/models/element-base":14,"./data/models/sortable-collection":28,"./modules/editor":29,"./modules/preview":30,"./utility/custom-media-manager":32,"./utility/messenger":33,"./utility/render-queue":34,"./utility/renderer":35,"./views/controls":52,"./views/controls/base":38,"./views/elements":97,"./views/elements/base":83}],3:[function(require,module,exports){
+},{"../tmp/templates-builder.js":133,"../tmp/templates-elements.js":134,"../tmp/templates-svg.js":135,"./behaviors":5,"./data/models":18,"./data/models/collection-index":9,"./data/models/element-base":14,"./data/models/sortable-collection":28,"./modules/editor":29,"./modules/preview":30,"./utility/custom-media-manager":32,"./utility/messenger":33,"./utility/render-queue":34,"./utility/renderer":35,"./views/controls":52,"./views/controls/base":38,"./views/elements":98,"./views/elements/base":83}],3:[function(require,module,exports){
 module.exports = Mn.Behavior.extend({
 
   defaults: {
@@ -1112,7 +1112,9 @@ var ElementCollection = Backbone.Collection.extend({
     var index = this.indexOf( model );
     var clone = model.toJSON();
 
-    clone.title = cs.l18n('sortable-duplicate').replace('%s', clone.title );
+    if ( clone.title )
+      clone.title = cs.l18n('sortable-duplicate').replace('%s', clone.title );
+
     this.create( clone, index + 1, (model.markupCache) ? model.markupCache : false, true );
 
   }
@@ -1244,13 +1246,17 @@ module.exports = Mn.Module.extend({
     Backbone.$(window).load(_.bind(this.loadView, this));
     Backbone.$('#preview-frame').load(_.bind(this.loadIFrame, this))
 
-    //this.clearPreloader();
     this.listenTo( cs.channel, 'block:download', this.blockDownload );
+
 
     this.listenTo( cs.navigate, 'layout:section', function( selected ) {
       cs.data.reply( 'get:selected:layout', selected );
       cs.navigate.trigger( 'pane', 'layout' );
-    })
+    });
+
+    this.listenTo( cs.navigate, 'pane', this.killObserver );
+    this.listenTo( cs.navigate, 'subpane:opened', this.killObserver );
+
   },
 
   loadSettings: function() {
@@ -1301,10 +1307,6 @@ module.exports = Mn.Module.extend({
 
   },
 
-  onEditorRendered: function(){
-
-  },
-
   loadIFrame: function() {
 
     cs.preview.off( 'remote' );
@@ -1322,7 +1324,7 @@ module.exports = Mn.Module.extend({
       return;
 
     var update = {
-      title: 'Copy of ' + options.model.get( 'title' )
+      title: cs.l18n('sortable-duplicate').replace('%s', options.model.get( 'title' ) )
     };
 
     this.rows.duplicate( options.model, update );
@@ -1573,10 +1575,14 @@ module.exports = Mn.Module.extend({
       });
 
     });
+  },
+
+  killObserver: function() {
+    cs.preview.trigger( 'remote', 'kill:observer' );
   }
 
 });
-},{"../data/models/block-collection":6,"../data/models/block-manager":7,"../data/models/control-collection":12,"../data/models/element-stub-collection":15,"../data/models/options":19,"../data/models/post":20,"../data/models/setting-section-collection":26,"../utility/ajax.js":31,"../views/main/editor":124}],30:[function(require,module,exports){
+},{"../data/models/block-collection":6,"../data/models/block-manager":7,"../data/models/control-collection":12,"../data/models/element-stub-collection":15,"../data/models/options":19,"../data/models/post":20,"../data/models/setting-section-collection":26,"../utility/ajax.js":31,"../views/main/editor":125}],30:[function(require,module,exports){
 var PreviewView = require('../views/main/preview.js');
 module.exports = Mn.Module.extend({
 
@@ -1676,7 +1682,7 @@ module.exports = Mn.Module.extend({
   }
 
 });
-},{"../views/main/preview.js":128}],31:[function(require,module,exports){
+},{"../views/main/preview.js":129}],31:[function(require,module,exports){
 module.exports = {
 
 	/**
@@ -2232,7 +2238,6 @@ module.exports = {
 }
 },{"./template-helpers":37}],36:[function(require,module,exports){
 String.prototype.replaceAll = function (find, replace) {
-  console.log(this,find,replace);
   return this.replace(new RegExp(find.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1"), 'g'), replace);
 }
 },{}],37:[function(require,module,exports){
@@ -2317,7 +2322,8 @@ module.exports = Mn.CompositeView.extend({
     if ( this.proxy && options.condition ) {
     	_.each( _.keys( options.condition ) , function( item ) {
 
-				if (item.indexOf('!') == 0) item = item.replace('!','');
+				if ( item.indexOf(':not') == item.length - 4 ) item = item.replace( ':not', '' );
+        if ( item.indexOf('parent:') == 0 ) item = item.replace( 'parent:', '' );
     		this.listenTo(this.proxy, 'change:' + item, this.toggleVisibility );
 
     	}, this );
@@ -2358,12 +2364,19 @@ module.exports = Mn.CompositeView.extend({
 			// means all conditions have been met
 			var remainingConditions = _.filter( _.keys( options.condition ) , _.bind( function( conditionName ) {
 
-				var negate = ( conditionName.indexOf('!') == 0 );
+				var negate = ( conditionName.indexOf(':not') == conditionName.length - 4 );
 				var conditionValue = options.condition[conditionName];
 
-				if (negate) conditionName = conditionName.replace('!','');
+				if (negate) conditionName = conditionName.replace(':not','');
 
-	  		var controlValue = this.proxy.get(conditionName);
+        if ( conditionName.indexOf('parent:') == 0 ) {
+          source = this.proxy.collection.parentEl;
+          conditionName = conditionName.replace('parent:','');
+        } else {
+          source = this.proxy;
+        }
+
+        var controlValue = source.get(conditionName);
 
 	  		var check = ( _.isArray(conditionValue) ) ? _.contains( conditionValue, controlValue) : ( controlValue == conditionValue );
 
@@ -2504,18 +2517,32 @@ module.exports = Mn.ItemView.extend({
   template: 'inspector/breadcrumbs',
   controlName: 'breadcrumbs',
   events: {
-    'click button': 'navigate'
+    'click button': 'inspect',
+    'mouseover button': 'mouseOver',
+    'mouseout button': 'mouseOut',
   },
 
   initialize: function() {
     this.levels = this.findLevels([],this.model.proxy);
   },
 
-  navigate: function(e) {
-    var level;
-    if ( level = this.levels[ parseInt( this.$(e.currentTarget).data('level') ) ] ) {
-      level.model.trigger( 'inspect' );
-    }
+  mouseOver: function( e ) {
+    var level = this.buttonLevel( e );
+    if ( level  ) level.model.trigger( 'observe:in' );
+  },
+
+  mouseOut: function( e ) {
+    var level = this.buttonLevel( e );
+    if ( level  ) level.model.trigger( 'observe:out' );
+  },
+
+  inspect: function( e ) {
+    var level = this.buttonLevel( e );
+    if ( level  ) level.model.trigger( 'inspect' );
+  },
+
+  buttonLevel: function( e ) {
+    return this.levels[ parseInt( this.$(e.currentTarget).data('level') ) ];
   },
 
   findLevels: function( levels, model ) {
@@ -3416,7 +3443,9 @@ module.exports = Mn.ItemView.extend({
 
   events: {
     'dragstart.h5s': 'updateDragging',
-    'dragend.h5s': 'updatePosition'
+    'dragend.h5s': 'updatePosition',
+    'mouseover': 'mouseOver',
+    'mouseout': 'mouseOut'
   },
 
   triggers: {
@@ -3447,6 +3476,14 @@ module.exports = Mn.ItemView.extend({
     return _.extend( Mn.ItemView.prototype.serializeData.apply(this,arguments), {
       icons: this.icons
     });
+  },
+
+  mouseOver: function( e ) {
+    this.model.trigger('observe:in');
+  },
+
+  mouseOut: function( e ) {
+    this.model.trigger('observe:out');
   }
 
 })
@@ -4102,10 +4139,6 @@ module.exports = SortableItem.extend({
     'handle': 'span.handle'
   },
 
-  events: {
-    'dragend.h5s': 'updatePosition'
-  },
-
   triggers: {
     'click @ui.action': 'clickAction',
     'click @ui.actionAlt': 'clickActionAlt',
@@ -4127,7 +4160,9 @@ module.exports = Mn.ItemView.extend({
   },
 
   events: {
-    'dragend.h5s': 'updatePosition'
+    'dragend.h5s': 'updatePosition',
+    'mouseover': 'mouseOver',
+    'mouseout': 'mouseOut',
   },
 
   triggers: {
@@ -4167,7 +4202,15 @@ module.exports = Mn.ItemView.extend({
     }
 
     return data;
-  }
+  },
+
+  mouseOver: function( e ) {
+    this.model.trigger('observe:in');
+  },
+
+  mouseOut: function( e ) {
+    this.model.trigger('observe:out');
+  },
 
 });
 },{}],74:[function(require,module,exports){
@@ -4509,6 +4552,9 @@ var BaseShared = {
       this.model.trigger( 'view:init' );
     }
 
+    this.listenTo( this.model, 'observe:in', this.observeIn );
+    this.listenTo( this.model, 'observe:out', this.observeOut );
+
     this.on( 'render', _.debounce( _.bind( this.baseRender, this ), 10 ) );
 
   },
@@ -4572,11 +4618,19 @@ var BaseShared = {
 
   mouseOver: function( e ) {
   	e.stopPropagation();
-    cs.observer.trigger( 'in', this );
+    this.model.trigger('observe:in');
   },
 
   mouseOut: function( e ) {
-  	cs.observer.trigger( 'out', this );
+  	this.model.trigger('observe:out');
+  },
+
+  observeIn: function() {
+    cs.observer.trigger( 'in', this );
+  },
+
+  observeOut: function() {
+    cs.observer.trigger( 'out', this );
   },
 
 	setData: function ( e ) {
@@ -4703,6 +4757,9 @@ module.exports = Mn.CollectionView.extend({
 			this.render();
 		} );
 		this.once( 'fade', this.fade );
+
+    this.listenTo( this.model, 'observe:in', this.observeIn );
+    this.listenTo( this.model, 'observe:out', this.observeOut );
 
 		this.listenTo( cs.observer, 'kill:indicator', function() {
 			cs.$indicator.detach();
@@ -4890,12 +4947,21 @@ module.exports = Mn.CollectionView.extend({
 
 	mouseOver: function ( e ) {
 		e.stopPropagation();
-		cs.observer.trigger( 'in', this );
+		this.model.trigger('observe:in');
 	},
 
 	mouseOut: function ( e ) {
-		cs.observer.trigger( 'out', this );
+		this.model.trigger('observe:out');
 	},
+
+  observeIn: function() {
+    cs.observer.trigger( 'in', this );
+  },
+
+  observeOut: function() {
+    cs.observer.trigger( 'out', this );
+  },
+
 
 	receiveElement: function ( e ) {
 
@@ -5203,6 +5269,14 @@ module.exports = cs.ElementViews.Base.extend({
 	}
 });
 },{}],97:[function(require,module,exports){
+module.exports = cs.ElementViews.Base.extend({
+
+	onAfterElementRender: function() {
+
+	}
+
+});
+},{}],98:[function(require,module,exports){
 module.exports = {
   'accordion'         : require('./accordion'),
   'alert'             : require('./alert'),
@@ -5244,14 +5318,17 @@ module.exports = {
   'tabs'              : require('./tabs'),
   'text-type'         : require('./text-type'),
   'text'              : require('./text'),
+
+  //3rd party
+  'gravity-forms'     : require('./gravity-forms'),
 }
-},{"./accordion":80,"./alert":81,"./author":82,"./blockquote":84,"./button":85,"./callout":86,"./card":87,"./code":88,"./column":89,"./columnize":90,"./counter":91,"./creative-cta":92,"./custom-headline":93,"./feature-headline":94,"./gap":95,"./google-map":96,"./promo":98,"./prompt":99,"./pullquote":100,"./row":101,"./skill-bar":103,"./slider":104,"./social-sharing":105,"./tabs":106,"./text":108,"./text-type":107}],98:[function(require,module,exports){
+},{"./accordion":80,"./alert":81,"./author":82,"./blockquote":84,"./button":85,"./callout":86,"./card":87,"./code":88,"./column":89,"./columnize":90,"./counter":91,"./creative-cta":92,"./custom-headline":93,"./feature-headline":94,"./gap":95,"./google-map":96,"./gravity-forms":97,"./promo":99,"./prompt":100,"./pullquote":101,"./row":102,"./skill-bar":104,"./slider":105,"./social-sharing":106,"./tabs":107,"./text":109,"./text-type":108}],99:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	autoFocus: {
 		'.x-promo-content': 'content'
 	}
 });
-},{}],99:[function(require,module,exports){
+},{}],100:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	autoFocus: {
 		'.h-prompt': 'heading',
@@ -5259,14 +5336,14 @@ module.exports = cs.ElementViews.Base.extend({
 		'.x-btn': 'button_text'
 	}
 });
-},{}],100:[function(require,module,exports){
+},{}],101:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	autoFocus: {
 		'.x-pullquote .x-cite': 'cite',
 		'.x-pullquote': 'content'
 	}
 });
-},{}],101:[function(require,module,exports){
+},{}],102:[function(require,module,exports){
 module.exports = cs.ElementViews.BaseCore.extend( {
 
 	childView: require('./column'),
@@ -5357,7 +5434,7 @@ module.exports = cs.ElementViews.BaseCore.extend( {
 	}
 
 } );
-},{"./column":89}],102:[function(require,module,exports){
+},{"./column":89}],103:[function(require,module,exports){
 module.exports = cs.ElementViews.BaseCore.extend( {
 
 	childView: require('./row'),
@@ -5551,26 +5628,26 @@ module.exports = cs.ElementViews.BaseCore.extend( {
 
 
 } );
-},{"./row":101}],103:[function(require,module,exports){
+},{"./row":102}],104:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	autoFocus: {
 		'.h-skill-bar': 'heading',
 		'.x-skill-bar': 'bar_text'
 	}
 });
-},{}],104:[function(require,module,exports){
+},{}],105:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	emptyDetection: function() {
     // Prevent empty detection
   }
 });
-},{}],105:[function(require,module,exports){
+},{}],106:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	autoFocus: {
 		'.x-entry-share': 'heading'
 	}
 });
-},{}],106:[function(require,module,exports){
+},{}],107:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 
 	onClickBeforeInspect: function( e ) {
@@ -5581,7 +5658,7 @@ module.exports = cs.ElementViews.Base.extend({
 	},
 
 });
-},{}],107:[function(require,module,exports){
+},{}],108:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	autoFocus: {
 		'.x-text-type .prefix': 'prefix',
@@ -5589,13 +5666,13 @@ module.exports = cs.ElementViews.Base.extend({
 		'.x-text-type .suffix': 'suffix'
 	}
 });
-},{}],108:[function(require,module,exports){
+},{}],109:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	autoFocus: {
 		'.x-text': 'content'
 	}
 });
-},{}],109:[function(require,module,exports){
+},{}],110:[function(require,module,exports){
 // Confirm
 module.exports = Mn.ItemView.extend({
   className: 'cs-confirm',
@@ -5660,7 +5737,7 @@ module.exports = Mn.ItemView.extend({
   },
 
 });
-},{}],110:[function(require,module,exports){
+},{}],111:[function(require,module,exports){
 // Expand
 module.exports = Mn.ItemView.extend({
   tagName: 'button',
@@ -5695,7 +5772,7 @@ module.exports = Mn.ItemView.extend({
 
   }
 });
-},{}],111:[function(require,module,exports){
+},{}],112:[function(require,module,exports){
 // Expansion
 var ControlListView = require('../controls/control-collection')
   , ControlCollection = require('../../data/models/control-collection');
@@ -5777,7 +5854,7 @@ module.exports = Mn.ItemView.extend({
   }
 
 });
-},{"../../data/models/control-collection":12,"../controls/control-collection":44}],112:[function(require,module,exports){
+},{"../../data/models/control-collection":12,"../controls/control-collection":44}],113:[function(require,module,exports){
 // Home
 module.exports = Mn.ItemView.extend({
   className: 'cs-home',
@@ -5800,7 +5877,7 @@ module.exports = Mn.ItemView.extend({
     return data;
   }
 });
-},{}],113:[function(require,module,exports){
+},{}],114:[function(require,module,exports){
 // Options
 var ControlCollection = require('../../data/models/control-collection');
 
@@ -5835,7 +5912,7 @@ module.exports = Mn.CompositeView.extend({
   }
 
 });
-},{"../../data/models/control-collection":12}],114:[function(require,module,exports){
+},{"../../data/models/control-collection":12}],115:[function(require,module,exports){
 // Respond
 module.exports = Mn.ItemView.extend({
   className: 'cs-respond',
@@ -5881,7 +5958,7 @@ module.exports = Mn.ItemView.extend({
   }
 
 });
-},{}],115:[function(require,module,exports){
+},{}],116:[function(require,module,exports){
 // SaveComplete
 module.exports = Mn.ItemView.extend({
   className: 'cs-saved',
@@ -5920,7 +5997,7 @@ module.exports = Mn.ItemView.extend({
 
 });
 
-},{}],116:[function(require,module,exports){
+},{}],117:[function(require,module,exports){
 // InspectorPane
 
 var ControlListView = require('../controls/control-collection');
@@ -5978,6 +6055,8 @@ module.exports = Mn.LayoutView.extend({
 
   openSub: function( model ) {
 
+    cs.navigate.trigger( 'subpane:opened' );
+
     clearTimeout(this.subTimeout);
     var selected = cs.data.request('get:sub:inspector');
     this.Sub.show( new ControlListView( {
@@ -6003,7 +6082,7 @@ module.exports = Mn.LayoutView.extend({
   }
 
 });
-},{"../controls/control-collection":44}],117:[function(require,module,exports){
+},{"../controls/control-collection":44}],118:[function(require,module,exports){
 // LayoutPane
 var ManageRowsView = require('./sub-row/layout-sub-rows')
   , ControlListView = require('../controls/control-collection')
@@ -6046,6 +6125,8 @@ module.exports = Mn.LayoutView.extend({
     if ( !selected || !selected.section )
       return;
 
+    cs.navigate.trigger( 'subpane:opened' );
+
     cs.channel.trigger( 'inspect:element', { model: selected.section } );
 
     clearTimeout(this.subTimeout);
@@ -6066,6 +6147,7 @@ module.exports = Mn.LayoutView.extend({
 
   openSubTemplates: function() {
 
+    cs.navigate.trigger( 'subpane:opened' );
     clearTimeout(this.subTimeout);
     this.Sub.show( new TemplatesView( { model: cs.data.request( 'block:manager' ) } ) );
     this.$('.cs-builder-sub').addClass('active').find('.cs-pane-content-inner').perfectScrollbar({
@@ -6076,7 +6158,7 @@ module.exports = Mn.LayoutView.extend({
   },
 
 });
-},{"../controls/control-collection":44,"./sub-row/layout-sub-rows":118,"./sub-templates/layout-sub-templates":119}],118:[function(require,module,exports){
+},{"../controls/control-collection":44,"./sub-row/layout-sub-rows":119,"./sub-templates/layout-sub-templates":120}],119:[function(require,module,exports){
 // RowSubPane
 
 var ViewControlCollection = require('../../controls/control-collection')
@@ -6188,7 +6270,7 @@ module.exports = Mn.LayoutView.extend({
     this.columnControls.reset();
   }
 });
-},{"../../../data/models/control-collection":12,"../../controls/control-collection":44}],119:[function(require,module,exports){
+},{"../../../data/models/control-collection":12,"../../controls/control-collection":44}],120:[function(require,module,exports){
 // TemplatesSubPane
 
 var ViewControlCollection = require('../../controls/control-collection')
@@ -6308,7 +6390,7 @@ module.exports = Mn.LayoutView.extend({
     this.controls.reset();
   }
 });
-},{"../../../data/models/control-collection":12,"../../controls/control-collection":44}],120:[function(require,module,exports){
+},{"../../../data/models/control-collection":12,"../../controls/control-collection":44}],121:[function(require,module,exports){
 // ElementLibraryPane
 
 var ViewBasePane = require('../main/base-pane')
@@ -6341,7 +6423,7 @@ module.exports = ViewBasePane.extend({
     this.$('#elements-search').focus();
   }
 });
-},{"../main/base-pane":123,"./library-list":122}],121:[function(require,module,exports){
+},{"../main/base-pane":124,"./library-list":123}],122:[function(require,module,exports){
 // ElementLibraryItem
 
 module.exports = Mn.ItemView.extend({
@@ -6388,7 +6470,7 @@ module.exports = Mn.ItemView.extend({
 	// 	this.$el.attr( 'data-tooltip-message', this.model.get( 'description' ) );
 	// }
 });
-},{}],122:[function(require,module,exports){
+},{}],123:[function(require,module,exports){
 module.exports = Mn.CollectionView.extend({
 	tagName: 'ul',
 	className: 'cs-elements',
@@ -6430,7 +6512,7 @@ module.exports = Mn.CollectionView.extend({
 		this.query = '';
 	}
 });
-},{"./element-stub":121}],123:[function(require,module,exports){
+},{"./element-stub":122}],124:[function(require,module,exports){
 // BasePane
 var BasePane = Mn.LayoutView.extend({
 
@@ -6471,7 +6553,7 @@ BasePane.extend = function(child) {
 
 module.exports = BasePane;
 
-},{}],124:[function(require,module,exports){
+},{}],125:[function(require,module,exports){
 // Editor
 
 var ViewHeader    = require('./header')
@@ -6631,7 +6713,7 @@ module.exports = Mn.LayoutView.extend({
   }
 
 });
-},{"../extra/expansion":111,"../inspector/inspector":116,"../layout/layout":117,"../library/element-library":120,"../settings/settings":131,"./footer":125,"./header":126}],125:[function(require,module,exports){
+},{"../extra/expansion":112,"../inspector/inspector":117,"../layout/layout":118,"../library/element-library":121,"../settings/settings":132,"./footer":126,"./header":127}],126:[function(require,module,exports){
 var ViewExpand  = require('../extra/expand')
   , ViewConfirm = require('../extra/confirm')
   , ViewHome    = require('../extra/home')
@@ -6817,7 +6899,7 @@ module.exports = Mn.ItemView.extend({
 
 
 });
-},{"../extra/confirm":109,"../extra/expand":110,"../extra/home":112,"../extra/options":113,"../extra/respond":114,"../extra/save-complete":115}],126:[function(require,module,exports){
+},{"../extra/confirm":110,"../extra/expand":111,"../extra/home":113,"../extra/options":114,"../extra/respond":115,"../extra/save-complete":116}],127:[function(require,module,exports){
 // EditorHeader
 module.exports = Mn.ItemView.extend({
   tagName: 'nav',
@@ -6858,7 +6940,7 @@ module.exports = Mn.ItemView.extend({
     this.$( '.' + pane ).addClass('active').siblings().removeClass('active');
   }
 });
-},{}],127:[function(require,module,exports){
+},{}],128:[function(require,module,exports){
 module.exports = Mn.ItemView.extend({
 	template: 'observer',
 	className: 'cs-observer',
@@ -6872,6 +6954,7 @@ module.exports = Mn.ItemView.extend({
 
 		this.listenTo( cs.observer, 'in', this.observeIn );
 		this.listenTo( cs.observer, 'out', this.observeOut );
+		this.listenTo( cs.preview,  'kill:observer', this.kill );
 		this.listenTo( cs.observer, 'kill', this.kill );
 		this.listenTo( cs.observer, 'drag:indicator', this.dragIndicator );
 
@@ -7042,7 +7125,7 @@ module.exports = Mn.ItemView.extend({
 
 	// }
 });
-},{}],128:[function(require,module,exports){
+},{}],129:[function(require,module,exports){
 var Observer = require('./observer.js');
 module.exports = Mn.CollectionView.extend({
 
@@ -7113,7 +7196,7 @@ module.exports = Mn.CollectionView.extend({
 	}
 
 })
-},{"../elements/section":102,"./observer.js":127}],129:[function(require,module,exports){
+},{"../elements/section":103,"./observer.js":128}],130:[function(require,module,exports){
 module.exports = Mn.CollectionView.extend({
   // className: 'cs-pane-content-inner',
 	childView: require('./settings-section'),
@@ -7141,7 +7224,7 @@ module.exports = Mn.CollectionView.extend({
 
   }
 });
-},{"./settings-section":130}],130:[function(require,module,exports){
+},{"./settings-section":131}],131:[function(require,module,exports){
 module.exports = Mn.CompositeView.extend({
 	template: 'settings/section',
 	className: 'cs-settings-section',
@@ -7155,7 +7238,7 @@ module.exports = Mn.CompositeView.extend({
 			this.$el.addClass('empty');
 	}
 });
-},{}],131:[function(require,module,exports){
+},{}],132:[function(require,module,exports){
 // Views.SettingsPane
 
 var ViewControlCollection = require('../controls/control-collection');
@@ -7243,6 +7326,8 @@ module.exports = ViewBasePane.extend({
 
   openSub: function( model ) {
 
+    cs.navigate.trigger( 'subpane:opened' );
+
     clearTimeout(this.subTimeout);
     var selected = cs.data.request('get:sub:inspector');
     this.Sub.show( new ControlListView( {
@@ -7261,35 +7346,8 @@ module.exports = ViewBasePane.extend({
   }
 
 });
-},{"../../data/models/control-collection":12,"../controls/control-collection":44,"../main/base-pane":123,"./settings-collection":129}],132:[function(require,module,exports){
-var templates={};templates['layout/actions']=function (obj) {
-obj || (obj = {});
-var __t, __p = '';
-with (obj) {
-__p += '<ul class="cs-actions">\n  <li class="action new">\n    <i class="cs-icon" data-cs-icon="&#xf0fe;"></i>\n    <span>' +
-((__t = ( l18n('layout-add-section') )) == null ? '' : __t) +
-'</span>\n  </li>\n  <li class="action templates">\n    <i class="cs-icon" data-cs-icon="&#xf15b;"></i>\n    <span>' +
-((__t = ( l18n('layout-templates') )) == null ? '' : __t) +
-'</span>\n  </li>\n</ul>';
-
-}
-return __p
-};templates['layout/layout']=function (obj) {
-obj || (obj = {});
-var __t, __p = '', __j = Array.prototype.join;
-function print() { __p += __j.call(arguments, '') }
-with (obj) {
-
- //builder/layout/layout ;
-__p += '\n<h2>' +
-((__t = ( l18n('layout-heading') )) == null ? '' : __t) +
-'</h2>\n<div class="cs-pane-content-outer">\n  <div id="layout-controls" class="cs-pane-content-inner" style="right:0px;">\n    <div class="cs-pane-section"></div>\n  </div>\n</div>\n<div class="cs-builder-sub layout">\n  <button class="cs-builder-sub-back">\n    <i class="cs-icon" data-cs-icon="&#xf053;"></i> <span>' +
-((__t = ( l18n('layout-return') )) == null ? '' : __t) +
-'</span>\n  </button>\n  <div id="layout-sub" class="cs-pane-content-outer"></div>\n</div>';
-
-}
-return __p
-};templates['controls/base']=function (obj) {
+},{"../../data/models/control-collection":12,"../controls/control-collection":44,"../main/base-pane":124,"./settings-collection":130}],133:[function(require,module,exports){
+var templates={};templates['controls/base']=function (obj) {
 obj || (obj = {});
 var __t, __p = '', __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
@@ -7720,111 +7778,6 @@ __p += '\n<div class="cs-wp-select"></div>';
 
 }
 return __p
-};templates['inspector/blank-state']=function (obj) {
-obj || (obj = {});
-var __t, __p = '', __j = Array.prototype.join;
-function print() { __p += __j.call(arguments, '') }
-with (obj) {
-
- //builder/inspector/blank-state ;
-__p += '\n' +
-((__t = ( cs.icon('logo-flat-custom') )) == null ? '' : __t) +
-'\n<span class="title">Nothing Selected</span>\n<span>Click on an element in the site preview to begin inspecting it.</span>';
-
-}
-return __p
-};templates['inspector/breadcrumbs']=function (obj) {
-obj || (obj = {});
-var __t, __p = '', __j = Array.prototype.join;
-function print() { __p += __j.call(arguments, '') }
-with (obj) {
-
- if ( count > 0 ) { ;
-__p += '\n<button data-level="0" ';
- if ( items.length == 1 ) { print('disabled') } ;
-__p += '>';
- print((items.length == 1) ? _.first( items ).title : _.first( items ).label ) ;
-__p += '</button>\n';
- _.each( _.rest( items ), function(item,index) { ;
-__p += '\n	<span><i class="cs-icon" data-cs-icon="' +
-((__t = ( fontIcon( (rtl) ? 'angle-left' : 'angle-right' ) )) == null ? '' : __t) +
-'"></i></span>\n	<button ';
- if ( count == index+2 ) { print('disabled') } ;
-__p += ' data-level="' +
-((__t = ( index + 1 )) == null ? '' : __t) +
-'" >' +
-((__t = ( item.label )) == null ? '' : __t) +
-'</button>\n';
- }) ;
-__p += '\n';
- } ;
-
-
-}
-return __p
-};templates['inspector/column-actions']=function (obj) {
-obj || (obj = {});
-var __t, __p = '';
-with (obj) {
-__p += '<ul class="cs-actions">\n  <li class="action manage-layout">\n    <i class="cs-icon" data-cs-icon="' +
-((__t = ( fontIcon('bars') )) == null ? '' : __t) +
-'"></i>\n    <span>' +
-((__t = ( l18n('inspector-manage-layout') )) == null ? '' : __t) +
-'</span>\n  </li>\n  <li class="action erase">\n    <i class="cs-icon" data-cs-icon="' +
-((__t = ( fontIcon('eraser') )) == null ? '' : __t) +
-'"></i>\n    <span>' +
-((__t = ( l18n('inspector-erase') )) == null ? '' : __t) +
-'</span>\n  </li>\n</ul>';
-
-}
-return __p
-};templates['inspector/element-actions']=function (obj) {
-obj || (obj = {});
-var __t, __p = '';
-with (obj) {
-__p += '<ul class="cs-actions">\n  <li class="action duplicate">\n    <i class="cs-icon" data-cs-icon="' +
-((__t = ( fontIcon('copy') )) == null ? '' : __t) +
-'"></i>\n    <span>' +
-((__t = ( l18n('inspector-duplicate') )) == null ? '' : __t) +
-'</span>\n  </li>\n  <li class="action delete">\n    <i class="cs-icon" data-cs-icon="' +
-((__t = ( fontIcon('trash-o') )) == null ? '' : __t) +
-'"></i>\n    <span>' +
-((__t = ( l18n('inspector-delete') )) == null ? '' : __t) +
-'</span>\n  </li>\n</ul>';
-
-}
-return __p
-};templates['inspector/inspector']=function (obj) {
-obj || (obj = {});
-var __t, __p = '', __j = Array.prototype.join;
-function print() { __p += __j.call(arguments, '') }
-with (obj) {
-
- //builder/inspector/inspector ;
-__p += '\n<h2>' +
-((__t = ( heading )) == null ? '' : __t) +
-'</h2>\n<div class="cs-pane-content-outer">\n	<div id="inspector-controls" class="cs-pane-content-inner"></div>\n</div>\n<div class="cs-builder-sub inspector ">\n  <button class="cs-builder-sub-back">\n  <i class="cs-icon" data-cs-icon="&#xf053;"></i>\n  <span>' +
-((__t = ( l18n('inspector-return') )) == null ? '' : __t) +
-'</span>\n	</button>\n	<div class="cs-pane-content-outer">\n		<div class="cs-pane-content-inner">\n			<div id="inspector-sub" class="cs-pane-section"></div>\n		</div>\n	</div>\n</div>\n';
-
-}
-return __p
-};templates['inspector/row-actions']=function (obj) {
-obj || (obj = {});
-var __t, __p = '';
-with (obj) {
-__p += '<ul class="cs-actions">\n  <li class="action manage-layout">\n    <i class="cs-icon" data-cs-icon="' +
-((__t = ( fontIcon('bars') )) == null ? '' : __t) +
-'"></i>\n    <span>' +
-((__t = ( l18n('inspector-manage-layout') )) == null ? '' : __t) +
-'</span>\n  </li>\n  <li class="action delete">\n    <i class="cs-icon" data-cs-icon="' +
-((__t = ( fontIcon('trash-o') )) == null ? '' : __t) +
-'"></i>\n    <span>' +
-((__t = ( l18n('inspector-delete') )) == null ? '' : __t) +
-'</span>\n  </li>\n</ul>';
-
-}
-return __p
 };templates['extra/confirm']=function (obj) {
 obj || (obj = {});
 var __t, __p = '', __j = Array.prototype.join;
@@ -7948,44 +7901,169 @@ __p += '\n<p class="message">' +
 
 }
 return __p
-};templates['settings/actions']=function (obj) {
-obj || (obj = {});
-var __t, __p = '';
-with (obj) {
-__p += '<ul class="cs-actions">\n  <li class="action css">\n    <i class="cs-icon" data-cs-icon="' +
-((__t = ( fontIcon('paint-brush') )) == null ? '' : __t) +
-'"></i>\n    <span>' +
-((__t = ( l18n('settings-css-editor') )) == null ? '' : __t) +
-'</span>\n  </li>\n  <li class="action js">\n    <i class="cs-icon" data-cs-icon="' +
-((__t = ( fontIcon('code') )) == null ? '' : __t) +
-'"></i>\n    <span>' +
-((__t = ( l18n('settings-js-editor') )) == null ? '' : __t) +
-'</span>\n  </li>\n</ul>';
-
-}
-return __p
-};templates['settings/page-settings']=function (obj) {
+};templates['inspector/blank-state']=function (obj) {
 obj || (obj = {});
 var __t, __p = '', __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
 
- //builder/settings/page-settings ;
-__p += '\n<h2>' +
-((__t = ( l18n('settings-heading') )) == null ? '' : __t) +
-'</h2>\n<div class="cs-pane-content-outer">\n	<div class="cs-pane-content-inner">\n  	<div id="setting-controls"></div>\n  	<div id="setting-sections"></div>\n	</div>\n<div class="cs-builder-sub settings ">\n  <button class="cs-builder-sub-back">\n  <i class="cs-icon" data-cs-icon="&#xf053;"></i>\n  <span>' +
-((__t = ( l18n('settings-return') )) == null ? '' : __t) +
-'</span>\n	</button>\n	<div class="cs-pane-content-outer">\n		<div class="cs-pane-content-inner">\n			<div id="settings-sub" class="cs-pane-section"></div>\n		</div>\n	</div>\n</div>';
+ //builder/inspector/blank-state ;
+__p += '\n' +
+((__t = ( cs.icon('logo-flat-custom') )) == null ? '' : __t) +
+'\n<span class="title">Nothing Selected</span>\n<span>Click on an element in the site preview to begin inspecting it.</span>';
 
 }
 return __p
-};templates['settings/section']=function (obj) {
+};templates['inspector/breadcrumbs']=function (obj) {
+obj || (obj = {});
+var __t, __p = '', __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+
+ if ( count > 0 ) { ;
+__p += '\n  <button data-level="0" ';
+ if ( items.length == 1 ) { print('class="disabled"') } ;
+__p += '>';
+ print((items.length == 1) ? _.first( items ).title : _.first( items ).label ) ;
+__p += '</button>\n  ';
+ _.each( _.rest( items ), function(item,index) { ;
+__p += '\n  	<span><i class="cs-icon" data-cs-icon="' +
+((__t = ( fontIcon( (rtl) ? 'angle-left' : 'angle-right' ) )) == null ? '' : __t) +
+'"></i></span>\n  	<button ';
+ if ( count == index+2 ) { print('class="disabled"') } ;
+__p += ' data-level="' +
+((__t = ( index + 1 )) == null ? '' : __t) +
+'" >' +
+((__t = ( item.label )) == null ? '' : __t) +
+'</button>\n  ';
+ }) ;
+__p += '\n';
+ } ;
+
+
+}
+return __p
+};templates['inspector/column-actions']=function (obj) {
 obj || (obj = {});
 var __t, __p = '';
 with (obj) {
-__p += '<h3 class="cs-pane-section-toggle">' +
+__p += '<ul class="cs-actions">\n  <li class="action manage-layout">\n    <i class="cs-icon" data-cs-icon="' +
+((__t = ( fontIcon('bars') )) == null ? '' : __t) +
+'"></i>\n    <span>' +
+((__t = ( l18n('inspector-manage-layout') )) == null ? '' : __t) +
+'</span>\n  </li>\n  <li class="action erase">\n    <i class="cs-icon" data-cs-icon="' +
+((__t = ( fontIcon('eraser') )) == null ? '' : __t) +
+'"></i>\n    <span>' +
+((__t = ( l18n('inspector-erase') )) == null ? '' : __t) +
+'</span>\n  </li>\n</ul>';
+
+}
+return __p
+};templates['inspector/element-actions']=function (obj) {
+obj || (obj = {});
+var __t, __p = '';
+with (obj) {
+__p += '<ul class="cs-actions">\n  <li class="action duplicate">\n    <i class="cs-icon" data-cs-icon="' +
+((__t = ( fontIcon('copy') )) == null ? '' : __t) +
+'"></i>\n    <span>' +
+((__t = ( l18n('inspector-duplicate') )) == null ? '' : __t) +
+'</span>\n  </li>\n  <li class="action delete">\n    <i class="cs-icon" data-cs-icon="' +
+((__t = ( fontIcon('trash-o') )) == null ? '' : __t) +
+'"></i>\n    <span>' +
+((__t = ( l18n('inspector-delete') )) == null ? '' : __t) +
+'</span>\n  </li>\n</ul>';
+
+}
+return __p
+};templates['inspector/inspector']=function (obj) {
+obj || (obj = {});
+var __t, __p = '', __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+
+ //builder/inspector/inspector ;
+__p += '\n<h2>' +
+((__t = ( heading )) == null ? '' : __t) +
+'</h2>\n<div class="cs-pane-content-outer">\n	<div id="inspector-controls" class="cs-pane-content-inner"></div>\n</div>\n<div class="cs-builder-sub inspector ">\n  <button class="cs-builder-sub-back">\n  <i class="cs-icon" data-cs-icon="&#xf053;"></i>\n  <span>' +
+((__t = ( l18n('inspector-return') )) == null ? '' : __t) +
+'</span>\n	</button>\n	<div class="cs-pane-content-outer">\n		<div class="cs-pane-content-inner">\n			<div id="inspector-sub" class="cs-pane-section"></div>\n		</div>\n	</div>\n</div>\n';
+
+}
+return __p
+};templates['inspector/row-actions']=function (obj) {
+obj || (obj = {});
+var __t, __p = '';
+with (obj) {
+__p += '<ul class="cs-actions">\n  <li class="action manage-layout">\n    <i class="cs-icon" data-cs-icon="' +
+((__t = ( fontIcon('bars') )) == null ? '' : __t) +
+'"></i>\n    <span>' +
+((__t = ( l18n('inspector-manage-layout') )) == null ? '' : __t) +
+'</span>\n  </li>\n  <li class="action delete">\n    <i class="cs-icon" data-cs-icon="' +
+((__t = ( fontIcon('trash-o') )) == null ? '' : __t) +
+'"></i>\n    <span>' +
+((__t = ( l18n('inspector-delete') )) == null ? '' : __t) +
+'</span>\n  </li>\n</ul>';
+
+}
+return __p
+};templates['layout/actions']=function (obj) {
+obj || (obj = {});
+var __t, __p = '';
+with (obj) {
+__p += '<ul class="cs-actions">\n  <li class="action new">\n    <i class="cs-icon" data-cs-icon="&#xf0fe;"></i>\n    <span>' +
+((__t = ( l18n('layout-add-section') )) == null ? '' : __t) +
+'</span>\n  </li>\n  <li class="action templates">\n    <i class="cs-icon" data-cs-icon="&#xf15b;"></i>\n    <span>' +
+((__t = ( l18n('layout-templates') )) == null ? '' : __t) +
+'</span>\n  </li>\n</ul>';
+
+}
+return __p
+};templates['layout/layout']=function (obj) {
+obj || (obj = {});
+var __t, __p = '', __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+
+ //builder/layout/layout ;
+__p += '\n<h2>' +
+((__t = ( l18n('layout-heading') )) == null ? '' : __t) +
+'</h2>\n<div class="cs-pane-content-outer">\n  <div id="layout-controls" class="cs-pane-content-inner" style="right:0px;">\n    <div class="cs-pane-section"></div>\n  </div>\n</div>\n<div class="cs-builder-sub layout">\n  <button class="cs-builder-sub-back">\n    <i class="cs-icon" data-cs-icon="&#xf053;"></i> <span>' +
+((__t = ( l18n('layout-return') )) == null ? '' : __t) +
+'</span>\n  </button>\n  <div id="layout-sub" class="cs-pane-content-outer"></div>\n</div>';
+
+}
+return __p
+};templates['library/element-library']=function (obj) {
+obj || (obj = {});
+var __t, __p = '', __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+
+ //builder/library/element-library ;
+__p += '\n<h2>' +
+((__t = ( l18n('elements-heading') )) == null ? '' : __t) +
+'</h2>\n<div class="cs-pane-content-outer">\n	<div class="cs-search-section">\n    <div class="cs-search">\n      <input type="search" placeholder="' +
+((__t = ( l18n('elements-search') )) == null ? '' : __t) +
+'" id="elements-search">\n      <i class="cs-icon" data-cs-icon="' +
+((__t = ( fontIcon('search') )) == null ? '' : __t) +
+'"></i>\n    </div>\n  </div>\n	<div class="cs-pane-content-inner" style="right:0px;">\n\n		<div id="elements-library" class="cs-pane-section"></div>\n\n\n		<div class="cs-builder-sub elements">\n			<button class="cs-builder-sub-back">\n		  	<i class="cs-icon" data-cs-icon="&#xf053;"></i>\n		  	<span>' +
+((__t = ( l18n('elements-return') )) == null ? '' : __t) +
+'</span>\n		  </button>\n			<div id="elements-sub" class="cs-pane-content"></div>\n		</div>\n	</div>\n</div>';
+
+}
+return __p
+};templates['library/element-stub']=function (obj) {
+obj || (obj = {});
+var __t, __p = '', __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+
+ //builder/library/element-stub ;
+__p += '\n<span class="icon">' +
+((__t = ( icon )) == null ? '' : __t) +
+'</span>\n<span class="name"><span>' +
 ((__t = ( title )) == null ? '' : __t) +
-'</h3>\n<div class="cs-pane-section">\n	<ul class="cs-controls"></ul>\n</div>';
+'</span></span>';
 
 }
 return __p
@@ -8048,37 +8126,44 @@ __p += '\n<button class="layout">' +
 
 }
 return __p
-};templates['library/element-library']=function (obj) {
+};templates['settings/actions']=function (obj) {
 obj || (obj = {});
-var __t, __p = '', __j = Array.prototype.join;
-function print() { __p += __j.call(arguments, '') }
+var __t, __p = '';
 with (obj) {
-
- //builder/library/element-library ;
-__p += '\n<h2>' +
-((__t = ( l18n('elements-heading') )) == null ? '' : __t) +
-'</h2>\n<div class="cs-pane-content-outer">\n	<div class="cs-search-section">\n    <div class="cs-search">\n      <input type="search" placeholder="' +
-((__t = ( l18n('elements-search') )) == null ? '' : __t) +
-'" id="elements-search">\n      <i class="cs-icon" data-cs-icon="' +
-((__t = ( fontIcon('search') )) == null ? '' : __t) +
-'"></i>\n    </div>\n  </div>\n	<div class="cs-pane-content-inner" style="right:0px;">\n\n		<div id="elements-library" class="cs-pane-section"></div>\n\n\n		<div class="cs-builder-sub elements">\n			<button class="cs-builder-sub-back">\n		  	<i class="cs-icon" data-cs-icon="&#xf053;"></i>\n		  	<span>' +
-((__t = ( l18n('elements-return') )) == null ? '' : __t) +
-'</span>\n		  </button>\n			<div id="elements-sub" class="cs-pane-content"></div>\n		</div>\n	</div>\n</div>';
+__p += '<ul class="cs-actions">\n  <li class="action css">\n    <i class="cs-icon" data-cs-icon="' +
+((__t = ( fontIcon('paint-brush') )) == null ? '' : __t) +
+'"></i>\n    <span>' +
+((__t = ( l18n('settings-css-editor') )) == null ? '' : __t) +
+'</span>\n  </li>\n  <li class="action js">\n    <i class="cs-icon" data-cs-icon="' +
+((__t = ( fontIcon('code') )) == null ? '' : __t) +
+'"></i>\n    <span>' +
+((__t = ( l18n('settings-js-editor') )) == null ? '' : __t) +
+'</span>\n  </li>\n</ul>';
 
 }
 return __p
-};templates['library/element-stub']=function (obj) {
+};templates['settings/page-settings']=function (obj) {
 obj || (obj = {});
 var __t, __p = '', __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
 
- //builder/library/element-stub ;
-__p += '\n<span class="icon">' +
-((__t = ( icon )) == null ? '' : __t) +
-'</span>\n<span class="name"><span>' +
+ //builder/settings/page-settings ;
+__p += '\n<h2>' +
+((__t = ( l18n('settings-heading') )) == null ? '' : __t) +
+'</h2>\n<div class="cs-pane-content-outer">\n	<div class="cs-pane-content-inner">\n  	<div id="setting-controls"></div>\n  	<div id="setting-sections"></div>\n	</div>\n<div class="cs-builder-sub settings ">\n  <button class="cs-builder-sub-back">\n  <i class="cs-icon" data-cs-icon="&#xf053;"></i>\n  <span>' +
+((__t = ( l18n('settings-return') )) == null ? '' : __t) +
+'</span>\n	</button>\n	<div class="cs-pane-content-outer">\n		<div class="cs-pane-content-inner">\n			<div id="settings-sub" class="cs-pane-section"></div>\n		</div>\n	</div>\n</div>';
+
+}
+return __p
+};templates['settings/section']=function (obj) {
+obj || (obj = {});
+var __t, __p = '';
+with (obj) {
+__p += '<h3 class="cs-pane-section-toggle">' +
 ((__t = ( title )) == null ? '' : __t) +
-'</span></span>';
+'</h3>\n<div class="cs-pane-section">\n	<ul class="cs-controls"></ul>\n</div>';
 
 }
 return __p
@@ -8165,7 +8250,7 @@ __p += '<input id="template-upload" type="file" name="blockUpload"/>\n<button cl
 }
 return __p
 };module.exports=templates;
-},{}],133:[function(require,module,exports){
+},{}],134:[function(require,module,exports){
 var templates={};templates['dragging-placeholder']=function (obj) {
 obj || (obj = {});
 var __t, __p = '';
@@ -8239,7 +8324,7 @@ __p += '<div class="cs-observer-tooltip top left">' +
 }
 return __p
 };module.exports=templates;
-},{}],134:[function(require,module,exports){
+},{}],135:[function(require,module,exports){
 var templates={};templates['element-accordion']=function (obj) {
 obj || (obj = {});
 var __t, __p = '', __j = Array.prototype.join;
@@ -8345,7 +8430,7 @@ var __t, __p = '', __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
 
- // icons/element-flip-box ;
+ // icons/element-card ;
 __p += '\n<svg class="cs-custom-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="-290 382 30 30" enable-background="new -290 382 30 30" xml:space="preserve">\n  <g>\n    <path d="M-276.4,404.4l1.6,1.6h-8.7l0,0c-1.4,0-2.5-1.1-2.5-2.5c0-0.7,0.3-1.5,0.9-1.9c0.2-0.2,0.2-0.5,0.1-0.7c-0.1-0.2-0.5-0.2-0.7-0.1c-0.8,0.7-1.3,1.7-1.3,2.7c0,1.9,1.6,3.5,3.5,3.5l0,0h8.8l-1.6,1.6l0.7,0.7l2.9-2.9l-2.9-2.9L-276.4,404.4z"/>\n    <path d="M-277.5,392.5c0,1.4,1.1,2.5,2.5,2.5s2.5-1.1,2.5-2.5s-1.1-2.5-2.5-2.5S-277.5,391.1-277.5,392.5z M-273.5,392.5c0,0.8-0.7,1.5-1.5,1.5s-1.5-0.7-1.5-1.5s0.7-1.5,1.5-1.5S-273.5,391.7-273.5,392.5z"/>\n    <path d="M-272,388.5c0-0.3-0.2-0.5-0.5-0.5h-5c-0.3,0-0.5,0.2-0.5,0.5s0.2,0.5,0.5,0.5h5C-272.2,389-272,388.8-272,388.5z"/>\n    <path d="M-279,396.5c0,0.3,0.2,0.5,0.5,0.5h9c0.3,0,0.5-0.2,0.5-0.5s-0.2-0.5-0.5-0.5h-9C-278.8,396-279,396.2-279,396.5z"/>\n    <path d="M-281,398.5c0,0.3,0.2,0.5,0.5,0.5h11c0.3,0,0.5-0.2,0.5-0.5s-0.2-0.5-0.5-0.5h-11C-280.8,398-281,398.2-281,398.5z"/>\n    <path d="M-280.5,401h8c0.3,0,0.5-0.2,0.5-0.5s-0.2-0.5-0.5-0.5h-8c-0.3,0-0.5,0.2-0.5,0.5S-280.8,401-280.5,401z"/>\n    <path d="M-264.3,400.8c-0.2-0.2-0.5-0.1-0.7,0.1c-0.2,0.2-0.1,0.5,0.1,0.7c0.6,0.5,0.9,1.2,0.9,1.9c0,1.4-1.1,2.5-2.5,2.5l0,0h-4c-0.3,0-0.5,0.2-0.5,0.5s0.2,0.5,0.5,0.5h4l0,0c1.9,0,3.5-1.6,3.5-3.5C-263,402.5-263.5,401.5-264.3,400.8z"/>\n    <path d="M-283,404h4.5c0.3,0,0.5-0.2,0.5-0.5s-0.2-0.5-0.5-0.5h-4.5v-16h16v16h-6.5c-0.3,0-0.5,0.2-0.5,0.5s0.2,0.5,0.5,0.5h6.5c0.6,0,1-0.4,1-1v-16c0-0.6-0.4-1-1-1h-16c-0.6,0-1,0.4-1,1v16C-284,403.6-283.6,404-283,404z"/>\n  </g>\n</svg>';
 
 }
@@ -8493,6 +8578,17 @@ __p += '\n<svg class="cs-custom-icon" version="1.1" xmlns="http://www.w3.org/200
 
 }
 return __p
+};templates['element-feature-box']=function (obj) {
+obj || (obj = {});
+var __t, __p = '', __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+
+ // icons/element-feature-box ;
+__p += '\n<svg class="cs-custom-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="-290 382 30 30" enable-background="new -290 382 30 30" xml:space="preserve">\n  <g>\n    <path d="M-275,393.1c2.3,0,4.1-1.8,4.1-4.1s-1.8-4.1-4.1-4.1s-4.1,1.8-4.1,4.1S-277.3,393.1-275,393.1z M-276.5,390.5c0-0.8,0.7-1.5,1.5-1.5s1.5,0.7,1.5,1.5c0,0.6-0.3,1.1-0.8,1.3c-0.2,0.1-0.4,0.1-0.7,0.1s-0.5,0-0.7-0.1C-276.2,391.6-276.5,391.1-276.5,390.5z M-275,386.1c1.6,0,2.9,1.3,2.9,2.9c0,0.5-0.2,1-0.4,1.5c0-1.4-1.1-2.5-2.5-2.5s-2.5,1.1-2.5,2.5c-0.3-0.5-0.4-1-0.4-1.5C-277.9,387.4-276.6,386.1-275,386.1z"/>\n    <path d="M-280.5,396h11c0.3,0,0.5-0.2,0.5-0.5s-0.2-0.5-0.5-0.5h-11c-0.3,0-0.5,0.2-0.5,0.5S-280.8,396-280.5,396z"/>\n    <path d="M-281.5,400h15c0.3,0,0.5-0.2,0.5-0.5s-0.2-0.5-0.5-0.5h-15c-0.3,0-0.5,0.2-0.5,0.5S-281.8,400-281.5,400z"/>\n    <path d="M-266.5,401h-17c-0.3,0-0.5,0.2-0.5,0.5s0.2,0.5,0.5,0.5h17c0.3,0,0.5-0.2,0.5-0.5S-266.2,401-266.5,401z"/>\n    <path d="M-266.5,403h-17c-0.3,0-0.5,0.2-0.5,0.5s0.2,0.5,0.5,0.5h17c0.3,0,0.5-0.2,0.5-0.5S-266.2,403-266.5,403z"/>\n    <path d="M-266.5,405h-17c-0.3,0-0.5,0.2-0.5,0.5s0.2,0.5,0.5,0.5h17c0.3,0,0.5-0.2,0.5-0.5S-266.2,405-266.5,405z"/>\n    <path d="M-270.5,407h-13c-0.3,0-0.5,0.2-0.5,0.5s0.2,0.5,0.5,0.5h13c0.3,0,0.5-0.2,0.5-0.5S-270.2,407-270.5,407z"/>\n  </g>\n</svg>';
+
+}
+return __p
 };templates['element-feature-headline']=function (obj) {
 obj || (obj = {});
 var __t, __p = '', __j = Array.prototype.join;
@@ -8501,6 +8597,17 @@ with (obj) {
 
  // icons/element-feature-headline ;
 __p += '\n<svg class="cs-custom-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="-290 382 30 30" enable-background="new -290 382 30 30" xml:space="preserve">\n  <g>\n    <path d="M-282.5,386c-2.5,0-4.5,2-4.5,4.5s2,4.5,4.5,4.5s4.5-2,4.5-4.5S-280,386-282.5,386z M-282.5,394c-1.9,0-3.5-1.6-3.5-3.5s1.6-3.5,3.5-3.5s3.5,1.6,3.5,3.5S-280.6,394-282.5,394z"/>\n    <path d="M-275.5,391h12c0.3,0,0.5-0.2,0.5-0.5s-0.2-0.5-0.5-0.5h-0.5v-0.5c0-0.3-0.2-0.5-0.5-0.5s-0.5,0.2-0.5,0.5v0.5h-1v-0.5c0-0.3-0.2-0.5-0.5-0.5s-0.5,0.2-0.5,0.5v0.5h-1v-0.5c0-0.3-0.2-0.5-0.5-0.5s-0.5,0.2-0.5,0.5v0.5h-1v-0.5c0-0.3-0.2-0.5-0.5-0.5s-0.5,0.2-0.5,0.5v0.5h-1v-0.5c0-0.3-0.2-0.5-0.5-0.5s-0.5,0.2-0.5,0.5v0.5h-1v-0.5c0-0.3-0.2-0.5-0.5-0.5s-0.5,0.2-0.5,0.5v0.5h-0.5c-0.3,0-0.5,0.2-0.5,0.5S-275.8,391-275.5,391z"/>\n    <path d="M-284,392h3v-3h-3V392z M-283,390h1v1h-1V390z"/>\n    <path d="M-282.5,399c-2.5,0-4.5,2-4.5,4.5s2,4.5,4.5,4.5s4.5-2,4.5-4.5S-280,399-282.5,399z M-282.5,407c-1.9,0-3.5-1.6-3.5-3.5s1.6-3.5,3.5-3.5s3.5,1.6,3.5,3.5S-280.6,407-282.5,407z"/>\n    <path d="M-263.5,403h-0.5v-0.5c0-0.3-0.2-0.5-0.5-0.5s-0.5,0.2-0.5,0.5v0.5h-1v-0.5c0-0.3-0.2-0.5-0.5-0.5s-0.5,0.2-0.5,0.5v0.5h-1v-0.5c0-0.3-0.2-0.5-0.5-0.5s-0.5,0.2-0.5,0.5v0.5h-1v-0.5c0-0.3-0.2-0.5-0.5-0.5s-0.5,0.2-0.5,0.5v0.5h-1v-0.5c0-0.3-0.2-0.5-0.5-0.5s-0.5,0.2-0.5,0.5v0.5h-1v-0.5c0-0.3-0.2-0.5-0.5-0.5s-0.5,0.2-0.5,0.5v0.5h-0.5c-0.3,0-0.5,0.2-0.5,0.5s0.2,0.5,0.5,0.5h12c0.3,0,0.5-0.2,0.5-0.5S-263.2,403-263.5,403z"/>\n    <path d="M-280.5,404.4L-280.5,404.4c0-0.1,0-0.2-0.1-0.2c0,0,0,0,0-0.1l-1.5-2c0,0,0,0-0.1,0c-0.1,0,0,0,0-0.1l0,0h-0.1h-0.1h-0.1h-0.1h-0.1h-0.1l0,0c0,0,0,0,0,0.1s0,0-0.1,0l-1.5,2c0,0,0,0,0,0.1v0.1v0.1c0,0,0,0,0,0.1l0,0v0.1v0.1c0,0,0,0.1,0.1,0.1c0,0,0,0.1,0.1,0.1l0,0l0,0c0,0.1,0.1,0.1,0.2,0.1l0,0l0,0h3l0,0c0.1,0,0.2,0,0.3-0.1l0,0l0,0c0,0,0,0,0.1-0.1c0,0,0,0,0.1-0.1v-0.1C-280.5,404.6-280.5,404.6-280.5,404.4C-280.5,404.5-280.5,404.5-280.5,404.4C-280.5,404.5-280.5,404.5-280.5,404.4z M-282.5,403.3l0.5,0.7h-1L-282.5,403.3z"/>\n  </g>\n</svg>';
+
+}
+return __p
+};templates['element-feature-list']=function (obj) {
+obj || (obj = {});
+var __t, __p = '', __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+
+ // icons/element-feature-list ;
+__p += '\n<svg class="cs-custom-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="-290 382 30 30" enable-background="new -290 382 30 30" xml:space="preserve">\n  <g>\n    <path d="M-284,385c-1.7,0-3,1.3-3,3c0,1.5,1.1,2.8,2.6,3c0.1,0,0.3,0,0.4,0c1.7,0,3-1.3,3-3S-282.3,385-284,385z M-285,389c0-0.6,0.4-1,1-1s1,0.4,1,1s-0.4,1-1,1S-285,389.6-285,389z M-282.1,388.5c-0.2-0.9-1-1.5-1.9-1.5s-1.7,0.6-1.9,1.5c-0.1-0.2-0.1-0.3-0.1-0.5c0-1.1,0.9-2,2-2s2,0.9,2,2C-282,388.2-282,388.3-282.1,388.5z"/>\n    <path d="M-284,394c-1.7,0-3,1.3-3,3c0,1.5,1.1,2.8,2.6,3c0.1,0,0.3,0,0.4,0c1.7,0,3-1.3,3-3S-282.3,394-284,394z M-285,398c0-0.6,0.4-1,1-1s1,0.4,1,1s-0.4,1-1,1S-285,398.6-285,398z M-282.1,397.5c-0.2-0.9-1-1.5-1.9-1.5s-1.7,0.6-1.9,1.5c-0.1-0.2-0.1-0.3-0.1-0.5c0-1.1,0.9-2,2-2s2,0.9,2,2C-282,397.2-282,397.3-282.1,397.5z"/>\n    <path d="M-284,403c-1.7,0-3,1.3-3,3c0,1.5,1.1,2.8,2.6,3c0.1,0,0.3,0,0.4,0c1.7,0,3-1.3,3-3S-282.3,403-284,403z M-285,407c0-0.6,0.4-1,1-1s1,0.4,1,1s-0.4,1-1,1S-285,407.6-285,407z M-282.1,406.5c-0.2-0.9-1-1.5-1.9-1.5s-1.7,0.6-1.9,1.5c-0.1-0.2-0.1-0.3-0.1-0.5c0-1.1,0.9-2,2-2s2,0.9,2,2C-282,406.2-282,406.3-282.1,406.5z"/>\n    <path d="M-278.5,386h5c0.3,0,0.5-0.2,0.5-0.5s-0.2-0.5-0.5-0.5h-5c-0.3,0-0.5,0.2-0.5,0.5S-278.8,386-278.5,386z"/>\n    <path d="M-277,388.5c0,0.3,0.2,0.5,0.5,0.5h13c0.3,0,0.5-0.2,0.5-0.5s-0.2-0.5-0.5-0.5h-13C-276.8,388-277,388.2-277,388.5z"/>\n    <path d="M-278.5,391h12c0.3,0,0.5-0.2,0.5-0.5s-0.2-0.5-0.5-0.5h-12c-0.3,0-0.5,0.2-0.5,0.5S-278.8,391-278.5,391z"/>\n    <path d="M-278.5,395h4c0.3,0,0.5-0.2,0.5-0.5s-0.2-0.5-0.5-0.5h-4c-0.3,0-0.5,0.2-0.5,0.5S-278.8,395-278.5,395z"/>\n    <path d="M-263.5,397h-13c-0.3,0-0.5,0.2-0.5,0.5s0.2,0.5,0.5,0.5h13c0.3,0,0.5-0.2,0.5-0.5S-263.2,397-263.5,397z"/>\n    <path d="M-278.5,400h14c0.3,0,0.5-0.2,0.5-0.5s-0.2-0.5-0.5-0.5h-14c-0.3,0-0.5,0.2-0.5,0.5S-278.8,400-278.5,400z"/>\n    <path d="M-278.5,404h7c0.3,0,0.5-0.2,0.5-0.5s-0.2-0.5-0.5-0.5h-7c-0.3,0-0.5,0.2-0.5,0.5S-278.8,404-278.5,404z"/>\n    <path d="M-263.5,406h-13c-0.3,0-0.5,0.2-0.5,0.5s0.2,0.5,0.5,0.5h13c0.3,0,0.5-0.2,0.5-0.5S-263.2,406-263.5,406z"/>\n    <path d="M-271.5,408h-7c-0.3,0-0.5,0.2-0.5,0.5s0.2,0.5,0.5,0.5h7c0.3,0,0.5-0.2,0.5-0.5S-271.2,408-271.5,408z"/>\n    <circle cx="-284" cy="392.5" r="0.5"/>\n    <circle cx="-284" cy="401.5" r="0.5"/>\n  </g>\n</svg>';
 
 }
 return __p
@@ -8578,28 +8685,6 @@ with (obj) {
 
  // icons/element-image ;
 __p += '\n<svg class="cs-custom-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="-290 382 30 30" enable-background="new -290 382 30 30" xml:space="preserve">\n  <g>\n    <path d="M-266.5,388h-17c-0.8,0-1.5,0.7-1.5,1.5v15c0,0.8,0.7,1.5,1.5,1.5h17c0.8,0,1.5-0.7,1.5-1.5v-15C-265,388.7-265.7,388-266.5,388z M-266,389.5v2.4c-0.7,0.7-1.6,1.1-2.5,1.1l0,0c-1.9,0-3.5-1.6-3.5-3.5c0-0.2,0-0.3,0.1-0.5h5.4C-266.2,389-266,389.2-266,389.5z M-283.5,389h10.5c0,0.2,0,0.3,0,0.5c0,2.5,2,4.5,4.5,4.5l0,0c0.9,0,1.8-0.3,2.5-0.8v6.1l-2.8-2.8c-0.4-0.4-1-0.4-1.4,0l-2.8,2.8l-4.8-4.8c-0.4-0.4-1-0.4-1.4,0l-4.8,4.8v-9.8C-284,389.2-283.8,389-283.5,389z M-284,404.5v-3.8l5.5-5.5l9.8,9.8h-14.8C-283.8,405-284,404.8-284,404.5z M-266.5,405h-0.8l-5-5l2.8-2.8l3.5,3.5v3.8C-266,404.8-266.2,405-266.5,405z"/>\n    <path d="M-265.5,386h-19c-1.4,0-2.5,1.1-2.5,2.5v17c0,1.4,1.1,2.5,2.5,2.5h19c1.4,0,2.5-1.1,2.5-2.5v-17C-263,387.1-264.1,386-265.5,386z M-264,405.5c0,0.8-0.7,1.5-1.5,1.5h-19c-0.8,0-1.5-0.7-1.5-1.5v-17c0-0.8,0.7-1.5,1.5-1.5h19c0.8,0,1.5,0.7,1.5,1.5V405.5z"/>\n  </g>\n</svg>';
-
-}
-return __p
-};templates['element-info-box']=function (obj) {
-obj || (obj = {});
-var __t, __p = '', __j = Array.prototype.join;
-function print() { __p += __j.call(arguments, '') }
-with (obj) {
-
- // icons/element-info-box ;
-__p += '\n<svg class="cs-custom-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="-290 382 30 30" enable-background="new -290 382 30 30" xml:space="preserve">\n  <g>\n    <path d="M-275,393.1c2.3,0,4.1-1.8,4.1-4.1s-1.8-4.1-4.1-4.1s-4.1,1.8-4.1,4.1S-277.3,393.1-275,393.1z M-276.5,390.5c0-0.8,0.7-1.5,1.5-1.5s1.5,0.7,1.5,1.5c0,0.6-0.3,1.1-0.8,1.3c-0.2,0.1-0.4,0.1-0.7,0.1s-0.5,0-0.7-0.1C-276.2,391.6-276.5,391.1-276.5,390.5z M-275,386.1c1.6,0,2.9,1.3,2.9,2.9c0,0.5-0.2,1-0.4,1.5c0-1.4-1.1-2.5-2.5-2.5s-2.5,1.1-2.5,2.5c-0.3-0.5-0.4-1-0.4-1.5C-277.9,387.4-276.6,386.1-275,386.1z"/>\n    <path d="M-280.5,396h11c0.3,0,0.5-0.2,0.5-0.5s-0.2-0.5-0.5-0.5h-11c-0.3,0-0.5,0.2-0.5,0.5S-280.8,396-280.5,396z"/>\n    <path d="M-281.5,400h15c0.3,0,0.5-0.2,0.5-0.5s-0.2-0.5-0.5-0.5h-15c-0.3,0-0.5,0.2-0.5,0.5S-281.8,400-281.5,400z"/>\n    <path d="M-266.5,401h-17c-0.3,0-0.5,0.2-0.5,0.5s0.2,0.5,0.5,0.5h17c0.3,0,0.5-0.2,0.5-0.5S-266.2,401-266.5,401z"/>\n    <path d="M-266.5,403h-17c-0.3,0-0.5,0.2-0.5,0.5s0.2,0.5,0.5,0.5h17c0.3,0,0.5-0.2,0.5-0.5S-266.2,403-266.5,403z"/>\n    <path d="M-266.5,405h-17c-0.3,0-0.5,0.2-0.5,0.5s0.2,0.5,0.5,0.5h17c0.3,0,0.5-0.2,0.5-0.5S-266.2,405-266.5,405z"/>\n    <path d="M-270.5,407h-13c-0.3,0-0.5,0.2-0.5,0.5s0.2,0.5,0.5,0.5h13c0.3,0,0.5-0.2,0.5-0.5S-270.2,407-270.5,407z"/>\n  </g>\n</svg>';
-
-}
-return __p
-};templates['element-info-list']=function (obj) {
-obj || (obj = {});
-var __t, __p = '', __j = Array.prototype.join;
-function print() { __p += __j.call(arguments, '') }
-with (obj) {
-
- // icons/element-info-list ;
-__p += '\n<svg class="cs-custom-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="-290 382 30 30" enable-background="new -290 382 30 30" xml:space="preserve">\n  <g>\n    <path d="M-284,385c-1.7,0-3,1.3-3,3c0,1.5,1.1,2.8,2.6,3c0.1,0,0.3,0,0.4,0c1.7,0,3-1.3,3-3S-282.3,385-284,385z M-285,389c0-0.6,0.4-1,1-1s1,0.4,1,1s-0.4,1-1,1S-285,389.6-285,389z M-282.1,388.5c-0.2-0.9-1-1.5-1.9-1.5s-1.7,0.6-1.9,1.5c-0.1-0.2-0.1-0.3-0.1-0.5c0-1.1,0.9-2,2-2s2,0.9,2,2C-282,388.2-282,388.3-282.1,388.5z"/>\n    <path d="M-284,394c-1.7,0-3,1.3-3,3c0,1.5,1.1,2.8,2.6,3c0.1,0,0.3,0,0.4,0c1.7,0,3-1.3,3-3S-282.3,394-284,394z M-285,398c0-0.6,0.4-1,1-1s1,0.4,1,1s-0.4,1-1,1S-285,398.6-285,398z M-282.1,397.5c-0.2-0.9-1-1.5-1.9-1.5s-1.7,0.6-1.9,1.5c-0.1-0.2-0.1-0.3-0.1-0.5c0-1.1,0.9-2,2-2s2,0.9,2,2C-282,397.2-282,397.3-282.1,397.5z"/>\n    <path d="M-284,403c-1.7,0-3,1.3-3,3c0,1.5,1.1,2.8,2.6,3c0.1,0,0.3,0,0.4,0c1.7,0,3-1.3,3-3S-282.3,403-284,403z M-285,407c0-0.6,0.4-1,1-1s1,0.4,1,1s-0.4,1-1,1S-285,407.6-285,407z M-282.1,406.5c-0.2-0.9-1-1.5-1.9-1.5s-1.7,0.6-1.9,1.5c-0.1-0.2-0.1-0.3-0.1-0.5c0-1.1,0.9-2,2-2s2,0.9,2,2C-282,406.2-282,406.3-282.1,406.5z"/>\n    <path d="M-278.5,386h5c0.3,0,0.5-0.2,0.5-0.5s-0.2-0.5-0.5-0.5h-5c-0.3,0-0.5,0.2-0.5,0.5S-278.8,386-278.5,386z"/>\n    <path d="M-277,388.5c0,0.3,0.2,0.5,0.5,0.5h13c0.3,0,0.5-0.2,0.5-0.5s-0.2-0.5-0.5-0.5h-13C-276.8,388-277,388.2-277,388.5z"/>\n    <path d="M-278.5,391h12c0.3,0,0.5-0.2,0.5-0.5s-0.2-0.5-0.5-0.5h-12c-0.3,0-0.5,0.2-0.5,0.5S-278.8,391-278.5,391z"/>\n    <path d="M-278.5,395h4c0.3,0,0.5-0.2,0.5-0.5s-0.2-0.5-0.5-0.5h-4c-0.3,0-0.5,0.2-0.5,0.5S-278.8,395-278.5,395z"/>\n    <path d="M-263.5,397h-13c-0.3,0-0.5,0.2-0.5,0.5s0.2,0.5,0.5,0.5h13c0.3,0,0.5-0.2,0.5-0.5S-263.2,397-263.5,397z"/>\n    <path d="M-278.5,400h14c0.3,0,0.5-0.2,0.5-0.5s-0.2-0.5-0.5-0.5h-14c-0.3,0-0.5,0.2-0.5,0.5S-278.8,400-278.5,400z"/>\n    <path d="M-278.5,404h7c0.3,0,0.5-0.2,0.5-0.5s-0.2-0.5-0.5-0.5h-7c-0.3,0-0.5,0.2-0.5,0.5S-278.8,404-278.5,404z"/>\n    <path d="M-263.5,406h-13c-0.3,0-0.5,0.2-0.5,0.5s0.2,0.5,0.5,0.5h13c0.3,0,0.5-0.2,0.5-0.5S-263.2,406-263.5,406z"/>\n    <path d="M-271.5,408h-7c-0.3,0-0.5,0.2-0.5,0.5s0.2,0.5,0.5,0.5h7c0.3,0,0.5-0.2,0.5-0.5S-271.2,408-271.5,408z"/>\n    <circle cx="-284" cy="392.5" r="0.5"/>\n    <circle cx="-284" cy="401.5" r="0.5"/>\n  </g>\n</svg>';
 
 }
 return __p
@@ -9000,7 +9085,7 @@ __p += '\n<svg class="cs-custom-icon" version="1.1" xmlns="http://www.w3.org/200
 }
 return __p
 };module.exports=templates;
-},{}],135:[function(require,module,exports){
+},{}],136:[function(require,module,exports){
 /*! Color.js - v0.9.11 - 2013-08-09
 * https://github.com/Automattic/Color.js
 * Copyright (c) 2013 Matt Wiebe; Licensed GPLv2 */
@@ -9593,7 +9678,7 @@ return __p
 		global.Color = Color;
 
 }(this));
-},{}],136:[function(require,module,exports){
+},{}],137:[function(require,module,exports){
 /*
  * HTML5 Sortable jQuery Plugin
  * https://github.com/voidberg/html5sortable
@@ -9734,7 +9819,7 @@ return __p
     });
   };
 })(jQuery);
-},{}],137:[function(require,module,exports){
+},{}],138:[function(require,module,exports){
 // Generated by CoffeeScript 1.9.2
 
 /*
@@ -9964,7 +10049,7 @@ Copyright 2015 Kevin Sylvestre
   };
 
 }).call(this);
-},{}],138:[function(require,module,exports){
+},{}],139:[function(require,module,exports){
 //https://github.com/kmewhort/pointer_events_polyfill
 /*
  * Pointer Events Polyfill: Adds support for the style attribute "pointer-events: none" to browsers without this feature (namely, IE).
@@ -10034,7 +10119,7 @@ PointerEventsPolyfill.prototype.register_mouse_events = function(){
         return true;
     });
 };
-},{}],139:[function(require,module,exports){
+},{}],140:[function(require,module,exports){
 // Modified to fix transparent pixels being calculated as black (https://github.com/briangonzalez/rgbaster.js/issues/8)
 ;(function(window, undefined){
 
@@ -10158,7 +10243,7 @@ PointerEventsPolyfill.prototype.register_mouse_events = function(){
   window.RGBaster = window.RGBaster || RGBaster;
 
 })(window);
-},{}],140:[function(require,module,exports){
+},{}],141:[function(require,module,exports){
 /*!
  * string_score.js: String Scoring Algorithm 0.1.22
  *
@@ -10263,7 +10348,7 @@ String.prototype.score = function (word, fuzziness) {
 
   return finalScore;
 };
-},{}],141:[function(require,module,exports){
+},{}],142:[function(require,module,exports){
 // Backbone.BabySitter
 // -------------------
 // v0.1.6
@@ -10455,7 +10540,7 @@ String.prototype.score = function (word, fuzziness) {
 
 }));
 
-},{"backbone":"backbone","underscore":"underscore"}],142:[function(require,module,exports){
+},{"backbone":"backbone","underscore":"underscore"}],143:[function(require,module,exports){
 // MarionetteJS (Backbone.Marionette)
 // ----------------------------------
 // v2.4.1
@@ -13818,7 +13903,7 @@ String.prototype.score = function (word, fuzziness) {
   return Marionette;
 }));
 
-},{"backbone":"backbone","backbone.babysitter":141,"backbone.wreqr":145,"underscore":"underscore"}],143:[function(require,module,exports){
+},{"backbone":"backbone","backbone.babysitter":142,"backbone.wreqr":146,"underscore":"underscore"}],144:[function(require,module,exports){
 // Backbone.Radio v0.9.0
 (function(root, factory) {
   if (typeof define === 'function' && define.amd) {
@@ -14246,7 +14331,7 @@ String.prototype.score = function (word, fuzziness) {
   return Radio;
 }));
 
-},{"backbone":"backbone","underscore":"underscore"}],144:[function(require,module,exports){
+},{"backbone":"backbone","underscore":"underscore"}],145:[function(require,module,exports){
 // Backbone.Stickit v0.9.0, MIT Licensed
 // Copyright (c) 2012-2015 The New York Times, CMS Group, Matthew DeLambo <delambo@gmail.com>
 
@@ -14940,9 +15025,9 @@ String.prototype.score = function (word, fuzziness) {
 
 }));
 
-},{"backbone":"backbone","underscore":"underscore"}],145:[function(require,module,exports){
+},{"backbone":"backbone","underscore":"underscore"}],146:[function(require,module,exports){
 
-},{}],146:[function(require,module,exports){
+},{}],147:[function(require,module,exports){
 //! moment.js
 //! version : 2.10.2
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
@@ -18026,7 +18111,7 @@ String.prototype.score = function (word, fuzziness) {
     return _moment;
 
 }));
-},{}],147:[function(require,module,exports){
+},{}],148:[function(require,module,exports){
 /* NProgress, (c) 2013, 2014 Rico Sta. Cruz - http://ricostacruz.com/nprogress
  * @license MIT */
 
@@ -18504,7 +18589,7 @@ String.prototype.score = function (word, fuzziness) {
 });
 
 
-},{}],148:[function(require,module,exports){
+},{}],149:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -18512,7 +18597,7 @@ String.prototype.score = function (word, fuzziness) {
 
 module.exports = require('./src/js/adaptor/jquery');
 
-},{"./src/js/adaptor/jquery":149}],149:[function(require,module,exports){
+},{"./src/js/adaptor/jquery":150}],150:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -18560,7 +18645,7 @@ if (typeof define === 'function' && define.amd) {
 
 module.exports = mountJQuery;
 
-},{"../main":155,"../plugin/instances":166}],150:[function(require,module,exports){
+},{"../main":156,"../plugin/instances":167}],151:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -18607,7 +18692,7 @@ exports.list = function (element) {
   }
 };
 
-},{}],151:[function(require,module,exports){
+},{}],152:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -18686,7 +18771,7 @@ exports.remove = function (element) {
   }
 };
 
-},{}],152:[function(require,module,exports){
+},{}],153:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -18762,7 +18847,7 @@ EventManager.prototype.once = function (element, eventName, handler) {
 
 module.exports = EventManager;
 
-},{}],153:[function(require,module,exports){
+},{}],154:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -18780,7 +18865,7 @@ module.exports = (function () {
   };
 })();
 
-},{}],154:[function(require,module,exports){
+},{}],155:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -18866,7 +18951,7 @@ exports.env = {
   supportsIePointer: window.navigator.msMaxTouchPoints !== null
 };
 
-},{"./class":150,"./dom":151}],155:[function(require,module,exports){
+},{"./class":151,"./dom":152}],156:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -18882,7 +18967,7 @@ module.exports = {
   destroy: destroy
 };
 
-},{"./plugin/destroy":157,"./plugin/initialize":165,"./plugin/update":168}],156:[function(require,module,exports){
+},{"./plugin/destroy":158,"./plugin/initialize":166,"./plugin/update":169}],157:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -18902,7 +18987,7 @@ module.exports = {
   scrollYMarginOffset: 0
 };
 
-},{}],157:[function(require,module,exports){
+},{}],158:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -18925,7 +19010,7 @@ module.exports = function (element) {
   instances.remove(element);
 };
 
-},{"../lib/dom":151,"../lib/helper":154,"./instances":166}],158:[function(require,module,exports){
+},{"../lib/dom":152,"../lib/helper":155,"./instances":167}],159:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -18985,7 +19070,7 @@ module.exports = function (element) {
   bindClickRailHandler(element, i);
 };
 
-},{"../../lib/helper":154,"../instances":166,"../update-geometry":167}],159:[function(require,module,exports){
+},{"../../lib/helper":155,"../instances":167,"../update-geometry":168}],160:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -19092,7 +19177,7 @@ module.exports = function (element) {
   bindMouseScrollYHandler(element, i);
 };
 
-},{"../../lib/dom":151,"../../lib/helper":154,"../instances":166,"../update-geometry":167}],160:[function(require,module,exports){
+},{"../../lib/dom":152,"../../lib/helper":155,"../instances":167,"../update-geometry":168}],161:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -19212,7 +19297,7 @@ module.exports = function (element) {
   bindKeyboardHandler(element, i);
 };
 
-},{"../../lib/helper":154,"../instances":166,"../update-geometry":167}],161:[function(require,module,exports){
+},{"../../lib/helper":155,"../instances":167,"../update-geometry":168}],162:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -19358,7 +19443,7 @@ module.exports = function (element) {
   bindMouseWheelHandler(element, i);
 };
 
-},{"../../lib/helper":154,"../instances":166,"../update-geometry":167}],162:[function(require,module,exports){
+},{"../../lib/helper":155,"../instances":167,"../update-geometry":168}],163:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -19378,7 +19463,7 @@ module.exports = function (element) {
   bindNativeScrollHandler(element, i);
 };
 
-},{"../instances":166,"../update-geometry":167}],163:[function(require,module,exports){
+},{"../instances":167,"../update-geometry":168}],164:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -19491,7 +19576,7 @@ module.exports = function (element) {
   bindSelectionHandler(element, i);
 };
 
-},{"../../lib/helper":154,"../instances":166,"../update-geometry":167}],164:[function(require,module,exports){
+},{"../../lib/helper":155,"../instances":167,"../update-geometry":168}],165:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -19663,7 +19748,7 @@ module.exports = function (element, supportsTouch, supportsIePointer) {
   bindTouchHandler(element, i, supportsTouch, supportsIePointer);
 };
 
-},{"../instances":166,"../update-geometry":167}],165:[function(require,module,exports){
+},{"../instances":167,"../update-geometry":168}],166:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -19709,7 +19794,7 @@ module.exports = function (element, userSettings) {
   updateGeometry(element);
 };
 
-},{"../lib/class":150,"../lib/helper":154,"./handler/click-rail":158,"./handler/drag-scrollbar":159,"./handler/keyboard":160,"./handler/mouse-wheel":161,"./handler/native-scroll":162,"./handler/selection":163,"./handler/touch":164,"./instances":166,"./update-geometry":167}],166:[function(require,module,exports){
+},{"../lib/class":151,"../lib/helper":155,"./handler/click-rail":159,"./handler/drag-scrollbar":160,"./handler/keyboard":161,"./handler/mouse-wheel":162,"./handler/native-scroll":163,"./handler/selection":164,"./handler/touch":165,"./instances":167,"./update-geometry":168}],167:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -19809,7 +19894,7 @@ exports.get = function (element) {
   return instances[getId(element)];
 };
 
-},{"../lib/dom":151,"../lib/event-manager":152,"../lib/guid":153,"../lib/helper":154,"./default-setting":156}],167:[function(require,module,exports){
+},{"../lib/dom":152,"../lib/event-manager":153,"../lib/guid":154,"../lib/helper":155,"./default-setting":157}],168:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -19918,7 +20003,7 @@ module.exports = function (element) {
   cls[i.scrollbarYActive ? 'add' : 'remove'](element, 'ps-active-y');
 };
 
-},{"../lib/class":150,"../lib/dom":151,"../lib/helper":154,"./instances":166}],168:[function(require,module,exports){
+},{"../lib/class":151,"../lib/dom":152,"../lib/helper":155,"./instances":167}],169:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -19948,7 +20033,7 @@ module.exports = function (element) {
   d.css(i.scrollbarYRail, 'display', '');
 };
 
-},{"../lib/dom":151,"../lib/helper":154,"./instances":166,"./update-geometry":167}],"backbone":[function(require,module,exports){
+},{"../lib/dom":152,"../lib/helper":155,"./instances":167,"./update-geometry":168}],"backbone":[function(require,module,exports){
 module.exports = window.Backbone;
 },{}],"jquery":[function(require,module,exports){
 module.exports = window.jQuery;
