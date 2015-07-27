@@ -204,7 +204,15 @@
 
     <form action="" method="post" enctype="multipart/form-data">
 
-        <h2><?php _e('Responsive Menu Options', 'responsive-menu'); ?></h2>
+    <input 
+        type="submit" 
+        class="button button-primary" 
+        name="RMSubmit" 
+        value="<?php _e('Update Responsive Menu Options', 'responsive-menu'); ?>"
+        style="display: none;"
+        />
+        
+        <h2><?php _e('Responsive Menu Options', 'responsive-menu'); ?> <a target="_blank" class="button" href="http://responsive.menu/pricing"><?php _e( 'Go Pro - Upgrade now' ); ?></a></h2>
 
         <?php
         if ($status = RM_Status::get())
@@ -216,7 +224,9 @@
                 <li class="tab active" data-show-tab=".setting">Setting</li>							
                 <li class="tab" data-show-tab=".look-and-feel">Look & Feel</li>
                 <li class="tab" data-show-tab=".advanced-setting">Advanced Setting</li>
-                <li class="tab" data-show-tab=".import-export">Import/Export</li>			
+                <li class="tab" data-show-tab=".import-export">Import/Export</li>		
+                <li class="tab" data-show-tab=".single-menu">Single Menu</li>	
+                <li class="tab" data-show-tab=".themes">Header Bar & Themes</li>		
             </ul>	
         </nav>	
 
@@ -224,39 +234,9 @@
             <h3><?php _e('Meta Tag Check', 'responsive-menu'); ?></h3>
 
             <table>
-
-                <tr>
-                    <td><h4><?php _e('Viewport Meta Tag Check', 'responsive-menu'); ?>
-
-                            <?php if ($portTag = self::checkViewPortTag(get_bloginfo('url'))) : ?>
-
-                                <span class='success'> - <?php _e('Below Viewport Meta Tag Found', 'responsive-menu'); ?></span>
-
-                                <?php
-                            else :
-
-                                $portTag = null;
-
-                            endif;
-                            ?>
-
-                        </h4> 
-                    </td>
-                </tr>
-                <tr><td>
-                        <?php if ($portTag) : ?>
-
-                            &lt;meta name='viewport' content='<?php echo $portTag; ?>' /&gt;
-
-                        <?php else : ?>
-
-                            <span class='error'><?php _e('Viewport Meta Tag Not Found', 'responsive-menu'); ?></span>
-
-                        <?php endif; ?>
-                    </td>
-                <tr>
+				<tr>
                     <td>
-                        <h4><?php _e('Recommended Metaport Tag', 'responsive-menu'); ?></h4>
+                        <h4><?php _e('Recommended Metaport Tag', 'responsive-menu-pro'); ?></h4>
                     </td>
                 </tr>
                 <tr>
@@ -268,8 +248,8 @@
                 <tr>
                     <td>                            
                         <h4 class="divider">
-                            <?php _e('Note', 'responsive-menu'); ?>: 
-                            <?php _e('This is only a reference guide and is not critical if you are seeing errors, these can usually be ignored', 'responsive-menu'); ?>.
+                            <?php _e('Note', 'responsive-menu-pro'); ?>: 
+                            <?php _e('This is only a reference guide and yours may vary slightly', 'responsive-menu-pro'); ?>.
                         </h4>
                     </td>
                 </tr>
@@ -900,9 +880,10 @@
             <tr>
                 <td colspan="2">
                     <h4><?php _e('You can find a list of Geometric HTML shape codes below', 'responsive-menu'); ?>:</h4> 
-                    <a target="_blank" href="http://en.wikipedia.org/wiki/Geometric_Shapes">http://en.wikipedia.org/wiki/Geometric_Shapes</a>
+                    <a target="_blank" href="http://responsive.menu/html-geometric-shapes">http://responsive.menu/html-geometric-shapes</a>
                 </td>
-            <tr>
+           </tr>
+           <tr>
                 <td>
 
                     <h4><?php _e('Active Image', 'responsive-menu'); ?></h4> 
@@ -1389,20 +1370,6 @@
 
         <h3><?php _e('Animation Settings', 'responsive-menu'); ?></h3>
 
-        <?php if ($data['RMAnim'] == 'push' && $portTag != 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no') : ?>
-
-            <span class='error'>
-                <?php _e('Warning: The Push Animation requires you to place the following meta tag in your site header', 'responsive-menu'); ?>:
-            </span>
-
-            <br />
-
-            <span class='success'>
-                &lt;meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" /&gt;
-            </span>
-
-        <?php endif; ?>
-
         <table>
             <tr>
                 <td>
@@ -1848,46 +1815,104 @@
 
             </table>
     </div>
-    <div class="import-export">
+    <div class="import-export">   	
+    	
         <h3>Import Options</h3>
-
-
 
         <table>
 
             <tr>
 
                 <td>
-
-                    <input 
-                        type="submit" 
-                        class="button" 
-                        name="RMExport" 
-                        value="<?php _e('Export Options', 'responsive-menu'); ?>"
-                        />
-
                     <br />
 
                     <input
                         type="file" 
                         class="button file" 
                         name="RMImportFile" 
-                        value="<?php _e('Import File', 'responsive-menu'); ?>"
+                        value="<?php _e('Import File', 'responsive-menu-pro'); ?>"
                         />
 
                     <input 
                         type="submit" 
                         class="button" 
                         name="RMImport" 
-                        value="<?php _e('Import Options', 'responsive-menu'); ?>"
+                        value="<?php _e('Import Options From XML', 'responsive-menu-pro'); ?>"
                         />
                 </td>
 
             </tr>
 
         </table>
+                
+        <h3>Export Options</h3>
+
+        <table>
+
+            <tr>
+                <td>
+                	<br />
+                    <input 
+                        type="submit" 
+                        class="button" 
+                        name="RMExport" 
+                        value="<?php _e('Export Current Options', 'responsive-menu-pro'); ?>"
+                        />
+                </td>
+            </tr>
+        </table>
+
+        <h3>Reset to defaults</h3>
+
+        <table>
+
+            <tr>
+
+				<td>
+                    <h4 class="divider">
+                        <?php _e('Note'); ?>: 
+                        <?php _e('Please be warned this will reset all your current settings, please export your current files first', 'responsive-menu-pro'); ?>.
+                    </h4>
+                    <input 
+                        type="submit" 
+                        class="button" 
+                        name="RMReset" 
+                        value="<?php _e('Reset ALL Current Options', 'responsive-menu' ); ?>"
+                        />
+					
+                </td>
+
+            </tr>
+
+        </table>
+        
     </div>
 
+	<div class="single-menu">
+	
+		<table>
+			<tr>
+				<td><br /><?php _e( 'This feature is only available in the pro version, please click below to upgrade', 'responsive-menu-pro' ); ?>:</td>
+			</tr>
+			<tr>
+				<td><br /><a target="_blank" class="button" href="http://responsive.menu/pricing/"><?php _e( 'Upgrade now' ); ?></a></td>
+			</tr>
+		</table>		
+		
+	</div>
+	
+	<div class="themes">
+	
+		<table>
+			<tr>
+				<td><br /><?php _e( 'This feature is only available in the pro version, please click below to upgrade', 'responsive-menu-pro' ); ?>:</td>
+			</tr>
+			<tr>
+				<td><br /><a target="_blank" class="button" href="http://responsive.menu/pricing/"><?php _e( 'Upgrade now' ); ?></a></td>
+			</tr>
+		</table>		
+		
+	</div>
 
 
     <br /><br />

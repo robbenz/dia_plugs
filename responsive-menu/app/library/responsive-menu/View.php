@@ -23,32 +23,6 @@ class RM_View {
     
     
     /**
-     * Function to Check the current View Port Tag on the site
-     *
-     * @return string
-     * @added 2.0
-     */
-    
-    static function checkViewPortTag( $url ) {
-
-        
-        if( $metaTags = @get_meta_tags( $url ) ) :
-
-            if ( isset( $metaTags['viewport'] ) )
-                return $metaTags['viewport'];
-            else 
-                return false;
-        
-        endif;
-        
-        
-        return false;
-        
-        
-    }
-    
-    
-    /**
      * Function to format and display the status bar in the admin pages
      *
      * @param  array  $status
