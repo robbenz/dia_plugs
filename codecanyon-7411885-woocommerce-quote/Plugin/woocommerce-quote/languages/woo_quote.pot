@@ -1,0 +1,585 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WooCommerce Quote\n"
+"POT-Creation-Date: 2014-04-02 22:03+0300\n"
+"PO-Revision-Date: 2014-04-02 22:03+0300\n"
+"Last-Translator: \n"
+"Language-Team: RightPress <info@rightpress.net>\n"
+"Language: en_EN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+"X-Poedit-KeywordsList: __;_e;_c;__ngettext:1,2;_n:1,2;_nc:1,2;"
+"__ngettext_noop:1,2;_n_noop:1,2;_x:1,2c;_nx:1,2,4c;_nx_noop:1,2,3c;_ex:1,2c;"
+"esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"Plural-Forms: nplurals=2; plural=n == 1 ? 0 : 1;\n"
+"X-Poedit-SearchPath-0: /var/www/latest/wp-content/plugins/woocommerce-quote\n"
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/woocommerce-quote.php:223
+msgid "WooCommerce Quotes"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/woocommerce-quote.php:224
+msgid "Quotes"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/woocommerce-quote.php:245
+msgid ""
+"Image processing library not found on your server.<br>You must have either "
+"GD or Imagick extension enabled on your server for this module to work "
+"correctly."
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/woocommerce-quote.php:500
+msgid "Open Library"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/woocommerce-quote.php:604
+msgid "Your settings have been saved."
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/woocommerce-quote.php:610
+msgid "Reverted to a previous value."
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/woocommerce-quote.php:613
+msgid "must be numeric"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/woocommerce-quote.php:614
+msgid "must be either 0 or 1"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/woocommerce-quote.php:615
+msgid "is not allowed"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/woocommerce-quote.php:616
+msgid "is not a valid email address"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/woocommerce-quote.php:617
+msgid "is not a valid URL"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/woocommerce-quote.php:618
+msgid "is not a valid text string"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/woocommerce-quote.php:624
+msgid "Value of"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/woocommerce-quote.php:738
+msgid "Support"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/woocommerce-quote.php:740
+msgid "Settings"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:12
+msgid "Quote Settings"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:16
+msgid "General Settings"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:19
+msgid "Enable quotes"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:26
+msgid ""
+"<p>Lets customers generate a PDF quote based on their cart contents.</p>"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:29
+msgid "Download button position"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:37
+msgid "Above cart"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:38
+msgid "Below cart"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:39
+msgid "Above cart contents"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:40
+msgid "Below cart contents"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:41
+msgid "Above cart table"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:42
+msgid "Below cart table"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:43
+msgid "Next to checkout button"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:45
+msgid ""
+"<p>Choose position on the cart page where quote download button should "
+"appear. Not all of positions will work with all themes.</p>"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:48
+msgid "Next quote number"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:59
+msgid "Advanced Settings"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:62
+msgid "Display product ID/SKU"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:70
+msgid "Do not display"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:71
+msgid "Display product ID (WP post ID)"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:72
+msgid "Display SKU"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:74
+msgid ""
+"<p>If enabled, product ID/SKU will be displayed for each product just before "
+"its name.</p>"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:77
+msgid "Display product category"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:84
+msgid ""
+"<p>Controls whether or not to display product category below each product on "
+"the quote.</p> <p>If there are multiple categories, they will be displayed "
+"in one line separated by commas.</p>"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:87
+msgid "Display short description"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:94
+msgid ""
+"<p>Controls whether or not to display product short description below each "
+"product on the quote.</p> <p>This extension attempts to convert HTML to text "
+"but this feature is experimental. Use plain text to be sure that the final "
+"result looks as expected.</p>"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:97
+msgid "Display product images"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:104
+msgid ""
+"<p>Controls whether or not to display product images below product name "
+"whenever available.</p> <p>This feature is experimental - use at your own "
+"risk.</p>"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:107
+msgid "Display currency symbol"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:114
+msgid ""
+"<p>If enabled, currency symbol (e.g. $) will be displayed next to every "
+"amount on the quote. Currency code (e.g. USD) is displayed next to total "
+"amount in any way.</p>"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:119
+msgid "Tax Settings"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:122
+msgid "Display tax rows"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:130
+msgid "When tax is not displayed inline"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:131
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:146
+msgid "Always"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:132
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:147
+msgid "Never"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:134
+msgid ""
+"<p>If enabled, all applicable taxes will be listed just above (if Subtotal "
+"is exclusive of tax) or below (if Subtotal is inclusive of tax) Total row.</"
+"p>"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:137
+msgid "Display tax inline"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:145
+msgid "When different rates are present"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:149
+msgid ""
+"<p>You may need to display net amount, tax rate and tax amount individually "
+"for each line item.</p> <p>This is useful when different rates of the same "
+"tax are used for different items on the same quote, e.g. reduced VAT rate is "
+"applied to specific group of products.</p>"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:152
+msgid "Display amounts inclusive of tax"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:159
+msgid ""
+"<p>If enabled, line item price, line subtotal and subtotal will be displayed "
+"inclusive of tax. This plugin always overrides related WooCommerce settings."
+"</p><p>This setting is ignored when tax is displayed inline.</p>"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:162
+msgid "Display total excl. tax row"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:169
+msgid ""
+"<p>If enabled, additional line will be added to the totals block that "
+"displays total exclusive of tax.</p>"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:176
+msgid "Seller & Buyer"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:180
+msgid "Seller Block"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:183
+msgid "Logo image"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:190
+msgid "<p>Enter URL or select image from Media Library.</p>"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:193
+msgid "Logo resize factor"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:200
+msgid ""
+"<p>In percent. Increase this number if you want to make your logo larger on "
+"the quote and vice versa.</p>"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:203
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:236
+msgid "Block title"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:205
+msgid "Seller"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:212
+msgid "Company name"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:221
+msgid "Company details"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:228
+msgid ""
+"<p>Use this field to set up your company details, including address, company "
+"registration number, tax code etc.</p>"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:233
+msgid "Buyer Block"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:238
+msgid "Buyer"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:245
+msgid "Buyer details layout"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:252
+#, php-format
+msgid ""
+"<p>Use this field to set up the layout of the buyer details block.</p> "
+"<p>The following macros are available: %s</p> <p>You can use custom fields "
+"in the same way, e.g. {{my_custom_field_key}}.</p> <p>Do not include buyer "
+"first name, last name and company name - these fields are displayed "
+"automatically.</p>"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:255
+msgid "Remove lines with empty values"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:262
+msgid ""
+"<p>If enabled, all lines that contain macros with empty values only will be "
+"removed.</p>"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:269
+msgid "Content Blocks"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:273
+msgid "Page footer"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:276
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:299
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:322
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:345
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:368
+msgid "Content"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:287
+msgid "Custom Block #1"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:290
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:313
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:336
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:359
+msgid "Title"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:310
+msgid "Custom Block #2"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:333
+msgid "Custom Block #3"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:356
+msgid "Custom Block #4"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:381
+msgid "Localization"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:385
+msgid "Date & Time"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:388
+msgid "Date format"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:396
+msgid "mm/dd/yy"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:397
+msgid "mm/dd/yyyy"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:398
+msgid "dd/mm/yy"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:399
+msgid "dd/mm/yyyy"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:400
+msgid "yy-mm-dd"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:401
+msgid "yyyy-mm-dd"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:402
+msgid "Month dd, yyyy"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:403
+msgid "dd.mm.yyyy"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:404
+msgid "dd-mm-yyyy"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:410
+msgid "Field Labels"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:413
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:415
+msgid "Quote"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:422
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:424
+msgid "Quote Date"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:431
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:433
+msgid "Download Quote"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:440
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:442
+msgid "Quote Amount"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:449
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:451
+msgid "Product"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:458
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:460
+msgid "Price"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:467
+msgid "Quantity"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:469
+msgid "Qty."
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:476
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:478
+msgid "Net"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:483
+msgid ""
+"<p>Used as a column name for a line net amount column when different tax "
+"rates are used for different items.</p>"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:486
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:488
+msgid "Tax %"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:493
+msgid ""
+"<p>Used as a column name for a line tax rate column when different tax rates "
+"are used for different items.</p>"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:496
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:498
+msgid "Tax"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:503
+msgid ""
+"<p>Used as a column name for a line tax total column when different tax "
+"rates are used for different items.</p>"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:506
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:508
+msgid "Line Total"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:515
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:517
+msgid "Subtotal"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:524
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:526
+msgid "Cart Discount"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:533
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:535
+msgid "Total"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:542
+msgid "Total Excluding Tax"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:544
+msgid "Total Excl. Tax"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:551
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:553
+msgid "Category"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:560
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:562
+msgid "Description"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:569
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:571
+msgid "Page"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:578
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:580
+msgid "(additional page)"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:587
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:589
+msgid "Not Specified"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:596
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:598
+msgid "quote_"
+msgstr ""
+
+#: /var/www/latest/wp-content/plugins/woocommerce-quote/includes/woo-quote-plugin-structure.inc.php:603
+msgid ""
+"<p>Value of this field is used as a file name prefix for quotes (e.g. "
+"quote_123.pdf).</p>"
+msgstr ""
