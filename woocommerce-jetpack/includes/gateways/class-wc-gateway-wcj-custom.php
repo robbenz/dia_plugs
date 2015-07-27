@@ -4,10 +4,8 @@
  *
  * The WooCommerce Jetpack Custom Payment Gateway class.
  *
- * @class		WC_Gateway_WCJ_Custom
- * @version		2.2.0
- * @category	Class
- * @author 		Algoritmika Ltd.
+ * @version 2.2.3
+ * @author  Algoritmika Ltd.
  */
 
 add_action( 'plugins_loaded', 'init_wc_gateway_wcj_custom_class' );
@@ -357,9 +355,21 @@ function init_wc_gateway_wcj_custom_class() {
 	class WC_Gateway_WCJ_Custom_10 extends WC_Gateway_WCJ_Custom_Template { public function __construct() { $this->init( 10 ); } }
 	function add_wc_gateway_wcj_custom_classes( $methods ) {
 		$methods[] = 'WC_Gateway_WCJ_Custom'; // required
-		for ( $i = 2; $i <= apply_filters( 'wcj_get_option_filter', 0, get_option( 'wcj_custom_payment_gateways_number' ) ); $i++ )
+		$the_number = apply_filters( 'wcj_get_option_filter', 0, get_option( 'wcj_custom_payment_gateways_number' ) );
+		if ( $the_number > 10 ) $the_number = 10;
+		for ( $i = 2; $i <= $the_number; $i++ )
 			$methods[] = 'WC_Gateway_WCJ_Custom_' . $i;
 		return $methods;
 	}
 	add_filter( 'woocommerce_payment_gateways', 'add_wc_gateway_wcj_custom_classes' );
+
+	/* function add_wc_gateway_wcj_custom_classes( $methods ) {
+		for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 0, get_option( 'wcj_custom_payment_gateways_number' ) ); $i++ ) {
+			$class_name = ( 1 === $i ) ? 'WC_Gateway_WCJ_Custom' : 'WC_Gateway_WCJ_Custom_' . $i;
+			eval( 'class ' . $class_name . ' extends WC_Gateway_WCJ_Custom_Template { public function __construct() { $this->init( ' . $i . ' );  } }' );
+			$methods[] = $class_name;
+		}
+		return $methods;
+	}
+	add_filter( 'woocommerce_payment_gateways', 'add_wc_gateway_wcj_custom_classes' ); */
 }

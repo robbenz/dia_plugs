@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Settings class.
  *
- * @version 2.2.0
+ * @version 2.2.3
  * @since   1.0.0
  * @author  Algoritmika Ltd.
  */
@@ -31,8 +31,10 @@ class WC_Settings_Jetpack extends WC_Settings_Page {
 		add_action( 'woocommerce_sections_' . $this->id,      array( $this, 'output_cats_submenu' ) );
 		add_action( 'woocommerce_sections_' . $this->id,      array( $this, 'output_sections_submenu' ) );
 
-		//add_action( 'woocommerce_admin_field_save_button',    array( $this, 'output_save_settings_button' ) );
+//		add_action( 'woocommerce_admin_field_save_button',    array( $this, 'output_save_settings_button' ) );
 		add_action( 'woocommerce_admin_field_custom_number',  array( $this, 'output_custom_number' ) );
+
+		add_action( 'woocommerce_admin_field_module_tools',   array( $this, 'output_module_tools' ) );
 	}
 
     /**
@@ -48,6 +50,23 @@ class WC_Settings_Jetpack extends WC_Settings_Page {
 			</td>
 		</tr>
 		<?php
+	}
+
+	/**
+	 * output_module_tools.
+	 *
+	 * @version 2.2.3
+	 * @since   2.2.3
+	 */
+	function output_module_tools( $value ) {
+		?><tr valign="top">
+			<th scope="row" class="titledesc">
+				<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
+			</th>
+			<td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
+				<?php if ( isset( $_GET['section'] ) ) do_action( 'wcj_module_tools_' . $_GET['section'] ); ?>
+			</td>
+		</tr><?php
 	}
 
     /**
@@ -148,7 +167,7 @@ class WC_Settings_Jetpack extends WC_Settings_Page {
 			return;
 		}
 
-		echo '<ul class="subsubsub" style="text-transform: uppercase !important;">';
+		echo '<ul class="subsubsub" style="text-transform: uppercase !important; font-weight: bold;">';
 
 		$array_keys = array_keys( $this->cats );
 
@@ -362,14 +381,22 @@ class WC_Settings_Jetpack extends WC_Settings_Page {
 		else {
 			$settings[] = array(
 				'title' => __( 'WooCommerce Jetpack Dashboard', 'woocommerce-jetpack' ),
-				'type' => 'title',
-				'desc' => __( 'This dashboard lets you enable/disable any WooCommerce Jetpack module. Each checkbox comes with short module\'s description. Please visit <a href="http://woojetpack.com" target="_blank">WooJetpack.com</a> for detailed info on each feature.', 'woocommerce-jetpack' ),
-				'id' => 'wcj_options'
+				'type'  => 'title',
+				'desc'  => __( 'This dashboard lets you enable/disable any WooCommerce Jetpack module. Each checkbox comes with short module\'s description. Please visit <a href="http://woojetpack.com" target="_blank">WooJetpack.com</a> for detailed info on each feature.', 'woocommerce-jetpack' ),
+				'id'    => 'wcj_options'
 			);
-			$settings = apply_filters( 'wcj_features_status', $settings );
+			//$settings = apply_filters( 'wcj_features_status', $settings );
+			$settings = array_merge( $settings, $this->module_statuses );
 			$settings[] = array( 'type' => 'sectionend', 'id' => 'wcj_options', 'title' => '', 'desc' => '', );
 			return $settings;
 		}
+	}
+
+	/**
+	 * add_module_statuses
+	 */
+	function add_module_statuses( $statuses ) {
+		$this->module_statuses = $statuses;
 	}
 }
 
