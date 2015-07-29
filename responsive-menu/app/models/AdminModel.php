@@ -111,7 +111,7 @@ class RM_AdminModel extends RM_BaseModel {
 
         $RMX = isset( $data['RMX'] ) ? $data['RMX'] : RM_Registry::get( 'defaults', 'RMX' );
         
-        $RMMinWidth = isset( $data['RMMinWidth'] ) ? $data['RMMinWidth'] : RM_Registry::get( 'defaults', 'RMMinWidthRM' );
+        $RMMinWidth = isset( $data['RMMinWidth'] ) ? $data['RMMinWidth'] : RM_Registry::get( 'defaults', 'RMMinWidth' );
 
         /* Added in 2.0 */
         

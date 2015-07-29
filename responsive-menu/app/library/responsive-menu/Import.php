@@ -30,8 +30,18 @@ class RM_Import {
         $xml = simplexml_load_string( $data );
         $json = json_encode( $xml );
         $array = json_decode( $json, TRUE );
-        
-        return $array;
+        $decoded = array();
+		
+		foreach( $array as $key => $val ) :
+			/* Need to JSON Decode HTML Shapes */
+			if( $key == 'RMArShpA' || $key == 'RMArShpI' ) :
+				$decoded[$key] = is_array( $val ) ? null : json_decode( base64_decode( $val ) );
+			else :	
+				$decoded[$key] = is_array( $val ) ? null : base64_decode( $val );
+			endif;
+		endforeach;
+
+        return $decoded;
         
         
     }

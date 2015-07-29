@@ -87,8 +87,11 @@ class RM_AdminController extends RM_BaseController {
             $data = RM_Input::post( 'RMImport' ) ? RM_Import::getData( RM_Input::file( 'RMImportFile' ) ) : RM_Input::post();
 
 			/* Reset to defaults */
-			if( RM_Input::post( 'RMReset' ) )
+			if( RM_Input::post( 'RMReset' ) ) :
 				$data = RM_Registry::get( 'defaults' );
+				$data['RMArShpA'] = json_decode( $data['RMArShpA'] );
+				$data['RMArShpI'] = json_decode( $data['RMArShpI'] );
+			endif;
 				
             RM_AdminModel::save( $data );
         

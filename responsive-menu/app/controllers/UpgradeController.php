@@ -57,7 +57,7 @@ class RM_UpgradeController extends RM_BaseController {
     static function needsUpgrade() {
         
         
-        return get_option( 'RMVer' ) != RM_Registry::get( 'config', 'current_version' ) ? true : false;
+        return version_compare( get_option( 'RMVer' ), RM_Registry::get( 'config', 'current_version' ), '<' );
 
         
     }

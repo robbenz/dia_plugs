@@ -29,7 +29,7 @@ class RM_Export {
         
         foreach( ResponsiveMenu::getOptions() as $option_key => $option_val ) :
             
-            $xml .= '<' . $option_key . '>' . $option_val . '</' . $option_key . '>';
+            $xml .= '<' . $option_key . '>' . base64_encode( $option_val ) . '</' . $option_key . '>';
                 
         endforeach;
         
