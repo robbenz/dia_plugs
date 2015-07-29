@@ -391,7 +391,7 @@ class WooQuote extends TCPDF
         }
 
         // Draw bottom border
-        $this->Line(40, ($y+20), 560, ($y+20), array('color' => array(192, 192, 192)));
+        $this->Line(40, ($y+20), 560, ($y+20), array('color' => array(32, 32, 32)));
 
         return $this->getY();
     }
@@ -428,7 +428,7 @@ class WooQuote extends TCPDF
         }
 
         // Draw top border
-        $this->Line(40, ($y-2), 560, ($y-2), array('color' => array(192, 192, 192)));
+        $this->Line(40, ($y-2), 560, ($y-2), array('color' => array(32, 32, 32)));
         $y += 10;
 
         foreach ($this->totals as $key => $value) {
