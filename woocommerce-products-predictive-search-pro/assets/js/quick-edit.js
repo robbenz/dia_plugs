@@ -10,14 +10,14 @@ jQuery(document).ready(function(){
 		var $wc_predictive_search_inline_data = jQuery('#wc_predictive_search_inline_' + post_id );
 		
 		var predictive_search_focuskw 				= $wc_predictive_search_inline_data.find('.predictive_search_focuskw').text();
-		var woocommerce_search_exclude_item 		= $wc_predictive_search_inline_data.find('.woocommerce_search_exclude_item').text();
+		var predictive_search_exclude_item 			= $wc_predictive_search_inline_data.find('.ps_exclude_item').text();
 		
 		jQuery('#wc-predictive-search-fields-quick textarea[name="_predictive_search_focuskw"]', '.inline-edit-row').text(predictive_search_focuskw);
 		
-		if (woocommerce_search_exclude_item=='yes') {
-			jQuery('#wc-predictive-search-fields-quick input[name="_woocommerce_search_exclude_item"]', '.inline-edit-row').attr('checked', 'checked'); 
+		if (predictive_search_exclude_item=='yes') {
+			jQuery('#wc-predictive-search-fields-quick input[name="ps_exclude_item"]', '.inline-edit-row').attr('checked', 'checked'); 
 		} else {
-			jQuery('#wc-predictive-search-fields-quick input[name="_woocommerce_search_exclude_item"]', '.inline-edit-row').removeAttr('checked'); 
+			jQuery('#wc-predictive-search-fields-quick input[name="ps_exclude_item"]', '.inline-edit-row').removeAttr('checked'); 
 		}
     });  
     

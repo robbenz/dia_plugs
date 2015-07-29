@@ -58,24 +58,20 @@ class WC_Predictive_Search_Bulk_Quick_Editions
 	 */
 	public static function column_content( $column_name, $post_id  ) {
 		if ( $column_name == 'predictive_search_focuskw' ) {
-			$_predictive_search_focuskw = get_post_meta( $post_id, '_predictive_search_focuskw', true );
-			esc_attr_e( $_predictive_search_focuskw );
-			
+			global $wc_ps_keyword_data;
+			global $wc_ps_exclude_data;
+
+			$ps_focuskw = $wc_ps_keyword_data->get_item( $post_id );
+			esc_attr_e( $ps_focuskw );
+
 			$exclude_items = array();
-			if (get_post_type($post_id) == 'product') {
-				$exclude_items = (array) get_option('woocommerce_search_exclude_products');
-			} elseif (get_post_type($post_id) == 'page') {
-				$exclude_items = (array) get_option('woocommerce_search_exclude_pages');
-			} elseif (get_post_type($post_id) == 'post') {
-				$exclude_items = (array) get_option('woocommerce_search_exclude_posts');
+			$ps_exclude_item = 'no';
+			if ( $wc_ps_exclude_data->get_item( $post_id, get_post_type( $post_id ) ) > 0 ) {
+				$ps_exclude_item = 'yes';
 			}
-			$woocommerce_search_exclude_item = 'no';
-			if (is_array($exclude_items) && in_array($post_id, $exclude_items)) {
-				$woocommerce_search_exclude_item = 'yes';
-			}
-			echo '<div class="hidden" style="display:none" id="wc_predictive_search_inline_'.$post_id.'"><div class="predictive_search_focuskw">'.esc_attr( $_predictive_search_focuskw ).'</div><div class="woocommerce_search_exclude_item">'.$woocommerce_search_exclude_item.'</div></div>';
+			echo '<div class="hidden" style="display:none" id="wc_predictive_search_inline_'.$post_id.'"><div class="predictive_search_focuskw">'.esc_attr( $ps_focuskw ).'</div><div class="ps_exclude_item">'.$ps_exclude_item.'</div></div>';
 		}
-	}	
+	}
 
 	/**
 	 * Custom bulk edit - form
@@ -116,7 +112,7 @@ class WC_Predictive_Search_Bulk_Quick_Editions
                     <label class="inline-edit-tags">
                         <span class="title" style="width:100px;"><?php _e( 'Show / Hide', 'woops' ); ?></span> &nbsp;&nbsp;&nbsp;
                         <span class="">
-                            <select class="woocommerce_search_exclude_item" name="_woocommerce_search_exclude_item">
+                            <select class="ps_exclude_item" name="ps_exclude_item">
                             <?php
                                 $options = array(
                                     '' 	=> __( '- No Change -', 'woops' ),
@@ -157,29 +153,25 @@ class WC_Predictive_Search_Bulk_Quick_Editions
 		if ( !in_array( $post->post_type, array( 'product', 'post', 'page' ) ) ) return $post_id;
 		
 		// Save fields
-		if ( ! empty( $_REQUEST['change_ps_keyword'] ) && isset( $_REQUEST['_predictive_search_focuskw'] ) )
-			update_post_meta( $post_id, '_predictive_search_focuskw', trim( $_REQUEST['_predictive_search_focuskw'] ) );
-			
-		if ( ! empty( $_REQUEST['_woocommerce_search_exclude_item'] ) ) {
-
-			$exclude_option = 'woocommerce_search_exclude_products';
-			if ($post->post_type == 'product') {
-				$exclude_option = 'woocommerce_search_exclude_products';
-			} elseif ($post->post_type == 'page') {
-				$exclude_option = 'woocommerce_search_exclude_pages';
-			} elseif ($post->post_type == 'post') {
-				$exclude_option = 'woocommerce_search_exclude_posts';
-			}
-				
-			$exclude_items = (array) get_option($exclude_option);
-			if (!is_array($exclude_items)) $exclude_items = array();
-				
-			if ( $_REQUEST['_woocommerce_search_exclude_item'] == 1) {
-				if (!in_array($post_id, $exclude_items)) $exclude_items[] = $post_id;
+		if ( ! empty( $_REQUEST['change_ps_keyword'] ) && isset( $_REQUEST['_predictive_search_focuskw'] ) ) {
+			global $wc_ps_keyword_data;
+			$predictive_search_focuskw = trim( $_REQUEST['_predictive_search_focuskw'] );
+			if ( '' != $predictive_search_focuskw ) {
+				$wc_ps_keyword_data->update_item( $post_id, $predictive_search_focuskw );
 			} else {
-				$exclude_items = array_diff($exclude_items, array($post_id));
+				$wc_ps_keyword_data->delete_item( $post_id );
 			}
-			update_option($exclude_option, $exclude_items);
+		}
+			
+		if ( ! empty( $_REQUEST['ps_exclude_item'] ) ) {
+
+			global $wc_ps_exclude_data;
+
+			if ( isset( $_REQUEST['ps_exclude_item'] ) && $_REQUEST['ps_exclude_item'] == 1 ) {
+				$wc_ps_exclude_data->insert_item( $post_id , $post->post_type );
+			} else {
+				$wc_ps_exclude_data->delete_item( $post_id, $post->post_type );
+			}
 		}
 	
 	}
@@ -206,7 +198,7 @@ class WC_Predictive_Search_Bulk_Quick_Editions
 				</div>
                 <div class="inline-edit-group">
 					<label class="alignleft">
-                        <input type="checkbox" value="1" name="_woocommerce_search_exclude_item" />
+                        <input type="checkbox" value="1" name="ps_exclude_item" />
                         <span class="checkbox-title"><?php _e('Hide from Predictive Search results.', 'woops'); ?></span>
                     </label>
 				</div>
@@ -257,29 +249,25 @@ class WC_Predictive_Search_Bulk_Quick_Editions
 		}
 		$old_regular_price = $product->regular_price;
 		$old_sale_price    = $product->sale_price;
-	
+
 		// Save fields
-		if ( isset( $_POST['_predictive_search_focuskw'] ) && trim( $_POST['_predictive_search_focuskw'] ) != '' )
-			update_post_meta( $post_id, '_predictive_search_focuskw', trim( $_POST['_predictive_search_focuskw'] ) );
-		
-		$exclude_option = 'woocommerce_search_exclude_products';
-		if ($post->post_type == 'product') {
-			$exclude_option = 'woocommerce_search_exclude_products';
-		} elseif ($post->post_type == 'page') {
-			$exclude_option = 'woocommerce_search_exclude_pages';
-		} elseif ($post->post_type == 'post') {
-			$exclude_option = 'woocommerce_search_exclude_posts';
+		if ( isset( $_POST['_predictive_search_focuskw'] ) && trim( $_POST['_predictive_search_focuskw'] ) != '' ) {
+			global $wc_ps_keyword_data;
+			$predictive_search_focuskw = trim( $_REQUEST['_predictive_search_focuskw'] );
+			if ( '' != $predictive_search_focuskw ) {
+				$wc_ps_keyword_data->update_item( $post_id, $predictive_search_focuskw );
+			} else {
+				$wc_ps_keyword_data->delete_item( $post_id );
+			}
 		}
-			
-		$exclude_items = (array) get_option($exclude_option);
-		if (!is_array($exclude_items)) $exclude_items = array();
-			
-		if (isset($_POST['_woocommerce_search_exclude_item']) && $_POST['_woocommerce_search_exclude_item'] == 1) {
-			if (!in_array($post_id, $exclude_items)) $exclude_items[] = $post_id;
+
+
+		global $wc_ps_exclude_data;
+		if ( isset( $_POST['ps_exclude_item'] ) && $_POST['ps_exclude_item'] == 1 ) {
+			$wc_ps_exclude_data->insert_item( $post_id , $post->post_type );
 		} else {
-			$exclude_items = array_diff($exclude_items, array($post_id));
+			$wc_ps_exclude_data->delete_item( $post_id, $post->post_type );
 		}
-		update_option($exclude_option, $exclude_items);
 	}
 
 }

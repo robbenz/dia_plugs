@@ -1,5 +1,23 @@
 *** WooCommerce Predictive Search Changelog ***
 
+= 3.0.0 - 2015/07/28 =
+* Feature - Complete rebuild of Predictive Search database
+* Feature - All search objects are stored in Predictive Search Database tables
+* Feature - Performance enhancement, 1,000's of less Database calls - faster and lighter
+* Feature - Predictive Search Database auto updates when products, posts or pages, product categories, product tags are created or updated or deleted
+* Feature - Added option to turn Special Characters Function ON or OFF
+* Feature - Added option to select any Special Characters used on your site. Results returned with or without special character input
+* Feature - Manual Database Sync allows admin to manually sync PS database with WooCommerce and WordPress databases
+* Feature - Flush URL rewrite rules now updated when Search page slug is changed or something us updated on admin panel. Previously this was done each time the Search Results page URL was run. Dramatically decreases the load time of the search page
+* Feature - Only show found Results on Search results page - no Search elements tabs showing no results found
+* Feature - Added singular and plural result(s). Returns results when user adds plural (s) to search term
+* Feature - No Conflict. Update all MySQL query to Predictive Search database, so that it does not conflict with any another Search plugin
+* Feature - Function to auto convert all Predictive Search pre Version 3.0.0 to new PS database structure
+* Tweak - Tested for full compatibility with WooCommerce version 2.3.13
+* Tweak - Tested for full compatibility with WordPress version 4.2.3
+* Tweak - Added underscore _ to list of available special characters
+* Tweak - Updated backbone scripts for new rewrite urls
+
 = 2.4.5 - 2015/06/27 =
 * Tweak - Tested for full compatibility with WooCommerce Version 2.3.11
 * Tweak - Updated legacy API url for when a site admin has set index.php permalinks

@@ -142,7 +142,7 @@ class WC_Predictive_Search_Shortcodes
 			}
 		}
 		@media screen and ( max-width: 480px ) {
-			.a3_woocommerce_search_exclude_item {
+			.a3_ps_exclude_item {
 				float:none !important;
 				display:block;
 			}
@@ -226,27 +226,13 @@ class WC_Predictive_Search_Shortcodes
 		$search_keyword = '';
 		$search_in = 'product';
 		$search_other = '';
-		$pcat_slug = '';
-		$ptag_slug = '';
-		$cat_slug = '';
-		$tag_slug = '';
-		$extra_parameter_product = '';
-		$extra_parameter_post = '';
+		$cat_in = 'all';
 		
 		if (isset($wp_query->query_vars['keyword'])) $search_keyword = stripslashes( strip_tags( urldecode( $wp_query->query_vars['keyword'] ) ) );
 		else if (isset($_REQUEST['rs']) && trim($_REQUEST['rs']) != '') $search_keyword = stripslashes( strip_tags( $_REQUEST['rs'] ) );
 		
-		if (isset($wp_query->query_vars['pcat'])) $pcat_slug = stripslashes( strip_tags( urldecode( $wp_query->query_vars['pcat'] ) ) );
-		else if (isset($_REQUEST['pcat']) && trim($_REQUEST['pcat']) != '') $pcat_slug = stripslashes( strip_tags( $_REQUEST['pcat'] ) );
-		
-		if (isset($wp_query->query_vars['ptag'])) $ptag_slug = stripslashes( strip_tags( urldecode( $wp_query->query_vars['ptag'] ) ) );
-		else if (isset($_REQUEST['ptag']) && trim($_REQUEST['ptag']) != '') $ptag_slug = stripslashes( strip_tags( $_REQUEST['ptag'] ) );
-		
-		if (isset($wp_query->query_vars['scat'])) $cat_slug = stripslashes( strip_tags( urldecode( $wp_query->query_vars['scat'] ) ) );
-		else if (isset($_REQUEST['scat']) && trim($_REQUEST['scat']) != '') $cat_slug = stripslashes( strip_tags( $_REQUEST['scat'] ) );
-		
-		if (isset($wp_query->query_vars['stag'])) $tag_slug = stripslashes( strip_tags( urldecode( $wp_query->query_vars['stag'] ) ) );
-		else if (isset($_REQUEST['stag']) && trim($_REQUEST['stag']) != '') $tag_slug = stripslashes( strip_tags( $_REQUEST['stag'] ) );
+		if (isset($wp_query->query_vars['cat-in'])) $cat_in = stripslashes( strip_tags( urldecode( $wp_query->query_vars['cat-in'] ) ) );
+		else if (isset($_REQUEST['cat_in']) && trim($_REQUEST['cat_in']) != '') $cat_in = stripslashes( strip_tags( $_REQUEST['cat_in'] ) );
 		
 		if (isset($wp_query->query_vars['search-in'])) $search_in = stripslashes( strip_tags( urldecode( $wp_query->query_vars['search-in'] ) ) );
 		else if (isset($_REQUEST['search_in']) && trim($_REQUEST['search_in']) != '') $search_in = stripslashes( strip_tags( $_REQUEST['search_in'] ) );
@@ -255,38 +241,11 @@ class WC_Predictive_Search_Shortcodes
 		else if (isset($_REQUEST['search_other']) && trim($_REQUEST['search_other']) != '') $search_other = stripslashes( strip_tags( $_REQUEST['search_other'] ) );
 		
 		$permalink_structure = get_option( 'permalink_structure' );
-		
-		if ( $pcat_slug != '' ) {
-			if ( $permalink_structure == '' ) 
-				$extra_parameter_product .= '&pcat='.$pcat_slug;
-			else
-				$extra_parameter_product .= '/pcat/'.$pcat_slug;
-		} elseif ( $ptag_slug != '' ) {
-			if ( $permalink_structure == '' )
-				$extra_parameter_product .= '&ptag='.$ptag_slug;
-			else
-				$extra_parameter_product .= '/ptag/'.$ptag_slug;
-		}
-		
-		if ( $cat_slug != '' ) {
-			if ( $permalink_structure == '' ) 
-				$extra_parameter_post .= '&scat='.$cat_slug;
-			else
-				$extra_parameter_post .= '/scat/'.$cat_slug;
-		} elseif ( $tag_slug != '' ) {
-			if ( $permalink_structure == '' ) 
-				$extra_parameter_post .= '&stag='.$tag_slug;
-			else
-				$extra_parameter_post .= '/stag/'.$tag_slug;
-		}
-				
+
 		if ( $search_keyword != '' && $search_in != '' ) {
-			
-			$search_other_list = explode(",", $search_other);
-			if ( ! is_array( $search_other_list ) ) {
-				$search_other_list = array();
-			}
-			
+
+			global $ps_search_list, $ps_current_search_in;
+
 			ob_start();
 		?>
 		<div id="ps_results_container" class="woocommerce">
@@ -312,9 +271,12 @@ class WC_Predictive_Search_Shortcodes
                 .rs_rs_avatar{display:none;}
 			</style>
 		
-			<p class="rs_result_heading"><?php wc_ps_ict_t_e( 'Viewing all', __('Viewing all', 'woops') ); ?> <strong><span class="ps_heading_search_in_name"><?php echo $items_search_default[$search_in]['name']; ?></span></strong> <?php wc_ps_ict_t_e( 'Search Result Text', __('search results for your search query', 'woops') ); ?> <strong><?php echo $search_keyword; ?></strong></p>
+
+		<?php if ( count( $ps_search_list ) > 0 ) { ?>
+			<p class="rs_result_heading"><?php wc_ps_ict_t_e( 'Viewing all', __('Viewing all', 'woops') ); ?> <strong><span class="ps_heading_search_in_name"><?php echo $items_search_default[$ps_current_search_in]['name']; ?></span></strong> <?php wc_ps_ict_t_e( 'Search Result Text', __('search results for your search query', 'woops') ); ?> <strong><?php echo $search_keyword; ?></strong></p>
+		<?php } ?>
 		<?php	
-			if ( count( $search_other_list ) > 0 ) {
+			if ( count( $ps_search_list ) > 1 ) {
 				if ( $permalink_structure == '')
 					$other_link_search = get_permalink( $woocommerce_search_page_id ).'&rs='. urlencode($search_keyword);
 				else
@@ -323,14 +285,16 @@ class WC_Predictive_Search_Shortcodes
 		?>
 			<div class="rs_result_others"><div class="rs_result_others_heading"><?php wc_ps_ict_t_e( 'Sort Text', __('Sort Search Results by', 'woops') ); ?></div>
 		<?php
-				foreach ( $search_other_list as $search_other_item ) {
+				foreach ( $ps_search_list as $search_other_item ) {
+					if ( ! isset( $items_search_default[$search_other_item] ) ) continue;
+
 					if ( $permalink_structure == '' ) {
 		?>
-        		<?php echo $line_vertical; ?><span class="rs_result_other_item"><a class="ps_navigation ps_navigation<?php echo $search_other_item; ?>" href="<?php echo $other_link_search; ?>&search_in=<?php echo $search_other_item; ?><?php echo $extra_parameter_product.$extra_parameter_post; ?>&search_other=<?php echo $search_other; ?>" data-href="?page_id=<?php echo $woocommerce_search_page_id; ?>&rs=<?php echo urlencode($search_keyword); ?>&search_in=<?php echo $search_other_item; ?><?php echo $extra_parameter_product.$extra_parameter_post; ?>&search_other=<?php echo $search_other; ?>" alt=""><?php echo $items_search_default[$search_other_item]['name']; ?></a></span>
+        		<?php echo $line_vertical; ?><span class="rs_result_other_item"><a class="ps_navigation ps_navigation<?php echo $search_other_item; ?>" href="<?php echo $other_link_search; ?>&search_in=<?php echo $search_other_item; ?>&cat_in=<?php echo $cat_in; ?>&search_other=<?php echo $search_other; ?>" data-href="?page_id=<?php echo $woocommerce_search_page_id; ?>&rs=<?php echo urlencode($search_keyword); ?>&search_in=<?php echo $search_other_item; ?>&cat_in=<?php echo $cat_in; ?>&search_other=<?php echo $search_other; ?>" alt=""><?php echo $items_search_default[$search_other_item]['name']; ?></a></span>
         <?php
 					} else {
 		?>
-				<?php echo $line_vertical; ?><span class="rs_result_other_item"><a class="ps_navigation ps_navigation<?php echo $search_other_item; ?>" href="<?php echo $other_link_search; ?>/search-in/<?php echo $search_other_item; ?><?php echo $extra_parameter_product.$extra_parameter_post; ?>/search-other/<?php echo $search_other; ?>" data-href="keyword/<?php echo urlencode($search_keyword); ?>/search-in/<?php echo $search_other_item; ?><?php echo $extra_parameter_product.$extra_parameter_post; ?>/search-other/<?php echo $search_other; ?>" alt=""><?php echo $items_search_default[$search_other_item]['name']; ?></a></span>
+				<?php echo $line_vertical; ?><span class="rs_result_other_item"><a class="ps_navigation ps_navigation<?php echo $search_other_item; ?>" href="<?php echo $other_link_search; ?>/search-in/<?php echo $search_other_item; ?>/cat-in/<?php echo $cat_in; ?>/search-other/<?php echo $search_other; ?>" data-href="keyword/<?php echo urlencode($search_keyword); ?>/search-in/<?php echo $search_other_item; ?>/cat-in/<?php echo $cat_in; ?>/search-other/<?php echo $search_other; ?>" alt=""><?php echo $items_search_default[$search_other_item]['name']; ?></a></span>
 		<?php
 					}
 					$line_vertical = ' | ';

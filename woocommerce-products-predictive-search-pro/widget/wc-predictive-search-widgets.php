@@ -66,21 +66,19 @@ class WC_Predictive_Search_Widgets extends WP_Widget
 		global $woocommerce_search_page_id;
 		
 		$id = str_replace('products_predictive_search-','',$widget_id);
-		$pcat_slug = '';
-		$ptag_slug = '';
-		$cat_slug = '';
-		$tag_slug = '';
-		if ($search_global != 1) {
+
+		$cat_in = 'all';
+		if ( $search_global != 1 ) {
 			if (is_tax('product_cat')) {
 				$term = get_term_by('slug', get_query_var('product_cat'), 'product_cat');
-				if ( $term ) $pcat_slug = $term->slug;
+				if ( $term ) $cat_in = $term->slug;
 			} elseif (is_tax('product_tag')) {
 				$term = get_term_by('slug', get_query_var('product_tag'), 'product_tag');
-				if ( $term ) $ptag_slug = $term->slug;
+				if ( $term ) $cat_in = $term->slug;
 			} elseif (is_category()) {
-				$cat_slug = get_query_var('category_name');
+				$cat_in = get_query_var('category_name');
 			} elseif (is_tag()) {
-				$tag_slug = get_query_var('tag');
+				$cat_in = get_query_var('tag');
 			}
 		}
 		$row = 0;
@@ -125,10 +123,7 @@ class WC_Predictive_Search_Widgets extends WP_Widget
             data-ps-default_text="<?php echo esc_attr( $search_box_text ); ?>" 
             data-ps-row="<?php echo esc_attr( $row ); ?>" 
             data-ps-text_lenght="<?php echo esc_attr( $text_lenght ); ?>" 
-            <?php if ( $pcat_slug != '' ) { ?>data-ps-pcat="<?php echo esc_attr( $pcat_slug ); ?>" <?php } ?>
-            <?php if ( $ptag_slug != '' ) { ?>data-ps-ptag="<?php echo esc_attr( $ptag_slug ); ?>" <?php } ?>
-            <?php if ( $cat_slug != '' ) { ?>data-ps-scat="<?php echo esc_attr( $cat_slug ); ?>" <?php } ?>
-            <?php if ( $tag_slug != '' ) { ?>data-ps-stag="<?php echo esc_attr( $tag_slug ); ?>" <?php } ?>
+            data-ps-cat_in="<?php echo esc_attr( $cat_in ); ?>"
             <?php if ( $search_in != '' ) { ?>data-ps-popup_search_in="<?php echo esc_attr( $search_in ); ?>" <?php } ?>
             <?php if ( count( $search_list ) > 0 ) { ?>data-ps-search_in="<?php echo esc_attr( $search_list[0] ); ?>" <?php } ?>
             <?php if ( count( $search_list ) > 0 ) { ?>data-ps-search_other="<?php echo esc_attr( implode(",", $search_list) ); ?>" <?php } ?>
@@ -137,25 +132,11 @@ class WC_Predictive_Search_Widgets extends WP_Widget
             <span data-ps-id="<?php echo $id;?>" class="bt_search predictive_search_bt" id="bt_pp_search_<?php echo $id;?>"></span>
             </div>
             <input type="hidden" name="search_in" value="<?php echo $search_list[0]; ?>"  />
-			<?php
-			if ($pcat_slug != '') { ?>
-            	<input type="hidden" name="pcat" value="<?php echo $pcat_slug; ?>"  />
-            <?php
-			} elseif ($ptag_slug != '') { ?>
-            	<input type="hidden" name="ptag" value="<?php echo $ptag_slug; ?>"  />
-            <?php
-			} elseif ($cat_slug != '') { ?>
-            	<input type="hidden" name="scat" value="<?php echo $cat_slug; ?>"  />
-            <?php
-			} elseif ($tag_slug != '') { ?>
-            	<input type="hidden" name="stag" value="<?php echo $tag_slug; ?>"  />
-            <?php
-			}
-			?>
+            <input type="hidden" name="cat_in" value="<?php echo esc_attr( $cat_in ); ?>"  />
             <input type="hidden" name="search_other" value="<?php echo implode(",", $search_list); ?>"  />
-            <!-- begin rob hack -->
+            <!-- begin BENZ hack -->
             <span data-ps-id="<?php echo $id;?>" class="bt_search predictive_search_bt" id="bt_pp_search_100"></span>
-            <!-- end rob hack -->
+            <!-- end BENZ hack -->
 		</form>
         </div>
         <?php if (trim($style) == '') { ?>
@@ -226,7 +207,9 @@ class WC_Predictive_Search_Widgets extends WP_Widget
             <p><?php _e("Activate search 'types' for this widget by entering the number of results to show in the widget dropdown. &lt;empty&gt; = not activated. Sort order by drag and drop", 'woops'); ?></p>
             <ul class="ui-sortable predictive_search_item">
             <?php foreach ($number_items as $key => $value) { ?>
+            	<?php if ( isset( $items_search_default[$key] ) ) { ?>
             	<li><span class="item_heading"><label for="search_<?php echo $key; ?>"><?php echo $items_search_default[$key]['name']; ?></label></span> <input id="search_<?php echo $key; ?>" name="<?php echo $this->get_field_name('number_items'); ?>[<?php echo $key; ?>]" type="text" value="<?php echo esc_attr($value); ?>" style="width:50px;" /></li>
+            	<?php } ?>
             <?php } ?>
             </ul>
             <p><label><input type="checkbox" name="<?php echo $this->get_field_name('show_price'); ?>" value="1" <?php checked( $show_price, 1 ); ?>  /> <?php _e('Show Product prices', 'woops'); ?></label>

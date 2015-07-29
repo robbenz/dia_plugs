@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce Predictive Search\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-29 17:45+0700\n"
-"PO-Revision-Date: 2015-01-29 17:45+0700\n"
+"POT-Creation-Date: 2015-07-28 11:16+0700\n"
+"PO-Revision-Date: 2015-07-28 11:16+0700\n"
 "Last-Translator: Nguyen Cong Tuan <mr.nguyencongtuan@gmail.com>\n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -87,30 +87,32 @@ msgstr ""
 msgid "Outset"
 msgstr ""
 
-#: admin/admin-interface.php:1359 admin/admin-interface.php:1449
-#: admin/admin-interface.php:1478
+#: admin/admin-interface.php:1396 admin/admin-interface.php:1486
+#: admin/admin-interface.php:1515
 #: admin/settings/all-results-page-settings.php:207
 #: admin/settings/all-results-page-settings.php:218
 #: admin/settings/all-results-page-settings.php:229
 #: admin/settings/all-results-page-settings.php:240
 #: admin/settings/all-results-page-settings.php:251
-#: admin/settings/global-settings.php:231
-#: admin/settings/global-settings.php:265
+#: admin/settings/global-settings.php:247
+#: admin/settings/global-settings.php:281
+#: admin/settings/global-settings.php:317
 #: admin/settings/google-analytics-settings.php:194
 #: admin/settings/search-function-settings.php:242
 #: admin/settings/search-function-settings.php:299
 msgid "ON"
 msgstr ""
 
-#: admin/admin-interface.php:1360 admin/admin-interface.php:1450
-#: admin/admin-interface.php:1479
+#: admin/admin-interface.php:1397 admin/admin-interface.php:1487
+#: admin/admin-interface.php:1516
 #: admin/settings/all-results-page-settings.php:208
 #: admin/settings/all-results-page-settings.php:219
 #: admin/settings/all-results-page-settings.php:230
 #: admin/settings/all-results-page-settings.php:241
 #: admin/settings/all-results-page-settings.php:252
-#: admin/settings/global-settings.php:232
-#: admin/settings/global-settings.php:266
+#: admin/settings/global-settings.php:248
+#: admin/settings/global-settings.php:282
+#: admin/settings/global-settings.php:318
 #: admin/settings/google-analytics-settings.php:195
 #: admin/settings/search-function-settings.php:243
 #: admin/settings/search-function-settings.php:300
@@ -118,107 +120,107 @@ msgid "OFF"
 msgstr ""
 
 # @ woops
-#: admin/admin-interface.php:1520
+#: admin/admin-interface.php:1557
 #: admin/settings/search-function-settings.php:253
 msgid "Width"
 msgstr "Breite"
 
 # @ woops
-#: admin/admin-interface.php:1522
+#: admin/admin-interface.php:1559
 #, fuzzy
 msgid "Height"
 msgstr "Rechts"
 
-#: admin/admin-interface.php:1524
+#: admin/admin-interface.php:1561
 msgid "Hard Crop"
 msgstr ""
 
-#: admin/admin-interface.php:1601
+#: admin/admin-interface.php:1638
 msgid "-- Default Fonts --"
 msgstr ""
 
-#: admin/admin-interface.php:1612
+#: admin/admin-interface.php:1649
 msgid "-- Google Fonts --"
 msgstr ""
 
-#: admin/admin-interface.php:1653
+#: admin/admin-interface.php:1690
 msgid "Preview your customized typography settings"
 msgstr ""
 
-#: admin/admin-interface.php:1787 admin/admin-interface.php:2046
+#: admin/admin-interface.php:1824 admin/admin-interface.php:2083
 msgid "Preview your customized border settings"
 msgstr ""
 
-#: admin/admin-interface.php:1796 admin/admin-interface.php:2037
+#: admin/admin-interface.php:1833 admin/admin-interface.php:2074
 msgid "Rounded"
 msgstr ""
 
-#: admin/admin-interface.php:1797 admin/admin-interface.php:2038
+#: admin/admin-interface.php:1834 admin/admin-interface.php:2075
 msgid "Square"
 msgstr ""
 
-#: admin/admin-interface.php:1807 admin/admin-interface.php:2051
+#: admin/admin-interface.php:1844 admin/admin-interface.php:2088
 msgid "Top Left Corner"
 msgstr ""
 
-#: admin/admin-interface.php:1827 admin/admin-interface.php:2071
+#: admin/admin-interface.php:1864 admin/admin-interface.php:2108
 msgid "Top Right Corner"
 msgstr ""
 
-#: admin/admin-interface.php:1847 admin/admin-interface.php:2091
+#: admin/admin-interface.php:1884 admin/admin-interface.php:2128
 msgid "Bottom Right Corner"
 msgstr ""
 
-#: admin/admin-interface.php:1867 admin/admin-interface.php:2111
+#: admin/admin-interface.php:1904 admin/admin-interface.php:2148
 msgid "Bottom Left Corner"
 msgstr ""
 
-#: admin/admin-interface.php:1960
+#: admin/admin-interface.php:1997
 msgid "Preview your customized border styles settings"
 msgstr ""
 
-#: admin/admin-interface.php:2172
+#: admin/admin-interface.php:2209
 msgid "YES"
 msgstr ""
 
-#: admin/admin-interface.php:2173
+#: admin/admin-interface.php:2210
 msgid "NO"
 msgstr ""
 
-#: admin/admin-interface.php:2187
+#: admin/admin-interface.php:2224
 msgid "Horizontal Shadow"
 msgstr ""
 
-#: admin/admin-interface.php:2205
+#: admin/admin-interface.php:2242
 msgid "Vertical Shadow"
 msgstr ""
 
-#: admin/admin-interface.php:2223
+#: admin/admin-interface.php:2260
 msgid "Blur Distance"
 msgstr ""
 
-#: admin/admin-interface.php:2241
+#: admin/admin-interface.php:2278
 msgid "Spread Size"
 msgstr ""
 
-#: admin/admin-interface.php:2259
+#: admin/admin-interface.php:2296
 msgid "INNER"
 msgstr ""
 
-#: admin/admin-interface.php:2260
+#: admin/admin-interface.php:2297
 msgid "OUTER"
 msgstr ""
 
-#: admin/admin-interface.php:2278
+#: admin/admin-interface.php:2315
 msgid "Preview your customized box shadow settings"
 msgstr ""
 
-#: admin/admin-interface.php:2514
+#: admin/admin-interface.php:2557
 msgid "Save changes"
 msgstr ""
 
 # @ woops
-#: admin/admin-interface.php:2515
+#: admin/admin-interface.php:2558
 #, fuzzy
 msgid "Reset Settings"
 msgstr "Globale Einstellungen"
@@ -226,10 +228,10 @@ msgstr "Globale Einstellungen"
 # @ woops
 #: admin/admin-pages/predictive-search-page.php:63
 #: admin/admin-pages/predictive-search-page.php:64
-#: admin/settings/global-settings.php:224
-#: admin/wc-predictive-search-init.php:207
-#: classes/class-wc-predictive-search-bulk-quick-editions.php:93
-#: classes/class-wc-predictive-search-bulk-quick-editions.php:200
+#: admin/settings/global-settings.php:240
+#: admin/wc-predictive-search-init.php:221
+#: classes/class-wc-predictive-search-bulk-quick-editions.php:89
+#: classes/class-wc-predictive-search-bulk-quick-editions.php:192
 msgid "Predictive Search"
 msgstr "Predictive Search"
 
@@ -321,7 +323,7 @@ msgstr ""
 
 # @ woops
 #: admin/settings/all-results-page-settings.php:200
-#: classes/class-wc-predictive-search-backbone.php:142
+#: classes/class-wc-predictive-search-backbone.php:111
 #: classes/class-wpml-functions.php:59
 msgid "SKU"
 msgstr "SKU"
@@ -336,7 +338,7 @@ msgstr "SKU-Nummer mit den Suchergebnissen anzeigen"
 #: admin/settings/all-results-page-settings.php:211
 #: admin/settings/search-function-settings.php:235
 #: classes/class-wc-predictive-search-backbone.php:34
-#: classes/class-wc-predictive-search-backbone.php:143
+#: classes/class-wc-predictive-search-backbone.php:112
 #: classes/class-wc-predictive-search-shortcodes.php:159
 #: classes/class-wpml-functions.php:61
 msgid "Price"
@@ -361,8 +363,8 @@ msgstr "Schaltfläche \\\"In den Warenkorb\\\" mit den Suchergebnissen anzeigen"
 
 # @ woops
 #: admin/settings/all-results-page-settings.php:233
-#: classes/class-wpml-functions.php:55 includes/class-legacy-api.php:197
-#: includes/class-legacy-api.php:368
+#: classes/class-wpml-functions.php:55 includes/class-legacy-api.php:164
+#: includes/class-legacy-api.php:326
 #: widget/wc-predictive-search-widgets.php:21
 msgid "Product Categories"
 msgstr "Produktkategorien"
@@ -375,8 +377,8 @@ msgstr "Kategorien mit den Suchergebnissen anzeigen"
 
 # @ woops
 #: admin/settings/all-results-page-settings.php:244
-#: classes/class-wpml-functions.php:56 includes/class-legacy-api.php:207
-#: includes/class-legacy-api.php:371
+#: classes/class-wpml-functions.php:56 includes/class-legacy-api.php:174
+#: includes/class-legacy-api.php:329
 #: widget/wc-predictive-search-widgets.php:22
 msgid "Product Tags"
 msgstr "Produkt-Tags"
@@ -400,64 +402,64 @@ msgid "Exclude Content Settings successfully reseted."
 msgstr ""
 
 # @ woops
-#: admin/settings/exclude-content-settings.php:135
+#: admin/settings/exclude-content-settings.php:182
 #: admin/tabs/exclude-content-tab.php:78
 #, fuzzy
 msgid "Exclude Content"
 msgstr "Beiträge ausschließen"
 
 # @ woops
-#: admin/settings/exclude-content-settings.php:221
+#: admin/settings/exclude-content-settings.php:303
 msgid "Exclude From Predictive Search"
 msgstr "Von der Suche ausschließen"
 
 # @ woops
-#: admin/settings/exclude-content-settings.php:225
+#: admin/settings/exclude-content-settings.php:307
 msgid "Exclude Products"
 msgstr "Produkte ausschließen"
 
 # @ woops
-#: admin/settings/exclude-content-settings.php:228
+#: admin/settings/exclude-content-settings.php:310
 msgid "Choose Products"
 msgstr "Produkte auswählen"
 
 # @ woops
-#: admin/settings/exclude-content-settings.php:233
+#: admin/settings/exclude-content-settings.php:316
 msgid "Exclude Product Categories"
 msgstr "Produktkategorien ausschließen"
 
 # @ woops
-#: admin/settings/exclude-content-settings.php:236
+#: admin/settings/exclude-content-settings.php:319
 msgid "Choose Product Categories"
 msgstr "Produktkategorien auswählen"
 
 # @ woops
-#: admin/settings/exclude-content-settings.php:241
+#: admin/settings/exclude-content-settings.php:325
 msgid "Exclude Product Tags"
 msgstr "Produkt-Tags ausschließen"
 
 # @ woops
-#: admin/settings/exclude-content-settings.php:244
+#: admin/settings/exclude-content-settings.php:328
 msgid "Choose Product Tags"
 msgstr "Produkt-Tags auswählen"
 
 # @ woops
-#: admin/settings/exclude-content-settings.php:249
+#: admin/settings/exclude-content-settings.php:334
 msgid "Exclude Posts"
 msgstr "Beiträge ausschließen"
 
 # @ woops
-#: admin/settings/exclude-content-settings.php:252
+#: admin/settings/exclude-content-settings.php:337
 msgid "Choose Posts"
 msgstr "Beiträge auswählen"
 
 # @ woops
-#: admin/settings/exclude-content-settings.php:257
+#: admin/settings/exclude-content-settings.php:343
 msgid "Exclude Pages"
 msgstr "Seiten ausschließen"
 
 # @ woops
-#: admin/settings/exclude-content-settings.php:260
+#: admin/settings/exclude-content-settings.php:346
 msgid "Choose Pages"
 msgstr "Seiten auswählen"
 
@@ -475,25 +477,31 @@ msgstr ""
 msgid "Global Settings successfully reseted."
 msgstr ""
 
+#: admin/settings/global-settings.php:140
+msgid ""
+"<strong>SUCCESS</strong>! Your Predictive Search Database has been "
+"successfully updated."
+msgstr ""
+
 # @ woops
-#: admin/settings/global-settings.php:157
+#: admin/settings/global-settings.php:173
 #: admin/tabs/global-settings-tab.php:78
 #, fuzzy
 msgid "Settings"
 msgstr "Globale Einstellungen"
 
 # @ woops
-#: admin/settings/global-settings.php:201
+#: admin/settings/global-settings.php:217
 msgid "Global Search Box Text"
 msgstr "Text im Eingabefeld der globalen Suche"
 
 # @ woops
-#: admin/settings/global-settings.php:207
+#: admin/settings/global-settings.php:223
 #, fuzzy
 msgid "Search Page Configuration"
 msgstr "Suchseite"
 
-#: admin/settings/global-settings.php:209
+#: admin/settings/global-settings.php:225
 msgid ""
 "Predictive Search has detected the WPML plugin. On install a search page was "
 "auto created for each language in use. Please use the WPML String "
@@ -503,7 +511,7 @@ msgid ""
 msgstr ""
 
 # @ woops
-#: admin/settings/global-settings.php:209
+#: admin/settings/global-settings.php:225
 msgid ""
 "A search results page needs to be selected so that WooCommerce Predictive "
 "Search knows where to show search results. This page should have been "
@@ -514,22 +522,22 @@ msgstr ""
 "Plugins erstellt worden sein. Falls nicht, lege bitte eine Seite dafür an."
 
 # @ woops
-#: admin/settings/global-settings.php:212
+#: admin/settings/global-settings.php:228
 msgid "Search Page"
 msgstr "Suchseite"
 
 # @ woops
-#: admin/settings/global-settings.php:213
+#: admin/settings/global-settings.php:229
 msgid "Page contents:"
 msgstr "Seiteninhalt:"
 
 # @ woops
-#: admin/settings/global-settings.php:219
+#: admin/settings/global-settings.php:235
 #, fuzzy
 msgid "Predictive Search Focus Keywords"
 msgstr "Predictive-Search-Funktion"
 
-#: admin/settings/global-settings.php:220
+#: admin/settings/global-settings.php:236
 msgid ""
 "<strong>Important!</strong> Do not turn this feature on unless you have or "
 "will be adding Focus Keywords to your products. ON and Predictive search "
@@ -539,42 +547,84 @@ msgid ""
 msgstr ""
 
 # @ woops
-#: admin/settings/global-settings.php:240
+#: admin/settings/global-settings.php:256
 #, fuzzy
 msgid "SEO Focus Keywords"
 msgstr "Schlüsselwörter"
 
-#: admin/settings/global-settings.php:241
+#: admin/settings/global-settings.php:257
 msgid "Supported plugins, WordPress SEO and ALL in ONE SEO Pack."
 msgstr ""
 
 # @ woops
-#: admin/settings/global-settings.php:246
+#: admin/settings/global-settings.php:262
 msgid "Select SEO plugin"
 msgstr "SEO Plugin auswählen"
 
 # @ woops
-#: admin/settings/global-settings.php:247
+#: admin/settings/global-settings.php:263
 msgid "Yoast WordPress SEO"
 msgstr "Yoast WordPress SEO"
 
 # @ woops
-#: admin/settings/global-settings.php:248
+#: admin/settings/global-settings.php:264
 msgid "All in One SEO"
 msgstr "All in One SEO"
 
 # @ woops
-#: admin/settings/global-settings.php:253
+#: admin/settings/global-settings.php:269
+#, fuzzy
+msgid "Special Characters"
+msgstr "Zeichen"
+
+#: admin/settings/global-settings.php:270
+msgid ""
+"Select any special characters that are used on this site. Selecting a "
+"character will mean that results will be returned when user search input "
+"includes or excludes the special character. <strong>IMPORTANT!</strong> Do "
+"not turn this feature on unless needed. If ON - only select actual "
+"characters used in Product Titles, SKU, Category Names etc - each special "
+"character selected creates 1 extra query per search object, per product, "
+"post or page."
+msgstr ""
+
+# @ woops
+#: admin/settings/global-settings.php:274
+#, fuzzy
+msgid "Special Character Function"
+msgstr "Predictive-Search-Funktion"
+
+# @ woops
+#: admin/settings/global-settings.php:290
+#, fuzzy
+msgid "Select Characters"
+msgstr "Zeichen"
+
+#: admin/settings/global-settings.php:298
+msgid "Manual Database Sync"
+msgstr ""
+
+#: admin/settings/global-settings.php:299
+msgid ""
+"Predictive Search database is auto updated whenever a product or post is "
+"published or updated. Please run a Manual database sync if you upload "
+"products by csv or feel that Predictive Search results are showing old "
+"data.  Will sync the Predictive Search database with your current "
+"WooCommerce and WordPress databases"
+msgstr ""
+
+# @ woops
+#: admin/settings/global-settings.php:305
 msgid "House Keeping"
 msgstr "Aufräumen"
 
 # @ woops
-#: admin/settings/global-settings.php:257
+#: admin/settings/global-settings.php:309
 msgid "Clean up on Deletion"
 msgstr "Saubermachen nach dem Entfernen"
 
 # @ woops
-#: admin/settings/global-settings.php:258
+#: admin/settings/global-settings.php:310
 #, fuzzy
 msgid ""
 "On deletion (not deactivate) the plugin it will completely remove all of its "
@@ -583,23 +633,31 @@ msgstr ""
 "Markiere dieses Feld, um nach dem Entfernen des Plugins alle zugehörigen "
 "Tabellen und Daten zu löschen. Bei einem Upgrade auf die Pro-Version ist dies"
 
-#: admin/settings/global-settings.php:283
+#: admin/settings/global-settings.php:335
 msgid ""
 "Enter the translated search box text for each language for WPML to show it "
 "correct on the front end."
 msgstr ""
 
 # @ woops
-#: admin/settings/global-settings.php:290
-#: admin/settings/global-settings.php:304
+#: admin/settings/global-settings.php:342
+#: admin/settings/global-settings.php:356
 msgid "Text to Show"
 msgstr "Anzuzeigender Text"
 
 # @ woops
-#: admin/settings/global-settings.php:292
-#: admin/settings/global-settings.php:306
+#: admin/settings/global-settings.php:344
+#: admin/settings/global-settings.php:358
 msgid "&lt;empty&gt; shows nothing"
 msgstr "&lt;Leer&gt; = es wird nichts angezeigt"
+
+#: admin/settings/global-settings.php:367
+msgid "Sync Search Data"
+msgstr ""
+
+#: admin/settings/global-settings.php:369
+msgid "Sync Now"
+msgstr ""
 
 # @ woops
 #: admin/settings/google-analytics-settings.php:82
@@ -791,8 +849,10 @@ msgstr ""
 
 # @ woops
 #: admin/settings/search-function-settings.php:200
-#: classes/class-wpml-functions.php:54 includes/class-legacy-api.php:450
-#: includes/class-legacy-api.php:456
+#: classes/class-wpml-functions.php:54
+#: includes/class-wc-predictive-search.php:362
+#: includes/class-wc-predictive-search.php:371
+#: includes/class-wc-predictive-search.php:377
 #: widget/wc-predictive-search-widgets.php:20
 msgid "Product SKU"
 msgstr "Produkt-SKU"
@@ -961,38 +1021,38 @@ msgstr "Woocommerce Predictive Search"
 msgid "Woocommerce Predictive Search"
 msgstr "Woocommerce Predictive Search"
 
-#: admin/wc-predictive-search-init.php:28
-#: admin/wc-predictive-search-init.php:218
+#: admin/wc-predictive-search-init.php:36
+#: admin/wc-predictive-search-init.php:232
 msgid ""
 "Connection Error! Could not reach the a3API on Amazon Cloud, the network may "
 "be busy. Please try again in a few minutes."
 msgstr ""
 
-#: admin/wc-predictive-search-init.php:236 upgrade/plugin_upgrade.php:132
+#: admin/wc-predictive-search-init.php:250 upgrade/plugin_upgrade.php:168
 msgid "Error: "
 msgstr ""
 
-#: admin/wc-predictive-search-init.php:242
+#: admin/wc-predictive-search-init.php:256
 msgid "Thank you. This Authorization Key is valid."
 msgstr ""
 
-#: admin/wc-predictive-search-init.php:283
+#: admin/wc-predictive-search-init.php:297
 msgid "No find the encryp.inc file. Please copy encryp.inc file to folder"
 msgstr ""
 
-#: admin/wc-predictive-search-init.php:288
+#: admin/wc-predictive-search-init.php:302
 msgid "encryp.inc was modified. Please keep it by default"
 msgstr ""
 
-#: admin/wc-predictive-search-init.php:295 upgrade/plugin_upgrade.php:30
+#: admin/wc-predictive-search-init.php:309 upgrade/plugin_upgrade.php:32
 msgid "Enter Your Plugin Authorization Key"
 msgstr ""
 
-#: admin/wc-predictive-search-init.php:300 upgrade/plugin_upgrade.php:30
+#: admin/wc-predictive-search-init.php:314 upgrade/plugin_upgrade.php:32
 msgid "Authorization Key"
 msgstr ""
 
-#: admin/wc-predictive-search-init.php:303
+#: admin/wc-predictive-search-init.php:317
 msgid "Validate"
 msgstr ""
 
@@ -1009,19 +1069,19 @@ msgid "in"
 msgstr ""
 
 # @ woops
-#: classes/class-wc-predictive-search-backbone.php:148
+#: classes/class-wc-predictive-search-backbone.php:117
 #: classes/class-wpml-functions.php:62
 msgid "Category"
 msgstr "Kategorie"
 
 # @ woops
-#: classes/class-wc-predictive-search-backbone.php:157
+#: classes/class-wc-predictive-search-backbone.php:126
 #: classes/class-wpml-functions.php:63
 msgid "Tags"
 msgstr "Tags"
 
 # @ woops
-#: classes/class-wc-predictive-search-backbone.php:172
+#: classes/class-wc-predictive-search-backbone.php:141
 #: classes/class-wpml-functions.php:74
 msgid "Nothing Found! Please refine your search and try again."
 msgstr "Nichts zu finden! Bitte andere Suchbegriffe verwenden."
@@ -1031,64 +1091,64 @@ msgid "PS Focus KW"
 msgstr ""
 
 # @ woops
-#: classes/class-wc-predictive-search-bulk-quick-editions.php:96
-#: classes/class-wc-predictive-search-bulk-quick-editions.php:203
-#: classes/class-wc-predictive-search-metabox.php:47
+#: classes/class-wc-predictive-search-bulk-quick-editions.php:92
+#: classes/class-wc-predictive-search-bulk-quick-editions.php:195
+#: classes/class-wc-predictive-search-metabox.php:41
 msgid "Focus Keywords"
 msgstr "Schlüsselwörter"
 
-#: classes/class-wc-predictive-search-bulk-quick-editions.php:101
-#: classes/class-wc-predictive-search-bulk-quick-editions.php:122
+#: classes/class-wc-predictive-search-bulk-quick-editions.php:97
+#: classes/class-wc-predictive-search-bulk-quick-editions.php:118
 msgid "- No Change -"
 msgstr ""
 
-#: classes/class-wc-predictive-search-bulk-quick-editions.php:102
+#: classes/class-wc-predictive-search-bulk-quick-editions.php:98
 msgid "Change to:"
 msgstr ""
 
 # @ woops
-#: classes/class-wc-predictive-search-bulk-quick-editions.php:112
-#: classes/class-wc-predictive-search-bulk-quick-editions.php:204
+#: classes/class-wc-predictive-search-bulk-quick-editions.php:108
+#: classes/class-wc-predictive-search-bulk-quick-editions.php:196
 #, fuzzy
 msgid "Enter Focus keywords"
 msgstr "Schlüsselwörter"
 
-#: classes/class-wc-predictive-search-bulk-quick-editions.php:117
+#: classes/class-wc-predictive-search-bulk-quick-editions.php:113
 msgid "Show / Hide"
 msgstr ""
 
 # @ woops
-#: classes/class-wc-predictive-search-bulk-quick-editions.php:123
+#: classes/class-wc-predictive-search-bulk-quick-editions.php:119
 #, fuzzy
 msgid "Hide from Predictive Search results"
 msgstr "Aus den Suchergebnissen ausblenden"
 
 # @ woops
-#: classes/class-wc-predictive-search-bulk-quick-editions.php:124
+#: classes/class-wc-predictive-search-bulk-quick-editions.php:120
 #, fuzzy
 msgid "Show in Predictive Search results"
 msgstr "Aus den Suchergebnissen ausblenden"
 
 # @ woops
-#: classes/class-wc-predictive-search-bulk-quick-editions.php:210
-#: classes/class-wc-predictive-search-metabox.php:30
+#: classes/class-wc-predictive-search-bulk-quick-editions.php:202
+#: classes/class-wc-predictive-search-metabox.php:24
 msgid "Hide from Predictive Search results."
 msgstr "Aus den Suchergebnissen ausblenden"
 
 # @ woops
-#: classes/class-wc-predictive-search-filter.php:393
+#: classes/class-wc-predictive-search-filter.php:52
 msgid "Documentation"
 msgstr "Dokumentation"
 
 # @ woops
-#: classes/class-wc-predictive-search-filter.php:394
+#: classes/class-wc-predictive-search-filter.php:53
 msgid "Support"
 msgstr "Support"
 
 # @ woops
-#: classes/class-wc-predictive-search-metabox.php:32
-#: classes/class-wc-predictive-search-metabox.php:34
-#: classes/class-wc-predictive-search-metabox.php:35
+#: classes/class-wc-predictive-search-metabox.php:26
+#: classes/class-wc-predictive-search-metabox.php:27
+#: classes/class-wc-predictive-search-metabox.php:28
 msgid "Predictive Search Meta"
 msgstr "Predictive Search Meta"
 
@@ -1118,7 +1178,7 @@ msgstr "im Dropdown angezeigten Ergebnisse"
 
 # @ woops
 #: classes/class-wc-predictive-search-shortcodes.php:159
-#: widget/wc-predictive-search-widgets.php:229
+#: widget/wc-predictive-search-widgets.php:212
 #, fuzzy
 msgid "Show Product prices"
 msgstr "Produktkategorien auswählen"
@@ -1180,7 +1240,7 @@ msgstr "Breite des Suchfelds"
 
 # @ woops
 #: classes/class-wc-predictive-search-shortcodes.php:163
-#: widget/wc-predictive-search-widgets.php:214
+#: widget/wc-predictive-search-widgets.php:195
 msgid "Search box text message"
 msgstr "Im Suchfeld anzuzeigender Text"
 
@@ -1204,68 +1264,74 @@ msgstr "Shortcode einfügen"
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: classes/class-wc-predictive-search-shortcodes.php:312
+#: classes/class-wc-predictive-search-shortcodes.php:273
 #: classes/class-wpml-functions.php:67
 msgid "Viewing all"
 msgstr ""
 
 # @ woops
-#: classes/class-wc-predictive-search-shortcodes.php:312
+#: classes/class-wc-predictive-search-shortcodes.php:273
 #: classes/class-wpml-functions.php:68
 #, fuzzy
 msgid "search results for your search query"
 msgstr "Es werden alle Suchergebnisse angezeigt"
 
 # @ woops
-#: classes/class-wc-predictive-search-shortcodes.php:321
+#: classes/class-wc-predictive-search-shortcodes.php:283
 #: classes/class-wpml-functions.php:69
 #, fuzzy
 msgid "Sort Search Results by"
 msgstr "Tags mit den Suchergebnissen anzeigen"
 
 # @ woops
-#: classes/class-wc-predictive-search-shortcodes.php:345
+#: classes/class-wc-predictive-search-shortcodes.php:309
 #: classes/class-wpml-functions.php:70
 msgid "Loading More Results..."
 msgstr "Weitere Ergebnisse laden..."
 
 # @ woops
-#: classes/class-wc-predictive-search-shortcodes.php:347
+#: classes/class-wc-predictive-search-shortcodes.php:311
 #: classes/class-wpml-functions.php:71
 msgid "No More Results to Show"
 msgstr "Keine weiteren Ergebnisse"
 
 # @ woops
-#: classes/class-wc-predictive-search-shortcodes.php:350
+#: classes/class-wc-predictive-search-shortcodes.php:314
 #: classes/class-wpml-functions.php:72
 #, fuzzy
 msgid "Fetching search results..."
 msgstr "Weitere Ergebnisse laden..."
 
 # @ woops
-#: classes/class-wc-predictive-search-shortcodes.php:352
+#: classes/class-wc-predictive-search-shortcodes.php:316
 #: classes/class-wpml-functions.php:73
 #, fuzzy
 msgid "No Results to Show"
 msgstr "Keine weiteren Ergebnisse"
 
 # @ woops
-#: classes/class-wpml-functions.php:53 includes/class-legacy-api.php:395
-#: includes/class-legacy-api.php:401
+#: classes/class-wpml-functions.php:53
+#: includes/class-wc-predictive-search.php:244
+#: includes/class-wc-predictive-search.php:253
+#: includes/class-wc-predictive-search.php:259
 #: widget/wc-predictive-search-widgets.php:19
 msgid "Product Name"
 msgstr "Produktname"
 
 # @ woops
-#: classes/class-wpml-functions.php:57 includes/class-legacy-api.php:505
-#: includes/class-legacy-api.php:511
+#: classes/class-wpml-functions.php:57
+#: includes/class-wc-predictive-search.php:420
+#: includes/class-wc-predictive-search.php:429
+#: includes/class-wc-predictive-search.php:435
 #: widget/wc-predictive-search-widgets.php:23
 msgid "Posts"
 msgstr "Beiträge"
 
 # @ woops
-#: classes/class-wpml-functions.php:58 includes/class-legacy-api.php:505
-#: includes/class-legacy-api.php:511
+#: classes/class-wpml-functions.php:58
+#: includes/class-wc-predictive-search.php:420
+#: includes/class-wc-predictive-search.php:429
+#: includes/class-wc-predictive-search.php:435
 #: widget/wc-predictive-search-widgets.php:24
 msgid "Pages"
 msgstr "Seiten"
@@ -1275,15 +1341,15 @@ msgstr "Seiten"
 msgid "Priced"
 msgstr "Mit Preis"
 
-#: classes/class-wpml-functions.php:64 includes/class-legacy-api.php:218
+#: classes/class-wpml-functions.php:64 includes/class-legacy-api.php:185
 msgid "Nothing found for that name. Try a different spelling or name."
 msgstr ""
 
-#: upgrade/plugin_upgrade.php:30
+#: upgrade/plugin_upgrade.php:32
 msgid "or"
 msgstr ""
 
-#: upgrade/plugin_upgrade.php:30
+#: upgrade/plugin_upgrade.php:32
 msgid "Purchase one now"
 msgstr ""
 
@@ -1302,17 +1368,17 @@ msgid "WooCommerce Predictive Search"
 msgstr "WooCommerce Predictive Search"
 
 # @ woops
-#: widget/wc-predictive-search-widgets.php:205
+#: widget/wc-predictive-search-widgets.php:186
 msgid "Title:"
 msgstr "Titel:"
 
 # @ woops
-#: widget/wc-predictive-search-widgets.php:221
+#: widget/wc-predictive-search-widgets.php:202
 msgid "Search box text message:"
 msgstr "Im Suchfeld anzuzeigender Text"
 
 # @ woops
-#: widget/wc-predictive-search-widgets.php:223
+#: widget/wc-predictive-search-widgets.php:204
 msgid ""
 "Activate search 'types' for this widget by entering the number of results to "
 "show in the widget dropdown. &lt;empty&gt; = not activated. Sort order by "
@@ -1323,17 +1389,17 @@ msgstr ""
 "Drag&Drop."
 
 # @ woops
-#: widget/wc-predictive-search-widgets.php:231
+#: widget/wc-predictive-search-widgets.php:214
 msgid " Results description character count:"
 msgstr "Zeichenzahl in den Beschreibungen der Ergebnisse"
 
 # @ woops
-#: widget/wc-predictive-search-widgets.php:232
+#: widget/wc-predictive-search-widgets.php:215
 msgid "Search All Products"
 msgstr "Alle Produkte durchsuchen"
 
 # @ woops
-#: widget/wc-predictive-search-widgets.php:233
+#: widget/wc-predictive-search-widgets.php:216
 msgid "Smart Search"
 msgstr "Smart Search"
 

@@ -89,6 +89,7 @@ class WC_Predictive_Search_Global_Settings extends WC_Predictive_Search_Admin_UI
 		add_action( $this->plugin_name . '_set_default_settings' , array( $this, 'set_default_settings' ) );
 
 		add_action( $this->plugin_name . '_settings_' . 'predictive_search_searchbox_text' . '_start', array( $this, 'predictive_search_searchbox_text' ) );
+		add_action( $this->plugin_name . '_settings_' . 'predictive_search_synch_data' . '_start', array( $this, 'predictive_search_synch_data' ) );
 
 		add_action( $this->plugin_name . '-' . $this->form_key . '_settings_init' , array( $this, 'after_save_settings' ) );
 		//add_action( $this->plugin_name . '_get_all_settings' , array( $this, 'get_settings' ) );
@@ -126,6 +127,21 @@ class WC_Predictive_Search_Global_Settings extends WC_Predictive_Search_Admin_UI
 		}
 		if ( isset( $_REQUEST['woocommerce_search_box_text']) ) {
 			update_option('woocommerce_search_box_text',  $_REQUEST['woocommerce_search_box_text'] );
+		}
+		if ( isset( $_POST['predicitve-search-synch-wp-data'] ) ) {
+			@set_time_limit(86400);
+			@ini_set("memory_limit","640M");
+			global $wc_predictive_search;
+			$wc_predictive_search->install_databases();
+
+			global $wc_ps_synch;
+			$wc_ps_synch->synch_full_database();
+
+			echo '<div class="updated"><p>' . __( '<strong>SUCCESS</strong>! Your Predictive Search Database has been successfully updated.', 'woops' ) . '</p></div>';
+		}
+
+		if ( isset( $_POST['bt_save_settings'] ) ) {
+			flush_rewrite_rules();
 		}
 	}
 
@@ -250,6 +266,42 @@ class WC_Predictive_Search_Global_Settings extends WC_Predictive_Search_Admin_UI
 			),
 
 			array(
+            	'name' 		=> __( 'Special Characters', 'woops' ),
+				'desc'		=> __( 'Select any special characters that are used on this site. Selecting a character will mean that results will be returned when user search input includes or excludes the special character. <strong>IMPORTANT!</strong> Do not turn this feature on unless needed. If ON - only select actual characters used in Product Titles, SKU, Category Names etc - each special character selected creates 1 extra query per search object, per product, post or page.', 'woops' ),
+                'type' 		=> 'heading',
+           	),
+			array(
+				'name' 		=> __( 'Special Character Function', 'woops' ),
+				'class'		=> 'woocommerce_search_remove_special_character',
+				'id' 		=> 'woocommerce_search_remove_special_character',
+				'type' 		=> 'onoff_checkbox',
+				'default'	=> 'no',
+				'checked_value'		=> 'yes',
+				'unchecked_value'	=> 'no',
+				'checked_label'		=> __( 'ON', 'woops' ),
+				'unchecked_label' 	=> __( 'OFF', 'woops' ),
+			),
+
+			array(
+                'type' 		=> 'heading',
+				'class'		=> 'woocommerce_search_remove_special_character_container',
+           	),
+			array(
+				'name' 		=> __( "Select Characters", 'woops' ),
+				'id' 		=> 'woocommerce_search_special_characters',
+				'type' 		=> 'multiselect',
+				'css'		=> 'width:600px; min-height:80px;',
+				'options'	=> WC_Predictive_Search_Functions::special_characters_list(),
+			),
+
+			array(
+            	'name' 		=> __( 'Manual Database Sync', 'woops' ),
+            	'desc'		=> __( 'Predictive Search database is auto updated whenever a product or post is published or updated. Please run a Manual database sync if you upload products by csv or feel that Predictive Search results are showing old data.  Will sync the Predictive Search database with your current WooCommerce and WordPress databases', 'woops' ),
+            	'id'		=> 'predictive_search_synch_data',
+                'type' 		=> 'heading',
+           	),
+
+			array(
 				'name' 		=> __( 'House Keeping', 'woops' ).' :',
 				'type' 		=> 'heading',
 			),
@@ -309,6 +361,17 @@ class WC_Predictive_Search_Global_Settings extends WC_Predictive_Search_Admin_UI
     <?php }
 	}
 
+	public function predictive_search_synch_data() {
+	?>
+		<tr valign="top" class="">
+			<th class="titledesc" scope="row"><label><?php _e('Sync Search Data', 'woops');?></label></th>
+			<td class="forminp">
+				<input type="submit" class="button button-primary" name="predicitve-search-synch-wp-data" value="<?php _e('Sync Now', 'woops');?>" />
+			</td>
+		</tr>
+	<?php
+	}
+
 	public function include_script() {
 	?>
 <script>
@@ -322,12 +385,27 @@ class WC_Predictive_Search_Global_Settings extends WC_Predictive_Search_Admin_UI
 			$('.woocommerce_search_focus_plugin_container').css( {'visibility': 'hidden', 'height' : '0px', 'overflow' : 'hidden'} );
 		}
 
+		if ( $("input.woocommerce_search_remove_special_character:checked").val() == 'yes') {
+			$('.woocommerce_search_remove_special_character_container').css( {'visibility': 'visible', 'height' : 'auto', 'overflow' : 'inherit'} );
+		} else {
+			$('.woocommerce_search_remove_special_character_container').css( {'visibility': 'hidden', 'height' : '0px', 'overflow' : 'hidden'} );
+		}
+
 		$(document).on( "a3rev-ui-onoff_checkbox-switch", '.woocommerce_search_focus_enable', function( event, value, status ) {
 			$('.woocommerce_search_focus_plugin_container').hide().css( {'visibility': 'visible', 'height' : 'auto', 'overflow' : 'inherit'} );
 			if ( status == 'true' ) {
 				$(".woocommerce_search_focus_plugin_container").slideDown();
 			} else {
 				$(".woocommerce_search_focus_plugin_container").slideUp();
+			}
+		});
+
+		$(document).on( "a3rev-ui-onoff_checkbox-switch", '.woocommerce_search_remove_special_character', function( event, value, status ) {
+			$('.woocommerce_search_remove_special_character_container').hide().css( {'visibility': 'visible', 'height' : 'auto', 'overflow' : 'inherit'} );
+			if ( status == 'true' ) {
+				$(".woocommerce_search_remove_special_character_container").slideDown();
+			} else {
+				$(".woocommerce_search_remove_special_character_container").slideUp();
 			}
 		});
 

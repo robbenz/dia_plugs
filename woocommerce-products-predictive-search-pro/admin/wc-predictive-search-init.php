@@ -5,16 +5,22 @@
 update_option('wc_predictive_search_plugin', 'woo_predictive_search');
 function wc_predictive_install(){
 	global $wpdb;
-	$woocommerce_search_page_id = WC_Predictive_Search::create_page( _x('woocommerce-search', 'page_slug', 'woops'), 'woocommerce_search_page_id', __('Woocommerce Predictive Search', 'woops'), '[woocommerce_search]' );
-	WC_Predictive_Search::auto_create_page_for_wpml( $woocommerce_search_page_id, _x('woocommerce-search', 'page_slug', 'woops'), __('Woocommerce Predictive Search', 'woops'), '[woocommerce_search]' );
+	$woocommerce_search_page_id = WC_Predictive_Search_Functions::create_page( _x('woocommerce-search', 'page_slug', 'woops'), 'woocommerce_search_page_id', __('Woocommerce Predictive Search', 'woops'), '[woocommerce_search]' );
+	WC_Predictive_Search_Functions::auto_create_page_for_wpml( $woocommerce_search_page_id, _x('woocommerce-search', 'page_slug', 'woops'), __('Woocommerce Predictive Search', 'woops'), '[woocommerce_search]' );
 
 	// Set Settings Default from Admin Init
 	global $wc_predictive_search_admin_init;
 	$wc_predictive_search_admin_init->set_default_settings();
 
+	global $wc_predictive_search;
+	$wc_predictive_search->install_databases();
+
+	global $wc_ps_synch;
+	$wc_ps_synch->synch_full_database();
+
 	delete_option('woocommerce_search_lite_clean_on_deletion');
 
-	update_option('wc_predictive_search_version', '2.4.5');
+	update_option('wc_predictive_search_version', '3.0.0');
 	update_option('wc_predictive_search_plugin', 'woo_predictive_search');
 	delete_transient("woo_predictive_search_update_info");
 	flush_rewrite_rules();
@@ -47,6 +53,8 @@ function wc_predictive_deactivate(){
 
 	delete_option ( 'a3rev_pin_woo_predictive_search' );
 	delete_option ( 'a3rev_auth_woo_predictive_search' );
+
+	flush_rewrite_rules();
 
 }
 
@@ -93,7 +101,8 @@ global $wc_predictive_search_admin_init;
 $wc_predictive_search_admin_init->init();
 
 // Custom Rewrite Rules
-add_action('init', array('WC_Predictive_Search_Hook_Filter', 'custom_rewrite_rule'), 101 );
+add_filter( 'query_vars', array( 'WC_Predictive_Search_Functions', 'add_query_vars' ) );
+add_filter( 'rewrite_rules_array', array( 'WC_Predictive_Search_Functions', 'add_rewrite_rules' ) );
 
 // Registry widget
 add_action('widgets_init', 'register_widget_woops_predictive_search');
@@ -117,7 +126,7 @@ add_action( 'add_meta_boxes', array('WC_Predictive_Search_Meta','create_custombo
 
 // Save Predictive Search Meta Box to all post type
 if(in_array(basename($_SERVER['PHP_SELF']), array('post.php', 'page.php', 'page-new.php', 'post-new.php'))){
-	add_action( 'save_post', array('WC_Predictive_Search_Meta','save_custombox' ) );
+	add_action( 'save_post', array('WC_Predictive_Search_Meta','save_custombox' ), 103 );
 }
 
 // Add search widget icon to Page Editor
@@ -125,18 +134,6 @@ if (in_array (basename($_SERVER['PHP_SELF']), array('post.php', 'page.php', 'pag
 	add_action('media_buttons_context', array('WC_Predictive_Search_Shortcodes', 'add_search_widget_icon') );
 	add_action('admin_footer', array('WC_Predictive_Search_Shortcodes', 'add_search_widget_mce_popup'));
 }
-
-if (!is_admin()) {
-	add_filter( 'posts_search', array('WC_Predictive_Search_Hook_Filter', 'search_by_title_only'), 500, 2 );
-	add_filter( 'posts_orderby', array('WC_Predictive_Search_Hook_Filter', 'predictive_posts_orderby'), 500, 2 );
-	add_filter( 'get_meta_sql', array('WC_Predictive_Search_Hook_Filter', 'remove_where_on_focuskw_meta'), 500, 6 );
-	// Check role scoper plugin is activated
-	if ( function_exists('scoper_activate') ) {
-		add_filter( 'posts_request', array('WC_Predictive_Search_Hook_Filter', 'posts_request_unconflict_role_scoper_plugin'), 500, 2);
-	}
-}
-
-add_filter( 'pre_get_posts', array('WC_Predictive_Search_Hook_Filter', 'pre_get_posts'), 500 );
 
 if ( ! is_admin() )
 	add_action('init',array('WC_Predictive_Search_Hook_Filter','add_frontend_style'));
@@ -194,13 +191,26 @@ function woo_predictive_search_widget($ps_echo = true, $product_items = 0, $p_sk
 	else return $ps_search_html;
 }
 
-// Upgrade to 2.0
-if(version_compare(get_option('wc_predictive_search_version'), '2.0') === -1){
-	WC_Predictive_Search::upgrade_version_2_0();
-	update_option('wc_predictive_search_version', '2.0');
-}
+// Check upgrade functions
+add_action( 'init', 'woo_predictive_search_pro_upgrade_plugin' );
+function woo_predictive_search_pro_upgrade_plugin () {
 
-update_option('wc_predictive_search_version', '2.4.5');
+	// Upgrade to 2.0
+	if(version_compare(get_option('wc_predictive_search_version'), '2.0') === -1){
+		update_option('wc_predictive_search_version', '2.0');
+
+		include( WOOPS_DIR. '/includes/updates/update-2.0.php' );
+	}
+
+	// Upgrade to 2.0
+	if(version_compare(get_option('wc_predictive_search_version'), '3.0.0') === -1){
+		update_option('wc_predictive_search_version', '3.0.0');
+
+		include( WOOPS_DIR. '/includes/updates/update-3.0.php' );
+	}
+
+	update_option('wc_predictive_search_version', '3.0.0');
+}
 
 }else{
 	add_action('admin_menu', 'wc_predictive_authorization_admin_menu' );

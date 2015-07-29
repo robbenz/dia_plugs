@@ -18,10 +18,7 @@ $.fn.extend({
 		var ps_id = this.data('ps-id');
 		var ps_row = this.data('ps-row');
 		var ps_text_lenght = this.data('ps-text_lenght');
-		var ps_pcat = this.data('ps-pcat');
-		var ps_ptag = this.data('ps-ptag');
-		var ps_scat = this.data('ps-scat');
-		var ps_stag = this.data('ps-stag');
+		var ps_cat_in = this.data('ps-cat_in');
 		var ps_popup_search_in = this.data('ps-popup_search_in');
 		var ps_show_price = this.data('ps-show_price');
 		
@@ -31,17 +28,10 @@ $.fn.extend({
 			'show_price': ps_show_price
 		};
 		
-		if ( typeof ps_pcat != 'undefined' && ps_pcat != '' ) {
-			ps_extra_parameters.pcat = ps_pcat;
-		}
-		if ( typeof ps_ptag != 'undefined' && ps_ptag != '' ) {
-			ps_extra_parameters.ptag = ps_ptag;
-		}
-		if ( typeof ps_scat != 'undefined' && ps_scat != '' ) {
-			ps_extra_parameters.scat = ps_scat;
-		}
-		if ( typeof ps_stag != 'undefined' && ps_stag != '' ) {
-			ps_extra_parameters.stag = ps_stag;
+		if ( typeof ps_cat_in != 'undefined' && ps_cat_in != '' ) {
+			ps_extra_parameters.cat_in = ps_cat_in;
+		} else {
+			ps_extra_parameters.cat_in = 0;
 		}
 		if ( typeof ps_popup_search_in != 'undefined' && ps_popup_search_in != '' ) {
 			ps_extra_parameters.search_in = JSON.stringify( ps_popup_search_in );
