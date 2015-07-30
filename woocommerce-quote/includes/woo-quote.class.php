@@ -790,7 +790,7 @@ class WooQuote extends TCPDF
     {
         // General style
         $style = array(
-                'family' => 'arial',
+                'family' => 'helvetica',
                 'style' => '',
                 'size' => 9,
                 'color' => '#000000'
