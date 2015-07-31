@@ -34,7 +34,7 @@ $ul_class .= 'icons-'.$siw_icons;
 		
 		if (in_array($siw_icons, $siw_custom_sizes)) {
 			$size = str_replace("custom_","",$siw_icons);
-			$siw_icon_path = STYLESHEETPATH .'/social_icons/'.$size.'/'.$id.'.{gif,jpg,jpeg,png}';
+			$siw_icon_path = get_stylesheet_directory() .'/social_icons/'.$size.'/'.$id.'.{gif,jpg,jpeg,png}';
 		}
 		else {
 			$siw_abs_path = str_replace('lib/', '', plugin_dir_path( __FILE__ ));

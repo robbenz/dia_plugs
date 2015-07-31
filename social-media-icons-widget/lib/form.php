@@ -2,7 +2,8 @@
 global $siw_social_accounts;
 
 foreach ($siw_social_accounts as $site => $id) {
-	if(!isset($instance[$id])) { $instance[$id] = 'http://'; }
+	if(!isset($instance[$id])) { $instance[$id] = ''; }
+	elseif($instance[$id] == 'http://') { $instance[$id] = ''; }
 }
 
 if(!isset($instance['title'])) { $instance['title'] = ''; }
@@ -52,7 +53,7 @@ $siw_sizes = array(
 <ul class="social_accounts">
 	<?php foreach ($siw_social_accounts as $site => $id) : ?>
 		<li><label for="<?php echo $this->get_field_id($id); ?>" class="<?php echo $id; ?>"><?php echo $site; ?>:</label>
-			<input class="widefat" type="text" id="<?php echo $this->get_field_id($id); ?>" name="<?php echo $this->get_field_name($id); ?>" value="<?php echo esc_attr($instance[$id]); ?>" /></li>
+			<input class="widefat" type="text" id="<?php echo $this->get_field_id($id); ?>" name="<?php echo $this->get_field_name($id); ?>" value="<?php echo esc_attr($instance[$id]); ?>" placeholder="http://" /></li>
 	<?php endforeach; ?>
 </ul>
 

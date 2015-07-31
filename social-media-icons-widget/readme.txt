@@ -4,7 +4,7 @@ Tags: social, media, widget, follow, profile, icons, 500px, About.me, Behance, D
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CJN7XU3Z7XHDL
 Requires at least: 3.5.1
 Tested up to: 4.1
-Stable tag: 15.06
+Stable tag: 15.07
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -73,6 +73,11 @@ The opening and closing unordered list tags can be edited or changed with the so
 2. Widget settings via the Appearance > Widgets screen.
 
 == Changelog ==
+
+= 15.07 =
+* Replaced http:// in unused input boxes with placeholder attribute instead.
+* Added CSS for icons in widget settings.
+* Updated the way icon path for custom icons is generated to stop conflicts with multilingual plugins.
 
 = 15.06 =
 * Fixed Undefined index errors.
