@@ -1,8 +1,8 @@
 === Woocommerce Abandoned Cart Lite ===
-Contributors: ashokrane
+Contributors: ashokrane, pinal.shah, mansishah, dharakothari
 Tags: abandon cart, shopping cart abandonment
 Requires at least: 1.3
-Tested up to: 4.1.1
+Tested up to: 4.2.2
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -41,7 +41,7 @@ Note: Some features are available in the PRO version only.
 
 **Pro Version:**
 
-**[WooCommerce Abandoned Cart Pro 1.0](http://www.tychesoftwares.com/store/premium-plugins/woocommerce-abandoned-cart-pro "WooCommerce Abandoned Cart Pro")** - The PRO version allows you to track products in abandoned carts, create unlimited email templates, track coupons, keep a track of sent emails & much more.
+**[WooCommerce Abandoned Cart Pro 2.3.8](http://www.tychesoftwares.com/store/premium-plugins/woocommerce-abandoned-cart-pro "WooCommerce Abandoned Cart Pro")** - The PRO version allows you to track products in abandoned carts, create unlimited email templates, track coupons, keep a track of sent emails & much more.
 
 
 **Email Sending Setup:**
@@ -79,6 +79,28 @@ Please ensure you have followed the instructions in "Email Sending Setup" right 
 4. Lists Recovered Orders.
 
 == Changelog ==
+
+= 1.9 =
+* Fixed security issues pointed out by Wordpress.org review team.
+
+= 1.8 =
+* The strings for the products table, added using the shortcode {{products.cart}} in email templates have been added to the .pot, .po and .mo files of the plugin. Now the cart data will be translated to the respective language in the reminder emails as well as the test emails.
+
+= 1.7 =
+* Merge fields like {{products.cart}}, {{customer.firstname}}, etc. will be replaced with dummy data in the test emails that are sent from the template add / edit page. This ensures that you get a very close approximation of the actual email that will be delivered to your customers.
+* Product image size in the abandon cart notification emails is set to a fixed height & width now.
+* On WordPress Multisite, incorrect table prefix was used due to which the plugin was not functioning correctly on multisite installs. This is fixed now.
+
+= 1.6 = 
+* We have included .po, .pot and .mo files in the plugin. The plugin strings can now be translated to any language using these files.
+
+= 1.5 =
+* A shortcode {{products.cart}} can now be added in the abandoned cart notification emails. It will add the product information in the email like Product image, Product name, Quantity, Price & Total. The shortcode needs to be added from the AC menu from the template editor.
+* The default value of the field "Cart abandoned cut-off time" in Settings tab was blank when the plugin is installed. This is now set to 60 minutes upon plugin activation.
+
+= 1.4 =
+* The abandoned cart emails were being sent multiple times for a single email template due to a bug. This is fixed.
+* The plugin will now work on WordPress Multisite too.
 
 = 1.3 =
 * The abandoned cart email notifications are now sent out automatically without the necessity of having to set up a cron job manually.
