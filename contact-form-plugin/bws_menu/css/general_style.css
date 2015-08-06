@@ -69,7 +69,6 @@ td.bws_pro_version_tooltip {
     margin: 5px 0;
     border: 1px solid #AAAAAA;
     max-width: 800px;
-    overflow: hidden;
 }
 .bws_table_bg { 
     background: #f8e268 url("../images/pattern.png");
