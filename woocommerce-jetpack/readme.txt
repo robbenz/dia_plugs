@@ -1,10 +1,10 @@
-=== WooCommerce Jetpack ===
+=== Booster for WooCommerce ===
 Contributors: algoritmika
 Donate link: http://algoritmika.com/donate/
-Tags: woocommerce,woocommerce jetpack,custom price labels,call for price,currency symbol,remove sorting,remove old product slugs,add to cart text,order number,sequential order numbering,email pdf invoice,pdf invoice,pdf invoices,already in cart,empty cart,redirect to checkout,minimum order amount,customize checkout fields,checkout fields,email,customize product tabs,product tabs,related products number,empty cart,redirect add to cart,redirect to checkout,product already in cart,custom payment gateway,payment gateway icon,auto-complete all orders,custom order statuses,custom order status,remove text from price,custom css,hide categories count,hide subcategories count,hide category count,hide subcategory count,display total sales,custom product tabs,remove product tab,payment gateway fee,
+Tags: woocommerce,booster for woocommerce,woocommerce jetpack,custom price labels,call for price,currency symbol,remove sorting,remove old product slugs,add to cart text,order number,sequential order numbering,email pdf invoice,pdf invoice,pdf invoices,already in cart,empty cart,redirect to checkout,minimum order amount,customize checkout fields,checkout fields,email,customize product tabs,product tabs,related products number,empty cart,redirect add to cart,redirect to checkout,product already in cart,custom payment gateway,payment gateway icon,auto-complete all orders,custom order statuses,custom order status,remove text from price,custom css,hide categories count,hide subcategories count,hide category count,hide subcategory count,display total sales,custom product tabs,remove product tab,payment gateway fee,
 Requires at least: 3.8
 Tested up to: 4.2
-Stable tag: 2.2.3
+Stable tag: 2.2.5
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -12,7 +12,7 @@ Supercharge your WordPress WooCommerce site with these awesome powerful features
 
 == Description ==
 
-WooCommerce Jetpack is a WordPress plugin that supercharges your site with awesome powerful features. Features are absolutely required for anyone using excellent WordPress WooCommerce platform.
+Booster for WooCommerce is a WordPress plugin that supercharges your site with awesome powerful features. Features are absolutely required for anyone using excellent WooCommerce platform.
 
 = Features =
 
@@ -50,7 +50,7 @@ WooCommerce Jetpack is a WordPress plugin that supercharges your site with aweso
 * *Checkout Core Fields* - Customize WooCommerce core checkout fields. Disable/enable fields, set required, change labels and/or placeholders.
 * *Checkout Custom Fields* - Add custom fields to WooCommerce checkout page.
 * *Checkout Custom Info* - Add custom info to WooCommerce checkout page.
-* *Custom Payment Gateways* - Add any number of custom payment gateways to WooCommerce.
+* *Custom Payment Gateways* - Add multiple custom payment gateways to WooCommerce.
 * *Empty Cart Button* - Add and customize "Empty Cart" button to cart page.
 * *Mini Cart* - Customize WooCommerce mini cart widget.
 * *Payment Gateways Fees* - Enable extra fees for WooCommerce payment gateways.
@@ -72,20 +72,20 @@ WooCommerce Jetpack is a WordPress plugin that supercharges your site with aweso
 
 **Emails & Misc.**
 
-* *Admin Tools* - Debug and log tools for WooCommerce Jetpack.
+* *Admin Tools* - Booster for WooCommerce debug and log tools.
 * *Emails* - Add another email recipient(s) to all WooCommerce emails.
 * *General* - Separate custom CSS for front and back end. Shortcodes in Wordpress text widgets.
 * *Old Slugs* - Remove old WooCommerce products slugs.
 * *Reports* - WooCommerce stock, sales, customers etc. reports.
-* *WPML* - Basic WPML support for WooCommerce Jetpack.
+* *WPML* - Booster for WooCommerce basic WPML support.
 
 = Feedback =
 * We are open to your suggestions and feedback - thank you for using or trying out one of our plugins!
-* If you have any ideas how to upgrade the plugin to make it better, or if you have ideas about the features that are missing from our plugin, please [fill the form](http://woojetpack.com/submit-idea/).
-* For support visit the [contact page](http://woojetpack.com/contact-us/).
+* If you have any ideas how to upgrade the plugin to make it better, or if you have ideas about the features that are missing from our plugin, please [fill the form](http://boostwoo.com/submit-idea/).
+* For support visit the [contact page](http://boostwoo.com/contact-us/).
 
 = More =
-* Visit the [WooCommerce Jetpack plugin page](http://woojetpack.com/)
+* Visit the [Booster for WooCommerce plugin page](http://boostwoo.com/)
 
 = Available Translations =
 * `FR_fr` by Jean-Marc Schreiber.
@@ -100,7 +100,7 @@ WooCommerce Jetpack is a WordPress plugin that supercharges your site with aweso
 
 = How to unlock those some features settings that are locked? =
 
-To unlock all WooCommerce Jetpack features, please install additional <a href="http://woojetpack.com/plus/">WooCommerce Jetpack Plus</a> plugin.
+To unlock all Booster for WooCommerce features, please install additional <a href="http://boostwoo.com/plus/">Booster for WooCommerce Plus</a> plugin.
 
 == Screenshots ==
 
@@ -108,8 +108,24 @@ To unlock all WooCommerce Jetpack features, please install additional <a href="h
 
 == Changelog ==
 
+= 2.2.5 - 02/08/2015 =
+* Fix - datepicker js script - issue with bazar theme (Add Shortcodes on page edit) fixed.
+* Dev - Plugin renaming continued.
+
+= 2.2.4 - 01/08/2015 =
+* Dev - Plugin renamed from "WooCommerce Jetpack" to "Booster for WooCommerce" (`name_changed_notice` added).
+* Dev - PRODUCTS - Sorting - "Sort SKUs as numbers instead of as texts" option added.
+* Fix - PRODUCTS - Sorting - meta_value to meta_value_num in sort by quantity.
+* Dev - PRODUCTS - Sorting - Code refactoring.
+* Dev - PRODUCTS - Product Cost Price - *Profit* column added.
+* Dev - CART & CHECKOUT - Custom Payment Gateways - Short description changed.
+* Fix - CART & CHECKOUT - Checkout Core Fields - `fix_required_by_default` added.
+* Dev - EMAILS & MISC. - Admin Tools - Short description changed.
+* Dev - EMAILS & MISC. - Reports - Ranges by month added.
+* Dev - EMAILS & MISC. - WPML - Short description changed.
+
 = 2.2.3 - 27/07/2015 =
-* Fix - https://wordpress.org/support/topic/custom-payment-gateway-settings-disappeared-after-last-update
+* Fix - CART & CHECKOUT - Custom Payment Gateways - https://wordpress.org/support/topic/custom-payment-gateway-settings-disappeared-after-last-update.
 * Fix - CART & CHECKOUT - Payment Gateways Fees - Fee removed if current payment gateway is not available for user selected shipping method.
 * Fix - CART & CHECKOUT - Payment Gateways Fees - "Tax class" (and "Is taxable") bug fixed.
 * Dev - Tools (SKU and Admin) moved to each module's settings.
@@ -402,7 +418,7 @@ To unlock all WooCommerce Jetpack features, please install additional <a href="h
   %price%, %price_excluding_tax% (suggested by Josh),
   %stock_availability% (by https://wordpress.org/support/topic/custom-tabs-1),
   %time_since_last_sale%, %weight%, %list_attributes% etc.
-  For full list of short codes, please visit http://woojetpack.com/features/product-info/
+  For full list of short codes, please visit http://boostwoo.com/features/product-info/
 * Feature Upgraded - Product Listings - Option to change default WooCommerce behavior on displaying all products if none categories are dispalyed.
   Now it's possible to disable displaying the products. Suggested by Xavier.
 * Feature Upgraded - PDF Invoices - Order date and time added. Suggested by https://wordpress.org/support/topic/order-time
