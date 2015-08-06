@@ -3776,13 +3776,14 @@ xData.api.map('column', function( params ) {
     $(this).waypoint(function() {
 
       var options = { opacity: '1' };
+      var duration = params.duration || 750;
 
       if      ( params.animation === 'in-from-top' )    { options.top = '0';    }
       else if ( params.animation === 'in-from-left' )   { options.left = '0';   }
       else if ( params.animation === 'in-from-right' )  { options.right = '0';  }
       else if ( params.animation === 'in-from-bottom' ) { options.bottom = '0'; }
 
-      $(this).animate(options, 750, 'easeOutExpo');
+      $(this).animate( options, duration, 'easeOutExpo' );
 
     }, { offset : '65%', triggerOnce : true });
 
@@ -4241,6 +4242,8 @@ $('.x-widgetbar').on('shown.bs.collapse', function() {
 // =============================================================================
 
 xData.api.map('lightbox', function( params ) {
+
+  if ( params.disable || xData.isPreview ) return;
 
   var options = {
     skin    : 'light',

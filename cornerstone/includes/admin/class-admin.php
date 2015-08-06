@@ -157,7 +157,7 @@ class Cornerstone_Admin {
 	 */
 	public function addToolbarEditLink() {
 
-		if ( is_singular() && CS()->common()->isPostTypeAllowed() )  {
+		if ( is_singular() && CS()->common()->isPostTypeAllowed() && $this->usesCornerstone() )  {
 
 			global $wp_admin_bar;
 

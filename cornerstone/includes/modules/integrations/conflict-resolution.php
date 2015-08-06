@@ -15,6 +15,9 @@ class Cornerstone_Integration_Conflict_Resolution {
 
 	public static function preInit() {
 
+		// Disable NextGEN Resource Manager
+		add_filter('run_ngg_resource_manager', '__return_false' );
+
 		global $wp_version;
 
 		if ( version_compare( $wp_version, '4.1', '<' ) ) {

@@ -1,13 +1,16 @@
-require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.CS_builder = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /**
  * Load Global Dependencies
  */
 window.Marionette = window.Mn = require('backbone.marionette');
 window.moment = require('moment');
+window.NProgress = require('nprogress');
+window.Mousetrap = require('mousetrap');
+require('mousetrap/plugins/global-bind/mousetrap-global-bind');
 window.ColorLib = require('../vendor/color');
+window.FileSaver = require('../vendor/FileSaver');
 require('backbone.stickit');
 require('backbone.radio');
-window.NProgress = require('nprogress');
 require('perfect-scrollbar/jquery')(Backbone.$);
 require('../vendor/html.sortable');
 require('../vendor/string_score');
@@ -20,7 +23,7 @@ require('./utility/string-replace-all');
  * Fire it up
  */
 require('./app')();
-},{"../vendor/color":136,"../vendor/html.sortable":137,"../vendor/jquery.growl":138,"../vendor/pointer-events-polyfill":139,"../vendor/rgbaster":140,"../vendor/string_score":141,"./app":2,"./utility/string-replace-all":36,"backbone.marionette":143,"backbone.radio":144,"backbone.stickit":145,"moment":147,"nprogress":148,"perfect-scrollbar/jquery":149}],2:[function(require,module,exports){
+},{"../vendor/FileSaver":137,"../vendor/color":138,"../vendor/html.sortable":139,"../vendor/jquery.growl":140,"../vendor/pointer-events-polyfill":141,"../vendor/rgbaster":142,"../vendor/string_score":143,"./app":2,"./utility/string-replace-all":36,"backbone.marionette":145,"backbone.radio":146,"backbone.stickit":147,"moment":149,"mousetrap":150,"mousetrap/plugins/global-bind/mousetrap-global-bind":151,"nprogress":152,"perfect-scrollbar/jquery":153}],2:[function(require,module,exports){
 var App = Mn.Application.extend({
 
   initialize: function() {
@@ -45,7 +48,7 @@ var App = Mn.Application.extend({
     /**
      * Allow modules to communicate across iFrames using our messenger mixin
      */
-    _.extend( Mn.Module.prototype, require('./utility/messenger') );
+    //_.extend( Mn.Module.prototype, require('./utility/messenger') );
 
     /**
      * Load Templates & Icons
@@ -78,12 +81,15 @@ var App = Mn.Application.extend({
     this.renderQueue = new RenderQueue();
 
     this.loadModels();
-    /**
-     * Load Preview / Editor Mode
-     */
-    this.module( "Mode", (this.Config.isPreview == "true") ? this.loadPreview() : this.loadEditor() );
 
+  },
 
+  /**
+   * Load Preview / Editor Mode
+   */
+  onStart: function() {
+    var mode = (this.Config.isPreview == "true") ? this.loadPreview() : this.loadEditor();
+    this.Mode = new mode;
   },
 
   /**
@@ -115,6 +121,7 @@ var App = Mn.Application.extend({
 
   loadPreview: function() {
 
+    xData.isPreview = true;
     cs.config.trigger( 'load:preview' );
     /**
      * Setup ElementViews
@@ -149,7 +156,6 @@ var App = Mn.Application.extend({
   },
 
   cleanUpPreview: function() {
-    this.Mode.stop();
     delete this.ElementViews;
     delete this.Icons;
   },
@@ -250,6 +256,7 @@ var App = Mn.Application.extend({
   search:   Backbone.Radio.channel( 'cs:search' ),
   confirm:  Backbone.Radio.channel( 'cs:confirm' ),
   message:  Backbone.Radio.channel( 'cs:message' ),
+  keybind:  Backbone.Radio.channel( 'cs:keybind' ),
 
   log: function() {
     if (this.Config.debug == 'true')
@@ -268,7 +275,7 @@ var App = Mn.Application.extend({
 module.exports = function(){
   ( window.cs = new App( { Config: window.cs() } ) ).start({});
 }
-},{"../tmp/templates-builder.js":133,"../tmp/templates-elements.js":134,"../tmp/templates-svg.js":135,"./behaviors":5,"./data/models":18,"./data/models/collection-index":9,"./data/models/element-base":14,"./data/models/sortable-collection":28,"./modules/editor":29,"./modules/preview":30,"./utility/custom-media-manager":32,"./utility/messenger":33,"./utility/render-queue":34,"./utility/renderer":35,"./views/controls":52,"./views/controls/base":38,"./views/elements":98,"./views/elements/base":83}],3:[function(require,module,exports){
+},{"../tmp/templates-builder.js":134,"../tmp/templates-elements.js":135,"../tmp/templates-svg.js":136,"./behaviors":5,"./data/models":18,"./data/models/collection-index":9,"./data/models/element-base":14,"./data/models/sortable-collection":28,"./modules/editor":29,"./modules/preview":31,"./utility/custom-media-manager":33,"./utility/render-queue":34,"./utility/renderer":35,"./views/controls":52,"./views/controls/base":38,"./views/elements":98,"./views/elements/base":83}],3:[function(require,module,exports){
 module.exports = Mn.Behavior.extend({
 
   defaults: {
@@ -866,7 +873,7 @@ var Post = Backbone.Model.extend({
 
 });
 module.exports = Post;
-},{"../../utility/ajax.js":31,"./element-base":14}],21:[function(require,module,exports){
+},{"../../utility/ajax.js":32,"./element-base":14}],21:[function(require,module,exports){
 // RowCollection
 var SortableCollection = require('./sortable-collection');
 module.exports = SortableCollection.extend({
@@ -1136,9 +1143,15 @@ var EditorView     = require('../views/main/editor')
   , Options = require('../data/models/options')
   , ajax = require('../utility/ajax.js');
 
-module.exports = Mn.Module.extend({
 
-  onStart: function() {
+
+module.exports = Mn.Object.extend({
+
+  initialize: function() {
+
+    this.modules = {
+      Keybindings: new (require('./keybind'))
+    };
 
     // Build Element Library
     this.elementLibrary = new ElementLibrary( cs.config.request('elementLibraryStubs'), { sections: cs.config.request('elementLibrarySections') } );
@@ -1314,7 +1327,7 @@ module.exports = Mn.Module.extend({
       document.getElementById("preview-frame").contentWindow.cs.preview.trigger( 'remote', arguments )
     } );
 
-    cs.preview.trigger( 'remote', 'reload', this.post )
+    cs.preview.trigger( 'remote', 'reload', this, cs );
     //document.getElementById("preview-frame").contentWindow.cs.preview.trigger( 'reload', this.post )
   },
 
@@ -1481,6 +1494,13 @@ module.exports = Mn.Module.extend({
 
   blockDownload: function( name ) {
 
+    try {
+      !!new Blob;
+    } catch (e) {
+      cs.message.trigger( 'error', cs.l18n( 'browser-no-can') );
+      return;
+    }
+
     var name = name || 'template';
 
     var elements = (this.post) ? this.post.get('elements') : null;
@@ -1493,14 +1513,16 @@ module.exports = Mn.Module.extend({
     var filename = name.replace(/\s+/g, '_');
 
     var jsonData = JSON.stringify( data, null, 2);
-    var downloadLink = document.createElement("a");
-    downloadLink.setAttribute("href", 'data:text/json;charset=utf8,' + encodeURIComponent( jsonData ) );
-    downloadLink.setAttribute("download", filename + ".csl" );
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    Backbone.$(downloadLink).on('click',function(){
-      $(this).remove();
-    });
+    FileSaver.saveAs( new Blob([jsonData], {type: "text/plain;charset=utf-8"}), filename + ".csl" );
+
+    // var downloadLink = document.createElement("a");
+    // downloadLink.setAttribute("href", 'data:text/json;charset=utf8,' + encodeURIComponent( jsonData ) );
+    // downloadLink.setAttribute("download", filename + ".csl" );
+    // document.body.appendChild(downloadLink);
+    // downloadLink.click();
+    // Backbone.$(downloadLink).on('click',function(){
+    //   $(this).remove();
+    // });
 
   },
 
@@ -1524,7 +1546,7 @@ module.exports = Mn.Module.extend({
       elements.reset();
 
     if (!sections || !sections.length || sections.length == 0) {
-      cs.message.trigger( 'error', 'Could not load template.' );
+      cs.message.trigger( 'error', cs.l18n( 'templates-error-import') );
       return;
     }
 
@@ -1540,7 +1562,7 @@ module.exports = Mn.Module.extend({
     }, this );
 
 
-    cs.message.trigger( 'success', (format == 'page') ? 'Page updated.' : 'Block inserted.' );
+    cs.message.trigger( 'success', (format == 'page') ? cs.l18n( 'templates-page-updated') : cs.l18n( 'templates-block-inserted') );
   },
 
   convertLegacy: function( sections ) {
@@ -1582,12 +1604,76 @@ module.exports = Mn.Module.extend({
   }
 
 });
-},{"../data/models/block-collection":6,"../data/models/block-manager":7,"../data/models/control-collection":12,"../data/models/element-stub-collection":15,"../data/models/options":19,"../data/models/post":20,"../data/models/setting-section-collection":26,"../utility/ajax.js":31,"../views/main/editor":125}],30:[function(require,module,exports){
+},{"../data/models/block-collection":6,"../data/models/block-manager":7,"../data/models/control-collection":12,"../data/models/element-stub-collection":15,"../data/models/options":19,"../data/models/post":20,"../data/models/setting-section-collection":26,"../utility/ajax.js":32,"../views/main/editor":126,"./keybind":30}],30:[function(require,module,exports){
+module.exports = Mn.Object.extend({
+
+  bindings: {
+    'ark': 'up up down down left right left right b a enter'
+  },
+
+  initialize: function(options){
+
+    this.addBindings();
+
+    if ( options && options.preview ) {
+
+      this.listenTo( cs.preview, 'propogate:keybinding:upstream', function( action ) {
+        cs.keybind.trigger( action );
+      });
+
+      this.listenTo(cs.preview, 'reload', function( editor, builder ) {
+
+        this.listenTo( cs.keybind, 'propogate:keybinding', function( action ) {
+          builder.keybind.trigger( action );
+        });
+
+      });
+
+    } else {
+
+      this.listenTo( cs.keybind, 'propogate:keybinding', function( action ) {
+        cs.preview.trigger( 'remote', 'propogate:keybinding:upstream', action );
+      });
+
+    }
+
+  },
+
+  addBindings: function() {
+
+    this.bindings = _.extend( cs.config.request('keybindings'), this.bindings );
+
+    _.each(this.bindings,function( sequence, action ){
+
+      var type = undefined;
+      var types = ['keypress', 'keyup', 'keydown' ];
+
+      _.each( types, function(prefix) {
+        if ( sequence.indexOf( prefix + ':') == 0 ) {
+          type = prefix;
+          sequence = sequence.replace( prefix + ':', '' );
+        }
+      });
+
+      Mousetrap.bindGlobal( sequence, function() {
+        cs.keybind.trigger( action );
+        cs.keybind.trigger( 'propogate:keybinding', action );
+      }, type );
+
+    });
+
+  }
+
+});
+},{}],31:[function(require,module,exports){
 var PreviewView = require('../views/main/preview.js');
-module.exports = Mn.Module.extend({
+module.exports = Mn.Object.extend({
 
-  onStart: function() {
+  initialize: function() {
 
+    this.modules = {
+      Keybindings: new (require('./keybind'))( { preview: true } )
+    };
 
     cs.$indicator = Backbone.$('<div class="cs-indicator"></div>');
 
@@ -1599,9 +1685,9 @@ module.exports = Mn.Module.extend({
       cs.preview.trigger.apply( this, args );
     });
 
-    this.listenTo(cs.preview, 'reload', function( post ) {
+    this.listenTo(cs.preview, 'reload', function( editor ) {
 
-      this.post = post;
+      this.post = editor.post;
       cs.data.reply( 'get:post', this.post );
 
       Backbone.$('#cornerstone-preview-entry').empty();
@@ -1674,15 +1760,8 @@ module.exports = Mn.Module.extend({
 
   },
 
-  onStop: function() {
-    //console.log('STOPPING PREVIEW FRAME');
-    //this.view.destroy();
-    //delete this.view;
-    //delete this.post;
-  }
-
 });
-},{"../views/main/preview.js":129}],31:[function(require,module,exports){
+},{"../views/main/preview.js":130,"./keybind":30}],32:[function(require,module,exports){
 module.exports = {
 
 	/**
@@ -1725,7 +1804,7 @@ module.exports = {
 		}).promise();
 	}
 };
-},{}],32:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 var media = wp.media;
 var l10n = media.view.l10n;
 wp.media.view.MediaFrame.Cornerstone = wp.media.view.MediaFrame.Post.extend({
@@ -2048,98 +2127,6 @@ wp.media.view.MediaFrame.Cornerstone = wp.media.view.MediaFrame.Post.extend({
 //   }
 
 // });
-},{}],33:[function(require,module,exports){
-
-var Messenger = {};
-
-Messenger.Events = {
-
-	messengerOptions: {},
-
-	usePostMessage: function( options ) {
-		var options = options || {};
-
-		_.extend( this.messengerOptions, {
-			target: options.target || (window.parent == window ? null : window.parent),
-			origin: options.origin || window.location.origin,
-			channel: options.channel || 'global',
-			events: options.events || []
-		});
-
-		var recievePostMessageBound = _.bind(this.recievePostMessage, this );
-
-		window.addEventListener( 'message', recievePostMessageBound, false );
-
-		this.on( 'destroy', _.bind( function() {
-			window.removeEventListener( 'message', recievePostMessageBound, false );
-		}, this ) );
-
-
-		this.on( 'all', this.triggerPostMessage );
-	},
-
-	recievePostMessage: function( event ) {
-
-		if ( ! this.messengerOptions.target )
-			return;
-
-		// Require matching origins
-		if ( !this.messengerOptions.origin || event.origin !== this.messengerOptions.origin )
-			return;
-
-		message = event.data
-
-		// Maybe unserialize
-		if ( typeof message === 'string' )
-			message = JSON.parse( message );
-
-		// Validate message object
-		if ( !message || !message.args || !message.channel || message.channel != this.messengerOptions.channel )
-			return;
-
-		message.args[0] = message.args[0].replace('send:','remote:')
-		this.trigger.apply( this, _.values( message.args ) );
-
-	},
-
-	sendPostMessage: function(name) {
-
-		if (!this.messengerOptions.target){
-			console.log('Messenger Error: Can\'t send because target is null', this );
-			return;
-		}
-
-    var message = {
-    	args: arguments,
-    	channel: this.messengerOptions.channel,
-    }
-
-		this.messengerOptions.target.postMessage( JSON.stringify( message ), this.messengerOptions.origin );
-	},
-
-	triggerPostMessage: function(name) {
-
-		// Send if name starts with send:
-		if ( name.indexOf('send:') == 0 ) {
-			this.sendPostMessage.apply(this,arguments);
-			return;
-		}
-
-		// Send whitelisted events
-		if ( this.messengerOptions.events == 'all' || _.contains( this.messengerOptions.events, name ) ) {
-			var array = [];
-			var slice = array.slice;
-			var args = arguments
-			var args = slice.call( arguments, 1)
-			args.unshift( 'send:' + name );
-			this.sendPostMessage.apply(this,args);
-		}
-
-	}
-
-}
-
-module.exports = Messenger.Events;
 },{}],34:[function(require,module,exports){
 var ajax = require('../utility/ajax.js');
 
@@ -2205,7 +2192,7 @@ module.exports = Mn.Object.extend({
 		this.jobs = {};
 	}
 });
-},{"../utility/ajax.js":31}],35:[function(require,module,exports){
+},{"../utility/ajax.js":32}],35:[function(require,module,exports){
 /**
  * Custom Renderer using Cornerstone precompiled templates as a source
  * Includes global template helpers
@@ -4825,6 +4812,7 @@ module.exports = Mn.CollectionView.extend({
 
   		animation = this.model.get('fade_animation');
   		offset = this.model.get('fade_animation_offset');
+
   		style = { opacity: 0 };
 
 			switch ( animation ) {
@@ -4846,7 +4834,8 @@ module.exports = Mn.CollectionView.extend({
   		if ( _.isFunction( callback = window.xData.base.lookupCallback('column') ) ) {
       callback.call( this.$el, {
 	  		fade: fade,
-	  		animation: animation
+	  		animation: animation,
+        duration: parseInt( this.model.get('fade_duration') )
 	  	});
     }
   	}
@@ -5301,7 +5290,7 @@ module.exports = {
   'google-map'        : require('./google-map'),
 //'icon-list'         : require('./icon-list'),
 //'image'             : require('./image'),
-//'line'              : require('./line'),
+  'line'              : require('./line'),
 //'map-embed'         : require('./map-embed'),
 //'pricing-table'     : require('./pricing-table'),
   'promo'             : require('./promo'),
@@ -5322,13 +5311,58 @@ module.exports = {
   //3rd party
   'gravity-forms'     : require('./gravity-forms'),
 }
-},{"./accordion":80,"./alert":81,"./author":82,"./blockquote":84,"./button":85,"./callout":86,"./card":87,"./code":88,"./column":89,"./columnize":90,"./counter":91,"./creative-cta":92,"./custom-headline":93,"./feature-headline":94,"./gap":95,"./google-map":96,"./gravity-forms":97,"./promo":99,"./prompt":100,"./pullquote":101,"./row":102,"./skill-bar":104,"./slider":105,"./social-sharing":106,"./tabs":107,"./text":109,"./text-type":108}],99:[function(require,module,exports){
+},{"./accordion":80,"./alert":81,"./author":82,"./blockquote":84,"./button":85,"./callout":86,"./card":87,"./code":88,"./column":89,"./columnize":90,"./counter":91,"./creative-cta":92,"./custom-headline":93,"./feature-headline":94,"./gap":95,"./google-map":96,"./gravity-forms":97,"./line":99,"./promo":100,"./prompt":101,"./pullquote":102,"./row":103,"./skill-bar":105,"./slider":106,"./social-sharing":107,"./tabs":108,"./text":110,"./text-type":109}],99:[function(require,module,exports){
+module.exports = cs.ElementViews.Base.extend({
+
+  template: _.template('<hr class="x-hr">'),
+  remoteRender: false,
+
+  onRender: function() {
+
+    var $line, classes, styles, visibility, customID, customStyle;
+    $line = this.$('hr');
+
+    classes = [ 'x-hr' ];
+    styles = {};
+
+    if (visibility = this.model.get('visibility')) {
+      classes = _.union( classes, visibility );
+    }
+
+    classes.push(this.model.get('class'))
+    $line.attr('class', classes.join(' '));
+
+    customID = this.model.get('custom_id');
+    if (customID) $line.attr( 'id', customID );
+
+    $line.removeAttr('style');
+    $line.css(styles);
+
+    customStyle = this.model.get('style');
+    if (customStyle) $line.attr('style', $line.attr('style') + customStyle );
+
+    // Replace margin with padding after this first render
+    // This helps make the line clickable in the preview window
+    _.defer(function(){
+
+      $line.css({
+        'paddingBottom' : $line.css('marginBottom'),
+        'marginBottom' : '0'
+      });
+
+    })
+
+
+  },
+
+});
+},{}],100:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	autoFocus: {
 		'.x-promo-content': 'content'
 	}
 });
-},{}],100:[function(require,module,exports){
+},{}],101:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	autoFocus: {
 		'.h-prompt': 'heading',
@@ -5336,14 +5370,14 @@ module.exports = cs.ElementViews.Base.extend({
 		'.x-btn': 'button_text'
 	}
 });
-},{}],101:[function(require,module,exports){
+},{}],102:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	autoFocus: {
 		'.x-pullquote .x-cite': 'cite',
 		'.x-pullquote': 'content'
 	}
 });
-},{}],102:[function(require,module,exports){
+},{}],103:[function(require,module,exports){
 module.exports = cs.ElementViews.BaseCore.extend( {
 
 	childView: require('./column'),
@@ -5434,7 +5468,7 @@ module.exports = cs.ElementViews.BaseCore.extend( {
 	}
 
 } );
-},{"./column":89}],103:[function(require,module,exports){
+},{"./column":89}],104:[function(require,module,exports){
 module.exports = cs.ElementViews.BaseCore.extend( {
 
 	childView: require('./row'),
@@ -5628,26 +5662,26 @@ module.exports = cs.ElementViews.BaseCore.extend( {
 
 
 } );
-},{"./row":102}],104:[function(require,module,exports){
+},{"./row":103}],105:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	autoFocus: {
 		'.h-skill-bar': 'heading',
 		'.x-skill-bar': 'bar_text'
 	}
 });
-},{}],105:[function(require,module,exports){
+},{}],106:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	emptyDetection: function() {
     // Prevent empty detection
   }
 });
-},{}],106:[function(require,module,exports){
+},{}],107:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	autoFocus: {
 		'.x-entry-share': 'heading'
 	}
 });
-},{}],107:[function(require,module,exports){
+},{}],108:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 
 	onClickBeforeInspect: function( e ) {
@@ -5658,7 +5692,7 @@ module.exports = cs.ElementViews.Base.extend({
 	},
 
 });
-},{}],108:[function(require,module,exports){
+},{}],109:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	autoFocus: {
 		'.x-text-type .prefix': 'prefix',
@@ -5666,13 +5700,13 @@ module.exports = cs.ElementViews.Base.extend({
 		'.x-text-type .suffix': 'suffix'
 	}
 });
-},{}],109:[function(require,module,exports){
+},{}],110:[function(require,module,exports){
 module.exports = cs.ElementViews.Base.extend({
 	autoFocus: {
 		'.x-text': 'content'
 	}
 });
-},{}],110:[function(require,module,exports){
+},{}],111:[function(require,module,exports){
 // Confirm
 module.exports = Mn.ItemView.extend({
   className: 'cs-confirm',
@@ -5737,7 +5771,7 @@ module.exports = Mn.ItemView.extend({
   },
 
 });
-},{}],111:[function(require,module,exports){
+},{}],112:[function(require,module,exports){
 // Expand
 module.exports = Mn.ItemView.extend({
   tagName: 'button',
@@ -5772,7 +5806,7 @@ module.exports = Mn.ItemView.extend({
 
   }
 });
-},{}],112:[function(require,module,exports){
+},{}],113:[function(require,module,exports){
 // Expansion
 var ControlListView = require('../controls/control-collection')
   , ControlCollection = require('../../data/models/control-collection');
@@ -5854,7 +5888,7 @@ module.exports = Mn.ItemView.extend({
   }
 
 });
-},{"../../data/models/control-collection":12,"../controls/control-collection":44}],113:[function(require,module,exports){
+},{"../../data/models/control-collection":12,"../controls/control-collection":44}],114:[function(require,module,exports){
 // Home
 module.exports = Mn.ItemView.extend({
   className: 'cs-home',
@@ -5877,7 +5911,7 @@ module.exports = Mn.ItemView.extend({
     return data;
   }
 });
-},{}],114:[function(require,module,exports){
+},{}],115:[function(require,module,exports){
 // Options
 var ControlCollection = require('../../data/models/control-collection');
 
@@ -5912,7 +5946,7 @@ module.exports = Mn.CompositeView.extend({
   }
 
 });
-},{"../../data/models/control-collection":12}],115:[function(require,module,exports){
+},{"../../data/models/control-collection":12}],116:[function(require,module,exports){
 // Respond
 module.exports = Mn.ItemView.extend({
   className: 'cs-respond',
@@ -5958,7 +5992,7 @@ module.exports = Mn.ItemView.extend({
   }
 
 });
-},{}],116:[function(require,module,exports){
+},{}],117:[function(require,module,exports){
 // SaveComplete
 module.exports = Mn.ItemView.extend({
   className: 'cs-saved',
@@ -5997,7 +6031,7 @@ module.exports = Mn.ItemView.extend({
 
 });
 
-},{}],117:[function(require,module,exports){
+},{}],118:[function(require,module,exports){
 // InspectorPane
 
 var ControlListView = require('../controls/control-collection');
@@ -6082,7 +6116,7 @@ module.exports = Mn.LayoutView.extend({
   }
 
 });
-},{"../controls/control-collection":44}],118:[function(require,module,exports){
+},{"../controls/control-collection":44}],119:[function(require,module,exports){
 // LayoutPane
 var ManageRowsView = require('./sub-row/layout-sub-rows')
   , ControlListView = require('../controls/control-collection')
@@ -6128,6 +6162,7 @@ module.exports = Mn.LayoutView.extend({
     cs.navigate.trigger( 'subpane:opened' );
 
     cs.channel.trigger( 'inspect:element', { model: selected.section } );
+    cs.preview.trigger( 'remote', 'select:section', selected.section );
 
     clearTimeout(this.subTimeout);
 
@@ -6158,7 +6193,7 @@ module.exports = Mn.LayoutView.extend({
   },
 
 });
-},{"../controls/control-collection":44,"./sub-row/layout-sub-rows":119,"./sub-templates/layout-sub-templates":120}],119:[function(require,module,exports){
+},{"../controls/control-collection":44,"./sub-row/layout-sub-rows":120,"./sub-templates/layout-sub-templates":121}],120:[function(require,module,exports){
 // RowSubPane
 
 var ViewControlCollection = require('../../controls/control-collection')
@@ -6270,7 +6305,7 @@ module.exports = Mn.LayoutView.extend({
     this.columnControls.reset();
   }
 });
-},{"../../../data/models/control-collection":12,"../../controls/control-collection":44}],120:[function(require,module,exports){
+},{"../../../data/models/control-collection":12,"../../controls/control-collection":44}],121:[function(require,module,exports){
 // TemplatesSubPane
 
 var ViewControlCollection = require('../../controls/control-collection')
@@ -6390,7 +6425,7 @@ module.exports = Mn.LayoutView.extend({
     this.controls.reset();
   }
 });
-},{"../../../data/models/control-collection":12,"../../controls/control-collection":44}],121:[function(require,module,exports){
+},{"../../../data/models/control-collection":12,"../../controls/control-collection":44}],122:[function(require,module,exports){
 // ElementLibraryPane
 
 var ViewBasePane = require('../main/base-pane')
@@ -6423,7 +6458,7 @@ module.exports = ViewBasePane.extend({
     this.$('#elements-search').focus();
   }
 });
-},{"../main/base-pane":124,"./library-list":123}],122:[function(require,module,exports){
+},{"../main/base-pane":125,"./library-list":124}],123:[function(require,module,exports){
 // ElementLibraryItem
 
 module.exports = Mn.ItemView.extend({
@@ -6470,7 +6505,7 @@ module.exports = Mn.ItemView.extend({
 	// 	this.$el.attr( 'data-tooltip-message', this.model.get( 'description' ) );
 	// }
 });
-},{}],123:[function(require,module,exports){
+},{}],124:[function(require,module,exports){
 module.exports = Mn.CollectionView.extend({
 	tagName: 'ul',
 	className: 'cs-elements',
@@ -6512,7 +6547,7 @@ module.exports = Mn.CollectionView.extend({
 		this.query = '';
 	}
 });
-},{"./element-stub":122}],124:[function(require,module,exports){
+},{"./element-stub":123}],125:[function(require,module,exports){
 // BasePane
 var BasePane = Mn.LayoutView.extend({
 
@@ -6553,7 +6588,7 @@ BasePane.extend = function(child) {
 
 module.exports = BasePane;
 
-},{}],125:[function(require,module,exports){
+},{}],126:[function(require,module,exports){
 // Editor
 
 var ViewHeader    = require('./header')
@@ -6713,7 +6748,7 @@ module.exports = Mn.LayoutView.extend({
   }
 
 });
-},{"../extra/expansion":112,"../inspector/inspector":117,"../layout/layout":118,"../library/element-library":121,"../settings/settings":132,"./footer":126,"./header":127}],126:[function(require,module,exports){
+},{"../extra/expansion":113,"../inspector/inspector":118,"../layout/layout":119,"../library/element-library":122,"../settings/settings":133,"./footer":127,"./header":128}],127:[function(require,module,exports){
 var ViewExpand  = require('../extra/expand')
   , ViewConfirm = require('../extra/confirm')
   , ViewHome    = require('../extra/home')
@@ -6899,7 +6934,7 @@ module.exports = Mn.ItemView.extend({
 
 
 });
-},{"../extra/confirm":110,"../extra/expand":111,"../extra/home":113,"../extra/options":114,"../extra/respond":115,"../extra/save-complete":116}],127:[function(require,module,exports){
+},{"../extra/confirm":111,"../extra/expand":112,"../extra/home":114,"../extra/options":115,"../extra/respond":116,"../extra/save-complete":117}],128:[function(require,module,exports){
 // EditorHeader
 module.exports = Mn.ItemView.extend({
   tagName: 'nav',
@@ -6940,7 +6975,7 @@ module.exports = Mn.ItemView.extend({
     this.$( '.' + pane ).addClass('active').siblings().removeClass('active');
   }
 });
-},{}],128:[function(require,module,exports){
+},{}],129:[function(require,module,exports){
 module.exports = Mn.ItemView.extend({
 	template: 'observer',
 	className: 'cs-observer',
@@ -7125,7 +7160,7 @@ module.exports = Mn.ItemView.extend({
 
 	// }
 });
-},{}],129:[function(require,module,exports){
+},{}],130:[function(require,module,exports){
 var Observer = require('./observer.js');
 module.exports = Mn.CollectionView.extend({
 
@@ -7142,7 +7177,8 @@ module.exports = Mn.CollectionView.extend({
 
 		this.listenTo( cs.preview, 'set:collapse', this.toggleCollapse );
 		this.listenTo( cs.preview, 'dragging', this.toggleDragging );
-		this.listenTo( this.collection, 'new:item', _.debounce( _.bind( this.scrollNew, this ), 250, true ) );
+		this.listenTo( this.collection, 'new:item', _.debounce( _.bind( this.scrollToSection, this ), 250, true ) );
+		this.listenTo( cs.preview, 'select:section', this.scrollToSection );
 
 	},
 
@@ -7179,7 +7215,7 @@ module.exports = Mn.CollectionView.extend({
 		this.$el.toggleClass('cs-dragging', state )
 	},
 
-	scrollNew: function( model ) {
+	scrollToSection: function( model ) {
 
 		var child, $offset, offset;
 
@@ -7196,7 +7232,7 @@ module.exports = Mn.CollectionView.extend({
 	}
 
 })
-},{"../elements/section":103,"./observer.js":128}],130:[function(require,module,exports){
+},{"../elements/section":104,"./observer.js":129}],131:[function(require,module,exports){
 module.exports = Mn.CollectionView.extend({
   // className: 'cs-pane-content-inner',
 	childView: require('./settings-section'),
@@ -7224,7 +7260,7 @@ module.exports = Mn.CollectionView.extend({
 
   }
 });
-},{"./settings-section":131}],131:[function(require,module,exports){
+},{"./settings-section":132}],132:[function(require,module,exports){
 module.exports = Mn.CompositeView.extend({
 	template: 'settings/section',
 	className: 'cs-settings-section',
@@ -7238,7 +7274,7 @@ module.exports = Mn.CompositeView.extend({
 			this.$el.addClass('empty');
 	}
 });
-},{}],132:[function(require,module,exports){
+},{}],133:[function(require,module,exports){
 // Views.SettingsPane
 
 var ViewControlCollection = require('../controls/control-collection');
@@ -7346,7 +7382,7 @@ module.exports = ViewBasePane.extend({
   }
 
 });
-},{"../../data/models/control-collection":12,"../controls/control-collection":44,"../main/base-pane":124,"./settings-collection":130}],133:[function(require,module,exports){
+},{"../../data/models/control-collection":12,"../controls/control-collection":44,"../main/base-pane":125,"./settings-collection":131}],134:[function(require,module,exports){
 var templates={};templates['controls/base']=function (obj) {
 obj || (obj = {});
 var __t, __p = '', __j = Array.prototype.join;
@@ -8006,33 +8042,6 @@ __p += '<ul class="cs-actions">\n  <li class="action manage-layout">\n    <i cla
 
 }
 return __p
-};templates['layout/actions']=function (obj) {
-obj || (obj = {});
-var __t, __p = '';
-with (obj) {
-__p += '<ul class="cs-actions">\n  <li class="action new">\n    <i class="cs-icon" data-cs-icon="&#xf0fe;"></i>\n    <span>' +
-((__t = ( l18n('layout-add-section') )) == null ? '' : __t) +
-'</span>\n  </li>\n  <li class="action templates">\n    <i class="cs-icon" data-cs-icon="&#xf15b;"></i>\n    <span>' +
-((__t = ( l18n('layout-templates') )) == null ? '' : __t) +
-'</span>\n  </li>\n</ul>';
-
-}
-return __p
-};templates['layout/layout']=function (obj) {
-obj || (obj = {});
-var __t, __p = '', __j = Array.prototype.join;
-function print() { __p += __j.call(arguments, '') }
-with (obj) {
-
- //builder/layout/layout ;
-__p += '\n<h2>' +
-((__t = ( l18n('layout-heading') )) == null ? '' : __t) +
-'</h2>\n<div class="cs-pane-content-outer">\n  <div id="layout-controls" class="cs-pane-content-inner" style="right:0px;">\n    <div class="cs-pane-section"></div>\n  </div>\n</div>\n<div class="cs-builder-sub layout">\n  <button class="cs-builder-sub-back">\n    <i class="cs-icon" data-cs-icon="&#xf053;"></i> <span>' +
-((__t = ( l18n('layout-return') )) == null ? '' : __t) +
-'</span>\n  </button>\n  <div id="layout-sub" class="cs-pane-content-outer"></div>\n</div>';
-
-}
-return __p
 };templates['library/element-library']=function (obj) {
 obj || (obj = {});
 var __t, __p = '', __j = Array.prototype.join;
@@ -8064,6 +8073,33 @@ __p += '\n<span class="icon">' +
 '</span>\n<span class="name"><span>' +
 ((__t = ( title )) == null ? '' : __t) +
 '</span></span>';
+
+}
+return __p
+};templates['layout/actions']=function (obj) {
+obj || (obj = {});
+var __t, __p = '';
+with (obj) {
+__p += '<ul class="cs-actions">\n  <li class="action new">\n    <i class="cs-icon" data-cs-icon="&#xf0fe;"></i>\n    <span>' +
+((__t = ( l18n('layout-add-section') )) == null ? '' : __t) +
+'</span>\n  </li>\n  <li class="action templates">\n    <i class="cs-icon" data-cs-icon="&#xf15b;"></i>\n    <span>' +
+((__t = ( l18n('layout-templates') )) == null ? '' : __t) +
+'</span>\n  </li>\n</ul>';
+
+}
+return __p
+};templates['layout/layout']=function (obj) {
+obj || (obj = {});
+var __t, __p = '', __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+
+ //builder/layout/layout ;
+__p += '\n<h2>' +
+((__t = ( l18n('layout-heading') )) == null ? '' : __t) +
+'</h2>\n<div class="cs-pane-content-outer">\n  <div id="layout-controls" class="cs-pane-content-inner" style="right:0px;">\n    <div class="cs-pane-section"></div>\n  </div>\n</div>\n<div class="cs-builder-sub layout">\n  <button class="cs-builder-sub-back">\n    <i class="cs-icon" data-cs-icon="&#xf053;"></i> <span>' +
+((__t = ( l18n('layout-return') )) == null ? '' : __t) +
+'</span>\n  </button>\n  <div id="layout-sub" class="cs-pane-content-outer"></div>\n</div>';
 
 }
 return __p
@@ -8250,7 +8286,7 @@ __p += '<input id="template-upload" type="file" name="blockUpload"/>\n<button cl
 }
 return __p
 };module.exports=templates;
-},{}],134:[function(require,module,exports){
+},{}],135:[function(require,module,exports){
 var templates={};templates['dragging-placeholder']=function (obj) {
 obj || (obj = {});
 var __t, __p = '';
@@ -8324,7 +8360,7 @@ __p += '<div class="cs-observer-tooltip top left">' +
 }
 return __p
 };module.exports=templates;
-},{}],135:[function(require,module,exports){
+},{}],136:[function(require,module,exports){
 var templates={};templates['element-accordion']=function (obj) {
 obj || (obj = {});
 var __t, __p = '', __j = Array.prototype.join;
@@ -9085,7 +9121,264 @@ __p += '\n<svg class="cs-custom-icon" version="1.1" xmlns="http://www.w3.org/200
 }
 return __p
 };module.exports=templates;
-},{}],136:[function(require,module,exports){
+},{}],137:[function(require,module,exports){
+/* FileSaver.js
+ * A saveAs() FileSaver implementation.
+ * 1.1.20150716
+ *
+ * By Eli Grey, http://eligrey.com
+ * License: X11/MIT
+ *   See https://github.com/eligrey/FileSaver.js/blob/master/LICENSE.md
+ */
+
+/*global self */
+/*jslint bitwise: true, indent: 4, laxbreak: true, laxcomma: true, smarttabs: true, plusplus: true */
+
+/*! @source http://purl.eligrey.com/github/FileSaver.js/blob/master/FileSaver.js */
+
+var saveAs = saveAs || (function(view) {
+  "use strict";
+  // IE <10 is explicitly unsupported
+  if (typeof navigator !== "undefined" && /MSIE [1-9]\./.test(navigator.userAgent)) {
+    return;
+  }
+  var
+      doc = view.document
+      // only get URL when necessary in case Blob.js hasn't overridden it yet
+    , get_URL = function() {
+      return view.URL || view.webkitURL || view;
+    }
+    , save_link = doc.createElementNS("http://www.w3.org/1999/xhtml", "a")
+    , can_use_save_link = "download" in save_link
+    , click = function(node) {
+      var event = new MouseEvent("click");
+      node.dispatchEvent(event);
+    }
+    , webkit_req_fs = view.webkitRequestFileSystem
+    , req_fs = view.requestFileSystem || webkit_req_fs || view.mozRequestFileSystem
+    , throw_outside = function(ex) {
+      (view.setImmediate || view.setTimeout)(function() {
+        throw ex;
+      }, 0);
+    }
+    , force_saveable_type = "application/octet-stream"
+    , fs_min_size = 0
+    // See https://code.google.com/p/chromium/issues/detail?id=375297#c7 and
+    // https://github.com/eligrey/FileSaver.js/commit/485930a#commitcomment-8768047
+    // for the reasoning behind the timeout and revocation flow
+    , arbitrary_revoke_timeout = 500 // in ms
+    , revoke = function(file) {
+      var revoker = function() {
+        if (typeof file === "string") { // file is an object URL
+          get_URL().revokeObjectURL(file);
+        } else { // file is a File
+          file.remove();
+        }
+      };
+      if (view.chrome) {
+        revoker();
+      } else {
+        setTimeout(revoker, arbitrary_revoke_timeout);
+      }
+    }
+    , dispatch = function(filesaver, event_types, event) {
+      event_types = [].concat(event_types);
+      var i = event_types.length;
+      while (i--) {
+        var listener = filesaver["on" + event_types[i]];
+        if (typeof listener === "function") {
+          try {
+            listener.call(filesaver, event || filesaver);
+          } catch (ex) {
+            throw_outside(ex);
+          }
+        }
+      }
+    }
+    , auto_bom = function(blob) {
+      // prepend BOM for UTF-8 XML and text/* types (including HTML)
+      if (/^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(blob.type)) {
+        return new Blob(["\ufeff", blob], {type: blob.type});
+      }
+      return blob;
+    }
+    , FileSaver = function(blob, name, no_auto_bom) {
+      if (!no_auto_bom) {
+        blob = auto_bom(blob);
+      }
+      // First try a.download, then web filesystem, then object URLs
+      var
+          filesaver = this
+        , type = blob.type
+        , blob_changed = false
+        , object_url
+        , target_view
+        , dispatch_all = function() {
+          dispatch(filesaver, "writestart progress write writeend".split(" "));
+        }
+        // on any filesys errors revert to saving with object URLs
+        , fs_error = function() {
+          // don't create more object URLs than needed
+          if (blob_changed || !object_url) {
+            object_url = get_URL().createObjectURL(blob);
+          }
+          if (target_view) {
+            target_view.location.href = object_url;
+          } else {
+            var new_tab = view.open(object_url, "_blank");
+            if (new_tab == undefined && typeof safari !== "undefined") {
+              //Apple do not allow window.open, see http://bit.ly/1kZffRI
+              view.location.href = object_url
+            }
+          }
+          filesaver.readyState = filesaver.DONE;
+          dispatch_all();
+          revoke(object_url);
+        }
+        , abortable = function(func) {
+          return function() {
+            if (filesaver.readyState !== filesaver.DONE) {
+              return func.apply(this, arguments);
+            }
+          };
+        }
+        , create_if_not_found = {create: true, exclusive: false}
+        , slice
+      ;
+      filesaver.readyState = filesaver.INIT;
+      if (!name) {
+        name = "download";
+      }
+      if (can_use_save_link) {
+        object_url = get_URL().createObjectURL(blob);
+        save_link.href = object_url;
+        save_link.download = name;
+        setTimeout(function() {
+          click(save_link);
+          dispatch_all();
+          revoke(object_url);
+          filesaver.readyState = filesaver.DONE;
+        });
+        return;
+      }
+      // Object and web filesystem URLs have a problem saving in Google Chrome when
+      // viewed in a tab, so I force save with application/octet-stream
+      // http://code.google.com/p/chromium/issues/detail?id=91158
+      // Update: Google errantly closed 91158, I submitted it again:
+      // https://code.google.com/p/chromium/issues/detail?id=389642
+      if (view.chrome && type && type !== force_saveable_type) {
+        slice = blob.slice || blob.webkitSlice;
+        blob = slice.call(blob, 0, blob.size, force_saveable_type);
+        blob_changed = true;
+      }
+      // Since I can't be sure that the guessed media type will trigger a download
+      // in WebKit, I append .download to the filename.
+      // https://bugs.webkit.org/show_bug.cgi?id=65440
+      if (webkit_req_fs && name !== "download") {
+        name += ".download";
+      }
+      if (type === force_saveable_type || webkit_req_fs) {
+        target_view = view;
+      }
+      if (!req_fs) {
+        fs_error();
+        return;
+      }
+      fs_min_size += blob.size;
+      req_fs(view.TEMPORARY, fs_min_size, abortable(function(fs) {
+        fs.root.getDirectory("saved", create_if_not_found, abortable(function(dir) {
+          var save = function() {
+            dir.getFile(name, create_if_not_found, abortable(function(file) {
+              file.createWriter(abortable(function(writer) {
+                writer.onwriteend = function(event) {
+                  target_view.location.href = file.toURL();
+                  filesaver.readyState = filesaver.DONE;
+                  dispatch(filesaver, "writeend", event);
+                  revoke(file);
+                };
+                writer.onerror = function() {
+                  var error = writer.error;
+                  if (error.code !== error.ABORT_ERR) {
+                    fs_error();
+                  }
+                };
+                "writestart progress write abort".split(" ").forEach(function(event) {
+                  writer["on" + event] = filesaver["on" + event];
+                });
+                writer.write(blob);
+                filesaver.abort = function() {
+                  writer.abort();
+                  filesaver.readyState = filesaver.DONE;
+                };
+                filesaver.readyState = filesaver.WRITING;
+              }), fs_error);
+            }), fs_error);
+          };
+          dir.getFile(name, {create: false}, abortable(function(file) {
+            // delete file if it already exists
+            file.remove();
+            save();
+          }), abortable(function(ex) {
+            if (ex.code === ex.NOT_FOUND_ERR) {
+              save();
+            } else {
+              fs_error();
+            }
+          }));
+        }), fs_error);
+      }), fs_error);
+    }
+    , FS_proto = FileSaver.prototype
+    , saveAs = function(blob, name, no_auto_bom) {
+      return new FileSaver(blob, name, no_auto_bom);
+    }
+  ;
+  // IE 10+ (native saveAs)
+  if (typeof navigator !== "undefined" && navigator.msSaveOrOpenBlob) {
+    return function(blob, name, no_auto_bom) {
+      if (!no_auto_bom) {
+        blob = auto_bom(blob);
+      }
+      return navigator.msSaveOrOpenBlob(blob, name || "download");
+    };
+  }
+
+  FS_proto.abort = function() {
+    var filesaver = this;
+    filesaver.readyState = filesaver.DONE;
+    dispatch(filesaver, "abort");
+  };
+  FS_proto.readyState = FS_proto.INIT = 0;
+  FS_proto.WRITING = 1;
+  FS_proto.DONE = 2;
+
+  FS_proto.error =
+  FS_proto.onwritestart =
+  FS_proto.onprogress =
+  FS_proto.onwrite =
+  FS_proto.onabort =
+  FS_proto.onerror =
+  FS_proto.onwriteend =
+    null;
+
+  return saveAs;
+}(
+     typeof self !== "undefined" && self
+  || typeof window !== "undefined" && window
+  || this.content
+));
+// `self` is undefined in Firefox for Android content script context
+// while `this` is nsIContentFrameMessageManager
+// with an attribute `content` that corresponds to the window
+
+if (typeof module !== "undefined" && module.exports) {
+  module.exports.saveAs = saveAs;
+} else if ((typeof define !== "undefined" && define !== null) && (define.amd != null)) {
+  define([], function() {
+    return saveAs;
+  });
+}
+},{}],138:[function(require,module,exports){
 /*! Color.js - v0.9.11 - 2013-08-09
 * https://github.com/Automattic/Color.js
 * Copyright (c) 2013 Matt Wiebe; Licensed GPLv2 */
@@ -9678,7 +9971,7 @@ return __p
 		global.Color = Color;
 
 }(this));
-},{}],137:[function(require,module,exports){
+},{}],139:[function(require,module,exports){
 /*
  * HTML5 Sortable jQuery Plugin
  * https://github.com/voidberg/html5sortable
@@ -9819,7 +10112,7 @@ return __p
     });
   };
 })(jQuery);
-},{}],138:[function(require,module,exports){
+},{}],140:[function(require,module,exports){
 // Generated by CoffeeScript 1.9.2
 
 /*
@@ -10049,7 +10342,7 @@ Copyright 2015 Kevin Sylvestre
   };
 
 }).call(this);
-},{}],139:[function(require,module,exports){
+},{}],141:[function(require,module,exports){
 //https://github.com/kmewhort/pointer_events_polyfill
 /*
  * Pointer Events Polyfill: Adds support for the style attribute "pointer-events: none" to browsers without this feature (namely, IE).
@@ -10119,7 +10412,7 @@ PointerEventsPolyfill.prototype.register_mouse_events = function(){
         return true;
     });
 };
-},{}],140:[function(require,module,exports){
+},{}],142:[function(require,module,exports){
 // Modified to fix transparent pixels being calculated as black (https://github.com/briangonzalez/rgbaster.js/issues/8)
 ;(function(window, undefined){
 
@@ -10243,7 +10536,7 @@ PointerEventsPolyfill.prototype.register_mouse_events = function(){
   window.RGBaster = window.RGBaster || RGBaster;
 
 })(window);
-},{}],141:[function(require,module,exports){
+},{}],143:[function(require,module,exports){
 /*!
  * string_score.js: String Scoring Algorithm 0.1.22
  *
@@ -10348,10 +10641,10 @@ String.prototype.score = function (word, fuzziness) {
 
   return finalScore;
 };
-},{}],142:[function(require,module,exports){
+},{}],144:[function(require,module,exports){
 // Backbone.BabySitter
 // -------------------
-// v0.1.6
+// v0.1.7
 //
 // Copyright (c)2015 Derick Bailey, Muted Solutions, LLC.
 // Distributed under MIT license
@@ -10529,7 +10822,7 @@ String.prototype.score = function (word, fuzziness) {
   })(Backbone, _);
   
 
-  Backbone.ChildViewContainer.VERSION = '0.1.6';
+  Backbone.ChildViewContainer.VERSION = '0.1.7';
 
   Backbone.ChildViewContainer.noConflict = function () {
     Backbone.ChildViewContainer = previousChildViewContainer;
@@ -10540,7 +10833,7 @@ String.prototype.score = function (word, fuzziness) {
 
 }));
 
-},{"backbone":"backbone","underscore":"underscore"}],143:[function(require,module,exports){
+},{"backbone":"backbone","underscore":"underscore"}],145:[function(require,module,exports){
 // MarionetteJS (Backbone.Marionette)
 // ----------------------------------
 // v2.4.1
@@ -13903,7 +14196,7 @@ String.prototype.score = function (word, fuzziness) {
   return Marionette;
 }));
 
-},{"backbone":"backbone","backbone.babysitter":142,"backbone.wreqr":146,"underscore":"underscore"}],144:[function(require,module,exports){
+},{"backbone":"backbone","backbone.babysitter":144,"backbone.wreqr":148,"underscore":"underscore"}],146:[function(require,module,exports){
 // Backbone.Radio v0.9.0
 (function(root, factory) {
   if (typeof define === 'function' && define.amd) {
@@ -14331,8 +14624,8 @@ String.prototype.score = function (word, fuzziness) {
   return Radio;
 }));
 
-},{"backbone":"backbone","underscore":"underscore"}],145:[function(require,module,exports){
-// Backbone.Stickit v0.9.0, MIT Licensed
+},{"backbone":"backbone","underscore":"underscore"}],147:[function(require,module,exports){
+// Backbone.Stickit v0.9.2, MIT Licensed
 // Copyright (c) 2012-2015 The New York Times, CMS Group, Matthew DeLambo <delambo@gmail.com>
 
 (function (factory) {
@@ -15025,11 +15318,11 @@ String.prototype.score = function (word, fuzziness) {
 
 }));
 
-},{"backbone":"backbone","underscore":"underscore"}],146:[function(require,module,exports){
+},{"backbone":"backbone","underscore":"underscore"}],148:[function(require,module,exports){
 
-},{}],147:[function(require,module,exports){
+},{}],149:[function(require,module,exports){
 //! moment.js
-//! version : 2.10.2
+//! version : 2.10.3
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
 //! license : MIT
 //! momentjs.com
@@ -15052,28 +15345,12 @@ String.prototype.score = function (word, fuzziness) {
         hookCallback = callback;
     }
 
-    function defaultParsingFlags() {
-        // We need to deep clone this object.
-        return {
-            empty           : false,
-            unusedTokens    : [],
-            unusedInput     : [],
-            overflow        : -2,
-            charsLeftOver   : 0,
-            nullInput       : false,
-            invalidMonth    : null,
-            invalidFormat   : false,
-            userInvalidated : false,
-            iso             : false
-        };
-    }
-
     function isArray(input) {
         return Object.prototype.toString.call(input) === '[object Array]';
     }
 
     function isDate(input) {
-        return Object.prototype.toString.call(input) === '[object Date]' || input instanceof Date;
+        return input instanceof Date || Object.prototype.toString.call(input) === '[object Date]';
     }
 
     function map(arr, fn) {
@@ -15110,21 +15387,45 @@ String.prototype.score = function (word, fuzziness) {
         return createLocalOrUTC(input, format, locale, strict, true).utc();
     }
 
+    function defaultParsingFlags() {
+        // We need to deep clone this object.
+        return {
+            empty           : false,
+            unusedTokens    : [],
+            unusedInput     : [],
+            overflow        : -2,
+            charsLeftOver   : 0,
+            nullInput       : false,
+            invalidMonth    : null,
+            invalidFormat   : false,
+            userInvalidated : false,
+            iso             : false
+        };
+    }
+
+    function getParsingFlags(m) {
+        if (m._pf == null) {
+            m._pf = defaultParsingFlags();
+        }
+        return m._pf;
+    }
+
     function valid__isValid(m) {
         if (m._isValid == null) {
+            var flags = getParsingFlags(m);
             m._isValid = !isNaN(m._d.getTime()) &&
-                m._pf.overflow < 0 &&
-                !m._pf.empty &&
-                !m._pf.invalidMonth &&
-                !m._pf.nullInput &&
-                !m._pf.invalidFormat &&
-                !m._pf.userInvalidated;
+                flags.overflow < 0 &&
+                !flags.empty &&
+                !flags.invalidMonth &&
+                !flags.nullInput &&
+                !flags.invalidFormat &&
+                !flags.userInvalidated;
 
             if (m._strict) {
                 m._isValid = m._isValid &&
-                    m._pf.charsLeftOver === 0 &&
-                    m._pf.unusedTokens.length === 0 &&
-                    m._pf.bigHour === undefined;
+                    flags.charsLeftOver === 0 &&
+                    flags.unusedTokens.length === 0 &&
+                    flags.bigHour === undefined;
             }
         }
         return m._isValid;
@@ -15133,10 +15434,10 @@ String.prototype.score = function (word, fuzziness) {
     function valid__createInvalid (flags) {
         var m = create_utc__createUTC(NaN);
         if (flags != null) {
-            extend(m._pf, flags);
+            extend(getParsingFlags(m), flags);
         }
         else {
-            m._pf.userInvalidated = true;
+            getParsingFlags(m).userInvalidated = true;
         }
 
         return m;
@@ -15172,7 +15473,7 @@ String.prototype.score = function (word, fuzziness) {
             to._offset = from._offset;
         }
         if (typeof from._pf !== 'undefined') {
-            to._pf = from._pf;
+            to._pf = getParsingFlags(from);
         }
         if (typeof from._locale !== 'undefined') {
             to._locale = from._locale;
@@ -15207,7 +15508,7 @@ String.prototype.score = function (word, fuzziness) {
     }
 
     function isMoment (obj) {
-        return obj instanceof Moment || (obj != null && hasOwnProp(obj, '_isAMomentObject'));
+        return obj instanceof Moment || (obj != null && obj._isAMomentObject != null);
     }
 
     function toInt(argumentForCoercion) {
@@ -15645,7 +15946,7 @@ String.prototype.score = function (word, fuzziness) {
         if (month != null) {
             array[MONTH] = month;
         } else {
-            config._pf.invalidMonth = input;
+            getParsingFlags(config).invalidMonth = input;
         }
     });
 
@@ -15729,7 +16030,7 @@ String.prototype.score = function (word, fuzziness) {
         var overflow;
         var a = m._a;
 
-        if (a && m._pf.overflow === -2) {
+        if (a && getParsingFlags(m).overflow === -2) {
             overflow =
                 a[MONTH]       < 0 || a[MONTH]       > 11  ? MONTH :
                 a[DATE]        < 1 || a[DATE]        > daysInMonth(a[YEAR], a[MONTH]) ? DATE :
@@ -15739,11 +16040,11 @@ String.prototype.score = function (word, fuzziness) {
                 a[MILLISECOND] < 0 || a[MILLISECOND] > 999 ? MILLISECOND :
                 -1;
 
-            if (m._pf._overflowDayOfYear && (overflow < YEAR || overflow > DATE)) {
+            if (getParsingFlags(m)._overflowDayOfYear && (overflow < YEAR || overflow > DATE)) {
                 overflow = DATE;
             }
 
-            m._pf.overflow = overflow;
+            getParsingFlags(m).overflow = overflow;
         }
 
         return m;
@@ -15756,10 +16057,12 @@ String.prototype.score = function (word, fuzziness) {
     }
 
     function deprecate(msg, fn) {
-        var firstTime = true;
+        var firstTime = true,
+            msgWithStack = msg + '\n' + (new Error()).stack;
+
         return extend(function () {
             if (firstTime) {
-                warn(msg);
+                warn(msgWithStack);
                 firstTime = false;
             }
             return fn.apply(this, arguments);
@@ -15804,7 +16107,7 @@ String.prototype.score = function (word, fuzziness) {
             match = from_string__isoRegex.exec(string);
 
         if (match) {
-            config._pf.iso = true;
+            getParsingFlags(config).iso = true;
             for (i = 0, l = isoDates.length; i < l; i++) {
                 if (isoDates[i][1].exec(string)) {
                     // match[5] should be 'T' or undefined
@@ -16084,7 +16387,7 @@ String.prototype.score = function (word, fuzziness) {
             yearToUse = defaults(config._a[YEAR], currentDate[YEAR]);
 
             if (config._dayOfYear > daysInYear(yearToUse)) {
-                config._pf._overflowDayOfYear = true;
+                getParsingFlags(config)._overflowDayOfYear = true;
             }
 
             date = createUTCDate(yearToUse, 0, config._dayOfYear);
@@ -16180,7 +16483,7 @@ String.prototype.score = function (word, fuzziness) {
         }
 
         config._a = [];
-        config._pf.empty = true;
+        getParsingFlags(config).empty = true;
 
         // This array is used to make a Date, either with `new Date` or `Date.UTC`
         var string = '' + config._i,
@@ -16196,7 +16499,7 @@ String.prototype.score = function (word, fuzziness) {
             if (parsedInput) {
                 skipped = string.substr(0, string.indexOf(parsedInput));
                 if (skipped.length > 0) {
-                    config._pf.unusedInput.push(skipped);
+                    getParsingFlags(config).unusedInput.push(skipped);
                 }
                 string = string.slice(string.indexOf(parsedInput) + parsedInput.length);
                 totalParsedInputLength += parsedInput.length;
@@ -16204,27 +16507,29 @@ String.prototype.score = function (word, fuzziness) {
             // don't parse if it's not a known token
             if (formatTokenFunctions[token]) {
                 if (parsedInput) {
-                    config._pf.empty = false;
+                    getParsingFlags(config).empty = false;
                 }
                 else {
-                    config._pf.unusedTokens.push(token);
+                    getParsingFlags(config).unusedTokens.push(token);
                 }
                 addTimeToArrayFromToken(token, parsedInput, config);
             }
             else if (config._strict && !parsedInput) {
-                config._pf.unusedTokens.push(token);
+                getParsingFlags(config).unusedTokens.push(token);
             }
         }
 
         // add remaining unparsed input length to the string
-        config._pf.charsLeftOver = stringLength - totalParsedInputLength;
+        getParsingFlags(config).charsLeftOver = stringLength - totalParsedInputLength;
         if (string.length > 0) {
-            config._pf.unusedInput.push(string);
+            getParsingFlags(config).unusedInput.push(string);
         }
 
         // clear _12h flag if hour is <= 12
-        if (config._pf.bigHour === true && config._a[HOUR] <= 12) {
-            config._pf.bigHour = undefined;
+        if (getParsingFlags(config).bigHour === true &&
+                config._a[HOUR] <= 12 &&
+                config._a[HOUR] > 0) {
+            getParsingFlags(config).bigHour = undefined;
         }
         // handle meridiem
         config._a[HOUR] = meridiemFixWrap(config._locale, config._a[HOUR], config._meridiem);
@@ -16268,7 +16573,7 @@ String.prototype.score = function (word, fuzziness) {
             currentScore;
 
         if (config._f.length === 0) {
-            config._pf.invalidFormat = true;
+            getParsingFlags(config).invalidFormat = true;
             config._d = new Date(NaN);
             return;
         }
@@ -16279,7 +16584,6 @@ String.prototype.score = function (word, fuzziness) {
             if (config._useUTC != null) {
                 tempConfig._useUTC = config._useUTC;
             }
-            tempConfig._pf = defaultParsingFlags();
             tempConfig._f = config._f[i];
             configFromStringAndFormat(tempConfig);
 
@@ -16288,12 +16592,12 @@ String.prototype.score = function (word, fuzziness) {
             }
 
             // if there is any input that was not parsed add a penalty for that format
-            currentScore += tempConfig._pf.charsLeftOver;
+            currentScore += getParsingFlags(tempConfig).charsLeftOver;
 
             //or tokens
-            currentScore += tempConfig._pf.unusedTokens.length * 10;
+            currentScore += getParsingFlags(tempConfig).unusedTokens.length * 10;
 
-            tempConfig._pf.score = currentScore;
+            getParsingFlags(tempConfig).score = currentScore;
 
             if (scoreToBeat == null || currentScore < scoreToBeat) {
                 scoreToBeat = currentScore;
@@ -16336,6 +16640,8 @@ String.prototype.score = function (word, fuzziness) {
             configFromStringAndArray(config);
         } else if (format) {
             configFromStringAndFormat(config);
+        } else if (isDate(input)) {
+            config._d = input;
         } else {
             configFromInput(config);
         }
@@ -16388,7 +16694,6 @@ String.prototype.score = function (word, fuzziness) {
         c._i = input;
         c._f = format;
         c._strict = strict;
-        c._pf = defaultParsingFlags();
 
         return createFromConfig(c);
     }
@@ -16962,11 +17267,25 @@ String.prototype.score = function (word, fuzziness) {
     }
 
     function from (time, withoutSuffix) {
+        if (!this.isValid()) {
+            return this.localeData().invalidDate();
+        }
         return create__createDuration({to: this, from: time}).locale(this.locale()).humanize(!withoutSuffix);
     }
 
     function fromNow (withoutSuffix) {
         return this.from(local__createLocal(), withoutSuffix);
+    }
+
+    function to (time, withoutSuffix) {
+        if (!this.isValid()) {
+            return this.localeData().invalidDate();
+        }
+        return create__createDuration({from: this, to: time}).locale(this.locale()).humanize(!withoutSuffix);
+    }
+
+    function toNow (withoutSuffix) {
+        return this.to(local__createLocal(), withoutSuffix);
     }
 
     function locale (key) {
@@ -17071,11 +17390,11 @@ String.prototype.score = function (word, fuzziness) {
     }
 
     function parsingFlags () {
-        return extend({}, this._pf);
+        return extend({}, getParsingFlags(this));
     }
 
     function invalidAt () {
-        return this._pf.overflow;
+        return getParsingFlags(this).overflow;
     }
 
     addFormatToken(0, ['gg', 2], 0, function () {
@@ -17226,7 +17545,7 @@ String.prototype.score = function (word, fuzziness) {
         if (weekday != null) {
             week.d = weekday;
         } else {
-            config._pf.invalidWeekday = input;
+            getParsingFlags(config).invalidWeekday = input;
         }
     });
 
@@ -17351,7 +17670,7 @@ String.prototype.score = function (word, fuzziness) {
     });
     addParseToken(['h', 'hh'], function (input, array, config) {
         array[HOUR] = toInt(input);
-        config._pf.bigHour = true;
+        getParsingFlags(config).bigHour = true;
     });
 
     // LOCALES
@@ -17468,6 +17787,8 @@ String.prototype.score = function (word, fuzziness) {
     momentPrototype__proto.format       = format;
     momentPrototype__proto.from         = from;
     momentPrototype__proto.fromNow      = fromNow;
+    momentPrototype__proto.to           = to;
+    momentPrototype__proto.toNow        = toNow;
     momentPrototype__proto.get          = getSet;
     momentPrototype__proto.invalidAt    = invalidAt;
     momentPrototype__proto.isAfter      = isAfter;
@@ -17656,7 +17977,7 @@ String.prototype.score = function (word, fuzziness) {
         }
         // Lenient ordinal parsing accepts just a number in addition to
         // number + (possibly) stuff coming from _ordinalParseLenient.
-        this._ordinalParseLenient = new RegExp(this._ordinalParse.source + '|' + /\d{1,2}/.source);
+        this._ordinalParseLenient = new RegExp(this._ordinalParse.source + '|' + (/\d{1,2}/).source);
     }
 
     var prototype__proto = Locale.prototype;
@@ -17873,13 +18194,13 @@ String.prototype.score = function (word, fuzziness) {
             // handle milliseconds separately because of floating point math errors (issue #1867)
             days = this._days + Math.round(yearsToDays(this._months / 12));
             switch (units) {
-                case 'week'   : return days / 7            + milliseconds / 6048e5;
-                case 'day'    : return days                + milliseconds / 864e5;
-                case 'hour'   : return days * 24           + milliseconds / 36e5;
-                case 'minute' : return days * 24 * 60      + milliseconds / 6e4;
-                case 'second' : return days * 24 * 60 * 60 + milliseconds / 1000;
+                case 'week'   : return days / 7     + milliseconds / 6048e5;
+                case 'day'    : return days         + milliseconds / 864e5;
+                case 'hour'   : return days * 24    + milliseconds / 36e5;
+                case 'minute' : return days * 1440  + milliseconds / 6e4;
+                case 'second' : return days * 86400 + milliseconds / 1000;
                 // Math.floor prevents floating point math errors here
-                case 'millisecond': return Math.floor(days * 24 * 60 * 60 * 1000) + milliseconds;
+                case 'millisecond': return Math.floor(days * 864e5) + milliseconds;
                 default: throw new Error('Unknown unit ' + units);
             }
         }
@@ -18080,7 +18401,7 @@ String.prototype.score = function (word, fuzziness) {
     // Side effect imports
 
 
-    utils_hooks__hooks.version = '2.10.2';
+    utils_hooks__hooks.version = '2.10.3';
 
     setHookCallback(local__createLocal);
 
@@ -18111,7 +18432,1075 @@ String.prototype.score = function (word, fuzziness) {
     return _moment;
 
 }));
-},{}],148:[function(require,module,exports){
+},{}],150:[function(require,module,exports){
+/*global define:false */
+/**
+ * Copyright 2015 Craig Campbell
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * Mousetrap is a simple keyboard shortcut library for Javascript with
+ * no external dependencies
+ *
+ * @version 1.5.3
+ * @url craig.is/killing/mice
+ */
+(function(window, document, undefined) {
+
+    /**
+     * mapping of special keycodes to their corresponding keys
+     *
+     * everything in this dictionary cannot use keypress events
+     * so it has to be here to map to the correct keycodes for
+     * keyup/keydown events
+     *
+     * @type {Object}
+     */
+    var _MAP = {
+        8: 'backspace',
+        9: 'tab',
+        13: 'enter',
+        16: 'shift',
+        17: 'ctrl',
+        18: 'alt',
+        20: 'capslock',
+        27: 'esc',
+        32: 'space',
+        33: 'pageup',
+        34: 'pagedown',
+        35: 'end',
+        36: 'home',
+        37: 'left',
+        38: 'up',
+        39: 'right',
+        40: 'down',
+        45: 'ins',
+        46: 'del',
+        91: 'meta',
+        93: 'meta',
+        224: 'meta'
+    };
+
+    /**
+     * mapping for special characters so they can support
+     *
+     * this dictionary is only used incase you want to bind a
+     * keyup or keydown event to one of these keys
+     *
+     * @type {Object}
+     */
+    var _KEYCODE_MAP = {
+        106: '*',
+        107: '+',
+        109: '-',
+        110: '.',
+        111 : '/',
+        186: ';',
+        187: '=',
+        188: ',',
+        189: '-',
+        190: '.',
+        191: '/',
+        192: '`',
+        219: '[',
+        220: '\\',
+        221: ']',
+        222: '\''
+    };
+
+    /**
+     * this is a mapping of keys that require shift on a US keypad
+     * back to the non shift equivelents
+     *
+     * this is so you can use keyup events with these keys
+     *
+     * note that this will only work reliably on US keyboards
+     *
+     * @type {Object}
+     */
+    var _SHIFT_MAP = {
+        '~': '`',
+        '!': '1',
+        '@': '2',
+        '#': '3',
+        '$': '4',
+        '%': '5',
+        '^': '6',
+        '&': '7',
+        '*': '8',
+        '(': '9',
+        ')': '0',
+        '_': '-',
+        '+': '=',
+        ':': ';',
+        '\"': '\'',
+        '<': ',',
+        '>': '.',
+        '?': '/',
+        '|': '\\'
+    };
+
+    /**
+     * this is a list of special strings you can use to map
+     * to modifier keys when you specify your keyboard shortcuts
+     *
+     * @type {Object}
+     */
+    var _SPECIAL_ALIASES = {
+        'option': 'alt',
+        'command': 'meta',
+        'return': 'enter',
+        'escape': 'esc',
+        'plus': '+',
+        'mod': /Mac|iPod|iPhone|iPad/.test(navigator.platform) ? 'meta' : 'ctrl'
+    };
+
+    /**
+     * variable to store the flipped version of _MAP from above
+     * needed to check if we should use keypress or not when no action
+     * is specified
+     *
+     * @type {Object|undefined}
+     */
+    var _REVERSE_MAP;
+
+    /**
+     * loop through the f keys, f1 to f19 and add them to the map
+     * programatically
+     */
+    for (var i = 1; i < 20; ++i) {
+        _MAP[111 + i] = 'f' + i;
+    }
+
+    /**
+     * loop through to map numbers on the numeric keypad
+     */
+    for (i = 0; i <= 9; ++i) {
+        _MAP[i + 96] = i;
+    }
+
+    /**
+     * cross browser add event method
+     *
+     * @param {Element|HTMLDocument} object
+     * @param {string} type
+     * @param {Function} callback
+     * @returns void
+     */
+    function _addEvent(object, type, callback) {
+        if (object.addEventListener) {
+            object.addEventListener(type, callback, false);
+            return;
+        }
+
+        object.attachEvent('on' + type, callback);
+    }
+
+    /**
+     * takes the event and returns the key character
+     *
+     * @param {Event} e
+     * @return {string}
+     */
+    function _characterFromEvent(e) {
+
+        // for keypress events we should return the character as is
+        if (e.type == 'keypress') {
+            var character = String.fromCharCode(e.which);
+
+            // if the shift key is not pressed then it is safe to assume
+            // that we want the character to be lowercase.  this means if
+            // you accidentally have caps lock on then your key bindings
+            // will continue to work
+            //
+            // the only side effect that might not be desired is if you
+            // bind something like 'A' cause you want to trigger an
+            // event when capital A is pressed caps lock will no longer
+            // trigger the event.  shift+a will though.
+            if (!e.shiftKey) {
+                character = character.toLowerCase();
+            }
+
+            return character;
+        }
+
+        // for non keypress events the special maps are needed
+        if (_MAP[e.which]) {
+            return _MAP[e.which];
+        }
+
+        if (_KEYCODE_MAP[e.which]) {
+            return _KEYCODE_MAP[e.which];
+        }
+
+        // if it is not in the special map
+
+        // with keydown and keyup events the character seems to always
+        // come in as an uppercase character whether you are pressing shift
+        // or not.  we should make sure it is always lowercase for comparisons
+        return String.fromCharCode(e.which).toLowerCase();
+    }
+
+    /**
+     * checks if two arrays are equal
+     *
+     * @param {Array} modifiers1
+     * @param {Array} modifiers2
+     * @returns {boolean}
+     */
+    function _modifiersMatch(modifiers1, modifiers2) {
+        return modifiers1.sort().join(',') === modifiers2.sort().join(',');
+    }
+
+    /**
+     * takes a key event and figures out what the modifiers are
+     *
+     * @param {Event} e
+     * @returns {Array}
+     */
+    function _eventModifiers(e) {
+        var modifiers = [];
+
+        if (e.shiftKey) {
+            modifiers.push('shift');
+        }
+
+        if (e.altKey) {
+            modifiers.push('alt');
+        }
+
+        if (e.ctrlKey) {
+            modifiers.push('ctrl');
+        }
+
+        if (e.metaKey) {
+            modifiers.push('meta');
+        }
+
+        return modifiers;
+    }
+
+    /**
+     * prevents default for this event
+     *
+     * @param {Event} e
+     * @returns void
+     */
+    function _preventDefault(e) {
+        if (e.preventDefault) {
+            e.preventDefault();
+            return;
+        }
+
+        e.returnValue = false;
+    }
+
+    /**
+     * stops propogation for this event
+     *
+     * @param {Event} e
+     * @returns void
+     */
+    function _stopPropagation(e) {
+        if (e.stopPropagation) {
+            e.stopPropagation();
+            return;
+        }
+
+        e.cancelBubble = true;
+    }
+
+    /**
+     * determines if the keycode specified is a modifier key or not
+     *
+     * @param {string} key
+     * @returns {boolean}
+     */
+    function _isModifier(key) {
+        return key == 'shift' || key == 'ctrl' || key == 'alt' || key == 'meta';
+    }
+
+    /**
+     * reverses the map lookup so that we can look for specific keys
+     * to see what can and can't use keypress
+     *
+     * @return {Object}
+     */
+    function _getReverseMap() {
+        if (!_REVERSE_MAP) {
+            _REVERSE_MAP = {};
+            for (var key in _MAP) {
+
+                // pull out the numeric keypad from here cause keypress should
+                // be able to detect the keys from the character
+                if (key > 95 && key < 112) {
+                    continue;
+                }
+
+                if (_MAP.hasOwnProperty(key)) {
+                    _REVERSE_MAP[_MAP[key]] = key;
+                }
+            }
+        }
+        return _REVERSE_MAP;
+    }
+
+    /**
+     * picks the best action based on the key combination
+     *
+     * @param {string} key - character for key
+     * @param {Array} modifiers
+     * @param {string=} action passed in
+     */
+    function _pickBestAction(key, modifiers, action) {
+
+        // if no action was picked in we should try to pick the one
+        // that we think would work best for this key
+        if (!action) {
+            action = _getReverseMap()[key] ? 'keydown' : 'keypress';
+        }
+
+        // modifier keys don't work as expected with keypress,
+        // switch to keydown
+        if (action == 'keypress' && modifiers.length) {
+            action = 'keydown';
+        }
+
+        return action;
+    }
+
+    /**
+     * Converts from a string key combination to an array
+     *
+     * @param  {string} combination like "command+shift+l"
+     * @return {Array}
+     */
+    function _keysFromString(combination) {
+        if (combination === '+') {
+            return ['+'];
+        }
+
+        combination = combination.replace(/\+{2}/g, '+plus');
+        return combination.split('+');
+    }
+
+    /**
+     * Gets info for a specific key combination
+     *
+     * @param  {string} combination key combination ("command+s" or "a" or "*")
+     * @param  {string=} action
+     * @returns {Object}
+     */
+    function _getKeyInfo(combination, action) {
+        var keys;
+        var key;
+        var i;
+        var modifiers = [];
+
+        // take the keys from this pattern and figure out what the actual
+        // pattern is all about
+        keys = _keysFromString(combination);
+
+        for (i = 0; i < keys.length; ++i) {
+            key = keys[i];
+
+            // normalize key names
+            if (_SPECIAL_ALIASES[key]) {
+                key = _SPECIAL_ALIASES[key];
+            }
+
+            // if this is not a keypress event then we should
+            // be smart about using shift keys
+            // this will only work for US keyboards however
+            if (action && action != 'keypress' && _SHIFT_MAP[key]) {
+                key = _SHIFT_MAP[key];
+                modifiers.push('shift');
+            }
+
+            // if this key is a modifier then add it to the list of modifiers
+            if (_isModifier(key)) {
+                modifiers.push(key);
+            }
+        }
+
+        // depending on what the key combination is
+        // we will try to pick the best event for it
+        action = _pickBestAction(key, modifiers, action);
+
+        return {
+            key: key,
+            modifiers: modifiers,
+            action: action
+        };
+    }
+
+    function _belongsTo(element, ancestor) {
+        if (element === null || element === document) {
+            return false;
+        }
+
+        if (element === ancestor) {
+            return true;
+        }
+
+        return _belongsTo(element.parentNode, ancestor);
+    }
+
+    function Mousetrap(targetElement) {
+        var self = this;
+
+        targetElement = targetElement || document;
+
+        if (!(self instanceof Mousetrap)) {
+            return new Mousetrap(targetElement);
+        }
+
+        /**
+         * element to attach key events to
+         *
+         * @type {Element}
+         */
+        self.target = targetElement;
+
+        /**
+         * a list of all the callbacks setup via Mousetrap.bind()
+         *
+         * @type {Object}
+         */
+        self._callbacks = {};
+
+        /**
+         * direct map of string combinations to callbacks used for trigger()
+         *
+         * @type {Object}
+         */
+        self._directMap = {};
+
+        /**
+         * keeps track of what level each sequence is at since multiple
+         * sequences can start out with the same sequence
+         *
+         * @type {Object}
+         */
+        var _sequenceLevels = {};
+
+        /**
+         * variable to store the setTimeout call
+         *
+         * @type {null|number}
+         */
+        var _resetTimer;
+
+        /**
+         * temporary state where we will ignore the next keyup
+         *
+         * @type {boolean|string}
+         */
+        var _ignoreNextKeyup = false;
+
+        /**
+         * temporary state where we will ignore the next keypress
+         *
+         * @type {boolean}
+         */
+        var _ignoreNextKeypress = false;
+
+        /**
+         * are we currently inside of a sequence?
+         * type of action ("keyup" or "keydown" or "keypress") or false
+         *
+         * @type {boolean|string}
+         */
+        var _nextExpectedAction = false;
+
+        /**
+         * resets all sequence counters except for the ones passed in
+         *
+         * @param {Object} doNotReset
+         * @returns void
+         */
+        function _resetSequences(doNotReset) {
+            doNotReset = doNotReset || {};
+
+            var activeSequences = false,
+                key;
+
+            for (key in _sequenceLevels) {
+                if (doNotReset[key]) {
+                    activeSequences = true;
+                    continue;
+                }
+                _sequenceLevels[key] = 0;
+            }
+
+            if (!activeSequences) {
+                _nextExpectedAction = false;
+            }
+        }
+
+        /**
+         * finds all callbacks that match based on the keycode, modifiers,
+         * and action
+         *
+         * @param {string} character
+         * @param {Array} modifiers
+         * @param {Event|Object} e
+         * @param {string=} sequenceName - name of the sequence we are looking for
+         * @param {string=} combination
+         * @param {number=} level
+         * @returns {Array}
+         */
+        function _getMatches(character, modifiers, e, sequenceName, combination, level) {
+            var i;
+            var callback;
+            var matches = [];
+            var action = e.type;
+
+            // if there are no events related to this keycode
+            if (!self._callbacks[character]) {
+                return [];
+            }
+
+            // if a modifier key is coming up on its own we should allow it
+            if (action == 'keyup' && _isModifier(character)) {
+                modifiers = [character];
+            }
+
+            // loop through all callbacks for the key that was pressed
+            // and see if any of them match
+            for (i = 0; i < self._callbacks[character].length; ++i) {
+                callback = self._callbacks[character][i];
+
+                // if a sequence name is not specified, but this is a sequence at
+                // the wrong level then move onto the next match
+                if (!sequenceName && callback.seq && _sequenceLevels[callback.seq] != callback.level) {
+                    continue;
+                }
+
+                // if the action we are looking for doesn't match the action we got
+                // then we should keep going
+                if (action != callback.action) {
+                    continue;
+                }
+
+                // if this is a keypress event and the meta key and control key
+                // are not pressed that means that we need to only look at the
+                // character, otherwise check the modifiers as well
+                //
+                // chrome will not fire a keypress if meta or control is down
+                // safari will fire a keypress if meta or meta+shift is down
+                // firefox will fire a keypress if meta or control is down
+                if ((action == 'keypress' && !e.metaKey && !e.ctrlKey) || _modifiersMatch(modifiers, callback.modifiers)) {
+
+                    // when you bind a combination or sequence a second time it
+                    // should overwrite the first one.  if a sequenceName or
+                    // combination is specified in this call it does just that
+                    //
+                    // @todo make deleting its own method?
+                    var deleteCombo = !sequenceName && callback.combo == combination;
+                    var deleteSequence = sequenceName && callback.seq == sequenceName && callback.level == level;
+                    if (deleteCombo || deleteSequence) {
+                        self._callbacks[character].splice(i, 1);
+                    }
+
+                    matches.push(callback);
+                }
+            }
+
+            return matches;
+        }
+
+        /**
+         * actually calls the callback function
+         *
+         * if your callback function returns false this will use the jquery
+         * convention - prevent default and stop propogation on the event
+         *
+         * @param {Function} callback
+         * @param {Event} e
+         * @returns void
+         */
+        function _fireCallback(callback, e, combo, sequence) {
+
+            // if this event should not happen stop here
+            if (self.stopCallback(e, e.target || e.srcElement, combo, sequence)) {
+                return;
+            }
+
+            if (callback(e, combo) === false) {
+                _preventDefault(e);
+                _stopPropagation(e);
+            }
+        }
+
+        /**
+         * handles a character key event
+         *
+         * @param {string} character
+         * @param {Array} modifiers
+         * @param {Event} e
+         * @returns void
+         */
+        self._handleKey = function(character, modifiers, e) {
+            var callbacks = _getMatches(character, modifiers, e);
+            var i;
+            var doNotReset = {};
+            var maxLevel = 0;
+            var processedSequenceCallback = false;
+
+            // Calculate the maxLevel for sequences so we can only execute the longest callback sequence
+            for (i = 0; i < callbacks.length; ++i) {
+                if (callbacks[i].seq) {
+                    maxLevel = Math.max(maxLevel, callbacks[i].level);
+                }
+            }
+
+            // loop through matching callbacks for this key event
+            for (i = 0; i < callbacks.length; ++i) {
+
+                // fire for all sequence callbacks
+                // this is because if for example you have multiple sequences
+                // bound such as "g i" and "g t" they both need to fire the
+                // callback for matching g cause otherwise you can only ever
+                // match the first one
+                if (callbacks[i].seq) {
+
+                    // only fire callbacks for the maxLevel to prevent
+                    // subsequences from also firing
+                    //
+                    // for example 'a option b' should not cause 'option b' to fire
+                    // even though 'option b' is part of the other sequence
+                    //
+                    // any sequences that do not match here will be discarded
+                    // below by the _resetSequences call
+                    if (callbacks[i].level != maxLevel) {
+                        continue;
+                    }
+
+                    processedSequenceCallback = true;
+
+                    // keep a list of which sequences were matches for later
+                    doNotReset[callbacks[i].seq] = 1;
+                    _fireCallback(callbacks[i].callback, e, callbacks[i].combo, callbacks[i].seq);
+                    continue;
+                }
+
+                // if there were no sequence matches but we are still here
+                // that means this is a regular match so we should fire that
+                if (!processedSequenceCallback) {
+                    _fireCallback(callbacks[i].callback, e, callbacks[i].combo);
+                }
+            }
+
+            // if the key you pressed matches the type of sequence without
+            // being a modifier (ie "keyup" or "keypress") then we should
+            // reset all sequences that were not matched by this event
+            //
+            // this is so, for example, if you have the sequence "h a t" and you
+            // type "h e a r t" it does not match.  in this case the "e" will
+            // cause the sequence to reset
+            //
+            // modifier keys are ignored because you can have a sequence
+            // that contains modifiers such as "enter ctrl+space" and in most
+            // cases the modifier key will be pressed before the next key
+            //
+            // also if you have a sequence such as "ctrl+b a" then pressing the
+            // "b" key will trigger a "keypress" and a "keydown"
+            //
+            // the "keydown" is expected when there is a modifier, but the
+            // "keypress" ends up matching the _nextExpectedAction since it occurs
+            // after and that causes the sequence to reset
+            //
+            // we ignore keypresses in a sequence that directly follow a keydown
+            // for the same character
+            var ignoreThisKeypress = e.type == 'keypress' && _ignoreNextKeypress;
+            if (e.type == _nextExpectedAction && !_isModifier(character) && !ignoreThisKeypress) {
+                _resetSequences(doNotReset);
+            }
+
+            _ignoreNextKeypress = processedSequenceCallback && e.type == 'keydown';
+        };
+
+        /**
+         * handles a keydown event
+         *
+         * @param {Event} e
+         * @returns void
+         */
+        function _handleKeyEvent(e) {
+
+            // normalize e.which for key events
+            // @see http://stackoverflow.com/questions/4285627/javascript-keycode-vs-charcode-utter-confusion
+            if (typeof e.which !== 'number') {
+                e.which = e.keyCode;
+            }
+
+            var character = _characterFromEvent(e);
+
+            // no character found then stop
+            if (!character) {
+                return;
+            }
+
+            // need to use === for the character check because the character can be 0
+            if (e.type == 'keyup' && _ignoreNextKeyup === character) {
+                _ignoreNextKeyup = false;
+                return;
+            }
+
+            self.handleKey(character, _eventModifiers(e), e);
+        }
+
+        /**
+         * called to set a 1 second timeout on the specified sequence
+         *
+         * this is so after each key press in the sequence you have 1 second
+         * to press the next key before you have to start over
+         *
+         * @returns void
+         */
+        function _resetSequenceTimer() {
+            clearTimeout(_resetTimer);
+            _resetTimer = setTimeout(_resetSequences, 1000);
+        }
+
+        /**
+         * binds a key sequence to an event
+         *
+         * @param {string} combo - combo specified in bind call
+         * @param {Array} keys
+         * @param {Function} callback
+         * @param {string=} action
+         * @returns void
+         */
+        function _bindSequence(combo, keys, callback, action) {
+
+            // start off by adding a sequence level record for this combination
+            // and setting the level to 0
+            _sequenceLevels[combo] = 0;
+
+            /**
+             * callback to increase the sequence level for this sequence and reset
+             * all other sequences that were active
+             *
+             * @param {string} nextAction
+             * @returns {Function}
+             */
+            function _increaseSequence(nextAction) {
+                return function() {
+                    _nextExpectedAction = nextAction;
+                    ++_sequenceLevels[combo];
+                    _resetSequenceTimer();
+                };
+            }
+
+            /**
+             * wraps the specified callback inside of another function in order
+             * to reset all sequence counters as soon as this sequence is done
+             *
+             * @param {Event} e
+             * @returns void
+             */
+            function _callbackAndReset(e) {
+                _fireCallback(callback, e, combo);
+
+                // we should ignore the next key up if the action is key down
+                // or keypress.  this is so if you finish a sequence and
+                // release the key the final key will not trigger a keyup
+                if (action !== 'keyup') {
+                    _ignoreNextKeyup = _characterFromEvent(e);
+                }
+
+                // weird race condition if a sequence ends with the key
+                // another sequence begins with
+                setTimeout(_resetSequences, 10);
+            }
+
+            // loop through keys one at a time and bind the appropriate callback
+            // function.  for any key leading up to the final one it should
+            // increase the sequence. after the final, it should reset all sequences
+            //
+            // if an action is specified in the original bind call then that will
+            // be used throughout.  otherwise we will pass the action that the
+            // next key in the sequence should match.  this allows a sequence
+            // to mix and match keypress and keydown events depending on which
+            // ones are better suited to the key provided
+            for (var i = 0; i < keys.length; ++i) {
+                var isFinal = i + 1 === keys.length;
+                var wrappedCallback = isFinal ? _callbackAndReset : _increaseSequence(action || _getKeyInfo(keys[i + 1]).action);
+                _bindSingle(keys[i], wrappedCallback, action, combo, i);
+            }
+        }
+
+        /**
+         * binds a single keyboard combination
+         *
+         * @param {string} combination
+         * @param {Function} callback
+         * @param {string=} action
+         * @param {string=} sequenceName - name of sequence if part of sequence
+         * @param {number=} level - what part of the sequence the command is
+         * @returns void
+         */
+        function _bindSingle(combination, callback, action, sequenceName, level) {
+
+            // store a direct mapped reference for use with Mousetrap.trigger
+            self._directMap[combination + ':' + action] = callback;
+
+            // make sure multiple spaces in a row become a single space
+            combination = combination.replace(/\s+/g, ' ');
+
+            var sequence = combination.split(' ');
+            var info;
+
+            // if this pattern is a sequence of keys then run through this method
+            // to reprocess each pattern one key at a time
+            if (sequence.length > 1) {
+                _bindSequence(combination, sequence, callback, action);
+                return;
+            }
+
+            info = _getKeyInfo(combination, action);
+
+            // make sure to initialize array if this is the first time
+            // a callback is added for this key
+            self._callbacks[info.key] = self._callbacks[info.key] || [];
+
+            // remove an existing match if there is one
+            _getMatches(info.key, info.modifiers, {type: info.action}, sequenceName, combination, level);
+
+            // add this call back to the array
+            // if it is a sequence put it at the beginning
+            // if not put it at the end
+            //
+            // this is important because the way these are processed expects
+            // the sequence ones to come first
+            self._callbacks[info.key][sequenceName ? 'unshift' : 'push']({
+                callback: callback,
+                modifiers: info.modifiers,
+                action: info.action,
+                seq: sequenceName,
+                level: level,
+                combo: combination
+            });
+        }
+
+        /**
+         * binds multiple combinations to the same callback
+         *
+         * @param {Array} combinations
+         * @param {Function} callback
+         * @param {string|undefined} action
+         * @returns void
+         */
+        self._bindMultiple = function(combinations, callback, action) {
+            for (var i = 0; i < combinations.length; ++i) {
+                _bindSingle(combinations[i], callback, action);
+            }
+        };
+
+        // start!
+        _addEvent(targetElement, 'keypress', _handleKeyEvent);
+        _addEvent(targetElement, 'keydown', _handleKeyEvent);
+        _addEvent(targetElement, 'keyup', _handleKeyEvent);
+    }
+
+    /**
+     * binds an event to mousetrap
+     *
+     * can be a single key, a combination of keys separated with +,
+     * an array of keys, or a sequence of keys separated by spaces
+     *
+     * be sure to list the modifier keys first to make sure that the
+     * correct key ends up getting bound (the last key in the pattern)
+     *
+     * @param {string|Array} keys
+     * @param {Function} callback
+     * @param {string=} action - 'keypress', 'keydown', or 'keyup'
+     * @returns void
+     */
+    Mousetrap.prototype.bind = function(keys, callback, action) {
+        var self = this;
+        keys = keys instanceof Array ? keys : [keys];
+        self._bindMultiple.call(self, keys, callback, action);
+        return self;
+    };
+
+    /**
+     * unbinds an event to mousetrap
+     *
+     * the unbinding sets the callback function of the specified key combo
+     * to an empty function and deletes the corresponding key in the
+     * _directMap dict.
+     *
+     * TODO: actually remove this from the _callbacks dictionary instead
+     * of binding an empty function
+     *
+     * the keycombo+action has to be exactly the same as
+     * it was defined in the bind method
+     *
+     * @param {string|Array} keys
+     * @param {string} action
+     * @returns void
+     */
+    Mousetrap.prototype.unbind = function(keys, action) {
+        var self = this;
+        return self.bind.call(self, keys, function() {}, action);
+    };
+
+    /**
+     * triggers an event that has already been bound
+     *
+     * @param {string} keys
+     * @param {string=} action
+     * @returns void
+     */
+    Mousetrap.prototype.trigger = function(keys, action) {
+        var self = this;
+        if (self._directMap[keys + ':' + action]) {
+            self._directMap[keys + ':' + action]({}, keys);
+        }
+        return self;
+    };
+
+    /**
+     * resets the library back to its initial state.  this is useful
+     * if you want to clear out the current keyboard shortcuts and bind
+     * new ones - for example if you switch to another page
+     *
+     * @returns void
+     */
+    Mousetrap.prototype.reset = function() {
+        var self = this;
+        self._callbacks = {};
+        self._directMap = {};
+        return self;
+    };
+
+    /**
+     * should we stop this event before firing off callbacks
+     *
+     * @param {Event} e
+     * @param {Element} element
+     * @return {boolean}
+     */
+    Mousetrap.prototype.stopCallback = function(e, element) {
+        var self = this;
+
+        // if the element has the class "mousetrap" then no need to stop
+        if ((' ' + element.className + ' ').indexOf(' mousetrap ') > -1) {
+            return false;
+        }
+
+        if (_belongsTo(element, self.target)) {
+            return false;
+        }
+
+        // stop for input, select, and textarea
+        return element.tagName == 'INPUT' || element.tagName == 'SELECT' || element.tagName == 'TEXTAREA' || element.isContentEditable;
+    };
+
+    /**
+     * exposes _handleKey publicly so it can be overwritten by extensions
+     */
+    Mousetrap.prototype.handleKey = function() {
+        var self = this;
+        return self._handleKey.apply(self, arguments);
+    };
+
+    /**
+     * Init the global mousetrap functions
+     *
+     * This method is needed to allow the global mousetrap functions to work
+     * now that mousetrap is a constructor function.
+     */
+    Mousetrap.init = function() {
+        var documentMousetrap = Mousetrap(document);
+        for (var method in documentMousetrap) {
+            if (method.charAt(0) !== '_') {
+                Mousetrap[method] = (function(method) {
+                    return function() {
+                        return documentMousetrap[method].apply(documentMousetrap, arguments);
+                    };
+                } (method));
+            }
+        }
+    };
+
+    Mousetrap.init();
+
+    // expose mousetrap to the global object
+    window.Mousetrap = Mousetrap;
+
+    // expose as a common js module
+    if (typeof module !== 'undefined' && module.exports) {
+        module.exports = Mousetrap;
+    }
+
+    // expose mousetrap as an AMD module
+    if (typeof define === 'function' && define.amd) {
+        define(function() {
+            return Mousetrap;
+        });
+    }
+}) (window, document);
+
+},{}],151:[function(require,module,exports){
+/**
+ * adds a bindGlobal method to Mousetrap that allows you to
+ * bind specific keyboard shortcuts that will still work
+ * inside a text input field
+ *
+ * usage:
+ * Mousetrap.bindGlobal('ctrl+s', _saveChanges);
+ */
+/* global Mousetrap:true */
+(function(Mousetrap) {
+    var _globalCallbacks = {};
+    var _originalStopCallback = Mousetrap.prototype.stopCallback;
+
+    Mousetrap.prototype.stopCallback = function(e, element, combo, sequence) {
+        var self = this;
+
+        if (self.paused) {
+            return true;
+        }
+
+        if (_globalCallbacks[combo] || _globalCallbacks[sequence]) {
+            return false;
+        }
+
+        return _originalStopCallback.call(self, e, element, combo);
+    };
+
+    Mousetrap.prototype.bindGlobal = function(keys, callback, action) {
+        var self = this;
+        self.bind(keys, callback, action);
+
+        if (keys instanceof Array) {
+            for (var i = 0; i < keys.length; i++) {
+                _globalCallbacks[keys[i]] = true;
+            }
+            return;
+        }
+
+        _globalCallbacks[keys] = true;
+    };
+
+    Mousetrap.init();
+}) (Mousetrap);
+
+},{}],152:[function(require,module,exports){
 /* NProgress, (c) 2013, 2014 Rico Sta. Cruz - http://ricostacruz.com/nprogress
  * @license MIT */
 
@@ -18589,7 +19978,7 @@ String.prototype.score = function (word, fuzziness) {
 });
 
 
-},{}],149:[function(require,module,exports){
+},{}],153:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -18597,7 +19986,7 @@ String.prototype.score = function (word, fuzziness) {
 
 module.exports = require('./src/js/adaptor/jquery');
 
-},{"./src/js/adaptor/jquery":150}],150:[function(require,module,exports){
+},{"./src/js/adaptor/jquery":154}],154:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -18645,7 +20034,7 @@ if (typeof define === 'function' && define.amd) {
 
 module.exports = mountJQuery;
 
-},{"../main":156,"../plugin/instances":167}],151:[function(require,module,exports){
+},{"../main":160,"../plugin/instances":171}],155:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -18692,7 +20081,7 @@ exports.list = function (element) {
   }
 };
 
-},{}],152:[function(require,module,exports){
+},{}],156:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -18771,7 +20160,7 @@ exports.remove = function (element) {
   }
 };
 
-},{}],153:[function(require,module,exports){
+},{}],157:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -18847,7 +20236,7 @@ EventManager.prototype.once = function (element, eventName, handler) {
 
 module.exports = EventManager;
 
-},{}],154:[function(require,module,exports){
+},{}],158:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -18865,7 +20254,7 @@ module.exports = (function () {
   };
 })();
 
-},{}],155:[function(require,module,exports){
+},{}],159:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -18951,7 +20340,7 @@ exports.env = {
   supportsIePointer: window.navigator.msMaxTouchPoints !== null
 };
 
-},{"./class":151,"./dom":152}],156:[function(require,module,exports){
+},{"./class":155,"./dom":156}],160:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -18967,7 +20356,7 @@ module.exports = {
   destroy: destroy
 };
 
-},{"./plugin/destroy":158,"./plugin/initialize":166,"./plugin/update":169}],157:[function(require,module,exports){
+},{"./plugin/destroy":162,"./plugin/initialize":170,"./plugin/update":173}],161:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -18987,7 +20376,7 @@ module.exports = {
   scrollYMarginOffset: 0
 };
 
-},{}],158:[function(require,module,exports){
+},{}],162:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -19010,7 +20399,7 @@ module.exports = function (element) {
   instances.remove(element);
 };
 
-},{"../lib/dom":152,"../lib/helper":155,"./instances":167}],159:[function(require,module,exports){
+},{"../lib/dom":156,"../lib/helper":159,"./instances":171}],163:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -19070,7 +20459,7 @@ module.exports = function (element) {
   bindClickRailHandler(element, i);
 };
 
-},{"../../lib/helper":155,"../instances":167,"../update-geometry":168}],160:[function(require,module,exports){
+},{"../../lib/helper":159,"../instances":171,"../update-geometry":172}],164:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -19177,7 +20566,7 @@ module.exports = function (element) {
   bindMouseScrollYHandler(element, i);
 };
 
-},{"../../lib/dom":152,"../../lib/helper":155,"../instances":167,"../update-geometry":168}],161:[function(require,module,exports){
+},{"../../lib/dom":156,"../../lib/helper":159,"../instances":171,"../update-geometry":172}],165:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -19297,7 +20686,7 @@ module.exports = function (element) {
   bindKeyboardHandler(element, i);
 };
 
-},{"../../lib/helper":155,"../instances":167,"../update-geometry":168}],162:[function(require,module,exports){
+},{"../../lib/helper":159,"../instances":171,"../update-geometry":172}],166:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -19443,7 +20832,7 @@ module.exports = function (element) {
   bindMouseWheelHandler(element, i);
 };
 
-},{"../../lib/helper":155,"../instances":167,"../update-geometry":168}],163:[function(require,module,exports){
+},{"../../lib/helper":159,"../instances":171,"../update-geometry":172}],167:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -19463,7 +20852,7 @@ module.exports = function (element) {
   bindNativeScrollHandler(element, i);
 };
 
-},{"../instances":167,"../update-geometry":168}],164:[function(require,module,exports){
+},{"../instances":171,"../update-geometry":172}],168:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -19576,7 +20965,7 @@ module.exports = function (element) {
   bindSelectionHandler(element, i);
 };
 
-},{"../../lib/helper":155,"../instances":167,"../update-geometry":168}],165:[function(require,module,exports){
+},{"../../lib/helper":159,"../instances":171,"../update-geometry":172}],169:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -19748,7 +21137,7 @@ module.exports = function (element, supportsTouch, supportsIePointer) {
   bindTouchHandler(element, i, supportsTouch, supportsIePointer);
 };
 
-},{"../instances":167,"../update-geometry":168}],166:[function(require,module,exports){
+},{"../instances":171,"../update-geometry":172}],170:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -19794,7 +21183,7 @@ module.exports = function (element, userSettings) {
   updateGeometry(element);
 };
 
-},{"../lib/class":151,"../lib/helper":155,"./handler/click-rail":159,"./handler/drag-scrollbar":160,"./handler/keyboard":161,"./handler/mouse-wheel":162,"./handler/native-scroll":163,"./handler/selection":164,"./handler/touch":165,"./instances":167,"./update-geometry":168}],167:[function(require,module,exports){
+},{"../lib/class":155,"../lib/helper":159,"./handler/click-rail":163,"./handler/drag-scrollbar":164,"./handler/keyboard":165,"./handler/mouse-wheel":166,"./handler/native-scroll":167,"./handler/selection":168,"./handler/touch":169,"./instances":171,"./update-geometry":172}],171:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -19894,7 +21283,7 @@ exports.get = function (element) {
   return instances[getId(element)];
 };
 
-},{"../lib/dom":152,"../lib/event-manager":153,"../lib/guid":154,"../lib/helper":155,"./default-setting":157}],168:[function(require,module,exports){
+},{"../lib/dom":156,"../lib/event-manager":157,"../lib/guid":158,"../lib/helper":159,"./default-setting":161}],172:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -20003,7 +21392,7 @@ module.exports = function (element) {
   cls[i.scrollbarYActive ? 'add' : 'remove'](element, 'ps-active-y');
 };
 
-},{"../lib/class":151,"../lib/dom":152,"../lib/helper":155,"./instances":167}],169:[function(require,module,exports){
+},{"../lib/class":155,"../lib/dom":156,"../lib/helper":159,"./instances":171}],173:[function(require,module,exports){
 /* Copyright (c) 2015 Hyunje Alex Jun and other contributors
  * Licensed under the MIT License
  */
@@ -20033,13 +21422,14 @@ module.exports = function (element) {
   d.css(i.scrollbarYRail, 'display', '');
 };
 
-},{"../lib/dom":152,"../lib/helper":155,"./instances":167,"./update-geometry":168}],"backbone":[function(require,module,exports){
+},{"../lib/dom":156,"../lib/helper":159,"./instances":171,"./update-geometry":172}],"backbone":[function(require,module,exports){
 module.exports = window.Backbone;
 },{}],"jquery":[function(require,module,exports){
 module.exports = window.jQuery;
 },{}],"underscore":[function(require,module,exports){
 module.exports = window._;
-},{}]},{},[1])
+},{}]},{},[1])("underscore")
+});
 //# sourceMappingURL=builder.map
 
 /* Modules bundled with Browserify */

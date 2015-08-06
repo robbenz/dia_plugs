@@ -156,6 +156,7 @@ class Cornerstone_Builder {
 				'savedLast' => get_the_modified_time('U'),
 				'visualEnhancements' => ($settings['visual_enhancements']) ? 'true' : 'false',
 				'isRTL' => is_rtl() ? 'true' : 'false',
+				'keybindings' => apply_filters( 'cornerstone_keybindings', include( CS()->path( 'includes/builder/keybindings.php' ) ) ),
 			), apply_filters( 'cornerstone_config_data', array() )
 		);
 
