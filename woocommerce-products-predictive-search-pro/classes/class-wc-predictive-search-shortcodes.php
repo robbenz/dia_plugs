@@ -258,17 +258,15 @@ class WC_Predictive_Search_Shortcodes
 				.rs_result_row {background-color: #00426a;}
                 .rs_result_row:hover{opacity:1;}
                 .rs_rs_description{text-transform: uppercase;}  
-                .rs_rs_avatar{width:64px;margin-right:10px;overflow: hidden;float:left; text-align:center;}
+                .rs_rs_avatar{margin-right:10px;overflow: hidden;float:left; text-align:center;}
 				.rs_rs_avatar img{width:100%;height:auto; padding:0 !important; margin:0 !important; border: none !important;}
-				.rs_rs_name{margin-left:0px; pointer-events: none;}
+				.rs_rs_name{margin-left:0px;}
 				.rs_content{margin-left:20px;}
 				.ps_more_result{display:none;width:240px;text-align:center;position:fixed;bottom:50%;left:50%;margin-left:-125px;background-color: black;opacity: .75;color: white;padding: 10px;border-radius:10px;-webkit-border-radius: 10px;-moz-border-radius: 10px}
 				.rs_rs_price .oldprice{text-decoration:line-through; font-size:80%;}
 				.rs_result_others { margin-bottom:20px; }
 				.rs_result_others_heading {font-weight:bold;} 
 				.ps_navigation_activated { font-weight:bold;}
-                .rs_rs_addtocart {pointer-events:auto;}
-                .rs_rs_avatar{display:none;}
 			</style>
 		
 
