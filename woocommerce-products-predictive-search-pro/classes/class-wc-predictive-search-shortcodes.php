@@ -326,6 +326,9 @@ class WC_Predictive_Search_Shortcodes
 		});
 		})(jQuery);
 		</script>
+
+
+
 		<?php
 			
 			$output = ob_get_clean();

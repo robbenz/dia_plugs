@@ -109,7 +109,7 @@ class WC_Predictive_Search_Hook_Backbone
         
 		<div class="rs_content">
         
-			<a href="{{= url }}"><span class="rs_rs_name">{{ if ( type == 'p_sku' ) {  }}{{= keyword }}, {{ } }}{{= title }}</span></a>
+			<div id="rs_rs_rs_name_wrap"><a href="{{= url }}"><span class="rs_rs_name">{{ if ( type == 'p_sku' ) {  }}{{= keyword }}, {{ } }}{{= title }}</span></a></div>
             
 			{{ if ( sku != null && sku != '' ) { }}<div class="rs_rs_sku"><?php wc_ps_ict_t_e( 'SKU', __('SKU', 'woops') ); ?>: {{= sku }}</div>{{ } }}
             
