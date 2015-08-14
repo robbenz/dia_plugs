@@ -46,7 +46,6 @@ class WC_Predictive_Search_Hook_Backbone
 		</div>
 	</script>
     
-    
     <?php
 		wp_register_script( 'ajax-woo-autocomplete-script', WOOPS_JS_URL . '/ajax-autocomplete/jquery.autocomplete.js', array(), '3.0.0', true );
 		wp_register_script( 'backbone.localStorage', WOOPS_JS_URL . '/backbone.localStorage.js', array() , '1.1.9', true );
@@ -156,9 +155,6 @@ class WC_Predictive_Search_Hook_Backbone
 		<p><?php wc_ps_ict_t_e( 'No Result Text', __('<span class="sorry-you-cant-find">Sorry, we don\'t have that part yet.</span><br /><br /><a href="#" class="eModal-2 click-here-parts-link">Click Here To Request A Quote</a>', 'woops') ); ?></p>
 		{{ } }}
 	</script>
-    
-    
-    
     
     <?php
 		wp_enqueue_script( 'jquery' );
