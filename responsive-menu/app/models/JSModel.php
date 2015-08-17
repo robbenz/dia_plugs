@@ -73,6 +73,13 @@ class RM_JSModel extends RM_BaseModel {
             case 'bottom' : $pushSide = 'marginTop'; $pos = '-'; break;
         endswitch;
 
+        switch( $options['RMSide']  ) :
+            case 'left' : $pushBtnSide = 'left';  break;
+            case 'right' : $pushBtnSide = 'right';  break;
+            case 'top' : $pushBtnSide = 'top';  break;
+            case 'bottom' : $pushBtnSide = 'bottom'; break;
+        endswitch;
+		
         $sideSlideOpen = $side == 'right' && empty( $slideOpen ) ? " \$RMjQuery( 'body' ).addClass( 'RMPushOpen' ); " : '';
         $sideSlideRemove =  $side == 'right' && empty( $slideRemove ) ? " \$RMjQuery( 'body' ).removeClass( 'RMPushOpen' ); " : '';
         
@@ -115,7 +122,7 @@ class RM_JSModel extends RM_BaseModel {
 
                     $slideOver .= "
 
-                        \$RMjQuery( '#click-menu' ).animate( { $pushSide: \"{$pos}\" + MenuHeight }, {$speed}, 'linear' );
+                        \$RMjQuery( '#click-menu' ).animate( { $pushBtnSide: '{$width}%' }, {$speed}, 'linear' );
                         \$RMjQuery( '#click-menu' ).css( '$location', 'auto' );
 
                         ";
@@ -135,7 +142,7 @@ class RM_JSModel extends RM_BaseModel {
 
                     $slideOver .= "
 
-                        \$RMjQuery( '#click-menu' ).animate( { $pushSide: \"{$pos}{$width}%\" }, {$speed}, 'linear' );
+                        \$RMjQuery( '#click-menu' ).animate( { $pushBtnSide: '{$width}%' }, {$speed}, 'linear' );
                         \$RMjQuery( '#click-menu' ).css( '{$location}', 'auto' );
 
                     ";
@@ -155,7 +162,7 @@ class RM_JSModel extends RM_BaseModel {
 
             $slideBack .= "
 
-                \$RMjQuery( '#click-menu' ).animate( { $pushSide: \"{$options['RMRight']}\" }, {$speed}, 'linear', function() {
+                \$RMjQuery( '#click-menu' ).animate( { $pushBtnSide: '{$options['RMRight']}%' }, {$speed}, 'linear', function() {
 
                     \$RMjQuery( '#click-menu' ).removeAttr( 'style' );
 
@@ -546,6 +553,7 @@ class RM_JSModel extends RM_BaseModel {
         |--------------------------------------------------------------------------
         |
         | This is the part that deals with the accordion animation
+		| Currently only works to one level of depth
         |
         */     
 
@@ -557,11 +565,35 @@ class RM_JSModel extends RM_BaseModel {
 
                 \$RMjQuery( '.accordion-open' ).removeClass( 'accordion-open' );
 
-                \$RMjQuery( this ).parent( 'li' ).addClass( 'accordion-open' );
-
-                \$RMjQuery( '.responsive-menu li:not( .accordion-open ) > ul' ).slideUp();
-
-
+				\$RMjQuery( this ).parent( 'li' ).addClass( 'accordion-open' );	
+								
+				\$RMjQuery( '.responsive-menu > li:not( .accordion-open ) > ul' ).slideUp();
+				
+				if( \$RMjQuery( this ).siblings( 'ul' ).is( ':visible' ) ) {
+					\$RMjQuery( this ).parent( 'li' ).removeClass( 'accordion-open' );	
+				} else {
+					\$RMjQuery( this ).parent( 'li' ).addClass( 'accordion-open' );	
+				}
+				
+				\$RMjQuery( '.responsive-menu > li > .appendLink' ).removeClass( 'rm-append-inactive' );
+				\$RMjQuery( '.responsive-menu > li > .appendLink' ).addClass( 'rm-append-active' );		
+                
+                var AllClosed = true;
+                
+				\$RMjQuery( '.responsive-menu > li > .appendLink' ).each( function( i ) {
+					\$RMjQuery( this ).html( \$RMjQuery( this ).hasClass( 'rm-append-active' ) ? '{$inactiveArrow}' : '{$activeArrow}' );	
+					AllClosed = \$RMjQuery( this ).parent( 'li' ).hasClass( 'accordion-open' )? false : AllClosed;		
+				});
+				
+				\$RMjQuery( this ).removeClass( 'rm-append-active' );
+				\$RMjQuery( this ).addClass( 'rm-append-inactive' );
+				
+				if( AllClosed ) {
+					\$RMjQuery( this ).removeClass( 'rm-append-inactive' );
+					\$RMjQuery( this ).addClass( 'rm-append-active' );
+				
+				}
+								
             }
 
             ";
