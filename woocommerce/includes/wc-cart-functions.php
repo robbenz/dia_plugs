@@ -281,8 +281,9 @@ function wc_cart_totals_shipping_method_label( $method ) {
 				$label .= ' <small class="tax_label">' . WC()->countries->inc_tax_or_vat() . '</small>';
 			}
 		}
-	} elseif ( $method->id !== 'free_shipping' ) {
-		$label .= ' (' . __( 'Free', 'woocommerce' ) . ')';
+    } elseif ( $method->id !== 'free_shipping' ) {
+        /** BENZ EDIT*/
+		$label .= ' ' . __( '', 'woocommerce' ) . '';
 	}
 
 	return apply_filters( 'woocommerce_cart_shipping_method_full_label', $label, $method );
