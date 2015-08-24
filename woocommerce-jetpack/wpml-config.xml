@@ -71,6 +71,15 @@
 		<key name="wcj_add_to_cart_text_on_archives_in_cart_other" />
 		<key name="wcj_checkout_place_order_button_text" />
 		<key name="wcj_cart_custom_info_content_1" />
+		<key name="wcj_cart_custom_info_content_2" />
+		<key name="wcj_cart_custom_info_content_3" />
+		<key name="wcj_cart_custom_info_content_4" />
+		<key name="wcj_cart_custom_info_content_5" />
+		<key name="wcj_cart_custom_info_content_6" />
+		<key name="wcj_cart_custom_info_content_7" />
+		<key name="wcj_cart_custom_info_content_8" />
+		<key name="wcj_cart_custom_info_content_9" />
+		<key name="wcj_cart_custom_info_content_10" />
 		<key name="wcj_mini_cart_custom_info_content_1" />
 		<key name="wcj_checkout_fields_billing_country_label" />
 		<key name="wcj_checkout_fields_billing_country_placeholder" />
@@ -162,6 +171,7 @@
 		<key name="wcj_invoicing_proforma_invoice_template" />
 		<key name="wcj_invoicing_packing_slip_template" />
 		<key name="wcj_invoicing_credit_note_template" />
+		<key name="wcj_invoicing_custom_doc_template" />
 		<key name="wcj_invoicing_invoice_header_image" />
 		<key name="wcj_invoicing_invoice_header_title_text" />
 		<key name="wcj_invoicing_invoice_header_text" />
@@ -174,13 +184,18 @@
 		<key name="wcj_invoicing_credit_note_header_image" />
 		<key name="wcj_invoicing_credit_note_header_title_text" />
 		<key name="wcj_invoicing_credit_note_header_text" />
+		<key name="wcj_invoicing_custom_doc_header_image" />
+		<key name="wcj_invoicing_custom_doc_header_title_text" />
+		<key name="wcj_invoicing_custom_doc_header_text" />
 		<key name="wcj_invoicing_invoice_footer_text" />
 		<key name="wcj_invoicing_proforma_invoice_footer_text" />
 		<key name="wcj_invoicing_packing_slip_footer_text" />
 		<key name="wcj_invoicing_credit_note_footer_text" />
+		<key name="wcj_invoicing_custom_doc_footer_text" />
 		<key name="wcj_invoicing_invoice_file_name" />
 		<key name="wcj_invoicing_proforma_invoice_file_name" />
 		<key name="wcj_invoicing_packing_slip_file_name" />
 		<key name="wcj_invoicing_credit_note_file_name" />
+		<key name="wcj_invoicing_custom_doc_file_name" />
 	</admin-texts>
 </wpml-config>

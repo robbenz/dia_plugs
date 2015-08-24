@@ -1,10 +1,10 @@
 === Booster for WooCommerce ===
-Contributors: algoritmika,valentinas-solovjovas
+Contributors: algoritmika,anbinder,solovjov
 Donate link: http://algoritmika.com/donate/
 Tags: woocommerce,booster for woocommerce,woocommerce jetpack,custom price labels,call for price,currency symbol,remove sorting,remove old product slugs,add to cart text,order number,sequential order numbering,email pdf invoice,pdf invoice,pdf invoices,already in cart,empty cart,redirect to checkout,minimum order amount,customize checkout fields,checkout fields,email,customize product tabs,product tabs,related products number,empty cart,redirect add to cart,redirect to checkout,product already in cart,custom payment gateway,payment gateway icon,auto-complete all orders,custom order statuses,custom order status,remove text from price,custom css,hide categories count,hide subcategories count,hide category count,hide subcategory count,display total sales,custom product tabs,remove product tab,payment gateway fee,
 Requires at least: 3.8
-Tested up to: 4.2
-Stable tag: 2.2.6
+Tested up to: 4.3
+Stable tag: 2.2.8
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -91,6 +91,7 @@ Booster for WooCommerce is a WordPress plugin that supercharges your site with a
 = Available Translations =
 * French - `fr_FR` by Jean-Marc Schreiber.
 * Dutch - `nl_NL`.
+* Russian - `ru_RU`.
 
 == Installation ==
 
@@ -110,13 +111,34 @@ To unlock all Booster for WooCommerce features, please install additional <a hre
 
 == Changelog ==
 
+= 2.2.8 - 23/08/2015 =
+* Fix - EMAILS & MISC. - WPML - "Creating WPML XML file on each settings saving" disabled. Manual "Regenerate wpml-config.xml file" tool added.
+* Dev - Select All checkbox style modified in `output_dashboard_modules` function.
+* Dev - Dutch translation updated.
+* Dev - POT file updated.
+
+= 2.2.7 - 22/08/2015 =
+* Dev - Russian translation added.
+* Dev - "Module" added to `add_enable_module_setting()` in `WCJ_Module`.
+* Fix - PRICES & CURRENCIES - Wholesale Price - Limit price to zero on fixed type discount.
+* Fix - PRICES & CURRENCIES - Price by Country - `wcj_get_currency_symbol` function. Affects: admin (per product), frontend and reports currency symbols.
+* Dev - CART & CHECKOUT - Checkout Core Fields - "Class" select option added.
+* Dev - CART & CHECKOUT - Checkout Core Fields - Code refactoring.
+* Dev - CART & CHECKOUT - Checkout Custom Fields - Code refactoring.
+* Fix - CART & CHECKOUT - Checkout Custom Fields - Store Exporter fix.
+* Fix - SHIPPING & ORDERS - Order Numbers - Prefix bug (in free version) fixed.
+* Dev - SHIPPING & ORDERS - Order Numbers - Code refactoring.
+* Dev - SHIPPING & ORDERS - Order Custom Statuses - "Add All Statuses to Admin Order Bulk Actions" option added.
+* Dev - PDF Invoicing - "Custom Document" added. `[wcj_custom_doc_number]` and `[wcj_custom_doc_date]` shortcodes added.
+* Dev - PDF Invoicing - Emails - "Admin - Cancelled Order" and "Customer - Refunded Order" options added.
+
 = 2.2.6 - 15/08/2015 =
 * Fix - Shortcodes - `[wcj_order_checkout_field]` bug fixed.
 * Dev - Shortcodes - Products - `[wcj_product_total_sales]` added.
 * Dev - Code refactoring - Meta box support added to `WCJ_Module`.
 * Dev - Code refactoring - `get_settings()` added to `WCJ_Module`.
 * Dev - Dutch translation added.
-* Dev - POT file updated added.
+* Dev - POT file updated.
 * Dev - PRICES & CURRENCIES - Price by Country - "WooJetpack" to "BoostWoo" in country group fields descriptions.
 * Dev - PRICES & CURRENCIES - Price by Country - "Override Country on Checkout with Billing Country" option added. "No country was detected" routine disabled.
 * Dev - PRICES & CURRENCIES - Wholesale Price - Option to set *fixed* discount value (not percent).

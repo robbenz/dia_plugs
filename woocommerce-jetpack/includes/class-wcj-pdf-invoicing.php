@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack PDF Invoicing class.
  *
- * @version 2.2.1
+ * @version 2.2.7
  * @author  Algoritmika Ltd.
  */
 
@@ -14,12 +14,12 @@ if ( ! class_exists( 'WCJ_PDF_Invoicing' ) ) :
 
 class WCJ_PDF_Invoicing {
 
-    /**
-     * Constructor.
-     */
-    public function __construct() {
+	/**
+	 * Constructor.
+	 */
+	public function __construct() {
 
-        if ( get_option( 'wcj_pdf_invoicing_enabled' ) == 'yes' ) {
+		if ( get_option( 'wcj_pdf_invoicing_enabled' ) == 'yes' ) {
 
 			include_once( 'pdf-invoices/class-wcj-pdf-invoicing-renumerate-tool.php' );
 			include_once( 'pdf-invoices/class-wcj-pdf-invoicing-report-tool.php' );
@@ -38,43 +38,50 @@ class WCJ_PDF_Invoicing {
 			}
 	    }
 
-        // Settings hooks
-        add_filter( 'wcj_settings_sections',      array( $this, 'settings_section' )        );
-        add_filter( 'wcj_settings_pdf_invoicing', array( $this, 'get_settings' ),       100 );
-        add_filter( 'wcj_features_status',        array( $this, 'add_enabled_option' ), 100 );
-    }
-
-    /**
-     * create_invoice.
-     */
+		// Settings hooks
+		add_filter( 'wcj_settings_sections',      array( $this, 'settings_section' )        );
+		add_filter( 'wcj_settings_pdf_invoicing', array( $this, 'get_settings' ),       100 );
+		add_filter( 'wcj_features_status',        array( $this, 'add_enabled_option' ), 100 );
+	}
+	/**
+	 * create_invoice.
+	 */
 	function create_invoice( $order_id ) {
 		return $this->create_document( $order_id, 'invoice' );
 	}
 
-    /**
-     * create_proforma_invoice.
-     */
+	/**
+	 * create_proforma_invoice.
+	 */
 	function create_proforma_invoice( $order_id ) {
 		return $this->create_document( $order_id, 'proforma_invoice' );
 	}
 
-    /**
-     * create_packing_slip.
-     */
+	/**
+	 * create_packing_slip.
+	 */
 	function create_packing_slip( $order_id ) {
 		return $this->create_document( $order_id, 'packing_slip' );
 	}
 
-    /**
-     * create_credit_note.
-     */
+	/**
+	 * create_credit_note.
+	 */
 	function create_credit_note( $order_id ) {
 		return $this->create_document( $order_id, 'credit_note' );
 	}
 
-    /**
-     * create_document.
-     */
+	/**
+	 * create_custom_doc.
+	 *
+	 * @since 2.2.7
+	 */
+	function create_custom_doc( $order_id ) {
+		return $this->create_document( $order_id, 'custom_doc' );
+	}
+	/**
+	 * create_document.
+	 */
 	function create_document( $order_id, $invoice_type ) {
 
 		if ( false == wcj_is_invoice_created( $order_id, $invoice_type ) ) {
@@ -93,20 +100,18 @@ class WCJ_PDF_Invoicing {
 		}
 		*/
 	}
-
-    /**
-     * catch_args.
-     */
+	/**
+	 * catch_args.
+	 */
     function catch_args() {
 		$this->order_id        = ( isset( $_GET['order_id'] ) )                                             ? $_GET['order_id'] : 0;
 		$this->invoice_type_id = ( isset( $_GET['invoice_type_id'] ) )                                      ? $_GET['invoice_type_id'] : '';
 		$this->save_as_pdf     = ( isset( $_GET['save_pdf_invoice'] ) && '1' == $_GET['save_pdf_invoice'] ) ? true : false;
 		$this->get_invoice     = ( isset( $_GET['get_invoice'] ) && '1' == $_GET['get_invoice'] )           ? true : false;
 	}
-
-    /**
-     * generate_pdf_on_init.
-     */
+	/**
+	 * generate_pdf_on_init.
+	 */
 	function generate_pdf_on_init() {
 
 		// Check if all is OK
@@ -123,19 +128,17 @@ class WCJ_PDF_Invoicing {
 		$the_invoice->get_pdf( $dest );
 		//echo $invoice_html;
 	}
-
-    /**
-     * add_enabled_option.
-     */
+	/**
+	 * add_enabled_option.
+	 */
     public function add_enabled_option( $settings ) {
         $all_settings = $this->get_settings();
         $settings[] = $all_settings[1];
         return $settings;
     }
-
-    /**
-     * get_settings.
-     */
+	/**
+	 * get_settings.
+	 */
     function get_settings() {
 
         $settings = array(
@@ -181,10 +184,9 @@ class WCJ_PDF_Invoicing {
 
 		return $settings;
     }
-
-    /**
-     * settings_section.
-     */
+	/**
+	 * settings_section.
+	 */
     function settings_section( $sections ) {
         $sections['pdf_invoicing'] = __( 'General', 'woocommerce-jetpack' );
         return $sections;

@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Module class.
  *
- * @version 2.2.6
+ * @version 2.2.7
  * @since   2.2.0
  * @author  Algoritmika Ltd.
  */
@@ -233,15 +233,15 @@ class WCJ_Module {
 	 * settings_section.
 	 * only for `module`
 	 *
-	 * @version 2.2.3
+	 * @version 2.2.7
 	 */
 	function add_enable_module_setting( $settings, $module_desc = '' ) {
 		$enable_module_setting = array(
 			array(
-				'title' => $this->short_desc . ' ' . __( 'Options', 'woocommerce-jetpack' ),
+				'title' => $this->short_desc . ' ' . __( 'Module Options', 'woocommerce-jetpack' ),
 				'type'  => 'title',
 				'desc'  => $module_desc,
-				'id'    => 'wcj_' . $this->id . '_options',
+				'id'    => 'wcj_' . $this->id . '_module_options',
 			),
 			array(
 				'title'    => $this->short_desc,
@@ -253,7 +253,7 @@ class WCJ_Module {
 			),
 			array(
 				'type' => 'sectionend',
-				'id'   => 'wcj_' . $this->id . '_options',
+				'id'   => 'wcj_' . $this->id . '_module_options',
 			),
 		);
 		return array_merge( $enable_module_setting, $settings );

@@ -15,36 +15,36 @@ if ( ! class_exists( 'WCJ_Address_Formats' ) ) :
 
 class WCJ_Address_Formats extends WCJ_Module {
 
-    /**
-     * Constructor.
-     */
-    function __construct() {
+	/**
+	 * Constructor.
+	 */
+	function __construct() {
 
 		$this->id         = 'address_formats';
 		$this->short_desc = __( 'Address Formats', 'woocommerce-jetpack' );
 		$this->desc       = __( 'Set address format in WooCommerce orders on per country basis. Force base country display.', 'woocommerce-jetpack' );
 		parent::__construct();
 
-        if ( $this->is_enabled() ) {
+		if ( $this->is_enabled() ) {
 			add_filter( 'woocommerce_localisation_address_formats',            array( $this, 'customize_address_formats' ), PHP_INT_MAX );
 			add_filter( 'woocommerce_formatted_address_force_country_display', array( $this, 'customize_force_country_display' ), PHP_INT_MAX );
-        }
-    }
+		}
+	}
 
-    /**
-     * customize_force_country_display.
-     */
-    function customize_force_country_display( $display ) {
+	/**
+	 * customize_force_country_display.
+	 */
+	function customize_force_country_display( $display ) {
 		if ( '' != ( $customized_display = get_option( 'wcj_address_formats_force_country_display', '' ) ) ) {
 			return ( 'yes' === $customized_display ) ? true : false;
 		}
 		return $display;
 	}
 
-    /**
-     * customize_address_formats.
-     */
-    function customize_address_formats( $formats ) {
+	/**
+	 * customize_address_formats.
+	 */
+	function customize_address_formats( $formats ) {
 		//$formats['LT'] = "{name}\n{company}\n{address_1}\n{address_2}\n{city} {postcode}\n{state}\n{country}";
 		$modified_formats = array();
 		$default_formats = $this->get_default_address_formats();
@@ -113,12 +113,12 @@ class WCJ_Address_Formats extends WCJ_Module {
 		return $formats;
 	}
 
-    /**
-     * get_settings.
-     */
-    function get_settings() {
+	/**
+	 * get_settings.
+	 */
+	function get_settings() {
 
-        $settings = array();
+		$settings = array();
 
 		// Force country display
 		$settings[] = array(
@@ -163,8 +163,8 @@ class WCJ_Address_Formats extends WCJ_Module {
 			'id'   => 'wcj_address_formats_country_options'
 		);
 
-        return $this->add_enable_module_setting( $settings );
-    }
+		return $this->add_enable_module_setting( $settings );
+	}
 }
 
 endif;

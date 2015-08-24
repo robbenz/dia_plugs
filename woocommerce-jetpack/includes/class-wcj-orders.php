@@ -99,7 +99,7 @@ class WCJ_Orders extends WCJ_Module {
 		return '<img src="' . $img_src . '" title="' . wcj_get_country_name_by_code( $country_code ) . '">';
 	}
 	/**
-	 * Ouput custom columns for orders
+	 * Output custom columns for orders
 	 * @param  string $column
 	 */
 	public function render_order_columns( $column ) {

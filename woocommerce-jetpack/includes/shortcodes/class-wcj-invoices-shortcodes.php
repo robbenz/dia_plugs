@@ -4,9 +4,8 @@
  *
  * The WooCommerce Jetpack Invoices Shortcodes class.
  *
- * @class    WCJ_PDF_Invoices_Shortcodes
- * @version  2.2.0
- * @author   Algoritmika Ltd.
+ * @version 2.2.7
+ * @author  Algoritmika Ltd.
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -15,10 +14,12 @@ if ( ! class_exists( 'WCJ_Invoices_Shortcodes' ) ) :
 
 class WCJ_Invoices_Shortcodes extends WCJ_Shortcodes {
 
-    /**
-     * Constructor.
-     */
-    public function __construct() {
+	/**
+	 * Constructor.
+	 *
+	 * @version 2.2.7
+	 */
+	public function __construct() {
 
 		$this->the_shortcodes = array(
 
@@ -26,11 +27,13 @@ class WCJ_Invoices_Shortcodes extends WCJ_Shortcodes {
 			'wcj_proforma_invoice_number',
 			'wcj_packing_slip_number',
 			'wcj_credit_note_number',
+			'wcj_custom_doc_number',
 
 			'wcj_invoice_date',
 			'wcj_proforma_invoice_date',
 			'wcj_packing_slip_date',
 			'wcj_credit_note_date',
+			'wcj_custom_doc_date',
 
 		);
 
@@ -44,9 +47,9 @@ class WCJ_Invoices_Shortcodes extends WCJ_Shortcodes {
 		parent::__construct();
     }
 
-    /**
-     * init_atts.
-     */
+	/**
+	 * init_atts.
+	 */
 	function init_atts( $atts ) {
 
 		// Atts
@@ -64,9 +67,9 @@ class WCJ_Invoices_Shortcodes extends WCJ_Shortcodes {
 		return $atts;
 	}
 
-    /**
-     * wcj_invoice_date.
-     */
+	/**
+	 * wcj_invoice_date.
+	 */
     function wcj_invoice_date( $atts ) {
 		return wcj_get_invoice_date( $atts['order_id'], $atts['invoice_type'], $atts['days'], $atts['date_format'] );
 	}
@@ -79,10 +82,13 @@ class WCJ_Invoices_Shortcodes extends WCJ_Shortcodes {
 	function wcj_credit_note_date( $atts ) {
 		return wcj_get_invoice_date( $atts['order_id'], 'credit_note', $atts['days'], $atts['date_format'] );
 	}
+	function wcj_custom_doc_date( $atts ) {
+		return wcj_get_invoice_date( $atts['order_id'], 'custom_doc', $atts['days'], $atts['date_format'] );
+	}
 
-    /**
-     * wcj_invoice_number.
-     */
+	/**
+	 * wcj_invoice_number.
+	 */
 	function wcj_invoice_number( $atts ) {
 		return wcj_get_invoice_number( $atts['order_id'], $atts['invoice_type'] );
 	}
@@ -94,6 +100,9 @@ class WCJ_Invoices_Shortcodes extends WCJ_Shortcodes {
 	}
 	function wcj_credit_note_number( $atts ) {
 		return wcj_get_invoice_number( $atts['order_id'], 'credit_note' );
+	}
+	function wcj_custom_doc_number( $atts ) {
+		return wcj_get_invoice_number( $atts['order_id'], 'custom_doc' );
 	}
 }
 

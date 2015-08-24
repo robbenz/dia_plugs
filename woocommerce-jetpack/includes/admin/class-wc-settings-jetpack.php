@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Settings class.
  *
- * @version 2.2.6
+ * @version 2.2.8
  * @since   1.0.0
  * @author  Algoritmika Ltd.
  */
@@ -18,7 +18,7 @@ class WC_Settings_Jetpack extends WC_Settings_Page {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.2.6
+	 * @version 2.2.8
 	 */
 	function __construct() {
 
@@ -35,6 +35,7 @@ class WC_Settings_Jetpack extends WC_Settings_Page {
 
 //		add_action( 'woocommerce_admin_field_save_button',     array( $this, 'output_save_settings_button' ) );
 		add_action( 'woocommerce_admin_field_custom_number',   array( $this, 'output_custom_number' ) );
+		add_action( 'woocommerce_admin_field_custom_link',     array( $this, 'output_custom_link' ) );
 		add_action( 'woocommerce_admin_field_module_tools',    array( $this, 'output_module_tools' ) );
 		add_action( 'woocommerce_admin_field_custom_textarea', array( $this, 'output_custom_textarea' ) );
 	}
@@ -106,10 +107,27 @@ class WC_Settings_Jetpack extends WC_Settings_Page {
 		</tr><?php
 	}
 
-    /**
-     * output_custom_number.
-     */
-    function output_custom_number( $value ) {
+	/**
+	 * output_custom_link.
+	 *
+	 * @version 2.2.8
+	 * @since   2.2.8
+	 */
+	function output_custom_link( $value ) {
+		?><tr valign="top">
+			<th scope="row" class="titledesc">
+				<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
+			</th>
+			<td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
+				<?php echo $value['link']; ?>
+			</td>
+		</tr><?php
+	}
+
+	/**
+	 * output_custom_number.
+	 */
+	function output_custom_number( $value ) {
 		$type         = 'number';//$value['type'];
 		$option_value = get_option( $value['id'], $value['default'] );
 
@@ -329,6 +347,8 @@ class WC_Settings_Jetpack extends WC_Settings_Page {
 
 	/**
 	 * output_dashboard_modules.
+	 *
+	 * @version 2.2.8
 	 */
 	function output_dashboard_modules( $settings, $cat_id = '' ) {
 		$readme_html = '';
@@ -336,14 +356,14 @@ class WC_Settings_Jetpack extends WC_Settings_Page {
 		<table class="wp-list-table widefat plugins">
 			<thead>
 			<tr>
-			<th scope="col" id="cb" class="manage-column column-cb check-column" style=""><label class="screen-reader-text" for="cb-select-all-1"><?php _e( 'Select All', 'woocommerce-jetpack' ); ?></label><input id="cb-select-all-1" type="checkbox"></th>
+			<th scope="col" id="cb" class="manage-column column-cb check-column" style=""><label class="screen-reader-text" for="cb-select-all-1"><?php _e( 'Select All', 'woocommerce-jetpack' ); ?></label><input id="cb-select-all-1" type="checkbox" style="margin-top:15px;"></th>
 			<th scope="col" id="name" class="manage-column column-name" style=""><?php _e( 'Module', 'woocommerce-jetpack' ); ?></th>
 			<th scope="col" id="description" class="manage-column column-description" style=""><?php _e( 'Description', 'woocommerce-jetpack' ); ?></th>
 			</tr>
 			</thead>
 			<tfoot>
 			<tr>
-			<th scope="col" class="manage-column column-cb check-column" style=""><label class="screen-reader-text" for="cb-select-all-2"><?php _e( 'Select All', 'woocommerce-jetpack' ); ?></label><input id="cb-select-all-2" type="checkbox"></th>
+			<th scope="col" class="manage-column column-cb check-column" style=""><label class="screen-reader-text" for="cb-select-all-2"><?php _e( 'Select All', 'woocommerce-jetpack' ); ?></label><input id="cb-select-all-2" type="checkbox" style="margin-top:15px;"></th>
 			<th scope="col" class="manage-column column-name" style=""><?php _e( 'Module', 'woocommerce-jetpack' ); ?></th>
 			<th scope="col" class="manage-column column-description" style=""><?php _e( 'Description', 'woocommerce-jetpack' ); ?></th>
 			</tr>

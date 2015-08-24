@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Wholesale Price class.
  *
- * @version 2.2.6
+ * @version 2.2.7
  * @since   2.2.0
  * @author  Algoritmika Ltd.
  */
@@ -115,7 +115,7 @@ class WCJ_Wholesale_Price extends WCJ_Module {
 	/**
 	 * get_wholesale_price.
 	 *
-	 * @version 2.2.6
+	 * @version 2.2.7
 	 */
 	private function get_wholesale_price( $price, $quantity ) {
 		$discount = $this->get_discount_by_quantity( $quantity );
@@ -123,7 +123,8 @@ class WCJ_Wholesale_Price extends WCJ_Module {
 			$discount_koef = 1.0 - ( $discount / 100.0 );
 			return $price * $discount_koef;
 		} else {
-			return ( $price - $discount );
+			$discounted_price = $price - $discount;
+			return ( $discounted_price >= 0 ) ? $discounted_price : 0;
 		}
 	}
 

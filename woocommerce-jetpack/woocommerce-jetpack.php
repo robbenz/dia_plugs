@@ -3,7 +3,7 @@
 Plugin Name: Booster for WooCommerce
 Plugin URI: http://BoostWoo.com
 Description: Supercharge your WooCommerce site with these awesome powerful features.
-Version: 2.2.6
+Version: 2.2.8
 Author: Algoritmika Ltd
 Author URI: http://www.algoritmika.com
 Copyright: © 2015 Algoritmika Ltd.
@@ -364,6 +364,8 @@ final class WC_Jetpack {
 			foreach ( $settings as $section ) {
 
 				$values = $section->get_settings();
+				
+				// Modules statuses
 				$submodules_classes = array(
 					'WCJ_PDF_Invoicing_Display',
 					'WCJ_PDF_Invoicing_Emails',
@@ -378,9 +380,11 @@ final class WC_Jetpack {
 					$this->module_statuses[] = $values[1];
 				}
 
+				// Adding options
 				foreach ( $values as $value ) {
 					if ( isset( $value['default'] ) && isset( $value['id'] ) ) {
 
+						// Admin reset
 						if ( isset ( $_GET['woojetpack_admin_options_reset'] ) ) {
 							require_once( ABSPATH . 'wp-includes/pluggable.php' );
 							if ( is_super_admin() ) {
@@ -388,6 +392,7 @@ final class WC_Jetpack {
 							}
 						}
 
+						// Finally adding options
 						$autoload = isset( $value['autoload'] ) ? (bool) $value['autoload'] : true;
 						add_option( $value['id'], $value['default'], '', ( $autoload ? 'yes' : 'no' ) );
 
@@ -418,7 +423,6 @@ final class WC_Jetpack {
 		do_action( 'before_wcj_init' );
 		// Set up localisation
 		load_plugin_textdomain( 'woocommerce-jetpack',  false, dirname( plugin_basename( __FILE__ ) ) . '/langs/' );
-
 		// Init action
 		do_action( 'wcj_init' );
 	}

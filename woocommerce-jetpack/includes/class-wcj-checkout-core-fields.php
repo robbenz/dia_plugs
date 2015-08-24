@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Checkout Core Fields class.
  *
- * @version 2.2.4
+ * @version 2.2.7
  * @author  Algoritmika Ltd.
  */
 
@@ -12,16 +12,17 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 if ( ! class_exists( 'WCJ_Checkout_Core_Fields' ) ) :
 
-class WCJ_Checkout_Core_Fields {
+class WCJ_Checkout_Core_Fields extends WCJ_Module {
 
 	/**
 	 * @var array $sub_items
 	 */
 	public $sub_items = array(
-		'enabled'		=> 'checkbox',
-		'required'		=> 'checkbox',
-		'label' 		=> 'text',
-		'placeholder'	=> 'text',
+		'enabled'     => 'checkbox',
+		'required'    => 'checkbox',
+		'label'       => 'text',
+		'placeholder' => 'text',
+		'class'       => 'select',
 	);
 
 	/**
@@ -52,40 +53,29 @@ class WCJ_Checkout_Core_Fields {
 		'order_comments' 		=> array( 'enabled' => 'yes', 'label' => '', 'placeholder' => '', 'required' => 'no' ),
 	);
 
-    /**
-     * Constructor.
+	/**
+	 * Constructor.
 	 *
-	 * @version 2.2.4
-     */
-    public function __construct() {
+	 * @version 2.2.7
+	 */
+	public function __construct() {
 
-		$this->id = 'checkout_core_fields';
+		$this->id         = 'checkout_core_fields';
+		$this->short_desc = __( 'Checkout Core Fields', 'woocommerce-jetpack' );
+		$this->desc       = __( 'Customize WooCommerce core checkout fields. Disable/enable fields, set required, change labels and/or placeholders.', 'woocommerce-jetpack' );
+		parent::__construct();
 
-        // Main hooks
-        if ( 'yes' === get_option( 'wcj_checkout_core_fields_enabled' ) ) {
+		if ( $this->is_enabled() ) {
 			add_filter( 'woocommerce_checkout_fields' , array( $this, 'custom_override_checkout_fields' ) );
 			add_filter( 'woocommerce_default_address_fields', array( $this, 'fix_required_by_default' ) );
-        }
-
-        // Settings hooks
-        add_filter( 'wcj_settings_sections',     array( $this, 'settings_section' ) );
-        add_filter( 'wcj_settings_' . $this->id, array( $this, 'get_settings' ), 100 );
-        add_filter( 'wcj_features_status',       array( $this, 'add_enabled_option' ), 100 );
-    }
-
-	/**
-	 * add_enabled_option.
-	 */
-	public function add_enabled_option( $settings ) {
-		$all_settings = $this->get_settings();
-		$settings[] = $all_settings[1];
-		return $settings;
+		}
 	}
 
 	/**
 	 * fix_required_by_default.
 	 *
 	 * @since 2.2.4
+	 * @todo  There must be a better way!
 	 */
 	function fix_required_by_default( $address_fields ) {
 		$fields_required_by_default = array(
@@ -107,9 +97,12 @@ class WCJ_Checkout_Core_Fields {
 		return $address_fields;
 	}
 
+	/**
+	 * custom_override_checkout_fields.
+	 *
+	 * @version 2.2.7
+	 */
 	function custom_override_checkout_fields( $checkout_fields ) {
-
-		//if ( is_super_admin() ) { echo '<pre>'; print_r( $checkout_fields ); echo '</pre>'; }
 
 		foreach ( $this->items as $item_key => $default_values ) {
 
@@ -140,6 +133,11 @@ class WCJ_Checkout_Core_Fields {
 							}
 						}
 
+						if ( 'class' === $sub_item_key ) {
+							if ( 'default' === $the_option ) continue;
+							else $the_option = array( $the_option );
+						}
+
 						$checkout_fields[$field_parts[0]][$item_key][$sub_item_key] = $the_option;
 					}
 				}
@@ -149,30 +147,21 @@ class WCJ_Checkout_Core_Fields {
 		return $checkout_fields;
 	}
 
-    /**
-     * get_settings.
-     */
-    function get_settings() {
+	/**
+	 * get_settings.
+	 *
+	 * @version 2.2.7
+	 */
+	function get_settings() {
 
 		//global $woocommerce;
 
-        $settings = array(
+		$settings = array(
 
-            array( 'title' => __( 'Checkout Core Fields Options', 'woocommerce-jetpack' ), 'type' => 'title', 'desc' => __( '', 'woocommerce-jetpack' ), 'id' => 'wcj_checkout_core_fields_options' ),
+			array( 'title' => __( 'Checkout Core Fields Options', 'woocommerce-jetpack' ), 'type' => 'title', 'desc' => __( '', 'woocommerce-jetpack' ), 'id' => 'wcj_checkout_core_fields_options' ),
 
-            array(
-                'title'    => __( 'Checkout Core Fields', 'woocommerce-jetpack' ),
-                'desc'     => '<strong>' . __( 'Enable Module', 'woocommerce-jetpack' ) . '</strong>',
-                'desc_tip' => __( 'Customize WooCommerce core checkout fields. Disable/enable fields, set required, change labels and/or placeholders.', 'woocommerce-jetpack' ),
-                'id'       => 'wcj_checkout_core_fields_enabled',
-                'default'  => 'no',
-                'type'     => 'checkbox',
-            ),
-
-           //array( 'type'  => 'sectionend', 'id' => 'wcj_checkout_core_fields_options' ),
+			//array( 'type'  => 'sectionend', 'id' => 'wcj_checkout_core_fields_options' ),
 		);
-
-
 
 		// Checkout fields
 //		$settings[] = array( 'title' => __( 'Checkout Fields Options', 'woocommerce-jetpack' ), 'type' => 'title', 'desc' => __( 'This section lets you customize the checkout fields: change label, placeholder, set required, or remove any field.', 'woocommerce-jetpack' ), 'id' => 'wcj_checkout_fields_options' );
@@ -230,11 +219,7 @@ class WCJ_Checkout_Core_Fields {
 
 				$item_id = 'wcj_checkout_fields_' . $field . '_' . $item_key;
 
-				//$field_parts = explode( "_", $field, 2 );
-
-				$default_value = $default_values[$item_key];//'';
-				//echo '<pre>' . $item_key . ':' . $item_type . ':' . $default_value . '</pre>';
-				//if ( $item_type == 'checkbox' ) $default_value = 'yes';
+				$default_value = isset( $default_values[ $item_key ] ) ?  $default_values[ $item_key ] : '';
 
 				$item_title = $field;// . ' ' . $item_key;
 				$item_title = str_replace( "_", " ", $item_title );
@@ -244,15 +229,25 @@ class WCJ_Checkout_Core_Fields {
 				if ( 'text' == $item_type ) $item_desc_tip = __( 'Leave blank for WooCommerce defaults.', 'woocommerce-jetpack' );
 
 				$settings_to_add = array(
-					//'title'    => $item_title,
-					//'desc'     => $item_id,//__( 'Enable the Checkout feature', 'woocommerce-jetpack' ),
-					'desc'	   => $item_key,
+//					'title'    => $item_title,
+//					'desc'     => $item_id,//__( 'Enable the Checkout feature', 'woocommerce-jetpack' ),
+					'desc'     => $item_key,
 					'desc_tip' => $item_desc_tip,// . __( 'Default: ', 'woocommerce-jetpack' ) . $default_value,
 					'id'       => $item_id,
 					'default'  => $default_value,
 					'type'     => $item_type,
-					'css'	   => 'min-width:300px;width:50%;',
+					'css'      => 'min-width:300px;width:50%;',
 				);
+
+				if ( 'class' === $item_key ) {
+					$settings_to_add['options'] = array(
+						'default'        => __( 'Default', 'woocommerce-jetpack' ),
+						'form-row-first' => __( 'Align Left', 'woocommerce-jetpack' ),
+						'form-row-last'  => __( 'Align Right', 'woocommerce-jetpack' ),
+						'form-row-full'  => __( 'Full Row', 'woocommerce-jetpack' ),
+					);
+					$settings_to_add['default'] = 'default';
+				}
 
 				if ( 'enabled' == $item_key ) {
 
@@ -261,10 +256,6 @@ class WCJ_Checkout_Core_Fields {
 				}
 				else if ( 'required' == $item_key ) $settings_to_add['checkboxgroup'] = 'end';
 
-				//echo '<pre>';
-				//print_r( $settings_to_add );
-				//echo '</pre>';
-
 				$settings[] = $settings_to_add;
 			}
 		}
@@ -272,16 +263,8 @@ class WCJ_Checkout_Core_Fields {
 //		$settings[] = array( 'type'  => 'sectionend', 'id' => 'wcj_checkout_fields_options' );
 		$settings[] = array( 'type'  => 'sectionend', 'id' => 'wcj_checkout_core_fields_options' );
 
-        return $settings;
-    }
-
-    /**
-     * settings_section.
-     */
-    function settings_section( $sections ) {
-        $sections['checkout_core_fields'] = __( 'Checkout Core Fields', 'woocommerce-jetpack' );
-        return $sections;
-    }
+		return $this->add_enable_module_setting( $settings );
+	}
 }
 
 endif;

@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Functions.
  *
- * @version 2.2.6
+ * @version 2.2.7
  * @author  Algoritmika Ltd.
  */
 
@@ -387,15 +387,21 @@ if ( ! function_exists( 'wcj_get_currencies_names_and_symbols' ) ) {
 
 /**
  * wcj_get_currency_symbol.
+ *
+ * @version 2.2.7
  */
 if ( ! function_exists( 'wcj_get_currency_symbol' ) ) {
 	function wcj_get_currency_symbol( $currency_code ) {
+		$return = '';
 		$currencies = include( wcj_plugin_path() . '/includes/currencies/wcj-currencies.php' );
 		foreach( $currencies as $data ) {
-			if ( $currency_code == $data['code'] )
-				return $data['symbol'];
+			if ( $currency_code == $data['code'] ) {
+				$return = $data['symbol'];
+				break;
+			}
 		}
-		return false;
+		$return = apply_filters( 'wcj_get_option_filter', $return, get_option( 'wcj_currency_' . $currency_code, $return ) );
+		return ( '' != $return ) ? $return : false;
 	}
 }
 

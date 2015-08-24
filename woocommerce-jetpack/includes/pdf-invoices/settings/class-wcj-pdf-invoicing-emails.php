@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack PDF Invoicing Emails class.
  *
- * @version 2.2.2
+ * @version 2.2.7
  * @author  Algoritmika Ltd.
  */
 
@@ -96,6 +96,8 @@ class WCJ_PDF_Invoicing_Emails extends WCJ_Module {
 
 	/**
 	 * get_settings.
+	 *
+	 * @version 2.2.7
 	 */
 	function get_settings() {
 
@@ -103,25 +105,31 @@ class WCJ_PDF_Invoicing_Emails extends WCJ_Module {
 		$invoice_types = wcj_get_invoice_types();
 		foreach ( $invoice_types as $invoice_type ) {
 
-			$settings[] = array( 'title' => strtoupper( $invoice_type['desc'] ), 'type' => 'title', 'desc' => '', 'id' => 'wcj_invoicing_' . $invoice_type['id'] . '_emails_options' );
+			$settings[] = array(
+				'title' => strtoupper( $invoice_type['desc'] ),
+				'type'  => 'title',
+				'desc'  => '',
+				'id'    => 'wcj_invoicing_' . $invoice_type['id'] . '_emails_options'
+			);
 
-			//$available_emails = apply_filters( 'woocommerce_resend_order_emails_available', array( 'new_order', 'customer_processing_order', 'customer_completed_order', 'customer_invoice' ) );
+			//$available_emails = apply_filters( 'woocommerce_resend_order_emails_available', array( 'new_order', 'cancelled_order', 'customer_processing_order', 'customer_completed_order', 'customer_invoice', 'customer_refunded_order' ) );
 			$available_emails = array(
 				'new_order'                 => __( 'Admin - New Order', 'woocommerce' ),
+				'cancelled_order'           => __( 'Admin - Cancelled Order', 'woocommerce' ),
 				'customer_processing_order' => __( 'Customer - Processing Order', 'woocommerce' ),
 				'customer_completed_order'  => __( 'Customer - Completed Order', 'woocommerce' ),
 				'customer_invoice'          => __( 'Customer - Invoice', 'woocommerce' ),
+				'customer_refunded_order'   => __( 'Customer - Refunded Order', 'woocommerce' ),
 			);
-
 			$settings[] = array(
-				'title' 		=> __( 'Attach PDF to emails', 'woocommerce' ),
+				'title'         => __( 'Attach PDF to emails', 'woocommerce' ),
 				'id'            => 'wcj_invoicing_' . $invoice_type['id'] . '_attach_to_emails',
-				'type' 			=> 'multiselect',
-				'class'			=> 'chosen_select',
-				'css'			=> 'width: 450px;',
-				//'default' 		=> 'new_order',
-				'default' 		=> '',
-				'options'		=> $available_emails,
+				'type'          => 'multiselect',
+				'class'         => 'chosen_select',
+				'css'           => 'width: 450px;',
+//				'default'       => 'new_order',
+				'default'       => '',
+				'options'       => $available_emails,
 				'custom_attributes' => array(
 					'data-placeholder' => __( 'Select some emails', 'woocommerce' )
 				)
@@ -129,7 +137,10 @@ class WCJ_PDF_Invoicing_Emails extends WCJ_Module {
 
 			$settings = apply_filters( 'wcj_pdf_invoicing_emails_settings', $settings, $invoice_type['id'] );
 
-			$settings[] = array( 'type'  => 'sectionend', 'id' => 'wcj_invoicing_' . $invoice_type['id'] . '_emails_options' );
+			$settings[] = array(
+				'type' => 'sectionend',
+				'id'   => 'wcj_invoicing_' . $invoice_type['id'] . '_emails_options'
+			);
 		}
 
 		return $settings;
