@@ -3,7 +3,7 @@
 Plugin Name: WooCommerce Abandon Cart Lite Plugin
 Plugin URI: http://www.tychesoftwares.com/store/premium-plugins/woocommerce-abandoned-cart-pro
 Description: This plugin captures abandoned carts by logged-in users & emails them about it. <strong><a href="http://www.tychesoftwares.com/store/premium-plugins/woocommerce-abandoned-cart-pro">Click here to get the PRO Version.</a></strong>
-Version: 1.9
+Version: 2.0.1
 Author: Tyche Softwares
 Author URI: http://www.tychesoftwares.com/
 */
@@ -894,7 +894,7 @@ function woocommerce_ac_delete(){
 							{
 							?>
 							<tr id="row_<?php echo $abandoned_order_id; ?>">
-								<td><strong><?php echo "Abandoned Order #".$abandoned_order_id;?></strong><?php echo "</br>Name: ".$user_first_name[0]." ".$user_last_name[0]."<br><a href='mailto:$user_email'>".$user_email."</a>"; ?></td>
+								<td><strong><?php echo "Abandoned Order #".$abandoned_order_id;?></strong><?php  if( isset( $user_first_name[0] ) && isset( $user_last_name[0] ) ) { $user_name =  $user_first_name[0]." ".$user_last_name[0]; } echo "</br>Name: ".$user_name." <br><a href='mailto:$user_email'>".$user_email."</a>"; ?></td>
 								<td><?php echo get_woocommerce_currency_symbol()." ".$line_total; ?></td>
 								<td><?php echo $order_date; ?></td>
 								<td><?php echo $ac_status; ?>
@@ -1652,7 +1652,7 @@ function woocommerce_ac_delete(){
 													$initial_data = "";
 													if ( $mode == 'edittemplate' )
 													{
-														$initial_data = $results[0]->body;
+														$initial_data = stripslashes( $results[0]->body );
 													}
 																										
 													echo "<textarea id='woocommerce_ac_email_body' name='woocommerce_ac_email_body' rows='15'' cols='80'>".$initial_data."</textarea>";

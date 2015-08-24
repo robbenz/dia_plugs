@@ -4,7 +4,7 @@ Donate link: http://responsive.menu/donate/
 Tags: responsive, menu, responsive menu, mobile menu, wordpress responsive menu, wp responsive menu, tablet menu, mobile, tablet, 3 lines, 3 line, three line, three lines
 Requires at least: 3.5.0
 Tested up to: 4.3
-Stable tag: 2.8.3
+Stable tag: 2.8.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -131,6 +131,9 @@ Alternatively:
 3. Example Front End Expanded Menu
 
 == Changelog ==
+
+= 2.8.4 (19th Aug 2015) =
+* Fixed middle mouse scroll button bug
 
 = 2.8.3 (13th Aug 2015) =
 * Fixed bug with accordion sub arrows not re-setting correctly

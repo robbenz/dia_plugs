@@ -331,9 +331,9 @@ class RM_JSModel extends RM_BaseModel {
 
             $js .= "
 
-                \$RMjQuery( document ).on( 'click tap', function( e ) { 
+                \$RMjQuery( document ).bind( 'vclick', function( e ) {  
 
-                    if( !\$RMjQuery( e.target ).closest( '#responsive-menu, {$trigger}' ).length ) { 
+                    if( e.which != 2 && !\$RMjQuery( e.target ).closest( '#responsive-menu, {$trigger}' ).length ) { 
 
                         closeRM(); 
 
