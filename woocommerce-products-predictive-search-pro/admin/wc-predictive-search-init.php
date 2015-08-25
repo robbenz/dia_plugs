@@ -15,12 +15,9 @@ function wc_predictive_install(){
 	global $wc_predictive_search;
 	$wc_predictive_search->install_databases();
 
-	global $wc_ps_synch;
-	$wc_ps_synch->synch_full_database();
-
 	delete_option('woocommerce_search_lite_clean_on_deletion');
 
-	update_option('wc_predictive_search_version', '3.0.0');
+	update_option('wc_predictive_search_version', '3.0.1');
 	update_option('wc_predictive_search_plugin', 'woo_predictive_search');
 	delete_transient("woo_predictive_search_update_info");
 	flush_rewrite_rules();
@@ -60,6 +57,12 @@ function wc_predictive_deactivate(){
 
 function woops_init() {
 	if ( get_option('wc_predictive_search_just_installed') ) {
+		@set_time_limit(86400);
+		@ini_set("memory_limit","1000M");
+
+		global $wc_ps_synch;
+		$wc_ps_synch->synch_full_database();
+
 		delete_option('wc_predictive_search_just_installed');
 		wp_redirect( admin_url( 'admin.php?page=woo-predictive-search', 'relative' ) );
 		exit;
@@ -209,7 +212,7 @@ function woo_predictive_search_pro_upgrade_plugin () {
 		include( WOOPS_DIR. '/includes/updates/update-3.0.php' );
 	}
 
-	update_option('wc_predictive_search_version', '3.0.0');
+	update_option('wc_predictive_search_version', '3.0.1');
 }
 
 }else{

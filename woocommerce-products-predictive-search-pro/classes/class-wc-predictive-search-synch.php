@@ -40,34 +40,59 @@ class WC_Predictive_Search_Synch
 		global $wc_ps_postmeta_data;
 		global $wc_ps_product_sku_data;
 
-		// Empty all tables
-		$wc_ps_posts_data->empty_table();
-		$wc_ps_postmeta_data->empty_table();
-		$wc_ps_product_sku_data->empty_table();
+		// Check if synch data is stopped at latest run then continue synch without empty all the tables
+		$synched_data = get_option( 'wc_predictive_search_synched_data', 0 );
+
+		if ( 0 == $synched_data ) {
+			// continue synch data from stopped post ID
+			$stopped_ID = $wc_ps_posts_data->get_latest_post_id();
+			if ( empty( $stopped_ID ) || is_null( $stopped_ID ) ) {
+				$stopped_ID = 0;
+			}
+		} else {
+			// Empty all tables
+			$wc_ps_posts_data->empty_table();
+			$wc_ps_postmeta_data->empty_table();
+			$wc_ps_product_sku_data->empty_table();
+
+			update_option( 'wc_predictive_search_synched_data', 0 );
+
+			$stopped_ID = 0;
+		}
 
 		$post_types = apply_filters( 'predictive_search_post_types_support', array( 'post', 'page', 'product' ) );
 
 		$all_posts = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT ID, post_title, post_type FROM {$wpdb->posts} WHERE post_status = %s AND post_type IN ('". implode("','", $post_types ) ."')" , 'publish'
+				"SELECT ID, post_title, post_type FROM {$wpdb->posts} WHERE ID > %d AND post_status = %s AND post_type IN ('". implode("','", $post_types ) ."') ORDER BY ID ASC" , $stopped_ID, 'publish'
 			)
 		);
 
 		if ( $all_posts ) {
+
+			$woocommerce_search_focus_enable = get_option( 'woocommerce_search_focus_enable', 'no' );
+			$woocommerce_search_focus_plugin = get_option( 'woocommerce_search_focus_plugin', 'none' );
+
 			foreach ( $all_posts as $item ) {
 				$post_id       = $item->ID;
 
-				$yoast_keyword = get_post_meta( $post_id, '_yoast_wpseo_focuskw', true );
-				$wpseo_keyword = get_post_meta( $post_id, '_aioseop_keywords', true );
-
 				$wc_ps_posts_data->insert_item( $post_id, $item->post_title, $item->post_type );
 
-				if ( ! empty( $yoast_keyword ) && '' != trim( $yoast_keyword ) ) {
-					$wc_ps_postmeta_data->add_item_meta( $post_id, '_yoast_wpseo_focuskw', $yoast_keyword );
-				}
+				if ( 'yes' == $woocommerce_search_focus_enable && 'none' != $woocommerce_search_focus_plugin ) {
 
-				if ( ! empty( $wpseo_keyword ) && '' != trim( $wpseo_keyword ) ) {
-					$wc_ps_postmeta_data->add_item_meta( $post_id, '_aioseop_keywords', $wpseo_keyword );
+					if ( 'yoast_seo_plugin' == $woocommerce_search_focus_plugin ) {
+						$yoast_keyword = get_post_meta( $post_id, '_yoast_wpseo_focuskw', true );
+						if ( ! empty( $yoast_keyword ) && '' != trim( $yoast_keyword ) ) {
+							$wc_ps_postmeta_data->add_item_meta( $post_id, '_yoast_wpseo_focuskw', $yoast_keyword );
+						}
+					}
+
+					if ( 'all_in_one_seo_plugin' == $woocommerce_search_focus_plugin ) {
+						$wpseo_keyword = get_post_meta( $post_id, '_aioseop_keywords', true );
+						if ( ! empty( $wpseo_keyword ) && '' != trim( $wpseo_keyword ) ) {
+							$wc_ps_postmeta_data->add_item_meta( $post_id, '_aioseop_keywords', $wpseo_keyword );
+						}
+					}
 				}
 
 				if ( 'product' == $item->post_type ) {
@@ -78,6 +103,8 @@ class WC_Predictive_Search_Synch
 				}
 			}
 		}
+
+		update_option( 'wc_predictive_search_synched_data', 1 );
 	}
 
 	public function migrate_product_categories() {

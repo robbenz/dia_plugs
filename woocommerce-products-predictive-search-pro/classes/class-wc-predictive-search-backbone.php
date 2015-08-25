@@ -27,7 +27,7 @@ class WC_Predictive_Search_Hook_Backbone
 		<div class="ajax_search_content">
 			<div class="result_row">
 				<a href="{{= url }}">
-					<span class="rs_avatar"><img src="{{= image_url }}" /></span>
+					<span class="rs_rs_avatar"><a href="{{= url }}"><img src="{{= image_url }}" /></a></span>
 					<div class="rs_content_popup">
 						{{ if ( type == 'p_sku' ) { }}<span class="rs_name">{{= sku }}</span>{{ } }}
 						<span class="rs_name">{{= title }}</span>
