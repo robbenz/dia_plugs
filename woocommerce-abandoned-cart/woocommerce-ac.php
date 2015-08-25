@@ -756,7 +756,7 @@ function woocommerce_ac_delete(){
 			if( $count > 0 ) {
 				$p = new pagination;
 				$p->items( $count );
-				$p->limit( 10 ); // Limit entries per page
+				$p->limit( 100 ); // Limit entries per page
 				$p->target( "admin.php?page=woocommerce_ac_page&action=listcart" );
 				
                 if ( isset( $p->paging ) ) {
