@@ -40,10 +40,10 @@ class WC_Settings_Jetpack extends WC_Settings_Page {
 		add_action( 'woocommerce_admin_field_custom_textarea', array( $this, 'output_custom_textarea' ) );
 	}
 
-    /**
-     * output_save_settings_button.
-     *
-    function output_save_settings_button( $value ) {
+	/**
+	 * output_save_settings_button.
+	 *
+	function output_save_settings_button( $value ) {
 		?>
 		<tr valign="top">
 			<th scope="row" class="titledesc">

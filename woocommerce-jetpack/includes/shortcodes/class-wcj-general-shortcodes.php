@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack General Shortcodes class.
  *
- * @version 2.2.1
+ * @version 2.2.9
  * @author  Algoritmika Ltd.
  */
 
@@ -16,6 +16,8 @@ class WCJ_General_Shortcodes extends WCJ_Shortcodes {
 
 	/**
 	 * Constructor.
+	 *
+	 * @version 2.2.9
 	 */
 	public function __construct() {
 
@@ -26,6 +28,7 @@ class WCJ_General_Shortcodes extends WCJ_Shortcodes {
 			'wcj_wpml',
 			'wcj_wpml_translate',
 			'wcj_country_select_drop_down_list',
+			'wcj_text',
 		);
 
 		$this->the_atts = array(
@@ -79,11 +82,23 @@ class WCJ_General_Shortcodes extends WCJ_Shortcodes {
 	}
 
 	/**
+	 * wcj_text.
+	 *
+	 * @since 2.2.9
+	 */
+	function wcj_text( $atts, $content ) {
+		return /* do_shortcode(  */ $content /* ) */;
+	}
+
+	/**
 	 * wcj_wpml.
+	 *
+	 * @version 2.2.9
 	 */
 	function wcj_wpml( $atts, $content ) {
-		if ( '' == $atts['lang'] || ( defined( 'ICL_LANGUAGE_CODE' ) && ICL_LANGUAGE_CODE === $atts['lang'] ) ) return do_shortcode( $content );
-		else return '';
+		/* if ( '' == $atts['lang'] || ( defined( 'ICL_LANGUAGE_CODE' ) && ICL_LANGUAGE_CODE === $atts['lang'] ) ) return do_shortcode( $content );
+		else return ''; */
+		return do_shortcode( $content );
 	}
 
 	/**

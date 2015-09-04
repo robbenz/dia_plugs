@@ -145,9 +145,8 @@ class WCJ_Address_Formats extends WCJ_Module {
 			'desc'  => __( 'Address Formats by Country Options.', 'woocommerce-jetpack' ),
 			'id'    => 'wcj_address_formats_country_options'
 		);
-		//$formats = apply_filters( 'wcj_get_address_formats_filter', array() );
-		//$formats = WC()->countries->get_address_formats();
-		//wcj_log( $formats );
+//		$formats = apply_filters( 'wcj_get_address_formats_filter', array() );
+//		$formats = WC()->countries->get_address_formats();
 		$formats = $this->get_default_address_formats();
 		foreach ( $formats as $country_code => $format ) {
 			$settings[] = array(

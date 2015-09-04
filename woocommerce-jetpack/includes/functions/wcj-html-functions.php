@@ -4,8 +4,8 @@
  *
  * The WooCommerce Jetpack HTML functions.
  *
- * @version		1.0.0
- * @author 		Algoritmika Ltd.
+ * @version 1.0.0
+ * @author  Algoritmika Ltd.
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -13,22 +13,21 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * wcj_get_table_html.
  */
-if ( ! function_exists( 'wcj_get_table_html' ) ) {	
-	//function wcj_get_table_html( $data, $table_class = '', $table_heading_type = 'horizontal', $columns_classes = array(), $columns_styles = array() ) {
+if ( ! function_exists( 'wcj_get_table_html' ) ) {
 	function wcj_get_table_html( $data, $args = array() ) {
-		$defaults = array( 
+		$defaults = array(
 			'table_class'        => '',
 			'table_style'        => '',
-			'table_heading_type' => 'horizontal', 
-			'columns_classes'    => array(), 
+			'table_heading_type' => 'horizontal',
+			'columns_classes'    => array(),
 			'columns_styles'     => array(),
 		);
 		//wp_parse_args( $args, $defaults );
-		$args = array_merge( $defaults, $args );		
-		extract( $args );		
+		$args = array_merge( $defaults, $args );
+		extract( $args );
 		$table_class = ( '' == $table_class ) ? '' : ' class="' . $table_class . '"';
 		$table_style = ( '' == $table_style ) ? '' : ' style="' . $table_style . '"';
-		$html = '';		
+		$html = '';
 		$html .= '<table' . $table_class . $table_style . '>';
 		$html .= '<tbody>';
 		foreach( $data as $row_number => $row ) {
@@ -43,9 +42,9 @@ if ( ! function_exists( 'wcj_get_table_html' ) ) {
 				$html .= '</' . $th_or_td . '>';
 			}
 			$html .= '</tr>';
-		}		
+		}
 		$html .= '</tbody>';
-		$html .= '</table>';		
+		$html .= '</table>';
 		return $html;
 	}
 }
@@ -55,11 +54,11 @@ if ( ! function_exists( 'wcj_get_table_html' ) ) {
  */
 if ( ! function_exists( 'wcj_get_option_html' ) ) {
 	function wcj_get_option_html( $option_type, $option_id, $option_value, $option_description, $option_class ) {
-			
+
 		if ( 'checkbox' === $option_type )
-			$is_checked = checked( $option_value, 'on', false );		
-			
-		$html = '';	
+			$is_checked = checked( $option_value, 'on', false );
+
+		$html = '';
 		switch ( $option_type ) {
 			case 'number':
 			case 'text':
@@ -74,9 +73,9 @@ if ( ! function_exists( 'wcj_get_option_html' ) ) {
 			case 'select':
 				$html .= '<select class="' . $option_class . '" id="' . $option_id . '" name="' . $option_id . '">' . $option_value . '</select>';
 				break;
-		}		
+		}
 		$html .= '<span class="description">' . $option_description . '</span>';
-		
-		return $html;		
+
+		return $html;
 	}
 }

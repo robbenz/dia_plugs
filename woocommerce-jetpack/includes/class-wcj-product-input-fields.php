@@ -64,6 +64,7 @@ class WCJ_Product_Input_Fields {
 
 	/**
 	 * handle_downloads.
+	 *
 	 * @version 2.2.2
 	 * @since 2.2.2
 	 */

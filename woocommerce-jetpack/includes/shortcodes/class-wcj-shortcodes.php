@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Shortcodes class.
  *
- * @version 2.2.1
+ * @version 2.2.9
  * @author  Algoritmika Ltd.
  */
 
@@ -53,18 +53,23 @@ class WCJ_Shortcodes {
 
 	/**
 	 * wcj_shortcode.
+	 *
+	 * @version 2.2.9
 	 */
 	function wcj_shortcode( $atts, $content, $shortcode ) {
 
 		// Init
 		if ( empty( $atts ) ) $atts = array();
 		$global_defaults = array(
-			'before'          => '',
-			'after'           => '',
-			'visibility'      => '',//user_visibility
-			'site_visibility' => '',
-			'location'        => '',//user_location
-			'wpml_language'   => '',
+			'before'              => '',
+			'after'               => '',
+			'visibility'          => '',//user_visibility
+			'site_visibility'     => '',
+			'location'            => '',//user_location
+			'wpml_language'       => '',
+			'wpml_not_language'   => '',
+			'billing_country'     => '',
+			'not_billing_country' => '',
 		);
 		$atts = array_merge( $global_defaults, $atts );
 
@@ -87,8 +92,29 @@ class WCJ_Shortcodes {
 		if ( '' != $atts['location'] && 'all' != $atts['location'] && $atts['location'] != $this->wcj_get_user_location() ) return '';
 
 		// Check if language is ok
+		if ( 'wcj_wpml' === $shortcode || 'wcj_wpml_translate' === $shortcode ) $atts['wpml_language']     = $atts['lang'];
+		if ( 'wcj_wpml' === $shortcode || 'wcj_wpml_translate' === $shortcode ) $atts['wpml_not_language'] = $atts['not_lang'];
 		if ( '' != $atts['wpml_language'] ) {
-			if ( ! defined( 'ICL_LANGUAGE_CODE' ) || ICL_LANGUAGE_CODE != $atts['wpml_language'] ) return '';
+			if ( ! defined( 'ICL_LANGUAGE_CODE' ) ) return '';
+			if ( ! in_array( ICL_LANGUAGE_CODE, $this->custom_explode( $atts['wpml_language'] ) ) ) return '';
+		}
+		// Check if language is ok (not in...)
+		if ( '' != $atts['wpml_not_language'] ) {
+			if ( defined( 'ICL_LANGUAGE_CODE' ) ) {
+				if ( in_array( ICL_LANGUAGE_CODE, $this->custom_explode( $atts['wpml_not_language'] ) ) ) return '';
+			}
+		}
+
+		// Check if billing country by arg is ok
+		if ( '' != $atts['billing_country'] ) {
+			if ( ! isset( $_GET['billing_country'] ) ) return '';
+			if ( ! in_array( $_GET['billing_country'], $this->custom_explode( $atts['billing_country'] ) ) ) return '';
+		}
+		// Check if billing country by arg is ok (not in...)
+		if ( '' != $atts['not_billing_country'] ) {
+			if ( isset( $_GET['billing_country'] ) ) {
+				if ( in_array( $_GET['billing_country'], $this->custom_explode( $atts['not_billing_country'] ) ) ) return '';
+			}
 		}
 
 		// Add child class specific atts
@@ -104,6 +130,20 @@ class WCJ_Shortcodes {
 		return '';
 	}
 
+	/**
+	 * custom_explode.
+	 *
+	 * @since 2.2.9
+	 */
+	function custom_explode( $string_to_explode ) {
+		$string_to_explode = str_replace( ' ', '', $string_to_explode );
+		$string_to_explode = trim( $string_to_explode, ',' );
+		return explode( ',', $string_to_explode );
+	}
+
+	/**
+	 * wcj_get_user_location.
+	 */
 	function wcj_get_user_location() {
 		$country = '';
 		if ( isset( $_GET['country'] ) && '' != $_GET['country'] && is_super_admin() ) {

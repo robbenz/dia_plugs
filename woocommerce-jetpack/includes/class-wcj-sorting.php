@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Sorting class.
  *
- * @version 2.2.4
+ * @version 2.2.9
  * @author  Algoritmika Ltd.
  */
 
@@ -28,7 +28,7 @@ class WCJ_Sorting extends WCJ_Module {
 		$this->desc       = __( 'Add more WooCommerce sorting options or remove all sorting including default.', 'woocommerce-jetpack' );
 		parent::__construct();
 
-        if ( $this->is_enabled() ) {
+		if ( $this->is_enabled() ) {
 
 			if ( 'yes' === get_option( 'wcj_more_sorting_enabled' ) ) {
 				add_filter( 'woocommerce_get_catalog_ordering_args',       array( $this, 'custom_woocommerce_get_catalog_ordering_args' ), 100 );// Sorting
@@ -48,9 +48,12 @@ class WCJ_Sorting extends WCJ_Module {
 
 	/**
 	 * Unlocks - Sorting - remove_sorting.
+	 *
+	 * @version 2.2.9
 	 */
 	public function remove_sorting() {
 		remove_action( 'woocommerce_before_shop_loop', 'woocommerce_catalog_ordering', 30 );
+		remove_action( 'mpcth_before_shop_loop',       'woocommerce_catalog_ordering', 40 ); // Blaszok theme
 	}
 
 	/*
@@ -73,15 +76,6 @@ class WCJ_Sorting extends WCJ_Module {
 			$updated_settings[] = $section;
 		}
 		return $updated_settings;
-	}
-
-	/*
-	 * Custom Init - remove all sorting action
-	 *
-	function custom_init() {
-
-		if ( get_option( 'wcj_sorting_remove_all_enabled' ) )
-			do_action( 'wcj_sorting_remove_action' );
 	}
 
 	/*

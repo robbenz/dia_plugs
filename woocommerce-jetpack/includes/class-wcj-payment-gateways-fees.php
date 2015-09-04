@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Payment Gateways Fees class.
  *
- * @version 2.2.6
+ * @version 2.2.9
  * @since   2.2.2
  * @author  Algoritmika Ltd.
  */
@@ -47,33 +47,33 @@ class WCJ_Payment_Gateways_Fees extends WCJ_Module {
 		return $this->add_enable_module_setting( $settings );
 	}
 
-    /**
-     * add_hooks.
-     */
-    function add_hooks() {
+	/**
+	 * add_hooks.
+	 */
+	function add_hooks() {
 		add_filter( 'wcj_payment_gateways_fees_settings',  array( $this, 'add_fees_settings' ) );
 	}
 
-    /**
-     * register_script.
-     */
-    public function register_script() {
-        wp_register_script( 'wcj-payment-gateways-checkout', trailingslashit( plugin_dir_url( __FILE__ ) ) . 'js/checkout.js', array( 'jquery' ), false, true );
-    }
+	/**
+	 * register_script.
+	 */
+	public function register_script() {
+		wp_register_script( 'wcj-payment-gateways-checkout', trailingslashit( plugin_dir_url( __FILE__ ) ) . 'js/checkout.js', array( 'jquery' ), false, true );
+	}
 
-    /**
-     * enqueue_checkout_script.
-     */
-    public function enqueue_checkout_script() {
-        if( ! is_checkout() )
+	/**
+	 * enqueue_checkout_script.
+	 */
+	public function enqueue_checkout_script() {
+		if( ! is_checkout() )
 			return;
 		wp_enqueue_script( 'wcj-payment-gateways-checkout' );
-    }
+	}
 
 	/**
 	 * gateways_fees.
 	 *
-	 * @version 2.2.3
+	 * @version 2.2.9
 	 */
 	function gateways_fees() {
 		global $woocommerce;
@@ -110,7 +110,7 @@ class WCJ_Payment_Gateways_Fees extends WCJ_Module {
 					$taxable = ( 'yes' === get_option( 'wcj_gateways_fees_is_taxable_' . $current_gateway ) ) ? true : false;
 					$tax_class_name = '';
 					if ( $taxable ) {
-						$tax_class_id = apply_filters( 'wcj_get_option_filter', 0, get_option( 'wcj_gateways_fees_tax_class_id_' . $current_gateway, 0 ) );
+						$tax_class_id = get_option( 'wcj_gateways_fees_tax_class_id_' . $current_gateway, 0 );
 						$tax_class_names = array_merge( array( '', ), WC_Tax::get_tax_classes() );
 						$tax_class_name = $tax_class_names[ $tax_class_id ];
 					}
@@ -120,14 +120,14 @@ class WCJ_Payment_Gateways_Fees extends WCJ_Module {
 		}
 	}
 
-    /**
-     * add_fees_settings.
+	/**
+	 * add_fees_settings.
 	 *
-	 * @version 2.2.6
-     */
+	 * @version 2.2.9
+	 */
 	function add_fees_settings( $settings ) {
 		// Gateway's Extra Fees
-        $settings[] = array(
+		$settings[] = array(
 			'title' => __( 'Payment Gateways Fees and Discounts Options', 'woocommerce-jetpack' ),
 			'type' => 'title',
 			'desc' => __( 'This section lets you set extra fees for payment gateways.', 'woocommerce-jetpack' ),
@@ -234,30 +234,24 @@ class WCJ_Payment_Gateways_Fees extends WCJ_Module {
 				array(
 					'title'    	=> '',
 					'desc'    	=> __( 'Is taxable?', 'woocommerce-jetpack' ),
-					/* 'desc_tip'	=> apply_filters( 'get_wc_jetpack_plus_message', '', 'desc' ), */
 					'id'       	=> 'wcj_gateways_fees_is_taxable_' . $key,
 					'default'  	=> 'no',
 					'type'		=> 'checkbox',
-					/* 'custom_attributes'
-								=> apply_filters( 'get_wc_jetpack_plus_message', '', 'disabled' ), */
 				),
 
 				array(
 					'title'     => '',
 					'desc'      => __( 'Tax Class (only if Taxable selected).', 'woocommerce-jetpack' ),
-					'desc_tip'  => apply_filters( 'get_wc_jetpack_plus_message', '', 'desc_no_link' ),
 					'id'        => 'wcj_gateways_fees_tax_class_id_' . $key,
 					'default'   => '',
 					'type'      => 'select',
 					'options'   => array_merge( array( __( 'Standard Rate', 'woocommerce-jetpack' ) ), WC_Tax::get_tax_classes() ),
-					'custom_attributes'
-					            => apply_filters( 'get_wc_jetpack_plus_message', '', 'disabled' ),
 				),
 
 			) );
-        }
+		}
 
-        $settings[] = array( 'type'  => 'sectionend', 'id' => 'wcj_payment_gateways_fees_options' );
+		$settings[] = array( 'type'  => 'sectionend', 'id' => 'wcj_payment_gateways_fees_options' );
 
 		return $settings;
 	}

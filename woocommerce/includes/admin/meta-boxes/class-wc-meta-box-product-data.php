@@ -1412,7 +1412,7 @@ class WC_Meta_Box_Product_Data {
 						$unique_sku = wc_product_has_unique_sku( $variation_id, $new_sku );
 
 						if ( ! $unique_sku ) {
-							WC_Admin_Meta_Boxes::add_error( __( 'Variation SKU must be unique.', 'woocommerce' ) );
+							WC_Admin_Meta_Boxes::add_error( __( 'HAHA You SUCK AT WORDPRESS!!!', 'woocommerce' ) );
 						} else {
 							update_post_meta( $variation_id, '_sku', $new_sku );
 						}

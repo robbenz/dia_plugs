@@ -4,7 +4,7 @@ Donate link: http://algoritmika.com/donate/
 Tags: woocommerce,booster for woocommerce,woocommerce jetpack,custom price labels,call for price,currency symbol,remove sorting,remove old product slugs,add to cart text,order number,sequential order numbering,email pdf invoice,pdf invoice,pdf invoices,already in cart,empty cart,redirect to checkout,minimum order amount,customize checkout fields,checkout fields,email,customize product tabs,product tabs,related products number,empty cart,redirect add to cart,redirect to checkout,product already in cart,custom payment gateway,payment gateway icon,auto-complete all orders,custom order statuses,custom order status,remove text from price,custom css,hide categories count,hide subcategories count,hide category count,hide subcategory count,display total sales,custom product tabs,remove product tab,payment gateway fee,
 Requires at least: 3.8
 Tested up to: 4.3
-Stable tag: 2.2.8
+Stable tag: 2.2.9
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -110,6 +110,21 @@ To unlock all Booster for WooCommerce features, please install additional <a hre
 1. Plugin admin area.
 
 == Changelog ==
+
+= 2.2.9 - 01/09/2015 =
+* Dev - Shortcodes - Orders - `[wcj_order_meta]` shortcode added (attribute: `meta_key`).
+* Dev - Shortcodes - Orders - `[wcj_order_custom_meta_field]` shortcode added. Suggested by https://wordpress.org/support/topic/pdf-invoice-get-order-item-meta-data.
+* Dev - Shortcodes - General - `[wcj_text]` shortcode added.
+* Dev - Shortcodes - General - `not_lang` attribute added to `[wcj_wpml]` shortcode; `lang` modified to accept comma separated values.
+* Dev - Shortcodes - `wpml_not_language` attribute added to all shortcodes; `wpml_language` modified to accept comma separated values.
+* Dev - Shortcodes - `billing_country` and `not_billing_country` attributes added to all shortcodes.
+* Fix - PRODUCTS - Product Input Fields - Local (i.e. per Product) Product Input Fields - Bug when increasing (and saving) the number of input fields, fixed.
+* Dev - PRODUCTS - Product Input Fields - Local (i.e. per Product) Product Input Fields - Meta box layout changed.
+* Dev - PRODUCTS - Product Tabs - Code refactoring.
+* Dev - PRODUCTS - Product Tabs - Local (i.e. per Product) Custom Product Tabs - Meta box layout changed.
+* Fix - PRODUCTS - Product Tabs - Local (i.e. per Product) Custom Product Tabs - Bug when increasing (and saving) the number of custom product tabs, fixed.
+* Dev - PRODUCTS - Sorting - Remove All Sorting - Blaszok theme compatibility added.
+* Dev - CART & CHECKOUT - Payment Gateways Fees and Discounts - Plus lock removed from "Tax Class" option.
 
 = 2.2.8 - 23/08/2015 =
 * Fix - EMAILS & MISC. - WPML - "Creating WPML XML file on each settings saving" disabled. Manual "Regenerate wpml-config.xml file" tool added.
