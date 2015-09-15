@@ -6,5 +6,9 @@ function pmxi_admin_init(){
 
     @ini_set('mysql.connect_timeout', 300);
     @ini_set('default_socket_timeout', 300);    
+
+ //    if (isset($_GET['addon_notice_ignore']) && '1' == $_GET['addon_notice_ignore'] && isset($_GET['addon_slug']) ) {
+	// 	update_option($_GET['addon_slug'] . '_notice_ignore', 'true');
+	// }
 	
 }

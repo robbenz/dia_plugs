@@ -39,6 +39,8 @@ $.fn.wplupload  = function($options) {
 			$('.wpallimport-choose-file').find('.wpallimport-upload-resource-step-two').slideUp();
 
 			$('#cancel-upload').removeAttr('disabled');
+
+			//$('.auto-generate-template').removeAttr('rel').hide();
 			
 			$up.start();
 		});
@@ -75,11 +77,29 @@ $.fn.wplupload  = function($options) {
 			}
 			else{
 
+				if (r.post_type)
+				{
+					var index = $('#custom_type_selector li:has(input[value="'+ r.post_type +'"])').index();
+					if (index != -1)
+					{
+						$('#custom_type_selector').ddslick('select', {index: index });
+						$('.auto-generate-template').css({'display':'inline-block'}).attr('rel', 'upload_type');
+					}
+					else
+					{
+						$('.auto-generate-template').hide();
+					}
+				}
+				else
+				{
+					$('.auto-generate-template').hide();
+				}
+
 				$('#filepath').val(r.name);
 
 				$('#progressbar').html('<span>Upload Complete</span> - ' + file.name + ' (' + ( (file.size / (1024*1024) >= 1) ? (file.size / (1024*1024)).toFixed(2) + 'mb' : (file.size / (1024)).toFixed(2) + 'kb') + ')');					
 
-				setTimeout(function() {
+				setTimeout(function() {					
 					
 					$('.wpallimport-choose-file').find('.wpallimport-upload-resource-step-two').slideDown();	
 

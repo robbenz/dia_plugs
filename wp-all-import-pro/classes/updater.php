@@ -8,7 +8,8 @@ if( ! class_exists('PMXI_Updater') ) {
         private $name     = '';
         private $slug     = '';
         private $_plugin_file = '';
-        private $did_check = false;
+        private $did_check = false;        
+        private $version;
 
         /**
          * Class constructor.
@@ -287,9 +288,9 @@ if( ! class_exists('PMXI_Updater') ) {
          */
         private function api_request( $_action, $_data, $debug = false ) {
 
-            global $wp_version;
+            global $wp_version;            
 
-            $data = array_merge( $this->api_data, $_data );
+            $data = array_merge( $this->api_data, $_data );                        
 
             if ( $data['slug'] != $this->slug )
                 return;
@@ -310,13 +311,13 @@ if( ! class_exists('PMXI_Updater') ) {
                 'plugin'     => $this->_plugin_file,
                 'author'     => $data['author'],
                 'url'        => home_url(),
-                'version'    => PMXI_VERSION
+                'version'    => $this->version
             );
 
             $request = wp_remote_post( $this->api_url, array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
 
-            if ( ! is_wp_error( $request ) ) {
-                $request = json_decode( wp_remote_retrieve_body( $request ) );
+            if ( ! is_wp_error( $request ) ) {                
+                $request = json_decode( wp_remote_retrieve_body( $request ) );                
             }
 
             if ( $request && isset( $request->banners ) ) {

@@ -132,4 +132,5 @@ function pmxi_admin_notices() {
 			endif;
 		}
 	}	
+	wp_all_import_addon_notifications();	
 }

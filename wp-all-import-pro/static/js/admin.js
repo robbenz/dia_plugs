@@ -204,10 +204,11 @@
 			$('.change_file').find('.wpallimport-file-upload-result').attr('rel', $(this).attr('rel'));
 			$('.change_file').find('.wpallimport-upload-type-container[rel=' + $(this).attr('rel') + ']').show();
 			$('.change_file').find('#wpallimport-url-upload-status').html('');
-			$('.change_file').find('input[name=new_type]').val( $(this).attr('rel').replace('_type', '') );
+			$('.change_file').find('input[name=new_type]').val( $(this).attr('rel').replace('_type', '') );			
+
 			if ($(this).attr('rel') == 'upload_type'){
 				$('input[type=file]').click();
-			}
+			}			
 		});
 		$('.wpallimport-import-from.selected').click();
 
@@ -265,7 +266,16 @@
 			$('.wpallimport-choose-file').find('.wpallimport-file-upload-result').attr('rel', $(this).attr('rel'));
 			$('.wpallimport-choose-file').find('.wpallimport-upload-type-container[rel=' + $(this).attr('rel') + ']').show();
 			$('.wpallimport-choose-file').find('#wpallimport-url-upload-status').html('');
-			$('.wpallimport-choose-file').find('input[name=type]').val( $(this).attr('rel').replace('_type', '') );						
+			$('.wpallimport-choose-file').find('input[name=type]').val( $(this).attr('rel').replace('_type', '') );				
+			
+			if ($('.auto-generate-template').attr('rel') == $(this).attr('rel')){
+				$('.auto-generate-template').css({'display':'inline-block'});
+			}
+			else
+			{
+				$('.auto-generate-template').hide();
+			}			
+
 			if ($(this).attr('rel') == 'upload_type'){
 				$('input[type=file]').click();
 			}
@@ -314,6 +324,25 @@
 							$('.wpallimport-choose-file').find('.wpallimport-submit-buttons').show();						
 						});						
 						$('.wpallimport-choose-file').find('input[name=downloaded]').val(window.JSON.stringify(response.upload_result));
+
+						if (response.post_type)
+						{
+							var index = $('#custom_type_selector li:has(input[value="'+ response.post_type +'"])').index();
+							if (index != -1)
+							{
+								$('#custom_type_selector').ddslick('select', {index: index });
+								$('.auto-generate-template').css({'display':'inline-block'}).attr('rel', 'url_type');
+							}
+							else
+							{
+								$('.auto-generate-template').hide();
+							}
+						}
+						else
+						{
+							$('.auto-generate-template').hide();
+						}
+
 					}
 					else {
 						$('.wpallimport-header').next('.clear').after(response.errors);
@@ -410,6 +439,11 @@
 		$('#custom_type_selector').hide();
 
 		$('.wpallimport-import-to.wpallimport-import-to-checked').click();		
+
+		$('a.auto-generate-template').click(function(){
+			$('input[name^=auto_generate]').val('1');					
+			$(this).parents('form:first').submit();
+		});
 		
 	});
 	//[/End Step 1]		
@@ -597,7 +631,7 @@
 
 	        $pointer.css({'position':'fixed', 'top' : '15%', 'left' : $leftOffset + 'px'});
 
-			if (tinyMCE != undefined) tinyMCE.triggerSave(false, false);
+			if (typeof tinyMCE != 'undefined') tinyMCE.triggerSave(false, false);
 
 			$.post($URL, $form.serialize(), function (response) {
 							
@@ -1188,8 +1222,11 @@
 						$('#pmxi_xml_element').append(response.render_element);
 						$('.wpallimport-root-element').html(response.root_element);
 						$('.wpallimport-elements-count-info').html(response.count);
-						if (response.count) 
-							$submit.show();
+						$('.wp_all_import_warning').hide(); 
+						if (response.count){ 
+							$submit.show();							
+							if ($('.xml-element.lvl-1').length < 1) $('.wp_all_import_warning').css({'display':'inline-block'});
+						}
 						else
 							$submit.hide();
 					}
@@ -1737,6 +1774,11 @@
 				}
 			});
 		});
+		var $uniqueKey = $form.find('input[name=unique_key]');
+		var $tmpUniqueKey = $form.find('input[name=tmp_unique_key]');
+		$form.find('.wpallimport-auto-detect-unique-key').click(function(){
+			$uniqueKey.val($tmpUniqueKey.val());
+		});
 	});
 	
 	// chunk files upload
@@ -1919,6 +1961,10 @@
 		$(this).prev('div.input').find('input[type=text]:last, textarea:last').addClass('wpallimport-top-radius');
 	});
 
+	$('.wpallimport-delete-and-edit').click(function(){
+    	window.location.href = $(this).attr('rel');
+    });
+
 	var fix_tag_position = function(){
 		if ($('.wpallimport-layout').length && $('.tag').length){
 	    	var offset = $('.wpallimport-layout').offset();
@@ -1932,11 +1978,6 @@
 	        }
 	    }
 	}
-
-	$('.wp_all_import_show_path').click(function(){
-		var path = $(this).attr('rel');
-		$(this).parents('em:first').html(path);
-	});
 
 	fix_tag_position();	
 

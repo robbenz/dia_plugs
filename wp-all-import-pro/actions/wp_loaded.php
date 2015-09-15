@@ -31,16 +31,38 @@ function pmxi_wp_loaded() {
 		
 		$ids = explode(',', $_GET['import_id']);
 
-		if (!empty($ids) and is_array($ids)){			
+		if (!empty($ids) and is_array($ids)){						
 
 			foreach ($ids as $id) { if (empty($id)) continue;
 
 				$import->getById($id);	
 
-				if ( ! $import->isEmpty() ){
+				if ( ! $import->isEmpty() ){			
+
+					if ( ! empty($_GET['sync']) )
+					{
+						$imports = $wpdb->get_results("SELECT `id`, `name`, `path` FROM $table WHERE `processing` = 1", ARRAY_A);
+						if ( ! empty($imports) )
+						{
+							$processing_ids = array();
+							foreach ($imports as $imp) {
+								$processing_ids[] = $imp['id'];
+							}
+							wp_send_json(array(
+								'status'     => 403,
+								'message'    => sprintf(__('Other imports are currently in process [%s].', 'wp_all_import_plugin'), implode(",", $processing_ids))
+							));
+							//$logger and call_user_func($logger, sprintf(__('Other imports are currently in process [%s].', 'wp_all_import_plugin'), implode(",", $processing_ids)));
+							break;
+						}
+					}		
 
 					if ( ! in_array($import->type, array('url', 'ftp', 'file')) ) {
-						$logger and call_user_func($logger, sprintf(__('Scheduling update is not working with "upload" import type. Import #%s.', 'wp_all_import_plugin'), $id));
+						wp_send_json(array(
+							'status'     => 500,
+							'message'    => sprintf(__('Scheduling update is not working with "upload" import type. Import #%s.', 'wp_all_import_plugin'), $id)
+						));
+						//$logger and call_user_func($logger, sprintf(__('Scheduling update is not working with "upload" import type. Import #%s.', 'wp_all_import_plugin'), $id));
 					}
 
 					switch ($_GET['action']) {
@@ -48,7 +70,13 @@ function pmxi_wp_loaded() {
 						case 'trigger':							
 
 							if ( (int) $import->executing ){
-								$logger and call_user_func($logger, sprintf(__('Import #%s is currently in manually process. Request skipped.', 'wp_all_import_plugin'), $id));	
+
+								wp_send_json(array(
+									'status'     => 403,
+									'message'    => sprintf(__('Import #%s is currently in manually process. Request skipped.', 'wp_all_import_plugin'), $id)
+								));
+
+								//$logger and call_user_func($logger, sprintf(__('Import #%s is currently in manually process. Request skipped.', 'wp_all_import_plugin'), $id));	
 							}
 							elseif ( ! $import->processing and ! $import->triggered ){
 								
@@ -71,14 +99,29 @@ function pmxi_wp_loaded() {
 									'summary' => __("triggered by cron", "wp_all_import_plugin")
 								))->save();	
 
-								$logger and call_user_func($logger, sprintf(__('#%s Cron job triggered.', 'wp_all_import_plugin'), $id));
+								//$logger and call_user_func($logger, sprintf(__('#%s Cron job triggered.', 'wp_all_import_plugin'), $id));
+								wp_send_json(array(
+									'status'     => 200,
+									'message'    => sprintf(__('#%s Cron job triggered.', 'wp_all_import_plugin'), $id)
+								));
 							
 							}
 							elseif( $import->processing and ! $import->triggered) {
-								$logger and call_user_func($logger, sprintf(__('Import #%s currently in process. Request skipped.', 'wp_all_import_plugin'), $id));	
+								wp_send_json(array(
+									'status'     => 403,
+									'message'    => sprintf(__('Import #%s currently in process. Request skipped.', 'wp_all_import_plugin'), $id)
+								));
+
+								//$logger and call_user_func($logger, sprintf(__('Import #%s currently in process. Request skipped.', 'wp_all_import_plugin'), $id));	
 							}													
 							elseif( ! $import->processing and $import->triggered){
-								$logger and call_user_func($logger, sprintf(__('Import #%s already triggered. Request skipped.', 'wp_all_import_plugin'), $id));	
+								
+								wp_send_json(array(
+									'status'     => 403,
+									'message'    => sprintf(__('Import #%s already triggered. Request skipped.', 'wp_all_import_plugin'), $id)
+								));
+
+								//$logger and call_user_func($logger, sprintf(__('Import #%s already triggered. Request skipped.', 'wp_all_import_plugin'), $id));	
 							}
 
 							break;
@@ -93,10 +136,18 @@ function pmxi_wp_loaded() {
 							
 							// start execution imports that is in the cron process												
 							if ( ! (int) $import->triggered ){
-								$logger and call_user_func($logger, sprintf(__('Import #%s is not triggered. Request skipped.', 'wp_all_import_plugin'), $id));	
+								wp_send_json(array(
+									'status'     => 403,
+									'message'    => sprintf(__('Import #%s is not triggered. Request skipped.', 'wp_all_import_plugin'), $id)
+								));
+								//$logger and call_user_func($logger, sprintf(__('Import #%s is not triggered. Request skipped.', 'wp_all_import_plugin'), $id));	
 							}
 							elseif ( (int) $import->executing ){
-								$logger and call_user_func($logger, sprintf(__('Import #%s is currently in manually process. Request skipped.', 'wp_all_import_plugin'), $id));	
+								wp_send_json(array(
+									'status'     => 403,
+									'message'    => sprintf(__('Import #%s is currently in manually process. Request skipped.', 'wp_all_import_plugin'), $id)
+								));
+								//$logger and call_user_func($logger, sprintf(__('Import #%s is currently in manually process. Request skipped.', 'wp_all_import_plugin'), $id));	
 							}
 							elseif ( (int) $import->triggered and ! (int) $import->processing ){								
 								
@@ -137,7 +188,7 @@ function pmxi_wp_loaded() {
 
 								ob_start();
 
-								$import->set(array('canceled' => 0, 'failed' => 0))->execute($logger, true, $history_log->id);
+								$response = $import->set(array('canceled' => 0, 'failed' => 0))->execute($logger, true, $history_log->id);
 
 								$log_data = ob_get_clean();
 								
@@ -147,21 +198,37 @@ function pmxi_wp_loaded() {
 									@fclose($log);
 								}
 
-								if ( ! (int) $import->queue_chunk_number ){
+								if ( ! empty($response) and is_array($response)){
+									wp_send_json($response);
+								}
+								elseif ( ! (int) $import->queue_chunk_number ){
 
-									$logger and call_user_func($logger, sprintf(__('Import #%s complete', 'wp_all_import_plugin'), $import->id));	
+									wp_send_json(array(
+										'status'     => 200,
+										'message'    => sprintf(__('Import #%s complete', 'wp_all_import_plugin'), $import->id)
+									));
+									//$logger and call_user_func($logger, sprintf(__('Import #%s complete', 'wp_all_import_plugin'), $import->id));	
 
 								}
 								else{
 
-									$logger and call_user_func($logger, sprintf(__('Records Count %s', 'wp_all_import_plugin'), (int) $import->count));
-									$logger and call_user_func($logger, sprintf(__('Records Processed %s', 'wp_all_import_plugin'), (int) $import->queue_chunk_number));
+									wp_send_json(array(
+										'status'     => 200,
+										'message'    => sprintf(__('Records Processed %s. Records Count %s.', 'wp_all_import_plugin'), (int) $import->queue_chunk_number, (int) $import->count)
+									));
+
+									// $logger and call_user_func($logger, sprintf(__('Records Count %s', 'wp_all_import_plugin'), (int) $import->count));
+									// $logger and call_user_func($logger, sprintf(__('Records Processed %s', 'wp_all_import_plugin'), (int) $import->queue_chunk_number));
 
 								}
 
 							}
 							else {
-								$logger and call_user_func($logger, sprintf(__('Import #%s already processing. Request skipped.', 'wp_all_import_plugin'), $id));								
+								wp_send_json(array(
+									'status'     => 403,
+									'message'    => sprintf(__('Import #%s already processing. Request skipped.', 'wp_all_import_plugin'), $id)
+								));
+								//$logger and call_user_func($logger, sprintf(__('Import #%s already processing. Request skipped.', 'wp_all_import_plugin'), $id));								
 							}
 
 							break;					

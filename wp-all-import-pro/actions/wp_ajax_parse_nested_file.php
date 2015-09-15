@@ -156,7 +156,7 @@ function pmxi_wp_ajax_parse_nested_file(){
 			'root_element' => $root_element,
 			'xml_tree' => $xml_tree,
 			'xpath' => $customXpath,
-			'count' => (($count) ? sprintf("<p class='green pmxi_counter'>" . __('Elements founded', 'pmxi_pligun') . " <strong>%s</strong></p>", $count) : "<p class='red pmxi_counter'>" . __('Elements not found', 'pmxi_pligun') . "</p>")
+			'count' => (($count) ? sprintf("<p class='green pmxi_counter'>" . __('Elements found', 'pmxi_pligun') . " <strong>%s</strong></p>", $count) : "<p class='red pmxi_counter'>" . __('Elements not found', 'pmxi_pligun') . "</p>")
 		))); die;
 	}
 

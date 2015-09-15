@@ -49,6 +49,7 @@ if ( ! empty($post_taxonomies)):
 																			<input type="hidden" name="tax_assign_to_one_term_single[<?php echo $ctx->name; ?>]" value="0"/>
 																			<input type="checkbox" id="tax_assign_to_one_term_single_<?php echo $ctx->name; ?>" <?php if ( ! empty($post['tax_assign_to_one_term_single'][$ctx->name]) ) echo "checked='checked'"; ?> name="tax_assign_to_one_term_single[<?php echo $ctx->name; ?>]" value="1"/>
 																			<label for="tax_assign_to_one_term_single_<?php echo $ctx->name;?>"><?php printf(__('Only assign %s to the imported %s, not the entire hierarchy', 'wp_all_import_plugin'), $custom_type->labels->name, $ctx->labels->singular_name); ?></label>
+																			<a href="#help" class="wpallimport-help" title="<?php _e('By default all categories above the matched category will also be assigned to the post. If enabled, only the imported category will be assigned to the post.', 'wp_all_import_plugin'); ?>" style="position:relative; top: -1px;">?</a>
 																		</div>
 																	</div>
 																</div>
@@ -72,6 +73,7 @@ if ( ! empty($post_taxonomies)):
 																			<input type="hidden" name="tax_assign_to_one_term_multiple[<?php echo $ctx->name; ?>]" value="0"/>
 																			<input type="checkbox" id="tax_assign_to_one_term_multiple_<?php echo $ctx->name; ?>" <?php if ( ! empty($post['tax_assign_to_one_term_multiple'][$ctx->name]) ) echo "checked='checked'"; ?> name="tax_assign_to_one_term_multiple[<?php echo $ctx->name; ?>]" value="1"/>
 																			<label for="tax_assign_to_one_term_multiple_<?php echo $ctx->name;?>"><?php printf(__('Only assign %s to the imported %s, not the entire hierarchy', 'wp_all_import_plugin'), $custom_type->labels->name, $ctx->labels->singular_name); ?></label>
+																			<a href="#help" class="wpallimport-help" title="<?php _e('By default all categories above the matched category will also be assigned to the post. If enabled, only the imported category will be assigned to the post.', 'wp_all_import_plugin'); ?>" style="position:relative; top: -1px;">?</a>
 																		</div>
 																	</div>
 																</div>

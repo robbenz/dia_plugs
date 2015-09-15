@@ -187,13 +187,13 @@ $l10n = array(
 									
 									$custom_types = get_post_types(array('_builtin' => true), 'objects') + get_post_types(array('_builtin' => false, 'show_ui' => true), 'objects'); 
 									foreach ($custom_types as $key => $ct) {
-										if (in_array($key, array('attachment', 'revision', 'nav_menu_item'))) unset($custom_types[$key]);
+										if (in_array($key, array('attachment', 'revision', 'nav_menu_item', 'shop_order'))) unset($custom_types[$key]);
 									}
 									$custom_types = apply_filters( 'pmxi_custom_types', $custom_types );
 
 									$hidden_post_types = get_post_types(array('_builtin' => false, 'show_ui' => false), 'objects');
 									foreach ($hidden_post_types as $key => $ct) {
-										if (in_array($key, array('attachment', 'revision', 'nav_menu_item'))) unset($hidden_post_types[$key]);
+										if (in_array($key, array('attachment', 'revision', 'nav_menu_item', 'shop_order'))) unset($hidden_post_types[$key]);
 									}
 									$hidden_post_types = apply_filters( 'pmxi_custom_types', $hidden_post_types );
 
@@ -246,7 +246,10 @@ $l10n = array(
 					<p class="wpallimport-submit-buttons">
 						<input type="hidden" name="custom_type" value="<?php echo $post['custom_type'];?>">
 						<input type="hidden" name="is_submitted" value="1" />
-						<?php wp_nonce_field('choose-file', '_wpnonce_choose-file'); ?>					
+						<input type="hidden" name="auto_generate" value="0" />
+						
+						<?php wp_nonce_field('choose-file', '_wpnonce_choose-file'); ?>		
+						<a href="javascript:void(0);" class="back rad3 auto-generate-template" style="float:none; background: #e4e6e6; padding: 0 50px;"><?php _e('Skip to Step 4', 'wp_all_import_plugin'); ?></a>			
 						<input type="submit" class="button button-primary button-hero wpallimport-large-button" value="<?php _e('Continue to Step 2', 'wp_all_import_plugin') ?>" id="advanced_upload"/>
 					</p>
 					

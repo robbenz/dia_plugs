@@ -140,6 +140,10 @@
 				<hr>
 				
 				<div class="input wpallimport-section" style="padding-bottom: 8px; padding-left: 8px;">
+
+					<?php 
+						wp_all_import_template_notifications( $post, 'notice' );							
+					?>					
 										
 					<p style="margin: 11px; float: left;">
 						<input type="hidden" name="save_template_as" value="0" />
