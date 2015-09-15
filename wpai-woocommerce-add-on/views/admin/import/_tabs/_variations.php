@@ -83,10 +83,12 @@
 
 		<div class="wpallimport-clear" style="margin-top:5px;"></div>
 		
+		<?php if ( "new" == $post['wizard_type']): ?>
+		
 		<p class="form-field wpallimport-radio-field">
 			<input type="radio" id="xml_matching_parent" class="switcher" name="matching_parent" value="xml" <?php echo 'xml' == $post['matching_parent'] ? 'checked="checked"': '' ?> style="float:left;"/>
 			<label for="xml_matching_parent" style="width:350px;"><?php _e('I\'m importing XML and my variations are child XML elements', 'wp_all_import_plugin' )?> </label>			
-		</p>
+		</p>		
 			
 		<div class="switcher-target-xml_matching_parent" style="padding-left:25px; position:relative;">
 
@@ -103,7 +105,7 @@
 
 				<div style="margin-right:2%;">
 					
-					<div class="options_group">
+					<!--div class="options_group">
 						<p class="form-field wpallimport-radio-field">
 							<label style="border-right:none;" for="_variable_virtual"><?php _e('Virtual', 'woocommerce');?> </label>
 							<input type="checkbox" name="_variable_virtual" id="_variable_virtual" style="position:relative; top:2px; margin-left:5px;" <?php echo ($post['_variable_virtual']) ? 'checked="checked"' : ''; ?>>
@@ -112,7 +114,7 @@
 							<label for="_variable_downloadable" class="show_if_simple"><?php _e('Downloadable','woocommerce');?></label>
 							<input type="checkbox" name="_variable_downloadable" id="_variable_downloadable" style="position:relative; top:2px; margin-left:5px;" <?php echo ($post['_variable_downloadable']) ? 'checked="checked"' : ''; ?>>
 						</p>
-					</div>					
+					</div-->					
 
 					<div class="options_group">
 						<p class="form-field">
@@ -132,6 +134,15 @@
 								<input type="hidden" name="variable_image_use_parent" value="0"/>
 								<input type="checkbox" name="variable_image_use_parent" id="variable_image_use_parent" style="position:relative; top:1px; margin-left:5px; margin-right:5px;" <?php echo ($post['variable_image_use_parent']) ? 'checked="checked"' : ''; ?>>
 								<label for="variable_image_use_parent" style="top:0px;"><?php _e("XPath Is From Parent","pmxi_plugin"); ?></label>
+							</span>
+						</p>
+						<p class="form-field">
+							<label style="width:150px;"><?php _e('Variation Description','woocommerce');?></label>
+							<input type="text" value="<?php echo esc_attr($post['variable_description']) ?>" style="" name="variable_description" class="short">
+							<span class="use_parent">
+								<input type="hidden" name="variable_description_use_parent" value="0"/>
+								<input type="checkbox" name="variable_description_use_parent" id="variable_description_use_parent" style="position:relative; top:1px; margin-left:5px; margin-right:5px;" <?php echo ($post['variable_description_use_parent']) ? 'checked="checked"' : ''; ?>>
+								<label for="variable_description_use_parent" style="top:0px;"><?php _e("XPath Is From Parent","pmxi_plugin"); ?></label>
 							</span>
 						</p>
 					</div>
@@ -261,7 +272,7 @@
 						</p>
 					</div>
 
-					<div class="options_group"  <?php echo ( ! $post['_variable_virtual']) ? 'style="display:none;"' : ''; ?> id="variable_virtual">
+					<div class="options_group" id="variable_virtual">
 						
 						<p class="form-field wpallimport-radio-field">
 							<input type="radio" id="is_variable_product_virtual_yes" class="switcher" name="is_variable_product_virtual" value="yes" <?php echo 'yes' == $post['is_variable_product_virtual'] ? 'checked="checked"': '' ?>/>
@@ -289,7 +300,7 @@
 						</div>						
 					</div>
 
-					<div class="options_group" <?php echo ($post['_variable_virtual']) ? 'style="display:none;"' : ''; ?> id="variable_dimensions">
+					<div class="options_group" id="variable_dimensions">
 						<p class="form-field">
 							<label style="width:150px;"><?php _e('Weight','woocommerce');?></label>
 							<input type="text" placeholder="0.00" value="<?php echo esc_attr($post['variable_weight']) ?>" style="" name="variable_weight" class="short">
@@ -406,7 +417,7 @@
 					</div>
 	
 					<!--  Downloadable -->
-					<div class="options_group variable_downloadable" <?php echo ( ! $post['_variable_downloadable']) ? 'style="display:none;"' : ''; ?>>
+					<div class="options_group">
 						<p class="form-field wpallimport-radio-field">
 							<input type="radio" id="is_variable_product_downloadable_yes" class="switcher" name="is_variable_product_downloadable" value="yes" <?php echo 'yes' == $post['is_variable_product_downloadable'] ? 'checked="checked"': '' ?>/>
 							<label for="is_variable_product_downloadable_yes"><?php _e("Downloadable"); ?></label>
@@ -433,7 +444,7 @@
 						</div>
 					</div>
 
-					<div class="options_group variable_downloadable" <?php echo ( ! $post['_variable_downloadable']) ? 'style="display:none;"' : ''; ?>>
+					<div class="options_group variable_downloadable">
 						<p class="form-field">
 							<label style="width:150px;"><?php _e('File paths','woocommerce');?></label>
 							<input type="text" value="<?php echo esc_attr($post['variable_file_paths']) ?>" name="variable_file_paths" class="short" style="width:60% !important;">
@@ -632,7 +643,9 @@
 		</div>
 		
 		<div class="clear" style="margin-top:5px;"></div>
-					
+		
+		<?php endif; ?>
+
 	</div>
 
 	<div class="options_group variations_are_not_child_elements">

@@ -8,6 +8,7 @@ if( ! class_exists('PMWI_Updater') ) {
         private $name     = '';
         private $slug     = '';
         private $did_check = false;
+        private $version;
 
         /**
          * Class constructor.
@@ -283,7 +284,7 @@ if( ! class_exists('PMWI_Updater') ) {
 
             global $wp_version;
 
-            $data = array_merge( $this->api_data, $_data );
+            $data = array_merge( $this->api_data, $_data );        
 
             if ( $data['slug'] != $this->slug )
                 return;
@@ -303,7 +304,8 @@ if( ! class_exists('PMWI_Updater') ) {
                 'slug'       => $data['slug'],
                 'author'     => $data['author'],
                 'url'        => home_url(),
-            );
+                'version'    => $this->version
+            );            
 
             $request = wp_remote_post( $this->api_url, array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
 

@@ -91,7 +91,13 @@
 		</p>
 
 	</div>
-	<div class="options_group show_if_virtual">
+	<div class="options_group show_if_variable">
+		<p class="form-field">
+			<label><?php _e("Variation Description"); ?></label>
+			<input type="text" class="short" name="single_product_variation_description" value="<?php echo esc_attr($post['single_product_variation_description']) ?>"/>			
+		</p>
+	</div>
+	<div class="options_group">
 		
 			<p class="form-field wpallimport-radio-field">
 				<input type="radio" id="is_product_virtual_yes" class="switcher" name="is_product_virtual" value="yes" <?php echo 'yes' == $post['is_product_virtual'] ? 'checked="checked"': '' ?>/>
@@ -114,7 +120,7 @@
 			</div>
 		
 	</div>
-	<div class="options_group show_if_downloadable">
+	<div class="options_group">
 		
 		<p class="form-field wpallimport-radio-field">
 			<input type="radio" id="is_product_downloadable_yes" class="switcher" name="is_product_downloadable" value="yes" <?php echo 'yes' == $post['is_product_downloadable'] ? 'checked="checked"': '' ?>/>

@@ -17,7 +17,8 @@
 		var is_grouped = ($('#product-type').val() == 'grouped');
 		var is_simple = ($('#product-type').val() == 'simple');
 		var is_external = ($('#product-type').val() == 'external');
-		var is_downloadable = ($('#_downloadable').is(':checked'));
+		var is_downloadable = !($('input[name=is_product_downloadable]:checked').val() == 'no');
+		var is_variable_downloadable = !($('input[name=is_variable_product_downloadable]:checked').val() == 'no');		
 		var is_virtual = ($('#_virtual').is(':checked'));			
 		var is_multiple_product_type = ($('input[name=is_multiple_product_type]:checked').val() == 'yes');		
 
@@ -29,7 +30,7 @@
 				$(this).hasClass('hide_if_external')) && is_multiple_product_type)				
 			{
 	 			if ($(this).hasClass('hide_if_grouped') && is_grouped) { $(this).hide(); return true; } else if ( $(this).hasClass('hide_if_grouped') && !is_grouped )  $(this).show(); 	 			
-	 			if ($(this).hasClass('hide_if_external') && is_external) { $(this).hide(); return true; } else if ( $(this).hasClass('hide_if_external') && !is_external )  $(this).show();	 			
+	 			if ($(this).hasClass('hide_if_external') && is_external) { $(this).hide(); return true; } else if ( $(this).hasClass('hide_if_external') && !is_external )  $(this).show();	 				 			
 	 		}
 
 	 		if (($(this).hasClass('show_if_simple') || $(this).hasClass('show_if_variable') || $(this).hasClass('show_if_grouped') || $(this).hasClass('show_if_external')) && is_multiple_product_type){
@@ -65,11 +66,13 @@
 
 	 		if ($(this).hasClass('hide_if_virtual') || 
 				$(this).hasClass('show_if_virtual') || 
-				$(this).hasClass('show_if_downloadable'))
+				$(this).hasClass('show_if_downloadable') || 
+				$(this).hasClass('variable_downloadable'))
 	 		{
 	 			if ($(this).hasClass('hide_if_virtual') && is_virtual) $(this).hide(); else if ( $(this).hasClass('hide_if_virtual') && !is_virtual )  $(this).show();
 	 			if ($(this).hasClass('show_if_virtual') && is_virtual) $(this).show(); else if ( $(this).hasClass('show_if_virtual') && !is_virtual )  $(this).hide();
 	 			if ($(this).hasClass('show_if_downloadable') && is_downloadable) $(this).show(); else if ( $(this).hasClass('show_if_downloadable') && !is_downloadable )  $(this).hide();
+	 			if ($(this).hasClass('variable_downloadable') && is_variable_downloadable) $(this).show(); else if ( $(this).hasClass('variable_downloadable') && !is_variable_downloadable )  $(this).hide();
 	 		}
 		});
 
@@ -119,7 +122,7 @@
 		change_depencies();
 		$('.wc-tabs').find('li:visible:first').find('a').click();
 	});
-	$('#_virtual, #_downloadable, input[name=is_product_manage_stock], input[name=is_variable_product_manage_stock]').click(change_depencies);
+	$('#_virtual, #_downloadable, input[name=is_product_manage_stock], input[name=is_variable_product_manage_stock], input[name=is_product_downloadable], input[name=is_variable_product_downloadable]').click(change_depencies);
 	$('input[name=is_multiple_product_type]').click(function(){
 		change_depencies();
 		$('.wc-tabs').find('li:visible:first').find('a').click();
@@ -154,20 +157,20 @@
 		$('#variable_sale_price_shedule').show();
 	});
 
-	$('#_variable_virtual').click(function(){
-		if ($(this).is(':checked')){
-			$('#variable_virtual').show();
-			$('#variable_dimensions').hide();
-		}
-		else{
-			$('#variable_virtual').hide();
-			$('#variable_dimensions').show();
-		}
-	});
+	// $('#_variable_virtual').click(function(){
+	// 	if ($(this).is(':checked')){
+	// 		$('#variable_virtual').show();
+	// 		$('#variable_dimensions').hide();
+	// 	}
+	// 	else{
+	// 		$('#variable_virtual').hide();
+	// 		$('#variable_dimensions').show();
+	// 	}
+	// });
 
-	$('#_variable_downloadable').click(function(){
-		if ($(this).is(':checked')) $('.variable_downloadable').show(); else $('.variable_downloadable').hide();
-	});	
+	// $('#_variable_downloadable').click(function(){
+	// 	if ($(this).is(':checked')) $('.variable_downloadable').show(); else $('.variable_downloadable').hide();
+	// });	
 
 	var variation_xpath = $('#variations_xpath').val();
 
