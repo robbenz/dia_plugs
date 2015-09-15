@@ -127,7 +127,7 @@ class Vc_Grid_Item {
 	 */
 	public function mapShortcodes() {
 		// @kludge
-		// @todo refactor with with new way of roles for shortcodes.
+		// TODO: refactor with with new way of roles for shortcodes.
 		// NEW ROLES like post_type for shortcode and access policies.
 		$shortcodes = $this->shortcodes();
 		foreach ( $shortcodes as $shortcode_settings ) {
@@ -236,7 +236,6 @@ class Vc_Grid_Item {
 	 * @param $template
 	 */
 	public function parseTemplate( $template ) {
-		// $this->setShortcodes();
 		$this->mapShortcodes();
 		$attr = ' width="' . $this->gridAttribute( 'element_width', 12 ) . '"'
 		        . ' is_end="' . ( $this->isEnd() === 'true' ? 'true' : '' ) . '"';

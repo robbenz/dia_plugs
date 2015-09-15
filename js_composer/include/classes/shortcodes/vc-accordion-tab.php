@@ -18,25 +18,25 @@ class WPBakeryShortCode_VC_Accordion_tab extends WPBakeryShortCode_VC_Tab {
 		$column_controls = $this->getColumnControls( $this->settings( 'controls' ) );
 		$column_controls_bottom = $this->getColumnControls( 'add', 'bottom-controls' );
 
-		if ( $width == 'column_14' || $width == '1/4' ) {
+		if ( $width === 'column_14' || $width === '1/4' ) {
 			$width = array( 'vc_col-sm-3' );
-		} else if ( $width == 'column_14-14-14-14' ) {
+		} else if ( $width === 'column_14-14-14-14' ) {
 			$width = array( 'vc_col-sm-3', 'vc_col-sm-3', 'vc_col-sm-3', 'vc_col-sm-3' );
-		} else if ( $width == 'column_13' || $width == '1/3' ) {
+		} else if ( $width === 'column_13' || $width === '1/3' ) {
 			$width = array( 'vc_col-sm-4' );
-		} else if ( $width == 'column_13-23' ) {
+		} else if ( $width === 'column_13-23' ) {
 			$width = array( 'vc_col-sm-4', 'vc_col-sm-8' );
-		} else if ( $width == 'column_13-13-13' ) {
+		} else if ( $width === 'column_13-13-13' ) {
 			$width = array( 'vc_col-sm-4', 'vc_col-sm-4', 'vc_col-sm-4' );
-		} else if ( $width == 'column_12' || $width == '1/2' ) {
+		} else if ( $width === 'column_12' || $width === '1/2' ) {
 			$width = array( 'vc_col-sm-6' );
-		} else if ( $width == 'column_12-12' ) {
+		} else if ( $width === 'column_12-12' ) {
 			$width = array( 'vc_col-sm-6', 'vc_col-sm-6' );
-		} else if ( $width == 'column_23' || $width == '2/3' ) {
+		} else if ( $width === 'column_23' || $width === '2/3' ) {
 			$width = array( 'vc_col-sm-8' );
-		} else if ( $width == 'column_34' || $width == '3/4' ) {
+		} else if ( $width === 'column_34' || $width === '3/4' ) {
 			$width = array( 'vc_col-sm-9' );
-		} else if ( $width == 'column_16' || $width == '1/6' ) {
+		} else if ( $width === 'column_16' || $width === '1/6' ) {
 			$width = array( 'vc_col-sm-2' );
 		} else {
 			$width = array( '' );

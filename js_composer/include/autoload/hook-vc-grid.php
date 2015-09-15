@@ -21,7 +21,7 @@ Class Vc_Hooks_Vc_Grid implements Vc_Vendor_Interface {
 		 * Used to save appended grid shortcodes to post meta with serialized array,
 		 * @see Vc_Hooks_Vc_Grid::gridSavePostSettings (fetching shortcodes and return it data) and Vc_Hooks_Vc_Grid::get_shortcode_regex (search exact shortcode in content)
 		 * @see Vc_Post_Admin::setSettings for filter info
-		 * @deprecated since 4.4.3 due to invalid hash algorithm on saving.
+		 * @deprecated 4.4.3 due to invalid hash algorithm on saving.
 		 */
 		add_filter( 'vc_hooks_vc_post_settings', array(
 			&$this,
@@ -37,7 +37,6 @@ Class Vc_Hooks_Vc_Grid implements Vc_Vendor_Interface {
 		/**
 		 * Used to output shortcode data for ajax request. called on any page request.
 		 */
-		// add_action( 'template_redirect', array( &$this, 'getGridDataForAjax' ) );
 		add_action( 'wp_ajax_vc_get_vc_grid_data', array( &$this, 'getGridDataForAjax' ) );
 		add_action( 'wp_ajax_nopriv_vc_get_vc_grid_data', array( &$this, 'getGridDataForAjax' ) );
 	}
@@ -137,7 +136,7 @@ Class Vc_Hooks_Vc_Grid implements Vc_Vendor_Interface {
 	/**
 	 * Set page meta box values with vc_adv_pager shortcodes data
 	 * @since 4.4
-	 * @deprecated since 4.4.3
+	 * @deprecated 4.4.3
 	 *
 	 * @param array $settings
 	 * @param $post_id
@@ -191,7 +190,7 @@ Class Vc_Hooks_Vc_Grid implements Vc_Vendor_Interface {
 			$to_save = array();
 			if ( isset( $found[1] ) && is_array( $found[1] ) ) {
 				foreach ( $found[1] as $key => $parse_able ) {
-					if ( empty( $parse_able ) || $parse_able != '[' ) {
+					if ( empty( $parse_able ) || $parse_able !== '[' ) {
 						$id_pattern = '/' . $this->grid_id_unique_name . '\:([\w-_]+)/';
 						$id_value = $found[4][ $key ];
 

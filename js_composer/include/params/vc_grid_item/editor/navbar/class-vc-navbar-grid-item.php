@@ -57,8 +57,7 @@ Class Vc_Navbar_Grid_Item extends Vc_Navbar {
 	public function getControlPreviewItemWidth() {
 		$output = '<li class="vc_pull-right vc_gitem-navbar-dropdown vc_gitem-navbar-preview-width" data-vc-grid-item="navbar_preview_width"><select data-vc-navbar-control="preview_width">';
 		for ( $i = 1; $i <= 12; $i ++ ) {
-			$output .= '<option value="' . esc_attr( $i ) . '">'
-			           . __( $i . '/12 width', 'js_composer' ) . '</option>';
+			$output .= '<option value="' . esc_attr( $i ) . '">' . sprintf( __( '%s/12 width', 'js_composer' ), $i ) . '</option>';
 		}
 		$output .= '</select></li>';
 
@@ -66,8 +65,10 @@ Class Vc_Navbar_Grid_Item extends Vc_Navbar {
 	}
 
 	public function getControlAnimationList() {
+		VcShortcodeAutoloader::getInstance()->includeClass( 'WPBakeryShortCode_VC_Gitem_Animated_Block' );
+
 		$output = '';
-		require_once vc_path_dir( 'SHORTCODES_DIR', 'vc-gitem-animated-block.php' );
+
 		$animations = WPBakeryShortCode_VC_Gitem_Animated_Block::animations();
 		if ( is_array( $animations ) ) {
 			$output .= '<li class="vc_pull-right vc_gitem-navbar-dropdown">'

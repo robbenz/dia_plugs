@@ -23,10 +23,10 @@ if ( is_object( $wp_widget_factory ) && isset( $wp_widget_factory->widgets, $wp_
 	the_widget( $type, $atts, $args );
 	$output .= ob_get_clean();
 
-	$output .= '</div>' . $this->endBlockComment( $this->getShortcode() ) . "\n";
+	$output .= '</div>';
 
 	echo $output;
 } else {
-	echo $this->endBlockComment( 'Widget ' . esc_attr( $type ) . 'Not found in : vc_wp_search' );
+	echo $this->debugComment( 'Widget ' . esc_attr( $type ) . 'Not found in : vc_wp_search' );
 }
-//todo make more informative if wp is in debug mode
+// TODO: make more informative if wp is in debug mode

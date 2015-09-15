@@ -7,9 +7,15 @@
  * @var $this WPBakeryShortCode_VC_Basic_Grid
  */
 $isotope_options = $posts = $filter_terms = array();
-
 $this->buildAtts( $atts, $content );
-$css_classes = ' ' . $this->shortcode;
+
+$css = isset( $atts['css'] ) ? $atts['css'] : '';
+$el_class = isset( $atts['el_class'] ) ? $atts['el_class'] : '';
+
+$class_to_filter = 'vc_grid-container vc_clearfix wpb_content_element ' . $this->shortcode;
+$class_to_filter .= vc_shortcode_custom_css_class( $css, ' ' ) . $this->getExtraClass( $el_class );
+$css_class = apply_filters( VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, $class_to_filter, $this->settings['base'], $atts );
+
 wp_enqueue_script( 'prettyphoto' );
 wp_enqueue_style( 'prettyphoto' );
 
@@ -20,7 +26,7 @@ if ( 'pagination' === $this->atts['style'] ) {
 $this->enqueueScripts();
 ?><!-- vc_grid start -->
 <div class="vc_grid-container-wrapper vc_clearfix">
-	<div class="vc_grid-container vc_clearfix wpb_content_element<?php echo esc_attr( $css_classes ); ?>"
+	<div class="<?php echo esc_attr( $css_class ) ?>"
 	     data-vc-<?php echo esc_attr( $this->pagable_type ); ?>-settings="<?php echo esc_attr( json_encode( $this->grid_settings ) ); ?>"
 	     data-vc-request="<?php echo esc_attr( admin_url( 'admin-ajax.php', 'relative' ) ); ?>"
 	     data-vc-post-id="<?php echo esc_attr( get_the_ID() ); ?>">

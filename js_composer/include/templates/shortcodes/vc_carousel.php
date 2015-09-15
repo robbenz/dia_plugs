@@ -115,14 +115,8 @@ while ( $my_query->have_posts() ) {
 	$posts[] = $post;
 }
 wp_reset_query();
-// $options = vc_parse_options_string($bxslider_options, $this->shortcode, 'bxslider_options');
-// }}
 $this->setLinktarget( $link_target );
 
-// wp_enqueue_script('vc_bxslider');
-// wp_enqueue_style('vc_bxslider_css');
-// wp_enqueue_script('vc_swiper');
-// wp_enqueue_style('vc_swiper_css');
 wp_enqueue_script( 'vc_carousel_js' );
 wp_enqueue_style( 'vc_carousel_css' );
 
@@ -135,10 +129,10 @@ $carousel_id = 'vc_carousel-' . WPBakeryShortCode_Vc_Carousel::getCarouselIndex(
 			<?php echo wpb_widget_title( array( 'title' => $title, 'extraclass' => 'wpb_gallery_heading' ) ) ?>
 			<div id="<?php echo $carousel_id ?>" data-ride="vc_carousel"
 			     data-wrap="<?php echo $wrap === 'yes' ? 'true' : 'false' ?>"
-			     data-interval="<?php echo $autoplay == 'yes' ? $speed : 0 ?>" data-auto-height="true"
+			     data-interval="<?php echo $autoplay === 'yes' ? $speed : 0 ?>" data-auto-height="true"
 			     data-mode="<?php echo $mode ?>" data-partial="<?php echo $partial_view === 'yes' ? 'true' : 'false' ?>"
 			     data-per-view="<?php echo $slides_per_view ?>"
-			     data-hide-on-end="<?php echo $autoplay == 'yes' ? 'false' : 'true' ?>" class="vc_carousel vc_slide">
+			     data-hide-on-end="<?php echo $autoplay === 'yes' ? 'false' : 'true' ?>" class="vc_carousel vc_slide">
 				<?php if ( $hide_pagination_control !== 'yes' ): ?>
 					<!-- Indicators -->
 					<ol class="vc_carousel-indicators">
@@ -146,7 +140,7 @@ $carousel_id = 'vc_carousel-' . WPBakeryShortCode_Vc_Carousel::getCarouselIndex(
 							<li data-target="#<?php echo $carousel_id ?>" data-slide-to="<?php echo $i ?>"></li>
 						<?php endfor; ?>
 					</ol>
-				<?php endif; ?>
+				<?php endif ?>
 				<!-- Wrapper for slides -->
 				<div class="vc_carousel-inner">
 					<div class="vc_carousel-slideline">
@@ -175,8 +169,7 @@ $carousel_id = 'vc_carousel-' . WPBakeryShortCode_Vc_Carousel::getCarouselIndex(
 					<a class="vc_right vc_carousel-control" href="#<?php echo $carousel_id ?>" data-slide="next">
 						<span class="icon-next"></span>
 					</a>
-				<?php endif; ?>
+				<?php endif ?>
 			</div>
 		</div>
 	</div>
-<?php echo $this->endBlockComment( $this->getShortcode() );

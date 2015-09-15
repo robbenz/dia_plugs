@@ -90,7 +90,9 @@ Class Vc_Grid_Item_Preview {
 		wp_enqueue_style( 'js_composer_front' );
 		wp_enqueue_script( 'wpb_composer_front_js' );
 		wp_enqueue_style( 'js_composer_custom_css' );
-		require_once vc_path_dir( 'SHORTCODES_DIR', 'vc-basic-grid.php' );
+
+		VcShortcodeAutoloader::getInstance()->includeClass( 'WPBakeryShortCode_VC_Basic_Grid' );
+
 		$grid = new WPBakeryShortCode_VC_Basic_Grid( array( 'base' => 'vc_basic_grid' ) );
 		$grid->shortcodeScripts();
 		$grid->enqueueScripts();

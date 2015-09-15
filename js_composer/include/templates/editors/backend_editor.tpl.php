@@ -15,7 +15,7 @@ $nav_bar->render();
 $wpb_vc_status = apply_filters( 'wpb_vc_js_status_filter', vc_get_param( 'wpb_vc_js_status', get_post_meta( $post->ID, '_wpb_vc_js_status', true ) ) );
 
 // TODO: remove this.
-if ( $wpb_vc_status == "" || ! isset( $wpb_vc_status ) ) {
+if ( $wpb_vc_status === "" || ! isset( $wpb_vc_status ) ) {
 	$wpb_vc_status = 'false';
 }
 

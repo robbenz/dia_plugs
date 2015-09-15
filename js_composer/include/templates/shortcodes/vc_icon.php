@@ -18,15 +18,17 @@
  * @var $el_class
  * @var $link
  * @var $css_animation
+ * @var $css
  * Shortcode class
  * @var $this WPBakeryShortCode_VC_Icon
  */
 $atts = vc_map_get_attributes( $this->getShortcode(), $atts );
 extract( $atts );
 
-$class = $this->getExtraClass( $el_class );
-$css_class = apply_filters( VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, $class, $this->settings['base'], $atts );
-$css_class .= $this->getCSSAnimation( $css_animation );
+$class_to_filter = '';
+$class_to_filter .= vc_shortcode_custom_css_class( $css, ' ' ) . $this->getExtraClass( $el_class );
+$css_class = apply_filters( VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, $class_to_filter, $this->settings['base'], $atts );
+
 // Enqueue needed icon font.
 vc_icon_element_fonts_enqueue( $type );
 
@@ -63,4 +65,4 @@ $style = $style ? ' style="' . esc_attr( $style ) . '"' : '';
 			echo '<a class="vc_icon_element-link" href="' . esc_attr( $url['url'] ) . '" title="' . esc_attr( $url['title'] ) . '" target="' . ( strlen( $url['target'] ) > 0 ? esc_attr( $url['target'] ) : '_self' ) . '"></a>';
 		}
 		?></div>
-</div><?php echo $this->endBlockComment( $this->getShortcode() ); ?>
+</div>

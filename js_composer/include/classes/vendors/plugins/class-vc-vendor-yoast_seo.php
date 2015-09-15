@@ -18,14 +18,8 @@ Class Vc_Vendor_YoastSeo implements Vc_Vendor_Interface {
 	 * @since 4.4
 	 */
 	public function load() {
-		if ( class_exists( 'WPSEO_Metabox' )
-		     && ( vc_mode() == 'admin_page' || vc_mode() === 'admin_frontend_editor' )
-		) {
-			add_filter( 'wpseo_pre_analysis_post_content', array(
-				&$this,
-				'filterResults'
-			) );
-			//add_action( 'vc_frontend_editor_render_template', array( &$this, 'addSubmitBox' ) );
+		if ( class_exists( 'WPSEO_Metabox' ) && ( 'admin_page' === vc_mode() || 'admin_frontend_editor' === vc_mode() ) ) {
+			add_filter( 'wpseo_pre_analysis_post_content', array( &$this, 'filterResults' ) );
 		}
 	}
 
@@ -51,9 +45,5 @@ Class Vc_Vendor_YoastSeo implements Vc_Vendor_Interface {
 		}
 
 		return $this->parsedContent;
-	}
-
-	public function addSubmitBox() {
-		// do_action('post_submitbox_misc_actions');
 	}
 }

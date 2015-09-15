@@ -6,6 +6,7 @@
 $h2_custom_heading = vc_map_integrate_shortcode( 'vc_custom_heading', 'h2_', __( 'Heading', 'js_composer' ),
 	array(
 		'exclude' => array(
+			'source',
 			'text',
 			'css',
 		),
@@ -19,9 +20,9 @@ $h2_custom_heading = vc_map_integrate_shortcode( 'vc_custom_heading', 'h2_', __(
 // This is needed to remove custom heading _tag and _align options.
 if ( is_array( $h2_custom_heading ) && ! empty( $h2_custom_heading ) ) {
 	foreach ( $h2_custom_heading as $key => $param ) {
-		if ( is_array( $param ) && isset( $param['type'] ) && $param['type'] == 'font_container' ) {
-				$h2_custom_heading[ $key ]['value'] = '';
-				if ( isset( $param['settings'] ) && is_array( $param['settings'] ) && isset( $param['settings']['fields'] ) ) {
+		if ( is_array( $param ) && isset( $param['type'] ) && $param['type'] === 'font_container' ) {
+			$h2_custom_heading[ $key ]['value'] = '';
+			if ( isset( $param['settings'] ) && is_array( $param['settings'] ) && isset( $param['settings']['fields'] ) ) {
 				$sub_key = array_search( 'tag', $param['settings']['fields'] );
 				if ( false !== $sub_key ) {
 					unset( $h2_custom_heading[ $key ]['settings']['fields'][ $sub_key ] );
@@ -41,6 +42,7 @@ if ( is_array( $h2_custom_heading ) && ! empty( $h2_custom_heading ) ) {
 $h4_custom_heading = vc_map_integrate_shortcode( 'vc_custom_heading', 'h4_', __( 'Subheading', 'js_composer' ),
 	array(
 		'exclude' => array(
+			'source',
 			'text',
 			'css',
 		),
@@ -54,7 +56,7 @@ $h4_custom_heading = vc_map_integrate_shortcode( 'vc_custom_heading', 'h4_', __(
 // This is needed to remove custom heading _tag and _align options.
 if ( is_array( $h4_custom_heading ) && ! empty( $h4_custom_heading ) ) {
 	foreach ( $h4_custom_heading as $key => $param ) {
-		if ( is_array( $param ) && isset( $param['type'] ) && $param['type'] == 'font_container' ) {
+		if ( is_array( $param ) && isset( $param['type'] ) && $param['type'] === 'font_container' ) {
 			$h4_custom_heading[ $key ]['value'] = '';
 			if ( isset( $param['settings'] ) && is_array( $param['settings'] ) && isset( $param['settings']['fields'] ) ) {
 				$sub_key = array_search( 'tag', $param['settings']['fields'] );
@@ -184,8 +186,6 @@ $params = array_merge(
 		),
 		array(
 			'type' => 'textarea_html',
-			//holder' => 'div',
-			//'admin_label' => true,
 			'heading' => __( 'Text', 'js_composer' ),
 			'param_name' => 'content',
 			'value' => __( 'I am promo text. Click edit button to change this text. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.', 'js_composer' )
@@ -195,12 +195,12 @@ $params = array_merge(
 			'heading' => __( 'Width', 'js_composer' ),
 			'param_name' => 'el_width',
 			'value' => array(
-				__( '100%', 'js_composer' ) => '',
-				__( '90%', 'js_composer' ) => 'xl',
-				__( '80%', 'js_composer' ) => 'lg',
-				__( '70%', 'js_composer' ) => 'md',
-				__( '60%', 'js_composer' ) => 'sm',
-				__( '50%', 'js_composer' ) => 'xs',
+				'100%' => '',
+				'90%' => 'xl',
+				'80%' => 'lg',
+				'70%' => 'md',
+				'60%' => 'sm',
+				'50%' => 'xs',
 			),
 			'description' => __( 'Select call to action width (percentage).', 'js_composer' ),
 		),
@@ -219,7 +219,9 @@ $params = array_merge(
 		),
 	),
 	vc_map_integrate_shortcode( 'vc_btn', 'btn_', __( 'Button', 'js_composer' ),
-		false,
+		array(
+			'exclude' => array( 'css' )
+		),
 		array(
 			'element' => 'add_button',
 			'not_empty' => true,
@@ -253,7 +255,7 @@ $params = array_merge(
 	),
 	vc_map_integrate_shortcode( 'vc_icon', 'i_', __( 'Icon', 'js_composer' ),
 		array(
-			'exclude' => array( 'align' ),
+			'exclude' => array( 'align', 'css' )
 		),
 		array(
 			'element' => 'add_icon',
@@ -268,7 +270,13 @@ $params = array_merge(
 			'heading' => __( 'Extra class name', 'js_composer' ),
 			'param_name' => 'el_class',
 			'description' => __( 'Style particular content element differently - add a class name and refer to it in custom CSS.', 'js_composer' )
-		)
+		),
+		array(
+			'type' => 'css_editor',
+			'heading' => __( 'CSS box', 'js_composer' ),
+			'param_name' => 'css',
+			'group' => __( 'Design Options', 'js_composer' )
+		),
 	)
 );
 vc_map( array(

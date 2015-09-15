@@ -92,6 +92,7 @@ class Vc_Vendor_Layerslider implements Vc_Vendor_Interface {
 					'param_name' => 'id',
 					'admin_label' => true,
 					'value' => $layer_sliders,
+					'save_always' => true,
 					'description' => __( 'Select your LayerSlider.', 'js_composer' )
 				),
 				array(

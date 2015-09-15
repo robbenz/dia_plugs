@@ -1,5 +1,5 @@
 <?php
-require_once "vc-tta-tabs.php";
+VcShortcodeAutoloader::getInstance()->includeClass( 'WPBakeryShortCode_VC_Tta_Accordion' );
 
 class WPBakeryShortCode_VC_Tta_Tour extends WPBakeryShortCode_VC_Tta_Tabs {
 

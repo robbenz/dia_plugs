@@ -11,7 +11,6 @@ class WPBakeryShortCode_VC_Custom_heading extends WPBakeryShortCode {
 	 * @var array
 	 */
 	protected $fields = array(
-		//key(read only) => 'value'(changeable)
 		'google_fonts' => 'google_fonts',
 		'font_container' => 'font_container',
 		'el_class' => 'el_class',
@@ -106,14 +105,14 @@ class WPBakeryShortCode_VC_Custom_heading extends WPBakeryShortCode {
 		$styles = array();
 		if ( ! empty( $font_container_data ) && isset( $font_container_data['values'] ) ) {
 			foreach ( $font_container_data['values'] as $key => $value ) {
-				if ( $key != 'tag' && strlen( $value ) > 0 ) {
+				if ( $key !== 'tag' && strlen( $value ) > 0 ) {
 					if ( preg_match( '/description/', $key ) ) {
 						continue;
 					}
-					if ( $key == 'font_size' || $key == 'line_height' ) {
+					if ( $key === 'font_size' || $key === 'line_height' ) {
 						$value = preg_replace( '/\s+/', '', $value );
 					}
-					if ( $key == 'font_size' ) {
+					if ( $key === 'font_size' ) {
 						$pattern = '/^(\d*(?:\.\d+)?)\s*(px|\%|in|cm|mm|em|rem|ex|pt|pc|vw|vh|vmin|vmax)?$/';
 						// allowed metrics: http://www.w3schools.com/cssref/css_units.asp
 						$regexr = preg_match( $pattern, $value, $matches );

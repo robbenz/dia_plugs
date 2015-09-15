@@ -12,4 +12,3 @@ extract( $atts );
 $css = $this->getExtraClass( $el_class );
 
 echo '<div class="vc_items' . esc_attr( $css ) . '">' . __( 'Item', 'js_composer' ) . '</div>';
-echo $this->endBlockComment( $this->getShortcode() );

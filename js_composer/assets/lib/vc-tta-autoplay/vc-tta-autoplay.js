@@ -24,7 +24,7 @@
 					$.extend( true, {}, TtaAutoPlay.DEFAULTS, $this.data( 'vc-tta-autoplay' ), options ) );
 				$this.data( 'vc.tta.autoplay', data );
 			}
-			if ( 'string' === typeof action ) {
+			if ( 'string' === typeof(action) ) {
 				data[ action ].apply( data, args );
 			} else {
 				data.start( args ); // start the auto play by default

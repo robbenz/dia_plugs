@@ -8,9 +8,11 @@ $custom_background_color = '';
 $atts = vc_map_get_attributes( $this->getShortcode(), $atts );
 extract( $atts );
 $link = vc_gitem_create_link( $atts, 'vc_icon_element-link' );
-$class = $this->getExtraClass( $el_class );
-$css_class = apply_filters( VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, $class, $this->settings['base'], $atts );
-$css_class .= $this->getCSSAnimation( $css_animation );
+
+$class_to_filter = $this->getCSSAnimation( $css_animation );
+$class_to_filter .= vc_shortcode_custom_css_class( $css, ' ' ) . $this->getExtraClass( $el_class );
+$css_class = apply_filters( VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, $class_to_filter, $this->settings['base'], $atts );
+
 // Enqueue needed icon font.
 vc_icon_element_fonts_enqueue( $type );
 
@@ -42,7 +44,6 @@ $style = $style ? 'style="' . esc_attr( $style ) . '"' : '';
 			class="vc_icon_element-icon <?php echo esc_attr( ${"icon_" . $type} ); ?>" <?php echo( $color === 'custom' ? 'style="color:' . esc_attr( $custom_color ) . ' !important"' : '' ); ?>></span><?php
 		if ( strlen( $link ) > 0 ) {
 			echo '<' . $link . '></a>';
-			// echo '<a class="vc_icon_element-link" href="' . esc_attr( $url['url'] ) . '" title="' . esc_attr( $url['title'] ) . '" target="' . ( strlen( $url['target'] ) > 0 ? esc_attr( $url['target'] ) : '_self' ) . '"></a>';
 		}
 		?></div>
-</div><?php echo $this->endBlockComment( '.vc_icon_element' ); ?>
+</div>

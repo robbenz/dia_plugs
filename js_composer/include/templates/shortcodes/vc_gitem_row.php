@@ -25,4 +25,3 @@ if ( ! vc_gitem_has_content( $content ) ) {
 	return;
 }
 echo '<div class="' . esc_attr( $css_class ) . '">' . do_shortcode( $content ) . '</div>';
-echo $this->endBlockComment( $this->getShortcode() );

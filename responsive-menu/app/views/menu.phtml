@@ -45,7 +45,7 @@
     
     <?php endif;
 
-        if( isset( $data['RMHtml'] ) && $data['RMHtmlLoc'] == 'above' ) :
+        if( isset( $data['RMHtml'] ) && !empty( $data['RMHtml'] ) && $data['RMHtmlLoc'] == 'above' ) :
             self::additionalContent( $data['RMHtml'] );
         endif;
             
@@ -66,7 +66,7 @@
             self::searchBar();
         endif;
         
-        if( isset( $data['RMHtml'] ) && $data['RMHtmlLoc'] == 'below' ) :
+        if( isset( $data['RMHtml'] ) && !empty( $data['RMHtml'] ) && $data['RMHtmlLoc'] == 'below' ) :
             self::additionalContent( $data['RMHtml'] );
         endif;
 

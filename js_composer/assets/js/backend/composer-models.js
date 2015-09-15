@@ -51,26 +51,25 @@
 		 * @param options
 		 */
 		sync: function ( method, model, options ) {
-			var resp;
+			var response;
 			// Select action to do with data in you storage
 			switch ( method ) {
 				case "read":
-					resp = model.id ? store.find( model ) : store.findAll();
+					response = model.id ? store.find( model ) : store.findAll();
 					break;
 				case "create":
-					resp = store.create( model );
+					response = store.create( model );
 					break;
 				case "update":
-					resp = store.update( model );
+					response = store.update( model );
 					break;
 				case "delete":
-					resp = store.destroy( model );
+					response = store.destroy( model );
 					break;
 			}
 			// Response
-			if ( resp ) {
-				options.success( resp );
-
+			if ( response ) {
+				options.success( response );
 			} else {
 				options.error( "Record not found" );
 			}
@@ -95,7 +94,7 @@
 			}
 		},
 		setting: function ( name ) {
-			if ( this.settings === false ) {
+			if ( false === this.settings ) {
 				this.settings = vc.getMapped( this.get( 'shortcode' ) ) || {};
 			}
 			return this.settings[ name ];
@@ -112,20 +111,6 @@
 			return model.get( 'order' );
 		},
 		initialize: function () {
-			// this.on('add', this.checkUpdateOrder, this);
-		},
-		/**
-		 * Updates order of other models if new one has not last order value.
-		 */
-		checkUpdateOrder: function ( model ) {
-			var model_order = model.get( 'order' );
-			if ( model_order < this.length ) {
-				_.each( this.filter( function ( shortcode ) {
-					return model.id != shortcode.id && model.get( 'parent_id' ) === shortcode.get( 'parent_id' ) && shortcode.get( 'order' ) >= model_order;
-				} ), function ( shortcode ) {
-					shortcode.save( { order: shortcode.get( 'order' ) + 1 } );
-				} );
-			}
 		},
 		/**
 		 * Create new models from shortcode string.
@@ -150,26 +135,25 @@
 		 * @param options
 		 */
 		sync: function ( method, model, options ) {
-			var resp;
+			var response;
 			// Select action to do with data in you storage
 			switch ( method ) {
 				case "read":
-					resp = model.id ? store.find( model ) : store.findAll();
+					response = model.id ? store.find( model ) : store.findAll();
 					break;
 				case "create":
-					resp = store.create( model );
+					response = store.create( model );
 					break;
 				case "update":
-					resp = store.update( model );
+					response = store.update( model );
 					break;
 				case "delete":
-					resp = store.destroy( model );
+					response = store.destroy( model );
 					break;
 			}
 			// Response
-			if ( resp ) {
-				options.success( resp );
-
+			if ( response ) {
+				options.success( response );
 			} else {
 				options.error( "Record not found" );
 			}

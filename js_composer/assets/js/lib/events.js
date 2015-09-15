@@ -18,7 +18,8 @@ if ( ! window.vc ) {
 		this.trigger( 'shortcodes:' + shortcodeTag, shortcodeModel, eventType );
 		this.trigger( 'shortcodes:' + eventType, shortcodeModel );
 		this.trigger( 'shortcodes:' + shortcodeTag + ':' + eventType, shortcodeModel );
-		this.trigger( 'shortcodes:' + shortcodeTag + ':' + eventType + ':parent:' + shortcodeModel.get('parent_id'), shortcodeModel );
+		this.trigger( 'shortcodes:' + shortcodeTag + ':' + eventType + ':parent:' + shortcodeModel.get( 'parent_id' ),
+			shortcodeModel );
 		// Now trigger shortcode params events
 		this.triggerParamsEvents( eventType, shortcodeModel );
 	};

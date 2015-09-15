@@ -33,7 +33,7 @@
 			return false;
 		},
 		setting: function ( name ) {
-			if ( this.settings === false ) {
+			if ( false === this.settings ) {
 				this.settings = vc.getMapped( this.get( 'shortcode' ) ) || {};
 			}
 			return this.settings[ name ];

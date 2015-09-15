@@ -473,6 +473,7 @@
       overflow: initial;
     }
   }
+
   // Tabs Without Gaps
   // ------------------------
   &:not([class*="vc_tta-gap"]):not(.vc_tta-o-no-fill) {
@@ -523,11 +524,15 @@
         .vc_tta-tabs-container {
           margin-bottom: -@vc_tta-border-size-outline;
         }
-        .vc_tta-panels {
-          border-top-color: transparent;
+
+        &:not(.vc_tta-pageable) {
+          .vc_tta-panels {
+            border-top-color: transparent;
+          }
         }
       }
     }
+
     // Position Bottom
     // ---------------------
     &.vc_tta-tabs-position-bottom {
@@ -575,8 +580,11 @@
         .vc_tta-tabs-container {
           margin-top: -@vc_tta-border-size-outline;
         }
-        .vc_tta-panels {
-          border-bottom-color: transparent;
+
+        &:not(.vc_tta-pageable) {
+          .vc_tta-panels {
+            border-bottom-color: transparent;
+          }
         }
       }
     }
@@ -766,8 +774,6 @@
   }
 }
 
-
-
 /* Controls Alignments
  * =================================== */
 .vc_tta {
@@ -925,5 +931,3 @@
     }
   }
 }
-
-

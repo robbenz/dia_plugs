@@ -17,27 +17,10 @@ window.vc.addTemplateFilter = function ( callback ) {
 };
 
 (function ( $ ) {
-
-	var wpb_change_tab_title, wpb_change_accordion_tab_title, vc_activeMce;
-
-	wpb_change_tab_title = function ( $element, field ) {
-		$( '.tabs_controls a[href=#tab-' + $( field ).val() + ']' ).text( $( '.wpb-edit-form [name=title].wpb_vc_param_value' ).val() );
-	};
-	wpb_change_accordion_tab_title = function ( $element, field ) {
-		var $section_title = $element.prev();
-		$section_title.find( 'a' ).text( $( field ).val() );
-	};
+	var vc_activeMce;
 
 	window.init_textarea_html = function ( $element ) {
 		var $wp_link, textfield_id, $form_line, $content_holder;
-		/*
-		 Simple version without all this buttons from Wordpress
-		 tinyMCE.init({
-		 mode : "textareas",
-		 theme: 'advanced',
-		 editor_selector: $element.attr('name') + '_tinymce'
-		 });
-		 */
 		$wp_link = $( '#wp-link' );
 		if ( $wp_link.parent().hasClass( 'wp-dialog' ) ) {
 			$wp_link.wpdialog( 'destroy' );
@@ -50,7 +33,7 @@ window.vc.addTemplateFilter = function ( callback ) {
 			if ( _.isUndefined( tinyMCEPreInit.qtInit[ textfield_id ] ) ) {
 				window.tinyMCEPreInit.qtInit[ textfield_id ] = _.extend( {},
 					window.tinyMCEPreInit.qtInit[ window.wpActiveEditor ],
-					{ id: textfield_id } )
+					{ id: textfield_id } );
 			}
 			// Init tinymce
 			if ( window.tinyMCEPreInit && window.tinyMCEPreInit.mceInit[ window.wpActiveEditor ] ) {
@@ -61,7 +44,7 @@ window.vc.addTemplateFilter = function ( callback ) {
 						height: 200,
 						id: textfield_id,
 						setup: function ( ed ) {
-							if ( typeof(ed.on) != 'undefined' ) {
+							if ( 'undefined' !== typeof(ed.on) ) {
 								ed.on( 'init', function ( ed ) {
 									ed.target.focus();
 									window.wpActiveEditor = textfield_id;
@@ -78,12 +61,14 @@ window.vc.addTemplateFilter = function ( callback ) {
 					'' );
 				window.tinyMCEPreInit.mceInit[ textfield_id ].wp_autoresize_on = false;
 			}
-			$element.val( $content_holder.val() );
+			if ( vc.edit_element_block_view.model ) {
+				$element.val( $content_holder.val() );
+			}
 			quicktags( window.tinyMCEPreInit.qtInit[ textfield_id ] );
 			QTags._buttonsInit();
 			if ( window.tinymce ) {
 				window.switchEditors && window.switchEditors.go( textfield_id, 'tmce' );
-				if ( tinymce.majorVersion === "4" ) {
+				if ( "4" === tinymce.majorVersion ) {
 					tinymce.execCommand( 'mceAddEditor', true, textfield_id );
 				}
 			}
@@ -98,35 +83,10 @@ window.vc.addTemplateFilter = function ( callback ) {
 			}
 		}
 	};
-	function init_textarea_html_old( $element ) {
-		var textfield_id = $element.attr( "id" ),
-			$form_line = $element.closest( '.edit_form_line' ),
-			$content_holder = $form_line.find( '.vc_textarea_html_content' );
-		$( '#' + textfield_id + '-html' ).trigger( 'click' );
-		var $tmce = $( '.switch-tmce' );
-		$tmce.trigger( 'click' );
-		$form_line.find( '.wp-switch-editor' ).removeAttr( "onclick" );
-		$tmce.trigger( 'click' );
-		$element.closest( '.edit_form_line' ).find( '.switch-tmce' ).click( function () {
-			window.tinyMCE.execCommand( "mceAddControl", true, textfield_id );
-			window.switchEditors.go( textfield_id, 'tmce' );
-			$element.closest( '.edit_form_line' ).find( '.wp-editor-wrap' ).removeClass( 'html-active' ).addClass( 'tmce-active' );
-			var val = window.switchEditors.wpautop( $( this ).closest( '.edit_form_line' ).find( "textarea.visual_composer_tinymce" ).val() );
-			$( "textarea.visual_composer_tinymce" ).val( val );
-			// Add tinymce
-			window.tinyMCE.execCommand( "mceAddControl", true, textfield_id );
-		} );
-		$element.closest( '.edit_form_line' ).find( '.switch-html' ).click( function () {
-			$element.closest( '.edit_form_line' ).find( '.wp-editor-wrap' ).removeClass( 'tmce-active' ).addClass( 'html-active' );
-			window.tinyMCE.execCommand( "mceRemoveControl", true, textfield_id );
-		} );
-		$( '#wpb_tinymce_content-html' ).trigger( 'click' );
-		$( '#wpb_tinymce_content-tmce' ).trigger( 'click' ); // Fix hidden toolbar
-	}
 
 	// TODO: unsecure. Think about it
 	Color.prototype.toString = function () {
-		if ( this._alpha < 1 ) {
+		if ( 1 > this._alpha ) {
 			return this.toCSS( 'rgba', this._alpha ).replace( /\s+/g, '' );
 		}
 		var hex = parseInt( this._color, 10 ).toString( 16 );
@@ -134,9 +94,9 @@ window.vc.addTemplateFilter = function ( callback ) {
 			return '';
 		}
 		// maybe left pad it
-		if ( hex.length < 6 ) {
+		if ( 6 > hex.length ) {
 			for ( var i = 6 - hex.length - 1;
-				  i >= 0;
+				  0 <= i;
 				  i -- ) {
 				hex = '0' + hex;
 			}
@@ -152,7 +112,6 @@ window.vc.addTemplateFilter = function ( callback ) {
 
 	/**
 	 * Loop param for shortcode with magic query posts constructor.
-	 * ====================================
 	 */
 	vc.loop_partial = function ( template_name, key, loop, settings ) {
 		var data = _.isObject( loop ) && ! _.isUndefined( loop[ key ] ) ? loop[ key ] : '';
@@ -163,13 +122,13 @@ window.vc.addTemplateFilter = function ( callback ) {
 		}, template_options );
 	};
 	vc.loop_field_not_hidden = function ( key, loop ) {
-		return ! (_.isObject( loop[ key ] ) && _.isBoolean( loop[ key ].hidden ) && loop[ key ].hidden === true);
+		return ! (_.isObject( loop[ key ] ) && _.isBoolean( loop[ key ].hidden ) && true === loop[ key ].hidden);
 	};
 	vc.is_locked = function ( data ) {
-		return _.isObject( data ) && _.isBoolean( data.locked ) && data.locked === true;
+		return _.isObject( data ) && _.isBoolean( data.locked ) && true === data.locked;
 	};
 
-	var Suggester = function ( element, options ) {
+	function Suggester( element, options ) {
 		this.el = element;
 		this.$el = $( this.el );
 		this.$el_wrap = '';
@@ -194,13 +153,12 @@ window.vc.addTemplateFilter = function ( callback ) {
 			}
 		} );
 		this.init();
-	};
+	}
 
 	Suggester.prototype = {
 		constructor: Suggester,
 		init: function () {
 			_.bindAll( this, 'buildSource', 'itemSelected', 'labelClick', 'setFocus', 'resize' );
-			var that = this;
 			this.$el.wrap( '<ul class="' + this.options.css_class + '"><li class="input"/></ul>' );
 
 			this.$el_wrap = this.$el.parent();
@@ -250,14 +208,14 @@ window.vc.addTemplateFilter = function ( callback ) {
 		},
 		create: function ( item ) {
 			var index = (this.selected_items.push( item ) - 1),
-				remove = this.options.check_locked_callback( this.$el,
-					item ) === true ? '' : ' <a class="remove">&times;</a>',
+				remove = true === this.options.check_locked_callback( this.$el,
+					item ) ? '' : ' <a class="remove">&times;</a>',
 				$label,
-				exclude_css = '';
+				exclude_css;
 			if ( _.isUndefined( this.selected_items[ index ].action ) ) {
 				this.selected_items[ index ].action = '+';
 			}
-			exclude_css = this.selected_items[ index ].action === '-' ? ' exclude' : ' include';
+			exclude_css = '-' === this.selected_items[ index ].action ? ' exclude' : ' include';
 			$label = $( '<li class="vc_suggest-label' + exclude_css + '" data-index="' + index + '" data-value="' + item.value + '"><span class="label">' + item.name + '</span>' + remove + '</li>' );
 			$label.insertBefore( this.$el_wrap );
 			if ( ! _.isEmpty( remove ) ) {
@@ -276,8 +234,8 @@ window.vc.addTemplateFilter = function ( callback ) {
 				$label.remove();
 				return false;
 			}
-			this.selected_items[ index ].action = this.selected_items[ index ].action === '+' ? '-' : '+';
-			if ( this.selected_items[ index ].action == '+' ) {
+			this.selected_items[ index ].action = '+' === this.selected_items[ index ].action ? '-' : '+';
+			if ( '+' === this.selected_items[ index ].action ) {
 				$label.removeClass( 'exclude' ).addClass( 'include' );
 			} else {
 				$label.removeClass( 'include' ).addClass( 'exclude' );
@@ -306,12 +264,11 @@ window.vc.addTemplateFilter = function ( callback ) {
 	$.fn.suggester = function ( option ) {
 		return this.each( function () {
 			var $this = $( this ),
-				data = $this.data( 'suggester' ),
-				options = _.isObject( option ) ? option : {};
+				data = $this.data( 'suggester' );
 			if ( ! data ) {
 				$this.data( 'suggester', (data = new Suggester( this, option )) );
 			}
-			if ( typeof option == 'string' ) {
+			if ( 'string' === typeof(option) ) {
 				data[ option ]();
 			}
 		} );
@@ -331,10 +288,9 @@ window.vc.addTemplateFilter = function ( callback ) {
 			_.bindAll( this, 'save', 'updateSuggestion', 'suggestionLocked' );
 		},
 		render: function ( controller ) {
-			var that = this,
-				template = _.template( $( '#vcl-loop-frame' ).html(),
-					this.model,
-					_.extend( {}, template_options, { variable: 'loop' } ) );
+			var template = _.template( $( '#vcl-loop-frame' ).html(),
+				this.model,
+				_.extend( {}, template_options, { variable: 'loop' } ) );
 			this.controller = controller;
 			this.$el.html( template );
 			this.controller.$el.append( this.$el );
@@ -364,7 +320,7 @@ window.vc.addTemplateFilter = function ( callback ) {
 			}, this );
 			this.controller.setInputValue( this.return_array );
 		},
-		getValue: function ( key, default_value ) {
+		getValue: function ( key ) {
 			var value = $( '[name=' + key + ']', this.$el ).val();
 			return value;
 		},
@@ -392,7 +348,7 @@ window.vc.addTemplateFilter = function ( callback ) {
 				$suggestion_block = $elem.closest( '[data-block=suggestion]' );
 			value = _.reduce( data, function ( memo, label ) {
 				if ( ! _.isEmpty( label ) ) {
-					return memo + (_.isEmpty( memo ) ? '' : ',') + (label.action === '-' ? '-' : '') + label.value;
+					return memo + (_.isEmpty( memo ) ? '' : ',') + ('-' === label.action ? '-' : '') + label.value;
 				}
 			}, '' );
 			$suggestion_block.find( '[data-suggest-value]' ).val( value ).trigger( 'change' );
@@ -403,10 +359,10 @@ window.vc.addTemplateFilter = function ( callback ) {
 
 			return this.controller.settings[ field ]
 				&& _.isBoolean( this.controller.settings[ field ].locked )
-				&& this.controller.settings[ field ].locked == true
+				&& true == this.controller.settings[ field ].locked
 				&& _.isString( this.controller.settings[ field ].value )
-				&& _.indexOf( this.controller.settings[ field ].value.replace( '-', '' ).split( /\,/ ),
-					'' + value ) >= 0;
+				&& 0 <= _.indexOf( this.controller.settings[ field ].value.replace( '-', '' ).split( /\,/ ),
+					'' + value );
 		}
 	} );
 	var VcLoop = Backbone.View.extend( {
@@ -525,7 +481,7 @@ window.vc.addTemplateFilter = function ( callback ) {
 			if ( $field.is( ':checkbox' ) ) {
 				var value = [];
 				this.$el.find( 'input[name=' + $field.attr( 'name' ) + ']' ).each( function () {
-					if ( $( this ).is( ':checked' ) ) {
+					if ( this.checked ) {
 						value.push( $( this ).val() );
 					}
 				} );
@@ -540,8 +496,7 @@ window.vc.addTemplateFilter = function ( callback ) {
 	/**
 	 * VC_link power code.
 	 */
-
-	var VcSortedList = function ( element, settings ) {
+	function VcSortedList( element, settings ) {
 		this.el = element;
 		this.$el = $( this.el );
 		this.$data_field = this.$el.find( '.wpb_vc_param_value' );
@@ -549,11 +504,11 @@ window.vc.addTemplateFilter = function ( callback ) {
 		this.$current_control = this.$el.find( '.vc_sorted-list-container' );
 		_.defaults( this.options, {} );
 		this.init();
-	};
+	}
+
 	VcSortedList.prototype = {
 		constructor: VcSortedList,
 		init: function () {
-			var that = this;
 			_.bindAll( this, 'controlEvent', 'save' );
 			this.$toolbar.on( 'change', 'input', this.controlEvent );
 			var selected_data = this.$data_field.val().split( ',' );
@@ -561,7 +516,7 @@ window.vc.addTemplateFilter = function ( callback ) {
 				selected_data ) {
 				var control_settings = selected_data[ i ].split( '|' ),
 					$control = control_settings.length ? this.$toolbar.find( '[data-element=' + decodeURIComponent( control_settings[ 0 ] ) + ']' ) : false;
-				if ( $control !== false && $control.is( 'input' ) ) {
+				if ( false !== $control && $control.is( 'input' ) ) {
 					$control.prop( 'checked', true );
 					this.createControl( {
 						value: $control.val(),
@@ -595,7 +550,7 @@ window.vc.addTemplateFilter = function ( callback ) {
 		},
 		controlEvent: function ( e ) {
 			var $control = $( e.currentTarget );
-			if ( $control.is( ':checked' ) ) {
+			if ( $control[0].checked ) {
 				this.createControl( {
 					value: $control.val(),
 					label: $control.parent().text(),
@@ -612,7 +567,7 @@ window.vc.addTemplateFilter = function ( callback ) {
 				var return_string = encodeURIComponent( $( element ).data( 'name' ) );
 				$( element ).find( 'select' ).each( function () {
 					var $sub_control = $( this );
-					if ( $sub_control.is( 'select' ) && $sub_control.val() !== '' ) {
+					if ( $sub_control.is( 'select' ) && '' !== $sub_control.val() ) {
 						return_string += '|' + encodeURIComponent( $sub_control.val() );
 					}
 				} );
@@ -629,7 +584,7 @@ window.vc.addTemplateFilter = function ( callback ) {
 			if ( ! data ) {
 				$this.data( 'vc_sorted_list', (data = new VcSortedList( this, option )) );
 			}
-			if ( typeof option == 'string' ) {
+			if ( 'string' === typeof(option) ) {
 				data[ option ]();
 			}
 		} );
@@ -691,7 +646,7 @@ window.vc.addTemplateFilter = function ( callback ) {
 			this.font_types = $font_family_selected.attr( 'data[font_types]' );
 			this.$font_style_dropdown_el_container.parent().hide();
 
-			if ( this.font_family_url && this.font_family_url.length > 0 ) {
+			if ( this.font_family_url && 0 < this.font_family_url.length ) {
 				WebFont.load( {
 					google: {
 						families: [ this.font_family_url ]
@@ -712,8 +667,8 @@ window.vc.addTemplateFilter = function ( callback ) {
 				str_arr ) {
 				var str_arr_inner = str_arr[ str_inner ].split( ':' );
 				var sel = "";
-				if ( _.isString( default_f_style ) && default_f_style.length > 0 && str_arr[ str_inner ] == default_f_style ) {
-					sel = 'selected="selected"';
+				if ( _.isString( default_f_style ) && 0 < default_f_style.length && str_arr[ str_inner ] == default_f_style ) {
+					sel = 'selected';
 				}
 				oel = oel + '<option ' + sel + ' value="' + str_arr[ str_inner ] + '" data[font_weight]="' + str_arr_inner[ 1 ] + '" data[font_style]="' + str_arr_inner[ 2 ] + '" class="' + str_arr_inner[ 2 ] + '_' + str_arr_inner[ 1 ] + '" >' + str_arr_inner[ 0 ] + '</option>';
 
@@ -734,7 +689,6 @@ window.vc.addTemplateFilter = function ( callback ) {
 
 	/**
 	 * Auto Complete PARAMETER
-	 *
 	 */
 	var VC_AutoComplete = Backbone.View.extend( {
 		min_length: 2,
@@ -810,7 +764,7 @@ window.vc.addTemplateFilter = function ( callback ) {
 			if ( this.selected_items.length ) {
 				this.$input_param.val( this.getSelectedItems().join( ", " ) );
 			} else {
-				this.$input_param.val( "" );
+				this.$input_param.val( '' );
 			}
 		},
 		sortableChange: function ( event, ui ) {
@@ -859,7 +813,7 @@ window.vc.addTemplateFilter = function ( callback ) {
 			this.data.data( "ui-autocomplete" )._renderItem = this._renderItem;
 			this.data.data( "ui-autocomplete" )._renderMenu = this._renderMenu;
 			this.data.data( "ui-autocomplete" )._resizeMenu = this._resizeMenu;
-			if ( this.$input_param.val().length > 0 ) {
+			if ( 0 < this.$input_param.val().length ) {
 				if ( ! this.isMultiple ) {
 					this.$el.hide();
 				} else {
@@ -880,7 +834,7 @@ window.vc.addTemplateFilter = function ( callback ) {
 			if ( this.selected && this.options.no_hide ) {
 				this.getWidget().show();
 				this.selected ++;
-				if ( this.selected > 2 ) {
+				if ( 2 < this.selected ) {
 					this.selected = undefined;
 				}
 			}
@@ -1008,7 +962,7 @@ window.vc.addTemplateFilter = function ( callback ) {
 		},
 		source: function ( request, response ) {
 			var that = this;
-			if ( this.options.values && this.options.values.length > 0 ) {
+			if ( this.options.values && 0 < this.options.values.length ) {
 				if ( this.options.unique_values ) {
 					response( $.ui.autocomplete.filter(
 						_.difference( this.options.values, this.selected_items ),
@@ -1047,7 +1001,6 @@ window.vc.addTemplateFilter = function ( callback ) {
 
 	/**
 	 * Param initializer
-	 *
 	 */
 	var Vc_ParamInitializer = Backbone.View.extend( {
 		$content: {},
@@ -1066,13 +1019,10 @@ window.vc.addTemplateFilter = function ( callback ) {
 			var self;
 
 			self = this;
-			$( '.vc_shortcode-param', this.content() ).each( function () {
-				var param, $field;
-
-				param = {};
-				$field = $( this );
-				param = $field.data( 'param_settings' );
-				vc.atts.init.call( self, param, $field );
+			$( '[data-vc-ui-element="panel-shortcode-param"]', this.content() ).each( function () {
+				var _this = $( this ),
+					param = _this.data( 'param_settings' );
+				vc.atts.init.call( self, param, _this );
 			} );
 			return this;
 		}
@@ -1182,7 +1132,7 @@ window.vc.addTemplateFilter = function ( callback ) {
 		 * @returns {boolean}
 		 */
 		addAllowed: function () {
-			return (this.options.max_items > 0 && this.items + 1 <= this.options.max_items) || this.options.max_items <= 0;
+			return (0 < this.options.max_items && this.items + 1 <= this.options.max_items) || 0 >= this.options.max_items;
 		},
 		afterAdd: function ( $newEl, action ) {
 			var fn;
@@ -1289,7 +1239,7 @@ window.vc.addTemplateFilter = function ( callback ) {
 
 				elemName = this.adminLabelParams[ i ];
 				$field = $parent.find( '[name=' + elemName + ']' );
-				$paramWrapper = $field.closest( '.vc_shortcode-param' );
+				$paramWrapper = $field.closest( '[data-vc-ui-element="panel-shortcode-param"]' );
 
 				if ( 'undefined' !== typeof( this.mappedParams[ elemName ] ) ) {
 					labelName = this.mappedParams[ elemName ][ 'heading' ];
@@ -1298,7 +1248,7 @@ window.vc.addTemplateFilter = function ( callback ) {
 				if ( $field.is( 'select' ) ) {
 					labelValue = $field.find( 'option:selected' ).text();
 				} else if ( $field.is( 'input:checkbox' ) ) {
-					labelValue = $field.is( ':checked' ) ? $field.val() : '';
+					labelValue = $field[0].checked ? $field.val() : '';
 				} else {
 					labelValue = $field.val();
 				}
@@ -1336,22 +1286,22 @@ window.vc.addTemplateFilter = function ( callback ) {
 						_.each( $masters, function ( master ) {
 							var $master;
 							$master = $( master );
+							var masterName, rules;
+							masterName = $master.attr( 'name' );
+							rules = param.dependency;
+							if ( ! _.isArray( this.dependentElements[ masterName ] ) ) {
+								this.dependentElements[ masterName ] = [];
+							}
+							this.dependentElements[ masterName ].push( $slave );
 							if ( ! $master.data( 'dependentSet' ) ) {
-								var masterName, rules;
-								masterName = $master.attr( 'name' );
-								rules = param.dependency;
-								if ( ! _.isArray( this.dependentElements[ masterName ] ) ) {
-									this.dependentElements[ masterName ] = [];
-								}
-								this.dependentElements[ masterName ].push( $slave );
 								$master.attr( 'data-dependent-set', 'true' );
 								$master.bind( 'keyup change', this.hookDependent );
-								if ( ! callDependencies[ masterName ] ) {
-									callDependencies[ masterName ] = $master;
-								}
-								if ( _.isString( rules.callback ) ) {
-									window[ rules.callback ].call( this );
-								}
+							}
+							if ( ! callDependencies[ masterName ] ) {
+								callDependencies[ masterName ] = $master;
+							}
+							if ( _.isString( rules.callback ) ) {
+								window[ rules.callback ].call( this );
 							}
 						}, this );
 					}
@@ -1418,7 +1368,7 @@ window.vc.addTemplateFilter = function ( callback ) {
 				this.options.parent.afterDelete();
 				this.$el.remove();
 
-				//todo check memleaks everywhere
+				// TODO: check memleaks everywhere
 				this.unbind(); // Unbind all local event bindings
 				this.remove(); // Remove view from DOM
 			}
@@ -1482,32 +1432,35 @@ window.vc.addTemplateFilter = function ( callback ) {
 	vc.edit_form_callbacks = [];
 	vc.atts = {
 		parse: function ( param ) {
-			var value;
-			var $field = this.content().find( '.wpb_vc_param_value[name=' + param.param_name + ']' );
+			var value, params, $param, $field;
+
+			$field = this.content().find( '.wpb_vc_param_value[name=' + param.param_name + ']' );
+			$param = $field.closest( '[data-vc-ui-element="panel-shortcode-param"]' );
+
 			if ( ! _.isUndefined( vc.atts[ param.type ] ) && ! _.isUndefined( vc.atts[ param.type ].parse ) ) {
-				value = vc.atts[ param.type ].parse.call( this, param );
+				if ( $param.data( 'vcInitParam' ) ) {
+					value = vc.atts[ param.type ].parse.call( this, param );
+				} else {
+					params = this.model.get( 'params' );
+					value = (! _.isUndefined( params[ param.param_name ] ) ) ? params[ param.param_name ] : ($field.length ? $field.val() : null);
+				}
 			} else {
 				value = $field.length ? $field.val() : null;
 			}
-			if ( $field.data( 'js-function' ) !== undefined && typeof(window[ $field.data( 'js-function' ) ]) !== 'undefined' ) {
+
+			if ( 'undefined' !== typeof($field.data( 'js-function' )) && 'undefined' !== typeof(window[ $field.data( 'js-function' ) ]) ) {
 				var fn = window[ $field.data( 'js-function' ) ];
 				fn( this.$el, this, param );
 			}
+
+/*			if ( 'content' !== param.param_name ) {
+				value = vcEscapeHtml( value );
+			}*/
+
 			return value;
 		},
 		parseFrame: function ( param ) {
-			var value;
-			var $field = this.content().find( '.wpb_vc_param_value[name=' + param.param_name + ']' );
-			if ( ! _.isUndefined( vc.atts[ param.type ] ) && ! _.isUndefined( vc.atts[ param.type ].parse ) ) {
-				value = vc.atts[ param.type ].parse.call( this, param );
-			} else {
-				value = $field.length ? $field.val() : null;
-			}
-			if ( $field.data( 'js-function' ) !== undefined && typeof(window[ $field.data( 'js-function' ) ]) !== 'undefined' ) {
-				var fn = window[ $field.data( 'js-function' ) ];
-				fn( this.$el, this, param );
-			}
-			return value;
+			return vc.atts.parse.call( this, param );
 		},
 		init: function ( param, $field ) {
 			if ( ! _.isUndefined( vc.atts[ param.type ] ) && ! _.isUndefined( vc.atts[ param.type ].init ) ) {
@@ -1561,7 +1514,7 @@ window.vc.addTemplateFilter = function ( callback ) {
 				var self;
 
 				self = $( this );
-				if ( self.is( ':checked' ) ) {
+				if ( this.checked ) {
 					arr.push( self.attr( 'value' ) );
 				}
 			} );
@@ -1588,7 +1541,7 @@ window.vc.addTemplateFilter = function ( callback ) {
 			var shortcodeParams;
 			shortcodeParams = clonedModel.get( 'params' );
 			if ( ! _.isUndefined( paramSettings ) && ! _.isUndefined( paramSettings.settings ) && ! _.isUndefined( paramSettings.settings.auto_generate ) && true === paramSettings.settings.auto_generate ) {
-				shortcodeParams[ paramSettings.param_name ] = + new Date() + '-' + vc_guid();
+				shortcodeParams[ paramSettings.param_name ] = Date.now() + '-' + vc_guid();
 			} else {
 				shortcodeParams[ paramSettings.param_name ] = ""; // just reset a value
 			}
@@ -1609,7 +1562,7 @@ window.vc.addTemplateFilter = function ( callback ) {
 				var shortcodeParams;
 
 				shortcodeParams = shortcodeModel.get( 'params' );
-				shortcodeParams[ paramSettings.param_name ] = + new Date() + '-' + vc_guid();
+				shortcodeParams[ paramSettings.param_name ] = Date.now() + '-' + vc_guid();
 				shortcodeModel.set( { params: shortcodeParams }, { silent: true } );
 			}
 		}
@@ -1623,11 +1576,11 @@ window.vc.addTemplateFilter = function ( callback ) {
 				new_value = '';
 			$( 'input[name=' + param.param_name + ']', this.content() ).each( function () {
 				var self = $( this );
-				if ( self.is( ':checked' ) ) {
+				if ( this.checked ) {
 					posstypes_arr.push( self.attr( "value" ) );
 				}
 			} );
-			if ( posstypes_arr.length > 0 ) {
+			if ( 0 < posstypes_arr.length ) {
 				new_value = posstypes_arr.join( ',' );
 			}
 			return new_value;
@@ -1640,11 +1593,11 @@ window.vc.addTemplateFilter = function ( callback ) {
 				new_value = '';
 			$( 'input[name=' + param.param_name + ']', this.content() ).each( function () {
 				var self = $( this );
-				if ( self.is( ':checked' ) ) {
+				if ( this.checked ) {
 					posstypes_arr.push( self.attr( "value" ) );
 				}
 			} );
-			if ( posstypes_arr.length > 0 ) {
+			if ( 0 < posstypes_arr.length ) {
 				new_value = posstypes_arr.join( ',' );
 			}
 			return new_value;
@@ -1665,7 +1618,7 @@ window.vc.addTemplateFilter = function ( callback ) {
 			return base64_encode( rawurlencode( new_value ) );
 		},
 		render: function ( param, value ) {
-			return $( "<div/>" ).text( rawurldecode( base64_decode( value ) ) ).html();
+			return $( "<div/>" ).text( rawurldecode( base64_decode( value.trim() ) ) ).html();
 		}
 	};
 
@@ -1679,8 +1632,10 @@ window.vc.addTemplateFilter = function ( callback ) {
 					$options = $this.find( ':selected' ),
 					prev_option_class = $this.data( 'option' ),
 					option_class = $options.length ? $options.attr( 'class' ).replace( /\s/g, '_' ) : '';
-				prev_option_class != undefined && $this.removeClass( prev_option_class );
-				option_class != undefined && $this.data( 'option', option_class ) && $this.addClass( option_class );
+				option_class = option_class.replace( '#', 'hash-' );
+				'undefined' !== typeof(prev_option_class) && $this.removeClass( prev_option_class );
+				'undefined' !== typeof(option_class) && $this.data( 'option',
+					option_class ) && $this.addClass( option_class );
 			} );
 		},
 		defaults: function ( param ) {
@@ -1709,9 +1664,13 @@ window.vc.addTemplateFilter = function ( callback ) {
 			return $field.length ? $field.val() : null;
 		},
 		render: function ( param, value ) {
-			var $thumbnails = this.$el.find( '.attachment-thumbnails[data-name=' + param.param_name + ']' ),
-				thumbnails_html = this.$el.data( 'field-' + param.param_name + '-attach-images' );
-			if ( _.isUndefined( thumbnails_html ) && ! _.isEmpty( value ) ) {
+			var $thumbnails = this.$el.find( '.attachment-thumbnails[data-name=' + param.param_name + ']' );
+
+			if ( 'external_link' === this.model.getParam( 'source' ) ) {
+				value = this.model.getParam( 'custom_srcs' );
+			}
+
+			if ( ! _.isEmpty( value ) ) {
 				$.ajax( {
 					type: 'POST',
 					url: window.ajaxurl,
@@ -1724,10 +1683,11 @@ window.vc.addTemplateFilter = function ( callback ) {
 				} ).done( function ( html ) {
 					vc.atts.attach_images.updateImages( $thumbnails, html );
 				} );
-			} else if ( ! _.isUndefined( thumbnails_html ) ) {
+			} else {
 				this.$el.removeData( 'field-' + param.param_name + '-attach-images' );
-				vc.atts.attach_images.updateImages( $thumbnails, thumbnails_html );
+				vc.atts.attach_images.updateImages( $thumbnails, '' );
 			}
+
 			return value;
 		},
 		updateImages: function ( $thumbnails, thumbnails_html ) {
@@ -1744,7 +1704,7 @@ window.vc.addTemplateFilter = function ( callback ) {
 		parse: function ( param ) {
 			var $field = this.content().find( '.wpb_vc_param_value[name=' + param.param_name + ']' ),
 				val = '';
-			if ( $field.length && $field.val() != 'http://' ) {
+			if ( $field.length && 'http://' !== $field.val() ) {
 				val = $field.val();
 			}
 			return val;
@@ -1766,33 +1726,67 @@ window.vc.addTemplateFilter = function ( callback ) {
 			var $model = $( '[data-model-id=' + this.model.id + ']' );
 			var image_src = $model.data( 'field-' + param.param_name + '-attach-image' );
 			var $thumbnail = this.$el.find( '.attachment-thumbnail[data-name=' + param.param_name + ']' );
-			if ( _.isUndefined( image_src ) && ! _.isEmpty( value ) ) {
-				$.ajax( {
-					type: 'POST',
-					url: window.ajaxurl,
-					data: {
-						action: 'wpb_single_image_src',
-						content: value
-					},
-					dataType: 'html',
-					context: this
-				} ).done( function ( src ) {
-					vc.atts[ 'attach_image' ].updateImage( $thumbnail, src );
-				} );
-			} else if ( ! _.isUndefined( image_src ) ) {
-				$model.removeData( 'field-' + param.param_name + '-attach-image' );
-				vc.atts[ 'attach_image' ].updateImage( $thumbnail, image_src );
+			var $post_id = $( '#post_ID' );
+			var post_id = $post_id.length ? $post_id.val() : 0;
+
+			if ( 'image' === param.param_name ) {
+				switch ( this.model.getParam( 'source' ) ) {
+					case 'external_link':
+						vc.atts[ 'attach_image' ].updateImage( $thumbnail, this.model.getParam( 'custom_src' ) );
+						break;
+
+					default:
+						if ( ! _.isEmpty( value ) || 'featured_image' === this.model.getParam( 'source' ) ) {
+							$.ajax( {
+								type: 'POST',
+								url: window.ajaxurl,
+								data: {
+									action: 'wpb_single_image_src',
+									content: value,
+									params: this.model.get( 'params' ),
+									post_id: post_id
+								},
+								dataType: 'html',
+								context: this
+							} ).done( function ( image_src ) {
+								var image_exists = image_src.length || 'featured_image' === this.model.getParam( 'source' );
+								vc.atts[ 'attach_image' ].updateImage( $thumbnail, image_src, image_exists );
+							} );
+						} else if ( ! _.isUndefined( image_src ) ) {
+							$model.removeData( 'field-' + param.param_name + '-attach-image' );
+							vc.atts[ 'attach_image' ].updateImage( $thumbnail, image_src );
+						}
+
+						break;
+				}
 			}
 
 			return value;
 		},
-		updateImage: function ( $thumbnail, image_src ) {
-			if ( _.isEmpty( image_src ) ) {
-				$thumbnail.attr( 'src', '' ).hide();
-				$thumbnail.next().removeClass( 'image-exists' ).next().removeClass( 'image-exists' );
+		updateImage: function ( $thumbnail, image_src, image_exists ) {
+			if ( ! $thumbnail.length ) {
+				return;
+			}
+
+			if ( 'undefined' === typeof(image_exists) ) {
+				image_exists = false;
+			}
+
+			if ( image_exists || ! _.isEmpty( image_src ) ) {
+				$thumbnail.attr( 'src', image_src );
+
+				if ( _.isEmpty( image_src ) ) {
+					$thumbnail.hide();
+					$thumbnail.next().removeClass( 'image-exists' ).next().addClass( 'image-exists' );
+				} else {
+					$thumbnail.show();
+					$thumbnail.next().addClass( 'image-exists' ).next().addClass( 'image-exists' );
+				}
 			} else {
-				$thumbnail.attr( 'src', image_src ).show();
-				$thumbnail.next().addClass( 'image-exists' ).next().addClass( 'image-exists' );
+				$thumbnail
+					.attr( 'src', '' )
+					.hide()
+					.next().removeClass( 'image-exists' ).next().removeClass( 'image-exists' );
 			}
 		}
 	};
@@ -1807,19 +1801,19 @@ window.vc.addTemplateFilter = function ( callback ) {
 			options.font_family = $block.find( '.vc_google_fonts_form_field-font_family-select > option:selected' ).val();
 			options.font_style = $block.find( '.vc_google_fonts_form_field-font_style-select > option:selected' ).val();
 			string_pieces = _.map( options, function ( value, key ) {
-				if ( _.isString( value ) && value.length > 0 ) {
+				if ( _.isString( value ) && 0 < value.length ) {
 					return key + ':' + encodeURIComponent( value );
 				}
 			} );
 			string = $.grep( string_pieces, function ( value ) {
-				return _.isString( value ) && value.length > 0;
+				return _.isString( value ) && 0 < value.length;
 			} ).join( '|' );
 			return string;
 		},
 		init: function ( param, $field ) {
 			var $g_fonts = $field;
 			if ( $g_fonts.length ) {
-				if ( typeof WebFont != "undefined" ) {
+				if ( 'undefined' !== typeof(WebFont) ) {
 					new GoogleFonts( { el: $g_fonts } );
 				} else {
 					$g_fonts.find( '> .edit_form_line' ).html( window.i18nLocale.gfonts_unable_to_load_google_fonts || "Unable to load Google Fonts" );
@@ -1841,15 +1835,15 @@ window.vc.addTemplateFilter = function ( callback ) {
 			options.font_family = $block.find( '.vc_font_container_form_field-font_family-select > option:selected' ).val();
 			options.color = $block.find( '.vc_font_container_form_field-color-input' ).val();
 			options.line_height = $block.find( '.vc_font_container_form_field-line_height-input' ).val();
-			options.font_style_italic = $block.find( '.vc_font_container_form_field-font_style-checkbox.italic' ).is( ':checked' ) ? "1" : "";
-			options.font_style_bold = $block.find( '.vc_font_container_form_field-font_style-checkbox.bold' ).is( ':checked' ) ? "1" : "";
+			options.font_style_italic = $block.find( '.vc_font_container_form_field-font_style-checkbox.italic' ).prop( 'checked' ) ? "1" : "";
+			options.font_style_bold = $block.find( '.vc_font_container_form_field-font_style-checkbox.bold' ).prop( 'checked' ) ? "1" : "";
 			string_pieces = _.map( options, function ( value, key ) {
-				if ( _.isString( value ) && value.length > 0 ) {
+				if ( _.isString( value ) && 0 < value.length ) {
 					return key + ':' + encodeURIComponent( value );
 				}
 			} );
 			string = $.grep( string_pieces, function ( value ) {
-				return _.isString( value ) && value.length > 0;
+				return _.isString( value ) && 0 < value.length;
 			} ).join( '|' );
 			return string;
 		},
@@ -1866,7 +1860,7 @@ window.vc.addTemplateFilter = function ( callback ) {
 				$list;
 
 			$content = this.content();
-			$block = $content.find( '.wpb_el_type_param_group.vc_shortcode-param[data-param_name="' + param[ 'param_name' ] + '"]' );
+			$block = $content.find( '.wpb_el_type_param_group[data-vc-ui-element="panel-shortcode-param"][data-vc-shortcode-param-name="' + param[ 'param_name' ] + '"]' );
 			$list = $block.find( '> .edit_form_line > .vc_param_group-list' );
 
 			data = vc.atts.param_group.extractValues.call( this,
@@ -1928,7 +1922,7 @@ window.vc.addTemplateFilter = function ( callback ) {
 				var $control = $( this ),
 					value = $control.val().replace( /\s+/g, '' ),
 					alpha_val = 100,
-					$alpha, $alpha_output;
+					$alpha, $alpha_output, $pickerContainer;
 				if ( value.match( /rgba\(\d+\,\d+\,\d+\,([^\)]+)\)/ ) ) {
 					alpha_val = parseFloat( value.match( /rgba\(\d+\,\d+\,\d+\,([^\)]+)\)/ )[ 1 ] ) * 100;
 				}
@@ -1941,12 +1935,13 @@ window.vc.addTemplateFilter = function ( callback ) {
 						$( this ).trigger( 'change' );
 					}, 500 )
 				} );
+				$pickerContainer = $control.closest( '.wp-picker-container' );
 				$( '<div class="vc_alpha-container">'
 				+ '<label>Alpha: <output class="rangevalue">' + alpha_val + '%</output></label>'
 				+ '<input type="range" min="1" max="100" value="' + alpha_val + '" name="alpha" class="vc_alpha-field">'
-				+ '</div>' ).appendTo( $control.parents( '.wp-picker-container:first' ).addClass( 'vc_color-picker' ).find( '.iris-picker' ) );
-				$alpha = $control.parents( '.wp-picker-container:first' ).find( '.vc_alpha-field' );
-				$alpha_output = $control.parents( '.wp-picker-container:first' ).find( '.vc_alpha-container output' );
+				+ '</div>' ).appendTo( $pickerContainer.addClass( 'vc_color-picker' ).find( '.iris-picker' ) );
+				$alpha = $pickerContainer.find( '.vc_alpha-field' );
+				$alpha_output = $pickerContainer.find( '.vc_alpha-container output' );
 				$alpha.bind( 'change keyup', function () {
 					var alpha_val = parseFloat( $alpha.val() ),
 						iris = $control.data( 'a8c-iris' ),
@@ -1965,19 +1960,21 @@ window.vc.addTemplateFilter = function ( callback ) {
 			var $el_type_autocomplete = $field;
 			if ( $el_type_autocomplete.length ) {
 				$el_type_autocomplete.each( function () {
-					var $param = $( '.wpb_vc_param_value', this );
-					var param_name = $param.attr( 'name' );
-					var $el = $( '.vc_auto_complete_param', this );
-					var options = {};
-					options = $.extend(
-						{
+					var options,
+						$param = $( '.wpb_vc_param_value', this ),
+						param_name = $param.attr( 'name' ),
+						$el = $( '.vc_auto_complete_param', this ),
+						ac;
+
+					options = $.extend( {
 							$param_input: $param,
-							$el: $el,
-							param_name: param_name
+							param_name: param_name,
+							$el: $el
 						},
 						$param.data( 'settings' )
 					);
-					var ac = new VC_AutoComplete( options );
+
+					ac = new VC_AutoComplete( options );
 					if ( options.multiple ) {
 						ac.enableMultiple();
 					}
@@ -2039,7 +2036,7 @@ window.vc.addTemplateFilter = function ( callback ) {
 				} else {
 					dialog = window.wpLink;
 				}
-				// window.wpLink.textarea = this;
+
 				dialog.open( 'content' );
 				if ( _.isString( value_object.url ) ) {
 					$( '#wp-link-url' ).length ? $( '#wp-link-url' ).val( value_object.url ) : $( '#url-field' ).val( value_object.url );
@@ -2056,13 +2053,13 @@ window.vc.addTemplateFilter = function ( callback ) {
 					e.preventDefault();
 					e.stopImmediatePropagation();
 					var options = {},
-						string = '';
+						string;
 					options.url = $( '#wp-link-url' ).length ? $( '#wp-link-url' ).val() : $( '#url-field' ).val();
 					options.title = $( '#wp-link-text' ).length ? $( '#wp-link-text' ).val() : $( '#link-title-field' ).val();
 					var $checkbox = $( '#wp-link-target' ).length ? $( '#wp-link-target' ) : $( '#link-target-checkbox' );
-					options.target = $checkbox.is( ':checked' ) ? ' _blank' : '';
+					options.target = $checkbox[0].checked ? ' _blank' : '';
 					string = _.map( options, function ( value, key ) {
-						if ( _.isString( value ) && value.length > 0 ) {
+						if ( _.isString( value ) && 0 < value.length ) {
 							return key + ':' + encodeURIComponent( value );
 						}
 					} ).join( '|' );
@@ -2071,7 +2068,6 @@ window.vc.addTemplateFilter = function ( callback ) {
 					$url_label.html( options.url + options.target );
 					$title_label.html( options.title );
 
-					// $dialog.wpdialog('close');
 					dialog.close();
 					$link_submit.show();
 					$vc_link_submit.unbind( 'click.vcLink' );
@@ -2139,7 +2135,6 @@ window.vc.addTemplateFilter = function ( callback ) {
 			$field.find( '.vc-iconpicker' ).vcFontIconPicker( settings ).on( 'change', function ( e ) {
 				var $select = $( this );
 				if ( ! $select.data( 'vc-no-check' ) ) {
-					//event.extra_type = true;
 					$el.data( 'vc-no-check', true ).val( this.value ).trigger( 'change' );
 				}
 				$select.data( 'vc-no-check', false );
@@ -2159,17 +2154,17 @@ window.vc.addTemplateFilter = function ( callback ) {
 			var content = $field;
 			var $field_input = $( '.wpb_vc_param_value[name=' + param.param_name + ']', content );
 			$( 'option[value="' + $field_input.val() + '"]', content ).attr( 'selected', true );
-			var animation_style_test = function ( el, x ) {
+			function animation_style_test( el, x ) {
 				$( el ).removeClass().addClass( x + ' animated' ).one( 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend',
 					function () {
 						$( this ).removeClass().addClass( 'vc_param-animation-style-preview' );
 					} );
-			};
+			}
 
 			$( '.vc_param-animation-style-trigger', content ).click( function ( e ) {
 				e.preventDefault();
 				var animation = $( '.vc_param-animation-style', content ).val();
-				if ( animation != 'none' ) {
+				if ( 'none' !== animation ) {
 					animation_style_test( this.parentNode, 'vc_param-animation-style-preview ' + animation );
 				}
 			} );
@@ -2177,7 +2172,7 @@ window.vc.addTemplateFilter = function ( callback ) {
 			$( '.vc_param-animation-style', content ).change( function () {
 				var animation = $( this ).val();
 				$field_input.val( animation );
-				if ( animation != 'none' ) {
+				if ( 'none' !== animation ) {
 					var el = $( '.vc_param-animation-style-preview', content );
 					animation_style_test( el, 'vc_param-animation-style-preview ' + animation );
 				}
@@ -2191,13 +2186,13 @@ window.vc.addTemplateFilter = function ( callback ) {
 		 * @returns {string}
 		 */
 		parse: function () {
-			var value = 'vc_gid:' + (+ new Date() + '-' + this.model.get( 'id' ) + '-' + Math.floor( Math.random() * 11 ));
+			var value = 'vc_gid:' + (Date.now() + '-' + this.model.get( 'id' ) + '-' + Math.floor( Math.random() * 11 ));
 			return value;
 		}
 	};
 	/**
-	 *
 	 * @type {{addShortcode: Function}}
+	 * @param model vc.shortcode
 	 */
 	vc.atts.addShortcodeIdParam = function ( model ) {
 		var params, settings;

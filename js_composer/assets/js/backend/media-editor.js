@@ -309,7 +309,7 @@
 					var $this = $( this ),
 						editor = 'visual-composer';
 					media.vc_editor.$vc_editor_element = $( this );
-					if ( $this.attr( 'use-single' ) === 'true' ) {
+					if ( 'true' === $this.attr( 'use-single' ) ) {
 						media.VcSingleImage.frame( this ).open( 'vc_editor' );
 						return;
 					}

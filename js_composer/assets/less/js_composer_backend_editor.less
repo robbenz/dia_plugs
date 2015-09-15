@@ -8,8 +8,6 @@
 @import "lib/elements_icons.less";
 // Add element box
 @import "popups/modal_add_element.less";
-// Add template modal box
-@import "popups/panel_add_templates.less";
 
 // Navigation bar
 @vc_navbar_sprite_left_position: -60px;
@@ -30,7 +28,7 @@
 @import "popups/panel_edit_form.less";
 
 // Templates editor
-@import "popups/panel_templates.less";
+@import "modules/ui/vc_ui-panel-templates.less";
 // Post settings
 @import "popups/panel_post_settings.less";
 // Edit row layout
@@ -69,11 +67,9 @@
 @import "backend_shortcodes/vc_gmaps.less";
 @import "backend_shortcodes/vc_googleplus.less";
 @import "backend_shortcodes/vc_images_carousel.less";
-@import "backend_shortcodes/vc_message_old.less";
-// @deprecated since 4.4 and will be removed
 @import "backend_shortcodes/vc_message_box.less";
 @import "backend_shortcodes/vc_tta.less";
-// @import "shortcodes/vc_tta.less";
+@import "shortcodes/vc_separator.less";
 
 .vc_shortcode-param[data-param_type="iconpicker"] {
   .vc-icons-selector .selected-icon {
@@ -210,5 +206,17 @@
 .vc_button-settings-less {
   &:active {
     vertical-align: baseline;
+  }
+}
+
+// fix mobile overlay
+body.mobile.modal-open #wpwrap {
+  position: relative !important;
+}
+
+@media (max-width: @screen-xs-max) {
+  .vc_subnav-fixed {
+    top: 0;
+    padding-left: 10px;
   }
 }

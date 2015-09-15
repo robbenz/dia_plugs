@@ -740,7 +740,6 @@
 				$pp_gallery_li.filter(':eq('+set_position+')').addClass('selected');
 			}else{
 				$pp_pic_holder.find('.pp_content').unbind('mouseenter mouseleave');
-				// $pp_gallery.hide();
 			}
 		}
 	

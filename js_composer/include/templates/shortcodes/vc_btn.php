@@ -26,6 +26,7 @@
  * @var $i_icon_linecons
  * @var $i_icon_pixelicons
  * @var $css_animation
+ * @var $css
  * Shortcode class
  * @var $this WPBakeryShortCode_VC_Btn
  */
@@ -69,7 +70,7 @@ if ( '' === trim( $title ) ) {
 	$button_classes[] = 'vc_btn3-o-empty';
 	$button_html = '<span class="vc_btn3-placeholder">&nbsp;</span>';
 }
-if ( 'true' == $button_block && 'inline' !== $align ) {
+if ( 'true' === $button_block && 'inline' !== $align ) {
 	$button_classes[] = 'vc_btn3-block';
 }
 if ( 'true' === $add_icon ) {
@@ -150,7 +151,9 @@ if ( $styles ) {
 	$attributes[] = 'style="' . implode( ' ', $styles ) . '"';
 }
 
-$wrapper_classes = esc_attr( apply_filters( VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, implode( ' ', array_filter( $wrapper_classes ) ), $this->settings['base'], $atts ) );
+$class_to_filter = implode( ' ', array_filter( $wrapper_classes ) );
+$class_to_filter .= vc_shortcode_custom_css_class( $css, ' ' );
+$css_class = apply_filters( VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, $class_to_filter, $this->settings['base'], $atts );
 
 if ( $button_classes ) {
 	$button_classes = esc_attr( apply_filters( VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, implode( ' ', array_filter( $button_classes ) ), $this->settings['base'], $atts ) );
@@ -166,8 +169,8 @@ if ( $use_link ) {
 $attributes = implode( ' ', $attributes );
 
 ?>
-	<div class="<?php echo trim( $wrapper_classes ); ?>"><?php if ( $use_link ) {
+	<div class="<?php echo trim( esc_attr( $css_class ) ) ?>"><?php if ( $use_link ) {
 	echo '<a ' . $attributes . '>' . $button_html . '</a>';
 } else {
 	echo '<button ' . $attributes . '>' . $button_html . '</button>';
-} ?></div><?php echo $this->endBlockComment( $this->getShortcode() );
+} ?></div>

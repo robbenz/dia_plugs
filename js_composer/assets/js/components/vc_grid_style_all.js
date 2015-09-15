@@ -57,7 +57,7 @@ var vcGridStyleAll;
 	 * @param filter - string parameter with filter settings.
 	 */
 	vcGridStyleAll.prototype.filter = function ( filter ) {
-		filter = _.isUndefined( filter ) || filter === '*' ? '' : filter;
+		filter = _.isUndefined( filter ) || '*' === filter ? '' : filter;
 		if ( this.filterValue == filter ) {
 			return false; // already filtred
 		}
@@ -71,9 +71,9 @@ var vcGridStyleAll;
 		var $els = this.$content.find( '.vc_grid-item' + this.filterValue );
 		this.setIsLoading();
 		$els.addClass( 'vc_visible-item ' + (
-			vcGridSettings.addItemsAnimation != 'none' ? vcGridSettings.addItemsAnimation + ' animated' : '') );
+			'none' !== vcGridSettings.addItemsAnimation ? vcGridSettings.addItemsAnimation + ' animated' : '') );
 		this.unsetIsLoading();
-		jQuery(window).trigger( 'grid:items:added', this.$el );
+		jQuery( window ).trigger( 'grid:items:added', this.$el );
 	};
 	/**
 	 * Add new grid elements to content block. Called by ajax in render method.

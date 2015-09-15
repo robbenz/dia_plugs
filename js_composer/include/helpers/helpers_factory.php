@@ -208,7 +208,7 @@ if ( ! function_exists( 'vc_is_page_editable' ) ) {
 	 * @return bool
 	 */
 	function vc_is_page_editable() {
-		return vc_mode() == 'page_editable';
+		return vc_mode() === 'page_editable';
 	}
 }
 if ( ! function_exists( 'vc_action' ) ) {
@@ -249,7 +249,7 @@ if ( ! function_exists( 'vc_is_frontend_ajax' ) ) {
 	 * @return bool
 	 */
 	function vc_is_frontend_ajax() {
-		return vc_post_param( 'vc_inline' ) == 'true' || vc_get_param( 'vc_inline' );
+		return vc_post_param( 'vc_inline' ) === 'true' || vc_get_param( 'vc_inline' );
 	}
 }
 /**

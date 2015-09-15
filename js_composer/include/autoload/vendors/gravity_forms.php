@@ -37,6 +37,7 @@ function vc_vendor_gravityforms_load() {
 				'heading' => __( 'Form', 'js_composer' ),
 				'param_name' => 'id',
 				'value' => $gravity_forms_array,
+				'save_always' => true,
 				'description' => __( 'Select a form to add it to your post or page.', 'js_composer' ),
 				'admin_label' => true
 			),
@@ -48,6 +49,7 @@ function vc_vendor_gravityforms_load() {
 					__( 'No', 'js_composer' ) => 'false',
 					__( 'Yes', 'js_composer' ) => 'true'
 				),
+				'save_always' => true,
 				'description' => __( 'Would you like to display the forms title?', 'js_composer' ),
 				'dependency' => array(
 					'element' => 'id',
@@ -62,6 +64,7 @@ function vc_vendor_gravityforms_load() {
 					__( 'No', 'js_composer' ) => 'false',
 					__( 'Yes', 'js_composer' ) => 'true'
 				),
+				'save_always' => true,
 				'description' => __( 'Would you like to display the forms description?', 'js_composer' ),
 				'dependency' => array(
 					'element' => 'id',
@@ -76,6 +79,7 @@ function vc_vendor_gravityforms_load() {
 					__( 'No', 'js_composer' ) => 'false',
 					__( 'Yes', 'js_composer' ) => 'true'
 				),
+				'save_always' => true,
 				'description' => __( 'Enable AJAX submission?', 'js_composer' ),
 				'dependency' => array(
 					'element' => 'id',

@@ -53,8 +53,10 @@
     padding: @vc_tta-panes-padding-vertical @vc_tta-panes-padding-horizontal;
     display: none;
     overflow: hidden;
-    -webkit-transition: height .2s ease-in-out, padding .2s ease-in-out;
-    transition: height .2s ease-in-out, padding .2s ease-in-out;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    -webkit-transition: padding .2s ease-in-out;
+    transition: padding .2s ease-in-out;
     // Fix #93887286 elements margins
     > :last-child {
       margin-bottom: 0;
@@ -696,6 +698,18 @@
         }
       }
     }
+    &.vc_tta-pageable {
+      .vc_tta-o-non-responsive & {
+        .vc_tta-panel {
+          margin: 0;
+        }
+      }
+      @media (min-width: @vc_tta-breakpoint) {
+        .vc_tta-panel {
+          margin: 0;
+        }
+      }
+    }
   }
 
   // Flat Style
@@ -705,5 +719,13 @@
     .vc_tta-panel-heading {
       border-width: 0;
     }
+  }
+}
+
+// don't show panel headings on pageable
+// vc_tta-panel-title is container, that has empty a element
+.vc_tta-pageable {
+  .vc_tta-panel-title {
+    display: none;
   }
 }

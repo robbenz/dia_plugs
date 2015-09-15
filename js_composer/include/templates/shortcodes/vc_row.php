@@ -56,11 +56,6 @@ if ( ! empty( $full_height ) ) {
 	}
 }
 
-// use default video if user checked video, but didn't chose url
-if ( ! empty( $video_bg ) && empty( $video_bg_url ) ) {
-	$video_bg_url = 'https://www.youtube.com/watch?v=lMJXxhRFO1k';
-}
-
 $has_video_bg = ( ! empty( $video_bg ) && ! empty( $video_bg_url ) && vc_extract_youtube_id( $video_bg_url ) );
 
 if ( $has_video_bg ) {
@@ -104,6 +99,5 @@ $output .= '<div ' . implode( ' ', $wrapper_attributes ) . '>';
 $output .= wpb_js_remove_wpautop( $content );
 $output .= '</div>';
 $output .= $after_output;
-$output .= $this->endBlockComment( $this->getShortcode() );
 
 echo $output;

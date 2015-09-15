@@ -14,7 +14,7 @@
 $config = array( 
     
     
-    'current_version' => "2.8.4",
+    'current_version' => "2.8.5",
    
     
     'plugins_dir' => plugin_dir_path( __FILE__ ),

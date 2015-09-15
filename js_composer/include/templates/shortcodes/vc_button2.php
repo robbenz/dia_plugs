@@ -39,4 +39,4 @@ if ( $align ) {
                                                              href="<?php echo esc_attr( $a_href ); ?>"
                                                              title="<?php echo esc_attr( $a_title ); ?>"
                                                              target="<?php echo esc_attr( $a_target ); ?>"><?php echo $title; ?></a>
-	</div><?php echo $this->endBlockComment( $this->getShortcode() ) . "\n";
+	</div>

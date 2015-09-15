@@ -48,21 +48,24 @@ var vc_am = {
 	wp.shortcode.atmPreview = function ( options ) {
 		return new wp.shortcode( options ).taggedString();
 	};
-	var message_timer, show_message = function ( text, type ) {
-			if ( message_timer ) {
-				window.clearTimeout( message_timer );
-				$( '.vc_settings-automapper' ).remove();
-				message_timer = false;
-			}
-			var $message = $( '<div class="vc_atm-message updated' + (type ? ' vc_message-' + type : '') + '" style="display: none;"></div>' );
-			$message.text( text );
-			$message.prependTo( $( '#vc_settings-automapper' ) ).fadeIn( 500, function () {
-				var $message = $( this );
-				window.setTimeout( function () {
-					$message.remove();
-				}, 2000 );
-			} );
-		},
+
+	function show_message( text, type ) {
+		if ( message_timer ) {
+			window.clearTimeout( message_timer );
+			$( '.vc_settings-automapper' ).remove();
+			message_timer = false;
+		}
+		var $message = $( '<div class="vc_atm-message updated' + (type ? ' vc_message-' + type : '') + '" style="display: none;"></div>' );
+		$message.text( text );
+		$message.prependTo( $( '#vc_settings-automapper' ) ).fadeIn( 500, function () {
+			var $message = $( this );
+			window.setTimeout( function () {
+				$message.remove();
+			}, 2000 );
+		} );
+	}
+
+	var message_timer,
 		template_options = {
 			evaluate: /<#([\s\S]+?)#>/g,
 			interpolate: /\{\{\{([\s\S]+?)\}\}\}/g,
@@ -73,7 +76,7 @@ var vc_am = {
 			return string.charAt( 0 ).toUpperCase() + string.slice( 1 );
 		};
 
-	var showMessageMore = function ( text, typeClass, timeout, remove ) {
+	function showMessageMore( text, typeClass, timeout, remove ) {
 		if ( remove ) {
 			$( '.vc_atm-message' ).remove();
 		}
@@ -85,31 +88,31 @@ var vc_am = {
 			}, timeout );
 		}
 		return $message;
-	};
+	}
 
-	var showValidationError = function ( text, $el ) {
+	function showValidationError( text, $el ) {
 		if ( _.isUndefined( $el ) || ! $el.length ) {
 			$el = $( '.tab_intro' );
 		}
 		showMessageMore( text, 'error', undefined, true ).insertBefore( $el ).fadeIn( 500 );
-	};
+	}
 
 	var request_url = window.ajaxurl + '?vc_action=automapper',
 		sync_callback = function ( method, model, options ) {
 			var data;
-			if ( method === 'create' ) {
+			if ( 'create' === method ) {
 				model.set( 'id', window.vc_guid() );
 				data = {
 					vc_action: 'create',
 					data: model.toJSON()
 				};
-			} else if ( method === 'update' ) {
+			} else if ( 'update' === method ) {
 				data = {
 					vc_action: 'update',
 					id: model.get( 'id' ),
 					data: model.toJSON()
 				};
-			} else if ( method === 'delete' ) {
+			} else if ( 'delete' === method ) {
 				data = {
 					vc_action: 'delete',
 					id: model.get( 'id' )
@@ -127,12 +130,12 @@ var vc_am = {
 				context: this
 			} ).done( function ( data ) {
 				var result = model;
-				if ( data && method === 'read' ) {
+				if ( data && 'read' === method ) {
 					result = data;
 				}
 				// Response
 				if ( result ) {
-					(method === 'read') && options.success( result );
+					('read' === method) && options.success( result );
 				} else {
 					options.error( "Not found" );
 				}
@@ -215,9 +218,9 @@ var vc_am = {
 			];
 			_.each( attrs.params, function ( param ) {
 				_.each( fields_required, function ( field ) {
-					if ( param[ field ] === '' ) {
+					if ( '' === param[ field ] ) {
 						result = window.i18nLocaleVcAutomapper.error_enter_required_fields // '';
-					} else if ( field == 'param_name' && ! param[ field ].match( /^[a-z0-9_]+$/g ) ) {
+					} else if ( 'param_name' === field && ! param[ field ].match( /^[a-z0-9_]+$/g ) ) {
 						result = window.i18nLocaleVcAutomapper.error_enter_required_fields;
 					}
 				}, this );
@@ -248,7 +251,6 @@ var vc_am = {
 		header_template_html: '<h4>{{ name }}<span class="in-widget-title"></span></h4>',
 		initialize: function () {
 			_.bindAll( this, 'removeEditForm' );
-			// this.listenTo(this.model, 'change', this.renderTitle);
 			this.listenTo( this.model, 'destroy', this.removeView );
 			this.model.view = this;
 		},
@@ -367,7 +369,6 @@ var vc_am = {
 			if ( this.isValid( data ) ) {
 				vc_am.shortcodes.create( data );
 				show_message( window.i18nLocaleVcAutomapper.new_shortcode_mapped, 'success' );
-				// new EditFormView({model: vc_am.shortcodes.last()}).render();
 				$( '.vc_atm-message' ).remove();
 				vc_am.shortcodes.last().view.edit();
 			} else {
@@ -411,7 +412,7 @@ var vc_am = {
 
 			$this = $( e.currentTarget );
 			$parent = $this.parents( '.vc_fields' );
-			if ( $this.val() === 'hidden' ) {
+			if ( 'hidden' === $this.val() ) {
 				$parent.find( '[name="heading"]' ).attr( 'disabled', true );
 				$parent.find( '[name="description"]' ).attr( 'disabled', true );
 			} else {
@@ -453,7 +454,7 @@ var vc_am = {
 				content = false,
 				params_to_string = {};
 			_.each( params, function ( value, key ) {
-				if ( value.param_name !== 'content' ) {
+				if ( 'content' !== value.param_name ) {
 					params_to_string[ value.param_name ] = this.escapeParam( value.value );
 				} else {
 					content = value.value;
@@ -465,7 +466,7 @@ var vc_am = {
 				tag: data.tag,
 				attrs: params_to_string,
 				content: content,
-				type: content === false ? 'single' : ''
+				type: false === content ? 'single' : ''
 			} );
 		},
 		setPreview: function () {
@@ -513,13 +514,13 @@ var vc_am = {
 			];
 			_.each( attrs.params, function ( param, index ) {
 				var $field_el = $( '#vc_atm-params-list [name=param_name]:eq(' + index + ')' );
-				if ( param.param_name === 'content' && ! $field_el.data( 'system' ) ) {
+				if ( 'content' === param.param_name && ! $field_el.data( 'system' ) ) {
 					result = window.i18nLocaleVcAutomapper.error_content_param_not_manually;
 					$field_el.addClass( 'vc_error' );
 					$field_el.closest( '.vc_param-field' ).addClass( 'form-invalid' );
 					return;
 				}
-				if ( _.isBoolean( added_param_names[ param.param_name ] ) && added_param_names[ param.param_name ] == true ) {
+				if ( _.isBoolean( added_param_names[ param.param_name ] ) && true == added_param_names[ param.param_name ] ) {
 					$field_el.addClass( 'vc_error' );
 					$field_el.closest( '.vc_param-field' ).addClass( 'form-invalid' );
 					if ( ! result ) {
@@ -529,7 +530,7 @@ var vc_am = {
 				}
 				added_param_names[ param.param_name ] = true;
 				_.each( fields_required, function ( field ) {
-					if ( (param.type !== 'hidden' && param[ field ] === '') || (param.type === 'hidden' && field !== 'heading' && param[ field ] === '') ) {
+					if ( ('hidden' !== param.type && '' === param[ field ]) || ('hidden' === param.type && 'heading' !== field && '' === param[ field ]) ) {
 						$( '#vc_atm-params-list [name=' + field + ']:eq(' + index + ')' )
 							.addClass( 'vc_error' )
 							.closest( '.vc_param-field' )
@@ -537,7 +538,7 @@ var vc_am = {
 						if ( ! result ) {
 							result = window.i18nLocaleVcAutomapper.error_enter_required_fields;
 						}
-					} else if ( field == 'param_name' && ! param[ field ].match( /^[a-z0-9_]+$/g ) ) {
+					} else if ( 'param_name' === field && ! param[ field ].match( /^[a-z0-9_]+$/g ) ) {
 						$field_el
 							.addClass( 'vc_error' )
 							.closest( '.vc_param-field' )
@@ -552,7 +553,7 @@ var vc_am = {
 		},
 		setContentParam: function ( e ) {
 			var $control = $( e.currentTarget );
-			if ( $control.is( ':checked' ) ) {
+			if ( $control[0].checked ) {
 				this.addParamField( {
 					type: 'textarea',
 					heading: 'Content',
@@ -570,7 +571,7 @@ var vc_am = {
 			$( '#vc_atm-params-list' ).empty();
 			_.each( this.model.get( 'params' ), function ( param ) {
 				this.addParamField( param );
-				if ( param.param_name === 'content' ) {
+				if ( 'content' === param.param_name ) {
 					$( '#vc_atm-is-container' ).prop( 'checked', true );
 				}
 			}, this );
@@ -599,7 +600,7 @@ var vc_am = {
 			$( '.vc_param-name[value="' + name + '"]' ).parents( '.vc_param' ).remove();
 		},
 		addParamField: function ( attr ) {
-			var $block = $( '<div class="vc_param wpb_vc_row' + ( attr.param_name === 'content' ? ' vc_content' : '' ) + '"/>' ).appendTo( '#vc_atm-params-list' );
+			var $block = $( '<div class="vc_param wpb_vc_row' + ( 'content' === attr.param_name ? ' vc_content' : '' ) + '"/>' ).appendTo( '#vc_atm-params-list' );
 			$block.html( _.template( this.param_template_html, attr, template_options ) );
 		},
 		setParamSorting: function () {
@@ -644,7 +645,7 @@ var vc_am = {
 			_.bindAll( this, 'setPreview' );
 		},
 		render: function () {
-			var params, content,
+			var params,
 				parent = this.model.view;
 			params = this.model.get( 'params' );
 			EditFormView.__super__.render.call( this );
@@ -712,7 +713,7 @@ var vc_am = {
 		},
 		create: function ( e ) {
 			e && e.preventDefault && e.preventDefault();
-			if ( ! vc_am.current_form || vc_am.current_form.getType() !== 'create' ) {
+			if ( ! vc_am.current_form || 'create' !== vc_am.current_form.getType() ) {
 				this.addFormView = new AddFormView().render();
 			}
 		},

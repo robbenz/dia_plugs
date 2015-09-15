@@ -40,7 +40,7 @@
 			return false !== that.$element.data( 'vcUseCache' );
 		};
 
-		if ( undefined === this.useCacheFlag ) {
+		if ( 'undefined' === typeof(this.useCacheFlag) ) {
 			this.useCacheFlag = useCache();
 		}
 
@@ -56,7 +56,7 @@
 			return this.findContainer();
 		}
 
-		if ( undefined === this.$container ) {
+		if ( 'undefined' === typeof(this.$container) ) {
 			this.$container = this.findContainer();
 		}
 
@@ -107,7 +107,7 @@
 			return findSelector();
 		}
 
-		if ( undefined === this.selector ) {
+		if ( 'undefined' === typeof(this.selector) ) {
 			this.selector = findSelector();
 		}
 
@@ -126,7 +126,7 @@
 			return this.getContainer().find( selector );
 		}
 
-		if ( undefined === this.$target ) {
+		if ( 'undefined' === typeof(this.$target) ) {
 			this.$target = this.getContainer().find( selector );
 		}
 
@@ -151,7 +151,7 @@
 
 				accordion = $that.data( 'vc.accordion' );
 
-				if ( undefined === accordion ) {
+				if ( 'undefined' === typeof(accordion) ) {
 					$that.vcAccordion();
 					accordion = $that.data( 'vc.accordion' );
 				}
@@ -169,7 +169,7 @@
 			return filterElements();
 		}
 
-		if ( undefined === this.$relatedAccordion ) {
+		if ( 'undefined' === typeof(this.$relatedAccordion) ) {
 			this.$relatedAccordion = filterElements();
 		}
 
@@ -182,7 +182,7 @@
 	 */
 	Tabs.prototype.triggerEvent = function ( event ) {
 		var $event;
-		if ( 'string' === typeof event ) {
+		if ( 'string' === typeof(event) ) {
 			$event = $.Event( event );
 			this.$element.trigger( $event );
 		}
@@ -200,7 +200,7 @@
 			return $this.closest( this.tabSelector );
 		}
 
-		if ( undefined === this.$targetTab ) {
+		if ( 'undefined' === typeof(this.$targetTab) ) {
 			this.$targetTab = $this.closest( this.tabSelector );
 		}
 
@@ -260,7 +260,7 @@
 				data = new Tabs( $this, $.extend( true, {}, options ) );
 				$this.data( 'vc.tabs', data );
 			}
-			if ( 'string' === typeof action ) {
+			if ( 'string' === typeof(action) ) {
 				data[ action ].apply( data, args );
 			}
 		} );
@@ -292,7 +292,7 @@
 		var caller;
 		caller = $( e.target ).data( 'vc.accordion' );
 
-		if ( undefined === caller.getRelatedTab ) {
+		if ( 'undefined' === typeof(caller.getRelatedTab) ) {
 			/**
 			 * Get related tab from accordion
 			 * @returns {*}
@@ -307,7 +307,7 @@
 						$this = $( this );
 
 						tab = $this.data( 'vc.accordion' );
-						if ( undefined === tab ) {
+						if ( 'undefined' === typeof(tab) ) {
 							$this.vcAccordion();
 						}
 						tab = $this.data( 'vc.accordion' );
@@ -322,7 +322,7 @@
 					return findTargets();
 				}
 
-				if ( undefined === caller.relatedTab ) {
+				if ( 'undefined' === typeof(caller.relatedTab) ) {
 					caller.relatedTab = findTargets();
 				}
 

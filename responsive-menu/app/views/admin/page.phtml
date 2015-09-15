@@ -51,6 +51,62 @@
         vertical-align: top;
     }
 
+    table td .pro-option-inner
+    {
+        background: #de4b42;
+        color: white;
+        opacity: 0.8;
+        padding: 15px;
+        position: relative;
+        margin: 15px 0;
+        overflow: hidden;
+    }
+
+    table.pro-option-table
+    {
+        position: relative;
+    }
+
+    table.pro-option-table .pro-option-overlay,
+    table td.pro-option .pro-option-overlay
+    {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba( 1, 1, 1, 0.6 );
+        height: 0;
+        overflow: hidden;
+    }
+
+    table.pro-option-table:hover .pro-option-overlay,
+    table td.pro-option:hover .pro-option-overlay
+    {
+        height: 100%;
+    }
+
+    table.pro-option-table .pro-option-overlay a,
+    table td.pro-option .pro-option-overlay a
+    {
+        position: absolute;
+        left: 30%;
+        display: block;
+        right: 30%;
+        padding: 15px 0;
+        width: 40%;
+        top: 30%;
+        background: #DE4B42;
+        font-weight: bold;
+        font-size: 14px;
+        border: 1px solid white;
+        border-radius: 3px;
+        cursor: pointer;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+    }
+
     .default
     {
         font-size: 8px;
@@ -129,11 +185,19 @@
         width: 98%;
     }
 
+   table.pro-option-table .pro-option-overlay,
+    table td.pro-option .pro-option-overlay
+    {
+        transition: 0.5s all;
+    }
+
 </style>
 
 <script>
 
     jQuery(document).ready(function ($) {
+
+        $( '.pro-option-inner, .pro-option-table' ).append( '<div class="pro-option-overlay"><a target="_blank" href="http://responsive.menu/pricing/">Upgrade now</a>');
 
         $('.colourPicker').wpColorPicker( );
 
@@ -405,8 +469,30 @@
                     </td>
                 </tr>
 
-
             </table>
+
+            <h3><?php _e( 'Mobile devices', 'responsive-menu' ); ?></h3>
+            
+            <table>
+                <tr>
+                    <td class="pro-option">
+                    <div class="pro-option-inner">
+                        <h4>
+                            <?php _e( 'Only use Responsive Menu on mobile devices', 'responsive-menu'); ?>
+                        </h4> 
+                        <h5>
+                            <?php _e('This will ignore all breakpoint width settings and show the menu only on mobile devices using the wp_is_mobile() function', 'responsive-menu'); ?>
+                        </h5> 
+
+                        <input 
+                            type="checkbox" 
+                            name="use_only_on_mobile" 
+                            />
+                            </div>
+                    </td>
+                </tr>
+            </table>
+
         </div>
 
         <div class="look-and-feel">
@@ -759,7 +845,7 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="2">
+                <td>
 
                     <?php // Choose Theme Location Menu add by mkdgs   ?>  
 
@@ -796,6 +882,23 @@
                     <?php endif; ?>
 
                 </td>
+
+                <td class="pro-option">
+
+                <div class="pro-option-inner">
+
+                   <h4><?php _e('Set auto height on menu', 'responsive-menu'); ?></h4> 
+
+                    <h5><?php _e('Tick this if you would like the menu to have the height be automatically sized', 'responsive-menu'); ?></h5>
+
+                    <input 
+                        type="checkbox" 
+                        />
+
+                    </div>
+
+                </td>
+
             </tr>
             <tr>
                 <td>
@@ -1592,11 +1695,26 @@
 
                     </td>
                 </tr> 
+                                <tr>
+                    <td class="pro-option">
+                    <div class="pro-option-inner">
+                        <h4><?php _e('Word Wrap', 'responsive-menu'); ?></h4> 
+
+                        <h5><?php _e('Tick if you would like the link items to wrap around', 'responsive-menu'); ?></h5>
+
+                        <input 
+                            type="checkbox"
+                            />
+</div>
+                    </td>
+                   <td></td>
+                  </tr>
             </table>
 
 
 
             <table>
+
                 <tr>
                     <td>
 
@@ -1633,6 +1751,25 @@
                             </option>  
 
                         </select>
+
+                    </td>                
+                </tr>  
+
+                <tr>
+                    <td class="pro-option">
+                        <div class="pro-option-inner">
+
+                        <h4><?php _e('Search Box Text', 'responsive-menu'); ?></h4> 
+
+                        <h5><?php _e('This is the placeholder text that shows in the search box', 'responsive-menu'); ?></h5>
+
+                        <input 
+                            type="text" 
+                            value="Search" 
+                            />
+                        </div>
+                    </td>
+                    <td>
 
                     </td>                
                 </tr>  
@@ -1715,9 +1852,16 @@
 
 
                     </td>
-                    <td>
+                    <td class="pro-option">
+                        <div class="pro-option-inner">
+                        <h4><?php _e('Disable background scrolling when Menu is active', 'responsive-menu'); ?></h4> 
 
+                        <h5><?php _e('This will create a background overlay and disable scrolling', 'responsive-menu'); ?></h5>
 
+                        <input 
+                            type="checkbox" 
+                            />
+                            </div>
 
                     </td>                
                 </tr>  
@@ -1890,27 +2034,189 @@
 
 	<div class="single-menu">
 	
-		<table>
-			<tr>
-				<td><br /><?php _e( 'This feature is only available in the pro version, please click below to upgrade', 'responsive-menu-pro' ); ?>:</td>
-			</tr>
-			<tr>
-				<td><br /><a target="_blank" class="button" href="http://responsive.menu/pricing/"><?php _e( 'Upgrade now' ); ?></a></td>
-			</tr>
-		</table>		
+    <h3><?php _e('Use Responsive Menu as your only site menu', 'responsive-menu'); ?></h3>
+
+            <table class="pro-option-table">
+
+                <tr>
+                    <td>
+                        <h4>
+                            <?php _e('Turn on single menu option', 'responsive-menu'); ?>
+                        </h4> 
+                        <h5>
+                            <?php _e('This will replace your whole site menu and just use this plugin to control the menu on your whole site.', 'responsive-menu'); ?>
+                            <h4 class="divider">
+                                <?php _e('Note', 'responsive-menu'); ?>: 
+                                <?php _e('You must not be using the mobile only option and must use the shortcode for this to work', 'responsive-menu-pro'); ?>.
+                            </h4>
+                        </h5> 
+
+                        <input 
+                            type="checkbox" 
+                            />
+
+                    </td>
+                </tr>
+                <tr>
+                <td>                    
+
+                    <h4><?php _e('Menu Height', 'responsive-menu'); ?></h4> 
+
+                    <h5><?php _e('Enter the height you wish for the menu and links', 'responsive-menu'); ?>.</h5>
+
+                    <input 
+                        type="text"  
+                        class="numberInput" 
+
+                </td>
+                <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        
+                        <h4><?php _e('Single Menu Link Colour', 'responsive-menu'); ?></h4> 
+    
+                        <h5><?php _e('This is the colour of the single menu links', 'responsive-menu'); ?></h5>
+    
+                        <input 
+                            type="text" 
+                            class="colourPicker" 
+                            />
+                    </td>
+                    <td>
+                        
+                        <h4><?php _e('Single Menu Link Hover Colour', 'responsive-menu'); ?></h4> 
+    
+                        <h5><?php _e('This is the hover colour of the single menu links', 'responsive-menu'); ?></h5>
+    
+                        <input 
+                            type="text" 
+                            class="colourPicker" 
+                            />
+                    </td>
+               </tr>
+            </table>
 		
 	</div>
 	
 	<div class="themes">
 	
-		<table>
-			<tr>
-				<td><br /><?php _e( 'This feature is only available in the pro version, please click below to upgrade', 'responsive-menu-pro' ); ?>:</td>
-			</tr>
-			<tr>
-				<td><br /><a target="_blank" class="button" href="http://responsive.menu/pricing/"><?php _e( 'Upgrade now' ); ?></a></td>
-			</tr>
-		</table>		
+    <h3><?php _e( 'Header Bar', 'responsive-menu' ); ?></h3>
+    
+        <table class="pro-option-table">
+
+            <tr>
+                <td>
+                    <h4>
+                        <?php _e( 'Create header bar for use with Responsive Menu', 'responsive-menu' ); ?>
+                    </h4> 
+                    <h5>
+                        <?php _e('This will create a sticky header bar that follows you down the page with the menu and logo', 'responsive-menu'); ?>
+                    </h5> 
+
+                    <input 
+                        type="checkbox" 
+                        />
+
+                </td>
+            </tr>
+            
+            <tr>
+                <td><h4><?php _e( 'Header Bar Logo/HTML' ); ?></h4></td>
+            </tr>
+            <tr>
+                <td>
+                    <h4><?php _e('Header Bar Logo', 'responsive-menu'); ?></h4> 
+
+                    <h5><?php _e('This is the header bar logo that is displayed on the bar', 'responsive-menu'); ?></h5>
+
+                    <input 
+                        type="text" 
+                        id="header_bar_logo" 
+                        />
+
+                    <input 
+                        type="button"
+                        value="<?php _e('Upload Image', 'responsive-menu'); ?>" 
+                        class="button RMImageButton" 
+                        for="header_bar_logo"
+                        />
+
+                </td>
+                
+                <td>
+                    <h4><?php _e('Header Bar HTML Content', 'responsive-menu'); ?></h4> 
+
+                    <h5><?php _e('You can set HTML in the header bar instead of the logo', 'responsive-menu'); ?></h5>
+
+                    <textarea></textarea>
+
+                </td>
+                
+            </tr>
+            
+            <tr>
+                <td><h4><?php _e( 'Size & Colour Settings' ); ?></h4></td>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <h4><?php _e('Header Bar Height', 'responsive-menu'); ?></h4> 
+                    <h5><?php _e('This is the header bar height', 'responsive-menu'); ?></h5>
+
+                    <input 
+                        type="text"
+                        /> px
+
+                </td>
+                
+                <td>
+                    <h4><?php _e('Header Bar Background Colour', 'responsive-menu'); ?></h4> 
+
+                    <h5><?php _e('This is the background colour for the header bar', 'responsive-menu'); ?></h5>
+
+                    <input 
+                        type="text" 
+                        class="colourPicker" 
+                        />
+
+                </td>
+                
+            </tr>
+                                        
+        </table>        
+
+        <h3><?php _e( 'Themes', 'responsive-menu' ); ?></h3>
+        
+        <table class="pro-option-table">
+
+            <tr>
+                <td>
+                    <h4>
+                        <?php _e( 'Apply preset colour schemes to your Responsive Menu', 'responsive-menu' ); ?>
+                    </h4> 
+                    <h5>
+                        <?php _e('This will replace all your current colours only and will not touch other settings', 'responsive-menu'); ?>
+                    </h5> 
+
+                    <select name="theme">
+                        <option value="blue">Blue</option>
+                        <option value="red">Red</option>
+                        <option value="green">Green</option>
+                        <option value="yellow">Yellow</option>
+                        <option value="default">Default</option>
+                    </select>
+                    
+                    <input 
+                        type="submit" 
+                        class="button"
+                        value="Update Theme"
+                        />
+
+                </td>
+            </tr>
+                
+        </table>    	
 		
 	</div>
 

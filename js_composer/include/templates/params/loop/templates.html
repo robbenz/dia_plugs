@@ -14,14 +14,14 @@
     <div class="vc_row">
         <# if(vc.loop_field_not_hidden('size', loop)) { #>
             <div class="vc_col-sm-4">
-                <label class="wpb_element_label"><?php _e('Post Count', 'js_composer') ?></label>
+                <label class="wpb_element_label"><?php _e('Post count', 'js_composer') ?></label>
                 {{{ vc.loop_partial('text-input', 'size', loop) }}}
                 <span class="description clear"><?php _e('How many teasers to show? Enter number or word "All".', 'js_composer'); ?></span>
             </div>
             <# } #>
                 <# if(vc.loop_field_not_hidden('order_by', loop)) { #>
                     <div class="vc_col-sm-4">
-                        <label class="wpb_element_label"><?php _e('Order By', 'js_composer') ?></label>
+                        <label class="wpb_element_label"><?php _e('Order by', 'js_composer') ?></label>
                         {{{ vc.loop_partial('dropdown', 'order_by', loop) }}}
                         <span class="description clear"><?php echo sprintf(__('Select how to sort retrieved posts. More at %s.', 'js_composer'), '<a href="http://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters" target="_blank">
                             WordPress codex page</a>'); ?></span>
@@ -29,7 +29,7 @@
                     <# } #>
                         <# if(vc.loop_field_not_hidden('order', loop)) { #>
                             <div class="vc_col-sm-4">
-                                <label class="wpb_element_label"><?php _e('Order', 'js_composer') ?></label>
+                                <label class="wpb_element_label"><?php _e('Sort order', 'js_composer') ?></label>
                                 {{{ vc.loop_partial('dropdown', 'order', loop) }}}
                                 <span class="description clear"><?php _e('Designates the ascending or descending order.', 'js_composer'); ?></span>
                             </div>

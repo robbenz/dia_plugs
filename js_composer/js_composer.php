@@ -3,7 +3,7 @@
 Plugin Name: WPBakery Visual Composer
 Plugin URI: http://vc.wpbakery.com
 Description: Drag and drop page builder for WordPress. Take full control over your WordPress site, build any layout you can imagine – no programming knowledge required.
-Version: 4.6.2
+Version: 4.7
 Author: Michael M - WPBakery.com
 Author URI: http://wpbakery.com
 */
@@ -19,7 +19,7 @@ if ( ! defined( 'WPB_VC_VERSION' ) ) {
 	/**
 	 *
 	 */
-	define( 'WPB_VC_VERSION', '4.6.2' );
+	define( 'WPB_VC_VERSION', '4.7' );
 }
 
 /**
@@ -80,15 +80,6 @@ class Vc_Manager {
 	 * @var string
 	 */
 	private $custom_user_templates_dir = false;
-	/**
-	 * Is used by vc shortcodes generator by searching custom
-	 * @todo check for usage, looks like no more used since 4.4
-	 * @since 4.2
-	 * @deprecated
-	 *
-	 * @var bool
-	 */
-	private $use_custom_user_template_dir = false;
 
 	/**
 	 * Set updater mode
@@ -116,7 +107,7 @@ class Vc_Manager {
 
 	/**
 	 * Core singleton class
-	 * @var Singleton self - pattern realization
+	 * @var self - pattern realization
 	 */
 	private static $_instance;
 
@@ -145,7 +136,7 @@ class Vc_Manager {
 		 * PARAMS_DIR      - complex params for shortcodes editor form.
 		 * UPDATERS_DIR    - automatic notifications and updating classes.
 		 */
-		$this->setPaths( Array(
+		$this->setPaths( array(
 			'APP_ROOT' => $dir,
 			'WP_ROOT' => preg_replace( '/$\//', '', ABSPATH ),
 			'APP_DIR' => basename( $dir ),
@@ -161,7 +152,7 @@ class Vc_Manager {
 			'EDITORS_DIR' => $dir . '/include/classes/editors',
 			'PARAMS_DIR' => $dir . '/include/params',
 			'UPDATERS_DIR' => $dir . '/include/classes/updaters',
-			'VENDORS_DIR' => $dir . '/include/classes/vendors'
+			'VENDORS_DIR' => $dir . '/include/classes/vendors',
 		) );
 		// Load API
 		require_once $this->path( 'HELPERS_DIR', 'helpers_factory.php' );
@@ -172,6 +163,7 @@ class Vc_Manager {
 		require_once $this->path( 'HELPERS_DIR', 'helpers_api.php' );
 		require_once $this->path( 'HELPERS_DIR', 'filters.php' );
 		require_once $this->path( 'PARAMS_DIR', 'params.php' );
+		require_once $this->path( 'AUTOLOAD_DIR', 'vc-shortcode-autoloader.php' );
 		require_once $this->path( 'SHORTCODES_DIR', 'shortcodes.php' );
 		// Add hooks
 		add_action( 'plugins_loaded', array( &$this, 'pluginsLoaded' ), 9 );
@@ -342,7 +334,7 @@ class Vc_Manager {
 	 */
 	protected function setMode() {
 		/**
-		 * @todo: Create another system (When ajax rebuild).
+		 * TODO: Create another system (When ajax rebuild).
 		 * Use vc_action param to define mode.
 		 * 1. admin_frontend_editor - set by editor or request param
 		 * 2. admin_backend_editor - set by editor or request param
@@ -362,7 +354,7 @@ class Vc_Manager {
 				$this->mode = 'admin_page';
 			}
 		} else {
-			if ( isset( $_GET['vc_editable'] ) && $_GET['vc_editable'] === 'true' ) {
+			if ( isset( $_GET['vc_editable'] ) && 'true' === $_GET['vc_editable'] ) {
 				$this->mode = 'page_editable';
 			} else {
 				$this->mode = 'page';
@@ -528,7 +520,7 @@ class Vc_Manager {
 		if ( is_null( $this->is_network_plugin ) ) {
 			// Check is VC as network plugin
 			if ( is_multisite() && ( is_plugin_active_for_network( 'js_composer/js_composer.php' )
-			                         || is_network_only_plugin( 'js_composer/js_composer.php' ) )
+					|| is_network_only_plugin( 'js_composer/js_composer.php' ) )
 			) {
 				$this->setAsNetworkPlugin( true );
 			}
@@ -601,7 +593,7 @@ class Vc_Manager {
 	 * @return string
 	 */
 	public function getShortcodesTemplateDir( $template ) {
-		return $this->custom_user_templates_dir !== false ? $this->custom_user_templates_dir . '/' . $template : locate_template( 'vc_templates' . '/' . $template );
+		return $this->custom_user_templates_dir !== false ? $this->custom_user_templates_dir . '/' . $template : locate_template( 'vc_templates/' . $template );
 	}
 
 	/**
@@ -771,7 +763,7 @@ class Vc_Manager {
 			require_once $this->path( 'UPDATERS_DIR', 'class-vc-updater.php' );
 			$updater = new Vc_Updater();
 			require_once vc_path_dir( 'UPDATERS_DIR', 'class-vc-updating-manager.php' );
-			$updater->setUpdateManager( new Vc_Updating_Manager ( WPB_VC_VERSION, $updater->versionUrl(), vc_plugin_name() ) );
+			$updater->setUpdateManager( new Vc_Updating_Manager( WPB_VC_VERSION, $updater->versionUrl(), vc_plugin_name() ) );
 			$this->factory['updater'] = $updater;
 			do_action( 'vc_after_init_updater' );
 		}

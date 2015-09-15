@@ -115,7 +115,7 @@ Class Vc_Navbar_Frontend extends Vc_Navbar {
 					<button type="button" class="vc_btn vc_btn-primary vc_btn-sm vc_navbar-btn vc_btn-save"
 					        id="vc_button-save-as-pending"
 					        title="<?php esc_attr_e( "Save as Pending", 'js_composer' ) ?>"><?php _e( 'Save as Pending', 'js_composer' ) ?></button>
-				<?php endif; ?>
+				<?php endif ?>
 				<?php if ( $can_publish ) : ?>
 					<button type="button" class="vc_btn vc_btn-primary vc_btn-sm vc_navbar-btn vc_btn-save"
 					        id="vc_button-update" title="<?php esc_attr_e( "Publish", 'js_composer' ) ?>"
@@ -124,12 +124,12 @@ Class Vc_Navbar_Frontend extends Vc_Navbar {
 					<button type="button" class="vc_btn vc_btn-primary vc_btn-sm vc_navbar-btn vc_btn-save"
 					        id="vc_button-update" title="<?php esc_attr_e( "Submit for Review", 'js_composer' ) ?>"
 					        data-change-status="pending"><?php _e( 'Submit for Review', 'js_composer' ) ?></button>
-				<?php endif; ?>
+				<?php endif ?>
 			<?php else: ?>
 				<button type="button" class="vc_btn vc_btn-primary vc_btn-sm vc_navbar-btn vc_btn-save"
 				        id="vc_button-update"
 				        title="<?php esc_attr_e( "Update", 'js_composer' ) ?>"><?php _e( 'Update', 'js_composer' ) ?></button>
-			<?php endif; ?>
+			<?php endif ?>
 		</li>
 		<?php
 		$output = ob_get_contents();

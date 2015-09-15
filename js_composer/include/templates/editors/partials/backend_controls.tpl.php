@@ -2,7 +2,7 @@
 	<div class="vc_controls-<?php echo $position ?>">
 		<a class="<?php echo esc_attr( $name_css_class ) ?>">
 				<span class="vc_btn-content"
-				      title="<?php printf( __( 'Drag to move %s', 'js_composer' ), $name ) ?>"><?php echo __( $name, 'js_composer' ); ?></span>
+				      title="<?php printf( __( 'Drag to move %s', 'js_composer' ), $name ) ?>"><?php echo $name ?></span>
 		</a>
 		<?php if ( vc_mapper()->userHasAccess( $shortcode ) ): ?>
 			<?php foreach ( $controls as $control ): ?>
@@ -22,8 +22,8 @@
 					<a class="vc_control-btn vc_control-btn-delete" href="#"
 					   title="<?php printf( __( 'Delete %s', 'js_composer' ), $name ) ?>"><span
 							class="vc_btn-content"><span class="icon"></span></span></a>
-				<?php endif; ?>
+				<?php endif ?>
 			<?php endforeach; ?>
-		<?php endif; ?>
+		<?php endif ?>
 	</div>
 </div>

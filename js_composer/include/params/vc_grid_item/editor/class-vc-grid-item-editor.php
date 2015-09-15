@@ -15,17 +15,8 @@ class Vc_Grid_Item_Editor extends Vc_Backend_Editor {
 		add_action( 'admin_print_scripts-post.php', array( &$this, 'printScriptsMessages' ) );
 		add_action( 'admin_print_scripts-post-new.php', array( &$this, 'printScriptsMessages' ) );
 		add_action( 'vc_templates_render_backend_template', array( &$this, 'loadPredefinedTemplate' ), 10, 2 );
-		// add_action( 'vc_after_init', array(&$this, 'mapShortcodes'));
 	}
-	/*
-	public function mapShortcodes() {
-		if(vc_request_param('vc_grid_item_editor') === 'true') {
-			require_once vc_path_dir( 'EDITORS_DIR', 'popups/class-vc-templates-editor-grid-item.php' );
-			$templates_editor = new Vc_Templates_Editor_Grid_Item();
-			$templates_editor->init();
-		}
-	}
-	*/
+
 	/**
 	 * Create post type and new item in the admin menu.
 	 * @return void
@@ -171,7 +162,7 @@ class Vc_Grid_Item_Editor extends Vc_Backend_Editor {
 	}
 
 	public function loadPredefinedTemplate( $template_id, $template_type ) {
-		if ( 'grid_templates' == $template_type ) {
+		if ( 'grid_templates' === $template_type ) {
 			ob_start();
 			$this->templatesEditor()->load( $template_id );
 

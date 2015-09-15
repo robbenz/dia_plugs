@@ -32,7 +32,7 @@ if ( 'yes' === $atts['show_filter'] && ! empty( $filter_terms ) ):
 			     . ' data-vc-grid-filter-value=".vc_grid-term-'
 			     . $term->term_id
 			     . '">';
-			esc_attr_e( $term->name );
+			echo esc_attr( $term->name );
 			echo '</span><!-- fix whitespace
 				--></li>';
 		endforeach;

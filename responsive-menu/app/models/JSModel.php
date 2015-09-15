@@ -463,6 +463,8 @@ class RM_JSModel extends RM_BaseModel {
 
             \$RMjQuery( window ).resize( function() { 
 
+            	\$RMjQuery( '#responsive-menu' ).stop( true, true );
+            	
                 $setHeight
 
                 if( \$RMjQuery( window ).width() > $breakpoint ) { 

@@ -61,17 +61,17 @@ vc_map( array(
 			'param_name' => 'spacing',
 			'value' => array(
 				__( 'None', 'js_composer' ) => '',
-				__( '1px', 'js_composer' ) => '1',
-				__( '2px', 'js_composer' ) => '2',
-				__( '3px', 'js_composer' ) => '3',
-				__( '4px', 'js_composer' ) => '4',
-				__( '5px', 'js_composer' ) => '5',
-				__( '10px', 'js_composer' ) => '10',
-				__( '15px', 'js_composer' ) => '15',
-				__( '20px', 'js_composer' ) => '20',
-				__( '25px', 'js_composer' ) => '25',
-				__( '30px', 'js_composer' ) => '30',
-				__( '35px', 'js_composer' ) => '35',
+				'1px' => '1',
+				'2px' => '2',
+				'3px' => '3',
+				'4px' => '4',
+				'5px' => '5',
+				'10px' => '10',
+				'15px' => '15',
+				'20px' => '20',
+				'25px' => '25',
+				'30px' => '30',
+				'35px' => '35',
 			),
 			'heading' => __( 'Spacing', 'js_composer' ),
 			'description' => __( 'Select tour spacing.', 'js_composer' ),
@@ -82,17 +82,17 @@ vc_map( array(
 			'param_name' => 'gap',
 			'value' => array(
 				__( 'None', 'js_composer' ) => '',
-				__( '1px', 'js_composer' ) => '1',
-				__( '2px', 'js_composer' ) => '2',
-				__( '3px', 'js_composer' ) => '3',
-				__( '4px', 'js_composer' ) => '4',
-				__( '5px', 'js_composer' ) => '5',
-				__( '10px', 'js_composer' ) => '10',
-				__( '15px', 'js_composer' ) => '15',
-				__( '20px', 'js_composer' ) => '20',
-				__( '25px', 'js_composer' ) => '25',
-				__( '30px', 'js_composer' ) => '30',
-				__( '35px', 'js_composer' ) => '35',
+				'1px' => '1',
+				'2px' => '2',
+				'3px' => '3',
+				'4px' => '4',
+				'5px' => '5',
+				'10px' => '10',
+				'15px' => '15',
+				'20px' => '20',
+				'25px' => '25',
+				'30px' => '30',
+				'35px' => '35',
 			),
 			'heading' => __( 'Gap', 'js_composer' ),
 			'description' => __( 'Select tour gap.', 'js_composer' ),
@@ -137,17 +137,17 @@ vc_map( array(
 			'param_name' => 'autoplay',
 			'value' => array(
 				__( 'None', 'js_composer' ) => 'none',
-				__( '1', 'js_composer' ) => '1',
-				__( '2', 'js_composer' ) => '2',
-				__( '3', 'js_composer' ) => '3',
-				__( '4', 'js_composer' ) => '4',
-				__( '5', 'js_composer' ) => '5',
-				__( '10', 'js_composer' ) => '10',
-				__( '20', 'js_composer' ) => '20',
-				__( '30', 'js_composer' ) => '30',
-				__( '40', 'js_composer' ) => '40',
-				__( '50', 'js_composer' ) => '50',
-				__( '60', 'js_composer' ) => '60',
+				'1' => '1',
+				'2' => '2',
+				'3' => '3',
+				'4' => '4',
+				'5' => '5',
+				'10' => '10',
+				'20' => '20',
+				'30' => '30',
+				'40' => '40',
+				'50' => '50',
+				'60' => '60',
 			),
 			'std' => 'none',
 			'heading' => __( 'Autoplay', 'js_composer' ),
@@ -193,15 +193,21 @@ vc_map( array(
 			'param_name' => 'el_class',
 			'description' => __( 'If you wish to style particular content element differently, then use this field to add a class name and then refer to it in your css file.', 'js_composer' ),
 		),
+		array(
+			'type' => 'css_editor',
+			'heading' => __( 'CSS box', 'js_composer' ),
+			'param_name' => 'css',
+			'group' => __( 'Design Options', 'js_composer' )
+		),
 	),
 	'js_view' => 'VcBackendTtaTourView',
 	'custom_markup' => '
 <div class="vc_tta-container" data-vc-action="collapse">
 	<div class="vc_general vc_tta vc_tta-tabs vc_tta-color-backend-tabs-white vc_tta-style-flat vc_tta-shape-rounded vc_tta-spacing-1 vc_tta-tabs-position-left vc_tta-controls-align-left">
 		<div class="vc_tta-tabs-container">'
-		                   . '<ul class="vc_tta-tabs-list">'
-		                   . '<li class="vc_tta-tab" data-vc-tab data-vc-target-model-id="{{ model_id }}"><a href="javascript:;" data-vc-container=".vc_tta" data-vc-target="[data-model-id=\'{{ model_id }}\']" data-vc-target-model-id="{{ model_id }}" data-vc-tabs>{{ section_title }}</a></li>'
-		                   . '</ul>
+	                   . '<ul class="vc_tta-tabs-list">'
+	                   . '<li class="vc_tta-tab" data-vc-tab data-vc-target-model-id="{{ model_id }}"><a href="javascript:;" data-vc-container=".vc_tta" data-vc-target="[data-model-id=\'{{ model_id }}\']" data-vc-target-model-id="{{ model_id }}" data-vc-tabs>{{ section_title }}</a></li>'
+	                   . '</ul>
 		</div>
 		<div class="vc_tta-panels {{container-class}}">
 		  {{ content }}
@@ -213,7 +219,6 @@ vc_map( array(
 [vc_tta_section title="' . sprintf( "%s %d", __( 'Section', 'js_composer' ), 2 ) . '"][/vc_tta_section]
 	',
 	'admin_enqueue_js' => array(
-		vc_asset_url( 'lib/vc_accordion/vc-accordion.js' ),
-		vc_asset_url( 'lib/vc_tabs/vc-tabs.js' ),
-	),
+		vc_asset_url( 'lib/vc_tabs/vc-tabs.js' )
+	)
 ) );

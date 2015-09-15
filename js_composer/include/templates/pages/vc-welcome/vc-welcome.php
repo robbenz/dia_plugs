@@ -1,63 +1,59 @@
 <div class="vc_welcome-tab changelog">
-	<div class="vc_feature-section-teaser col">
+	<div class="vc_feature-section-teaser">
 		<div>
 			<img class="vc-featured-img" src="<?php echo vc_asset_url( 'vc/vc-welcome/screenshot.png' ); ?>"/>
 
-			<h3><?php _e( 'Complex Container Elements and Styling', 'js_composer' ); ?></h3>
+			<h3><?php _e( 'Faster and Beautiful Content Management', 'js_composer' ); ?></h3>
 
-			<p><?php _e( 'Visual Composer 4.6 offers complete rebuilt of complex content elements - Tabs, Tours and Accordions backed up by multiple styling and configuration options. New enhancements has been added to row element allowing to use video background and stretch row in height. Additional new elements and improvements for old elements in terms of design and styling continue the route set by Visual Composer in last few releases.
-', 'js_composer' ); ?></p>
+			<p><?php _e( 'Visual Composer version 4.7 has been focused on enhancing your beloved user interface in terms of design and performance. New fully resizable element parameter windows offers best possible content management experience you have been waiting for.', 'js_composer' ); ?></p>
+			<p><?php _e( 'Significantly improved performance allows take content management to the next level by reducing time you spend building layouts or adjusting elements. ', 'js_composer' ); ?></p>
 		</div>
 	</div>
 
-	<div class="vc_welcome-feature feature-section col three-col">
-		<div>
+	<div class="vc_welcome-feature feature-section vc_row">
+		<div class="vc_col-xs-4">
 			<img class="vc-img-center"
 			     src="<?php echo vc_asset_url( 'vc/vc-welcome/01.png' ); ?>"/>
-			<h4><?php _e( 'Tabs, Tours, Accordions', 'js_composer' ); ?></h4>
+			<h4><?php _e( 'Performance Improvement', 'js_composer' ); ?></h4>
 
-			<p><?php _e( 'Completely rebuilt Tabs, Tours and Accordions offers wide range of styling options and additional technical features like easy to use hash navigation. Control for styles, spaces, gaps and much more available out of the box.', 'js_composer' ); ?></p>
+			<p><?php _e( 'Thanks to intelligent initialization Visual Composer has become faster than ever. Experience advanced editing in no time.', 'js_composer' ); ?></p>
 		</div>
-		<div>
+		<div class="vc_col-xs-4">
 			<img class="vc-img-center"
 			     src="<?php echo vc_asset_url( 'vc/vc-welcome/02.png' ); ?>"/>
-			<h4><?php _e( 'Video and Full Height Container', 'js_composer' ); ?></h4>
+			<h4><?php _e( 'New User Interface', 'js_composer' ); ?></h4>
 
-			<p><?php _e( 'YouTube video background for row element allows building dynamic sites within minutes. Ability to stretch row in full height is a perfect solution for dividing content or grabbing attention.
-', 'js_composer' ); ?></p>
+			<p><?php _e( 'Based on the same beloved principles Visual Composer offers carefully crafted UI which will make your content management more intuitive.', 'js_composer' ); ?></p>
 		</div>
-		<div class="last-feature">
+		<div class="vc_col-xs-4">
 			<img class="vc-img-center"
 			     src="<?php echo vc_asset_url( 'vc/vc-welcome/03.png' ); ?>"/>
-			<h4><?php _e( 'Chart Elements', 'js_composer' ); ?></h4>
+			<h4><?php _e( 'Element Presets', 'js_composer' ); ?></h4>
 
-			<p><?php _e( 'Four new JS based chart elements: doughnut, pie, line and bar available out of the box. Smooth animation and styling options allows representation of complex data in easy way.', 'js_composer' ); ?></p>
+			<p><?php _e( 'Create element presets right in parameter window - no more need to constantly style same elements again and again.', 'js_composer' ); ?></p>
 		</div>
 	</div>
 
-	<div class="feature-section col three-col">
-		<div>
-			<h4><?php _e( 'Simplified Shortcodes', 'js_composer' ); ?></h4>
-			<p><?php _e( 'No more empty values for shortcodes - if the value is not set or used default it is not represented in shortcode.', 'js_composer' ); ?></p>
-
-			<h4><?php _e( 'ALT Tags for Images', 'js_composer' ); ?></h4>
-			<p><?php _e( 'All images added to your layout via Visual Composer are now containing ALT tag described in Media Library ensuring your content is better recognized in terms of SEO.', 'js_composer' ); ?></p>
+	<h3>Other valuable features</h3>
+	<div class="feature-section vc_row">
+		<div class="vc_col-xs-3">
+			<h4><?php _e( 'Pageable Content Element', 'js_composer' ); ?></h4>
+			<p><?php _e( 'Tabs based content element that allows you create pageable content blocks with just one click.', 'js_composer' ); ?></p>
 		</div>
 
-		<div>
-			<h4><?php _e( 'Image Filters', 'js_composer' ); ?></h4>
-			<p><?php _e( 'Visual Composer offers Instagram style filters for your media within Media Library to ensure your media content will look even better.', 'js_composer' ); ?></p>
-
-			<h4><?php _e( 'Theme Fonts in Custom Heading', 'js_composer' ); ?></h4>
-			<p><?php _e( 'Custom Heading Element allows choosing theme fonts to style them a little bit. It is not mandatory to rely on Google Fonts only anymore.', 'js_composer' ); ?></p>
+		<div class="vc_col-xs-3">
+			<h4><?php _e( 'Design Options', 'js_composer' ); ?></h4>
+			<p><?php _e( 'All Visual Composer elements now has Design Options tab for more advanced styling.', 'js_composer' ); ?></p>
 		</div>
 
-		<div class="last-feature">
-			<h4><?php _e( 'Icon Element Background', 'js_composer' ); ?></h4>
-			<p><?php _e( 'Icon Element background can be set to custom color ensuring that you can use completely different set of colors within your site.', 'js_composer' ); ?></p>
+		<div class="vc_col-xs-3">
+			<h4><?php _e( 'External Images', 'js_composer' ); ?></h4>
+			<p><?php _e( 'Single Image and Gallery now has option to accept external images through simple link parsing.', 'js_composer' ); ?></p>
+		</div>
 
-			<h4><?php _e( 'Custom Buttons Improvement', 'js_composer' ); ?></h4>
-			<p><?php _e( 'Additional style for custom buttons based on Outline button style offer quickly and easy choose your own color for outline buttons and add them to your WordPress site.', 'js_composer' ); ?></p>
+		<div class="vc_col-xs-3">
+			<h4><?php _e( 'Border Radius', 'js_composer' ); ?></h4>
+			<p><?php _e( 'Enhance your layout by applying border radius through Design Options tab.', 'js_composer' ); ?></p>
 		</div>
 	</div>
 

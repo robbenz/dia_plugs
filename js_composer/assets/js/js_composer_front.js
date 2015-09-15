@@ -3,12 +3,14 @@ document.documentElement.className += 'ontouchstart' in document.documentElement
 (function () {
 	var prefix = [
 		'-webkit-',
-		'-o-',
 		'-moz-',
 		'-ms-',
-		""
+		'-o-',
+		''
 	];
-	for ( var i = 0; i < prefix.length; i++ ) {
+	for ( var i = 0;
+		  i < prefix.length;
+		  i ++ ) {
 		if ( prefix[ i ] + 'transform' in document.documentElement.style ) {
 			document.documentElement.className += " vc_transform ";
 		}
@@ -23,10 +25,9 @@ document.documentElement.className += 'ontouchstart' in document.documentElement
 jQuery( window ).load( function () {
 
 } );
-var vc_js = function () {
+function vc_js() {
 	vc_twitterBehaviour();
 	vc_toggleBehaviour();
-	vc_toggleBehaviourOld(); // todo remove on next release
 	vc_tabsBehaviour();
 	vc_accordionBehaviour();
 	vc_teaserGrid();
@@ -42,13 +43,13 @@ var vc_js = function () {
 	vc_rowBehaviour();
 	vc_ttaActivation(); // @since 4.5
 	jQuery( document ).trigger( 'vc_js' );
-	window.setTimeout( vc_waypoints, 1500 );
-};
+	window.setTimeout( vc_waypoints, 500 );
+}
 jQuery( document ).ready( function ( $ ) {
 	window.vc_js();
-} ); // END jQuery(document).ready
+} );
 
-if ( typeof window[ 'vc_plugin_flexslider' ] !== 'function' ) {
+if ( 'function' !== typeof(window[ 'vc_plugin_flexslider' ]) ) {
 	window.vc_plugin_flexslider = function ( $parent ) {
 		var $slider = $parent ? $parent.find( '.wpb_flexslider' ) : jQuery( '.wpb_flexslider' );
 		$slider.each( function () {
@@ -57,7 +58,7 @@ if ( typeof window[ 'vc_plugin_flexslider' ] !== 'function' ) {
 				sliderTimeout = parseInt( this_element.attr( 'data-interval' ) ) * 1000,
 				sliderFx = this_element.attr( 'data-flex_fx' ),
 				slideshow = true;
-			if ( sliderTimeout == 0 ) {
+			if ( 0 === sliderTimeout ) {
 				slideshow = false;
 			}
 
@@ -74,7 +75,7 @@ if ( typeof window[ 'vc_plugin_flexslider' ] !== 'function' ) {
 
 /* Twitter
  ---------------------------------------------------------- */
-if ( typeof window[ 'vc_twitterBehaviour' ] !== 'function' ) {
+if ( 'function' !== typeof(window[ 'vc_twitterBehaviour' ]) ) {
 	window.vc_twitterBehaviour = function () {
 		jQuery( '.wpb_twitter_widget .tweets' ).each( function ( index ) {
 			var this_element = jQuery( this ),
@@ -100,9 +101,9 @@ if ( typeof window[ 'vc_twitterBehaviour' ] !== 'function' ) {
 
 /* Google plus
  ---------------------------------------------------------- */
-if ( typeof window[ 'vc_googleplus' ] !== 'function' ) {
+if ( 'function' !== typeof(window[ 'vc_googleplus' ]) ) {
 	window.vc_googleplus = function () {
-		if ( jQuery( '.wpb_googleplus' ).length > 0 ) {
+		if ( 0 < jQuery( '.wpb_googleplus' ).length ) {
 			(function () {
 				var po = document.createElement( 'script' );
 				po.type = 'text/javascript';
@@ -117,9 +118,9 @@ if ( typeof window[ 'vc_googleplus' ] !== 'function' ) {
 
 /* Pinterest
  ---------------------------------------------------------- */
-if ( typeof window[ 'vc_pinterest' ] !== 'function' ) {
+if ( 'function' !== typeof(window[ 'vc_pinterest' ]) ) {
 	window.vc_pinterest = function () {
-		if ( jQuery( '.wpb_pinterest' ).length > 0 ) {
+		if ( 0 < jQuery( '.wpb_pinterest' ).length ) {
 			(function () {
 				var po = document.createElement( 'script' );
 				po.type = 'text/javascript';
@@ -127,7 +128,6 @@ if ( typeof window[ 'vc_pinterest' ] !== 'function' ) {
 				po.src = 'http://assets.pinterest.com/js/pinit.js';
 				var s = document.getElementsByTagName( 'script' )[ 0 ];
 				s.parentNode.insertBefore( po, s );
-				//<script type="text/javascript" src="//assets.pinterest.com/js/pinit.js"></script>
 			})();
 		}
 	}
@@ -135,9 +135,9 @@ if ( typeof window[ 'vc_pinterest' ] !== 'function' ) {
 
 /* Progress bar
  ---------------------------------------------------------- */
-if ( typeof window[ 'vc_progress_bar' ] !== 'function' ) {
+if ( 'function' !== typeof(window[ 'vc_progress_bar' ] ) ) {
 	window.vc_progress_bar = function () {
-		if ( typeof jQuery.fn.waypoint !== 'undefined' ) {
+		if ( 'undefined' !== typeof(jQuery.fn.waypoint) ) {
 
 			jQuery( '.vc_progress_bar' ).waypoint( function () {
 				jQuery( this ).find( '.vc_single_bar' ).each( function ( index ) {
@@ -156,9 +156,9 @@ if ( typeof window[ 'vc_progress_bar' ] !== 'function' ) {
 
 /* Waypoints magic
  ---------------------------------------------------------- */
-if ( typeof window[ 'vc_waypoints' ] !== 'function' ) {
+if ( 'function' !== typeof(window[ 'vc_waypoints' ] ) ) {
 	window.vc_waypoints = function () {
-		if ( typeof jQuery.fn.waypoint !== 'undefined' ) {
+		if ( 'undefined' !== typeof(jQuery.fn.waypoint ) ) {
 			jQuery( '.wpb_animate_when_almost_visible:not(.wpb_start_animation)' ).waypoint( function () {
 				jQuery( this ).addClass( 'wpb_start_animation' );
 			}, { offset: '85%' } );
@@ -166,38 +166,11 @@ if ( typeof window[ 'vc_waypoints' ] !== 'function' ) {
 	}
 }
 
-/* Toggle
- * @deprecated since 4.4
- ---------------------------------------------------------- */
-// @todo remove on next release
-if ( typeof window[ 'vc_toggleBehaviourOld' ] !== 'function' ) {
-	/**
-	 * @deprecated will be removed in next release
-	 */
-	window.vc_toggleBehaviourOld = function () {
-		jQuery( ".wpb_toggle" ).unbind( 'click' ).click( function ( e ) {
-			if ( jQuery( this ).next().is( ':animated' ) ) {
-				return false;
-			}
-			if ( jQuery( this ).hasClass( 'wpb_toggle_title_active' ) ) {
-				jQuery( this ).removeClass( 'wpb_toggle_title_active' ).next().slideUp( 500 );
-			} else {
-				jQuery( this ).addClass( 'wpb_toggle_title_active' ).next().slideDown( 500 );
-			}
-		} );
-		jQuery( '.wpb_toggle_content' ).each( function ( index ) {
-			if ( jQuery( this ).next().is( 'h4.wpb_toggle' ) == false ) {
-				jQuery( '<div class="last_toggle_el_margin"></div>' ).insertAfter( this );
-			}
-		} );
-	}
-}
-
 /* Toggle/FAQ
  ---------------------------------------------------------- */
-if ( typeof window[ 'vc_toggleBehaviour' ] !== 'function' ) {
+if ( 'function' !== typeof(window[ 'vc_toggleBehaviour' ] ) ) {
 	window.vc_toggleBehaviour = function ( $el ) {
-		var event = function ( e ) {
+		function event( e ) {
 			e && e.preventDefault && e.preventDefault();
 			var title = jQuery( this );
 			var element = title.closest( '.vc_toggle' );
@@ -217,7 +190,8 @@ if ( typeof window[ 'vc_toggleBehaviour' ] !== 'function' ) {
 					}
 				} );
 			}
-		};
+		}
+
 		if ( $el ) {
 			if ( $el.hasClass( 'vc_toggle_title' ) ) {
 				$el.unbind( 'click' ).click( event );
@@ -232,16 +206,12 @@ if ( typeof window[ 'vc_toggleBehaviour' ] !== 'function' ) {
 
 /* Tabs + Tours
  ---------------------------------------------------------- */
-if ( typeof window[ 'vc_tabsBehaviour' ] !== 'function' ) {
+if ( 'function' !== typeof(window[ 'vc_tabsBehaviour' ] ) ) {
 	window.vc_tabsBehaviour = function ( $tab ) {
 		if ( jQuery.ui ) {
-			/* jQuery(function ($) {
-			 $(document.body).off('click.preview', 'a')
-			 }); */ // this causes wp-customizer bug
 			var $call = $tab || jQuery( '.wpb_tabs, .wpb_tour' ),
 				ver = jQuery.ui && jQuery.ui.version ? jQuery.ui.version.split( '.' ) : '1.10',
-				old_version = parseInt( ver[ 0 ] ) == 1 && parseInt( ver[ 1 ] ) < 9;
-			// if($call.hasClass('ui-widget')) $call.tabs('destroy');
+				old_version = 1 === parseInt( ver[ 0 ] ) && 9 > parseInt( ver[ 1 ] );
 			$call.each( function ( index ) {
 				var $tabs,
 					interval = jQuery( this ).attr( "data-interval" ),
@@ -252,13 +222,13 @@ if ( typeof window[ 'vc_tabsBehaviour' ] !== 'function' ) {
 						wpb_prepare_tab_content( event, ui );
 					},
 					beforeActivate: function ( event, ui ) {
-						ui.newPanel.index() !== 1 && ui.newPanel.find( '.vc_pie_chart:not(.vc_ready)' );
+						1 !== ui.newPanel.index() && ui.newPanel.find( '.vc_pie_chart:not(.vc_ready)' );
 					},
 					activate: function ( event, ui ) {
 						wpb_prepare_tab_content( event, ui );
 					}
 				} );
-				if ( interval && interval > 0 ) {
+				if ( interval && 0 < interval ) {
 					try {
 						$tabs.tabs( 'rotate', interval * 1000 );
 					} catch ( e ) {
@@ -273,14 +243,6 @@ if ( typeof window[ 'vc_tabsBehaviour' ] !== 'function' ) {
 
 				jQuery( this ).find( '.wpb_tabs_nav li' ).click( function ( e ) {
 					e.preventDefault();
-					/*if (jQuery.inArray(jQuery(this).attr('href'), tabs_array)) {
-					 if (old_version) {
-					 $tabs.tabs("select", jQuery(this).attr('href'));
-					 } else {
-					 $tabs.tabs("option", "active", jQuery(jQuery(this).attr('href')).index() - 1);
-					 }
-					 return false;
-					 }*/
 					if ( old_version ) {
 						$tabs.tabs( "select", jQuery( 'a', this ).attr( 'href' ) );
 					} else {
@@ -299,7 +261,7 @@ if ( typeof window[ 'vc_tabsBehaviour' ] !== 'function' ) {
 						else {
 							index --;
 						}
-						if ( index < 0 ) {
+						if ( 0 > index ) {
 							index = $tabs.tabs( "length" ) - 1;
 						}
 						else if ( index >= $tabs.tabs( "length" ) ) {
@@ -313,7 +275,7 @@ if ( typeof window[ 'vc_tabsBehaviour' ] !== 'function' ) {
 						if ( jQuery( this ).parent().hasClass( 'wpb_next_slide' ) ) {
 							index = (index + 1) >= length ? 0 : index + 1;
 						} else {
-							index = index - 1 < 0 ? length - 1 : index - 1;
+							index = 0 > index - 1 ? length - 1 : index - 1;
 						}
 
 						$tabs.tabs( "option", "active", index );
@@ -325,19 +287,17 @@ if ( typeof window[ 'vc_tabsBehaviour' ] !== 'function' ) {
 		}
 	}
 }
-;
 
 /* Tabs + Tours
  ---------------------------------------------------------- */
-if ( typeof window[ 'vc_accordionBehaviour' ] !== 'function' ) {
+if ( 'function' !== typeof(window[ 'vc_accordionBehaviour' ]) ) {
 	window.vc_accordionBehaviour = function () {
 		jQuery( '.wpb_accordion' ).each( function ( index ) {
 			var $this = jQuery( this );
 			var $tabs,
 				interval = $this.attr( "data-interval" ),
-				active_tab = ! isNaN( jQuery( this ).data( 'active-tab' ) ) && parseInt( $this.data( 'active-tab' ) ) > 0 ? parseInt( $this.data( 'active-tab' ) ) - 1 : false,
-				collapsible = active_tab === false || $this.data( 'collapsible' ) === 'yes';
-			//
+				active_tab = ! isNaN( jQuery( this ).data( 'active-tab' ) ) && 0 < parseInt( $this.data( 'active-tab' ) ) ? parseInt( $this.data( 'active-tab' ) ) - 1 : false,
+				collapsible = false === active_tab || 'yes' === $this.data( 'collapsible' );
 			$tabs = $this.find( '.wpb_accordion_wrapper' ).accordion( {
 				header: "> div > h3",
 				autoHeight: false,
@@ -348,7 +308,7 @@ if ( typeof window[ 'vc_accordionBehaviour' ] !== 'function' ) {
 
 				activate: vc_accordionActivate,
 				change: function ( event, ui ) {
-					if ( jQuery.fn.isotope != undefined ) {
+					if ( 'undefined' !== typeof(jQuery.fn.isotope) ) {
 						ui.newContent.find( '.isotope' ).isotope( "layout" );
 					}
 					vc_carouselBehaviour( ui.newPanel );
@@ -358,14 +318,13 @@ if ( typeof window[ 'vc_accordionBehaviour' ] !== 'function' ) {
 				$tabs.data( 'uiAccordion' )._keydown = function () {
 				};
 			}
-			//.tabs().tabs('rotate', interval*1000, true);
 		} );
 	}
 }
 
 /* Teaser grid: isotope
  ---------------------------------------------------------- */
-if ( typeof window[ 'vc_teaserGrid' ] !== 'function' ) {
+if ( 'function' !== typeof(window[ 'vc_teaserGrid' ]) ) {
 	window.vc_teaserGrid = function () {
 		var layout_modes = {
 			fitrows: 'fitRows',
@@ -378,7 +337,7 @@ if ( typeof window[ 'vc_teaserGrid' ] !== 'function' ) {
 			$thumbs.isotope( {
 				// options
 				itemSelector: '.isotope-item',
-				layoutMode: (layout_modes[ layout_mode ] == undefined ? 'fitRows' : layout_modes[ layout_mode ])
+				layoutMode: ('undefined' === typeof(layout_modes[ layout_mode ]) ? 'fitRows' : layout_modes[ layout_mode ])
 			} );
 			$container.find( '.categories_filter a' ).data( 'isotope', $thumbs ).click( function ( e ) {
 				e.preventDefault();
@@ -391,32 +350,17 @@ if ( typeof window[ 'vc_teaserGrid' ] !== 'function' ) {
 				$thumbs.isotope( "layout" );
 			} );
 		} );
-
-		/*
-		 var isotope = jQuery('.wpb_grid ul.thumbnails');
-		 if ( isotope.length > 0 ) {
-		 isotope.isotope({
-		 // options
-		 itemSelector : '.isotope-item',
-		 layoutMode : 'fitRows'
-		 });
-		 jQuery(window).load(function() {
-		 isotope.isotope("layout");
-		 });
-		 }
-		 */
 	}
 }
 
-if ( typeof window[ 'vc_carouselBehaviour' ] !== 'function' ) {
+if ( 'function' !== typeof(window[ 'vc_carouselBehaviour' ]) ) {
 	window.vc_carouselBehaviour = function ( $parent ) {
 		var $carousel = $parent ? $parent.find( ".wpb_carousel" ) : jQuery( ".wpb_carousel" );
 		$carousel.each( function () {
 			var $this = jQuery( this );
-			if ( $this.data( 'carousel_enabled' ) !== true && $this.is( ':visible' ) ) {
+			if ( true !== $this.data( 'carousel_enabled' ) && $this.is( ':visible' ) ) {
 				$this.data( 'carousel_enabled', true );
-				var carousel_width = jQuery( this ).width(),
-					visible_count = getColumnsCount( jQuery( this ) ),
+				var visible_count = getColumnsCount( jQuery( this ) ),
 					carousel_speed = 500;
 				if ( jQuery( this ).hasClass( 'columns_count_1' ) ) {
 					carousel_speed = 900;
@@ -431,7 +375,7 @@ if ( typeof window[ 'vc_carouselBehaviour' ] !== 'function' ) {
 					visible: visible_count,
 					speed: carousel_speed
 				} )
-					.width( '100%' );//carousel_width
+					.width( '100%' );
 
 				var fluid_ul = jQuery( this ).find( 'ul.wpb_thumbnails-fluid' );
 				fluid_ul.width( fluid_ul.width() + 300 );
@@ -449,53 +393,17 @@ if ( typeof window[ 'vc_carouselBehaviour' ] !== 'function' ) {
 	}
 }
 
-if ( typeof window[ 'vc_slidersBehaviour' ] !== 'function' ) {
+if ( 'function' !== typeof(window[ 'vc_slidersBehaviour' ]) ) {
 	window.vc_slidersBehaviour = function () {
-		//var sliders_count = 0;
 		jQuery( '.wpb_gallery_slides' ).each( function ( index ) {
 			var this_element = jQuery( this );
-			var ss_count = 0, $imagesGrid;
+			var $imagesGrid;
 
-			/*if ( this_element.hasClass('wpb_slider_fading') ) {
-			 var sliderSpeed = 500, sliderTimeout = this_element.attr('data-interval')*1000, slider_fx = 'fade';
-			 var current_ss;
-
-			 function slideshowOnBefore(currSlideElement, nextSlideElement, options) {
-			 jQuery(nextSlideElement).css({"position" : "absolute" });
-			 jQuery(nextSlideElement).find("div.description").animate({"opacity": 0}, 0);
-			 }
-
-			 function slideshowOnAfter(currSlideElement, nextSlideElement, options) {
-			 jQuery(nextSlideElement).find("div.description").animate({"opacity": 1}, 2000);
-
-			 jQuery(nextSlideElement).css({"position" : "static" });
-			 var new_h = jQuery(nextSlideElement).find('img').height();
-			 if ( jQuery.isNumeric(new_h) ) {
-			 //this_element.animate({ "height" : new_h }, sliderSpeed );
-			 }
-			 }
-
-			 this_element.find('ul')
-			 .before('<div class="ss_nav ss_nav_'+ss_count+'"></div><div class="wpb_fading_nav"><a id="next_'+ss_count+'" href="#next"></a> <a id="prev_'+ss_count+'" href="#prev"></a></div>')
-			 .cycle({
-			 fx: slider_fx, // choose your transition type, ex: fade, scrollUp, shuffle, etc...
-			 pause: 1,
-			 speed: sliderSpeed,
-			 timeout: sliderTimeout,
-			 delay: -ss_count * 1000,
-			 before: slideshowOnBefore,
-			 after:slideshowOnAfter,
-			 pager:  '.ss_nav_'+ss_count
-			 });
-			 //.find('.description').width(jQuery(this).width() - 20);
-			 ss_count++;
-			 }
-			 else*/
 			if ( this_element.hasClass( 'wpb_slider_nivo' ) ) {
 				var sliderSpeed = 800,
 					sliderTimeout = this_element.attr( 'data-interval' ) * 1000;
 
-				if ( sliderTimeout == 0 ) {
+				if ( 0 === sliderTimeout ) {
 					sliderTimeout = 9999999999;
 				}
 
@@ -533,15 +441,15 @@ if ( typeof window[ 'vc_slidersBehaviour' ] !== 'function' ) {
 						layoutMode: 'fitRows'
 					} );
 				}
-
 			}
 		} );
 	}
 }
-if ( typeof window[ 'vc_prettyPhoto' ] !== 'function' ) {
+
+if ( 'function' !== typeof(window[ 'vc_prettyPhoto' ]) ) {
 	window.vc_prettyPhoto = function () {
 		try {
-			// just in case. maybe prettyphoto isnt loaded on this site
+			// just in case. maybe prettyphoto isn't loaded on this site
 			if ( jQuery && jQuery.fn && jQuery.fn.prettyPhoto ) {
 				jQuery( 'a.prettyphoto, .gallery-icon a[href*=".jpg"]' ).prettyPhoto( {
 					animationSpeed: 'normal', /* fast/slow/normal */
@@ -570,19 +478,22 @@ if ( typeof window[ 'vc_prettyPhoto' ] !== 'function' ) {
 	}
 }
 
-if ( typeof window[ 'vc_google_fonts' ] !== 'function' ) {
+if ( 'function' !== typeof(window[ 'vc_google_fonts' ]) ) {
 	window.vc_google_fonts = function () {
-		return false; // @todo check this for what this is needed
+		return false; // TODO: check this for what this is needed
 	}
 }
 window.vcParallaxSkroll = false;
-if ( typeof window[ 'vc_rowBehaviour' ] !== 'function' ) {
+if ( 'function' !== typeof(window[ 'vc_rowBehaviour' ]) ) {
 	window.vc_rowBehaviour = function () {
 		var $ = window.jQuery;
-		var local_function = function () {
+
+		function localFunction() {
 			var $elements = $( '[data-vc-full-width="true"]' );
 			$.each( $elements, function ( key, item ) {
 				var $el = $( this );
+				$el.addClass( 'vc_hidden' );
+
 				var $el_full = $el.next( '.vc_row-full-width' );
 				var el_margin_left = parseInt( $el.css( 'margin-left' ), 10 );
 				var el_margin_right = parseInt( $el.css( 'margin-right' ), 10 );
@@ -596,24 +507,26 @@ if ( typeof window[ 'vc_rowBehaviour' ] !== 'function' ) {
 				} );
 				if ( ! $el.data( 'vcStretchContent' ) ) {
 					var padding = (- 1 * offset);
-					if ( padding < 0 ) {
+					if ( 0 > padding ) {
 						padding = 0;
 					}
 					var paddingRight = width - padding - $el_full.width() + el_margin_left + el_margin_right;
-					if ( paddingRight < 0 ) {
+					if ( 0 > paddingRight ) {
 						paddingRight = 0;
 					}
 					$el.css( { 'padding-left': padding + 'px', 'padding-right': paddingRight + 'px' } );
 				}
 				$el.attr( "data-vc-full-width-init", "true" );
+				$el.removeClass( 'vc_hidden' );
 			} );
-		};
+		}
+
 		/**
 		 * @todo refactor as plugin.
 		 * @returns {*}
 		 */
-		var parallaxRow = function () {
-			var vcSkrollrOptions,
+		function parallaxRow() {
+			var vcSkrollrOptions, vcParallaxSkroll,
 				callSkrollInit = false;
 			if ( vcParallaxSkroll ) {
 				vcParallaxSkroll.destroy();
@@ -629,7 +542,7 @@ if ( typeof window[ 'vc_rowBehaviour' ] !== 'function' ) {
 					parallaxImage,
 					youtubeId;
 				callSkrollInit = true; // Enable skrollinit;
-				if ( $( this ).data( 'vcParallaxOFade' ) == 'on' ) {
+				if ( 'on' === $( this ).data( 'vcParallaxOFade' ) ) {
 					$( this ).children().attr( 'data-5p-top-bottom', 'opacity:0;' ).attr( 'data-30p-top-bottom',
 						'opacity:1;' );
 				}
@@ -644,7 +557,7 @@ if ( typeof window[ 'vc_rowBehaviour' ] !== 'function' ) {
 
 				if ( youtubeId ) {
 					insertYoutubeVideoAsBackground( $parallaxElement, youtubeId );
-				} else if ( parallaxImage !== undefined ) {
+				} else if ( 'undefined' !== typeof(parallaxImage) ) {
 					$parallaxElement.css( 'background-image', 'url(' + parallaxImage + ')' );
 				}
 
@@ -668,12 +581,13 @@ if ( typeof window[ 'vc_rowBehaviour' ] !== 'function' ) {
 				return vcParallaxSkroll;
 			}
 			return false;
-		};
+		}
+
 		/**
 		 * @todo refactor as plugin.
 		 * @returns {*}
 		 */
-		var fullHeightRow = function () {
+		function fullHeightRow() {
 			$( '.vc_row-o-full-height:first' ).each( function () {
 				var $window,
 					windowHeight,
@@ -687,29 +601,38 @@ if ( typeof window[ 'vc_rowBehaviour' ] !== 'function' ) {
 					$( this ).css( 'min-height', fullHeight + 'vh' );
 				}
 			} );
-		};
-		$( window ).unbind( 'resize.vcRowBehaviour' ).bind( 'resize.vcRowBehaviour', local_function );
+
+			$( '.vc_row-o-full-height.vc_row-o-content-middle' ).each( function () {
+				var elHeight = $( this ).height();
+				$( '<div><!-- IE flexbox min height vertical align fixer --></div>' )
+					.addClass( 'vc_row-full-height-fixer' )
+					.height( elHeight )
+					.prependTo( $( this ) );
+			} );
+		}
+
+		$( window ).unbind( 'resize.vcRowBehaviour' ).bind( 'resize.vcRowBehaviour', localFunction );
 		$( window ).bind( 'resize.vcRowBehaviour', fullHeightRow );
-		local_function();
+		localFunction();
 		fullHeightRow();
 		initVideoBackgrounds(); // must be called before parallax
 		parallaxRow();
 	}
 }
 
-if ( typeof window[ 'vc_gridBehaviour' ] !== 'function' ) {
+if ( 'function' !== typeof(window[ 'vc_gridBehaviour' ]) ) {
 	window.vc_gridBehaviour = function () {
 		jQuery.fn.vcGrid && jQuery( '[data-vc-grid]' ).vcGrid();
 	}
 }
 /* Helper
  ---------------------------------------------------------- */
-if ( typeof window[ 'getColumnsCount' ] !== 'function' ) {
+if ( 'function' !== typeof(window[ 'getColumnsCount' ]) ) {
 	window.getColumnsCount = function ( el ) {
 		var find = false,
 			i = 1;
 
-		while ( find == false ) {
+		while ( false === find ) {
 			if ( el.hasClass( 'columns_count_' + i ) ) {
 				find = true;
 				return i;
@@ -721,25 +644,29 @@ if ( typeof window[ 'getColumnsCount' ] !== 'function' ) {
 
 var screen_size = getSizeName();
 function getSizeName() {
-	var screen_size = '',
-		screen_w = jQuery( window ).width();
+	var screen_w = jQuery( window ).width();
 
-	if ( screen_w > 1170 ) {
-		screen_size = "desktop_wide";
+	if ( 1170 < screen_w ) {
+		return 'desktop_wide';
 	}
-	else if ( screen_w > 960 && screen_w < 1169 ) {
-		screen_size = "desktop";
+
+	if ( 960 < screen_w && 1169 > screen_w ) {
+		return 'desktop';
 	}
-	else if ( screen_w > 768 && screen_w < 959 ) {
-		screen_size = "tablet";
+
+	if ( 768 < screen_w && 959 > screen_w ) {
+		return 'tablet';
 	}
-	else if ( screen_w > 300 && screen_w < 767 ) {
-		screen_size = "mobile";
+
+	if ( 300 < screen_w && 767 > screen_w ) {
+		return 'mobile';
 	}
-	else if ( screen_w < 300 ) {
-		screen_size = "mobile_portrait";
+
+	if ( 300 > screen_w ) {
+		return 'mobile_portrait';
 	}
-	return screen_size;
+
+	return '';
 }
 
 function loadScript( url, $obj, callback ) {
@@ -749,26 +676,21 @@ function loadScript( url, $obj, callback ) {
 
 	if ( script.readyState ) {  //IE
 		script.onreadystatechange = function () {
-			if ( script.readyState == "loaded" ||
-				script.readyState == "complete" ) {
+			if ( "loaded" === script.readyState ||
+				"complete" === script.readyState ) {
 				script.onreadystatechange = null;
 				callback();
 			}
 		};
-	} else {  //Others
-		/*
-		 script.onload = function(){
-
-		 callback();
-		 };
-		 */
+	} else {
+		//Others
 	}
 
 	script.src = url;
 	$obj.get( 0 ).appendChild( script );
 }
 
-if ( typeof window[ 'wpb_prepare_tab_content' ] !== 'function' ) {
+if ( 'function' !== typeof(window[ 'wpb_prepare_tab_content' ]) ) {
 	/**
 	 * Prepare html to correctly display inside tab container
 	 *
@@ -802,7 +724,7 @@ if ( typeof window[ 'wpb_prepare_tab_content' ] !== 'function' ) {
 		$carousel.length && jQuery.fn.carousel && $carousel.carousel( 'resizeAction' );
 		$ui_panel = panel.find( '.isotope, .wpb_image_grid_ul' ); // why var name '$ui_panel'?
 		$google_maps = panel.find( '.wpb_gmaps_widget' );
-		if ( $ui_panel.length > 0 ) {
+		if ( 0 < $ui_panel.length ) {
 			$ui_panel.isotope( "layout" );
 		}
 		if ( $google_maps.length && ! $google_maps.is( '.map_ready' ) ) {
@@ -817,21 +739,21 @@ if ( typeof window[ 'wpb_prepare_tab_content' ] !== 'function' ) {
 		}
 	}
 }
-var vc_ttaActivation = function () {
+function vc_ttaActivation() {
 	jQuery( '[data-vc-accordion]' ).on( 'show.vc.accordion', function ( e ) {
 		var $ = window.jQuery, ui = {};
 		ui.newPanel = $( this ).data( 'vc.accordion' ).getTarget();
 		window.wpb_prepare_tab_content( e, ui );
 	} );
-};
+}
 
-var vc_accordionActivate = function ( event, ui ) {
+function vc_accordionActivate( event, ui ) {
 	if ( ui.newPanel.length && ui.newHeader.length ) {
 		var $pie_charts = ui.newPanel.find( '.vc_pie_chart:not(.vc_ready)' ),
 			$round_charts = ui.newPanel.find( '.vc_round-chart' ),
 			$line_charts = ui.newPanel.find( '.vc_line-chart' ),
 			$carousel = ui.newPanel.find( '[data-ride="vc_carousel"]' );
-		if ( jQuery.fn.isotope != undefined ) {
+		if ( 'undefined' !== typeof(jQuery.fn.isotope) ) {
 			ui.newPanel.find( '.isotope, .wpb_image_grid_ul' ).isotope( "layout" );
 		}
 		if ( ui.newPanel.find( '.vc_masonry_media_grid, .vc_masonry_grid' ).length ) {
@@ -840,7 +762,6 @@ var vc_accordionActivate = function ( event, ui ) {
 				grid && grid.gridBuilder && grid.gridBuilder.setMasonry && grid.gridBuilder.setMasonry();
 			} );
 		}
-		//jQuery('html, body').animate({scrollTop: ui.newHeader.offset().top - 100}, 1000); // #1370 enhancement, #1762 issue.
 		vc_carouselBehaviour( ui.newPanel );
 		vc_plugin_flexslider( ui.newPanel );
 		$pie_charts.length && jQuery.fn.vcChat && $pie_charts.vcChat();
@@ -853,7 +774,7 @@ var vc_accordionActivate = function ( event, ui ) {
 			} );
 		}
 	}
-};
+}
 
 /**
  * Reinitialize all video backgrounds
@@ -895,7 +816,7 @@ function insertYoutubeVideoAsBackground( $element, youtubeId, counter ) {
 	if ( 'undefined' === typeof( YT.Player ) ) {
 		// wait for youtube iframe api to load. try for 10sec, then abort
 		counter = 'undefined' === typeof( counter ) ? 0 : counter;
-		if ( counter > 100 ) {
+		if ( 100 < counter ) {
 			console.warn( 'Too many attempts to load YouTube api' );
 			return;
 		}
@@ -907,10 +828,9 @@ function insertYoutubeVideoAsBackground( $element, youtubeId, counter ) {
 		return;
 	}
 
-	var player,
-		$container = $element.prepend( '<div class="vc_video-bg"><div class="inner"></div></div>' ).find( '.inner' );
+	var $container = $element.prepend( '<div class="vc_video-bg"><div class="inner"></div></div>' ).find( '.inner' );
 
-	player = new YT.Player( $container[ 0 ], {
+	new YT.Player( $container[ 0 ], {
 		width: '100%',
 		height: '100%',
 		videoId: youtubeId,
@@ -991,7 +911,7 @@ function vcExtractYoutubeId( url ) {
 
 	var id = url.match( /(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/ );
 
-	if ( null != id ) {
+	if ( null !== id ) {
 		return id[ 1 ];
 	}
 

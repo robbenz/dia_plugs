@@ -143,15 +143,15 @@ class Vc_Grid_Element {
 		$output .= '<span class="vc_t-grid-control vc_t-grid-control-layouts" style="display: none;">'
 		           // vc_col-sm-12
 		           . '<a class="vc_t-grid-control vc_t-grid-control-layout" data-cells="12" title="'
-		           . __( '1/1', 'js_composer' ) . '" data-vc-element-control="layouts">'
+		           . '1/1' . '" data-vc-element-control="layouts">'
 		           . '<i class="vc_t-grid-icon vc_t-grid-icon-layout-12"></i></a>'
 		           // vc_col-sm-6 + vc_col-sm-6
 		           . '<a class="vc_t-grid-control vc_t-grid-control-layout" data-cells="6_6" title="'
-		           . __( '1/2 + 1/2', 'js_composer' ) . '" data-vc-element-control="layouts">'
+		           . '1/2 + 1/2' . '" data-vc-element-control="layouts">'
 		           . '<i class="vc_t-grid-icon vc_t-grid-icon-layout-6-6"></i></a>'
 		           // vc_col-sm-4 + vc_col-sm-4 + vc_col-sm-4
 		           . '<a class="vc_t-grid-control vc_t-grid-control-layout" data-cells="4_4_4" title="'
-		           . __( '1/3 + 1/3 + 1/3', 'js_composer' ) . '" data-vc-element-control="layouts">'
+		           . '1/3 + 1/3 + 1/3' . '" data-vc-element-control="layouts">'
 		           . '<i class="vc_t-grid-icon vc_t-grid-icon-layout-4-4-4"></i></a>'
 		           . '</span>'
 		           . '<span class="vc_pull-right">'
@@ -216,10 +216,7 @@ class Vc_Grid_Element {
 		$title = ucfirst( preg_replace( '/\_/', ' ', $name ) );
 
 		return '<div class="vc_gitem-wrapper">'
-		       . $this->elementControls(
-			__( $title, 'js_composer' ),
-			preg_match( '/^post/', $name ) ? 'orange' : 'green'
-		)
+		       . $this->elementControls( $title, preg_match( '/^post/', $name ) ? 'orange' : 'green' )
 		       . '</div>';
 	}
 

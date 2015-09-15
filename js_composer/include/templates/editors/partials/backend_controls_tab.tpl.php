@@ -1,7 +1,7 @@
 <div class="vc_controls<?php echo ! empty( $extended_css ) ? ' ' . $extended_css : '' ?>">
 	<div class="vc_controls-<?php echo $position ?>">
 		<a class="vc_element-name">
-			<span class="vc_btn-content"><?php echo __( $name, 'js_composer' ); ?></span>
+			<span class="vc_btn-content"><?php echo $name ?></span>
 		</a>
 		<?php if ( vc_mapper()->userHasAccess( $shortcode ) ): ?>
 			<?php foreach ( $controls as $control ): ?>
@@ -21,8 +21,8 @@
 					<a class="vc_control-btn vc_control-btn-delete" href="#"
 					   title="<?php printf( __( 'Delete %s', 'js_composer' ), $name ) ?>"><span
 							class="vc_btn-content"><span class="icon"></span></span></a>
-				<?php endif; ?>
+				<?php endif ?>
 			<?php endforeach; ?>
-		<?php endif; ?>
+		<?php endif ?>
 	</div>
 </div>

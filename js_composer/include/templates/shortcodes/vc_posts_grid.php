@@ -122,23 +122,23 @@ if ( ! empty( $args['post_type'] ) && is_array( $args['post_type'] ) ) {
 		$post_types_teasers .= 'wpb_teaser_grid_' . $post_type . ' ';
 	}
 }
-$el_class = $this->getExtraClass( $el_class );
 $li_span_class = $this->spanClass( $grid_columns_count );
 
 $css_class = 'wpb_row wpb_teaser_grid wpb_content_element ' .
              $this->getMainCssClass( $filter ) . // Css class as selector for isotope plugin
              ' columns_count_' . $grid_columns_count . // Custom margin/padding for different count of columns in grid
              ' columns_count_' . $grid_columns_count . // Combination of layout and column count
-             // ' post_grid_'.$li_span_class .
-             ' ' . $post_types_teasers . // Css classes by selected post types
-             $el_class; // Custom css class from shortcode attributes
-// }}
+             ' ' . $post_types_teasers; // Css classes by selected post types
+
+$class_to_filter = $css_class;
+$class_to_filter .= $this->getExtraClass( $el_class );
+$css_class = apply_filters( VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, $class_to_filter, $this->settings['base'], $atts );
 
 $this->setLinktarget( $grid_link_target );
 
 ?>
 	<div
-		class="<?php echo esc_attr( apply_filters( VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, $css_class, $this->settings['base'], $atts ) ); ?>">
+		class="<?php echo esc_attr( $css_class ) ?>">
 		<div class="wpb_wrapper">
 			<?php echo wpb_widget_title( array( 'title' => $title, 'extraclass' => 'wpb_teaser_grid_heading' ) ) ?>
 			<div class="teaser_grid_container">
@@ -157,7 +157,7 @@ $this->setLinktarget( $grid_link_target );
 					echo '</ul>';
 					?>
 					<div class="vc_clearfix"></div>
-				<?php endif; ?>
+				<?php endif ?>
 				<ul class="wpb_thumbnails wpb_thumbnails-fluid vc_clearfix"
 				    data-layout-mode="<?php echo $grid_layout_mode ?>">
 					<?php
@@ -185,13 +185,13 @@ $this->setLinktarget( $grid_link_target );
 								include $this->getBlockTemplate();
 							endforeach;
 							echo '</div></li>';
-							echo $this->endBlockComment( 'single teaser' ); ?>
+							 ?>
 						<?php endforeach; ?>
 					<?php else: ?>
 						<li class="<?php echo $this->spanClass( 1 ); ?>"><?php _e( 'Nothing found.', 'js_composer' ) ?></li>
-					<?php endif; ?>
+					<?php endif ?>
 				</ul>
 			</div>
-		</div> <?php echo $this->endBlockComment( '.wpb_wrapper' ) ?>
+		</div>
 		<div class="clear"></div>
-	</div> <?php echo $this->endBlockComment( $this->getShortcode() ) ?>
+	</div>

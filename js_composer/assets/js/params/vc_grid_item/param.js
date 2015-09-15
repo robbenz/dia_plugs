@@ -13,12 +13,12 @@ if ( _.isUndefined( window.vc ) ) {
 	"use strict";
 	vc.atts.vc_grid_item = {
 		init: function ( param, $field ) {
-			this.content().find( '[data-param_name="' + param.param_name + '"] [data-vc-grid-element="value"]' )
+			this.content().find( '[data-vc-shortcode-param-name="' + param.param_name + '"] [data-vc-grid-element="value"]' )
 				.change( function () {
 					var value = $( this ).val(),
 						url = $( this ).find( '[value=' + value + ']' ).data( 'vcLink' );
 					if ( value ) {
-						$( this ).parents( '[data-param_name="' + param.param_name + '"]:first' )
+						$( this ).parents( '[data-vc-shortcode-param-name="' + param.param_name + '"]:first' )
 							.find( '[data-vc-grid-item="edit_link"]' ).attr( 'href', url );
 					}
 				} ).trigger( 'change' );
@@ -32,7 +32,7 @@ if ( _.isUndefined( window.vc ) ) {
 			 */
 		},
 		parse: function ( param ) {
-			var $field = this.content().find( '[data-param_name="' + param.param_name + '"] [data-vc-grid-element="value"]' );
+			var $field = this.content().find( '[data-vc-shortcode-param-name="' + param.param_name + '"] [data-vc-grid-element="value"]' );
 			/*
 			 fieldManager = $param_container.find('[data-vc-grid-element="container"]').data('vcFieldManager');
 			 return fieldManager ? fieldManager.save() : '';

@@ -373,6 +373,8 @@ if ( ! class_exists( 'WPBakeryShortCode' ) ) {
 
 		/**
 		 * @param $template
+		 *
+		 * @return string
 		 */
 		protected function setTemplate( $template ) {
 			return $this->html_template = apply_filters( 'vc_shortcode_set_template_' . $this->shortcode, $template );
@@ -464,40 +466,38 @@ if ( ! class_exists( 'WPBakeryShortCode' ) ) {
 		 * @return string
 		 */
 		public function contentAdmin( $atts, $content ) {
-			$element = $this->shortcode;
 			$output = $custom_markup = $width = $el_position = '';
-
-			if ( $content != null ) {
+			if ( $content !== null ) {
 				$content = wpautop( stripslashes( $content ) );
 			}
 			$shortcode_attributes = array( 'width' => '1/1' );
 			if ( isset( $this->settings['params'] ) && is_array( $this->settings['params'] ) ) {
 				foreach ( $this->settings['params'] as $param ) {
-					if ( $param['param_name'] != 'content' ) {
+					if ( $param['param_name'] !== 'content' ) {
 						if ( isset( $param['value'] ) ) {
-							$shortcode_attributes[ $param['param_name'] ] = is_string( $param['value'] ) ? __( $param['value'], "js_composer" ) : $param['value'];
+							$value = $param['value'];
 						} else {
-							$shortcode_attributes[ $param['param_name'] ] = '';
+							$value = '';
 						}
-					} else if ( $param['param_name'] == 'content' && $content == null ) {
-						$content = isset( $param['value'] ) ? __( $param['value'], "js_composer" ) : '';
+
+						$shortcode_attributes[ $param['param_name'] ] = $value;
+					} else if ( $param['param_name'] === 'content' && $content === null ) {
+						$content = isset( $param['value'] ) ? $param['value'] : '';
 					}
 				}
 			}
-			$atts = shortcode_atts(
-				$shortcode_attributes
-				, $atts );
+			$atts = shortcode_atts( $shortcode_attributes, $atts );
 			extract( $atts );
 			$this->atts = $atts;
 			$elem = $this->getElementHolder( $width );
-			if ( isset( $this->settings["custom_markup"] ) && $this->settings["custom_markup"] != '' ) {
+			if ( isset( $this->settings['custom_markup'] ) && $this->settings['custom_markup'] !== '' ) {
 				$markup = $this->settings['custom_markup'];
 				$elem = str_ireplace( '%wpb_element_content%', $this->customMarkup( $markup, $content ), $elem );
 				$output .= $elem;
 			} else {
-				$iner = $this->outputTitle( $this->settings['name'] );
-				$iner .= $this->paramsHtmlHolders( $atts );
-				$elem = str_ireplace( '%wpb_element_content%', $iner, $elem );
+				$inner = $this->outputTitle( $this->settings['name'] );
+				$inner .= $this->paramsHtmlHolders( $atts );
+				$elem = str_ireplace( '%wpb_element_content%', $inner, $elem );
 				$output .= $elem;
 			}
 
@@ -508,7 +508,7 @@ if ( ! class_exists( 'WPBakeryShortCode' ) ) {
 		 * @return bool
 		 */
 		public function isAdmin() {
-			return apply_filters( 'vc_shortcodes_is_admin', is_admin() ); //  && ! empty( $_POST['action'] ) && preg_match( '/^wpb\_/', $_POST['action'] );
+			return apply_filters( 'vc_shortcodes_is_admin', is_admin() );
 		}
 
 		/**
@@ -620,8 +620,8 @@ if ( ! class_exists( 'WPBakeryShortCode' ) ) {
 		 */
 		public function getExtraClass( $el_class ) {
 			$output = '';
-			if ( $el_class != '' ) {
-				$output = " " . str_replace( ".", "", $el_class );
+			if ( $el_class !== '' ) {
+				$output = ' ' . str_replace( '.', '', $el_class );
 			}
 
 			return $output;
@@ -634,7 +634,7 @@ if ( ! class_exists( 'WPBakeryShortCode' ) ) {
 		 */
 		public function getCSSAnimation( $css_animation ) {
 			$output = '';
-			if ( $css_animation != '' ) {
+			if ( $css_animation !== '' ) {
 				wp_enqueue_script( 'waypoints' );
 				$output = ' wpb_animate_when_almost_visible wpb_' . $css_animation;
 			}
@@ -645,40 +645,27 @@ if ( ! class_exists( 'WPBakeryShortCode' ) ) {
 		/**
 		 * Create HTML comment for blocks only if wpb_debug=true
 		 *
+		 * @deprecated 4.7 For debug type html comments use more generic debugComment function.
+		 *
 		 * @param $string
 		 *
 		 * @return string
 		 */
 		public function endBlockComment( $string ) {
-			//return '';
 			return wpb_debug() ? '<!-- END ' . $string . ' -->' : '';
 		}
 
 		/**
-		 * Start row comment for html shortcode block
+		 * if wpb_debug=true return HTML comment
 		 *
-		 * @param $position - block position
+		 * @since 4.7
 		 *
-		 * @return string
-		 */
-		public function startRow( $position ) {
-			$output = '';
-
-			return '';
-		}
-
-		/**
-		 * End row comment for html shortcode block
-		 *
-		 * @param $position -block position
+		 * @param string $comment
 		 *
 		 * @return string
 		 */
-
-		public function endRow( $position ) {
-			$output = '';
-
-			return '';
+		public function debugComment( $comment ) {
+			return wpb_debug() ? '<!-- ' . $comment . ' -->' : '';
 		}
 
 		/**
@@ -712,13 +699,14 @@ if ( ! class_exists( 'WPBakeryShortCode' ) ) {
 			$output .= $this->getCallbacks( $this->shortcode );
 			$output .= '<div class="wpb_element_wrapper ' . $this->settings( "wrapper_class" ) . '">';
 			$output .= '%wpb_element_content%';
-			$output .= '</div>'; // <!-- end .wpb_element_wrapper -->';
-			$output .= '</div>'; // <!-- end #element-'.$this->shortcode.' -->';
+			$output .= '</div>';
+			$output .= '</div>';
+
 			return $output;
 		}
 
-		/* This returs block controls
----------------------------------------------------------- */
+		// Return block controls
+
 		/**
 		 * @param $controls
 		 * @param string $extended_css
@@ -730,7 +718,7 @@ if ( ! class_exists( 'WPBakeryShortCode' ) ) {
 
 			$controls_end = '</div>';
 
-			$controls_add = ''; //' <a class="column_add" href="#" title="'.sprintf(__('Add to %s', 'js_composer'), strtolower($this->settings('name'))).'"></a>';
+			$controls_add = '';
 			$controls_edit = ' <a class="vc_control column_edit" href="#" title="' . sprintf( __( 'Edit %s', 'js_composer' ), strtolower( $this->settings( 'name' ) ) ) . '"><span class="vc_icon"></span></a>';
 			$controls_delete = ' <a class="vc_control column_clone" href="#" title="' . sprintf( __( 'Clone %s', 'js_composer' ), strtolower( $this->settings( 'name' ) ) ) . '"><span class="vc_icon"></span></a> <a class="column_delete" href="#" title="' . sprintf( __( 'Delete %s', 'js_composer' ), strtolower( $this->settings( 'name' ) ) ) . '"><span class="vc_icon"></span></a>';
 
@@ -739,13 +727,13 @@ if ( ! class_exists( 'WPBakeryShortCode' ) ) {
 			$column_controls_popup_delete = $controls_start . $controls_delete . $controls_end;
 			$column_controls_edit_popup_delete = $controls_start . $controls_edit . $controls_delete . $controls_end;
 
-			if ( $controls == 'popup_delete' ) {
+			if ( $controls === 'popup_delete' ) {
 				return $column_controls_popup_delete;
-			} else if ( $controls == 'edit_popup_delete' ) {
+			} else if ( $controls === 'edit_popup_delete' ) {
 				return $column_controls_edit_popup_delete;
-			} else if ( $controls == 'size_delete' ) {
+			} else if ( $controls === 'size_delete' ) {
 				return $column_controls_size_delete;
-			} else if ( $controls == 'add' ) {
+			} else if ( $controls === 'add' ) {
 				return $controls_start . $controls_add . $controls_end;
 			} else {
 				return $column_controls_full;
@@ -766,13 +754,6 @@ if ( ! class_exists( 'WPBakeryShortCode' ) ) {
 		 * @param string $extended_css
 		 *
 		 * @return string
-		 *
-		 * @param string $position - y,x position where to put controls inside block
-		 *    Possible $position values
-		 *    cc - center center position of the block
-		 *    tl - top left
-		 *    tr - top right
-		 *    br - bottom right
 		 */
 		public function getColumnControlsModular( $extended_css = '' ) {
 			ob_start();
@@ -805,7 +786,7 @@ if ( ! class_exists( 'WPBakeryShortCode' ) ) {
 
 			if ( isset( $this->settings['js_callback'] ) ) {
 				foreach ( $this->settings['js_callback'] as $text_val => $val ) {
-					/* TODO: name explain */
+					// TODO: name explain
 					$output .= '<input type="hidden" class="wpb_vc_callback wpb_vc_' . $text_val . '_callback " name="' . $text_val . '" value="' . $val . '" />';
 				}
 			}
@@ -848,13 +829,11 @@ if ( ! class_exists( 'WPBakeryShortCode' ) ) {
 				'btn-warning'
 			);
 			$value = str_ireplace( $old_names, $new_names, $value );
-			//$value = __($value, "js_composer");
-			//
 			$param_name = isset( $param['param_name'] ) ? $param['param_name'] : '';
 			$type = isset( $param['type'] ) ? $param['type'] : '';
 			$class = isset( $param['class'] ) ? $param['class'] : '';
 			if ( ! empty( $param['holder'] ) ) {
-				if ( $param['holder'] == 'input' ) {
+				if ( $param['holder'] === 'input' ) {
 					$output .= '<' . $param['holder'] . ' readonly="true" class="wpb_vc_param_value ' . $param_name . ' ' . $type . ' ' . $class . '" name="' . $param_name . '" value="' . $value . '">';
 				} elseif ( in_array( $param['holder'], array( 'img', 'iframe' ) ) ) {
 					$output .= '<' . $param['holder'] . ' class="wpb_vc_param_value ' . $param_name . ' ' . $type . ' ' . $class . '" name="' . $param_name . '" src="' . $value . '">';
@@ -863,7 +842,7 @@ if ( ! class_exists( 'WPBakeryShortCode' ) ) {
 				}
 			}
 			if ( ! empty( $param['admin_label'] ) && $param['admin_label'] === true ) {
-				$output .= '<span class="vc_admin_label admin_label_' . $param['param_name'] . ( empty( $value ) ? ' hidden-label' : '' ) . '"><label>' . __( $param['heading'], 'js_composer' ) . '</label>: ' . $value . '</span>';
+				$output .= '<span class="vc_admin_label admin_label_' . $param['param_name'] . ( empty( $value ) ? ' hidden-label' : '' ) . '"><label>' . $param['heading'] . '</label>: ' . $value . '</span>';
 			}
 
 			return $output;
@@ -923,7 +902,7 @@ if ( ! class_exists( 'WPBakeryShortCode' ) ) {
 			$return = array();
 			if ( is_array( $atts ) ) {
 				foreach ( $atts as $key => $val ) {
-					$return[ $key ] = preg_replace( '/\`\`/', '"', $val );
+					$return[ $key ] = str_replace( '``', '"', $val );
 				}
 			}
 
@@ -962,11 +941,11 @@ if ( ! class_exists( 'WPBakeryShortCode' ) ) {
 			if ( is_array( $matches ) && ! empty( $matches ) ) {
 				foreach ( $matches as $match ) {
 					switch ( strtolower( trim( $match[1] ) ) ) {
-						// @todo remove maybe create an wrappers as classes
+						// TODO: remove maybe create an wrappers as classes
 						case 'content': {
-							if ( $content != '' ) {
+							if ( $content !== '' ) {
 								$markup = str_replace( $match[0], $content, $markup );
-							} else if ( isset( $this->settings["default_content_in_template"] ) && $this->settings["default_content_in_template"] != '' ) {
+							} else if ( isset( $this->settings["default_content_in_template"] ) && $this->settings["default_content_in_template"] !== '' ) {
 								$markup = str_replace( $match[0], $this->settings["default_content_in_template"], $markup );
 							} else {
 								$markup = str_replace( $match[0], '', $markup );
@@ -986,7 +965,7 @@ if ( ! class_exists( 'WPBakeryShortCode' ) ) {
 							break;
 						}
 						case 'params': {
-							$iner = '';
+							$inner = '';
 							if ( isset( $this->settings['params'] ) && is_array( $this->settings['params'] ) ) {
 								foreach ( $this->settings['params'] as $param ) {
 									$param_value = isset( $$param['param_name'] ) ? $$param['param_name'] : '';
@@ -996,10 +975,10 @@ if ( ! class_exists( 'WPBakeryShortCode' ) ) {
 										$first_key = key( $param_value );
 										$param_value = is_null( $first_key ) ? '' : $param_value[ $first_key ];
 									}
-									$iner .= $this->singleParamHtmlHolder( $param, $param_value );
+									$inner .= $this->singleParamHtmlHolder( $param, $param_value );
 								}
 							}
-							$markup = str_replace( $match[0], $iner, $markup );
+							$markup = str_replace( $match[0], $inner, $markup );
 							break;
 						}
 						case 'editor_controls': {
@@ -1017,9 +996,14 @@ if ( ! class_exists( 'WPBakeryShortCode' ) ) {
 			return do_shortcode( $markup );
 		}
 
+		/**
+		 * @param $atts
+		 *
+		 * @return string
+		 */
 		protected function paramsHtmlHolders( $atts ) {
 			extract( $atts );
-			$iner = '';
+			$inner = '';
 			if ( isset( $this->settings['params'] ) && is_array( $this->settings['params'] ) ) {
 				foreach ( $this->settings['params'] as $param ) {
 					$param_value = isset( $$param['param_name'] ) ? $$param['param_name'] : '';
@@ -1029,11 +1013,11 @@ if ( ! class_exists( 'WPBakeryShortCode' ) ) {
 						$first_key = key( $param_value );
 						$param_value = is_null( $first_key ) ? '' : $param_value[ $first_key ];
 					}
-					$iner .= $this->singleParamHtmlHolder( $param, $param_value );
+					$inner .= $this->singleParamHtmlHolder( $param, $param_value );
 				}
 			}
 
-			return $iner;
+			return $inner;
 		}
 	}
 }
@@ -1089,11 +1073,11 @@ if ( ! class_exists( 'WPBakeryShortCodesContainer' ) ) {
 		 *
 		 * @return string
 		 */
-		public function getColumnControls( $controls = full, $extended_css = '' ) {
+		public function getColumnControls( $controls = 'full', $extended_css = '' ) {
 			$controls_start = '<div class="vc_controls vc_controls-visible controls controls_column' . ( ! empty( $extended_css ) ? " {$extended_css}" : '' ) . '">';
 			$controls_end = '</div>';
 
-			if ( $extended_css == 'bottom-controls' ) {
+			if ( $extended_css === 'bottom-controls' ) {
 				$control_title = sprintf( __( 'Append to this %s', 'js_composer' ), strtolower( $this->settings( 'name' ) ) );
 			} else {
 				$control_title = sprintf( __( 'Prepend to this %s', 'js_composer' ), strtolower( $this->settings( 'name' ) ) );
@@ -1129,6 +1113,7 @@ if ( ! class_exists( 'WPBakeryShortCodesContainer' ) ) {
 		 */
 		public function contentAdmin( $atts, $content = null ) {
 			$width = $el_class = '';
+
 			$atts = shortcode_atts( $this->predefined_atts, $atts );
 			extract( $atts );
 			$this->atts = $atts;
@@ -1141,7 +1126,7 @@ if ( ! class_exists( 'WPBakeryShortCodesContainer' ) ) {
 				}
 				$output .= '<div class="wpb_element_wrapper">';
 
-				if ( isset( $this->settings["custom_markup"] ) && $this->settings["custom_markup"] != '' ) {
+				if ( isset( $this->settings["custom_markup"] ) && $this->settings["custom_markup"] !== '' ) {
 					$markup = $this->settings['custom_markup'];
 					$output .= $this->customMarkup( $markup );
 				} else {
@@ -1204,13 +1189,12 @@ if ( ! class_exists( 'WPBakeryShortCodeFishBones' ) ) {
 			$this->settings = $settings;
 			$this->shortcode = $this->settings['base'];
 			$this->addAction( 'admin_init', 'enqueueAssets' );
-			//die(print_r(array($this->isAdmin(),vc_mode()),true));
 			if ( vc_is_page_editable() ) {
 				// fix for page editable
 				$this->addAction( 'wp_head', 'printIconStyles' );
 			}
-			$this->addAction( 'admin_head', 'printIconStyles' ); // fe+be
 
+			$this->addAction( 'admin_head', 'printIconStyles' ); // fe+be
 			$this->addAction( 'admin_print_scripts-post.php', 'enqueueAssets' );
 			$this->addAction( 'admin_print_scripts-post-new.php', 'enqueueAssets' );
 			if ( ! shortcode_exists( $this->shortcode ) ) {
@@ -1219,18 +1203,26 @@ if ( ! class_exists( 'WPBakeryShortCodeFishBones' ) ) {
 		}
 
 		/**
-		 * @return bool|WPBakeryShortCodeFishBones
+		 * @return WPBakeryShortCodeFishBones
 		 */
 		public function shortcodeClass() {
 			if ( $this->shortcode_class !== false ) {
 				return $this->shortcode_class;
 			}
+
 			require_once vc_path_dir( 'SHORTCODES_DIR', 'wordpress-widgets.php' );
-			$file_name = preg_replace( '/_/', '-', $this->settings( 'base' ) ) . '.php';
-			if ( is_file( vc_path_dir( 'SHORTCODES_DIR', $file_name ) ) ) {
-				require_once vc_path_dir( 'SHORTCODES_DIR', $file_name );
-			}
+
 			$class_name = $this->settings( 'php_class_name' ) ? $this->settings( 'php_class_name' ) : 'WPBakeryShortCode_' . $this->settings( 'base' );
+
+			$autoloaded_dependencies = VcShortcodeAutoloader::getInstance()->includeClass( $class_name );
+
+			if ( ! $autoloaded_dependencies ) {
+				$file = vc_path_dir( 'SHORTCODES_DIR', str_replace( '_', '-', $this->settings( 'base' ) ) . '.php' );
+				if ( is_file( $file ) ) {
+					require_once( $file );
+				}
+			}
+
 			if ( class_exists( $class_name ) && is_subclass_of( $class_name, 'WPBakeryShortCode' ) ) {
 				$this->shortcode_class = new $class_name( $this->settings );
 			} else {
@@ -1251,13 +1243,15 @@ if ( ! class_exists( 'WPBakeryShortCodeFishBones' ) ) {
 		}
 
 		/**
+		 * This method is not used
+		 *
 		 * @param $atts
 		 * @param null $content
 		 *
 		 * @return string
 		 */
 		protected function content( $atts, $content = null ) {
-			return ''; // this method is not used
+			return '';
 		}
 
 		/**

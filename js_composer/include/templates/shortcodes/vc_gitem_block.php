@@ -22,4 +22,3 @@ echo '<div class="vc_gitem-block' . $background_color
      . ' vc_gitem-float-' . $float
      . '">'
      . do_shortcode( $content ) . '</div>';
-echo $this->endBlockComment( $this->getShortcode() );

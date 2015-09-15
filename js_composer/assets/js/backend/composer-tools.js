@@ -1,7 +1,7 @@
 function setCookie( c_name, value, exdays ) {
 	var exdate = new Date();
 	exdate.setDate( exdate.getDate() + exdays );
-	var c_value = encodeURIComponent( value ) + ((exdays === null) ? "" : "; expires=" + exdate.toUTCString());
+	var c_value = encodeURIComponent( value ) + ((null === exdays) ? "" : "; expires=" + exdate.toUTCString());
 	document.cookie = c_name + "=" + c_value;
 }
 
@@ -31,7 +31,7 @@ function vc_toTitleCase( str ) {
 
 (function ( $ ) {
 	$.expr[ ':' ].containsi = function ( a, i, m ) {
-		return jQuery( a ).text().toUpperCase().indexOf( m[ 3 ].toUpperCase() ) >= 0;
+		return 0 <= jQuery( a ).text().toUpperCase().indexOf( m[ 3 ].toUpperCase() );
 	};
 	$( '#vc_license-activation-close' ).click( function ( e ) {
 		e.preventDefault();
@@ -47,15 +47,9 @@ function vc_toTitleCase( str ) {
 		sel: 'wpb_csseditor',
 		ace_enabled: false,
 		initialize: function ( sel ) {
-			if ( sel && sel.length > 0 ) {
+			if ( sel && 0 < sel.length ) {
 				this.sel = sel;
 			}
-			this.ace_enabled = true;
-		},
-		setTextarea: function () {
-			this.ace_enabled = false;
-		},
-		setAce: function () {
 			this.ace_enabled = true;
 		},
 		aceEnabled: function () {
@@ -98,7 +92,7 @@ function vc_toTitleCase( str ) {
 					'height': '100%',
 					'minHeight': '300px'
 				} );
-				$( '#' + this.sel ).html( "" ).append( this.$editor ).css( {
+				$( '#' + this.sel ).empty().append( this.$editor ).css( {
 					'overflowLeft': 'hidden',
 					'width': '100%',
 					'height': '100%'
@@ -113,6 +107,19 @@ function vc_toTitleCase( str ) {
 			var height = $( window ).height() - 380; // @fix ACE editor
 			if ( this.aceEnabled() ) {
 				$( '#' + this.sel ).css( { 'height': height, 'minHeight': height } );
+			} else {
+				this.$editor.parent().css( { 'height': height, 'minHeight': height } );
+				this.$editor.css( { 'height': '98%', 'width': '98%' } );
+			}
+		},
+		setSizeResizable: function () {
+			var height, editorPositionTop, footerPositionTop,
+				$editor = $( '#' + this.sel );
+			editorPositionTop = $editor.offset().top;
+			footerPositionTop = vc.active_panel.$el.find( '[data-vc-ui-element="panel-footer"]' ).offset().top;
+			height = footerPositionTop - editorPositionTop - 70;
+			if ( this.aceEnabled() ) {
+				$editor.css( { 'height': height, 'minHeight': height } );
 			} else {
 				this.$editor.parent().css( { 'height': height, 'minHeight': height } );
 				this.$editor.css( { 'height': '98%', 'width': '98%' } );
@@ -138,56 +145,48 @@ function vc_convert_column_size( width ) {
 			1
 		],
 		range = _.range( 1, 13 ),
-		num = ! _.isUndefined( numbers[ 0 ] ) && _.indexOf( range,
-			parseInt( numbers[ 0 ], 10 ) ) >= 0 ? parseInt( numbers[ 0 ], 10 ) : false,
-		dev = ! _.isUndefined( numbers[ 1 ] ) && _.indexOf( range,
-			parseInt( numbers[ 1 ], 10 ) ) >= 0 ? parseInt( numbers[ 1 ], 10 ) : false;
-	if ( num !== false && dev !== false ) {
+		num = ! _.isUndefined( numbers[ 0 ] ) && 0 <= _.indexOf( range,
+			parseInt( numbers[ 0 ], 10 ) ) ? parseInt( numbers[ 0 ], 10 ) : false,
+		dev = ! _.isUndefined( numbers[ 1 ] ) && 0 <= _.indexOf( range,
+			parseInt( numbers[ 1 ], 10 ) ) ? parseInt( numbers[ 1 ], 10 ) : false;
+	if ( false !== num && false !== dev ) {
 		return prefix + (12 * num / dev);
 	}
 	return prefix + '12';
 }
-/**
- * @deprecated
- * @param width
- * @return {*}
- */
-function vc_column_size( width ) {
-	return vc_convert_column_size( width );
-}
 function vc_convert_column_span_size( width ) {
 	width = width.replace( /^vc_/, '' );
-	if ( width == "span12" ) {
+	if ( "span12" === width ) {
 		return '1/1';
-	} else if ( width == "span11" ) {
+	} else if ( "span11" === width ) {
 		return '11/12';
-	} else if ( width == "span10" ) //three-fourth
+	} else if ( "span10" === width ) //three-fourth
 	{
 		return '5/6';
-	} else if ( width == "span9" ) //three-fourth
+	} else if ( "span9" === width ) //three-fourth
 	{
 		return '3/4';
-	} else if ( width == "span8" ) //two-third
+	} else if ( "span8" === width ) //two-third
 	{
 		return '2/3';
-	} else if ( width == "span7" ) {
+	} else if ( "span7" === width ) {
 		return '7/12';
-	} else if ( width == "span6" ) //one-half
+	} else if ( "span6" === width ) //one-half
 	{
 		return '1/2';
-	} else if ( width == "span5" ) //one-half
+	} else if ( "span5" === width ) //one-half
 	{
 		return '5/12';
-	} else if ( width == "span4" ) // one-third
+	} else if ( "span4" === width ) // one-third
 	{
 		return '1/3';
-	} else if ( width == "span3" ) // one-fourth
+	} else if ( "span3" === width ) // one-fourth
 	{
 		return '1/4';
-	} else if ( width == "span2" ) // one-fourth
+	} else if ( "span2" === width ) // one-fourth
 	{
 		return '1/6';
-	} else if ( width == "span1" ) {
+	} else if ( "span1" === width ) {
 		return '1/12';
 	}
 
@@ -206,7 +205,7 @@ function vc_get_column_mask( cells ) {
 			var sp = columns[ i ].match( /(\d{1,2})(\d{1,2})/ );
 			numbers_sum = _.reduce( sp.slice( 1 ), function ( memo, num ) {
 				return memo + parseInt( num, 10 );
-			}, numbers_sum ); //TODO: jshint
+			}, numbers_sum ); // TODO: jshint
 		}
 	}
 	return columns_count + '' + numbers_sum;
@@ -226,140 +225,39 @@ function VCS4() {
 	return (((1 + Math.random()) * 0x10000) | 0).toString( 16 ).substring( 1 );
 }
 
-/**
- * Taxonomies filter
- *
- * Show or hide taxonomies depending on selected post types
- */
-var wpb_grid_post_types_for_taxonomies_handler = function () {
-	var $labels = this.$content.find( '.wpb_el_type_taxonomies label[data-post-type]' ),
-		$ = jQuery;
-	$labels.hide();
-	$( '.grid_posttypes:checkbox', this.$content ).change( function () {
-		if ( $( this ).is( ':checked' ) ) {
-			$labels.filter( '[data-post-type=' + $( this ).val() + ']' ).show();
-		} else {
-			$labels.filter( '[data-post-type=' + $( this ).val() + ']' ).hide();
-		}
-	} ).each( function () {
-		if ( $( this ).is( ':checked' ) ) {
-			$labels.filter( '[data-post-type=' + $( this ).val() + ']' ).show();
-		}
-	} );
-};
-var wpb_single_image_img_link_dependency_callback = function () {
-	var $img_link_large = this.$content.find( '#img_link_large-yes' ),
-		$ = jQuery,
-		$img_link_target = this.$content.find( '[name=img_link_target]' ).parents( '.vc_shortcode-param:first' ),
-		params = this.model.get( 'params' ),
-		old_param_value = '',
-		$link_field = $( '.wpb-edit-form [name=link]' );
-	this.$content.find( '#img_link_large-yes' ).change( function () {
-		var checked = $( this ).is( ':checked' );
-		if ( checked ) {
-			$img_link_target.show();
-		} else {
-			if ( $link_field.val().length > 0 && $link_field.val() !== 'http://' ) {
-				$img_link_target.show();
-			} else {
-				$img_link_target.hide();
-			}
-		}
-	} );
-	var key_up_callback = _.debounce( function () {
-		var val = $( this ).val();
-		if ( val.length > 0 && val !== 'http://' && val !== 'https://' ) {
-			$img_link_target.show();
-		} else {
-			$img_link_target.hide();
-		}
-	}, 300 );
-	$link_field.keyup( key_up_callback ).trigger( 'keyup' );
-	if ( this.$content.find( '#img_link_large-yes' ).is( ':checked' ) ) {
-		$img_link_target.show();
-	} else {
-		if ( $link_field.length && $link_field.val().length > 0 ) {
-			$img_link_target.show();
-		} else {
-			$img_link_target.hide();
-		}
-	}
-	if ( params.img_link && params.img_link.length && ! params.link ) {
-		old_param_value = params.img_link;
-		if ( ! old_param_value.match( /^https?\:\/\// ) ) {
-			old_param_value = 'http://' + old_param_value;
-		}
-		$link_field.val( old_param_value );
-	}
-	vc.edit_form_callbacks.push( function () {
-		if ( this.params.img_link ) {
-			this.params.img_link = '';
-		}
-	} );
-};
-
-var vc_button_param_target_callback = function () {
+function vc_button_param_target_callback() {
 	var $ = jQuery,
-		$link_target = this.$content.find( '[name=target]' ).parents( '.vc_shortcode-param:first' ),
+		$link_target = this.$content.find( '[name=target]' ).parents( '[data-vc-ui-element="panel-shortcode-param"]:first' ),
 		$link_field = $( '.wpb-edit-form [name=href]' );
 	var key_up_callback = _.debounce( function () {
 		var val = $( this ).val();
-		if ( val.length > 0 && val !== 'http://' && val !== 'https://' ) {
+		if ( 0 < val.length && 'http://' !== val && 'https://' !== val ) {
 			$link_target.show();
 		} else {
 			$link_target.hide();
 		}
 	}, 300 );
 	$link_field.keyup( key_up_callback ).trigger( 'keyup' );
-};
+}
 
-var vc_cta_button_param_target_callback = function () {
+function vc_cta_button_param_target_callback() {
 	var $ = jQuery,
-		$link_target = this.$content.find( '[name=target]' ).parents( '.vc_shortcode-param:first' ),
+		$link_target = this.$content.find( '[name=target]' ).parents( '[data-vc-ui-element="panel-shortcode-param"]:first' ),
 		$link_field = $( '.wpb-edit-form [name=href]' );
 	var key_up_callback = _.debounce( function () {
 		var val = $( this ).val();
-		if ( val.length > 0 && val !== 'http://' && val !== 'https://' ) {
+		if ( 0 < val.length && 'http://' !== val && 'https://' !== val ) {
 			$link_target.show();
 		} else {
 			$link_target.hide();
 		}
 	}, 300 );
 	$link_field.keyup( key_up_callback ).trigger( 'keyup' );
-};
-/*
- var vc_grid_include_dependency_callback = function () {
- var $ = jQuery;
- var include_el = $('.wpb_vc_param_value[name=include]',this.$content);
- // include_el.parents('.wpb_el_type_autocomplete.vc_shortcode-param').removeClass('vc_dependent-hidden');
- var include_obj = include_el.data('object');
- var post_type_object = $('select.wpb_vc_param_value[name="post_type"]',this.$content);
- var val = post_type_object.val();
- include_obj.source_data = function (request, response) {
- return {query: {query:val,term:request.term}};
- };
- include_obj.source_data_val = val;
- post_type_object.change(function(e){
- val = $(this).val();
- if(include_obj.source_data_val != val) {
- include_obj.source_data = function (request, response) {
- return {query: {query:val,term:request.term}};
- };
+}
 
- include_obj.$el.data('uiAutocomplete').destroy();
- include_obj.$sortable_wrapper.find('.vc_data').remove(); // remove all appended items
- include_obj.render(); // re-render data
-
- include_obj.source_data_val = val;
- // include_el.parents('.wpb_el_type_autocomplete.vc_shortcode-param').removeClass('vc_dependent-hidden');
- }
- });
- };
- */
-var vc_grid_exclude_dependency_callback = function () {
+function vc_grid_exclude_dependency_callback() {
 	var $ = jQuery;
 	var exclude_el = $( '.wpb_vc_param_value[name=exclude]', this.$content );
-	// exclude_el.parents('.wpb_el_type_autocomplete.vc_shortcode-param').removeClass('vc_dependent-hidden');
 	var exclude_obj = exclude_el.data( 'object' );
 	var post_type_object = $( 'select.wpb_vc_param_value[name="post_type"]', this.$content );
 	var val = post_type_object.val();
@@ -377,12 +275,11 @@ var vc_grid_exclude_dependency_callback = function () {
 			exclude_obj.$sortable_wrapper.find( '.vc_data' ).remove(); // remove all appended items
 			exclude_obj.render(); // re-render data
 			exclude_obj.source_data_val = val;
-			// exclude_el.parents('.wpb_el_type_autocomplete.vc_shortcode-param').removeClass('vc_dependent-hidden');
 		}
 	} );
-};
-// var vcGriFilfterExcludeValuesList = [];
-var vcGridFilterExcludeCallBack = function () {
+}
+
+function vcGridFilterExcludeCallBack() {
 	var $ = jQuery, $filterBy, $exclude, autocomplete, defaultValue;
 	$filterBy = $( '.wpb_vc_param_value[name=filter_source]', this.$content );
 	defaultValue = $filterBy.val();
@@ -394,18 +291,10 @@ var vcGridFilterExcludeCallBack = function () {
 		autocomplete.source_data = function () {
 			return { vc_filter_by: $this.val() };
 		};
-	} ).trigger('change');
+	} ).trigger( 'change' );
+}
 
-	/*
-	 var filterValue = $( this ).val();
-	 autocomplete.options.values = _.filter( vcGriFilfterExcludeValuesList, function ( value ) {
-	 return value.group_id == filterValue;
-	 } );
-	 filterValue != currentFilterValue && autocomplete.clearValue();
-	 currentFilterValue = filterValue;
-	 */
-};
-var vcChartCustomColorDependency = function () {
+function vcChartCustomColorDependency() {
 	var $, $masterEl, $content;
 	$ = jQuery;
 	$masterEl = $( '.wpb_vc_param_value[name=style]', this.$content );
@@ -416,22 +305,9 @@ var vcChartCustomColorDependency = function () {
 		$content.toggleClass( 'vc_chart-edit-form-custom-color', 'custom' === masterValue );
 	} );
 	$masterEl.trigger( 'change' );
-};
-/*
- var vc_grid_custom_query_dependency = function() {
- var $ = jQuery,
- $post_type = $('select.wpb_vc_param_value[name="post_type"]',this.$content);
- $post_type.change(function(){
- var val = $(this).val();
- if(val === 'custom') {
- $(this).parents('.vc_shortcode-param').parent().addClass('vc_grid-custom-source');
- } else {
- $(this).parents('.vc_shortcode-param').parent().removeClass('vc_grid-custom-source');
- }
- });
- }
- */
-var vc_wpnop = function ( content ) {
+}
+
+function vc_wpnop( content ) {
 	var blocklist1, blocklist2, preserve_linebreaks = false, preserve_br = false;
 
 	// Protect pre|script tags
@@ -508,9 +384,9 @@ var vc_wpnop = function ( content ) {
 	}
 
 	return content;
-};
+}
 
-var vc_wpautop = function ( pee ) {
+function vc_wpautop( pee ) {
 	var preserve_linebreaks = false, preserve_br = false,
 		blocklist = 'table|thead|tfoot|caption|col|colgroup|tbody|tr|td|th|div|dl|dd|dt|ul|ol|li|pre|select|option|form|map|area|blockquote|address|math|style|p|h[1-6]|hr|fieldset|noscript|legend|section|article|aside|hgroup|header|footer|nav|figure|figcaption|details|menu|summary';
 
@@ -585,17 +461,11 @@ var vc_wpautop = function ( pee ) {
 		pee = pee.replace( /<wp-temp-br([^>]*)>/g, '<br$1>' );
 	}
 	return pee;
-};
+}
 
 var vc_regexp_shortcode = _.memoize( function () {
 	return RegExp( '\\[(\\[?)(\\w+\\b)(?![\\w-])([^\\]\\/]*(?:\\/(?!\\])[^\\]\\/]*)*?)(?:(\\/)\\]|\\](?:([^\\[]*(?:\\[(?!\\/\\2\\])[^\\[]*)*)(\\[\\/\\2\\]))?)(\\]?)' );
-	// return new RegExp( '\\[(\\[?)(\\S+)(?![\\w-])([^\\]\\/]*(?:\\/(?!\\])[^\\]\\/]*)*?)(?:(\\/)\\]|\\](?:([^\\[]*(?:\\[(?!\\/\\2\\])[^\\[]*)*)(\\[\\/\\2\\]))?)(\\]?)' );
 } );
-
-var vc_isCssIdValid = function ( id ) {
-	var re = /^[A-Za-z]+[\w\-\:\.]*$/;
-	return re.test( id )
-};
 
 /**
  * Add default values for params on shortcode creation.
@@ -603,32 +473,33 @@ var vc_isCssIdValid = function ( id ) {
  * @since 4.5
  * @param model
  */
-var vcAddShortcodeDefaultParams = function ( model ) {
+function vcAddShortcodeDefaultParams( model ) {
 	var params = model.get( 'params' );
 	params = _.extend( {}, vc.getDefaults( model.get( 'shortcode' ) ), params );
 	model.set( { params: params }, { silent: true } );
-};
+}
 
 /**
- * Used to change md5 - work 100x faster.
+ * Simple (non-secure) hash function
+ *
  * @since 4.5
  *
- * @param str
- * @returns {number}
+ * @param {object|string} obj Thing to hash
+ * @return {number} Can be negative
  */
-function vc_globalHashCode( str ) {
-	var hash = 0;
-	if ( str.length == 0 ) {
-		return hash;
+function vc_globalHashCode( obj ) {
+	if ( 'string' !== typeof(obj) ) {
+		obj = JSON.stringify( obj );
 	}
-	for ( i = 0;
-		  i < str.length;
-		  i ++ ) {
-		char = str.charCodeAt( i );
-		hash = ((hash << 5) - hash) + char;
-		hash = hash & hash; // Convert to 32bit integer
+
+	if ( ! obj.length ) {
+		return 0;
 	}
-	return hash;
+
+	return obj.split( '' ).reduce( function ( a, b ) {
+		a = ((a << 5) - a) + b.charCodeAt( 0 );
+		return a & a;
+	}, 0 );
 }
 
 // underscore object memoize can cause overriding problems
@@ -670,7 +541,7 @@ function vcChartParamAfterAddCallback( $elem, action ) {
 
 	i = 0;
 	while ( true ) {
-		if ( i ++ > 100 ) {
+		if ( 100 < i ++ ) {
 			break;
 		}
 
@@ -729,3 +600,39 @@ vc.events.on( 'shortcodes:vc_row:add:param:name:parallax shortcodes:vc_row:updat
 			}
 		}
 	} );
+/**
+ * console.log for every browser
+ *
+ * @see http://paulirish.com/2009/log-a-lightweight-wrapper-for-consolelog/
+ */
+window.vcConsoleLog = function () {
+	vcConsoleLog.history = vcConsoleLog.history || [];   // store logs to an array for reference
+	vcConsoleLog.history.push( arguments );
+	if ( this.console ) {
+		console.log( Array.prototype.slice.call( arguments ) );
+	}
+};
+
+/**
+ * Escape html string
+ *
+ * @param {string} text
+ * @return {string}
+ */
+function vcEscapeHtml( text ) {
+	var map = {
+		'&': '&amp;',
+		'<': '&lt;',
+		'>': '&gt;',
+		'"': '&quot;',
+		"'": '&#039;'
+	};
+
+	if ( null === text || 'undefined' === typeof(text) ) {
+		return '';
+	}
+
+	return text.replace( /[&<>"']/g, function ( m ) {
+		return map[ m ];
+	} );
+};

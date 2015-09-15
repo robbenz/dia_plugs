@@ -2,6 +2,21 @@
 
 class WPBakeryShortCode_VC_Single_image extends WPBakeryShortCode {
 
+	function __construct( $settings ) {
+		parent::__construct( $settings );
+
+		$this->jsScripts();
+	}
+
+	public function jsScripts() {
+		wp_register_script( 'zoom', vc_asset_url( 'lib/bower/zoom/jquery.zoom.min.js' ) );
+
+		wp_register_script( 'vc_image_zoom', vc_asset_url( 'lib/vc_image_zoom/vc_image_zoom.js' ), array(
+			'jquery',
+			'zoom'
+		), WPB_VC_VERSION, true );
+	}
+
 	public function singleParamHtmlHolder( $param, $value ) {
 		$output = '';
 		// Compatibility fixes
@@ -28,12 +43,10 @@ class WPBakeryShortCode_VC_Single_image extends WPBakeryShortCode {
 			'btn-warning'
 		);
 		$value = str_ireplace( $old_names, $new_names, $value );
-		//$value = __($value, "js_composer");
-		//
+
 		$param_name = isset( $param['param_name'] ) ? $param['param_name'] : '';
 		$type = isset( $param['type'] ) ? $param['type'] : '';
 		$class = isset( $param['class'] ) ? $param['class'] : '';
-
 
 		if ( 'attach_image' === $param['type'] && 'image' === $param_name ) {
 			$output .= '<input type="hidden" class="wpb_vc_param_value ' . $param_name . ' ' . $type . ' ' . $class . '" name="' . $param_name . '" value="' . $value . '" />';
@@ -45,7 +58,7 @@ class WPBakeryShortCode_VC_Single_image extends WPBakeryShortCode {
 			$this->setSettings( 'logo', ( $img ? $img['thumbnail'] : '<img width="150" height="150" src="' . vc_asset_url( 'vc/blank.gif' ) . '" class="attachment-thumbnail vc_element-icon"  data-name="' . $param_name . '" alt="" title="" style="display: none;" />' ) . '<span class="no_image_image vc_element-icon' . ( ! empty( $element_icon ) ? ' ' . $element_icon : '' ) . ( $img && ! empty( $img['p_img_large'][0] ) ? ' image-exists' : '' ) . '" /><a href="#" class="column_edit_trigger' . ( $img && ! empty( $img['p_img_large'][0] ) ? ' image-exists' : '' ) . '">' . __( 'Add image', 'js_composer' ) . '</a>' );
 			$output .= $this->outputTitleTrue( $this->settings['name'] );
 		} elseif ( ! empty( $param['holder'] ) ) {
-			if ( $param['holder'] == 'input' ) {
+			if ( $param['holder'] === 'input' ) {
 				$output .= '<' . $param['holder'] . ' readonly="true" class="wpb_vc_param_value ' . $param_name . ' ' . $type . ' ' . $class . '" name="' . $param_name . '" value="' . $value . '">';
 			} elseif ( in_array( $param['holder'], array( 'img', 'iframe' ) ) ) {
 				$output .= '<' . $param['holder'] . ' class="wpb_vc_param_value ' . $param_name . ' ' . $type . ' ' . $class . '" name="' . $param_name . '" src="' . $value . '">';
@@ -55,13 +68,13 @@ class WPBakeryShortCode_VC_Single_image extends WPBakeryShortCode {
 		}
 
 		if ( ! empty( $param['admin_label'] ) && $param['admin_label'] === true ) {
-			$output .= '<span class="vc_admin_label admin_label_' . $param['param_name'] . ( empty( $value ) ? ' hidden-label' : '' ) . '"><label>' . __( $param['heading'], 'js_composer' ) . '</label>: ' . $value . '</span>';
+			$output .= '<span class="vc_admin_label admin_label_' . $param['param_name'] . ( empty( $value ) ? ' hidden-label' : '' ) . '"><label>' . $param['heading'] . '</label>: ' . $value . '</span>';
 		}
 
 		return $output;
 	}
 
-	public function getImageSquereSize( $img_id, $img_size ) {
+	public function getImageSquareSize( $img_id, $img_size ) {
 		if ( preg_match_all( '/(\d+)x(\d+)/', $img_size, $sizes ) ) {
 			$exact_size = array(
 				'width' => isset( $sizes[1][0] ) ? $sizes[1][0] : '0',
@@ -88,6 +101,6 @@ class WPBakeryShortCode_VC_Single_image extends WPBakeryShortCode {
 	}
 
 	protected function outputTitleTrue( $title ) {
-		return '<h4 class="wpb_element_title">' . __( $title, 'js_composer' ) . ' ' . $this->settings( 'logo' ) . '</h4>';
+		return '<h4 class="wpb_element_title">' . $title . ' ' . $this->settings( 'logo' ) . '</h4>';
 	}
 }

@@ -6,7 +6,6 @@ class WPBakeryShortCode_VC_images_carousel extends WPBakeryShortCode_VC_gallery 
 
 	public function __construct( $settings ) {
 		parent::__construct( $settings );
-		// $this->addAction( 'wp_enqueue_scripts', 'jsCssScripts' );
 		$this->jsCssScripts();
 	}
 

@@ -193,7 +193,12 @@ vc_map( array(
 			'param_name' => 'el_class',
 			'description' => __( 'Style particular content element differently - add a class name and refer to it in custom CSS.', 'js_composer' )
 		),
-
+		array(
+			'type' => 'css_editor',
+			'heading' => __( 'CSS box', 'js_composer' ),
+			'param_name' => 'css',
+			'group' => __( 'Design Options', 'js_composer' )
+		),
 	),
 	'js_view' => 'VcIconElementView_Backend',
 ) );

@@ -138,9 +138,7 @@ Class Vc_Navbar implements Vc_Render {
 	 * @return string
 	 */
 	public function getControlPreview() {
-		return '';/*<li class="vc_pull-right vc_preview-backend">'
-		  //added to getControlsaveBacked() //
-		  .'</li>';*/
+		return '';
 	}
 
 	/**

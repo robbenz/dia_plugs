@@ -4,7 +4,7 @@ jQuery( document ).ready( function ( $ ) {
 		active: (getCookie( 'wpb_js_composer_settings_group_tab' ) ? getCookie( 'wpb_js_composer_settings_group_tab' ) : false),
 		collapsible: true,
 		change: function ( event, ui ) {
-			if ( ui.newHeader.attr( 'id' ) !== undefined ) {
+			if ( 'undefined' !== typeof(ui.newHeader.attr( 'id' )) ) {
 				setCookie( 'wpb_js_composer_settings_group_tab', '#' + ui.newHeader.attr( 'id' ), 365 * 24 * 60 * 60 );
 			} else {
 				setCookie( 'wpb_js_composer_settings_group_tab', '', 365 * 24 * 60 * 60 );
@@ -37,7 +37,6 @@ jQuery( document ).ready( function ( $ ) {
 		} );
 	} );
 	$( '.vc_settings-tab-content' ).submit( function () {
-		// setCookie('wpb_js_composer_settings_active_tab', $('.vc_settings-tab-control.nav-tab-active').attr('href'), 365 * 24 * 60 * 60);
 		return true;
 	} );
 
@@ -75,20 +74,21 @@ jQuery( document ).ready( function ( $ ) {
 		}
 	} );
 	$( '#wpb_js_use_custom' ).change( function () {
-		if ( $( this ).is( ':checked' ) ) {
+		if ( this.checked ) {
 			$( '#vc_settings-color' ).addClass( 'color_enabled' );
 		} else {
 			$( '#vc_settings-color' ).removeClass( 'color_enabled' );
 
 		}
 	} );
-	var showUpdaterSubmitButton = function () {
-			$( '#vc_settings-updater [type=submit]' ).attr( 'disabled', false );
-		},
-		hideUpdaterSubmitButton = function () {
-			$( '#vc_settings-updater [type=submit]' ).attr( 'disabled', true );
 
-		};
+	function showUpdaterSubmitButton() {
+		$( '#vc_settings-updater [type=submit]' ).attr( 'disabled', false );
+	}
+
+	function hideUpdaterSubmitButton() {
+		$( '#vc_settings-updater [type=submit]' ).attr( 'disabled', true );
+	}
 
 	$( '#vc_settings-activate-license' ).click( function ( e ) {
 		var $button = $( this ),
@@ -97,7 +97,7 @@ jQuery( document ).ready( function ( $ ) {
 			status = $( '#vc_settings-license-status' ).val(),
 			$api_key = $( '[name=wpb_js_envato_api_key]' ),
 			message_html = '<div id="vc_license-activation-message" class="updated vc_updater-result-message hidden"><p><strong>{message}</strong></p></div>';
-		if ( $button.attr( 'disabled' ) === true ) {
+		if ( true === $button.attr( 'disabled' ) ) {
 			return false;
 		}
 		$button.attr( 'disabled', true );
@@ -110,14 +110,14 @@ jQuery( document ).ready( function ( $ ) {
 			url: window.ajaxurl,
 			dataType: 'json',
 			data: {
-				action: status === 'activated' ? 'wpb_deactivate_license' : 'wpb_activate_license',
+				action: 'activated' === status ? 'wpb_deactivate_license' : 'wpb_activate_license',
 				username: $username.val(),
 				key: $key.val(),
 				api_key: $api_key.val()
 			}
 		} ).done( function ( data ) {
 			var code;
-			if ( data.result && status !== 'activated' ) {
+			if ( data.result && 'activated' !== status ) {
 				$( '#vc_settings-license-status' ).val( 'activated' );
 				$key.addClass( 'vc_updater-passive' ).attr( 'disabled', true );
 				$username.addClass( 'vc_updater-passive' ).attr( 'disabled', true );
@@ -126,7 +126,7 @@ jQuery( document ).ready( function ( $ ) {
 				message_html = message_html.replace( '{message}',
 					i18nLocaleSettings.vc_updater_license_activation_success );
 				hideUpdaterSubmitButton();
-			} else if ( data.result && status === 'activated' ) {
+			} else if ( data.result && 'activated' === status ) {
 				$( '#vc_settings-license-status' ).val( 'not_activated' );
 				$key.removeClass( 'vc_updater-passive' ).attr( 'disabled', false );
 				$username.removeClass( 'vc_updater-passive' ).attr( 'disabled', false );
@@ -137,37 +137,51 @@ jQuery( document ).ready( function ( $ ) {
 				showUpdaterSubmitButton();
 			} else {
 				message_html = message_html.replace( 'updated', 'error' );
-				code = typeof(data.code) === 'undefined' ? parseInt( data.code ) : 300;
-				if ( data.code === 100 ) {
-					// Empty data
-					message_html = message_html.replace( '{message}', i18nLocaleSettings.vc_updater_empty_data );
-					$key.closest( 'tr' ).addClass( 'form-invalid' );
-					$username.closest( 'tr' ).addClass( 'form-invalid' );
-				} else if ( data.code === 200 ) {
-					// Wrong purchase code.
-					message_html = message_html.replace( '{message}', i18nLocaleSettings.vc_updater_wrong_license_key );
-					$key.closest( 'tr' ).addClass( 'form-invalid' );
-				} else if ( data.code === 300 ) {
-					// Wrong data.
-					message_html = message_html.replace( '{message}', i18nLocaleSettings.vc_updater_wrong_data );
-				} else if ( data.code === 401 ) {
-					// Already activated
-					message_html = message_html.replace( '{message}', i18nLocaleSettings.vc_updater_already_activated );
-				} else if ( data.code === 402 ) {
-					// Activated on other wordpress site.
-					message_html = message_html.replace( '{message}',
-						i18nLocaleSettings.vc_updater_already_activated_another_url ).replace( '{site}',
-						data.activated_url );
-					$key.closest( 'tr' ).addClass( 'form-invalid' );
-				} else if ( data.code === 500 ) {
-					message_html = message_html.replace( '{message}', i18nLocaleSettings.vc_deactivation );
-				} else if ( data.message ) {
-					message_html = message_html.replace( '{message}', i18nLocaleSettings[ data.message ] );
-				} else {
-					message_html = message_html.replace( '{message}', i18nLocaleSettings.vc_updater_error );
-				}
+				code = 'undefined' === typeof(data.code) ? parseInt( data.code ) : 300;
 
+				switch ( code ) {
+					case 100: // Empty data
+						message_html = message_html.replace( '{message}', i18nLocaleSettings.vc_updater_empty_data );
+						$key.closest( 'tr' ).addClass( 'form-invalid' );
+						$username.closest( 'tr' ).addClass( 'form-invalid' );
+						break;
+
+					case 200: // Wrong purchase code.
+						message_html = message_html.replace( '{message}',
+							i18nLocaleSettings.vc_updater_wrong_license_key );
+						$key.closest( 'tr' ).addClass( 'form-invalid' );
+						break;
+
+					case 300: // Wrong data.
+						message_html = message_html.replace( '{message}', i18nLocaleSettings.vc_updater_wrong_data );
+						break;
+
+					case 401: // Already activated
+						message_html = message_html.replace( '{message}',
+							i18nLocaleSettings.vc_updater_already_activated );
+						break;
+
+					case 402: // Activated on other wordpress site.
+						message_html = message_html.replace( '{message}',
+							i18nLocaleSettings.vc_updater_already_activated_another_url ).replace( '{site}',
+							data.activated_url );
+						$key.closest( 'tr' ).addClass( 'form-invalid' );
+						break;
+
+					case 500:
+						message_html = message_html.replace( '{message}',
+							i18nLocaleSettings.vc_updater_deactivate_license );
+						break;
+
+					default:
+						if ( data.message ) {
+							message_html = message_html.replace( '{message}', i18nLocaleSettings[ data.message ] );
+						} else {
+							message_html = message_html.replace( '{message}', i18nLocaleSettings.vc_updater_error );
+						}
+				}
 			}
+
 			$( message_html ).insertAfter( '#vc_settings-activate-license' ).fadeIn( 100 );
 			$button.attr( 'disabled', false );
 			$( '#vc_updater-spinner' ).hide();
@@ -197,7 +211,7 @@ jQuery( document ).ready( function ( $ ) {
 		$( this ).text( $( this ).data( 'vcDoneTxt' ) );
 	} );
 
-	var showMessageMore = function ( text, typeClass, timeout, remove ) {
+	function showMessageMore( text, typeClass, timeout, remove ) {
 		if ( remove ) {
 			$( '.vc_atm-message' ).remove();
 		}
@@ -211,7 +225,7 @@ jQuery( document ).ready( function ( $ ) {
 			}, timeout );
 		}
 		return $message;
-	};
+	}
 
 	var lessBuilding = false;
 	$( '#vc_settings-color' ).submit( function ( e ) {
@@ -224,7 +238,7 @@ jQuery( document ).ready( function ( $ ) {
 		form = this;
 		$submitButton = $( '#submit_btn' );
 		$designCheckBox = $( '#wpb_js_use_custom' );
-		if ( 'checked' === $designCheckBox.attr( 'checked' ) && 'restore_color' !== $( '#vc_settings-color-action' ).val() ) {
+		if ( $designCheckBox.prop( 'checked' ) && 'restore_color' !== $( '#vc_settings-color-action' ).val() ) {
 			var modifyVars, variablesDataLinker, $spinner;
 
 			lessBuilding = true;
@@ -250,7 +264,7 @@ jQuery( document ).ready( function ( $ ) {
 							type: 'POST',
 							url: $form.attr( 'action' ),
 							data: $form.eq( 0 ).serializeArray(),
-							success: function ( ret ) {
+							success: function () {
 								showMessageMore( window.i18nLocaleSettings.saved,
 									'updated',
 									5000,

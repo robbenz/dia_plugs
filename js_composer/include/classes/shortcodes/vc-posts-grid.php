@@ -145,7 +145,7 @@ class WPBakeryShortCode_VC_Posts_Grid extends WPBakeryShortCode {
 			$this->loadPrettyPhoto();
 			// actually fixes relations if more prettyphoto added on page
 			if ( ! $this->pretty_rel_random ) {
-				$this->pretty_rel_random = ' rel="prettyPhoto[rel-' . get_the_ID() . '-' . rand() . ']"'; //rel-'.rand();
+				$this->pretty_rel_random = ' rel="prettyPhoto[rel-' . get_the_ID() . '-' . rand() . ']"';
 			}
 			$output .= '<a href="' . $post->image_link . '" class="' . $css_class . ' prettyphoto"' . $this->pretty_rel_random . ' ' . $this->link_target . ' title="' . $post->title_attribute . '">' . $content . '</a>';
 		} else {
@@ -164,7 +164,7 @@ class WPBakeryShortCode_VC_Posts_Grid extends WPBakeryShortCode {
 	}
 
 	protected function setLinkTarget( $grid_link_target = '' ) {
-		$this->link_target = $grid_link_target == '_blank' ? ' target="_blank"' : '';
+		$this->link_target = $grid_link_target === '_blank' ? ' target="_blank"' : '';
 	}
 
 	protected function findBlockTemplate() {

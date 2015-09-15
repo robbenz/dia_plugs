@@ -1,6 +1,6 @@
 <div class="vc_resources-tab changelog">
-	<div class="feature-section col two-col">
-		<div>
+	<div class="feature-section vc_row">
+		<div class="vc_col-xs-6">
 			<h3><?php _e( 'Resources', 'js_composer' ); ?></h3>
 
 			<p><?php _e( 'There are several resources available to Visual Composer users to help you to get around plugin:', 'js_composer' ); ?></p>
@@ -16,7 +16,8 @@
 				<li><a href="http://twitter.com/wpbakery" target="_blank">Twitter account</a></li>
 			</ul>
 		</div>
-		<div class="last-feature">
+		
+		<div class="vc_col-xs-6">
 			<h3><?php _e( 'Official Support', 'js_composer' ); ?></h3>
 
 			<p><?php printf( __( 'To get your support related question answered in the fastest timing, please head over to our <a href="%s" target="_blank">support page</a> and open Support ticket. To open support ticket you should have account in the ticket system. Registration should take you couple of minutes to complete and is completely automatic process. Prepare your Visual Composer <a href="%s" target="_blank">Purchase code</a> and fill in "Create account in Ticket system" form located at <a href="%s" target="_blank">support page</a>, then follow on screen instructions.', 'js_composer' ), 'http://support.wpbakery.com', 'http://go.wpbakery.com/purchase-code', 'http://support.wpbakery.com' ); ?></p>

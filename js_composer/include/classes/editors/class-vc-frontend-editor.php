@@ -62,7 +62,7 @@ Class Vc_Frontend_Editor implements Vc_Editor_Interface {
 	public $post_type;
 	/**
 	 * @var array
-	 */
+	 */#vc_ui-panel-edit-element
 	protected $settings = array(
 		'assets_dir' => 'assets',
 		'templates_dir' => 'templates',
@@ -109,7 +109,7 @@ Class Vc_Frontend_Editor implements Vc_Editor_Interface {
 
 		/**
 		 * Load required vendors classes;
-		 * @deprecated since 4.4 due to autoload logic
+		 * @deprecated 4.4 due to autoload logic
 		 */
 		visual_composer()->vendorsManager()->load();
 	}
@@ -153,8 +153,6 @@ Class Vc_Frontend_Editor implements Vc_Editor_Interface {
 			&$this,
 			'parseEditableContent'
 		), 9999 ); // after all the_post actions ended
-
-		//add_filter( 'the_content', array( &$this, 'editableContent' ) );
 
 		do_action( 'vc_inline_editor_page_view' );
 		add_filter( 'wp_enqueue_scripts', array(
@@ -220,7 +218,6 @@ Class Vc_Frontend_Editor implements Vc_Editor_Interface {
 			                              . rawurlencode( apply_filters( 'the_content', $post_content ) )
 			                              . '</script>'
 			                              . $post_shortcodes;
-			// . '<span id="vc_inline-anchor" style="display:none !important;"></span>';
 			// We already used the_content filter, we need to remove it to avoid double-using
 			remove_all_filters( 'the_content' );
 			// Used for just returning $post->post_content
@@ -244,7 +241,7 @@ Class Vc_Frontend_Editor implements Vc_Editor_Interface {
 	public function editableContent( $content ) {
 		// same addContentAnchor
 		do_shortcode( $content ); // this will not be outputted, but this is needed to enqueue needed js/styles.
-		
+
 		return '<span id="vc_inline-anchor" style="display:none !important;"></span>';
 	}
 
@@ -391,7 +388,7 @@ Class Vc_Frontend_Editor implements Vc_Editor_Interface {
 				'ID' => $this->post_id,
 				'post_status' => 'draft',
 				'post_title' => ''
-			); // , 'post_title' => __('No title', 'js_composer')
+			);
 			add_filter( 'wp_insert_post_empty_content', array( $this, 'allowInsertEmptyPost' ) );
 			wp_update_post( $post_data, true );
 			$this->post->post_status = 'draft';
@@ -427,20 +424,10 @@ Class Vc_Frontend_Editor implements Vc_Editor_Interface {
 		do_action( 'vc_frontend_editor_render' );
 
 		add_filter( 'admin_title', array( &$this, 'setEditorTitle' ) );
-		// $this->navbar_buttons = apply_filters( 'vc_nav_front_controls', $this->getLeftButtons() );
 		$this->render( 'editor' );
 		die();
 	}
 
-	/*
-	function getLeftButtons() {
-		return array(
-			array( 'add_element', '<li class="vc_show-mobile"><a href="#" class="vc_element_button" data-model-id="vc_element" id="vc_add-new-element" title="' . __( 'Add new element', 'js_composer' ) . '"></a></li>' ),
-			// array('add_row', '<li><a href="#" class="vc_row_button" data-tag="vc_row" id="vc_add-new-row">'.__('Add row', 'js_composer').'</a></li>'),
-			array( 'templates', '<li><a href="#" class="vc_templates_button"  id="vc_templates-editor-button" title="' . __( 'Templates', 'js_composer' ) . '"></a></li>' )
-		);
-	}
-	*/
 	/**
 	 * @return string
 	 */
@@ -454,7 +441,7 @@ Class Vc_Frontend_Editor implements Vc_Editor_Interface {
 	 * @return string|void
 	 */
 	function setEmptyTitlePlaceholder( $title ) {
-		return ! is_string( $title ) || strlen( $title ) == 0 ? __( '(no title)', 'js_composer' ) : $title;
+		return ! is_string( $title ) || strlen( $title ) === 0 ? __( '(no title)', 'js_composer' ) : $title;
 	}
 
 	/**
@@ -528,7 +515,6 @@ Class Vc_Frontend_Editor implements Vc_Editor_Interface {
 		if ( is_singular() ) {
 			if ( $this->showButton( get_the_ID() ) ) {
 				$wp_admin_bar->add_menu( array(
-					// 'parent' => $root_menu,
 					'id' => 'vc_inline-admin-bar-link',
 					'title' => __( 'Edit with Visual Composer', "js_composer" ),
 					'href' => self::getInlineUrl(),
@@ -606,7 +592,7 @@ Class Vc_Frontend_Editor implements Vc_Editor_Interface {
 	function loadShortcodes() {
 		if ( is_user_logged_in() ) {
 			$action = vc_post_param( 'action' );
-			if ( $action == 'vc_load_shortcode' ) {
+			if ( $action === 'vc_load_shortcode' ) {
 				! defined( 'CONCATENATE_SCRIPTS' ) && define( 'CONCATENATE_SCRIPTS', false );
 				ob_start();
 				$this->setPost();
@@ -622,20 +608,20 @@ Class Vc_Frontend_Editor implements Vc_Editor_Interface {
 				echo '</div>';
 				$output = ob_get_clean();
 				die( apply_filters( 'vc_frontend_editor_load_shortcode_ajax_output', $output ) );
-			} else if ( $action == 'vc_frontend_default_template' ) {
+			} else if ( $action === 'vc_frontend_default_template' ) {
 				// @deprecated since 4.4 and will be removed and should not be used, use action 'vc_frontend_default_template_modal' instead and templatesPanelEditor
 				$this->setPost();
 				visual_composer()->templatesEditor()->renderFrontendDefaultTemplate();
-			} else if ( $action == 'vc_frontend_template' ) {
+			} else if ( $action === 'vc_frontend_template' ) {
 				// @deprecated since 4.4 and will be removed and should not be used, use action 'vc_frontend_template_modal' instead and templatesPanelEditor
 				$this->setPost();
 				visual_composer()->templatesEditor()->renderFrontendTemplate();
-			} else if ( $action == 'vc_frontend_load_template' ) {
+			} else if ( $action === 'vc_frontend_load_template' ) {
 				$this->setPost();
 				visual_composer()->templatesPanelEditor()->renderFrontendTemplate();
 			}
 		}
-		if ( vc_post_param( 'action' ) != '' ) {
+		if ( vc_post_param( 'action' ) !== '' ) {
 			do_action( 'vc_front_load_page_' . esc_attr( vc_post_param( 'action' ) ) );
 		}
 	}
@@ -646,11 +632,11 @@ Class Vc_Frontend_Editor implements Vc_Editor_Interface {
 	 * @return string
 	 */
 	function fullUrl( $s ) {
-		$ssl = ( ! empty( $s['HTTPS'] ) && $s['HTTPS'] == 'on' ) ? true : false;
+		$ssl = ( ! empty( $s['HTTPS'] ) && $s['HTTPS'] === 'on' ) ? true : false;
 		$sp = strtolower( $s['SERVER_PROTOCOL'] );
 		$protocol = substr( $sp, 0, strpos( $sp, '/' ) ) . ( ( $ssl ) ? 's' : '' );
 		$port = $s['SERVER_PORT'];
-		$port = ( ( ! $ssl && $port == '80' ) || ( $ssl && $port == '443' ) ) ? '' : ':' . $port;
+		$port = ( ( ! $ssl && $port === '80' ) || ( $ssl && $port === '443' ) ) ? '' : ':' . $port;
 		$host = isset( $s['HTTP_X_FORWARDED_HOST'] ) ? $s['HTTP_X_FORWARDED_HOST'] : isset( $s['HTTP_HOST'] ) ? $s['HTTP_HOST'] : $s['SERVER_NAME'];
 
 		return $protocol . '://' . $host . $port . $s['REQUEST_URI'];
@@ -686,7 +672,7 @@ Class Vc_Frontend_Editor implements Vc_Editor_Interface {
 					$shortcode_obj = visual_composer()->getShortCode( $shortcode['tag'] );
 					if ( is_object( $shortcode_obj ) ) {
 						$output .= '<div data-type="element" data-model-id="' . $shortcode['id'] . '">';
-						$is_container = $shortcode_obj->settings( 'is_container' ) || ( $shortcode_obj->settings( 'as_parent' ) != null && $shortcode_obj->settings( 'as_parent' ) !== false );
+						$is_container = $shortcode_obj->settings( 'is_container' ) || ( $shortcode_obj->settings( 'as_parent' ) !== null && $shortcode_obj->settings( 'as_parent' ) !== false );
 						if ( $is_container ) {
 							$shortcode['string'] = preg_replace( '/\]/', '][vc_container_anchor]', $shortcode['string'], 1 );
 						}
@@ -730,7 +716,6 @@ Class Vc_Frontend_Editor implements Vc_Editor_Interface {
 		wp_enqueue_script( 'wp-color-picker' );
 		wp_enqueue_style( 'farbtastic' );
 		wp_enqueue_style( 'ui-custom-theme' );
-		// wp_enqueue_style('isotope-css');
 		wp_enqueue_style( 'animate-css' );
 		wp_enqueue_style( 'font-awesome' );
 		wp_enqueue_style( 'wpb_jscomposer_autosuggest' );
@@ -740,9 +725,9 @@ Class Vc_Frontend_Editor implements Vc_Editor_Interface {
 		wp_enqueue_script( 'jquery-ui-draggable' );
 		wp_enqueue_script( 'jquery-ui-accordion' );
 		wp_enqueue_script( 'jquery-ui-autocomplete' );
+		wp_enqueue_script( 'jquery-ui-resizable' );
 		wp_enqueue_script( 'vc_bootstrap_js', vc_asset_url( 'lib/bower/bootstrap3/dist/js/bootstrap.min.js' ), array( 'jquery' ), WPB_VC_VERSION, true );
 		wp_enqueue_script( 'farbtastic' );
-		// wp_enqueue_script('isotope');
 		wp_enqueue_script( 'wpb_scrollTo_js' );
 		wp_enqueue_script( 'wpb_php_js' );
 		wp_enqueue_script( 'wpb_js_composer_js_sortable' );
@@ -842,7 +827,7 @@ Class Vc_Frontend_Editor implements Vc_Editor_Interface {
 	function parseShortcodesString( $content, $is_container = false, $parent_id = false ) {
 		$string = '';
 		preg_match_all( '/' . self::shortcodesRegexp() . '/', trim( $content ), $found );
-		if ( count( $found[2] ) == 0 ) {
+		if ( count( $found[2] ) === 0 ) {
 			return $is_container && strlen( $content ) > 0 ? $this->parseShortcodesString( '[vc_column_text]' . $content . '[/vc_column_text]', false, $parent_id ) : $content;
 		}
 		foreach ( $found[2] as $index => $s ) {
@@ -874,7 +859,7 @@ Class Vc_Frontend_Editor implements Vc_Editor_Interface {
 	 */
 	function toString( $shortcode, $content ) {
 		$shortcode_obj = visual_composer()->getShortCode( $shortcode['tag'] );
-		$is_container = $shortcode_obj->settings( 'is_container' ) || ( $shortcode_obj->settings( 'as_parent' ) != null && $shortcode_obj->settings( 'as_parent' ) !== false );
+		$is_container = $shortcode_obj->settings( 'is_container' ) || ( $shortcode_obj->settings( 'as_parent' ) !== null && $shortcode_obj->settings( 'as_parent' ) !== false );
 		$shortcode = apply_filters( 'vc_frontend_editor_to_string', $shortcode, $shortcode_obj );
 
 		$output = ( '<div class="vc_element" data-tag="' . $shortcode['tag'] . '" data-shortcode-controls="' . esc_attr( json_encode( $shortcode_obj->shortcodeClass()->getControlsList() ) ) . '" data-model-id="' . $shortcode['id'] . '"' . self::cleanStyle() . '>' . $this->wrapperStart()

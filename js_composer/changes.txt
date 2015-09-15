@@ -1,3 +1,24 @@
+28.08.2015 - ver 4.7
+   - Compatibility with WP 4.3
+   - New: Element Preset mechanism added (Save, Set as Default)
+   - New: More predefined layouts added
+   - New: Param Window and other window update
+   - New: Param Window is resizable
+   - New: Pageable Content Element based on Tabs added
+   - New: Single Image Zoom option added to On Click Action
+   - Improved: Pie Chart element has new Visual Composer colors
+   - Improved: Separator width values added
+   - Improved: Custom Heading has H1 tag as an option
+   - Improved: Single Image and Image Gallery Source for External Image Added
+   - Improved: Single Image element uses caption from Media Library or input (for External Images)
+   - Improved: Single Image and Image gallery has same options under On Click Action
+   - Improved: Design Options added to all elements
+   - Improved: Border radius added to Design Options
+   - Improved: Progress Bar uses param group for values
+   - Fixed: Limit for acceptance of ACF field in Grid removed
+   - Delay of CSS animations reduced
+   - Minor bugfixes and improvements
+
 23.07.2015 - ver 4.6.2
    - Custom CSS class added for Tour, Tabs, Accordions
    - Syntax in js file changed for better minifying support

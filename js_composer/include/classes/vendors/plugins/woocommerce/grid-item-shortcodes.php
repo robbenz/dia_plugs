@@ -17,6 +17,7 @@ return array(
 					__( 'Product', 'js_composer' ) => 'product',
 					__( 'Order', 'js_composer' ) => 'order',
 				),
+				'save_always' => true,
 				'description' => __( 'Select Woo Commerce post type.', 'js_composer' ),
 			),
 			array(
@@ -28,6 +29,7 @@ return array(
 					'element' => 'post_type',
 					'value' => array( 'product' )
 				),
+				'save_always' => true,
 				'description' => __( 'Select field from product.', 'js_composer' ),
 			),
 			array(
@@ -49,6 +51,7 @@ return array(
 					'element' => 'post_type',
 					'value' => array( 'order' )
 				),
+				'save_always' => true,
 				'description' => __( 'Select field from order.', 'js_composer' ),
 			),
 			array(
@@ -66,6 +69,7 @@ return array(
 				'heading' => __( 'Show label', 'js_composer' ),
 				'param_name' => 'show_label',
 				'value' => array( __( 'Yes', 'js_composer' ) => 'yes' ),
+				'save_always' => true,
 				'description' => __( 'Enter label to display before key value.', 'js_composer' ),
 			),
 			array(
@@ -78,6 +82,7 @@ return array(
 					__( 'center', 'js_composer' ) => 'center',
 					__( 'justify', 'js_composer' ) => 'justify',
 				),
+				'save_always' => true,
 				'description' => __( 'Select alignment.', 'js_composer' ),
 			),
 			array(

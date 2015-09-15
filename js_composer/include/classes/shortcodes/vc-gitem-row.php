@@ -8,7 +8,6 @@ Class WPBakeryShortCode_VC_Gitem_Row extends WPBakeryShortCode_VC_Row {
 		foreach ( array_slice( $vc_row_layouts, 0, 4 ) as $layout ) {
 			$controls_layout .= '<a class="vc_control-set-column set_columns ' . $layout['icon_class'] . '" data-cells="' . $layout['cells'] . '" data-cells-mask="' . $layout['mask'] . '" title="' . $layout['title'] . '"></a> ';
 		}
-		// $controls_layout .= '<br/><a class="vc_control-set-column set_columns custom_columns" data-cells="custom" data-cells-mask="custom" title="' . __( 'Custom layout', 'js_composer' ) . '">' . __( 'Custom', 'js_composer' ) . '</a> ';
 		$controls_layout .= '</span>';
 
 		return $controls_layout;

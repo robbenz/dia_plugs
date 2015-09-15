@@ -37,7 +37,6 @@ var VcGrid, vcGridSettings = {
 		);
 		this.setSettings();
 		this.initStyle();
-		// this.initFilter();
 		this.initHover();
 		this.initZoneLink();
 	};
@@ -229,7 +228,7 @@ var VcGrid, vcGridSettings = {
 			if ( ! data ) {
 				$this.data( 'vcGrid', (data = new VcGrid( this )) );
 			}
-			if ( typeof option == 'string' ) {
+			if ( 'string' === typeof(option) ) {
 				data[ option ]();
 			}
 		} );

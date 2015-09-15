@@ -77,10 +77,8 @@ if ( strlen( $link ) > 0 && 'none' !== $link ) {
 		               . esc_attr( $link_s['title'] ) . '" target="' . esc_attr( trim( $link_s['target'] ) )
 		               . '" class="vc_gitem-link vc-zone-link"></a>';
 	} elseif ( 'post_link' === $link ) {
-		// $attr = ' data-vc-link="{{ post_link_url }}"';
 		$image_block = '<a href="{{ post_link_url }}" title="{{ post_title }}" class="vc_gitem-link vc-zone-link"></a>';
 	} elseif ( 'image' === $link ) {
-		// $attr = ' data-vc-link="{{ post_image_url }}"';
 		$image_block = '<a href="{{ post_image_url }}" title="{{ post_title }}" class="vc_gitem-link vc-zone-link"></a>';
 	} elseif ( 'image_lightbox' === $link ) {
 		if ( ! isset( $this->prettyphoto_rel ) ) {
@@ -101,4 +99,4 @@ echo( empty( $css_style ) ? '' : ' style="' . esc_attr( $css_style ) . '"' )
 	?>>
 		<?php echo do_shortcode( $content ) ?>
 	</div>
-</div><?php echo $this->endBlockComment( $this->getShortcode() ); ?>
+</div>

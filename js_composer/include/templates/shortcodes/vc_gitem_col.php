@@ -21,7 +21,7 @@ $atts = shortcode_atts( array(
 	'featured_image' => '',
 ), $atts );
 extract( $atts );
-// @todo: Note that vc_map_get_attributes doesnt return align so it should be checked in next bug fix
+// TODO: Note that vc_map_get_attributes doesnt return align so it should be checked in next bug fix
 
 $style = '';
 $width = wpb_translateColumnWidthToSpan( $width );
@@ -38,4 +38,3 @@ echo '<div class="' . $css_class . '"'
      . '>'
      . do_shortcode( $content )
      . '</div>';
-echo $this->endBlockComment( $this->getShortcode() );

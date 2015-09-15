@@ -137,7 +137,6 @@ class Vc_Settings {
 			$this->tabs['vc-general'] = __( 'General Settings', 'js_composer' );
 			if ( ! vc_is_as_theme() || apply_filters( 'vc_settings_page_show_design_tabs', false ) ) {
 				$this->tabs['vc-color'] = __( 'Design Options', 'js_composer' );
-				// $this->tabs['element_css'] = __('Element Class Names', 'js_composer');
 				$this->tabs['vc-custom_css'] = __( 'Custom CSS', 'js_composer' );
 			}
 		}
@@ -208,12 +207,11 @@ class Vc_Settings {
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_script( 'wp-color-picker' );
 		if (
-			( isset( $_GET['build_css'] ) && ( $_GET['build_css'] == '1' || $_GET['build_css'] == 'true' ) )
+			( isset( $_GET['build_css'] ) && ( $_GET['build_css'] === '1' || $_GET['build_css'] === 'true' ) )
 			||
 			( isset( $_GET['settings-updated'] ) && ( $_GET['settings-updated'] === '1' || $_GET['settings-updated'] === 'true' ) )
 		) {
-			//$this->buildCustomColorCss();
-			$this->buildCustomCss(); // todo remove this - no needs to re-save always
+			$this->buildCustomCss(); // TODO: remove this - no needs to re-save always
 		}
 		$tabs = $this->getTabs();
 		$page = new Vc_Page();
@@ -240,7 +238,6 @@ class Vc_Settings {
 			array( 'vc_color' => array( 'title' => __( 'Main accent color', 'js_composer' ) ) ),
 			array( 'vc_color_hover' => array( 'title' => __( 'Hover color', 'js_composer' ) ) ),
 			array( 'vc_color_call_to_action_bg' => array( 'title' => __( 'Call to action background color', 'js_composer' ) ) ),
-			//array('vc_color_call_to_action_border' => array('title' =>__('Call to action border color', 'js_composer'))),
 			array( 'vc_color_google_maps_bg' => array( 'title' => __( 'Google maps background color', 'js_composer' ) ) ),
 			array( 'vc_color_post_slider_caption_bg' => array( 'title' => __( 'Post slider caption background color', 'js_composer' ) ) ),
 			array( 'vc_color_progress_bar_bg' => array( 'title' => __( 'Progress bar background color', 'js_composer' ) ) ),
@@ -257,9 +254,9 @@ class Vc_Settings {
 			'compiled_js_composer_less' => '',
 		);
 		$vc_action = vc_action();
-		if ( $vc_action == 'restore_color' ) {
+		if ( $vc_action === 'restore_color' ) {
 			$this->restoreColor();
-		} elseif ( $vc_action == 'remove_all_css_classes' ) {
+		} elseif ( $vc_action === 'remove_all_css_classes' ) {
 			$this->removeAllCssClasses();
 		}
 
@@ -465,9 +462,6 @@ class Vc_Settings {
 		delete_option( self::$field_prefix . 'gutter' );
 		delete_option( self::$field_prefix . 'responsive_max' );
 		delete_option( self::$field_prefix . 'use_custom' );
-		// $this->buildCustomColorCss();
-
-		// wp_redirect( ! empty( $_POST['_wp_http_referer'] ) ? preg_replace( '/tab\=/', 'tab_old=', $_POST['_wp_http_referer'] ) . '&tab=color' : '/' );
 	}
 
 	/**
@@ -476,7 +470,6 @@ class Vc_Settings {
 	public function removeAllCssClasses() {
 		delete_option( self::$field_prefix . 'row_css_class' );
 		delete_option( self::$field_prefix . 'column_css_classes' );
-		// wp_redirect( ! empty( $_POST['_wp_http_referer'] ) ? preg_replace( '/tab\=/', 'tab_old=', $_POST['_wp_http_referer'] ) . '&tab=element_css' : '/options-general.php?page=vc_settings&tab=element_css' );
 	}
 
 	/**
@@ -505,26 +498,24 @@ class Vc_Settings {
 
 	function adminLoad() {
 		wp_enqueue_style( 'js_composer_settings', vc_asset_url( 'css/js_composer_settings.css' ), false, WPB_VC_VERSION, false );
-		// wp_enqueue_style( 'ui-custom-theme' );
 		wp_enqueue_script( 'jquery-ui-accordion' );
 		wp_enqueue_script( 'jquery-ui-sortable' );
 		wp_enqueue_script( 'wpb_js_composer_settings' );
 		wp_enqueue_script( 'ace-editor' );
-		// setcookie( 'wpb_js_composer_settings_active_tab' );
 		$this->locale = array(
 			'are_you_sure_reset_css_classes' => __( 'Are you sure you want to reset to defaults?', 'js_composer' ),
 			'are_you_sure_reset_color' => __( 'Are you sure you want to reset to defaults?', 'js_composer' ),
-			'vc_updater_error' => __( 'Something went wrong! Please try again later.', 'js_composer' ),
-			'vc_updater_license_activation_success' => __( 'License successfully activated. Thank you!', 'js_composer' ),
-			'vc_updater_license_deactivation_success' => __( 'Your license key is deactivated.', 'js_composer' ),
-			'vc_updater_empty_data' => __( 'Envato username and license key are required.', 'js_composer' ),
-			'vc_updater_wrong_license_key' => __( 'Invalid liense key. Please check information in your envato profile.', 'js_composer' ),
-			'vc_updater_wrong_data' => __( 'Wrong data. Please check your information or ask support for help.', 'js_composer' ),
-			'vc_updater_already_activated' => __( 'License successfully activated. Thank you!', 'js_composer' ),
-			'vc_updater_already_activated_another_url' => sprintf( __( 'Your license key is already activated on another website ({site}), you should deactivate it first or <a href="%s" target="_blank">obtain new license key</a>.', 'js_composer' ), esc_url( "http://bit.ly/vcomposer" ) ),
-			'vc_updater_activate_license' => __( 'Activate License', 'js_composer' ),
-			'vc_updater_deactivate_license' => __( 'Deactivate License', 'js_composer' ),
-			'wrong_username_api_key' => __( 'Wrong username and/or api key!', 'js_composer' ),
+			'vc_updater_error' => sprintf( __( 'Envato API error. Try again later  or open support ticket at <a href="%s" target="_blank">%s</a>.', 'js_composer' ), 'http://support.wpbakery.com', 'support.wpbakery.com' ),
+			'vc_updater_license_activation_success' => __( 'License successfully activated.', 'js_composer' ),
+			'vc_updater_license_deactivation_success' => __( 'License Key is deactivated.', 'js_composer' ),
+			'vc_updater_empty_data' => __( 'Envato Username and/or License Key are required.', 'js_composer' ),
+			'vc_updater_wrong_license_key' => sprintf( __( 'Invalid License Key. Visit your profile to retrieve valid License Key or read <a href="%s" target="_blank">tutorial</a>.', 'js_composer' ), 'http://go.wpbakery.com/purchase-code' ),
+			'vc_updater_wrong_data' => sprintf( __( 'Invalid data. Check your information or open support ticket at <a href="%s" target="_blank">%s</a>.', 'js_composer' ), 'http://support.wpbakery.com', 'support.wpbakery.com' ),
+			'vc_updater_already_activated' => __( 'License successfully activated.', 'js_composer' ),
+			'vc_updater_already_activated_another_url' => sprintf( __( 'Your License Key is already activated on another site ({site}), you should deactivate it first or <a href="%s" target="_blank">obtain new License Key</a>.', 'js_composer' ), esc_url( "http://bit.ly/vcomposer" ) ),
+			'vc_updater_activate_license' => __( 'Activate License.', 'js_composer' ),
+			'vc_updater_deactivate_license' => __( 'Deactivate License.', 'js_composer' ),
+			'wrong_username_api_key' => sprintf( __( 'Invalid Username and/or API Key. Check your data or read <a href="%s" target="_blank">tutorial</a>.', 'js_composer' ), 'http://go.wpbakery.com/activation' ),
 			'saving' => __( 'Saving...', 'js_composer' ),
 			'save' => __( 'Save Changes', 'js_composer' ),
 			'saved' => __( 'Design Options successfully saved.', 'js_composer' ),
@@ -540,7 +531,7 @@ class Vc_Settings {
 	 */
 	public function groups_access_rules_callback() {
 		global $wp_roles;
-		$groups = is_object( $wp_roles ) ? $wp_roles->roles : array(); // get_editable_roles();
+		$groups = is_object( $wp_roles ) ? $wp_roles->roles : array();
 
 		$settings = ( $settings = get_option( self::$field_prefix . 'groups_access_rules' ) ) ? $settings : array();
 		$show_types = array(
@@ -587,24 +578,24 @@ class Vc_Settings {
 									'vc_row',
 									'vc_row_inner',
 									'vc_column_inner'
-								) ) /*&& ( ! isset( $el['content_element'] ) || $el['content_element'] == true ) */
+								) )
 								): ?>
-									<?php if ( $z == 1 ): ?><div class="pull-left"><?php endif; ?>
+									<?php if ( $z === 1 ): ?><div class="pull-left"><?php endif ?>
 									<label>
 										<input
 											type="checkbox"
-											<?php if (isset( $shortcode_settings[ $sc_base ] ) && (int) $shortcode_settings[ $sc_base ] == 1): ?>checked="true"
-											<?php endif; ?>name="<?php echo self::$field_prefix . 'groups_access_rules[' . $key . '][shortcodes][' . $sc_base . ']' ?>"
+											<?php if (isset( $shortcode_settings[ $sc_base ] ) && (int) $shortcode_settings[ $sc_base ] === 1): ?>checked="true"
+											<?php endif ?>name="<?php echo self::$field_prefix . 'groups_access_rules[' . $key . '][shortcodes][' . $sc_base . ']' ?>"
 											value="1"/>
-										<?php _e( $el["name"], "js_composer" ) ?><?php if ( isset( $el['deprecated'] ) && $el['deprecated'] !== false ) {
+										<?php echo $el["name"] ?><?php if ( isset( $el['deprecated'] ) && $el['deprecated'] !== false ) {
 											echo ' <i>' . sprintf( __( '(deprecated since v%s)', 'js_composer' ), $el['deprecated'] ) . '</i>';
 										} ?>
 									</label>
 									<?php if ( $z == $size_line ): ?></div><?php $z = 0; endif;
 									$z += 1; ?>
-								<?php endif; ?>
+								<?php endif ?>
 							<?php endforeach; ?>
-							<?php if ($z != 1): ?></div><?php endif; ?>
+							<?php if ($z !== 1): ?></div><?php endif ?>
 						<div class="vc_clearfix"></div>
 						<div class="select-all">
 							<a href="#"
@@ -631,7 +622,7 @@ class Vc_Settings {
 		$pt_array = ( $pt_array = get_option( 'wpb_js_content_types' ) ) ? ( $pt_array ) : vc_default_editor_post_types();
 		foreach ( $this->getPostTypes() as $pt ) {
 			if ( ! in_array( $pt, $this->getExcluded() ) ) {
-				$checked = ( in_array( $pt, $pt_array ) ) ? ' checked="checked"' : '';
+				$checked = ( in_array( $pt, $pt_array ) ) ? ' checked' : '';
 				?>
 				<label>
 					<input type="checkbox"<?php echo $checked; ?> value="<?php echo $pt; ?>"
@@ -654,7 +645,7 @@ class Vc_Settings {
 		$pt_array = ( $pt_array = get_option( 'wpb_js_theme_content_types' ) ) ? $pt_array : vc_manager()->editorPostTypes();
 		foreach ( $this->getPostTypes() as $pt ) {
 			if ( ! in_array( $pt, $this->getExcluded() ) ) {
-				$checked = ( in_array( $pt, $pt_array ) ) ? ' checked="checked"' : '';
+				$checked = ( in_array( $pt, $pt_array ) ) ? ' checked' : '';
 				?>
 				<label>
 					<input type="checkbox"<?php echo $checked; ?> value="<?php echo $pt; ?>"
@@ -687,7 +678,7 @@ class Vc_Settings {
 		$checked = ( $checked = get_option( self::$field_prefix . 'not_responsive_css' ) ) ? $checked : false;
 		?>
 		<label>
-			<input type="checkbox"<?php echo( $checked ? ' checked="checked";' : '' ) ?> value="1"
+			<input type="checkbox"<?php echo( $checked ? ' checked' : '' ) ?> value="1"
 			       id="wpb_js_not_responsive_css" name="<?php echo self::$field_prefix . 'not_responsive_css' ?>">
 			<?php _e( 'Disable', "js_composer" ) ?>
 		</label><br/>
@@ -702,7 +693,7 @@ class Vc_Settings {
 		$pt_array = ( $pt_array = get_option( self::$field_prefix . 'google_fonts_subsets' ) ) ? $pt_array : $this->googleFontsSubsets();
 		foreach ( $this->getGoogleFontsSubsets() as $pt ) {
 			if ( ! in_array( $pt, $this->getGoogleFontsSubsetsExcluded() ) ) {
-				$checked = ( in_array( $pt, $pt_array ) ) ? ' checked="checked"' : '';
+				$checked = ( in_array( $pt, $pt_array ) ) ? ' ' : '';
 				?>
 				<label>
 					<input type="checkbox"<?php echo $checked; ?> value="<?php echo $pt; ?>"
@@ -791,11 +782,8 @@ class Vc_Settings {
 	public function row_css_class_callback() {
 		$value = ( $value = get_option( self::$field_prefix . 'row_css_class' ) ) ? $value : '';
 		echo ! empty( $value ) ? $value : '<i>' . __( 'Empty value', "js_composer" ) . '</i>';
-		// echo '<input type="text" name="'.self::$field_prefix.'row_css_class'.'" value="'.$value.'">';
-		// echo '<p class="description indicator-hint">'.__('To change class name for the row element, enter it here. By default vc_row is used.', 'js_composer').'</p>';
-
 	}
-	
+
 	/**
 	 * Not responsive checkbox callback function
 	 *
@@ -805,7 +793,7 @@ class Vc_Settings {
 		$checked = ( $checked = get_option( self::$field_prefix . $field ) ) ? $checked : false;
 		?>
 		<label>
-			<input type="checkbox"<?php echo( $checked ? ' checked="checked";' : '' ) ?> value="1"
+			<input type="checkbox"<?php echo( $checked ? ' checked' : '' ) ?> value="1"
 			       id="wpb_js_<?php echo $field; ?>" name="<?php echo self::$field_prefix . $field ?>">
 			<?php _e( 'Enable', "js_composer" ) ?>
 		</label><br/>
@@ -877,7 +865,6 @@ class Vc_Settings {
 		$field = 'js_composer_purchase_code';
 		$value = ( $value = get_option( self::$field_prefix . $field ) ) ? $value : '';
 		echo '<input type="text" name="' . self::$field_prefix . $field . '" value="' . $value . '"' . $this->disableIfActivated() . '>';
-		//echo '<p class="description indicator-hint">'.__('Your Item Purchase Code contained within the License Certificate which is accessible in your Envato account. o view your License Certificate: Login to your Envato account and visit Downloads section, then click "Download" button to reveal "License Certificate" link.', 'js_composer').'</p>';
 		echo '<p class="description indicator-hint">' . sprintf( __( 'Please enter your CodeCanyon Visual Composer license key, you can find your key by following the instructions on <a href="%s" target="_blank">this page</a>. (Example of license key: bjg759fk-kvta-6584-94h6-75jg8vblatftq)', 'js_composer' ), esc_url( "http://go.wpbakery.com/purchase-code" ) ) . '</p>';
 	}
 
@@ -917,13 +904,13 @@ class Vc_Settings {
 	 * @param $tab
 	 */
 	public function setting_section_callback_function( $tab ) {
-		if ( $tab["id"] == 'wpb_js_composer_settings_color' ): ?>
+		if ( $tab["id"] === 'wpb_js_composer_settings_color' ): ?>
 			<div class="tab_intro">
 				<p>
 					<?php _e( 'Here you can tweak default Visual Composer content elements visual appearance. By default Visual Composer is using neutral light-grey theme. Changing "Main accent color" will affect all content elements if no specific "content block" related color is set.', 'js_composer' ) ?>
 				</p>
 			</div>
-		<?php elseif ( $tab["id"] == 'wpb_js_composer_settings_updater' ): ?>
+		<?php elseif ( $tab["id"] === 'wpb_js_composer_settings_updater' ): ?>
 			<div class="tab_intro">
 				<?php if ( vc_is_as_theme() ): ?>
 					<div class="updated inline">
@@ -931,7 +918,7 @@ class Vc_Settings {
 							<?php _e( 'Please activate your license in Product License tab!', 'js_composer' ) ?>
 						</p>
 					</div>
-				<?php endif; ?>
+				<?php endif ?>
 				<p>
 					<?php //_e('Add your Envato credentials, to enable auto updater. With correct login credentials Visual Composer will be updated automatically (same as other plugins do).', 'js_composer') ?>
 					<?php echo sprintf( __( 'A valid license key qualifies you for support and enables automatic updates. <strong>A license key may only be used for one Visual Composer installation on one WordPress site at a time.</strong> If you previosly activated your license key on another site, then you should deactivate it first or <a href="%s" target="_blank">obtain new license key</a>.', 'js_composer' ), esc_url( "http://bit.ly/vcomposer" ) ); ?>
@@ -1001,9 +988,9 @@ class Vc_Settings {
 	 * @return mixed
 	 */
 	public function sanitize_row_css_class_callback( $value ) {
-		return $value; // return preg_match('/^[a-z_]\w+$/i', $value) ? $value : '';
+		return $value;
 	}
-	
+
 	/**
 	 * Post types fields sanitize
 	 *
@@ -1104,7 +1091,6 @@ class Vc_Settings {
 			add_settings_error( self::$field_prefix . 'gutter', 1, __( 'Invalid Gutter value.', 'js_composer' ), 'error' );
 		}
 
-		// $gutter = preg_replace('/[^\d\.]/', '', $gutter);
 		return $gutter;
 	}
 
@@ -1118,7 +1104,6 @@ class Vc_Settings {
 			add_settings_error( self::$field_prefix . 'responsive_max', 1, __( 'Invalid "Responsive max" value.', 'js_composer' ), 'error' );
 		}
 
-		// $gutter = preg_replace('/[^\d\.]/', '', $gutter);
 		return $responsive_max;
 	}
 
@@ -1242,12 +1227,11 @@ class Vc_Settings {
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_script( 'wp-color-picker' );
 		if (
-			( isset( $_GET['build_css'] ) && ( $_GET['build_css'] == '1' || $_GET['build_css'] == 'true' ) )
+			( isset( $_GET['build_css'] ) && ( $_GET['build_css'] === '1' || $_GET['build_css'] === 'true' ) )
 			||
 			( isset( $_GET['settings-updated'] ) && ( $_GET['settings-updated'] === '1' || $_GET['settings-updated'] === 'true' ) )
 		) {
-			//$this->buildCustomColorCss();
-			$this->buildCustomCss(); // todo disable this -> no needs to re-save always
+			$this->buildCustomCss(); // TODO: disable this -> no needs to re-save always
 		}
 		$use_custom = $this->useCustomCss();
 		?>
@@ -1262,7 +1246,7 @@ class Vc_Settings {
 				<?php endforeach; ?>
 			</h2>
 			<?php foreach ( $this->tabs as $tab => $title ): ?>
-				<?php if ( $tab == 'element_css' ): ?>
+				<?php if ( $tab === 'element_css' ): ?>
 					<form action="options.php" method="post" id="vc_settings-<?php echo $tab ?>"
 					      class="vc_settings-tab-content<?php echo( $this->active_tab == $tab ? ' vc_settings-tab-content-active' : '' ) ?>">
 						<?php settings_fields( $this->option_group . '_' . $tab ) ?>
@@ -1276,8 +1260,8 @@ class Vc_Settings {
 							$row_css_class = ( $value = get_option( self::$field_prefix . 'row_css_class' ) ) ? $value : '';
 							$column_css_classes = ( $value = get_option( self::$field_prefix . 'column_css_classes' ) ) ? (array) $value : array();
 							if ( ! empty( $row_css_class ) || strlen( implode( '', array_values( $column_css_classes ) ) ) > 0 ) {
-								echo '<p>' . __( 'You have used element class names settings to replace row and column css classes.' ) . '</p>';
-								echo '<p>' . __( 'Below is code snippet which you should add to your functions.php file in your theme, to replace row and column classes with custom classes saved by you earlier.' ) . '</p>';
+								echo '<p>' . __( 'You have used element class names settings to replace row and column css classes.', 'js_composer' ) . '</p>';
+								echo '<p>' . __( 'Below is code snippet which you should add to your functions.php file in your theme, to replace row and column classes with custom classes saved by you earlier.', 'js_composer' ) . '</p>';
 								$function = <<<EOF
 		<?php
 		function custom_css_classes_for_vc_row_and_vc_column(\$class_string, \$tag) {
@@ -1285,7 +1269,7 @@ EOF;
 								if ( ! empty( $row_css_class ) ) {
 									$function .= <<<EOF
 
-			if(\$tag=='vc_row' || \$tag=='vc_row_inner') {
+			if (\$tag === 'vc_row' || \$tag === 'vc_row_inner') {
 				\$class_string = str_replace('vc_row-fluid', '{$row_css_class}', \$class_string);
 			}
 EOF;
@@ -1297,7 +1281,7 @@ EOF;
 											$started_column_replace = true;
 											$function .= <<<EOF
 
-			if(\$tag=='vc_column' || \$tag=='vc_column_inner') {
+			if (\$tag === 'vc_column' || \$tag === 'vc_column_inner') {
 
 EOF;
 										}
@@ -1325,10 +1309,10 @@ EOF;
 								$function = <<<EOF
 		<?php
 		function custom_css_classes_for_vc_row_and_vc_column(\$class_string, \$tag) {
-			if(\$tag=='vc_row' || \$tag=='vc_row_inner') {
+			if (\$tag === 'vc_row' || \$tag === 'vc_row_inner') {
 				\$class_string = str_replace('vc_row-fluid', 'my_row-fluid', \$class_string);
 			}
-			if(\$tag=='vc_column' || \$tag=='vc_column_inner') {
+			if (\$tag === 'vc_column' || \$tag === 'vc_column_inner') {
 				\$class_string = preg_replace('/vc_col-sm-(\d{1,2})/', 'my_span$1', \$class_string);
 			}
 			return \$class_string;
@@ -1349,14 +1333,14 @@ EOF;
 						<a href="#" class="button vc_restore-button"
 						   id="vc_settings-custom-css-reset-data"><?php _e( 'Remove all saved', "js_composer" ) ?></a>
 					</form>
-				<?php elseif ( $tab == 'automapper' ): ?>
+				<?php elseif ( $tab === 'automapper' ): ?>
 					<form action="options.php" method="post" id="vc_settings-<?php echo $tab ?>"
 					      class="vc_settings-tab-content<?php echo( $this->active_tab == $tab ? ' vc_settings-tab-content-active' : '' ) ?>"<?php echo apply_filters( 'vc_setting-tab-form-' . $tab, '' ) ?>>
 						<?php vc_automapper()->renderHtml(); ?>
 					</form>
 				<?php
 				else: ?>
-					<?php $css = $tab == 'color' && $use_custom ? ' color_enabled' : ''; ?>
+					<?php $css = $tab === 'color' && $use_custom ? ' color_enabled' : ''; ?>
 					<form action="options.php" method="post" id="vc_settings-<?php echo $tab ?>"
 					      class="vc_settings-tab-content<?php echo ( $this->active_tab == $tab ? ' vc_settings-tab-content-active' : '' ) . $css ?>"<?php echo apply_filters( 'vc_setting-tab-form-' . $tab, '' ) ?>>
 						<?php settings_fields( $this->option_group . '_' . $tab ) ?>
@@ -1369,13 +1353,13 @@ EOF;
 						?>
 						<?php if ( $tab !== 'updater' ): ?>
 							<?php submit_button( __( 'Save Changes', 'js_composer' ), 'primary', 'submit', true, $submit_button_attributes ); ?>
-						<?php endif; ?>
+						<?php endif ?>
 						<input type="hidden" name="vc_action" value="<?php echo 'vc_action-' . $tab; ?>"
 						       id="vc_settings-<?php echo $tab ?>-action"/>
-						<?php if ( $tab == 'color' ): ?>
+						<?php if ( $tab === 'color' ): ?>
 							<a href="#" class="button vc_restore-button"
 							   id="vc_settings-color-restore-default"><?php _e( 'Restore Default', 'js_composer' ) ?></a>
-						<?php endif; ?>
+						<?php endif ?>
 						<?php if ( $tab === 'updater' ): ?>
 							<input type="hidden" id="vc_settings-license-status" name="vc_license_status"
 							       value="<?php echo empty( $license_activation_key ) ? 'not_activated' : 'activated' ?>"/>
@@ -1383,9 +1367,9 @@ EOF;
 							   id="vc_settings-activate-license"><?php empty( $license_activation_key ) ? _e( 'Activate License', 'js_composer' ) : _e( 'Deactivate License', 'js_composer' ) ?></a>
 							<span class="vc_updater-spinner-wrapper" style="display: none;" id="vc_updater-spinner"><img
 									src="<?php echo get_site_url() ?>/wp-admin/images/wpspin_light.gif"/></span>
-						<?php endif; ?>
+						<?php endif ?>
 					</form>
-				<?php endif; ?>
+				<?php endif ?>
 
 			<?php endforeach; ?>
 		</div>
@@ -1401,8 +1385,7 @@ EOF;
 		/** WordPress Administration File API */
 		require_once( ABSPATH . 'wp-admin/includes/file.php' );
 		$this->initAdmin();
-		//$this->buildCustomColorCss();
-		$this->buildCustomCss(); // todo remove this - no needs to re-save always
+		$this->buildCustomCss(); // TODO: remove this - no needs to re-save always
 	}
 
 	/**
@@ -1489,7 +1472,6 @@ EOF;
 				add_settings_error( self::$field_prefix . 'custom_css', $wp_filesystem->errors->get_error_code(), __( 'custom.css could not be created. Problem with access.', 'js_composer' ), 'error' );
 			}
 
-			//@file_put_contents( $filename, $css_string ); // uncomment this if you want to brute-force put content, but this also can proceed an error if something wrong
 			return false;
 		}
 

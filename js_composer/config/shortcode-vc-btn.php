@@ -19,7 +19,7 @@ $icons_params = vc_map_integrate_shortcode( 'vc_icon', 'i_', '',
 if ( is_array( $icons_params ) && ! empty( $icons_params ) ) {
 	foreach ( $icons_params as $key => $param ) {
 		if ( is_array( $param ) && ! empty( $param ) ) {
-			if ( $param['param_name'] == 'i_type' ) {
+			if ( $param['param_name'] === 'i_type' ) {
 				// append pixelicons to dropdown
 				$icons_params[ $key ]['value'][ __( 'Pixel', 'js_composer' ) ] = 'pixelicons';
 			}
@@ -173,7 +173,7 @@ $params = array_merge(
 			'type' => 'dropdown',
 			'heading' => __( 'Alignment', 'js_composer' ),
 			'param_name' => 'align',
-			'description' => __( 'Select button alignment.', 'js_comopser' ),
+			'description' => __( 'Select button alignment.', 'js_composer' ),
 			// compatible with btn2, default left to be compatible with btn1
 			'value' => array(
 				__( 'Inline', 'js_composer' ) => 'inline',
@@ -241,6 +241,12 @@ $params = array_merge(
 			'heading' => __( 'Extra class name', 'js_composer' ),
 			'param_name' => 'el_class',
 			'description' => __( 'Style particular content element differently - add a class name and refer to it in custom CSS.', 'js_composer' ),
+		),
+		array(
+			'type' => 'css_editor',
+			'heading' => __( 'CSS box', 'js_composer' ),
+			'param_name' => 'css',
+			'group' => __( 'Design Options', 'js_composer' )
 		),
 	)
 );

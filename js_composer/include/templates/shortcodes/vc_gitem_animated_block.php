@@ -17,7 +17,7 @@ extract( shortcode_atts( array(
 ), $atts ) );
 
 $css_style = '';
-$css_class = 'vc_gitem-animated-block' . vc_shortcode_custom_css_class( $css, ' ' );
+$css_class = 'vc_gitem-animated-block ' . vc_shortcode_custom_css_class( $css, ' ' );
 if ( ! empty( $animation ) ) {
 	$css_class .= ' vc_gitem-animate vc_gitem-animate-' . $animation;
 	$animation_attr .= ' data-vc-animation="' . esc_attr( $animation ) . '"';
@@ -27,4 +27,4 @@ if ( ! empty( $animation ) ) {
 ?>
 <div class="<?php echo esc_attr( $css_class ) ?>"<?php echo $animation_attr ?><?php
 echo( empty( $css_style ) ? '' : ' style="' . esc_attr( $css_style ) . '"' )
-?>><?php echo do_shortcode( $content ) ?></div><?php echo $this->endBlockComment( $this->getShortcode() ); ?>
+?>><?php echo do_shortcode( $content ) ?></div>

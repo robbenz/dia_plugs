@@ -29,24 +29,24 @@ if ( _.isUndefined( vc ) ) {
 		}
 		vc.loaded = true;
 
-		vc.map = window.vc_mapper; // vc_user_mapper /todo check why user mapper
+		vc.map = window.vc_mapper; // vc_user_mapper // TODO: check why user mapper
 
 		$( '#wpadminbar' ).remove();
 		var $body = $( 'body' );
 		$body.attr( 'data-vc', true );
 		vc.post_id = $( '#vc_post-id' ).val();
-		vc.is_mobile = $( 'body.mobile' ).length > 0;
+		vc.is_mobile = 0 < $( 'body.mobile' ).length;
 		vc.title = $( '#vc_title-saved' ).val();
 		// Create Modals & panels
-		vc.add_element_block_view = new vc.AddElementBlockView( { el: '#vc_add-element-dialog' } );
-		vc.edit_element_block_view = new vc.EditElementPanelView( { el: '#vc_properties-panel' } );
-		vc.post_settings_view = new vc.PostSettingsPanelView( { el: '#vc_post-settings-panel' } );
+		vc.add_element_block_view = new vc.AddElementUIPanelFrontendEditor( { el: '#vc_ui-panel-add-element' } );
+		vc.edit_element_block_view = new vc.EditElementUIPanel( { el: '#vc_ui-panel-edit-element' } );
+		vc.post_settings_view = new vc.PostSettingsUIPanelFrontendEditor( { el: '#vc_ui-panel-post-settings' } );
 		/**
-		 * @deprecated since 4.4
+		 * @deprecated 4.4
 		 * @type {vc.TemplatesEditorPanelView}
 		 */
 		vc.templates_editor_view = new vc.TemplatesEditorPanelView( { el: '#vc_templates-editor' } );
-		vc.templates_panel_view = new vc.TemplatesPanelViewFrontend( { el: '#vc_templates-panel' } );
+		vc.templates_panel_view = new vc.TemplateWindowUIPanelFrontendEditor( { el: '#vc_ui-panel-templates' } );
 
 		vc.app = new vc.View();
 		vc.buildRelevance();

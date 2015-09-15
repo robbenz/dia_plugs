@@ -35,6 +35,5 @@ $output .= '<div ' . implode( ' ', $wrapper_attributes ) . '>';
 $output .= wpb_js_remove_wpautop( $content );
 $output .= '</div>';
 $output .= $after_output;
-$output .= $this->endBlockComment( $this->getShortcode() );
 
 echo $output;

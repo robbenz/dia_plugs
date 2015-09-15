@@ -71,7 +71,7 @@ class Vc_Mapper {
 		do_action( 'vc_mapper_call_activities_before' );
 		while ( $activity = each( $this->init_activity ) ) {
 			list( $object, $method, $params ) = $activity[1];
-			if ( $object == 'mapper' ) {
+			if ( $object === 'mapper' ) {
 				switch ( $method ) {
 					case 'map':
 						WPBMap::map( $params['tag'], $params['attributes'] );

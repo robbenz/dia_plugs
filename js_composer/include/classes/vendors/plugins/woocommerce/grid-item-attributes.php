@@ -65,7 +65,7 @@ function vc_gitem_template_attribute_woocommerce_product( $value, $data ) {
 			$value = $product->get_weight() ? wc_format_decimal( $product->get_weight(), 2 ) : '';
 			break;
 		case 'on_sale':
-			$value = $product->is_on_sale() ? 'yes' : 'no'; // @todo change
+			$value = $product->is_on_sale() ? 'yes' : 'no'; // TODO: change
 			break;
 		default:
 			$value = $product->$data;

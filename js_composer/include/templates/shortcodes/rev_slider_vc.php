@@ -18,6 +18,6 @@ $css_class = apply_filters( VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, 'wpb_revslider_e
 $output .= '<div class="' . esc_attr( $css_class ) . '">';
 $output .= wpb_widget_title( array( 'title' => $title, 'extraclass' => 'wpb_revslider_heading' ) );
 $output .= apply_filters( 'vc_revslider_shortcode', do_shortcode( '[rev_slider ' . $alias . ']' ) );
-$output .= '</div>' . $this->endBlockComment( $this->getShortcode() ) . "\n";
+$output .= '</div>';
 
 echo $output;

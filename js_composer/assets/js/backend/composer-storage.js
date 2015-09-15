@@ -11,7 +11,7 @@
 	 * Shortcodes mapping settings.
 	 * @type {Object}
 	 */
-	vc.map = _.isUndefined( window.vc_mapper ) ? {} : window.vc_mapper; // todo check with frontend why in frontend user user_mapper
+	vc.map = _.isUndefined( window.vc_mapper ) ? {} : window.vc_mapper; // TODO: check with frontend why in frontend user user_mapper
 
 	/**
 	 * Shortcode Roles Based on general settings
@@ -119,7 +119,7 @@
 		 */
 		findAllRootSorted: function () {
 			var models = _.filter( _.values( this.data ), function ( model ) {
-				return model.parent_id === false;
+				return false === model.parent_id;
 			} );
 			return _.sortBy( models, function ( model ) {
 				return model.order;
@@ -183,9 +183,7 @@
 				return false;
 			}
 			var content = _.reduce( this.findAllRootSorted(), function ( memo, model ) {
-				// if(!_.isString(model.html)) {
 				model.html = this.createShortcodeString( model );
-				// }
 				return memo + model.html;
 			}, '', this );
 			this.setContent( content );
@@ -211,11 +209,6 @@
 			_.extend( params, parent.params );
 
 			if ( ! models.length ) {
-
-				if ( ! _.isUndefined( window.switchEditors ) && _.isString( params.content ) && window.switchEditors.wpautop( params.content ) === params.content ) {
-					params.content = window.vc_wpautop( params.content );
-				}
-
 				return _.isUndefined( params.content ) ? '' : params.content;
 			}
 			return _.reduce( models, function ( memo, model ) {
@@ -228,7 +221,6 @@
 		 */
 		getContent: function () {
 			if ( _.isObject( window.tinymce ) && tinymce.editors.content ) {
-				// window.switchEditors.go('content', 'html');
 				tinymce.editors.content.save();
 			}
 			return window.vc_wpnop( $( '#content' ).val() );
@@ -292,20 +284,20 @@
 				}
 				if ( _.isString( sub_content ) && sub_content.match( sub_regexp ) &&
 					(
-					(_.isBoolean( map_settings.is_container ) && map_settings.is_container === true) ||
-					(! _.isEmpty( map_settings.as_parent ) && map_settings.as_parent !== false)
+					(_.isBoolean( map_settings.is_container ) && true === map_settings.is_container) ||
+					(! _.isEmpty( map_settings.as_parent ) && false !== map_settings.as_parent)
 					) ) {
 					data = this.parseContent( data, sub_content, data[ id ] );
-				} else if ( _.isString( sub_content ) && sub_content.length && sub_matches[ 2 ] === 'vc_row' ) {
+				} else if ( _.isString( sub_content ) && sub_content.length && 'vc_row' === sub_matches[ 2 ] ) {
 					data = this.parseContent( data,
 						'[vc_column width="1/1"][vc_column_text]' + sub_content + '[/vc_column_text][/vc_column]',
 						data[ id ] );
-				} else if ( _.isString( sub_content ) && sub_content.length && sub_matches[ 2 ] === 'vc_column' ) {
+				} else if ( _.isString( sub_content ) && sub_content.length && 'vc_column' === sub_matches[ 2 ] ) {
 					data = this.parseContent( data,
 						'[vc_column_text]' + sub_content + '[/vc_column_text]',
 						data[ id ] );
 				} else if ( _.isString( sub_content ) ) {
-					data[ id ].params.content = sub_content; // sub_content.match(/\n/) && !_.isUndefined(window.switchEditors) ? window.switchEditors.wpautop(sub_content) : sub_content;
+					data[ id ].params.content = sub_content;
 				}
 			}, this );
 			return data;
@@ -315,7 +307,7 @@
 		 * @return {Boolean}
 		 */
 		isContentChanged: function () {
-			return this.checksum === false || this.checksum !== vc_globalHashCode( this.getContent() );
+			return false === this.checksum || this.checksum !== vc_globalHashCode( this.getContent() );
 		},
 		/**
 		 * Wrap content which is not inside vc shorcodes.
@@ -325,7 +317,7 @@
 		wrapData: function ( content ) {
 			var tags = _.keys( vc.map ).join( '|' ),
 				reg = this.regexp_split( 'vc_row' ),
-				starts_with_shortcode = new RegExp( '^\\[(\\[?)(' + tags + ')', 'g' ); //'^\\[(\\[?)\s*'
+				starts_with_shortcode = new RegExp( '^\\[(\\[?)(' + tags + ')', 'g' );
 			var matches = _.filter( content.trim().split( reg ), function ( value ) {
 				if ( ! _.isEmpty( value ) ) {
 					return value;
@@ -361,10 +353,6 @@
 			this.checksum = vc_globalHashCode( content );
 			content = this.wrapData( content );
 			this.data = this.parseContent( {}, content );
-			try {
-			} catch ( e ) {
-				this.data = {};
-			}
 		},
 		/**
 		 * Append new data to existing one.

@@ -82,8 +82,8 @@ class Vc_Updating_Manager {
 			$obj = new stdClass();
 			$obj->slug = $this->slug;
 			$obj->new_version = $remote_version;
-			$obj->url = ''; // $this->update_path;
-			$obj->package = ''; // $this->update_path;
+			$obj->url = '';
+			$obj->package = '';
 			$obj->name = vc_updater()->title;
 			$transient->response[ $this->plugin_slug ] = $obj;
 		}
@@ -176,7 +176,6 @@ class Vc_Updating_Manager {
 			echo ' <a href="' . $this->url . '">' . __( 'Download new version from CodeCanyon.', 'js_composer' ) . '</a>';
 		} else {
 			// update.php?action=upgrade-plugin&plugin=testimonials-widget%2Ftestimonials-widget.php&_wpnonce=6178d48b6e
-			// echo '<a href="' . wp_nonce_url( admin_url( 'plugins.php?vc_action=vc_upgrade' ) ) . '">' . __( 'Update Visual Composer now.', 'js_composer' ) . '</a>';
 			echo '<a href="' . wp_nonce_url( admin_url( 'update.php?action=upgrade-plugin&plugin=' . vc_plugin_name() ), 'upgrade-plugin_' . vc_plugin_name() ) . '">' . __( 'Update Visual Composer now.', 'js_composer' ) . '</a>';
 		}
 	}

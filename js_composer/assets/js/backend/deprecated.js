@@ -3,12 +3,12 @@
 		window.vc = {};
 	}
 
-	var localHasClass = function ( $el, className ) {
+	function localHasClass( $el, className ) {
 		return $el[ 0 ].classList.contains( className );
-	};
+	}
 
 	/**
-	 * @deprecated since 4.5
+	 * @deprecated 4.5
 	 *
 	 * @param $column
 	 * @returns {*}
@@ -75,15 +75,13 @@
 		},
 		render: function () {
 			//remove previous modal!!!
-			//$("div.wpb_bootstrap_modals[style$='display: none;']").remove();
 			$( "div.wpb_bootstrap_modals" ).filter( function () {
-				return $( this ).css( "display" ) == "none"
+				return "none" === $( this ).css( "display" )
 			} ).remove();
 			this.$field = $( '#wpb_custom_post_css_field' );
 			$( 'body' ).append( this.$el.html( this.template() ) );
 			$( '#wpb_csseditor' ).html( this.$field.val() );
 			this.$editor = ace.edit( "wpb_csseditor" );
-			//this.$editor.setTheme("ace/theme/dreamweaver");
 			var session = this.$editor.getSession();
 			session.setMode( "ace/mode/css" );
 			this.$editor.setValue( this.$field.val() );
@@ -145,227 +143,19 @@
 			$( 'body' ).append( this.$el.html( this.template() ) );
 			$( "#vc_tabs-templates" ).tabs();
 			this.$name = $( '#vc_template-name' );
-			this.data_rendered = true;
-			return this;
-		},
-		removeView: function () {
-			this.remove();
-		},
-		show: function ( container ) {
-			this.container = container;
-			this.render();
-			this.$el.modal( 'show' );
-		},
-		close: function () {
-			this.$el.modal( 'hide' );
-		}
-	} );
-	/**
-	 * Elements list
-	 * @type {*}
-	 */
-	var ElementBlockView = vc.element_block_view = Backbone.View.extend( {
-		tagName: 'div',
-		className: 'wpb_bootstrap_modals',
-		template: _.template( $( '#wpb-elements-list-modal-template' ).html() || '<div></div>' ),
-		data_saved: false,
-		events: {
-			'click [data-element]': 'createElement',
-			'click .close': 'close',
-			'hidden': 'removeView',
-			'shown': 'setupShown',
-			'click .wpb-content-layouts-container .isotope-filter a': 'filterElements',
-			'keyup #vc_elements_name_filter': 'filterElements'
-		},
-		initialize: function () {
-			if ( _.isUndefined( this.model ) ) {
-				this.model = { position_to_add: 'end' };
-			}
-		},
-		render: function () {
-			var that = this,
-				$container = this.container.$content,
-				item_selector,
-				$list,
-				tag,
-				not_in;
-			$( 'body' ).append( this.$el.html( this.template() ) );
-			$list = this.$el.find( '.wpb-elements-list' ),
-				item_selector = '.wpb-layout-element-button',
-				tag = this.container.model ? this.container.model.get( 'shortcode' ) : 'vc_column',
-				not_in = this._getNotIn( tag );
-			// New vision
-			var as_parent = tag && ! _.isUndefined( vc.map[ tag ].as_parent ) ? vc.map[ tag ].as_parent : false;
-			if ( _.isObject( as_parent ) ) {
-				var parent_selector = [];
-				if ( _.isString( as_parent.only ) ) {
-					parent_selector.push( _.reduce( as_parent.only.replace( /\s/, '' ).split( ',' ),
-						function ( memo, val ) {
-							return memo + ( _.isEmpty( memo ) ? '' : ',') + '[data-element="' + val.trim() + '"]';
-						},
-						'' ) );
-				}
-				if ( _.isString( as_parent.except ) ) {
-					parent_selector.push( _.reduce( as_parent.except.replace( /\s/, '' ).split( ',' ),
-						function ( memo, val ) {
-							return memo + ':not([data-element="' + val.trim() + '"])';
-						},
-						'' ) );
-				}
-				item_selector += parent_selector.join( ',' );
-			} else {
-				if ( not_in ) {
-					item_selector = not_in;
-				}
-			}
-			// OLD fashion
-			if ( tag !== false && tag !== false && ! _.isUndefined( vc.map[ tag ].allowed_container_element ) ) {
-				if ( vc.map[ tag ].allowed_container_element === false ) {
-					item_selector += ':not([data-is-container=true])';
-				} else if ( _.isString( vc.map[ tag ].allowed_container_element ) ) {
-					item_selector += ':not([data-is-container=true]), [data-element="' + vc.map[ tag ].allowed_container_element + '"]';
-				}
-			}
-			$( '.wpb-content-layouts', $list ).isotope( {
-				itemSelector: item_selector,
-				layoutMode: 'fitRows',
-				filter: null
-			} );
-			$( item_selector, $list ).addClass( 'isotope-item' );
-			$( '.wpb-content-layouts', $list ).isotope( 'reloadItems' );
-			$( '.wpb-content-layouts-container .isotope-filter a:first', $list ).trigger( 'click' );
-			$( '[data-filter]', this.$el ).each( function () {
-				if ( ! $( $( this ).data( 'filter' ) + ':visible', $list ).length ) {
-					$( this ).parent().hide();
-				} else {
-					$( this ).parent().show();
-				}
-			} );
-			return this;
-		},
-		_getNotIn: _.memoize( function ( tag ) {
-			var selector = _.reduce( vc.map, function ( memo, shortcode ) {
-				var separator = _.isEmpty( memo ) ? '' : ',';
-				if ( _.isObject( shortcode.as_child ) ) {
-					if ( _.isString( shortcode.as_child.only ) ) {
-						if ( ! _.contains( shortcode.as_child.only.replace( /\s/, '' ).split( ',' ), tag ) ) {
-							memo += separator + '.wpb-layout-element-button:not([data-element="' + shortcode.base + '"])';
-						}
-					}
-					if ( _.isString( shortcode.as_child.except ) ) {
-						if ( _.contains( shortcode.as_child.except.replace( /\s/, '' ).split( ',' ), tag ) ) {
-							memo += separator + '.wpb-layout-element-button:not([data-element="' + shortcode.base + '"])';
-						}
-					}
-				} else if ( shortcode.as_child === false ) {
-					memo += separator + '.wpb-layout-element-button:not([data-element="' + shortcode.base + '"])';
-				}
-				return memo;
-			}, '' );
-			return selector;
-		} ),
-		filterElements: function ( e ) {
-			e.stopPropagation();
-			var $list = this.$el.find( '.wpb-elements-list' ),
-				$control = $( e.currentTarget ),
-				filter = '',
-				$name_filter = $( '#vc_elements_name_filter' ),
-				name_filter = $name_filter.val();
-			if ( $control.is( '[data-filter]' ) ) {
-				$( '.wpb-content-layouts-container .isotope-filter .active', $list ).removeClass( 'active' );
-				$control.parent().addClass( 'active' );
-				filter = $control.data( 'filter' );
-				$name_filter.val( '' );
-			} else if ( name_filter.length > 0 ) {
-				filter = ":containsi('" + name_filter + "')";
-				$( '.wpb-content-layouts-container .isotope-filter .active', $list ).removeClass( 'active' );
-			} else if ( name_filter.length == 0 ) {
-				$( '.wpb-content-layouts-container .isotope-filter [data-filter="*"]' ).parent().addClass( 'active' );
-			}
-			$( '.wpb-content-layouts', $list ).isotope( { filter: filter } );
-		},
-		createElement: function ( e ) {
-			var model, column, row;
-			if ( _.isObject( e ) ) {
-				e.preventDefault();
-			}
-			var $button = $( e.currentTarget );
-			if ( this.container.$content.is( '#visual_composer_content' ) ) {
-				row = Shortcodes.create( { shortcode: 'vc_row' } );
-				column = Shortcodes.create( {
-					shortcode: 'vc_column',
-					params: { width: '1/1' },
-					parent_id: row.id,
-					root_id: row.id
-				} );
-				if ( $button.data( 'element' ) != 'vc_row' ) {
-					model = Shortcodes.create( {
-						shortcode: $button.data( 'element' ),
-						parent_id: column.id,
-						params: vc.getDefaults( $button.data( 'element' ) ),
-						root_id: row.id
-					} );
-				} else {
-					model = row;
-				}
-			} else {
-				if ( $button.data( 'element' ) == 'vc_row' ) {
-					row = model = Shortcodes.create( {
-						shortcode: 'vc_row_inner',
-						parent_id: this.container.model.id,
-						order: (this.model.position_to_add == 'start' ? this.getFirstPositionIndex() : Shortcodes.getNextOrder())
-					} );
-					Shortcodes.create( {
-						shortcode: 'vc_column_inner',
-						params: { width: '1/1' },
-						parent_id: row.id,
-						root_id: row.id
-					} );
-				} else {
-					model = Shortcodes.create( {
-						shortcode: $button.data( 'element' ),
-						parent_id: this.container.model.id,
-						order: (this.model.position_to_add == 'start' ? this.getFirstPositionIndex() : Shortcodes.getNextOrder()),
-						params: vc.getDefaults( $button.data( 'element' ) ),
-						root_id: this.container.model.get( 'root_id' )
-					} );
-				}
-			}
-			this.selected_model = _.isBoolean( vc.map[ $button.data( 'element' ) ].show_settings_on_create ) && vc.map[ $button.data( 'element' ) ].show_settings_on_create === false ? false : model;
-			this.$el.modal( 'hide' );
-			this.close();
 
-		},
-		getFirstPositionIndex: function () {
-			vc.element_start_index -= 1;
-			return vc.element_start_index;
+			return this;
 		},
 		removeView: function () {
-			if ( this.selected_model && this.selected_model.get( 'shortcode' ) != 'vc_row' && this.selected_model.get( 'shortcode' ) != 'vc_row_inner' ) {
-				vc.edit_element_block_view = new SettingsView( { model: this.selected_model } );
-				vc.edit_element_block_view.show();
-			}
 			this.remove();
-		},
-		setupShown: function () {
-			if ( ! vc.is_mobile ) {
-				$( '#vc_elements_name_filter' ).focus();
-			}
 		},
 		show: function ( container ) {
 			this.container = container;
 			this.render();
-			$( window ).bind( 'resize.ModalView', this.setSize );
-			this.setSize();
 			this.$el.modal( 'show' );
 		},
 		close: function () {
-			$( window ).unbind( 'resize.ModalView' );
 			this.$el.modal( 'hide' );
-		},
-		setSize: function () {
-			var height = $( window ).height() - 143;
-			this.$el.find( '.modal-body' ).css( 'maxHeight', height );
 		}
 	} );
 	/**
@@ -436,12 +226,12 @@
 				$master_container = $master.closest( '.vc_row-fluid' ),
 				master_value,
 				is_empty;
-			dependent_elements = _.isArray( dependent_elements ) ? dependent_elements : this.dependent_elements[ $master.attr( 'name' ) ],
-				master_value = $master.is( ':checkbox' ) ? _.map( this.$content.find( '[name=' + $( e.currentTarget ).attr( 'name' ) + '].wpb_vc_param_value:checked' ),
-					function ( element ) {
-						return $( element ).val();
-					} )
-					: $master.val();
+			dependent_elements = _.isArray( dependent_elements ) ? dependent_elements : this.dependent_elements[ $master.attr( 'name' ) ];
+			master_value = $master.is( ':checkbox' ) ? _.map( this.$content.find( '[name=' + $( e.currentTarget ).attr( 'name' ) + '].wpb_vc_param_value:checked' ),
+				function ( element ) {
+					return $( element ).val();
+				} )
+				: $master.val();
 			is_empty = $master.is( ':checkbox' ) ? ! this.$content.find( '[name=' + $master.attr( 'name' ) + '].wpb_vc_param_value:checked' ).length
 				: ! master_value.length;
 			if ( $master_container.hasClass( 'vc_dependent-hidden' ) ) {
@@ -453,9 +243,9 @@
 					var param_name = $element.attr( 'name' ),
 						rules = _.isObject( this.mapped_params[ param_name ] ) && _.isObject( this.mapped_params[ param_name ].dependency ) ? this.mapped_params[ param_name ].dependency : {},
 						$param_block = $element.closest( '.vc_row-fluid' );
-					if ( _.isBoolean( rules.not_empty ) && rules.not_empty === true && ! is_empty ) { // Check is not empty show dependent Element.
+					if ( _.isBoolean( rules.not_empty ) && true === rules.not_empty && ! is_empty ) { // Check is not empty show dependent Element.
 						$param_block.removeClass( 'vc_dependent-hidden' );
-					} else if ( _.isBoolean( rules.is_empty ) && rules.is_empty === true && is_empty ) {
+					} else if ( _.isBoolean( rules.is_empty ) && true === rules.is_empty && is_empty ) {
 						$param_block.removeClass( 'vc_dependent-hidden' );
 					} else if ( _.intersection( (_.isArray( rules.value ) ? rules.value : [ rules.value ]),
 							(_.isArray( master_value ) ? master_value : [ master_value ]) ).length ) {
@@ -491,7 +281,7 @@
 			}
 			var params = this.getParams();
 			this.model.save( { params: params } );
-			if ( parseInt( Backbone.VERSION ) === 0 ) {
+			if ( 0 === parseInt( Backbone.VERSION ) ) {
 				this.model.trigger( 'change:params', this.model );
 			}
 			this.data_saved = true;
@@ -516,7 +306,7 @@
 				if ( _.isUndefined( params[ param.param_name ] ) ) {
 					params[ param.param_name ] = '';
 				}
-				if ( param.type === "textarea_html" ) {
+				if ( "textarea_html" === param.type ) {
 					params[ param.param_name ] = params[ param.param_name ].replace( /\n/g,
 						'' );
 				}
@@ -533,14 +323,11 @@
 			if ( ! _.isUndefined( window.tinyMCE ) ) {
 				$( 'textarea.textarea_html', this.$el ).each( function () {
 					var id = $( this ).attr( 'id' );
-					if ( tinymce.majorVersion === "4" ) {
+					if ( "4" === tinymce.majorVersion ) {
 						window.tinyMCE.execCommand( 'mceRemoveEditor', true, id );
 					} else {
 						window.tinyMCE.execCommand( "mceRemoveControl", true, id );
 					}
-					// window.tinyMCE.execCommand('mceAddEditor', false, id);
-					// window.tinymce.activeEditor = tinymce.get('content');
-					// $('#wp-fullscreen-save .button').attr('onclick', 'wp.editor.fullscreen.save()').addClass('button-primary');
 				} );
 			}
 		},

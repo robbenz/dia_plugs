@@ -123,7 +123,7 @@ class WPBMap {
 	 * Map shortcode to VC.
 	 *
 	 * This method maps shortcode to VC.
-	 * You need to shortcode's tag and  settings to map correctly.
+	 * You need to shortcode's tag and settings to map correctly.
 	 * Default shortcodes are mapped in config/map.php file.
 	 * The best way is to call this method with "init" action callback function of WP.
 	 *
@@ -165,7 +165,6 @@ class WPBMap {
 			trigger_error( sprintf( __( "Wrong base for shortcode:%s. Base required", "js_composer" ), $tag ) );
 		} else {
 			self::$sc[ $tag ] = $attributes;
-			// self::$sc[ $tag ]['params'] = Array();
 
 			visual_composer()->addShortCode( self::$sc[ $tag ] );
 
@@ -201,7 +200,7 @@ class WPBMap {
 						'vc_row_inner',
 						'vc_column_inner'
 					) ) || ! isset( $settings[ self::$user_role ]['shortcodes'] ) || ! vc_mapper()->isCheckForAccess()
-				     || ( isset( $settings[ self::$user_role ]['shortcodes'][ $name ] ) && (int) $settings[ self::$user_role ]['shortcodes'][ $name ] == 1 )
+				     || ( isset( $settings[ self::$user_role ]['shortcodes'][ $name ] ) && (int) $settings[ self::$user_role ]['shortcodes'][ $name ] === 1 )
 				) {
 					if ( ! isset( $values['content_element'] ) || $values['content_element'] === true ) {
 						$categories = isset( $values['category'] ) ? $values['category'] : '_other_category_';
@@ -215,13 +214,13 @@ class WPBMap {
 									if ( array_search( $c, self::$user_categories ) === false ) {
 										self::$user_categories[] = $c;
 									}
-									$values['_category_ids'][] = md5( $c ); // array_search($category, self::$categories);
+									$values['_category_ids'][] = md5( $c );
 								}
 							} else {
 								if ( array_search( $categories, self::$user_categories ) === false ) {
 									self::$user_categories[] = $categories;
 								}
-								$values['_category_ids'][] = md5( $categories ); // array_search($category, self::$categories);
+								$values['_category_ids'][] = md5( $categories );
 							}
 						}
 					}

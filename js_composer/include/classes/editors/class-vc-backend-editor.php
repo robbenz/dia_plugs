@@ -47,7 +47,7 @@ class Vc_Backend_Editor implements Vc_Editor_Interface {
 
 		/**
 		 * Load required vendors classes;
-		 * @deprecated since 4.4 due to autoload logic
+		 * @deprecated 4.4 due to autoload logic
 		 */
 		visual_composer()->vendorsManager()->load();
 	}
@@ -78,7 +78,7 @@ class Vc_Backend_Editor implements Vc_Editor_Interface {
 	 */
 	public function renderEditor( $post = null ) {
 		/**
-		 * @todo setter/getter for $post
+		 * TODO: setter/getter for $post
 		 */
 		if ( ! is_object( $post ) || 'WP_Post' !== get_class( $post ) || ! isset( $post->ID ) ) {
 			return false;
@@ -146,22 +146,13 @@ class Vc_Backend_Editor implements Vc_Editor_Interface {
 			wp_enqueue_script( 'jquery-ui-draggable' );
 			wp_enqueue_script( 'jquery-ui-accordion' );
 			wp_enqueue_script( 'jquery-ui-autocomplete' );
+			wp_enqueue_script( 'jquery-ui-resizable' );
 			wp_enqueue_script( 'farbtastic' );
 			wp_enqueue_script( 'isotope' );
 			$bootstrap_version = '3.0.2';
 			wp_enqueue_script( 'vc_bootstrap_js_1', vc_asset_url( 'lib/bower/bootstrap3/js/modal.js' ), array( 'jquery' ), $bootstrap_version, true );
 			wp_enqueue_script( 'vc_bootstrap_js_2', vc_asset_url( 'lib/bower/bootstrap3/js/dropdown.js' ), array( 'jquery' ), $bootstrap_version, true );
 			wp_enqueue_script( 'vc_bootstrap_js_11', vc_asset_url( 'lib/bower/bootstrap3/js/transition.js' ), array( 'jquery' ), $bootstrap_version, true );
-			// wp_enqueue_script( 'vc_bootstrap_js', vc_asset_url( 'lib/bower/bootstrap3/dist/js/bootstrap.min.js' ), array( 'jquery' ), '3.0.2', true );
-
-			// wp_enqueue_script( 'vc_bootstrap_js_3', vc_asset_url( 'lib/bower/bootstrap3/js/tooltip.js' ), array( 'jquery' ), '3.0.2', true );
-			// wp_enqueue_script( 'vc_bootstrap_js_4', vc_asset_url( 'lib/bower/bootstrap3/js/alert.js' ), array( 'jquery' ), '3.0.2', true );
-			// wp_enqueue_script( 'vc_bootstrap_js_5', vc_asset_url( 'lib/bower/bootstrap3/js/button.js' ), array( 'jquery' ), '3.0.2', true );
-			// wp_enqueue_script( 'vc_bootstrap_js_6', vc_asset_url( 'lib/bower/bootstrap3/js/carousel.js' ), array( 'jquery' ), '3.0.2', true );
-			// wp_enqueue_script( 'vc_bootstrap_js_7', vc_asset_url( 'lib/bower/bootstrap3/js/collapse.js' ), array( 'jquery' ), '3.0.2', true );
-			// wp_enqueue_script( 'vc_bootstrap_js_8', vc_asset_url( 'lib/bower/bootstrap3/js/popover.js' ), array( 'jquery' ), '3.0.2', true );
-			// wp_enqueue_script( 'vc_bootstrap_js_9', vc_asset_url( 'lib/bower/bootstrap3/js/scrollspy.js' ), array( 'jquery' ), '3.0.2', true );
-			// wp_enqueue_script( 'vc_bootstrap_js_10', vc_asset_url( 'lib/bower/bootstrap3/js/tab.js' ), array( 'jquery' ), '3.0.2', true );
 			wp_enqueue_script( 'wpb_scrollTo_js' );
 			wp_enqueue_script( 'wpb_php_js' );
 			wp_enqueue_script( 'wpb_js_composer_js_sortable' );
@@ -177,7 +168,6 @@ class Vc_Backend_Editor implements Vc_Editor_Interface {
 			 * Enqueue deprecated
 			 * @since 4.4 removed
 			 */
-			//wp_enqueue_script( 'vc_js_composer_js_backend_deprecated', vc_asset_url( 'js/backend/deprecated.js' ), array( 'wpb_js_composer_js_view' ), WPB_VC_VERSION, true );
 			wp_enqueue_script( 'wpb_js_composer_js_backbone' );
 			wp_enqueue_script( 'wpb_jscomposer_composer_js' );
 			wp_enqueue_script( 'wpb_jscomposer_shortcode_js' );
@@ -189,7 +179,6 @@ class Vc_Backend_Editor implements Vc_Editor_Interface {
 			wp_enqueue_script( 'wpb_jscomposer_settings_js' );
 			wp_enqueue_script( 'wpb_jscomposer_media_editor_js' );
 			wp_enqueue_script( 'wpb_jscomposer_autosuggest_js' );
-			// }}
 			wp_enqueue_script( 'wpb_js_composer_js' );
 			/**
 			 * @since 4.4
@@ -202,7 +191,7 @@ class Vc_Backend_Editor implements Vc_Editor_Interface {
 	/**
 	 * Save generated shortcodes, html and visual composer status in posts meta.
 	 *
-	 * @deprecated since 4.4
+	 * @deprecated 4.4
 	 * @since  3.0
 	 * @access public
 	 *
@@ -229,13 +218,13 @@ class Vc_Backend_Editor implements Vc_Editor_Interface {
 		$settings = WPBakeryVisualComposerSettings::get( 'groups_access_rules' );
 		$role = $current_user->roles[0];
 
-		if ( $data_element == 'vc_column' && vc_post_param( 'data_width' ) !== null ) {
+		if ( $data_element === 'vc_column' && vc_post_param( 'data_width' ) !== null ) {
 			$output = do_shortcode( '[vc_column width="' . vc_post_param( 'data_width' ) . '"]' );
 			echo $output;
-		} elseif ( $data_element == 'vc_row' || $data_element == 'vc_row_inner' ) {
+		} elseif ( $data_element === 'vc_row' || $data_element === 'vc_row_inner' ) {
 			$output = do_shortcode( '[' . $data_element . ']' );
 			echo $output;
-		} elseif ( ! isset( $settings[ $role ]['shortcodes'] ) || ( isset( $settings[ $role ]['shortcodes'][ $data_element ] ) && (int) $settings[ $role ]['shortcodes'][ $data_element ] == 1 ) ) {
+		} elseif ( ! isset( $settings[ $role ]['shortcodes'] ) || ( isset( $settings[ $role ]['shortcodes'][ $data_element ] ) && (int) $settings[ $role ]['shortcodes'][ $data_element ] === 1 ) ) {
 			$output = do_shortcode( '[' . $data_element . ']' );
 			echo $output;
 		}

@@ -98,7 +98,7 @@
 			if ( ! data ) {
 				$this.data( 'vc.tab', (data = new Tab( this )) );
 			}
-			if ( typeof option == 'string' ) {
+			if ( 'string' === typeof(option) ) {
 				data[ option ]();
 			}
 		} );

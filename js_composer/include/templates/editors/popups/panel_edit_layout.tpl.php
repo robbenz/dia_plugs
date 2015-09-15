@@ -8,7 +8,7 @@
 		<h3 class="vc_panel-title"><?php echo __( 'Row Layout', 'js_composer' ) ?></h3>
 	</div>
 	<div class="vc_panel-body vc_properties-list">
-		<div class="vc_row vc_edit_form_elements">
+		<div class="vc_edit_form_elements">
 			<div class="vc_col-sm-12 vc_column vc_layout-panel-switcher">
 				<div class="wpb_element_label"><?php _e( 'Row layout', 'js_composer' ) ?></div>
 				<?php foreach ( $vc_row_layouts as $layout ): ?>

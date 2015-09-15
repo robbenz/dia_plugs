@@ -43,7 +43,6 @@ function vc_backend_editor_register_pointer( $p ) {
 						'buttonsEvent' => 'vcPointersEditorsTourEvents',
 					),
 					'closeEvent' => 'shortcodes:vc_row:add',
-					// 'closeEvent' => 'click #vc_templates-editor-button, #vc_add-new-element, #vc_no-content-add-element, #vc_no-content-add-text-block',
 					'showEvent' => 'backendEditor.show',
 				),
 				array(
@@ -82,39 +81,6 @@ function vc_backend_editor_register_pointer( $p ) {
 				)
 			),
 		);
-		/*
-		$p[ 'showEvent_pointers_backend_editor' ] = array(
-			'name' => 'vcEventPointerController',
-			'type' => 'map_on_event',
-			'messages' => array(
-				array(
-					'target'  => '.vc_control.column_add.vc_column-add:first',
-					'options' => array(
-						'content'  => sprintf( '<h3> %s </h3> <p> %s </p>',
-							__( 'Ha ha this is third', 'js_composer' ),
-							__( '3 Ps use predefined template as a starting point and modify it.', 'js_composer' )
-						),
-						'position' => array( 'edge' => 'left', 'align' => 'center' ),
-						'buttons' => 'vcPointersEditorsTourEvents',
-						'closeEvent' => 'click #poststuff',
-						'showEvent' => 'shortcodes:vc_column',
-					)
-				),
-				array(
-					'target'  => '.wpb_column_container:first .wpb_content_element:first .vc_controls-cc',
-					'options' => array(
-						'content'  => sprintf( '<h3> %s </h3> <p> %s </p>',
-							__( 'Ha ha this is the last one!', 'js_composer' ),
-							__( '4 Ps use predefined template as a starting point and modify it.', 'js_composer' )
-						),
-						'position' => array( 'edge' => 'left', 'align' => 'center' ),
-						'buttons' => 'vcPointersEditorsTourEvents',
-						'closeEvent' => 'click #poststuff',
-					)
-				),
-			)
-		);
-		*/
 	}
 
 	return $p;

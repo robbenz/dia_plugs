@@ -1,17 +1,17 @@
-if ( jQuery.fn.bxSlider !== undefined ) {
+if ( 'undefined' !== typeof(jQuery.fn.bxSlider) ) {
 	jQuery( '.bxslider' ).each( function () {
 		var $slider = jQuery( this );
 		$slider.bxSlider( $slider.data( 'settings' ) );
 	} );
 }
-if ( window.Swiper !== undefined ) {
+if ( 'undefined' !== typeof(window.Swiper) ) {
 
 	jQuery( '.swiper-container' ).each( function () {
 		var $this = jQuery( this ),
 			my_swiper,
 			max_slide_size = 0,
 			options = jQuery( this ).data( 'settings' );
-		if ( options.mode === 'vertical' ) {
+		if ( 'vertical' === options.mode ) {
 			$this.find( '.swiper-slide' ).each( function () {
 				var height = jQuery( this ).outerHeight( true );
 				if ( height > max_slide_size ) {
@@ -32,17 +32,17 @@ if ( window.Swiper !== undefined ) {
 		} );
 		my_swiper = jQuery( this ).swiper( jQuery.extend( options, {
 			onFirstInit: function ( swiper ) {
-				if ( swiper.slides.length < 2 ) {
+				if ( 2 > swiper.slides.length ) {
 					$this.find( '.vc_arrow-left,.vc_arrow-right' ).hide();
-				} else if ( swiper.activeIndex === 0 && swiper.params.loop !== true ) {
+				} else if ( 0 === swiper.activeIndex && true !== swiper.params.loop ) {
 					$this.find( '.vc_arrow-left' ).hide();
 				} else {
 					$this.find( '.vc_arrow-left' ).show();
 				}
 			},
 			onSlideChangeStart: function ( swiper ) {
-				if ( swiper.slides.length > 1 && swiper.params.loop !== true ) {
-					if ( swiper.activeIndex === 0 ) {
+				if ( 1 < swiper.slides.length && true !== swiper.params.loop ) {
+					if ( 0 === swiper.activeIndex ) {
 						$this.find( '.vc_arrow-left' ).hide();
 					} else {
 						$this.find( '.vc_arrow-left' ).show();

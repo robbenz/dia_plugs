@@ -3,8 +3,8 @@
 
 	<p><?php printf( __( 'WPBakery has complete documentation available at our knowledge base: <a target="_blank" href="%s">kb.wpbakery.com</a> which covers everything related to Visual Composer starting from Installation and up to more advanced features based on our Inner API.', 'js_composer' ), 'http://kb.wpbakery.com' ); ?></p>
 
-	<div class="feature-section col three-col">
-		<div>
+	<div class="feature-section vc_row">
+		<div class="vc_col-xs-4">
 			<h4><a target="_blank" href="https://wpbakery.atlassian.net/wiki/display/VC/Preface">Preface</a></h4>
 			<ul>
 				<li><a target="_blank"
@@ -18,7 +18,7 @@
 			</ul>
 		</div>
 
-		<div>
+		<div class="vc_col-xs-4">
 			<h4><a target="_blank" href="https://wpbakery.atlassian.net/wiki/display/VC/Licensing">Licensing</a></h4>
 			<ul>
 				<li><a target="_blank" href="https://wpbakery.atlassian.net/wiki/display/VC/Regular+License">Regular
@@ -30,7 +30,7 @@
 			</ul>
 		</div>
 
-		<div class="last-feature">
+		<div class="vc_col-xs-4">
 			<h4><a target="_blank" href="https://wpbakery.atlassian.net/wiki/display/VC/Getting+Started">Getting
 					Started</a></h4>
 			<ul>
@@ -45,8 +45,8 @@
 		</div>
 	</div>
 
-	<div class="feature-section col three-col">
-		<div>
+	<div class="feature-section vc_row">
+		<div class="vc_col-xs-4">
 			<h4><a target="_blank" href="https://wpbakery.atlassian.net/wiki/display/VC/Learning+More">Learning More</a>
 			</h4>
 			<ul>
@@ -73,22 +73,22 @@
 			</ul>
 		</div>
 
-		<div>
+		<div class="vc_col-xs-4">
 			<h4><a target="_blank" href="/wiki/pages/viewpage.action?pageId=4030510">Visual Composer "How To's"</a></h4>
 
 			<p>In this section you will find a quick tips in form of video tutorials on how to operate with Visual
 				Composer.</p>
 		</div>
 
-		<div class="last-feature">
+		<div class="vc_col-xs-4">
 			<h4><a target="_blank" href="https://wpbakery.atlassian.net/wiki/display/VC/FAQ">FAQ</a></h4>
 
 			<p>Here you can find answers to the Frequently Asked Question about Visual Composer.</p>
 		</div>
 	</div>
 
-	<div class="feature-section col three-col">
-		<div>
+	<div class="feature-section vc_row">
+		<div class="vc_col-xs-4">
 			<h4><a target="_blank" href="https://wpbakery.atlassian.net/wiki/display/VC/Add-ons">Add-ons</a></h4>
 			<ul>
 				<li><a target="_blank" href="https://wpbakery.atlassian.net/wiki/display/VC/Templatera">Templatera</a>
@@ -100,14 +100,14 @@
 			</ul>
 		</div>
 
-		<div>
+		<div class="vc_col-xs-4">
 			<h4><a target="_blank" href="https://wpbakery.atlassian.net/wiki/display/VC/Theme+Integration">Theme
 					Integration</a></h4>
 
 			<p>See how you can integrate Visual Composer within your WordPress theme.</p>
 		</div>
 
-		<div class="last-feature">
+		<div class="vc_col-xs-4">
 			<h4><a target="_blank" href="https://wpbakery.atlassian.net/wiki/display/VC/Inner+API">Inner API</a></h4>
 
 			<p>Inner API section describes capabilities of interaction with Visual Composer.</p>

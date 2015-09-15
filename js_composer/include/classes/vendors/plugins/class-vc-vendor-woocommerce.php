@@ -26,7 +26,6 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 				'mapShortcodes'
 			) );
 
-			// $this->mapShortcodes();
 			add_action( 'vc_backend_editor_render', array(
 				&$this,
 				'enqueueJsBackend'
@@ -181,6 +180,7 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 					'type' => 'textfield',
 					'heading' => __( 'Order count', 'js_composer' ),
 					'value' => 15,
+					'save_always' => true,
 					'param_name' => 'order_count',
 					'description' => __( 'You can specify the number or order to show, it\'s set by default to 15 (use -1 to display all orders.)', 'js_composer' ),
 				),
@@ -209,6 +209,7 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 					'type' => 'textfield',
 					'heading' => __( 'Per page', 'js_composer' ),
 					'value' => 12,
+					'save_always' => true,
 					'param_name' => 'per_page',
 					'description' => __( 'The "per_page" shortcode determines how many products to show on the page', 'js_composer' ),
 				),
@@ -217,6 +218,7 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 					'heading' => __( 'Columns', 'js_composer' ),
 					'value' => 4,
 					'param_name' => 'columns',
+					'save_always' => true,
 					'description' => __( 'The columns attribute controls how many columns wide the products should be before wrapping.', 'js_composer' ),
 				),
 				array(
@@ -224,13 +226,15 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 					'heading' => __( 'Order by', 'js_composer' ),
 					'param_name' => 'orderby',
 					'value' => $order_by_values,
+					'save_always' => true,
 					'description' => sprintf( __( 'Select how to sort retrieved products. More at %s.', 'js_composer' ), '<a href="http://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters" target="_blank">WordPress codex page</a>' )
 				),
 				array(
 					'type' => 'dropdown',
-					'heading' => __( 'Order way', 'js_composer' ),
+					'heading' => __( 'Sort order', 'js_composer' ),
 					'param_name' => 'order',
 					'value' => $order_way_values,
+					'save_always' => true,
 					'description' => sprintf( __( 'Designates the ascending or descending order. More at %s.', 'js_composer' ), '<a href="http://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters" target="_blank">WordPress codex page</a>' )
 				),
 			)
@@ -257,6 +261,7 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 					'heading' => __( 'Per page', 'js_composer' ),
 					'value' => 12,
 					'param_name' => 'per_page',
+					'save_always' => true,
 					'description' => __( 'The "per_page" shortcode determines how many products to show on the page', 'js_composer' ),
 				),
 				array(
@@ -264,6 +269,7 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 					'heading' => __( 'Columns', 'js_composer' ),
 					'value' => 4,
 					'param_name' => 'columns',
+					'save_always' => true,
 					'description' => __( 'The columns attribute controls how many columns wide the products should be before wrapping.', 'js_composer' ),
 				),
 				array(
@@ -271,13 +277,15 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 					'heading' => __( 'Order by', 'js_composer' ),
 					'param_name' => 'orderby',
 					'value' => $order_by_values,
+					'save_always' => true,
 					'description' => sprintf( __( 'Select how to sort retrieved products. More at %s.', 'js_composer' ), '<a href="http://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters" target="_blank">WordPress codex page</a>' )
 				),
 				array(
 					'type' => 'dropdown',
-					'heading' => __( 'Order way', 'js_composer' ),
+					'heading' => __( 'Sort order', 'js_composer' ),
 					'param_name' => 'order',
 					'value' => $order_way_values,
+					'save_always' => true,
 					'description' => sprintf( __( 'Designates the ascending or descending order. More at %s.', 'js_composer' ), '<a href="http://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters" target="_blank">WordPress codex page</a>' )
 				),
 			)
@@ -349,6 +357,7 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 					'heading' => __( 'Columns', 'js_composer' ),
 					'value' => 4,
 					'param_name' => 'columns',
+					'save_always' => true,
 				),
 				array(
 					'type' => 'dropdown',
@@ -356,13 +365,15 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 					'param_name' => 'orderby',
 					'value' => $order_by_values,
 					'std' => 'title',
+					'save_always' => true,
 					'description' => sprintf( __( 'Select how to sort retrieved products. More at %s. Default by Title', 'js_composer' ), '<a href="http://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters" target="_blank">WordPress codex page</a>' )
 				),
 				array(
 					'type' => 'dropdown',
-					'heading' => __( 'Order way', 'js_composer' ),
+					'heading' => __( 'Sort order', 'js_composer' ),
 					'param_name' => 'order',
 					'value' => $order_way_values,
+					'save_always' => true,
 					'description' => sprintf( __( 'Designates the ascending or descending order. More at %s. Default by ASC', 'js_composer' ), '<a href="http://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters" target="_blank">WordPress codex page</a>' )
 				),
 				array(
@@ -375,6 +386,7 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 						'unique_values' => true,
 						// In UI show results except selected. NB! You should manually check values in backend
 					),
+					'save_always' => true,
 					'description' => __( 'Enter List of Products', 'js_composer' ),
 				),
 				array(
@@ -554,6 +566,7 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 					'type' => 'textfield',
 					'heading' => __( 'Per page', 'js_composer' ),
 					'value' => 12,
+					'save_always' => true,
 					'param_name' => 'per_page',
 					'description' => __( 'How much items per page to show', 'js_composer' ),
 				),
@@ -561,6 +574,7 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 					'type' => 'textfield',
 					'heading' => __( 'Columns', 'js_composer' ),
 					'value' => 4,
+					'save_always' => true,
 					'param_name' => 'columns',
 					'description' => __( 'How much columns grid', 'js_composer' ),
 				),
@@ -569,13 +583,15 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 					'heading' => __( 'Order by', 'js_composer' ),
 					'param_name' => 'orderby',
 					'value' => $order_by_values,
+					'save_always' => true,
 					'description' => sprintf( __( 'Select how to sort retrieved products. More at %s.', 'js_composer' ), '<a href="http://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters" target="_blank">WordPress codex page</a>' )
 				),
 				array(
 					'type' => 'dropdown',
-					'heading' => __( 'Order way', 'js_composer' ),
+					'heading' => __( 'Sort order', 'js_composer' ),
 					'param_name' => 'order',
 					'value' => $order_way_values,
+					'save_always' => true,
 					'description' => sprintf( __( 'Designates the ascending or descending order. More at %s.', 'js_composer' ), '<a href="http://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters" target="_blank">WordPress codex page</a>' )
 				),
 				array(
@@ -583,6 +599,7 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 					'heading' => __( 'Category', 'js_composer' ),
 					'value' => $product_categories_dropdown,
 					'param_name' => 'category',
+					'save_always' => true,
 					'description' => __( 'Product category list', 'js_composer' ),
 				),
 			)
@@ -630,13 +647,15 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 					'heading' => __( 'Order by', 'js_composer' ),
 					'param_name' => 'orderby',
 					'value' => $order_by_values,
+					'save_always' => true,
 					'description' => sprintf( __( 'Select how to sort retrieved products. More at %s.', 'js_composer' ), '<a href="http://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters" target="_blank">WordPress codex page</a>' )
 				),
 				array(
 					'type' => 'dropdown',
-					'heading' => __( 'Order way', 'js_composer' ),
+					'heading' => __( 'Sort order', 'js_composer' ),
 					'param_name' => 'order',
 					'value' => $order_way_values,
+					'save_always' => true,
 					'description' => sprintf( __( 'Designates the ascending or descending order. More at %s.', 'js_composer' ), '<a href="http://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters" target="_blank">WordPress codex page</a>' )
 				),
 				array(
@@ -644,6 +663,7 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 					'heading' => __( 'Columns', 'js_composer' ),
 					'value' => 4,
 					'param_name' => 'columns',
+					'save_always' => true,
 					'description' => __( 'How much columns grid', 'js_composer' ),
 				),
 				array(
@@ -660,6 +680,7 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 						'multiple' => true,
 						'sortable' => true,
 					),
+					'save_always' => true,
 					'description' => __( 'List of product categories', 'js_composer' ),
 				),
 			)
@@ -695,6 +716,7 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 					'type' => 'textfield',
 					'heading' => __( 'Per page', 'js_composer' ),
 					'value' => 12,
+					'save_always' => true,
 					'param_name' => 'per_page',
 					'description' => __( 'How much items per page to show', 'js_composer' ),
 				),
@@ -702,6 +724,7 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 					'type' => 'textfield',
 					'heading' => __( 'Columns', 'js_composer' ),
 					'value' => 4,
+					'save_always' => true,
 					'param_name' => 'columns',
 					'description' => __( 'How much columns grid', 'js_composer' ),
 				),
@@ -710,13 +733,15 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 					'heading' => __( 'Order by', 'js_composer' ),
 					'param_name' => 'orderby',
 					'value' => $order_by_values,
+					'save_always' => true,
 					'description' => sprintf( __( 'Select how to sort retrieved products. More at %s.', 'js_composer' ), '<a href="http://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters" target="_blank">WordPress codex page</a>' )
 				),
 				array(
 					'type' => 'dropdown',
-					'heading' => __( 'Order way', 'js_composer' ),
+					'heading' => __( 'Sort order', 'js_composer' ),
 					'param_name' => 'order',
 					'value' => $order_way_values,
+					'save_always' => true,
 					'description' => sprintf( __( 'Designates the ascending or descending order. More at %s.', 'js_composer' ), '<a href="http://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters" target="_blank">WordPress codex page</a>' )
 				),
 			)
@@ -741,6 +766,7 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 					'heading' => __( 'Per page', 'js_composer' ),
 					'value' => 12,
 					'param_name' => 'per_page',
+					'save_always' => true,
 					'description' => __( 'How much items per page to show', 'js_composer' ),
 				),
 				array(
@@ -748,6 +774,7 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 					'heading' => __( 'Columns', 'js_composer' ),
 					'value' => 4,
 					'param_name' => 'columns',
+					'save_always' => true,
 					'description' => __( 'How much columns grid', 'js_composer' ),
 				),
 			)
@@ -774,6 +801,7 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 					'heading' => __( 'Per page', 'js_composer' ),
 					'value' => 12,
 					'param_name' => 'per_page',
+					'save_always' => true,
 					'description' => __( 'How much items per page to show', 'js_composer' ),
 				),
 				array(
@@ -781,6 +809,7 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 					'heading' => __( 'Columns', 'js_composer' ),
 					'value' => 4,
 					'param_name' => 'columns',
+					'save_always' => true,
 					'description' => __( 'How much columns grid', 'js_composer' ),
 				),
 				array(
@@ -788,13 +817,15 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 					'heading' => __( 'Order by', 'js_composer' ),
 					'param_name' => 'orderby',
 					'value' => $order_by_values,
+					'save_always' => true,
 					'description' => sprintf( __( 'Select how to sort retrieved products. More at %s.', 'js_composer' ), '<a href="http://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters" target="_blank">WordPress codex page</a>' )
 				),
 				array(
 					'type' => 'dropdown',
-					'heading' => __( 'Order way', 'js_composer' ),
+					'heading' => __( 'Sort order', 'js_composer' ),
 					'param_name' => 'order',
 					'value' => $order_way_values,
+					'save_always' => true,
 					'description' => sprintf( __( 'Designates the ascending or descending order. More at %s.', 'js_composer' ), '<a href="http://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters" target="_blank">WordPress codex page</a>' )
 				),
 			)
@@ -828,6 +859,7 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 					'heading' => __( 'Per page', 'js_composer' ),
 					'value' => 12,
 					'param_name' => 'per_page',
+					'save_always' => true,
 					'description' => __( 'How much items per page to show', 'js_composer' ),
 				),
 				array(
@@ -835,6 +867,7 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 					'heading' => __( 'Columns', 'js_composer' ),
 					'value' => 4,
 					'param_name' => 'columns',
+					'save_always' => true,
 					'description' => __( 'How much columns grid', 'js_composer' ),
 				),
 				array(
@@ -842,13 +875,15 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 					'heading' => __( 'Order by', 'js_composer' ),
 					'param_name' => 'orderby',
 					'value' => $order_by_values,
+					'save_always' => true,
 					'description' => sprintf( __( 'Select how to sort retrieved products. More at %s.', 'js_composer' ), '<a href="http://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters" target="_blank">WordPress codex page</a>' )
 				),
 				array(
 					'type' => 'dropdown',
-					'heading' => __( 'Order way', 'js_composer' ),
+					'heading' => __( 'Sort order', 'js_composer' ),
 					'param_name' => 'order',
 					'value' => $order_way_values,
+					'save_always' => true,
 					'description' => sprintf( __( 'Designates the ascending or descending order. More at %s.', 'js_composer' ), '<a href="http://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters" target="_blank">WordPress codex page</a>' )
 				),
 				array(
@@ -856,6 +891,7 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 					'heading' => __( 'Attribute', 'js_composer' ),
 					'param_name' => 'attribute',
 					'value' => $attributes,
+					'save_always' => true,
 					'description' => __( 'List of product taxonomy attribute', 'js_composer' ),
 				),
 				array(
@@ -863,6 +899,7 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 					'heading' => __( 'Filter', 'js_composer' ),
 					'param_name' => 'filter',
 					'value' => array( 'empty' => 'empty' ),
+					'save_always' => true,
 					'description' => __( 'Taxonomy values', 'js_composer' ),
 					'dependency' => array(
 						'element' => 'attribute',
@@ -912,7 +949,7 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 			'name' => __( 'Related Products', 'js_composer' ),
 			'base' => 'related_products',
 			'icon' => 'icon-wpb-woocommerce',
-			'content_element' => $post_type == 'product',
+			'content_element' => $post_type === 'product',
 			// disable showing if not product type
 			'category' => __( 'WooCommerce', 'js_composer' ),
 			'description' => __( 'List related products', 'js_composer' ),
@@ -921,6 +958,7 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 					'type' => 'textfield',
 					'heading' => __( 'Per page', 'js_composer' ),
 					'value' => 12,
+					'save_always' => true,
 					'param_name' => 'per_page',
 					'description' => __( 'Please note: the "per_page" shortcode argument will determine how many products are shown on a page. This will not add pagination to the shortcode. ', 'js_composer' ),
 				),
@@ -928,6 +966,7 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 					'type' => 'textfield',
 					'heading' => __( 'Columns', 'js_composer' ),
 					'value' => 4,
+					'save_always' => true,
 					'param_name' => 'columns',
 					'description' => __( 'How much columns grid', 'js_composer' ),
 				),
@@ -936,13 +975,15 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 					'heading' => __( 'Order by', 'js_composer' ),
 					'param_name' => 'orderby',
 					'value' => $order_by_values,
+					'save_always' => true,
 					'description' => sprintf( __( 'Select how to sort retrieved products. More at %s.', 'js_composer' ), '<a href="http://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters" target="_blank">WordPress codex page</a>' )
 				),
 				array(
 					'type' => 'dropdown',
-					'heading' => __( 'Order way', 'js_composer' ),
+					'heading' => __( 'Sort order', 'js_composer' ),
 					'param_name' => 'order',
 					'value' => $order_way_values,
+					'save_always' => true,
 					'description' => sprintf( __( 'Designates the ascending or descending order. More at %s.', 'js_composer' ), '<a href="http://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters" target="_blank">WordPress codex page</a>' )
 				),
 			)
@@ -993,7 +1034,7 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 		);
 		$param_line = '';
 		foreach ( $values as $label => $v ) {
-			$param_line .= ' <label class="vc_checkbox-label"><input id="' . $param['param_name'] . '-' . $v . '" value="' . $v . '" class="wpb_vc_param_value ' . $param['param_name'] . ' ' . $param['type'] . '" type="checkbox" name="' . $param['param_name'] . '"' . '> ' . __( $label, "js_composer" ) . '</label>';
+			$param_line .= ' <label class="vc_checkbox-label"><input id="' . $param['param_name'] . '-' . $v . '" value="' . $v . '" class="wpb_vc_param_value ' . $param['param_name'] . ' ' . $param['type'] . '" type="checkbox" name="' . $param['param_name'] . '"' . '> ' . $label . '</label>';
 		}
 		die( json_encode( $param_line ) );
 	}
@@ -1077,7 +1118,7 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 	 */
 	public function productIdDefaultValue( $current_value, $param_settings, $map_settings, $atts ) {
 		$value = trim( $current_value );
-		if ( strlen( trim( $current_value ) ) == 0 && isset( $atts['sku'] ) && strlen( $atts['sku'] ) > 0 ) {
+		if ( strlen( trim( $current_value ) ) === 0 && isset( $atts['sku'] ) && strlen( $atts['sku'] ) > 0 ) {
 			$value = $this->productIdDefaultValueFromSkuToId( $atts['sku'] );
 		}
 
@@ -1097,7 +1138,7 @@ Class Vc_Vendor_Woocommerce implements Vc_Vendor_Interface {
 	 */
 	public function productsIdsDefaultValue( $current_value, $param_settings, $map_settings, $atts ) {
 		$value = trim( $current_value );
-		if ( strlen( trim( $value ) ) == 0 && isset( $atts['skus'] ) && strlen( $atts['skus'] ) > 0 ) {
+		if ( strlen( trim( $value ) ) === 0 && isset( $atts['skus'] ) && strlen( $atts['skus'] ) > 0 ) {
 			$data = array();
 			$skus = $atts['skus'];
 			$skus_array = explode( ',', $skus );

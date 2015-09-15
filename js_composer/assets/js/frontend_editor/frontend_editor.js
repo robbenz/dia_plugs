@@ -72,7 +72,6 @@ _.extend( vc, {
 		vc.$frame.width( size );
 		vc.$frame_wrapper.css( { top: $vc_navbar.height() } );
 		vc.$frame.height( height );
-		// vc.$frame.height(vc.$frame.contents() ? vc.$frame.contents().height() : 1000);
 	};
 	vc.getDefaults = vc.memoizeWrapper( function ( tag ) {
 		var defaults, params;
@@ -300,7 +299,7 @@ _.extend( vc, {
 			data,
 			newModel;
 
-		newOrder = _.isBoolean( child_of_clone ) && child_of_clone === true ? model.get( 'order' ) : parseFloat( model.get( 'order' ) ) + vc.clone_index;
+		newOrder = _.isBoolean( child_of_clone ) && true === child_of_clone ? model.get( 'order' ) : parseFloat( model.get( 'order' ) ) + vc.clone_index;
 		params = _.extend( {}, model.get( 'params' ) );
 		tag = model.get( 'shortcode' );
 
@@ -316,14 +315,13 @@ _.extend( vc, {
 		if ( vc[ 'cloneMethod_' + tag ] ) {
 			data = vc[ 'cloneMethod_' + tag ]( data, model );
 		}
-		if ( ! _.isBoolean( child_of_clone ) || child_of_clone !== true ) {
+		if ( ! _.isBoolean( child_of_clone ) || true !== child_of_clone ) {
 			data.place_after_id = model.get( 'id' );
 		}
 		builder.create( data );
 
 		newModel = builder.last();
 
-		// if(!_.isBoolean(child_of_clone) || child_of_clone !== true) model.view.$el.addClass('vc_place-after');
 		_.each( vc.shortcodes.where( { parent_id: model.get( 'id' ) } ), function ( shortcode ) {
 			vc.CloneModel( builder, shortcode, newModel.get( 'id' ), true );
 		}, this );
@@ -332,12 +330,12 @@ _.extend( vc, {
 	vc.getColumnSize = function ( column ) {
 		var mod = 12 % column,
 			is_odd = function ( n ) {
-				return _.isNumber( n ) && (n % 2 == 1);
+				return _.isNumber( n ) && (1 === n % 2);
 			};
-		if ( mod > 0 && is_odd( column ) && column % 3 ) {
+		if ( 0 < mod && is_odd( column ) && column % 3 ) {
 			return column + '/' + 12;
 		}
-		if ( mod == 0 ) {
+		if ( 0 === mod ) {
 			mod = column;
 		}
 		return column / mod + '/' + (12 / mod);
@@ -363,11 +361,6 @@ _.extend( vc, {
 			'click > .vc_controls .vc_control-btn-edit': 'edit',
 			'click > .vc_controls .vc_control-btn-clone': 'clone',
 			'mousemove': 'checkControlsPosition'
-			//'mousemove': 'setMove',
-			// 'mouseenter': 'resetControlPosition',
-			// 'mouseleave': 'mouseLeave'
-			// 'mouseover .vc_control-btn': 'holdHover',
-			// 'mouseout .controls-cc': 'releaseHover'
 		},
 		controls_set: false,
 		$content: false,
@@ -377,7 +370,6 @@ _.extend( vc, {
 		builder: false,
 		default_controls_template: false,
 		initialize: function () {
-			// _.bindAll(this, 'setControlPosition', 'unsetControlPosition');
 			this.listenTo( this.model, 'destroy', this.removeView );
 			this.listenTo( this.model, 'change:params', this.update );
 			this.listenTo( this.model, 'change:parent_id', this.changeParentId );
@@ -388,7 +380,7 @@ _.extend( vc, {
 			this.$el.attr( 'data-tag', tag );
 			this.$el.addClass( 'vc_' + tag );
 			this.addControls();
-			var is_container = _.isObject( vc.getMapped( tag ) ) && ( ( _.isBoolean( vc.getMapped( tag ).is_container ) && vc.getMapped( tag ).is_container === true ) || ! _.isEmpty( vc.getMapped( tag ).as_parent ) );
+			var is_container = _.isObject( vc.getMapped( tag ) ) && ( ( _.isBoolean( vc.getMapped( tag ).is_container ) && true === vc.getMapped( tag ).is_container ) || ! _.isEmpty( vc.getMapped( tag ).as_parent ) );
 			if ( is_container ) {
 				this.$el.addClass( 'vc_container-block' );
 			}
@@ -407,7 +399,7 @@ _.extend( vc, {
 				control_top = this.$controls_buttons.offset().top;
 				element_position_top = this.$el.offset().top;
 				new_position = (window_top - element_position_top) + vc.$frame.height() / 2;
-				if ( new_position > 40 && new_position < element_height ) {
+				if ( 40 < new_position && new_position < element_height ) {
 					this.$controls_buttons.css( 'top', new_position );
 				} else if ( new_position > element_height ) {
 					this.$controls_buttons.css( 'top', element_height - 40 );
@@ -480,7 +472,7 @@ _.extend( vc, {
 			this.$controls_buttons = this.$controls.find( '> :first' );
 		},
 		content: function () {
-			if ( this.$content === false ) {
+			if ( false === this.$content ) {
 				this.$content = this.$el.find( '> :first' );
 			}
 			return this.$content;
@@ -488,7 +480,7 @@ _.extend( vc, {
 		changeParentId: function () {
 			var parent_id = this.model.get( 'parent_id' ), parent;
 			vc.builder.notifyParent( this.model.get( 'parent_id' ) );
-			if ( parent_id === false ) {
+			if ( false === parent_id ) {
 				app.placeElement( this.$el );
 			} else {
 				parent = vc.shortcodes.get( parent_id );
@@ -514,11 +506,11 @@ _.extend( vc, {
 		},
 		changed: function () {
 			this.$el.removeClass( 'vc_empty-shortcode-element' );
-			this.$el.height() === 0 && this.$el.addClass( 'vc_empty-shortcode-element' );
+			0 === this.$el.height() && this.$el.addClass( 'vc_empty-shortcode-element' );
 		},
 		edit: function ( e ) {
 			_.isObject( e ) && e.preventDefault() && e.stopPropagation();
-			if ( vc.activePanelName() !== 'edit_element' || ! vc.active_panel.model || vc.active_panel.model.get( 'id' ) !== this.model.get( 'id' ) ) {
+			if ( 'edit_element' !== vc.activePanelName() || ! vc.active_panel.model || vc.active_panel.model.get( 'id' ) !== this.model.get( 'id' ) ) {
 				vc.closeActivePanel();
 				vc.edit_element_block_view.render( this.model );
 			}
@@ -564,7 +556,7 @@ _.extend( vc, {
 			if ( model && model.get( 'place_after_id' ) ) {
 				$view.insertAfter( vc.$page.find( '[data-model-id=' + model.get( 'place_after_id' ) + ']' ) );
 				model.unset( 'place_after_id' );
-			} else if ( _.isString( activity ) && activity === 'prepend' ) {
+			} else if ( _.isString( activity ) && 'prepend' === activity ) {
 				$view.prependTo( this.content() );
 			} else {
 				$view.appendTo( this.content() );
@@ -574,7 +566,6 @@ _.extend( vc, {
 	} );
 	vc.FrameView = Backbone.View.extend( {
 		events: {
-			// 'keypress .entry-title': 'updateKeyPress',
 			'click .vc_add-element-action': 'addElement',
 			'click #vc_no-content-add-text-block': 'addTextBlock',
 			'click #vc_templates-more-layouts': 'openTemplatesWindow',
@@ -582,10 +573,13 @@ _.extend( vc, {
 
 		},
 		openTemplatesWindow: function ( e ) {
+			vc.templates_panel_view.once( 'show', function () {
+				$( '[data-vc-ui-element-target="[data-tab=default_templates]"]' ).click();
+			} );
 			vc.app.openTemplatesWindow.call( this, e );
 		},
 		updateKeyPress: function ( e ) {
-			if ( e.which === 13 ) {
+			if ( 13 === e.which ) {
 				e.preventDefault();
 				vc.$title.attr( 'contenteditable', false );
 				$( '.entry-content' ).trigger( 'click' );
@@ -633,7 +627,7 @@ _.extend( vc, {
 			vc.events.off( 'shortcodes:add', vc.atts.addShortcodeIdParam, this ).bind( 'shortcodes:add',
 				vc.atts.addShortcodeIdParam,
 				this );
-			// @todo create callbacks render on shortcode add with checking on load if shortcode has tab_id, on  creation call sddShortcode atts.
+			// TODO: create callbacks render on shortcode add with checking on load if shortcode has tab_id, on  creation call sddShortcode atts.
 			return this;
 		},
 		noContent: function ( no ) {
@@ -644,16 +638,33 @@ _.extend( vc, {
 			vc.add_element_block_view.render( false );
 		},
 		addTextBlock: function ( e ) {
-			e && e.preventDefault && e.preventDefault();
-			var builder = new vc.ShortcodesBuilder();
-			builder.create( { shortcode: 'vc_row' } )
-				.create( { shortcode: 'vc_column', parent_id: builder.lastID(), params: { width: '1/1' } } )
+			var builder, params;
+
+			e.preventDefault();
+
+			params = vc.getDefaults( 'vc_column_text' );
+			if ( 'undefined' !== typeof(window.vc_settings_presets[ 'vc_column_text' ]) ) {
+				params = _.extend( params, window.vc_settings_presets[ 'vc_column_text' ] );
+			}
+
+			builder = new vc.ShortcodesBuilder();
+
+			builder
+				.create( {
+					shortcode: 'vc_row'
+				} )
+				.create( {
+					shortcode: 'vc_column',
+					parent_id: builder.lastID(),
+					params: { width: '1/1' }
+				} )
 				.create( {
 					shortcode: 'vc_column_text',
 					parent_id: builder.lastID(),
-					params: vc.getDefaults( 'vc_column_text' )
+					params: params
 				} )
 				.render();
+
 			vc.edit_element_block_view.render( builder.last() );
 		},
 		scrollTo: function ( model ) {
@@ -674,8 +685,6 @@ _.extend( vc, {
 			'click #vc_add-new-row': 'createRow',
 			'click #vc_add-new-element': 'addElement',
 			'click #vc_post-settings-button': 'editSettings',
-			// 'click .vc_mode-control': 'switchMode',
-			//'click #vc_templates-editor-button': 'openTemplatesEditor', // @deprecated use openTemplatesModal
 			'click #vc_templates-editor-button': 'openTemplatesWindow',
 			'click #vc_guides-toggle-button': 'toggleMode',
 			'click #vc_button-cancel': 'cancel',
@@ -687,7 +696,6 @@ _.extend( vc, {
 		},
 		initialize: function () {
 			_.bindAll( this, 'saveRowOrder', 'saveElementOrder', 'saveColumnOrder', 'resizeWindow' );
-			// vc.shortcodes.bind('reset', this.addAll, this);
 			vc.shortcodes.on( 'change:params', this.changeParamsEvents, this );
 			vc.events.on( 'shortcodes:add', vcAddShortcodeDefaultParams, this );
 		},
@@ -702,32 +710,7 @@ _.extend( vc, {
 			this.$size_control = $( '#vc_screen-size-control' );
 			$( ".vc_element-container", vc.frame_window.document ).droppable( { accept: ".vc_element_button" } );
 			$( window ).resize( this.resizeWindow );
-			/*
-			 $('.vc_element_button').draggable({
-			 // iframeFix: true,
-			 helper: 'clone',
-			 revert: true,
-			 cursor:"move",
-			 start: function(event, ui) {
-			 vc.frame_window.vc_iframe.initDroppable();
-			 },
-			 stop: function(event, ui) {
-			 vc.frame_window.vc_iframe.killDroppable();
-			 }
-			 // connectToSortable: vc.frame_window.jQuery('.vc_element-container')
-			 });
-			 */
-			// vc.shortcodes.fetch({reset: true});
-			/*
-			 if(getCookie('vc_inline_mode')) {
-			 var mode = getCookie('vc_inline_mode');
-			 this.$el.find('.vc_mode-control').removeClass('active');
-			 this.$el.find('.vc_mode-control[data-mode=' + mode +']').addClass('active');
-			 this.setMode(mode);
-			 } else {
-			 this.$el.find('.vc_mode-control[data-mode=' + this.mode +']').addClass('active');
-			 }
-			 */
+
 			/**
 			 * @since 4.5
 			 */
@@ -770,14 +753,13 @@ _.extend( vc, {
 			var $control = $( e.currentTarget );
 			e && e.preventDefault();
 			this.setMode( $control.data( 'mode' ) );
-			// setCookie('vc_inline_mode', this.mode);
 			$control.siblings( '.vc_active' ).removeClass( 'vc_active' );
 			$control.addClass( 'vc_active' );
 		},
 		toggleMode: function ( e ) {
 			var $control = $( e.currentTarget );
 			e && e.preventDefault();
-			if ( this.mode === 'compose' ) {
+			if ( 'compose' === this.mode ) {
 				$control.addClass( 'vc_off' ).text( window.i18nLocale.guides_off );
 				this.setMode( 'view' );
 			} else {
@@ -797,7 +779,7 @@ _.extend( vc, {
 			if ( model && model.get( 'place_after_id' ) ) {
 				$view.insertAfter( vc.$page.find( '[data-model-id=' + model.get( 'place_after_id' ) + ']' ) );
 				model.unset( 'place_after_id' );
-			} else if ( _.isString( activity ) && activity === 'prepend' ) {
+			} else if ( _.isString( activity ) && 'prepend' === activity ) {
 				$view.prependTo( vc.$page );
 			} else {
 				$view.insertBefore( vc.$page.find( '#vc_no-content-helper' ) );
@@ -819,7 +801,6 @@ _.extend( vc, {
 		},
 		createRow: function ( e ) {
 			_.isObject( e ) && e.preventDefault();
-			// e.stopPropagation();
 			var builder = new vc.ShortcodesBuilder();
 			builder
 				.create( { shortcode: 'vc_row' } )
@@ -835,7 +816,7 @@ _.extend( vc, {
 			vc.post_settings_view.render().show();
 		},
 		/**
-		 * @deprecated Since 4.4 use openTemplatesWindow
+		 * @deprecated 4.4 use openTemplatesWindow
 		 * @param e
 		 */
 		openTemplatesEditor: function ( e ) {
@@ -861,10 +842,9 @@ _.extend( vc, {
 					if ( $this.is( '.droppable' ) ) {
 						$this.remove();
 						var row_data = { shortcode: 'vc_row', order: key };
-						if ( key === 0 ) {
+						if ( 0 === key ) {
 							vc.activity = 'prepend';
-						} else if ( key + 1 != $rows.length ) {
-							// vc.$page.find('> [data-tag=vc_row]:eq(' + (key - 1) +')').addClass('vc_place-after')
+						} else if ( key + 1 !== $rows.length ) {
 							row_data.place_after_id = vc.$page.find( '> [data-tag=vc_row]:eq(' + (key - 1) + ')' ).data( 'modelId' );
 						}
 						builder
@@ -890,11 +870,10 @@ _.extend( vc, {
 						if ( $element.is( '.droppable' ) ) {
 							current_parent = vc.shortcodes.get( $column.parents( '.vc_element[data-tag]:first' ).data( 'modelId' ) );
 							$element.remove();
-							if ( key === 0 ) {
+							if ( 0 === key ) {
 								prepend = true;
-							} else if ( key + 1 != $elements.length ) {
+							} else if ( key + 1 !== $elements.length ) {
 								prepend = $column.find( '> [data-tag]:eq(' + (key - 1) + ')' ).data( 'modelId' );
-								// $column.find('> [data-tag]:eq(' + (key - 1) +')').addClass('vc_place-after');
 							}
 							if ( current_parent ) {
 								vc.add_element_block_view.render( current_parent, prepend );

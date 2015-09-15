@@ -12,7 +12,6 @@
 	vc.Storage.prototype.getContent = function () {
 		var content;
 		if ( _.isObject( window.tinymce ) && tinymce.editors.content ) {
-			// window.switchEditors.go('content', 'html');
 			tinymce.editors.content.save();
 		}
 		content = window.vc_wpnop( $( '#content' ).val() );
@@ -35,13 +34,6 @@
 		} else {
 			vc.showSpinner();
 			this.sendDataGitemPreview();
-			/*
-			 $('[data-vc-grid-item="preview"]').addClass('vc_visible').html('<iframe src="'
-			 + window.ajaxurl + '?action=vc_gitem_preview&shortcodes_string='
-			 + window.encodeURIComponent(vc.storage.getContent())
-			 + '&post_id=' + window.encodeURIComponent($('#post_ID').val())
-			 + '"></iframe>');
-			 */
 		}
 	};
 	/**
@@ -81,7 +73,7 @@
 	};
 	vc.visualComposerView.prototype.hidePreview = function () {
 		$( '#visual_composer_content' ).show();
-		$( '[data-vc-grid-item="preview"]' ).removeClass( 'vc_visible' ).html( '' );
+		$( '[data-vc-grid-item="preview"]' ).removeClass( 'vc_visible' ).empty();
 		$( '[data-vc-grid-item="navbar_preview_width"]' ).removeClass( 'vc_visible' );
 		this.previewActivated = false;
 		$( '[data-vc-navbar-control="preview"]' ).text( i18nLocaleGItem.preview );
@@ -130,9 +122,9 @@
 				if ( ! vc.check_relevance( parent_tag, tag ) ) {
 					$( this ).sortable( 'cancel' );
 				}
-				var is_container = _.isObject( vc.map[ tag ] ) && ( ( _.isBoolean( vc.map[ tag ].is_container ) && vc.map[ tag ].is_container === true ) || ! _.isEmpty( vc.map[ tag ].as_parent ) );
-				if ( is_container && ! (allowed_container_element === true || allowed_container_element === ui.item.data( 'element_type' ).replace( /_inner$/,
-						'' )) ) { // && ui.item.hasClass('wpb_container_block')
+				var is_container = _.isObject( vc.map[ tag ] ) && ( ( _.isBoolean( vc.map[ tag ].is_container ) && true === vc.map[ tag ].is_container ) || ! _.isEmpty( vc.map[ tag ].as_parent ) );
+				if ( is_container && ! (true === allowed_container_element || allowed_container_element === ui.item.data( 'element_type' ).replace( /_inner$/,
+						'' )) ) {
 					$( this ).sortable( 'cancel' );
 				}
 				$( '.vc_sorting-empty-container' ).removeClass( 'vc_sorting-empty-container' );
@@ -146,8 +138,8 @@
 					ui.placeholder.addClass( 'vc_hidden-placeholder' );
 					return false;
 				}
-				var is_container = _.isObject( vc.map[ tag ] ) && ( ( _.isBoolean( vc.map[ tag ].is_container ) && vc.map[ tag ].is_container === true ) || ! _.isEmpty( vc.map[ tag ].as_parent ) );
-				if ( is_container && ! (allowed_container_element === true || allowed_container_element === ui.item.data( 'element_type' ).replace( /_inner$/,
+				var is_container = _.isObject( vc.map[ tag ] ) && ( ( _.isBoolean( vc.map[ tag ].is_container ) && true === vc.map[ tag ].is_container ) || ! _.isEmpty( vc.map[ tag ].as_parent ) );
+				if ( is_container && ! (true === allowed_container_element || allowed_container_element === ui.item.data( 'element_type' ).replace( /_inner$/,
 						'' )) ) {
 					ui.placeholder.addClass( 'vc_hidden-placeholder' );
 					return false;
@@ -155,7 +147,7 @@
 				if ( ui.sender && ui.sender.length && ! ui.sender.find( '[data-element_type]:visible' ).length ) {
 					ui.sender.addClass( 'vc_sorting-empty-container' );
 				}
-				ui.placeholder.removeClass( 'vc_hidden-placeholder' ); // .parent().removeClass('vc_empty-container');
+				ui.placeholder.removeClass( 'vc_hidden-placeholder' );
 				ui.placeholder.css( { maxWidth: ui.placeholder.parent().width() } );
 			}
 		} );
@@ -176,58 +168,6 @@
 	vc.visualComposerView.prototype.changePreviewAnimation = function ( animation ) {
 		var iframeWindow = $( '#vc_gitem-preview iframe' ).get( 0 ).contentWindow;
 		iframeWindow && iframeWindow.changeAnimation( animation );
-	};
-	// @todo optimize this function defer or change sometimes to slow.
-	vc.AddElementBlockViewBackendEditor.prototype.createElement = function ( e ) {
-		var model, tag, parent_id = false, cZone, cZoneRow, cZoneCol;
-		this.do_render = true;
-		_.isObject( e ) && e.preventDefault();
-		tag = $( e.currentTarget ).data( 'tag' );
-		if ( false !== this.model && 'vc_gitem_add_c_zone' === this.model.get( 'shortcode' ) ) {
-			this.model.view.setCZonePosition( this.model.getParam( 'position' ) );
-			vc.storage.lock();
-			cZone = vc.shortcodes.create( {
-				shortcode: 'vc_gitem_zone_c',
-				parent_id: this.model.get( 'parent_id' ),
-				params: _.extend( {}, vc.getDefaults( 'vc_gitem_zone_c' ) ),
-				order: this.model.getParam( 'cZonePosition' )
-			} );
-			this.model.view.cZone = cZone;
-			vc.storage.lock();
-			cZoneRow = vc.shortcodes.create( {
-				shortcode: 'vc_gitem_row',
-				params: _.extend( {}, vc.getDefaults( 'vc_gitem_row' ) ),
-				parent_id: cZone.get( 'id' )
-			} );
-			vc.storage.lock();
-			cZoneCol = vc.shortcodes.create( {
-				shortcode: 'vc_gitem_col',
-				params: _.extend( { width: '1/1' }, vc.getDefaults( 'vc_gitem_col' ) ),
-				parent_id: cZoneRow.get( 'id' )
-			} );
-			parent_id = cZoneCol.get( 'id' );
-			cZone = null;
-			cZoneCol = null;
-		} else if ( false !== this.model ) {
-			parent_id = this.model.get( 'id' );
-		}
-		model = vc.shortcodes.create( {
-			shortcode: tag,
-			parent_id: parent_id,
-			params: vc.getDefaults( tag ),
-			root_id: vc.shortcodes.findWhere( { shortcode: 'vc_gitem' } ) || false
-		} );
-		if ( tag === 'vc_gitem_row' ) {
-			vc.shortcodes.create( {
-				shortcode: 'vc_gitem_col',
-				params: { width: '1/1' },
-				parent_id: model.get( 'id' ),
-				root_id: model.get( 'id' )
-			} );
-		}
-		this.show_settings = _.isBoolean( vc.getMapped( tag ).show_settings_on_create ) && vc.getMapped( tag ).show_settings_on_create === false ? false : true;
-		this.model = model;
-		this.$el.modal( 'hide' );
 	};
 	vc.EditElementPanelView.prototype.ajaxData = function () {
 		return {
@@ -352,7 +292,7 @@
 		},
 		getCZoneModelOrder: function ( position ) {
 			var animatedBlockOrder = this.animatedBlock.get( 'order' );
-			return position === 'top' || position === 'left' ? animatedBlockOrder - 1 : animatedBlockOrder + 1
+			return 'top' === position || 'left' === position ? animatedBlockOrder - 1 : animatedBlockOrder + 1
 		},
 		cZoneRemoved: function () {
 			this.cZone = false;
@@ -397,13 +337,13 @@
 			var tag = view.model.get( 'shortcode' ),
 				position, $zone;
 			view.render();
-			if ( tag === 'vc_gitem_zone_c' ) {
+			if ( 'vc_gitem_zone_c' === tag ) {
 				position = this.model.getParam( 'c_zone_position' ) || 'bottom';
 				$zone = this.$content.find( '[data-vc-gitem="add-c"][data-vc-position="' + position + '"]' );
 				view.$el.appendTo( $zone.addClass( 'vc_zone-added' ) );
 				this.setDraggableC();
 				this.cZone = view.model;
-			} else if ( tag === 'vc_gitem_animated_block' ) {
+			} else if ( 'vc_gitem_animated_block' === tag ) {
 				view.$el.appendTo( $( '[data-vc-gitem="add-ab"]' ) );
 				this.animatedBlock = view.model;
 			}
@@ -483,7 +423,7 @@
 			+ zone + '"><a href="#" data-vc-gitem-tab-link="' + zone + '"><span class="vc_label">' + this.getZoneLabel( zone )
 			+ '</span></a><a class="vc_control column_edit" data-vc-control="edit" data-vc-zone-model-id="' + id + '"><span class="vc_icon"></span></a></li>' );
 			$zone.appendTo( '[data-vc-gitem-animated-block="tabs"]' );
-			zone === 'a' && this.switchZone( $zone.find( 'a' ) );
+			'a' === zone && this.switchZone( $zone.find( 'a' ) );
 		},
 		getZoneLabel: function ( zone ) {
 			var zoneSettings = vc.map[ 'vc_gitem_zone_' + zone ] ? vc.map[ 'vc_gitem_zone_' + zone ] : false;
@@ -540,11 +480,11 @@
 		addShortcode: function ( view ) {
 			var tag = view.model.get( 'shortcode' );
 			view.render();
-			if ( tag === 'vc_gitem_zone_a' ) {
+			if ( 'vc_gitem_zone_a' === tag ) {
 				view.$el.appendTo( this.$el.find( '[data-vc-gitem-animated-block="add-a"]' ) );
 				this.aZone = view.model;
 				this.addTab( 'a', view.model.get( 'id' ) );
-			} else if ( tag === 'vc_gitem_zone_b' ) {
+			} else if ( 'vc_gitem_zone_b' === tag ) {
 				view.$el.appendTo( this.$el.find( '[data-vc-gitem-animated-block="add-b"]' ) );
 				this.bZone = view.model;
 				this.addTab( 'b', view.model.get( 'id' ) );
@@ -680,7 +620,86 @@
 			return this;
 		}
 	} );
+	vc.AddElementUIPanelBackendEditor.prototype.createElement = function ( e ) {
+		_.isObject( e ) && e.preventDefault();
 
+		var model, tag, parent_id = false, cZone, cZoneRow, cZoneCol, showSettings;
+		tag = $( e.currentTarget ).data( 'tag' );
+
+		if ( false !== this.model && 'vc_gitem_add_c_zone' === this.model.get( 'shortcode' ) ) {
+
+			this.model.view.setCZonePosition( this.model.getParam( 'position' ) );
+
+			vc.storage.lock();
+			cZone = vc.shortcodes.create( {
+				shortcode: 'vc_gitem_zone_c',
+				parent_id: this.model.get( 'parent_id' ),
+				params: _.extend( {}, vc.getDefaults( 'vc_gitem_zone_c' ) ),
+				order: this.model.getParam( 'cZonePosition' )
+			} );
+
+			this.model.view.cZone = cZone;
+
+			vc.storage.lock();
+			cZoneRow = vc.shortcodes.create( {
+				shortcode: 'vc_gitem_row',
+				params: _.extend( {}, vc.getDefaults( 'vc_gitem_row' ) ),
+				parent_id: cZone.get( 'id' )
+			} );
+
+			vc.storage.lock();
+			cZoneCol = vc.shortcodes.create( {
+				shortcode: 'vc_gitem_col',
+				params: _.extend( { width: '1/1' }, vc.getDefaults( 'vc_gitem_col' ) ),
+				parent_id: cZoneRow.get( 'id' )
+			} );
+
+			parent_id = cZoneCol.get( 'id' );
+			cZone = null;
+			cZoneCol = null;
+
+		} else if ( false !== this.model ) {
+			parent_id = this.model.get( 'id' );
+		}
+		model = vc.shortcodes.create( {
+			shortcode: tag,
+			parent_id: parent_id,
+			params: vc.getDefaults( tag ),
+			root_id: vc.shortcodes.findWhere( { shortcode: 'vc_gitem' } ) || false
+		} );
+
+		if ( 'vc_gitem_row' === tag ) {
+			vc.shortcodes.create( {
+				shortcode: 'vc_gitem_col',
+				params: { width: '1/1' },
+				parent_id: model.get( 'id' ),
+				root_id: model.get( 'id' )
+			} );
+		}
+
+		this.model = model;
+
+		showSettings = ! (_.isBoolean( vc.getMapped( tag ).show_settings_on_create ) && false === vc.getMapped( tag ).show_settings_on_create );
+
+		// extend default params with settings presets if there are any
+		shortcode = this.model.get( 'shortcode' );
+		if ( 'undefined' !== typeof(window.vc_settings_presets[ shortcode ]) ) {
+			this.model.save( {
+				params: _.extend( {},
+					this.model.attributes.params,
+					window.vc_settings_presets[ shortcode ]
+				)
+			} );
+		}
+
+		this.hide();
+
+		if ( showSettings ) {
+			this.showEditForm();
+		}
+
+		this.addCustomCssStyleTag();
+	};
 	vc.TemplatesPanelViewBackend.prototype.renderTemplate = function ( html ) {
 		// Render template for backend
 		_.each( vc.filters.templates, function ( callback ) {
@@ -689,7 +708,7 @@
 		vc.storage.setContent( html );
 		vc.shortcodes.fetch( { reset: true } );
 		this.hide();
-		// todo show message
+		// TODO: show message
 	};
 	// Show on one column
 	$( document ).ready( function () {

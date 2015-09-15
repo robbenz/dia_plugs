@@ -3,7 +3,7 @@
 /**
  * Class Vc_Pageable
  */
-abstract class WPBakeryShortCodeVc_Pageable extends WPBakeryShortCode {
+abstract class WPBakeryShortCode_Vc_Pageable extends WPBakeryShortCode {
 
 	/**
 	 * @param $settings
@@ -77,9 +77,6 @@ abstract class WPBakeryShortCodeVc_Pageable extends WPBakeryShortCode {
 	 * @return string
 	 */
 	public function renderPagination( $grid_style, $settings, $content = '', $css_class = '' ) {
-		//if ( ! isset( $settings['shortcode_hash'] ) ) {
-		//	throw new Exception( 'You must provide shortcode_hash' );
-		//}
 		$css_class .= empty( $css_class ) ? '' : ' ' . 'vc_pageable-wrapper vc_hook_hover';
 		$content_method = vc_camel_case( 'content-' . $grid_style );
 		$content = method_exists( $this, $content_method ) ? $this->$content_method( $grid_style, $settings, $content ) : $content;

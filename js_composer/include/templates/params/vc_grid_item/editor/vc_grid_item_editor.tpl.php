@@ -21,7 +21,7 @@ $nav_bar->render();
 <script type="text/javascript">
 	<?php
 	$vc_gitem_template = vc_request_param( 'vc_gitem_template' );
-	if(strlen($vc_gitem_template) && false !== ($template = Vc_Grid_Item::predefinedTemplate($vc_gitem_template))) {
+	if (strlen($vc_gitem_template) && false !== ($template = Vc_Grid_Item::predefinedTemplate($vc_gitem_template))) {
 		echo "var vcDefaultGridItemContent = '" . $template['template'] . "';";
 	} else {
 	?>
@@ -32,11 +32,6 @@ $nav_bar->render();
 	 */
 	var vcDefaultGridItemContent = '' +
 		'[vc_gitem]' +
-			// '[vc_gitem_zone_c position="top"]' +
-			//	'[vc_gitem_row]' +
-			//		'[vc_gitem_col width="1/1"][/vc_gitem_col]' +
-			//	'[/vc_gitem_row]' +
-			// '[/vc_gitem_zone_c]' +
 		'[vc_gitem_animated_block]' +
 		'[vc_gitem_zone_a]' +
 		'[vc_gitem_row position="top"]' +

@@ -71,14 +71,12 @@ if ( _.isUndefined( window.vc ) ) {
 			'change .vc_simplify': 'changeSimplify'
 		},
 		initialize: function () {
-			// _.bindAll(media.vc_css_editor, 'open');
 			_.bindAll( this, 'setSimplify' )
 		},
 		render: function ( value ) {
 			this.attrs = {};
 			this.$simplify = this.$el.find( '.vc_simplify' );
 			_.isString( value ) && this.parse( value );
-			// media.vc_css_editor.init(this);
 			return this;
 		},
 		parse: function ( value ) {
@@ -151,7 +149,7 @@ if ( _.isUndefined( window.vc ) ) {
 			f && f();
 		},
 		setSimplify: function () {
-			this.simplifiedMode( this.$simplify.is( ':checked' ) );
+			this.simplifiedMode( this.$simplify[0].checked );
 
 		},
 		simplifiedMode: function ( enable ) {
@@ -162,7 +160,7 @@ if ( _.isUndefined( window.vc ) ) {
 				this.simplify = false;
 				this.$el.removeClass( 'vc_simplified' );
 				_.each( this.layouts, function ( attr ) {
-					if ( attr === 'border-width' ) {
+					if ( 'border-width' === attr ) {
 						attr = 'border';
 					}
 					var $control = $( '[data-attribute=' + attr + '].vc_top' );
@@ -193,34 +191,34 @@ if ( _.isUndefined( window.vc ) ) {
 				if ( name.match( new RegExp( '^(' + this.layouts.join( '|' ).replace( '-',
 						'\\-' ) + ')$' ) ) && value ) {
 					val_pos = value.split( /\s+/g );
-					if ( val_pos.length == 1 ) {
+					if ( 1 === val_pos.length ) {
 						val_pos = [
 							val_pos[ 0 ],
 							val_pos[ 0 ],
 							val_pos[ 0 ],
 							val_pos[ 0 ]
 						];
-					} else if ( val_pos.length === 2 ) {
+					} else if ( 2 === val_pos.length ) {
 						val_pos[ 2 ] = val_pos[ 0 ];
 						val_pos[ 3 ] = val_pos[ 1 ];
-					} else if ( val_pos.length === 3 ) {
+					} else if ( 3 === val_pos.length ) {
 						val_pos[ 3 ] = val_pos[ 1 ];
 					}
 					_.each( this.positions, function ( pos, key ) {
 						this.$el.find( '[data-name=' + name + '-' + pos + ']' ).val( val_pos[ key ] );
 					}, this );
-				} else if ( name === 'background-size' ) {
+				} else if ( 'background-size' === name ) {
 					background_size = value;
 					this.$el.find( '[name=background_style]' ).val( value );
-				} else if ( name === 'background-repeat' && ! background_size ) {
+				} else if ( 'background-repeat' === name && ! background_size ) {
 					this.$el.find( '[name=background_style]' ).val( value );
-				} else if ( name === 'background-image' ) {
+				} else if ( 'background-image' === name ) {
 					this.setCurrentBgImage( value.replace( /url\(([^\)]+)\)/, '$1' ) );
-				} else if ( name === 'background' && value ) {
+				} else if ( 'background' === name && value ) {
 					background_split = value.split( background_regex );
 					background_split[ 1 ] && this.$el.find( '[name=' + name + '_color]' ).val( background_split[ 1 ] );
 					background_split[ 2 ] && this.setCurrentBgImage( background_split[ 2 ] );
-				} else if ( name == 'border' && value && value.match( border_regex ) ) {
+				} else if ( 'border' === name && value && value.match( border_regex ) ) {
 					border_split = value.split( border_regex );
 					val_pos = [
 						border_split[ 1 ],
@@ -238,6 +236,8 @@ if ( _.isUndefined( window.vc ) ) {
 						this.$el.find( '[name=border_style]' ).val( value );
 					} else if ( name.indexOf( 'color' ) != - 1 ) {
 						this.$el.find( '[name=border_color]' ).val( value ).trigger( 'change' );
+					} else if ( name.indexOf( 'radius' ) != - 1 ) {
+						this.$el.find( '[name=border_radius]' ).val( value );
 					} else if ( name.match( /^[\w\-\d]+$/ ) ) {
 						this.$el.find( '[name=' + name.replace( /\-+/g, '_' ) + ']' ).val( value );
 					}
@@ -255,7 +255,7 @@ if ( _.isUndefined( window.vc ) ) {
 			this.getBackground();
 			this.getBorder();
 			if ( ! _.isEmpty( this.attrs ) ) {
-				string = '.vc_custom_' + (+ new Date) + '{' + _.reduce( this.attrs, function ( memo, value, key ) {
+				string = '.vc_custom_' + Date.now() + '{' + _.reduce( this.attrs, function ( memo, value, key ) {
 					return value ? memo + key + ': ' + value + ' !important;' : memo;
 				}, '', this ) + '}';
 			}
@@ -297,6 +297,7 @@ if ( _.isUndefined( window.vc ) ) {
 		},
 		getBorder: function () {
 			var style = this.$el.find( '[name=border_style]' ).val(),
+				radius = this.$el.find( '[name=border_radius]' ).val(),
 				color = this.$el.find( '[name=border_color]' ).val();
 			var sides = [
 				'left',
@@ -307,6 +308,9 @@ if ( _.isUndefined( window.vc ) ) {
 			if ( style && color && this.attrs[ 'border-width' ] && this.attrs[ 'border-width' ].match( /^\d+\S+$/ ) ) {
 				this.attrs.border = this.attrs[ 'border-width' ] + ' ' + style + ' ' + color;
 				this.attrs[ 'border-width' ] = undefined;
+				if ( radius ) {
+					this.attrs[ 'border-radius' ] = radius;
+				}
 			} else {
 				_.each( sides, function ( side ) {
 					if ( this.attrs[ 'border-' + side + '-width' ] ) {
@@ -318,6 +322,9 @@ if ( _.isUndefined( window.vc ) ) {
 						}
 					}
 				}, this );
+				if ( radius ) {
+					this.attrs[ 'border-radius' ] = radius;
+				}
 			}
 		},
 		getFields: function ( type ) {
@@ -333,7 +340,7 @@ if ( _.isUndefined( window.vc ) ) {
 				val.length && data.push( { name: pos, val: val } );
 			}, this );
 			_.each( data, function ( attr ) {
-				var attr_name = type == 'border-width' ? 'border-' + attr.name + '-width' : type + '-' + attr.name;
+				var attr_name = 'border-width' === type ? 'border-' + attr.name + '-width' : type + '-' + attr.name;
 				this.attrs[ attr_name ] = attr.val;
 			}, this );
 		},
@@ -384,7 +391,7 @@ if ( _.isUndefined( window.vc ) ) {
 	 * Backward capability for old css attributes
 	 * @return {String} - Css settings with class name and css attributes settings.
 	 */
-	var parseOldDesignOptions = function () {
+	function parseOldDesignOptions() {
 		var keys = {
 				'bg_color': 'background-color',
 				'padding': 'padding',
@@ -397,13 +404,14 @@ if ( _.isUndefined( window.vc ) ) {
 				if ( _.isUndefined( value ) || ! value.length ) {
 					return memo;
 				}
-				if ( attr_name === 'bg_image' ) {
+				if ( 'bg_image' === attr_name ) {
 					value = 'url(' + value + ')';
 				}
 				return memo + css_name + ': ' + value + ';';
 			}, '', this );
 		return cssString ? '.tmp_class{' + cssString + '}' : '';
-	};
+	}
+
 	removeOldDesignOptions = function () {
 		this.params = _.omit( this.params, 'bg_color', 'padding', 'margin_bottom', 'bg_image' );
 	};

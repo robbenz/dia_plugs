@@ -4,20 +4,13 @@ if ( _.isUndefined( window.vc ) ) {
 (function ( $ ) {
 
 	var VcColumnOffsetParam = Backbone.View.extend( {
-		events: {
-			// 'change [data-type="offset-sm"],[data-type="size-sm"]': 'setLgPlaceholders'
-		},
+		events: {},
 		$lg_offset_placeholder_value: false,
 		$lg_size_placeholder_value: false,
 		initialize: function () {
 			_.bindAll( this, 'setLgPlaceholders' );
 		},
 		render: function () {
-			// this.$lg_offset_placeholder_value = this.$el.find('[data-type="offset-sm"]');
-			// this.$lg_size_placeholder_value = this.$el.find('[data-type="size-sm"]');
-			// this.$lg_size = this.$el.find('[data-type="size-lg"]');
-			// this.$lg_offset = this.$el.find('[data-type=offset-lg]');
-			// this.setLgPlaceholders();
 			return this;
 		},
 		/**
@@ -30,16 +23,14 @@ if ( _.isUndefined( window.vc ) ) {
 				var $field = $( this );
 				if ( $field.is( ':checkbox:checked' ) ) {
 					data.push( $field.attr( 'name' ) );
-				} else if ( $field.is( 'select' ) && $field.val() != '' ) {
+				} else if ( $field.is( 'select' ) && '' !== $field.val() ) {
 					data.push( $field.val() );
 				}
 			} );
 			return data;
 		},
 		setLgPlaceholders: function () {
-			// size = this.$lg_size_placeholder_value.val().replace(/[^\d]/g, ''),
 			var offset = this.$lg_offset_placeholder_value.val().replace( /[^\d]/g, '' );
-			// this.$lg_size.find('option:first').text(size ? VcI8nColumnOffsetParam.inherit + size : '');
 			this.$lg_size.find( 'option:first' ).text( VcI8nColumnOffsetParam.inherit_default );
 			this.$lg_offset.find( 'option:first' ).text( offset ? VcI8nColumnOffsetParam.inherit + offset : '' );
 		}

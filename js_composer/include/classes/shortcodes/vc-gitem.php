@@ -59,24 +59,38 @@ class WPBakeryShortCode_VC_Gitem extends WPBakeryShortCodesContainer {
 		return 'class="vc_gitem-content"';
 	}
 
+	/**
+	 * Get rendered controls
+	 *
+	 * @param array $controls
+	 *
+	 * @return string
+	 */
 	public function getControls( $controls ) {
-		$output = '';
-		$controls_start = '<div class="vc_controls vc_controls-dark vc_controls-visible">';
-		$controls_end = '</div>';
-		$controls_add = ' <a class="vc_control-btn vc_control-btn-add" href="#" title="' . __( ' Add to this grid item', '' ) . '" data-vc-control="add"><i class="vc_icon"></i></a>';
-		$controls_edit = ' <a class="vc_control-btn vc_control-btn-edit" href="#" title="' . __( 'Edit this grid item', 'js_composer' ) . '" data-vc-control="edit"><i class="vc_icon"></i></a>';
-		$controls_delete = ' <a class="vc_control-btn vc_control-btn-delete" href="#" title="' . __( 'Delete this grid item ', 'js_composer' ) . '" data-vc-control="delete"><i class="vc_icon"></i></a>';
-		if ( is_array( $controls ) && ! empty( $controls ) ) {
-			$output = $controls_start;
-			foreach ( $controls as $control ) {
-				$control_var = 'controls_' . $control;
-				$output .= $$control_var;
-			}
-			$output .= $controls_end;
-		} else {
-			$output = ''; // $controls_start . $controls_edit . $controls_end;
+		if ( ! is_array( $controls ) || empty( $controls ) ) {
+			return '';
 		}
 
-		return $output;
+		$buttons = array();
+
+		foreach ( $controls as $control ) {
+			switch ( $control ) {
+				case 'add':
+					$buttons[] = '<a class="vc_control-btn vc_control-btn-add" href="#" title="' . __( 'Add to this grid item', 'js_composer' ) . '" data-vc-control="add"><i class="vc_icon"></i></a>';
+					break;
+
+				case 'edit':
+					$buttons[] = '<a class="vc_control-btn vc_control-btn-edit" href="#" title="' . __( 'Edit this grid item', 'js_composer' ) . '" data-vc-control="edit"><i class="vc_icon"></i></a>';
+					break;
+
+				case 'delete':
+					$buttons[] = '<a class="vc_control-btn vc_control-btn-delete" href="#" title="' . __( 'Delete this grid item ', 'js_composer' ) . '" data-vc-control="delete"><i class="vc_icon"></i></a>';
+					break;
+			}
+		}
+
+		$html = '<div class="vc_controls vc_controls-dark vc_controls-visible">' . implode( ' ', $buttons ) . '</div>';
+
+		return $html;
 	}
 }

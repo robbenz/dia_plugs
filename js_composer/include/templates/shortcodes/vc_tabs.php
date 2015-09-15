@@ -9,7 +9,6 @@
  * Shortcode class
  * @var $this WPBakeryShortCode_VC_Tabs
  */
-$output = '';
 $atts = vc_map_get_attributes( $this->getShortcode(), $atts );
 extract( $atts );
 
@@ -40,19 +39,25 @@ foreach ( $tab_titles as $tab ) {
 		$tabs_nav .= '<li><a href="#tab-' . ( isset( $tab_atts['tab_id'] ) ? $tab_atts['tab_id'] : sanitize_title( $tab_atts['title'] ) ) . '">' . $tab_atts['title'] . '</a></li>';
 	}
 }
-$tabs_nav .= '</ul>' . "\n";
+$tabs_nav .= '</ul>';
 
 $css_class = apply_filters( VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, trim( $element . ' wpb_content_element ' . $el_class ), $this->settings['base'], $atts );
 
-$output .= "\n\t" . '<div class="' . $css_class . '" data-interval="' . $interval . '">';
-$output .= "\n\t\t" . '<div class="wpb_wrapper wpb_tour_tabs_wrapper ui-tabs vc_clearfix">';
-$output .= wpb_widget_title( array( 'title' => $title, 'extraclass' => $element . '_heading' ) );
-$output .= "\n\t\t\t" . $tabs_nav;
-$output .= "\n\t\t\t" . wpb_js_remove_wpautop( $content );
 if ( 'vc_tour' === $this->shortcode ) {
-	$output .= "\n\t\t\t" . '<div class="wpb_tour_next_prev_nav vc_clearfix"> <span class="wpb_prev_slide"><a href="#prev" title="' . __( 'Previous tab', 'js_composer' ) . '">' . __( 'Previous tab', 'js_composer' ) . '</a></span> <span class="wpb_next_slide"><a href="#next" title="' . __( 'Next tab', 'js_composer' ) . '">' . __( 'Next tab', 'js_composer' ) . '</a></span></div>';
+	$next_prev_nav = '<div class="wpb_tour_next_prev_nav vc_clearfix"> <span class="wpb_prev_slide"><a href="#prev" title="' . __( 'Previous tab', 'js_composer' ) . '">' . __( 'Previous tab', 'js_composer' ) . '</a></span> <span class="wpb_next_slide"><a href="#next" title="' . __( 'Next tab', 'js_composer' ) . '">' . __( 'Next tab', 'js_composer' ) . '</a></span></div>';
+} else {
+	$next_prev_nav = '';
 }
-$output .= "\n\t\t" . '</div> ' . $this->endBlockComment( '.wpb_wrapper' );
-$output .= "\n\t" . '</div> ' . $this->endBlockComment( $this->getShortcode() );
+
+$output = '
+	<div class="' . $css_class . '" data-interval="' . $interval . '">
+		<div class="wpb_wrapper wpb_tour_tabs_wrapper ui-tabs vc_clearfix">
+			' . wpb_widget_title( array( 'title' => $title, 'extraclass' => $element . '_heading' ) )
+	. $tabs_nav
+	. wpb_js_remove_wpautop( $content )
+	. $next_prev_nav . '
+		</div>
+	</div>
+';
 
 echo $output;

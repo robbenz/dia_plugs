@@ -40,5 +40,4 @@ $output .= '<' . $font_container_data['values']['tag'] . ' ' . $style . ' >';
 $output .= $content;
 $output .= '</' . $font_container_data['values']['tag'] . '>';
 $output .= '</div>';
-$output .= $this->endBlockComment( $this->getShortcode() );
 echo $output;

@@ -3,20 +3,26 @@
  * Shortcode attributes
  * @var $atts
  * @var $title
+ * @var $source
  * @var $type
  * @var $onclick
  * @var $custom_links
  * @var $custom_links_target
  * @var $img_size
+ * @var $external_img_size
  * @var $images
+ * @var $custom_srcs
  * @var $el_class
  * @var $interval
+ * @var $css
  * Shortcode class
  * @var $this WPBakeryShortCode_VC_gallery
  */
-$output = '';
-$atts = vc_map_get_attributes( $this->getShortcode(), $atts );
-extract( $atts );
+
+$attributes = vc_map_get_attributes( $this->getShortcode(), $atts );
+extract( $attributes );
+
+$default_src = vc_asset_url( 'vc/no_image.png' );
 
 $gal_images = '';
 $link_start = '';
@@ -68,48 +74,82 @@ if ( 'flexslider' === $type || 'flexslider_fade' === $type || 'fading' === $type
 	$type = ' wpb_image_grid';
 }
 
-
 if ( '' === $images ) {
 	$images = '-1,-2,-3';
 }
 
-$pretty_rel_random = ' rel="prettyPhoto[rel-' . get_the_ID() . '-' . rand() . ']"'; //rel-'.rand();
+$pretty_rel_random = ' rel="prettyPhoto[rel-' . get_the_ID() . '-' . rand() . ']"';
 
 if ( 'custom_link' === $onclick ) {
 	$custom_links = explode( ',', $custom_links );
 }
-$images = explode( ',', $images );
-$i = - 1;
 
-foreach ( $images as $attach_id ) {
-	$i ++;
-	if ( $attach_id > 0 ) {
-		$post_thumbnail = wpb_getImageBySize( array( 'attach_id' => $attach_id, 'thumb_size' => $img_size ) );
-	} else {
-		$post_thumbnail = array();
-		$post_thumbnail['thumbnail'] = '<img src="' . vc_asset_url( 'vc/no_image.png' ) . '" />';
-		$post_thumbnail['p_img_large'][0] = vc_asset_url( 'vc/no_image.png' );
+switch ( $source ) {
+	case 'media_library':
+		$images = explode( ',', $images );
+		break;
+
+	case 'external_link':
+		$images = explode( ',', $custom_srcs );
+		break;
+}
+
+foreach ( $images as $i => $image ) {
+	switch ( $source ) {
+		case 'media_library':
+			if ( $image > 0 ) {
+				$img = wpb_getImageBySize( array( 'attach_id' => $image, 'thumb_size' => $img_size ) );
+				$thumbnail = $img['thumbnail'];
+				$large_img_src = $img['p_img_large'][0];
+			} else {
+				$large_img_src = $default_src;
+				$thumbnail = '<img src="' . $default_src . '" />';
+			}
+			break;
+
+		case 'external_link':
+			$image = esc_attr( $image );
+			$dimensions = vcExtractDimensions( $external_img_size );
+			$hwstring = $dimensions ? image_hwstring( $dimensions[0], $dimensions[1] ) : '';
+			$thumbnail = '<img ' . $hwstring . ' src="' . $image . '" />';
+			$large_img_src = $image;
+			break;
 	}
 
-	$thumbnail = $post_thumbnail['thumbnail'];
-	$p_img_large = $post_thumbnail['p_img_large'];
 	$link_start = $link_end = '';
 
-	if ( 'link_image' === $onclick ) {
-		$link_start = '<a class="prettyphoto" href="' . $p_img_large[0] . '"' . $pretty_rel_random . '>';
-		$link_end = '</a>';
-	} else if ( 'custom_link' === $onclick && isset( $custom_links[ $i ] ) && '' !== $custom_links[ $i ] ) {
-		$link_start = '<a href="' . $custom_links[ $i ] . '"' . ( ! empty( $custom_links_target ) ? ' target="' . $custom_links_target . '"' : '' ) . '>';
-		$link_end = '</a>';
+	switch ( $onclick ) {
+		case 'img_link_large':
+			$link_start = '<a href="' . $large_img_src . '" target="' . $custom_links_target . '">';
+			$link_end = '</a>';
+			break;
+
+		case 'link_image':
+			$link_start = '<a class="prettyphoto" href="' . $large_img_src . '"' . $pretty_rel_random . '>';
+			$link_end = '</a>';
+			break;
+
+		case 'custom_link':
+			if ( ! empty( $custom_links[ $i ] ) ) {
+				$link_start = '<a href="' . $custom_links[ $i ] . '"' . ( ! empty( $custom_links_target ) ? ' target="' . $custom_links_target . '"' : '' ) . '>';
+				$link_end = '</a>';
+			}
+			break;
 	}
+
 	$gal_images .= $el_start . $link_start . $thumbnail . $link_end . $el_end;
 }
-$css_class = apply_filters( VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, 'wpb_gallery wpb_content_element' . $el_class . ' vc_clearfix', $this->settings['base'], $atts );
-$output .= "\n\t" . '<div class="' . $css_class . '">';
-$output .= "\n\t\t" . '<div class="wpb_wrapper">';
+
+$class_to_filter = 'wpb_gallery wpb_content_element vc_clearfix';
+$class_to_filter .= vc_shortcode_custom_css_class( $css, ' ' ) . $this->getExtraClass( $el_class );
+$css_class = apply_filters( VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, $class_to_filter, $this->settings['base'], $atts );
+
+$output = '';
+$output .= '<div class="' . $css_class . '">';
+$output .= '<div class="wpb_wrapper">';
 $output .= wpb_widget_title( array( 'title' => $title, 'extraclass' => 'wpb_gallery_heading' ) );
 $output .= '<div class="wpb_gallery_slides' . $type . '" data-interval="' . $interval . '"' . $flex_fx . '>' . $slides_wrap_start . $gal_images . $slides_wrap_end . '</div>';
-$output .= "\n\t\t" . '</div> ' . $this->endBlockComment( '.wpb_wrapper' );
-$output .= "\n\t" . '</div> ' . $this->endBlockComment( $this->getShortcode() );
+$output .= '</div>';
+$output .= '</div>';
 
 echo $output;

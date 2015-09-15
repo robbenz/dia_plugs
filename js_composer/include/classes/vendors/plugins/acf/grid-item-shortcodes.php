@@ -14,6 +14,7 @@ foreach ( $groups as $group ) {
 		'heading' => __( 'Field name', 'js_composer' ),
 		'param_name' => 'field_from_' . $group[ $id ],
 		'value' => $fields_param_value,
+		'save_always' => true,
 		'description' => __( 'Select field from group.', 'js_composer' ),
 		'dependency' => array(
 			'element' => 'field_group',
@@ -35,6 +36,7 @@ return array(
 				'heading' => __( 'Field group', 'js_composer' ),
 				'param_name' => 'field_group',
 				'value' => $groups_param_values,
+				'save_always' => true,
 				'description' => __( 'Select field group.', 'js_composer' ),
 			)
 		), $fields_params, array(

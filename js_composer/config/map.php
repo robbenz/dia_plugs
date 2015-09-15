@@ -101,6 +101,7 @@ vc_map( array(
 			'type' => 'textfield',
 			'heading' => __( 'YouTube link', 'js_composer' ),
 			'param_name' => 'video_bg_url',
+			'value' => 'https://www.youtube.com/watch?v=lMJXxhRFO1k', // default video url
 			'description' => __( 'Add YouTube link.', 'js_composer' ),
 			'dependency' => array(
 				'element' => 'video_bg',
@@ -148,48 +149,6 @@ vc_map( array(
 				'not_empty' => true,
 			),
 		),
-		/*
-   array(
-        'type' => 'colorpicker',
-        'heading' => __( 'Custom Background Color', 'js_composer' ),
-        'param_name' => 'bg_color',
-        'description' => __( 'Select backgound color for your row', 'js_composer' ),
-        'edit_field_class' => 'col-sm-6'
-  ),
-  array(
-        'type' => 'textfield',
-        'heading' => __( 'Padding', 'js_composer' ),
-        'param_name' => 'padding',
-        'description' => __( 'You can use px, em, %, etc. or enter just number and it will use pixels.', 'js_composer' ),
-        'edit_field_class' => 'col-sm-6'
-  ),
-  array(
-        'type' => 'textfield',
-        'heading' => __( 'Bottom margin', 'js_composer' ),
-        'param_name' => 'margin_bottom',
-        'description' => __( 'You can use px, em, %, etc. or enter just number and it will use pixels.', 'js_composer' ),
-        'edit_field_class' => 'col-sm-6'
-  ),
-  array(
-        'type' => 'attach_image',
-        'heading' => __( 'Background Image', 'js_composer' ),
-        'param_name' => 'bg_image',
-        'description' => __( 'Select background image for your row', 'js_composer' )
-  ),
-  array(
-        'type' => 'dropdown',
-        'heading' => __( 'Background Repeat', 'js_composer' ),
-        'param_name' => 'bg_image_repeat',
-        'value' => array(
-                          __( 'Default', 'js_composer' ) => '',
-                          __( 'Cover', 'js_composer' ) => 'cover',
-					  __('Contain', 'js_composer') => 'contain',
-					  __('No Repeat', 'js_composer') => 'no-repeat'
-					),
-        'description' => __( 'Select how a background image will be repeated', 'js_composer' ),
-        'dependency' => array( 'element' => 'bg_image', 'not_empty' => true)
-  ),
-  */
 		array(
 			'type' => 'el_id',
 			'heading' => __( 'Row ID', 'js_composer' ),
@@ -206,7 +165,6 @@ vc_map( array(
 			'type' => 'css_editor',
 			'heading' => __( 'CSS box', 'js_composer' ),
 			'param_name' => 'css',
-			// 'description' => __( 'Style particular content element differently - add a class name and refer to it in custom CSS.', 'js_composer' ),
 			'group' => __( 'Design Options', 'js_composer' )
 		),
 	),
@@ -239,7 +197,6 @@ vc_map( array(
 			'type' => 'css_editor',
 			'heading' => __( 'CSS box', 'js_composer' ),
 			'param_name' => 'css',
-			// 'description' => __( 'Style particular content element differently - add a class name and refer to it in custom CSS.', 'js_composer' ),
 			'group' => __( 'Design Options', 'js_composer' )
 		),
 	),
@@ -297,7 +254,6 @@ vc_map( array(
 			'type' => 'css_editor',
 			'heading' => __( 'CSS box', 'js_composer' ),
 			'param_name' => 'css',
-			// 'description' => __( 'Style particular content element differently - add a class name and refer to it in custom CSS.', 'js_composer' ),
 			'group' => __( 'Design Options', 'js_composer' )
 		),
 		array(
@@ -342,7 +298,6 @@ vc_map( array(
 			"type" => "css_editor",
 			"heading" => __( 'CSS box', "js_composer" ),
 			"param_name" => "css",
-			// "description" => __("Style particular content element differently - add a class name and refer to it in custom CSS.", "js_composer"),
 			"group" => __( 'Design Options', 'js_composer' )
 		),
 		array(
@@ -392,49 +347,10 @@ vc_map( array(
 			'type' => 'css_editor',
 			'heading' => __( 'CSS box', 'js_composer' ),
 			'param_name' => 'css',
-			// 'description' => __( 'Style particular content element differently - add a class name and refer to it in custom CSS.', 'js_composer' ),
 			'group' => __( 'Design Options', 'js_composer' )
 		)
 	)
 ) );
-
-/* Latest tweets
----------------------------------------------------------- */
-/*vc_map( array(
-    'name' => __( 'Twitter Widget', 'js_composer' ),
-    'base' => 'vc_twitter',
-    'icon' => 'icon-wpb-balloon-twitter-left',
-    'category' => __( 'Social', 'js_composer' ),
-    'params' => array(
-  array(
-        'type' => 'textfield',
-        'heading' => __( 'Widget title', 'js_composer' ),
-        'param_name' => 'title',
-        'description' => __( 'Enter text used as widget title (Note: located above content element).', 'js_composer' )
-  ),
-  array(
-        'type' => 'textfield',
-        'heading' => __( 'Twitter username', 'js_composer' ),
-        'param_name' => 'twitter_name',
-        'admin_label' => true,
-        'description' => __( 'Type in twitter profile name from which load tweets.', 'js_composer' )
-  ),
-  array(
-        'type' => 'dropdown',
-        'heading' => __( 'Tweets count', 'js_composer' ),
-        'param_name' => 'tweets_count',
-        'admin_label' => true,
-        'value' => array( 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15),
-        'description' => __( 'How many recent tweets to load.', 'js_composer' )
-  ),
-  array(
-        'type' => 'textfield',
-        'heading' => __( 'Extra class name', 'js_composer' ),
-        'param_name' => 'el_class',
-        'description' => __( 'Style particular content element differently - add a class name and refer to it in custom CSS.', 'js_composer' )
-  )
-)
-) );*/
 
 include_once "shortcode-vc-icon-element.php";
 
@@ -446,7 +362,6 @@ vc_map( array(
 	'icon' => 'icon-wpb-ui-separator',
 	'show_settings_on_create' => true,
 	'category' => __( 'Content', 'js_composer' ),
-	//"controls"	=> 'popup_delete',
 	'description' => __( 'Horizontal separator line', 'js_composer' ),
 	'params' => array(
 		array(
@@ -505,7 +420,13 @@ vc_map( array(
 			'heading' => __( 'Extra class name', 'js_composer' ),
 			'param_name' => 'el_class',
 			'description' => __( 'Style particular content element differently - add a class name and refer to it in custom CSS.', 'js_composer' )
-		)
+		),
+		array(
+			'type' => 'css_editor',
+			'heading' => __( 'CSS box', 'js_composer' ),
+			'param_name' => 'css',
+			'group' => __( 'Design Options', 'js_composer' )
+		),
 	)
 ) );
 
@@ -598,7 +519,13 @@ vc_map( array(
 			'type' => 'hidden',
 			'param_name' => 'layout',
 			'value' => 'separator_with_text',
-		)
+		),
+		array(
+			'type' => 'css_editor',
+			'heading' => __( 'CSS box', 'js_composer' ),
+			'param_name' => 'css',
+			'group' => __( 'Design Options', 'js_composer' )
+		),
 	),
 	'js_view' => 'VcTextSeparatorView'
 ) );
@@ -899,7 +826,13 @@ vc_map( array(
 			'heading' => __( 'Extra class name', 'js_composer' ),
 			'param_name' => 'el_class',
 			'description' => __( 'Style particular content element differently - add a class name and refer to it in custom CSS.', 'js_composer' )
-		)
+		),
+		array(
+			'type' => 'css_editor',
+			'heading' => __( 'CSS box', 'js_composer' ),
+			'param_name' => 'css',
+			'group' => __( 'Design Options', 'js_composer' )
+		),
 	),
 	'js_view' => 'VcMessageView_Backend'
 ) );
@@ -924,7 +857,13 @@ vc_map( array(
 				__( 'Vertical with count', 'js_composer' ) => 'box_count'
 			),
 			'description' => __( 'Select button type.', 'js_composer' )
-		)
+		),
+		array(
+			'type' => 'css_editor',
+			'heading' => __( 'CSS box', 'js_composer' ),
+			'param_name' => 'css',
+			'group' => __( 'Design Options', 'js_composer' )
+		),
 	)
 ) );
 
@@ -949,7 +888,13 @@ vc_map( array(
 				__( 'Horizontal', 'js_composer' ) => 'none'
 			),
 			'description' => __( 'Select button type.', 'js_composer' )
-		)
+		),
+		array(
+			'type' => 'css_editor',
+			'heading' => __( 'CSS box', 'js_composer' ),
+			'param_name' => 'css',
+			'group' => __( 'Design Options', 'js_composer' )
+		),
 	)
 ) );
 
@@ -998,6 +943,12 @@ vc_map( array(
 			),
 			'description' => __( 'Minimum width of 120px to display. If annotation is set to "inline", this parameter sets the width in pixels to use for button and its inline annotation. Default width is 450px.', 'js_composer' )
 		),
+		array(
+			'type' => 'css_editor',
+			'heading' => __( 'CSS box', 'js_composer' ),
+			'param_name' => 'css',
+			'group' => __( 'Design Options', 'js_composer' )
+		),
 	)
 ) );
 
@@ -1021,7 +972,13 @@ vc_map( array(
 				__( 'No count', 'js_composer' ) => 'none'
 			),
 			'description' => __( 'Select button layout.', 'js_composer' )
-		)
+		),
+		array(
+			'type' => 'css_editor',
+			'heading' => __( 'CSS box', 'js_composer' ),
+			'param_name' => 'css',
+			'group' => __( 'Design Options', 'js_composer' )
+		),
 	)
 ) );
 
@@ -1101,6 +1058,12 @@ vc_map( array(
 			'param_name' => 'el_class',
 			'description' => __( 'Style particular content element differently - add a class name and refer to it in custom CSS.', 'js_composer' )
 		),
+		array(
+			'type' => 'css_editor',
+			'heading' => __( 'CSS box', 'js_composer' ),
+			'param_name' => 'css',
+			'group' => __( 'Design Options', 'js_composer' )
+		),
 	),
 	'js_view' => 'VcToggleView'
 ) );
@@ -1120,18 +1083,80 @@ vc_map( array(
 			'description' => __( 'Enter text used as widget title (Note: located above content element).', 'js_composer' )
 		),
 		array(
+			'type' => 'dropdown',
+			'heading' => __( 'Image source', 'js_composer' ),
+			'param_name' => 'source',
+			'value' => array(
+				__( 'Media library', 'js_composer' ) => 'media_library',
+				__( 'External link', 'js_composer' ) => 'external_link',
+				__( 'Featured Image', 'js_composer' ) => 'featured_image'
+			),
+			'std' => 'media_library',
+			'description' => __( 'Select image source.', 'js_composer' )
+		),
+		array(
 			'type' => 'attach_image',
 			'heading' => __( 'Image', 'js_composer' ),
 			'param_name' => 'image',
 			'value' => '',
-			'description' => __( 'Select image from media library.', 'js_composer' )
+			'description' => __( 'Select image from media library.', 'js_composer' ),
+			'dependency' => array(
+				'element' => 'source',
+				'value' => 'media_library'
+			),
+		),
+		array(
+			'type' => 'textfield',
+			'heading' => __( 'External link', 'js_composer' ),
+			'param_name' => 'custom_src',
+			'description' => __( 'Select external link.', 'js_composer' ),
+			'dependency' => array(
+				'element' => 'source',
+				'value' => 'external_link'
+			),
 		),
 		array(
 			'type' => 'textfield',
 			'heading' => __( 'Image size', 'js_composer' ),
 			'param_name' => 'img_size',
 			'value' => 'thumbnail',
-			'description' => __( 'Enter image size (Example: "thumbnail", "medium", "large", "full" or other sizes defined by theme). Alternatively enter size in pixels (Example: 200x100 (Width x Height)). Leave parameter empty to use "thumbnail" by default.', 'js_composer' )
+			'description' => __( 'Enter image size (Example: "thumbnail", "medium", "large", "full" or other sizes defined by theme). Alternatively enter size in pixels (Example: 200x100 (Width x Height)).', 'js_composer' ),
+			'dependency' => array(
+				'element' => 'source',
+				'value' => array( 'media_library', 'featured_image' )
+			),
+		),
+		array(
+			'type' => 'textfield',
+			'heading' => __( 'Image size', 'js_composer' ),
+			'param_name' => 'external_img_size',
+			'value' => '',
+			'description' => __( 'Enter image size in pixels. Example: 200x100 (Width x Height).', 'js_composer' ),
+			'dependency' => array(
+				'element' => 'source',
+				'value' => 'external_link'
+			),
+		),
+		array(
+			'type' => 'textfield',
+			'heading' => __( 'Caption', 'js_composer' ),
+			'param_name' => 'caption',
+			'description' => __( 'Enter text for image caption.', 'js_composer' ),
+			'dependency' => array(
+				'element' => 'source',
+				'value' => 'external_link'
+			),
+		),
+		array(
+			'type' => 'checkbox',
+			'heading' => __( 'Add caption?', 'js_composer' ),
+			'param_name' => 'add_caption',
+			'description' => __( 'Add image caption.', 'js_composer' ),
+			'value' => array( __( 'Yes', 'js_composer' ) => 'yes' ),
+			'dependency' => array(
+				'element' => 'source',
+				'value' => array( 'media_library', 'featured_image' )
+			),
 		),
 		array(
 			'type' => 'dropdown',
@@ -1149,7 +1174,22 @@ vc_map( array(
 			'heading' => __( 'Image style', 'js_composer' ),
 			'param_name' => 'style',
 			'value' => getVcShared( 'single image styles' ),
-			'description' => __( 'Select image display style.', 'js_comopser' )
+			'description' => __( 'Select image display style.', 'js_comopser' ),
+			'dependency' => array(
+				'element' => 'source',
+				'value' => array( 'media_library', 'featured_image' )
+			),
+		),
+		array(
+			'type' => 'dropdown',
+			'heading' => __( 'Image style', 'js_composer' ),
+			'param_name' => 'external_style',
+			'value' => getVcShared( 'single image external styles' ),
+			'description' => __( 'Select image display style.', 'js_comopser' ),
+			'dependency' => array(
+				'element' => 'source',
+				'value' => 'external_link'
+			),
 		),
 		array(
 			'type' => 'dropdown',
@@ -1165,11 +1205,18 @@ vc_map( array(
 			'param_holder_class' => 'vc_colored-dropdown'
 		),
 		array(
-			'type' => 'checkbox',
-			'heading' => __( 'Link to large image?', 'js_composer' ),
-			'param_name' => 'img_link_large',
-			'description' => __( 'If checked, image will link to the larger image.', 'js_composer' ),
-			'value' => array( __( 'Yes', 'js_composer' ) => 'yes' )
+			'type' => 'dropdown',
+			'heading' => __( 'On click action', 'js_composer' ),
+			'param_name' => 'onclick',
+			'value' => array(
+				__( 'None', 'js_composer' ) => '',
+				__( 'Link to large image', 'js_composer' ) => 'img_link_large',
+				__( 'Open prettyPhoto', 'js_composer' ) => 'link_image',
+				__( 'Open custom link', 'js_composer' ) => 'custom_link',
+				__( 'Zoom', 'js_composer' ) => 'zoom',
+			),
+			'description' => __( 'Select action for click action.', 'js_composer' ),
+			'std' => ''
 		),
 		array(
 			'type' => 'href',
@@ -1177,9 +1224,8 @@ vc_map( array(
 			'param_name' => 'link',
 			'description' => __( 'Enter URL if you want this image to have a link (Note: parameters like "mailto:" are also accepted).', 'js_composer' ),
 			'dependency' => array(
-				'element' => 'img_link_large',
-				'is_empty' => true,
-				'callback' => 'wpb_single_image_img_link_dependency_callback'
+				'element' => 'onclick',
+				'value' => 'custom_link',
 			)
 		),
 		array(
@@ -1188,9 +1234,9 @@ vc_map( array(
 			'param_name' => 'img_link_target',
 			'value' => $target_arr,
 			'dependency' => array(
-				'element' => 'link',
-				'not_empty' => true
-			)
+				'element' => 'onclick',
+				'value' => array( 'custom_link', 'img_link_large' ),
+			),
 		),
 		$vc_add_css_animation,
 		array(
@@ -1203,8 +1249,12 @@ vc_map( array(
 			'type' => 'css_editor',
 			'heading' => __( 'CSS box', 'js_composer' ),
 			'param_name' => 'css',
-			// 'description' => __( 'Style particular content element differently - add a class name and refer to it in custom CSS.', 'js_composer' ),
 			'group' => __( 'Design Options', 'js_composer' )
+		),
+		// backward compatibility. since 4.6
+		array(
+			'type' => 'hidden',
+			'param_name' => 'img_link_large'
 		)
 	)
 ) );
@@ -1248,29 +1298,71 @@ vc_map( array(
 			)
 		),
 		array(
+			'type' => 'dropdown',
+			'heading' => __( 'Image source', 'js_composer' ),
+			'param_name' => 'source',
+			'value' => array(
+				__( 'Media library', 'js_composer' ) => 'media_library',
+				__( 'External links', 'js_composer' ) => 'external_link'
+			),
+			'std' => 'media_library',
+			'description' => __( 'Select image source.', 'js_composer' )
+		),
+		array(
 			'type' => 'attach_images',
 			'heading' => __( 'Images', 'js_composer' ),
 			'param_name' => 'images',
 			'value' => '',
-			'description' => __( 'Select images from media library.', 'js_composer' )
+			'description' => __( 'Select images from media library.', 'js_composer' ),
+			'dependency' => array(
+				'element' => 'source',
+				'value' => 'media_library'
+			),
+		),
+		array(
+			'type' => 'exploded_textarea',
+			'heading' => __( 'External links', 'js_composer' ),
+			'param_name' => 'custom_srcs',
+			'description' => __( 'Enter external link for each gallery image (Note: divide links with linebreaks (Enter)).', 'js_composer' ),
+			'dependency' => array(
+				'element' => 'source',
+				'value' => 'external_link'
+			),
 		),
 		array(
 			'type' => 'textfield',
 			'heading' => __( 'Image size', 'js_composer' ),
 			'param_name' => 'img_size',
 			'value' => 'thumbnail',
-			'description' => __( 'Enter image size. Example: thumbnail, medium, large, full or other sizes defined by current theme. Alternatively enter image size in pixels: 200x100 (Width x Height). Leave empty to use "thumbnail" size.', 'js_composer' )
+			'description' => __( 'Enter image size. Example: thumbnail, medium, large, full or other sizes defined by current theme. Alternatively enter image size in pixels: 200x100 (Width x Height). Leave empty to use "thumbnail" size.', 'js_composer' ),
+			'dependency' => array(
+				'element' => 'source',
+				'value' => 'media_library'
+			),
+		),
+		array(
+			'type' => 'textfield',
+			'heading' => __( 'Image size', 'js_composer' ),
+			'param_name' => 'external_img_size',
+			'value' => '',
+			'description' => __( 'Enter image size in pixels. Example: 200x100 (Width x Height).', 'js_composer' ),
+			'dependency' => array(
+				'element' => 'source',
+				'value' => 'external_link'
+			),
 		),
 		array(
 			'type' => 'dropdown',
 			'heading' => __( 'On click action', 'js_composer' ),
 			'param_name' => 'onclick',
 			'value' => array(
+				__( 'None', 'js_composer' ) => '',
+				__( 'Link to large image', 'js_composer' ) => 'img_link_large',
 				__( 'Open prettyPhoto', 'js_composer' ) => 'link_image',
-				__( 'None', 'js_composer' ) => 'link_no',
-				__( 'Open custom links', 'js_composer' ) => 'custom_link'
+				__( 'Open custom link', 'js_composer' ) => 'custom_link',
 			),
-			'description' => __( 'Select action for click action.', 'js_composer' )
+			'description' => __( 'Select action for click action.', 'js_composer' ),
+			'std' => 'link_image'
 		),
 		array(
 			'type' => 'exploded_textarea',
@@ -1289,7 +1381,7 @@ vc_map( array(
 			'description' => __( 'Select where to open  custom links.', 'js_composer' ),
 			'dependency' => array(
 				'element' => 'onclick',
-				'value' => array( 'custom_link' )
+				'value' => array( 'custom_link', 'img_link_large' ),
 			),
 			'value' => $target_arr
 		),
@@ -1298,7 +1390,13 @@ vc_map( array(
 			'heading' => __( 'Extra class name', 'js_composer' ),
 			'param_name' => 'el_class',
 			'description' => __( 'Style particular content element differently - add a class name and refer to it in custom CSS.', 'js_composer' )
-		)
+		),
+		array(
+			'type' => 'css_editor',
+			'heading' => __( 'CSS box', 'js_composer' ),
+			'param_name' => 'css',
+			'group' => __( 'Design Options', 'js_composer' )
+		),
 	)
 ) );
 
@@ -1427,16 +1525,23 @@ vc_map( array(
 			'heading' => __( 'Extra class name', 'js_composer' ),
 			'param_name' => 'el_class',
 			'description' => __( 'Style particular content element differently - add a class name and refer to it in custom CSS.', 'js_composer' )
-		)
+		),
+		array(
+			'type' => 'css_editor',
+			'heading' => __( 'CSS box', 'js_composer' ),
+			'param_name' => 'css',
+			'group' => __( 'Design Options', 'js_composer' )
+		),
 	)
 ) );
 
 /**
- * @since 4.6 new TTA, tabs tours and accordions
+ * @since 4.6 new TTA, tabs, tours, accordions and pageable
  */
 include_once "shortcode-vc-tta-tabs.php";
 include_once "shortcode-vc-tta-tour.php";
 include_once "shortcode-vc-tta-accordion.php";
+include_once "shortcode-vc-tta-pageable.php";
 include_once "shortcode-vc-tta-section.php";
 
 /* Tabs
@@ -1713,10 +1818,6 @@ vc_map( array(
 			'heading' => __( 'Link target', 'js_composer' ),
 			'param_name' => 'grid_link_target',
 			'value' => $target_arr,
-			// 'dependency' => array(
-			//     'element' => 'grid_link',
-			//     'value' => array( 'link_post', 'link_image_post' )
-			// )
 		),
 		array(
 			'type' => 'checkbox',
@@ -1749,7 +1850,6 @@ vc_map( array(
 			'description' => __( 'Style particular content element differently - add a class name and refer to it in custom CSS.', 'js_composer' )
 		)
 	)
-	// 'html_template' => dirname(__DIR__).'/composer/shortcodes_templates/vc_posts_grid.php'
 ) );
 
 /* Post Carousel
@@ -1806,7 +1906,6 @@ vc_map( array(
 			'heading' => __( 'Link target', 'js_composer' ),
 			'param_name' => 'link_target',
 			'value' => $target_arr,
-			// 'dependency' => array( 'element' => 'link', 'value' => array( 'link_post', 'link_image_post', 'link_image' ) )
 		),
 		array(
 			'type' => 'textfield',
@@ -1879,7 +1978,7 @@ vc_map( array(
 			'heading' => __( 'Extra class name', 'js_composer' ),
 			'param_name' => 'el_class',
 			'description' => __( 'Style particular content element differently - add a class name and refer to it in custom CSS.', 'js_composer' )
-		)
+		),
 	)
 ) );
 
@@ -2013,7 +2112,7 @@ vc_map( array(
 		),
 		array(
 			'type' => 'dropdown',
-			'heading' => __( 'Order by', 'js_composer' ),
+			'heading' => __( 'Sort order', 'js_composer' ),
 			'param_name' => 'order',
 			'value' => array(
 				__( 'Descending', 'js_composer' ) => 'DESC',
@@ -2026,7 +2125,13 @@ vc_map( array(
 			'heading' => __( 'Extra class name', 'js_composer' ),
 			'param_name' => 'el_class',
 			'description' => __( 'Style particular content element differently - add a class name and refer to it in custom CSS.', 'js_composer' )
-		)
+		),
+		array(
+			'type' => 'css_editor',
+			'heading' => __( 'CSS box', 'js_composer' ),
+			'param_name' => 'css',
+			'group' => __( 'Design Options', 'js_composer' )
+		),
 	)
 ) );
 
@@ -2160,7 +2265,7 @@ vc_map( array(
 			'heading' => __( 'Extra class name', 'js_composer' ),
 			'param_name' => 'el_class',
 			'description' => __( 'Style particular content element differently - add a class name and refer to it in custom CSS.', 'js_composer' )
-		)
+		),
 	),
 	'js_view' => 'VcButtonView'
 ) );
@@ -2217,13 +2322,6 @@ vc_map( array(
 			'description' => __( 'Select button color.', 'js_composer' ),
 			'param_holder_class' => 'vc_colored-dropdown'
 		),
-		/*array(
-        'type' => 'dropdown',
-        'heading' => __( 'Icon', 'js_composer' ),
-        'param_name' => 'icon',
-        'value' => getVcShared( 'icons' ),
-        'description' => __( 'Button icon.', 'js_composer' )
-  ),*/
 		array(
 			'type' => 'dropdown',
 			'heading' => __( 'Size', 'js_composer' ),
@@ -2340,7 +2438,6 @@ vc_map( array(
 			'type' => 'textfield',
 			'heading' => __( 'Heading', 'js_composer' ),
 			'admin_label' => true,
-			//'holder' => 'h2',
 			'param_name' => 'h2',
 			'value' => __( 'Hey! I am first heading line feel free to change me', 'js_composer' ),
 			'description' => __( 'Enter text for heading line.', 'js_composer' )
@@ -2348,8 +2445,6 @@ vc_map( array(
 		array(
 			'type' => 'textfield',
 			'heading' => __( 'Subheading', 'js_composer' ),
-			//'holder' => 'h4',
-			//'admin_label' => true,
 			'param_name' => 'h4',
 			'value' => '',
 			'description' => __( 'Enter text for subheading line.', 'js_composer' )
@@ -2383,8 +2478,6 @@ vc_map( array(
 		),
 		array(
 			'type' => 'textarea_html',
-			//holder' => 'div',
-			//'admin_label' => true,
 			'heading' => __( 'Text', 'js_composer' ),
 			'param_name' => 'content',
 			'value' => __( 'I am promo text. Click edit button to change this text. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.', 'js_composer' )
@@ -2398,8 +2491,6 @@ vc_map( array(
 		array(
 			'type' => 'textfield',
 			'heading' => __( 'Text on the button', 'js_composer' ),
-			//'holder' => 'button',
-			//'class' => 'wpb_button',
 			'param_name' => 'title',
 			'value' => __( 'Text on the button', 'js_composer' ),
 			'description' => __( 'Add text on the button.', 'js_composer' )
@@ -2481,7 +2572,6 @@ vc_map( array(
 			'type' => 'css_editor',
 			'heading' => __( 'CSS box', 'js_composer' ),
 			'param_name' => 'css',
-			// 'description' => __( 'Style particular content element differently - add a class name and refer to it in custom CSS.', 'js_composer' ),
 			'group' => __( 'Design Options', 'js_composer' )
 		)
 	)
@@ -2508,7 +2598,7 @@ vc_map( array(
 			'param_name' => 'link',
 			'value' => '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6304.829986131271!2d-122.4746968033092!3d37.80374752160443!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808586e6302615a1%3A0x86bd130251757c00!2sStorey+Ave%2C+San+Francisco%2C+CA+94129!5e0!3m2!1sen!2sus!4v1435826432051" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>',
 			'description' => sprintf( __( 'Visit %s to create your map (Step by step: 1) Find location 2) Click the cog symbol in the lower right corner and select "Share or embed map" 3) On modal window select "Embed map" 4) Copy iframe code and paste it).' ),
-				'<a href="https://www.google.com/maps" target="_blank">' . __( 'Google maps', 'js_composer' ) . '</a>')
+				'<a href="https://www.google.com/maps" target="_blank">' . __( 'Google maps', 'js_composer' ) . '</a>' )
 		),
 		array(
 			'type' => 'textfield',
@@ -2523,7 +2613,13 @@ vc_map( array(
 			'heading' => __( 'Extra class name', 'js_composer' ),
 			'param_name' => 'el_class',
 			'description' => __( 'Style particular content element differently - add a class name and refer to it in custom CSS.', 'js_composer' )
-		)
+		),
+		array(
+			'type' => 'css_editor',
+			'heading' => __( 'CSS box', 'js_composer' ),
+			'param_name' => 'css',
+			'group' => __( 'Design Options', 'js_composer' )
+		),
 	)
 ) );
 
@@ -2550,7 +2646,13 @@ vc_map( array(
 			'heading' => __( 'Extra class name', 'js_composer' ),
 			'param_name' => 'el_class',
 			'description' => __( 'Style particular content element differently - add a class name and refer to it in custom CSS.', 'js_composer' )
-		)
+		),
+		array(
+			'type' => 'css_editor',
+			'heading' => __( 'CSS box', 'js_composer' ),
+			'param_name' => 'css',
+			'group' => __( 'Design Options', 'js_composer' )
+		),
 	)
 ) );
 
@@ -2636,7 +2738,13 @@ vc_map( array(
 			'heading' => __( 'Extra class name', 'js_composer' ),
 			'param_name' => 'el_class',
 			'description' => __( 'Style particular content element differently - add a class name and refer to it in custom CSS.', 'js_composer' )
-		)
+		),
+		array(
+			'type' => 'css_editor',
+			'heading' => __( 'CSS box', 'js_composer' ),
+			'param_name' => 'css',
+			'group' => __( 'Design Options', 'js_composer' )
+		),
 	)
 ) );
 
@@ -2656,11 +2764,81 @@ vc_map( array(
 			'description' => __( 'Enter text used as widget title (Note: located above content element).', 'js_composer' )
 		),
 		array(
-			'type' => 'exploded_textarea',
+			'type' => 'param_group',
 			'heading' => __( 'Values', 'js_composer' ),
 			'param_name' => 'values',
-			'description' => __( 'Enter values for graph - value, title and color. Divide value sets with linebreak "Enter" (Example: 90|Development|#e75956).', 'js_composer' ),
-			'value' => '90|Development,80|Design,70|Marketing'
+			'description' => __( 'Enter values for graph - value, title and color.', 'js_composer' ),
+			'value' => urlencode( json_encode( array(
+				array(
+					'label' => __( 'Development', 'js_composer' ),
+					'value' => '90',
+				),
+				array(
+					'label' => __( 'Design', 'js_composer' ),
+					'value' => '80',
+				),
+				array(
+					'label' => __( 'Marketing', 'js_composer' ),
+					'value' => '70',
+				),
+			) ) ),
+			'params' => array(
+				array(
+					'type' => 'textfield',
+					'heading' => __( 'Label', 'js_composer' ),
+					'param_name' => 'label',
+					'description' => __( 'Enter text used as title of bar.', 'js_composer' ),
+					'admin_label' => true,
+				),
+				array(
+					'type' => 'textfield',
+					'heading' => __( 'Value', 'js_composer' ),
+					'param_name' => 'value',
+					'description' => __( 'Enter value of bar.', 'js_composer' ),
+					'admin_label' => true,
+				),
+				array(
+					'type' => 'dropdown',
+					'heading' => __( 'Color', 'js_composer' ),
+					'param_name' => 'color',
+					'value' => array(
+						           __( 'Default', 'js_composer' ) => ''
+					           ) + array(
+						           __( 'Classic Grey', 'js_composer' ) => 'bar_grey',
+						           __( 'Classic Blue', 'js_composer' ) => 'bar_blue',
+						           __( 'Classic Turquoise', 'js_composer' ) => 'bar_turquoise',
+						           __( 'Classic Green', 'js_composer' ) => 'bar_green',
+						           __( 'Classic Orange', 'js_composer' ) => 'bar_orange',
+						           __( 'Classic Red', 'js_composer' ) => 'bar_red',
+						           __( 'Classic Black', 'js_composer' ) => 'bar_black',
+					           ) + getVcShared( 'colors-dashed' ) + array(
+						           __( 'Custom Color', 'js_composer' ) => 'custom'
+					           ),
+					'description' => __( 'Select single bar background color.', 'js_composer' ),
+					'admin_label' => true,
+					'param_holder_class' => 'vc_colored-dropdown'
+				),
+				array(
+					'type' => 'colorpicker',
+					'heading' => __( 'Custom color', 'js_composer' ),
+					'param_name' => 'customcolor',
+					'description' => __( 'Select custom single bar background color.', 'js_composer' ),
+					'dependency' => array(
+						'element' => 'color',
+						'value' => array( 'custom' )
+					),
+				),
+				array(
+					'type' => 'colorpicker',
+					'heading' => __( 'Custom text color', 'js_composer' ),
+					'param_name' => 'customtxtcolor',
+					'description' => __( 'Select custom single bar text color.', 'js_composer' ),
+					'dependency' => array(
+						'element' => 'color',
+						'value' => array( 'custom' )
+					),
+				),
+			),
 		),
 		array(
 			'type' => 'textfield',
@@ -2673,23 +2851,32 @@ vc_map( array(
 			'heading' => __( 'Color', 'js_composer' ),
 			'param_name' => 'bgcolor',
 			'value' => array(
-				__( 'Grey', 'js_composer' ) => 'bar_grey',
-				__( 'Blue', 'js_composer' ) => 'bar_blue',
-				__( 'Turquoise', 'js_composer' ) => 'bar_turquoise',
-				__( 'Green', 'js_composer' ) => 'bar_green',
-				__( 'Orange', 'js_composer' ) => 'bar_orange',
-				__( 'Red', 'js_composer' ) => 'bar_red',
-				__( 'Black', 'js_composer' ) => 'bar_black',
-				__( 'Custom Color', 'js_composer' ) => 'custom'
-			),
+				           __( 'Classic Grey', 'js_composer' ) => 'bar_grey',
+				           __( 'Classic Blue', 'js_composer' ) => 'bar_blue',
+				           __( 'Classic Turquoise', 'js_composer' ) => 'bar_turquoise',
+				           __( 'Classic Green', 'js_composer' ) => 'bar_green',
+				           __( 'Classic Orange', 'js_composer' ) => 'bar_orange',
+				           __( 'Classic Red', 'js_composer' ) => 'bar_red',
+				           __( 'Classic Black', 'js_composer' ) => 'bar_black',
+			           ) + getVcShared( 'colors-dashed' ) + array(
+				           __( 'Custom Color', 'js_composer' ) => 'custom'
+			           ),
 			'description' => __( 'Select bar background color.', 'js_composer' ),
-			'admin_label' => true
+			'admin_label' => true,
+			'param_holder_class' => 'vc_colored-dropdown',
 		),
 		array(
 			'type' => 'colorpicker',
-			'heading' => __( 'Bar custom color', 'js_composer' ),
+			'heading' => __( 'Bar custom background color', 'js_composer' ),
 			'param_name' => 'custombgcolor',
 			'description' => __( 'Select custom background color for bars.', 'js_composer' ),
+			'dependency' => array( 'element' => 'bgcolor', 'value' => array( 'custom' ) )
+		),
+		array(
+			'type' => 'colorpicker',
+			'heading' => __( 'Bar custom text color', 'js_composer' ),
+			'param_name' => 'customtxtcolor',
+			'description' => __( 'Select custom text color for bars.', 'js_composer' ),
 			'dependency' => array( 'element' => 'bgcolor', 'value' => array( 'custom' ) )
 		),
 		array(
@@ -2706,7 +2893,13 @@ vc_map( array(
 			'heading' => __( 'Extra class name', 'js_composer' ),
 			'param_name' => 'el_class',
 			'description' => __( 'Style particular content element differently - add a class name and refer to it in custom CSS.', 'js_composer' )
-		)
+		),
+		array(
+			'type' => 'css_editor',
+			'heading' => __( 'CSS box', 'js_composer' ),
+			'param_name' => 'css',
+			'group' => __( 'Design Options', 'js_composer' )
+		),
 	)
 ) );
 
@@ -2753,10 +2946,21 @@ vc_map( array(
 			'type' => 'dropdown',
 			'heading' => __( 'Color', 'js_composer' ),
 			'param_name' => 'color',
-			'value' => $colors_arr, //$pie_colors,
+			'value' => getVcShared( 'colors-dashed' ) + array( __( 'Custom', 'js_composer' ) => 'custom' ),
 			'description' => __( 'Select pie chart color.', 'js_composer' ),
 			'admin_label' => true,
-			'param_holder_class' => 'vc_colored-dropdown'
+			'param_holder_class' => 'vc_colored-dropdown',
+			'std' => 'grey'
+		),
+		array(
+			'type' => 'colorpicker',
+			'heading' => __( 'Custom color', 'js_composer' ),
+			'param_name' => 'custom_color',
+			'description' => __( 'Select custom color.', 'js_composer' ),
+			'dependency' => array(
+				'element' => 'color',
+				'value' => array( 'custom' )
+			),
 		),
 		array(
 			'type' => 'textfield',
@@ -2764,7 +2968,12 @@ vc_map( array(
 			'param_name' => 'el_class',
 			'description' => __( 'Style particular content element differently - add a class name and refer to it in custom CSS.', 'js_composer' )
 		),
-
+		array(
+			'type' => 'css_editor',
+			'heading' => __( 'CSS box', 'js_composer' ),
+			'param_name' => 'css',
+			'group' => __( 'Design Options', 'js_composer' )
+		),
 	)
 ) );
 
@@ -2925,7 +3134,12 @@ vc_map( array(
 			'param_name' => 'el_class',
 			'description' => __( 'Style particular content element differently - add a class name and refer to it in custom CSS.', 'js_composer' )
 		),
-
+		array(
+			'type' => 'css_editor',
+			'heading' => __( 'CSS box', 'js_composer' ),
+			'param_name' => 'css',
+			'group' => __( 'Design Options', 'js_composer' )
+		),
 	)
 ) );
 
@@ -3058,7 +3272,12 @@ vc_map( array(
 			'param_name' => 'el_class',
 			'description' => __( 'Style particular content element differently - add a class name and refer to it in custom CSS.', 'js_composer' )
 		),
-
+		array(
+			'type' => 'css_editor',
+			'heading' => __( 'CSS box', 'js_composer' ),
+			'param_name' => 'css',
+			'group' => __( 'Design Options', 'js_composer' )
+		),
 	)
 ) );
 
@@ -3215,14 +3434,16 @@ vc_map( array(
 ) );
 
 $tag_taxonomies = array();
-$taxonomies = get_taxonomies();
-if ( is_array( $taxonomies ) && ! empty( $taxonomies ) ) {
-	foreach ( $taxonomies as $taxonomy ) {
-		$tax = get_taxonomy( $taxonomy );
-		if ( ( is_object( $tax ) && ( ! $tax->show_tagcloud || empty( $tax->labels->name ) ) ) || ! is_object( $tax ) ) {
-			continue;
+if ( 'vc_edit_form' === vc_post_param( 'action' ) ) {
+	$taxonomies = get_taxonomies();
+	if ( is_array( $taxonomies ) && ! empty( $taxonomies ) ) {
+		foreach ( $taxonomies as $taxonomy ) {
+			$tax = get_taxonomy( $taxonomy );
+			if ( ( is_object( $tax ) && ( ! $tax->show_tagcloud || empty( $tax->labels->name ) ) ) || ! is_object( $tax ) ) {
+				continue;
+			}
+			$tag_taxonomies[ $tax->labels->name ] = esc_attr( $taxonomy );
 		}
-		$tag_taxonomies[ $tax->labels->name ] = esc_attr( $taxonomy );
 	}
 }
 vc_map( array(
@@ -3247,7 +3468,8 @@ vc_map( array(
 			'param_name' => 'taxonomy',
 			'value' => $tag_taxonomies,
 			'description' => __( 'Select source for tag cloud.', 'js_composer' ),
-			'admin_label' => true
+			'admin_label' => true,
+			'save_always' => true,
 		),
 		array(
 			'type' => 'textfield',
@@ -3288,7 +3510,8 @@ vc_map( array(
 			'param_name' => 'nav_menu',
 			'value' => $custom_menus,
 			'description' => empty( $custom_menus ) ? __( 'Custom menus not found. Please visit <b>Appearance > Menus</b> page to create new menu.', 'js_composer' ) : __( 'Select menu to display.', 'js_composer' ),
-			'admin_label' => true
+			'admin_label' => true,
+			'save_always' => true,
 		),
 		array(
 			'type' => 'textfield',
@@ -3319,13 +3542,7 @@ vc_map( array(
 			'holder' => 'div',
 			'heading' => __( 'Text', 'js_composer' ),
 			'param_name' => 'content',
-			// 'admin_label' => true
 		),
-		/*array(
-        'type' => 'checkbox',
-        'heading' => __( 'Automatically add paragraphs', 'js_composer' ),
-        'param_name' => "filter"
-  ),*/
 		array(
 			'type' => 'textfield',
 			'heading' => __( 'Extra class name', 'js_composer' ),
@@ -3605,6 +3822,12 @@ vc_map( array(
 			'param_name' => 'el_class',
 			'description' => __( 'Style particular content element differently - add a class name and refer to it in custom CSS.', 'js_composer' ),
 		),
+		array(
+			'type' => 'css_editor',
+			'heading' => __( 'CSS box', 'js_composer' ),
+			'param_name' => 'css',
+			'group' => __( 'Design Options', 'js_composer' )
+		),
 	),
 ) );
 
@@ -3619,12 +3842,27 @@ vc_map( array(
 	'description' => __( 'Text with Google fonts', 'js_composer' ),
 	'params' => array(
 		array(
+			'type' => 'dropdown',
+			'heading' => __( 'Text source', 'js_composer' ),
+			'param_name' => 'source',
+			'value' => array(
+				__( 'Custom text', 'js_composer' ) => '',
+				__( 'Post or Page Title', 'js_composer' ) => 'post_title'
+			),
+			'std' => '',
+			'description' => __( 'Select text source.', 'js_composer' )
+		),
+		array(
 			'type' => 'textarea',
 			'heading' => __( 'Text', 'js_composer' ),
 			'param_name' => 'text',
 			'admin_label' => true,
 			'value' => __( 'This is custom heading element', 'js_composer' ),
 			'description' => __( 'Note: If you are using non-latin characters be sure to activate them under Settings/Visual Composer/General Settings.', 'js_composer' ),
+			'dependency' => array(
+				'element' => 'source',
+				'is_empty' => true,
+			),
 		),
 		array(
 			'type' => 'vc_link',
@@ -3644,20 +3882,13 @@ vc_map( array(
 					'font_size',
 					'line_height',
 					'color',
-					//'font_style_italic'
-					//'font_style_bold'
-					//'font_family'
-
 					'tag_description' => __( 'Select element tag.', 'js_composer' ),
 					'text_align_description' => __( 'Select text alignment.', 'js_composer' ),
 					'font_size_description' => __( 'Enter font size.', 'js_composer' ),
 					'line_height_description' => __( 'Enter line height.', 'js_composer' ),
 					'color_description' => __( 'Select heading color.', 'js_composer' ),
-					//'font_style_description' => __('Put your description here','js_composer'),
-					//'font_family_description' => __('Put your description here','js_composer'),
 				),
 			),
-			// 'description' => __( '', 'js_composer' ),
 		),
 		array(
 			'type' => 'checkbox',
@@ -3670,17 +3901,8 @@ vc_map( array(
 			'type' => 'google_fonts',
 			'param_name' => 'google_fonts',
 			'value' => 'font_family:Abril%20Fatface%3Aregular|font_style:400%20regular%3A400%3Anormal',
-			// default
-			//'font_family:'.rawurlencode('Abril Fatface:400').'|font_style:'.rawurlencode('400 regular:400:normal')
-			// this will override 'settings'. 'font_family:'.rawurlencode('Exo:100,100italic,200,200italic,300,300italic,regular,italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic').'|font_style:'.rawurlencode('900 bold italic:900:italic'),
 			'settings' => array(
-				//'no_font_style' // Method 1: To disable font style
-				//'no_font_style'=>true // Method 2: To disable font style
 				'fields' => array(
-					//'font_family' => 'Abril Fatface:regular',
-					//'Exo:100,100italic,200,200italic,300,300italic,regular,italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic',// Default font family and all available styles to fetch
-					//'font_style' => '400 regular:400:normal',
-					// Default font style. Name:weight:style, example: "800 bold regular:800:normal"
 					'font_family_description' => __( 'Select font family.', 'js_composer' ),
 					'font_style_description' => __( 'Select font styling.', 'js_composer' )
 				)
@@ -3689,7 +3911,6 @@ vc_map( array(
 				'element' => 'use_theme_fonts',
 				'value_not_equal_to' => 'yes',
 			),
-			// 'description' => __( '', 'js_composer' ),
 		),
 		array(
 			'type' => 'textfield',
@@ -3701,7 +3922,6 @@ vc_map( array(
 			'type' => 'css_editor',
 			'heading' => __( 'CSS box', 'js_composer' ),
 			'param_name' => 'css',
-			// 'description' => __( 'Style particular content element differently - add a class name and refer to it in custom CSS.', 'js_composer' ),
 			'group' => __( 'Design Options', 'js_composer' )
 		)
 	),
@@ -3716,16 +3936,15 @@ $post_types = get_post_types( array() );
 $post_types_list = array();
 if ( is_array( $post_types ) && ! empty( $post_types ) ) {
 	foreach ( $post_types as $post_type ) {
-		if ( $post_type !== 'revision' && $post_type !== 'nav_menu_item'/* && $post_type !== 'attachment'*/ ) {
+		if ( $post_type !== 'revision' && $post_type !== 'nav_menu_item' ) {
 			$label = ucfirst( $post_type );
-			$post_types_list[] = array( $post_type, __( $label, 'js_composer' ) );
+			$post_types_list[] = array( $post_type, $label );
 		}
 	}
 }
 $post_types_list[] = array( 'custom', __( 'Custom query', 'js_composer' ) );
 $post_types_list[] = array( 'ids', __( 'List of IDs', 'js_composer' ) );
 
-// $taxonomies_list = array();
 $taxonomies_for_filter = array();
 
 if ( 'vc_edit_form' === vc_post_param( 'action' ) ) {
@@ -3739,26 +3958,21 @@ if ( 'vc_edit_form' === vc_post_param( 'action' ) ) {
 	}
 }
 
-/*
-$grid_cols_list = array();
-for( $i=2; $i<=12; $i++ ) {
-	$grid_cols_list[__( $i . ' columns', 'js_composer' )] = (string)$i;
-}*/
 $grid_cols_list = array(
-	//__( '12 items per row') => 1,
 	array( 'label' => "6", 'value' => 2 ),
 	array( 'label' => "4", 'value' => 3 ),
 	array( 'label' => "3", 'value' => 4 ),
 	array( 'label' => "2", 'value' => 6 ),
 	array( 'label' => "1", 'value' => 12 ),
 );
-$grid_params = array(
 
+$grid_params = array(
 	array(
 		'type' => 'dropdown',
 		'heading' => __( 'Data source', 'js_composer' ),
 		'param_name' => 'post_type',
 		'value' => $post_types_list,
+		'save_always' => true,
 		'description' => __( 'Select content type for your grid.', 'js_composer' )
 	),
 	array(
@@ -3774,7 +3988,6 @@ $grid_params = array(
 		'dependency' => array(
 			'element' => 'post_type',
 			'value' => array( 'ids' ),
-			//'callback' => 'vc_grid_include_dependency_callback',
 		),
 	),
 	// Custom query tab
@@ -3794,11 +4007,7 @@ $grid_params = array(
 		'param_name' => 'taxonomies',
 		'settings' => array(
 			'multiple' => true,
-			// is multiple values allowed? default false
-			// 'sortable' => true, // is values are sortable? default false
 			'min_length' => 1,
-			// min length to start search -> default 2
-			// 'no_hide' => true, // In UI after select doesn't hide an select list, default false
 			'groups' => true,
 			// In UI show results grouped by groups, default false
 			'unique_values' => true,
@@ -3809,7 +4018,6 @@ $grid_params = array(
 			// delay for search. default 500
 			'auto_focus' => true,
 			// auto focus input, default true
-			// 'values' => $taxonomies_list,
 		),
 		'param_holder_class' => 'vc_not-for-custom',
 		'description' => __( 'Enter categories, tags or custom taxonomies.', 'js_composer' ),
@@ -3880,18 +4088,18 @@ $grid_params = array(
 		'heading' => __( 'Gap', 'js_composer' ),
 		'param_name' => 'gap',
 		'value' => array(
-			__( '0px', 'js_composer' ) => '0',
-			__( '1px', 'js_composer' ) => '1',
-			__( '2px', 'js_composer' ) => '2',
-			__( '3px', 'js_composer' ) => '3',
-			__( '4px', 'js_composer' ) => '4',
-			__( '5px', 'js_composer' ) => '5',
-			__( '10px', 'js_composer' ) => '10',
-			__( '15px', 'js_composer' ) => '15',
-			__( '20px', 'js_composer' ) => '20',
-			__( '25px', 'js_composer' ) => '25',
-			__( '30px', 'js_composer' ) => '30',
-			__( '35px', 'js_composer' ) => '35',
+			'0px' => '0',
+			'1px' => '1',
+			'2px' => '2',
+			'3px' => '3',
+			'4px' => '4',
+			'5px' => '5',
+			'10px' => '10',
+			'15px' => '15',
+			'20px' => '20',
+			'25px' => '25',
+			'30px' => '30',
+			'35px' => '35',
 		),
 		'std' => '30',
 		'description' => __( 'Select gap between grid elements.', 'js_composer' ),
@@ -3913,7 +4121,6 @@ $grid_params = array(
 			__( 'Menu order/Page Order', 'js_composer' ) => 'menu_order',
 			__( 'Meta value', 'js_composer' ) => 'meta_value',
 			__( 'Meta value number', 'js_composer' ) => 'meta_value_num',
-			// __('Matches same order you passed in via the 'include' parameter.', 'js_composer') => 'post__in'
 			__( 'Random order', 'js_composer' ) => 'rand',
 		),
 		'description' => __( 'Select order type. If "Meta value" or "Meta value Number" is chosen then meta key is required.', 'js_composer' ),
@@ -3926,7 +4133,7 @@ $grid_params = array(
 	),
 	array(
 		'type' => 'dropdown',
-		'heading' => __( 'Sorting', 'js_composer' ),
+		'heading' => __( 'Sort order', 'js_composer' ),
 		'param_name' => 'order',
 		'group' => __( 'Data Settings', 'js_composer' ),
 		'value' => array(
@@ -3991,6 +4198,7 @@ $grid_params = array(
 			'element' => 'show_filter',
 			'value' => array( 'yes' ),
 		),
+		'save_always' => true,
 		'description' => __( 'Select filter source.', 'js_composer' ),
 	),
 	array(
@@ -4000,10 +4208,8 @@ $grid_params = array(
 		'settings' => array(
 			'multiple' => true,
 			// is multiple values allowed? default false
-			// 'sortable' => true, // is values are sortable? default false
 			'min_length' => 1,
 			// min length to start search -> default 2
-			// 'no_hide' => true, // In UI after select doesn't hide an select list, default false
 			'groups' => true,
 			// In UI show results grouped by groups, default false
 			'unique_values' => true,
@@ -4014,7 +4220,6 @@ $grid_params = array(
 			// delay for search. default 500
 			'auto_focus' => true,
 			// auto focus input, default true
-			// 'values' => $taxonomies_list,
 		),
 		'description' => __( 'Enter categories, tags won\'t be shown in the filters list', 'js_composer' ),
 		'dependency' => array(
@@ -4284,27 +4489,6 @@ $grid_params = array(
 		),
 		'description' => __( 'Select "animation out" for page transition.', 'js_composer' ),
 	),
-	/*
-	array(
-		'type' => 'dropdown',
-		'heading' => __( 'Element style', 'js_composer' ),
-		'param_name' => 'content',
-		'value' => array(
-			__( 'None', 'js_composer' ) => 'none',
-			__( 'Fade in', 'js_composer' ) => 'fadein',
-			__( 'Scale in', 'js_composer' ) => 'imageScale',
-			__( 'Slide from bottom', 'js_composer') => 'slideBottom',
-			__( 'Slide from right', 'js_composer' ) => 'slideFromRight',
-			__( 'Flip mode', 'js_composer' ) => 'flipCenter',
-			__( 'imageScaleRotate', 'js_composer') => 'imageScaleRotate',
-			__('Blur in' , 'js_composer') => 'blurIn',
-			__('Blur border in' , 'js_composer') => 'blurBorderIn',
-			__( 'Horizontal', 'js_composer' ) => 'horizontal'
-
-		),
-		'group' => __( 'Item Design', 'js_composer' ),
-	),
-	*/
 	array(
 		'type' => 'vc_grid_item',
 		'heading' => __( 'Grid element template', 'js_composer' ),
@@ -4317,7 +4501,19 @@ $grid_params = array(
 	array(
 		'type' => 'vc_grid_id',
 		'param_name' => 'grid_id',
-	)
+	),
+	array(
+		'type' => 'textfield',
+		'heading' => __( 'Extra class name', 'js_composer' ),
+		'param_name' => 'el_class',
+		'description' => __( 'Style particular content element differently - add a class name and refer to it in custom CSS.', 'js_composer' )
+	),
+	array(
+		'type' => 'css_editor',
+		'heading' => __( 'CSS box', 'js_composer' ),
+		'param_name' => 'css',
+		'group' => __( 'Design Options', 'js_composer' )
+	),
 );
 vc_map( array(
 	'name' => __( 'Post Grid', 'js_composer' ),
@@ -4338,7 +4534,6 @@ $media_grid_params = array(
 	$grid_params[6],
 	$grid_params[8],
 	$grid_params[9],
-	// $grid_params[20], filter size
 	$grid_params[21],
 	$grid_params[22],
 	$grid_params[23],
@@ -4362,7 +4557,13 @@ $media_grid_params = array(
 	array(
 		'type' => 'vc_grid_id',
 		'param_name' => 'grid_id',
-	)
+	),
+	array(
+		'type' => 'css_editor',
+		'heading' => __( 'CSS box', 'js_composer' ),
+		'param_name' => 'css',
+		'group' => __( 'Design Options', 'js_composer' )
+	),
 );
 $media_grid_params[4]['std'] = '5';
 vc_map( array(
@@ -4395,492 +4596,6 @@ vc_map( array(
 	'description' => __( 'Masonry media grid from Media Library', 'js_composer' ),
 	'params' => $masonry_media_grid_params
 ) );
-/*
-vc_map( array(
-	'name' => __( 'Grid', 'js_composer' ),
-	'base' => 'vc_grid_old',
-	'icon' => 'icon-wpb-ui-grid',
-	'show_settings_on_create' => true,
-	'category' => __( 'Content', 'js_composer' ),
-	'description' => __( 'All in one grid element', 'js_composer' ),
-	'params' => array(
-		array(
-			'type' => 'params_preset',
-			'heading' => __( 'Source', 'js_composer' ),
-			'param_name' => 'source',
-			'options' => array(),
-			'description' => __( 'Predefined sources', 'js_composer' ),
-		),
-		array(
-			'type' => 'params_preset',
-			'heading' => __( 'Design', 'js_composer' ),
-			'param_name' => 'design',
-			'options' => array(),
-			'description' => __( 'Predefined sources', 'js_composer' ),
-		),
-		// Design options
-		array(
-			'type' => 'dropdown',
-			'heading' => __( 'Layout', 'js_composer' ),
-			'param_name' => 'layout',
-			'value' => array(
-				__( 'Basic', 'js_composer' ) => 'basic',
-				__( 'Masonry', 'js_composer' ) => 'masonry',
-				//__( 'Packery', 'js_composer' ) => 'packery',
-			),
-			'group' => __( 'Design', 'js_composer' ),
-		),
-		array(
-			'type' => 'checkbox',
-			'heading' => __( 'Grid in full width', 'js_composer' ),
-			'param_name' => 'full_width',
-			'value' => array(
-				__( 'Yes please', 'js_composer' ) => 'yes',
-			),
-			'group' => __( 'Design', 'js_composer' ),
-		),
-		array(
-			'type' => 'dropdown',
-			'heading' => __( 'Element width', 'js_composer' ),
-			'param_name' => 'element_width',
-			'value' => $grid_cols_list,
-			'std' => '4',
-			'group' => __( 'Design', 'js_composer' )
-		),
-		array(
-			'type' => 'dropdown',
-			'heading' => __( 'Gap', 'js_composer' ),
-			'param_name' => 'gap',
-			'value' => array(
-				__( '0px', 'js_composer' ) => '0',
-				__( '1px', 'js_composer' ) => '1',
-				__( '2px', 'js_composer' ) => '2',
-				__( '3px', 'js_composer' ) => '3',
-				__( '4px', 'js_composer' ) => '4',
-				__( '5px', 'js_composer' ) => '5',
-				__( '10px', 'js_composer' ) => '10',
-				__( '15px', 'js_composer' ) => '15',
-				__( '20px', 'js_composer' ) => '20',
-				__( '25px', 'js_composer' ) => '25',
-				__( '30px', 'js_composer' ) => '30',
-				__( '35px', 'js_composer' ) => '35',
-			),
-			'description' => __( '', 'js_composer' ),
-			'group' => __( 'Design', 'js_composer' ),
-		),
-		array(
-			'type' => 'dropdown',
-			'heading' => __( 'Filter', 'js_composer' ),
-			'param_name' => 'filter',
-			'value' => array(
-				__( 'None', 'js_composer' ) => '',
-				__( 'Default', 'js_composer' ) => 'default',
-				__( 'Bordered', 'js_composer' ) => 'bordered',
-				__( 'Filled', 'js_composer' ) => 'filled',
-				__( 'Dropdown', 'js_composer' ) => 'dropdown',
-			),
-			'group' => __( 'Design', 'js_composer' ),
-		),
-		array(
-			'type' => 'dropdown',
-			'heading' => __( 'Filter align', 'js_composer' ),
-			'param_name' => 'filter_align',
-			'value' => array(
-				__( 'Center', 'js_composer' ) => 'center',
-				__( 'Left', 'js_composer' ) => 'left',
-				__( 'Right', 'js_composer' ) => 'right',
-			),
-			'group' => __( 'Design', 'js_composer' ),
-			'dependency' => array(
-				'element' => 'filter',
-				'value_not_equal_to' => array( 'none', '' ), // New dependency
-			),
-		),
-		array(
-			'type' => 'dropdown',
-			'heading' => __( 'Filter color', 'js_composer' ),
-			'param_name' => 'filter_color',
-			'value' => getVcShared( 'colors' ),
-			'param_holder_class' => 'vc_colored-dropdown',
-			'group' => __( 'Design', 'js_composer' ),
-			'dependency' => array(
-				'element' => 'filter',
-				'value_not_equal_to' => array( 'none', '' ), // New dependency
-			),
-		),
-		array(
-			'type' => 'dropdown',
-			'heading' => __( 'Grid Display Style', 'js_composer' ),
-			'param_name' => 'style',
-			'value' => array(
-				__( 'Show all', 'js_composer' ) => 'all',
-				__( 'Lazy loading', 'js_composer' ) => 'lazy',
-				__( 'Load more button', 'js_composer' ) => 'load-more',
-				__( 'Pagination', 'js_composer' ) => 'pagination',
-			),
-			'group' => __( 'Design', 'js_composer' ),
-		),
-		array(
-			'type' => 'textfield',
-			'heading' => __( 'Posts per page', 'js_composer' ),
-			'param_name' => 'posts_per_page',
-			'description' => __( '', 'js_composer' ),
-			'group' => __( 'Design', 'js_composer' ),
-			'value' => '10',
-			'dependency' => array(
-				'element' => 'style',
-				'value' => array( 'lazy', 'load-more', 'pagination' ),
-			),
-		),
-		array(
-			'type' => 'dropdown',
-			'heading' => __( 'Button style', 'js_composer' ),
-			'param_name' => 'button_style',
-			'value' => getVcShared( 'button styles' ),
-			'param_holder_class' => 'vc_colored-dropdown',
-			'group' => __( 'Design', 'js_composer' ),
-			'dependency' => array(
-				'element' => 'style',
-				'value' => array( 'load-more' ),
-			),
-		),
-		array(
-			'type' => 'dropdown',
-			'heading' => __( 'Button color', 'js_composer' ),
-			'param_name' => 'button_color',
-			'value' => getVcShared( 'colors' ),
-			'param_holder_class' => 'vc_colored-dropdown',
-			'group' => __( 'Design', 'js_composer' ),
-			'dependency' => array(
-				'element' => 'style',
-				'value' => array( 'load-more' ),
-			),
-		),
-		array(
-			'type' => 'dropdown',
-			'heading' => __( 'Arrows design', 'js_composer' ),
-			'param_name' => 'arrows_design',
-			'value' => array(
-				__( 'None', 'js_composer' ) => 'none',
-				__( 'fa-angle', 'js_composer' ) => 'fa fa-angle-left',
-				__( 'fa-arrow-circle', 'js_composer' ) => 'fa fa-arrow-circle-left',
-				__( 'fa-arrow', 'js_composer' ) => 'fa fa-arrow-left',
-				__( 'fa-caret', 'js_composer' ) => 'fa fa-caret-left',
-				__( 'fa-chevron-circle', 'js_composer' ) => 'fa fa-chevron-circle-left',
-				__( 'fa-chevron', 'js_composer' ) => 'fa fa-chevron-left',
-				__( 'fa-arrow-circle-o', 'js_composer' ) => 'fa fa-arrow-circle-o-left',
-				__( 'fa-angle-double', 'js_composer' ) => 'fa fa-angle-double-left ',
-			),
-			'group' => __( 'Design', 'js_composer' ),
-			'dependency' => array(
-				'element' => 'style',
-				'value' => array( 'pagination' ),
-			),
-		),
-		array(
-			'type' => 'dropdown',
-			'heading' => __( 'Arrows position', 'js_composer' ),
-			'param_name' => 'arrows_position',
-			'value' => array(
-				__( 'Inside Wrapper', 'js_composer' ) => 'inside',
-				__( 'Outside Wrapper', 'js_composer' ) => 'outside',
-			),
-			'group' => __( 'Design', 'js_composer' ),
-			'dependency' => array(
-				'element' => 'arrows_design',
-				'value_not_equal_to' => array( 'none' ), // New dependency
-			),
-		),
-		array(
-			'type' => 'dropdown',
-			'heading' => __( 'Arrows color', 'js_composer' ),
-			'param_name' => 'arrows_color',
-			'value' => getVcShared( 'colors' ),
-			'param_holder_class' => 'vc_colored-dropdown',
-			'group' => __( 'Design', 'js_composer' ),
-			'dependency' => array(
-				'element' => 'arrows_design',
-				'value_not_equal_to' => array( 'none' ), // New dependency
-			),
-		),
-		array(
-			'type' => 'dropdown',
-			'heading' => __( 'Paging design', 'js_composer' ),
-			'param_name' => 'paging_design',
-			'value' => array(
-				__( 'None', 'js_composer' ) => 'none',
-				__( 'Square Dots', 'js_composer' ) => 'square_dots',
-				__( 'Radio Dots', 'js_composer' ) => 'radio_dots',
-				__( 'Point Dots', 'js_composer' ) => 'point_dots',
-				__( 'Fill Square Dots', 'js_composer' ) => 'fill_square_dots',
-				__( 'Rounded Fill Square Dots', 'js_composer' ) => 'round_fill_square_dots',
-				__( 'Pagination Default', 'js_composer' ) => 'pagination_default',
-				__( 'Pagination Rounded', 'js_composer' ) => 'pagination_rounded',
-				__( 'Pagination Square', 'js_composer' ) => 'pagination_square',
-				__( 'Pagination Rounded Square', 'js_composer' ) => 'pagination_rounded_square',
-			),
-			'group' => __( 'Design', 'js_composer' ),
-			'dependency' => array(
-				'element' => 'style',
-				'value' => array( 'pagination' ),
-			),
-		),
-		array(
-			'type' => 'dropdown',
-			'heading' => __( 'Paging color', 'js_composer' ),
-			'param_name' => 'paging_color',
-			'value' => getVcShared( 'colors' ),
-			'param_holder_class' => 'vc_colored-dropdown',
-			'group' => __( 'Design', 'js_composer' ),
-			'dependency' => array(
-				'element' => 'paging_design',
-				'value_not_equal_to' => array( 'none' ), // New dependency
-			),
-		),
-		array(
-			'type' => 'checkbox',
-			'heading' => __( 'Loop', 'js_composer' ),
-			'param_name' => 'loop',
-			'description' => __( '', 'js_composer' ),
-			'value' => array( __( 'Yes', 'js_composer' ) => 'yes' ),
-			'group' => __( 'Design', 'js_composer' ),
-			'dependency' => array(
-				'element' => 'style',
-				'value' => array( 'pagination' ),
-			),
-		),
-		array(
-			'type' => 'textfield',
-			'heading' => __( 'Autoplay time', 'js_composer' ),
-			'param_name' => 'autoplay',
-			'value' => '-1',
-			'description' => __( 'Default -1. Disabled autoplay.', 'js_composer' ),
-			'group' => __( 'Design', 'js_composer' ),
-			'dependency' => array(
-				'element' => 'style',
-				'value' => array( 'pagination' ),
-			),
-		),
-		array(
-			'type' => 'animation_style',
-			'heading' => __( 'Animation In', 'js_composer' ),
-			'param_name' => 'paging_animation_in',
-			'group' => __( 'Design', 'js_composer' ),
-			'settings' => array(
-				'type' => array( 'in', 'other' ),
-			),
-			'dependency' => array(
-				'element' => 'style',
-				'value' => array( 'pagination' ),
-			),
-		),
-		array(
-			'type' => 'animation_style',
-			'heading' => __( 'Animation Out', 'js_composer' ),
-			'param_name' => 'paging_animation_out',
-			'group' => __( 'Design', 'js_composer' ),
-			'settings' => array(
-				'type' => array( 'out', 'other' ),
-			),
-			'dependency' => array(
-				'element' => 'style',
-				'value' => array( 'pagination' ),
-			),
-		),
-		// Source options
-		array(
-			'type' => 'dropdown',
-			'heading' => __( 'Content', 'js_composer' ),
-			'param_name' => 'post_type',
-			'value' => $post_types_list,
-			'group' => __( 'Source', 'js_composer' ),
-		),
-		array(
-			'type' => 'textarea_safe',
-			'heading' => __( 'Custom query', 'js_composer' ),
-			'param_name' => 'custom_query',
-			'description' => __( '', 'js_composer' ),
-			'group' => __( 'Source', 'js_composer' ),
-			'dependency' => array(
-				'element' => 'post_type',
-				'value' => array( 'custom' ),
-				'callback' => 'vc_grid_custom_query_dependency',
-			),
-		),
-		array(
-			'type' => 'dropdown',
-			'heading' => __( 'Filter source', 'js_composer' ),
-			'param_name' => 'filter_source',
-			'value' => $taxonomies_for_filter,
-			'group' => __( 'Source', 'js_composer' ),
-			'param_holder_class' => 'vc_not-for-custom',
-		),
-		array(
-			'type' => 'autocomplete',
-			'heading' => __( 'Taxonomies', 'js_composer' ),
-			'param_name' => 'taxonomies',
-			'settings' => array(
-				'multiple' => true,
-				// is multiple values allowed? default false
-				// 'sortable' => true, // is values are sortable? default false
-				'min_length' => 1,
-				// min length to start search -> default 2
-				// 'no_hide' => true, // In UI after select doesn't hide an select list, default false
-				'groups' => true,
-				// In UI show results grouped by groups, default false
-				'unique_values' => true,
-				// In UI show results except selected. NB! You should manually check values in backend, default false
-				'display_inline' => true,
-				// In UI show results inline view, default false (each value in own line)
-				'delay' => 500,
-				// delay for search. default 500
-				'auto_focus' => true,
-				// auto focus input, default true
-				'values' => $taxonomies_list,
-			),
-			'group' => __( 'Source', 'js_composer' ),
-			'param_holder_class' => 'vc_not-for-custom',
-
-		),
-		array(
-			'type' => 'dropdown',
-			'heading' => __( 'Order by', 'js_composer' ),
-			'param_name' => 'orderby',
-			'value' => array(
-				__( 'Date', 'js_composer' ) => 'date',
-				__( 'Order by post id', 'js_composer' ) => 'ID',
-				__( 'Author', 'js_composer' ) => 'author',
-				__( 'Title', 'js_composer' ) => 'title',
-				__( 'Last modified date', 'js_composer' ) => 'modified',
-				__( 'Post/page parent id', 'js_composer' ) => 'parent',
-				__( 'Number of comments', 'js_composer' ) => 'comment_count',
-				__( 'Menu order/Order by Page Order', 'js_composer' ) => 'menu_order',
-				__( 'Meta value', 'js_composer' ) => 'meta_value',
-				__( 'Meta value number', 'js_composer' ) => 'meta_value_num',
-				// __('Matches same order you passed in via the 'include' parameter.', 'js_composer') => 'post__in'
-				__( 'Random order', 'js_composer' ) => 'rand',
-			),
-			'description' => __( 'Note that meta key must also be present if "Meta value" or "Meta value Number" is set.', 'js_composer' ),
-			'group' => __( 'Source', 'js_composer' ),
-			'param_holder_class' => 'vc_not-for-custom',
-
-		),
-		array(
-			'type' => 'dropdown',
-			'heading' => __( 'Order by', 'js_composer' ),
-			'param_name' => 'order',
-			'group' => __( 'Source', 'js_composer' ),
-			'value' => array(
-				__( 'Ascending', 'js_composer' ) => 'ASC',
-				__( 'Descending', 'js_composer' ) => 'DSC',
-			),
-			'param_holder_class' => 'vc_not-for-custom',
-
-		),
-		array(
-			'type' => 'textfield',
-			'heading' => __( 'Meta key', 'js_composer' ),
-			'param_name' => 'meta_key',
-			'description' => __( '', 'js_composer' ),
-			'group' => __( 'Source', 'js_composer' ),
-			'dependency' => array(
-				'element' => 'orderby',
-				'value' => array( 'meta_value', 'meta_value_num' ),
-			),
-			'param_holder_class' => 'vc_not-for-custom',
-
-		),
-		array(
-			'type' => 'textfield',
-			'heading' => __( 'Limit', 'js_composer' ),
-			'param_name' => 'limit',
-			'description' => __( '', 'js_composer' ),
-			'group' => __( 'Source', 'js_composer' ),
-			'param_holder_class' => 'vc_not-for-custom'
-
-		),
-		array(
-			'type' => 'textfield',
-			'heading' => __( 'Offset', 'js_composer' ),
-			'param_name' => 'offset',
-			'description' => __( '', 'js_composer' ),
-			'group' => __( 'Source', 'js_composer' ),
-			'param_holder_class' => 'vc_not-for-custom',
-
-		),
-		array(
-			'type' => 'autocomplete',
-			'heading' => __( 'Include', 'js_composer' ),
-			'param_name' => 'include',
-			'description' => __( '', 'js_composer' ),
-			'group' => __( 'Source', 'js_composer' ),
-			'settings' => array(
-				'multiple' => true,
-				// is multiple values allowed? default false
-				// 'sortable' => true, // is values are sortable? default false
-				'min_length' => 2,
-				// min length to start search -> default 2
-				// 'no_hide' => true, // In UI after select doesn't hide an select list, default false
-				'groups' => true,
-				// In UI show results grouped by groups, default false
-				'unique_values' => true,
-				// In UI show results except selected. NB! You should manually check values in backend, default false
-				'display_inline' => true,
-				// In UI show results inline view, default false (each value in own line)
-				'delay' => 500,
-				// delay for search. default 500
-				'auto_focus' => true,
-				// auto focus input, default true
-			),
-			'dependency' => array(
-				'element' => 'post_type',
-				'not_empty' => true,
-				'callback' => 'vc_grid_include_dependency_callback',
-			),
-			'param_holder_class' => 'vc_not-for-custom',
-
-		),
-		array(
-			'type' => 'autocomplete',
-			'heading' => __( 'Exclude', 'js_composer' ),
-			'param_name' => 'exclude',
-			'description' => __( '', 'js_composer' ),
-			'group' => __( 'Source', 'js_composer' ),
-			'settings' => array(
-				'multiple' => true,
-				// is multiple values allowed? default false
-				// 'sortable' => true, // is values are sortable? default false
-				'min_length' => 2,
-				// min length to start search -> default 2
-				// 'no_hide' => true, // In UI after select doesn't hide an select list, default false
-				'groups' => true,
-				// In UI show results grouped by groups, default false
-				'unique_values' => true,
-				// In UI show results except selected. NB! You should manually check values in backend, default false
-				'display_inline' => true,
-				// In UI show results inline view, default false (each value in own line)
-				'delay' => 500,
-				// delay for search. default 500
-				'auto_focus' => true,
-				// auto focus input, default true
-			),
-			'dependency' => array(
-				'element' => 'post_type',
-				'not_empty' => true,
-				'callback' => 'vc_grid_exclude_dependency_callback',
-			),
-			'param_holder_class' => 'vc_not-for-custom',
-		),
-		array(
-			'type' => 'vc_grid_element',
-			'heading' => __( 'Builder', 'js_composer' ),
-			'param_name' => 'content',
-			'description' => __( '', 'js_composer' ),
-			'group' => __( 'Item Design', 'js_composer' ),
-		),
-	),
-) );
-*/
 
 add_filter( 'vc_autocomplete_vc_basic_grid_include_callback',
 	'vc_include_field_search', 10, 1 ); // Get suggestion(find). Must return an array
@@ -4977,13 +4692,10 @@ function vc_search_by_title_only( $search, &$wp_query ) {
 		$n = ! empty( $q['exact'] ) ? '' : '%';
 		$search =
 		$searchand = '';
-		//die(print_r(array($q,$search),true));
 		foreach ( (array) $q['search_terms'] as $term ) {
-			//die($term);
 			$term = $wpdb->esc_like( $term );
 			$like = $n . $term . $n;
 			$search .= $wpdb->prepare( "{$searchand}($wpdb->posts.post_title LIKE %s)", $like );
-			//die($search);
 			$searchand = ' AND ';
 		}
 		if ( ! empty( $search ) ) {
@@ -4994,7 +4706,6 @@ function vc_search_by_title_only( $search, &$wp_query ) {
 		}
 	}
 
-	//die($search);
 	return $search;
 }
 
@@ -5009,7 +4720,7 @@ function vc_include_field_search( $search_string ) {
 	$args = array( 's' => $query, 'post_type' => 'any' );
 	$args['vc_search_by_title_only'] = true;
 	$args['numberposts'] = - 1;
-	if ( strlen( $args['s'] ) == 0 ) {
+	if ( strlen( $args['s'] ) === 0 ) {
 		unset( $args['s'] );
 	}
 	add_filter( 'posts_search', 'vc_search_by_title_only', 500, 2 );
@@ -5065,7 +4776,7 @@ function vc_exclude_field_search( $data_arr ) {
 	);
 	$args['vc_search_by_title_only'] = true;
 	$args['numberposts'] = - 1;
-	if ( strlen( $args['s'] ) == 0 ) {
+	if ( strlen( $args['s'] ) === 0 ) {
 		unset( $args['s'] );
 	}
 	add_filter( 'posts_search', 'vc_search_by_title_only', 500, 2 );
@@ -5105,7 +4816,7 @@ class VcSharedLibrary {
 	 * @var array
 	 */
 	private static $colors = array(
-		'Blue' => 'blue', // Why __( 'Blue', 'js_composer' ) doesn't work?
+		'Blue' => 'blue',
 		'Turquoise' => 'turquoise',
 		'Pink' => 'pink',
 		'Violet' => 'violet',
@@ -5228,7 +4939,11 @@ class VcSharedLibrary {
 		'80%' => '80',
 		'70%' => '70',
 		'60%' => '60',
-		'50%' => '50'
+		'50%' => '50',
+		'40%' => '40',
+		'30%' => '30',
+		'20%' => '20',
+		'10%' => '10'
 	);
 
 	/**
@@ -5267,17 +4982,33 @@ class VcSharedLibrary {
 		'Outline' => 'vc_box_outline',
 		'Shadow' => 'vc_box_shadow',
 		'Bordered shadow' => 'vc_box_shadow_border',
-		'3D Shadow' => 'vc_box_shadow_3d',
-		'Round' => 'vc_box_circle', //new
-		'Round Border' => 'vc_box_border_circle', //new
-		'Round Outline' => 'vc_box_outline_circle', //new
-		'Round Shadow' => 'vc_box_shadow_circle', //new
-		'Round Border Shadow' => 'vc_box_shadow_border_circle', //new
-		'Circle' => 'vc_box_circle_2', //new
-		'Circle Border' => 'vc_box_border_circle_2', //new
-		'Circle Outline' => 'vc_box_outline_circle_2', //new
-		'Circle Shadow' => 'vc_box_shadow_circle_2', //new
-		'Circle Border Shadow' => 'vc_box_shadow_border_circle_2' //new
+		'3D Shadow' => 'vc_box_shadow_3d'
+	);
+
+	/**
+	 * Round box styles
+	 *
+	 * @var array
+	 */
+	public static $round_box_styles = array(
+		'Round' => 'vc_box_circle',
+		'Round Border' => 'vc_box_border_circle',
+		'Round Outline' => 'vc_box_outline_circle',
+		'Round Shadow' => 'vc_box_shadow_circle',
+		'Round Border Shadow' => 'vc_box_shadow_border_circle'
+	);
+
+	/**
+	 * Circle box styles
+	 *
+	 * @var array
+	 */
+	public static $circle_box_styles = array(
+		'Circle' => 'vc_box_circle_2',
+		'Circle Border' => 'vc_box_border_circle_2',
+		'Circle Outline' => 'vc_box_outline_circle_2',
+		'Circle Shadow' => 'vc_box_shadow_circle_2',
+		'Circle Border Shadow' => 'vc_box_shadow_border_circle_2'
 	);
 
 	/**
@@ -5365,10 +5096,34 @@ class VcSharedLibrary {
 	}
 
 	/**
+	 * Get list of box styles
+	 *
+	 * Possible $groups values:
+	 * - default
+	 * - round
+	 * - circle
+	 *
+	 * @param array $groups Array of groups to include. If not specified, return all
+	 *
 	 * @return array
 	 */
-	public static function getBoxStyles() {
-		return self::$box_styles;
+	public static function getBoxStyles( $groups = array() ) {
+		$list = array();
+		$groups = (array) $groups;
+
+		if ( ! $groups || in_array( 'default', $groups ) ) {
+			$list += self::$box_styles;
+		}
+
+		if ( ! $groups || in_array( 'round', $groups ) ) {
+			$list += self::$round_box_styles;
+		}
+
+		if ( ! $groups || in_array( 'cirlce', $groups ) ) {
+			$list += self::$circle_box_styles;
+		}
+
+		return $list;
 	}
 
 	public static function getColorsDashed() {
@@ -5396,7 +5151,6 @@ class VcSharedLibrary {
 	}
 }
 
-//VcSharedLibrary::getColors();
 /**
  * @param string $asset
  *
@@ -5450,6 +5204,10 @@ function getVcShared( $asset = '' ) {
 
 		case 'single image styles':
 			return VcSharedLibrary::getBoxStyles();
+			break;
+
+		case 'single image external styles':
+			return VcSharedLibrary::getBoxStyles( array( 'default', 'round' ) );
 			break;
 
 		case 'toggle styles':

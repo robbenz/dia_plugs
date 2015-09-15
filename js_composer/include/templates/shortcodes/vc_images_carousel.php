@@ -17,6 +17,7 @@
  * @var $hide_prev_next_buttons
  * @var $speed
  * @var $partial_view
+ * @var $css
  * Shortcode class
  * @var $this WPBakeryShortCode_VC_images_carousel
  */
@@ -31,7 +32,7 @@ $el_start = '';
 $el_end = '';
 $slides_wrap_start = '';
 $slides_wrap_end = '';
-$pretty_rand = $onclick == 'link_image' ? ' rel="prettyPhoto[rel-' . get_the_ID() . '-' . rand() . ']"' : '';
+$pretty_rand = $onclick === 'link_image' ? ' rel="prettyPhoto[rel-' . get_the_ID() . '-' . rand() . ']"' : '';
 
 wp_enqueue_script( 'vc_carousel_js' );
 wp_enqueue_style( 'vc_carousel_css' );
@@ -39,8 +40,6 @@ if ( 'link_image' === $onclick ) {
 	wp_enqueue_script( 'prettyphoto' );
 	wp_enqueue_style( 'prettyphoto' );
 }
-
-$el_class = $this->getExtraClass( $el_class );
 
 if ( '' === $images ) {
 	$images = '-1,-2,-3';
@@ -52,7 +51,11 @@ if ( 'custom_link' === $onclick ) {
 
 $images = explode( ',', $images );
 $i = - 1;
-$css_class = apply_filters( VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, 'wpb_images_carousel wpb_content_element' . $el_class . ' vc_clearfix', $this->settings['base'], $atts );
+
+$class_to_filter = 'wpb_images_carousel wpb_content_element vc_clearfix';
+$class_to_filter .= vc_shortcode_custom_css_class( $css, ' ' ) . $this->getExtraClass( $el_class );
+$css_class = apply_filters( VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, $class_to_filter, $this->settings['base'], $atts );
+
 $carousel_id = 'vc_images-carousel-' . WPBakeryShortCode_VC_images_carousel::getCarouselIndex();
 $slider_width = $this->getSliderWidth( $img_size );
 ?>
@@ -73,7 +76,7 @@ $slider_width = $this->getSliderWidth( $img_size );
 					<li data-target="#<?php echo $carousel_id ?>" data-slide-to="<?php echo $z ?>"></li>
 				<?php endfor; ?>
 			</ol>
-		<?php endif; ?>
+		<?php endif ?>
 		<!-- Wrapper for slides -->
 		<div class="vc_carousel-inner">
 			<div class="vc_carousel-slideline">
@@ -108,7 +111,7 @@ $slider_width = $this->getSliderWidth( $img_size );
 									</a>
 								<?php else: ?>
 									<?php echo $thumbnail ?>
-								<?php endif; ?>
+								<?php endif ?>
 							</div>
 						</div>
 					<?php endforeach; ?>
@@ -123,7 +126,7 @@ $slider_width = $this->getSliderWidth( $img_size );
 			<a class="vc_right vc_carousel-control" href="#<?php echo $carousel_id ?>" data-slide="next">
 				<span class="icon-next"></span>
 			</a>
-		<?php endif; ?>
+		<?php endif ?>
 	</div>
-	</div><?php echo $this->endBlockComment( '.wpb_wrapper' ) ?>
-	</div><?php echo $this->endBlockComment( $this->getShortcode() ) ?>
+	</div>
+	</div>

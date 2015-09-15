@@ -8,7 +8,7 @@
  * ========================================================= */
 
 (function ( $ ) {
-	var InitGalleries = function () {
+	function InitGalleries() {
 		// TODO: Backbone style for view binding
 		$( '.gallery_widget_attached_images_list', this.$view ).unbind( 'click.removeImage' ).on( 'click.removeImage',
 			'a.icon-remove',
@@ -40,14 +40,15 @@
 				}
 			} );
 		} );
-	};
+	}
+
 	new InitGalleries();
 
 	var $tabs = $( '#vc_edit-form-tabs' );
 	if ( $tabs.length ) {
 		$( '.wpb-edit-form' ).addClass( 'vc_with-tabs' );
 		$tabs.find( '.vc_edit-form-tab-control' ).removeClass( 'vc_active' ).eq( 0 ).addClass( 'vc_active' );
-		$tabs.find( '.vc_edit-form-tab' ).removeClass( 'vc_active' ).eq( 0 ).addClass( 'vc_active' );
+		$tabs.find( '[data-vc-ui-element="panel-edit-element-tab"]' ).removeClass( 'vc_active' ).eq( 0 ).addClass( 'vc_active' );
 		$tabs.find( '.vc_edit-form-link' ).click( function ( e ) {
 			var $this = $( this );
 			e.preventDefault();

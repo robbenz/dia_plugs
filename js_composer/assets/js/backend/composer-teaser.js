@@ -140,7 +140,7 @@
 		},
 		toggle: function ( e ) {
 			var $target = $( e.currentTarget );
-			if ( $target.is( ':checked' ) ) {
+			if ( $target[0].checked ) {
 				this.$contructor_container.show();
 			} else {
 				this.$contructor_container.hide();
@@ -159,12 +159,12 @@
 					name: $control.val(),
 					link: 'none'
 				};
-			if ( data.name === 'image' ) {
+			if ( 'image' === data.name ) {
 				data.mode = 'featured';
-			} else if ( data.name === 'text' ) {
+			} else if ( 'text' === data.name ) {
 				data.mode = 'excerpt';
 			}
-			if ( $control.is( ':checked' ) ) {
+			if ( $control[0].checked ) {
 				this.createControl( data );
 			} else {
 				this.$list.find( '[data-control=' + data.name + ']' ).remove();
@@ -175,8 +175,7 @@
 		setLinkControl: function ( e ) {
 			e.preventDefault();
 			var $button = $( e.currentTarget ),
-				$control = $button.closest( '.vc_link-controls' ),
-				link_type = $button.data( 'link' );
+				$control = $button.closest( '.vc_link-controls' );
 			$control.find( '.vc_active-link' ).removeClass( 'vc_active-link' );
 			$button.addClass( 'vc_active-link' );
 			this.save();
@@ -193,23 +192,23 @@
 			this.updateContent( data );
 		},
 		removeData: function ( data ) {
-			if ( data.name === 'title' ) {
+			if ( 'title' === data.name ) {
 				$( '#title' ).unbind( 'keyup.vcTeaserTitle' );
-			} else if ( data.name === 'text' ) {
+			} else if ( 'text' === data.name ) {
 				this.current_text_mode = '';
-			} else if ( data.name === 'image' ) {
+			} else if ( 'image' === data.name ) {
 				this.current_image_mode = '';
 			}
 		},
 		updateContent: function ( data ) {
-			if ( data.name === 'title' ) {
+			if ( 'title' === data.name ) {
 				$( '#title' ).bind( 'keyup.vcTeaserTitle', this.updateTitle ).trigger( 'keyup.vcTeaserTitle' );
 				this.save();
-			} else if ( data.name === 'image' ) {
+			} else if ( 'image' === data.name ) {
 				this.setImageMode( data.mode );
-			} else if ( data.name === 'text' ) {
+			} else if ( 'text' === data.name ) {
 				this.setTextMode( data.mode );
-			} else if ( data.name === 'link' ) {
+			} else if ( 'link' === data.name ) {
 				this.save();
 			}
 		},
@@ -228,11 +227,11 @@
 			if ( new_mode !== this.current_text_mode ) {
 				$vc_text.removeClass( 'vc_text-' + this.current_image_mode ).addClass( 'vc_text-' + new_mode );
 				this.current_text_mode = new_mode;
-				if ( new_mode === 'excerpt' ) {
+				if ( 'excerpt' === new_mode ) {
 					$vc_text.html( '<div class="vc_teaser-text-excerpt">' + this.getExcerpt() + '</div>' );
-				} else if ( new_mode === 'text' ) {
+				} else if ( 'text' === new_mode ) {
 					$vc_text.html( '<div class="vc_teaser-text-text"></div>' ).find( '.vc_teaser-text-text' ).html( $( '#content' ).val() );
-				} else if ( new_mode === 'custom' ) {
+				} else if ( 'custom' === new_mode ) {
 					$vc_text.html( '<textarea name="vc_teaser_text_custom" id="vc_teaser-text-custom"></textarea>' ).find( 'textarea' ).val( this.custom_text );
 				}
 			}
@@ -264,13 +263,13 @@
 				$( '.vc_image',
 					this.$el ).removeClass( 'vc_image-' + this.current_image_mode ).addClass( 'vc_image-' + new_mode );
 				this.current_image_mode = new_mode;
-				if ( new_mode === 'featured' ) {
-					if ( this.featured_image_trigger === false ) {
+				if ( 'featured' === new_mode ) {
+					if ( false === this.featured_image_trigger ) {
 						$( document ).ajaxSuccess( this.triggerFeaturedImageChanges );
 						this.featured_image_trigger = true;
 					}
 					this.setFeaturedImageBlock( $( '#set-post-thumbnail' ).parent().html() );
-				} else if ( new_mode === 'custom' ) {
+				} else if ( 'custom' === new_mode ) {
 					this.setCustomImageBlock();
 				}
 			}
@@ -335,7 +334,7 @@
 				$image = '';
 			if ( $vc_image.hasClass( 'vc_image-featured' ) ) {
 				$image = $( data ).find( 'img' ).length ? $( data ).find( 'img' ) : $( '<div>Featured image not set</div>' );
-				$( '.vc_image', this.$el ).html( '' ).append( $image );
+				$( '.vc_image', this.$el ).empty().append( $image );
 			}
 		},
 		updateTitle: function ( e ) {
@@ -351,11 +350,11 @@
 			$( '.vc_teaser-control', this.$el ).each( function () {
 				var $block = $( this ),
 					block_data = { name: $block.data( 'control' ) };
-				if ( block_data.name === 'image' ) {
-					block_data.image = that.current_image_mode !== 'featured' ? that.getCustomTeaserImage() : that.current_image_mode;
-				} else if ( block_data.name == 'text' ) {
+				if ( 'image' === block_data.name ) {
+					block_data.image = 'featured' !== that.current_image_mode ? that.getCustomTeaserImage() : that.current_image_mode;
+				} else if ( 'text' === block_data.name ) {
 					block_data.mode = that.current_text_mode;
-					if ( block_data.mode === 'custom' ) {
+					if ( 'custom' === block_data.mode ) {
 						block_data.text = that.custom_text;
 					}
 				}
@@ -382,16 +381,17 @@
 			}
 			_.each( data, function ( block_data ) {
 				if ( _.isString( block_data.name ) ) {
-					var $control = $( '.vc_teaser-btn-' + block_data.name, this.$toolbar ).prop( 'checked', true );
-					if ( block_data.name == 'image' && ! _.isUndefined( block_data.image ) ) {
-						if ( block_data.image !== 'featured' ) {
+					$( '.vc_teaser-btn-' + block_data.name, this.$toolbar ).prop( 'checked', true );
+
+					if ( 'image' === block_data.name && ! _.isUndefined( block_data.image ) ) {
+						if ( 'featured' !== block_data.image ) {
 							this.custom_image_attributes = { id: block_data.image };
 							block_data.mode = 'custom';
 						} else {
 							block_data.mode = 'featured';
 						}
-					} else if ( block_data.name == 'text' ) {
-						if ( block_data.mode === 'custom' ) {
+					} else if ( 'text' === block_data.name ) {
+						if ( 'custom' === block_data.mode ) {
 							this.custom_text = block_data.text;
 						}
 					}

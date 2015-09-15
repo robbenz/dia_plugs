@@ -31,4 +31,4 @@ $css_class .= vc_shortcode_custom_css_class( $css, ' ' );
 	<div class="<?php echo esc_attr( $css_class_mini ) ?>">
 		<?php echo do_shortcode( $content ) ?>
 	</div>
-</div><?php echo $this->endBlockComment( $this->getShortcode() ); ?>
+</div>

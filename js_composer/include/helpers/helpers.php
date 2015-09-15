@@ -6,9 +6,10 @@
  *
  */
 
+// Check if this file is loaded in js_composer
 if ( ! defined( 'WPB_VC_VERSION' ) ) {
 	die( '-1' );
-} // Check if this file is loaded in js_composer
+}
 
 /**
  * @param array $params
@@ -17,28 +18,28 @@ if ( ! defined( 'WPB_VC_VERSION' ) ) {
  * vc_filter: vc_wpb_getimagesize - to override output of this function
  * @return array|bool
  */
-function wpb_getImageBySize(
-	$params = array(
+function wpb_getImageBySize( $params = array() ) {
+	$params = array_merge( array(
 		'post_id' => null,
 		'attach_id' => null,
 		'thumb_size' => 'thumbnail',
 		'class' => ''
-	)
-) {
-	//array( 'post_id' => $post_id, 'thumb_size' => $grid_thumb_size )
-	if ( ( ! isset( $params['attach_id'] ) || $params['attach_id'] == null ) && ( ! isset( $params['post_id'] ) || $params['post_id'] == null ) ) {
+	), $params );
+
+	if ( ! $params['thumb_size'] ) {
+		$params['thumb_size'] = 'thumbnail';
+	}
+
+	if ( ! $params['attach_id'] && ! $params['post_id'] ) {
 		return false;
 	}
-	$post_id = isset( $params['post_id'] ) ? $params['post_id'] : 0;
 
-	if ( $post_id ) {
-		$attach_id = get_post_thumbnail_id( $post_id );
-	} else {
-		$attach_id = $params['attach_id'];
-	}
+	$post_id = $params['post_id'];
+
+	$attach_id = $post_id ? get_post_thumbnail_id( $post_id ) : $params['attach_id'];
 
 	$thumb_size = $params['thumb_size'];
-	$thumb_class = ( isset( $params['class'] ) && $params['class'] != '' ) ? $params['class'] . ' ' : '';
+	$thumb_class = ( isset( $params['class'] ) && $params['class'] !== '' ) ? $params['class'] . ' ' : '';
 
 	global $_wp_additional_image_sizes;
 	$thumbnail = '';
@@ -85,15 +86,16 @@ function wpb_getImageBySize(
 				} // Finally, use the title
 				if ( $p_img ) {
 
-					$attributes = array(
+					$attributes = vc_stringify_attributes( array(
 						'class' => $thumb_class,
 						'src' => $p_img['url'],
 						'width' => $p_img['width'],
 						'height' => $p_img['height'],
 						'alt' => $alt,
-						'title' => $title,
-					);
-					$thumbnail = '<img ' . vc_array_to_attr_string( $attributes ) . '" />';
+						'title' => $title
+					) );
+
+					$thumbnail = '<img ' . $attributes . ' />';
 				}
 			}
 		}
@@ -110,7 +112,7 @@ function wpb_getImageBySize(
 /**
  * @param $width
  *
- * @deprecated since 4.5
+ * @deprecated 4.5
  * @since 4.2
  * @return string
  */
@@ -282,30 +284,35 @@ if ( ! function_exists( 'siteAttachedImages' ) ) {
 					</li>';
 		}
 
-		if ( $output != '' ) {
+		if ( $output !== '' ) {
 			$output = '<ul class="gallery_widget_img_select">' . $output . '</ul>';
 		}
 
 		return $output;
-	} // end siteAttachedImages()
+	}
 }
 
 /**
- * @param array $att_ids
+ * @param array $images IDs or srcs of images
  *
  * @since 4.2
  * @return string
  */
-function fieldAttachedImages( $att_ids = array() ) {
+function fieldAttachedImages( $images = array() ) {
 	$output = '';
 
-	foreach ( $att_ids as $th_id ) {
-		$thumb_src = wp_get_attachment_image_src( $th_id, 'thumbnail' );
+	foreach ( $images as $image ) {
+		if ( is_numeric( $image ) ) {
+			$thumb_src = wp_get_attachment_image_src( $image, 'thumbnail' );
+			$thumb_src = isset( $thumb_src[0] ) ? $thumb_src[0] : '';
+		} else {
+			$thumb_src = $image;
+		}
+
 		if ( $thumb_src ) {
-			$thumb_src = $thumb_src[0];
 			$output .= '
 			<li class="added">
-				<img rel="' . $th_id . '" src="' . $thumb_src . '" />
+				<img rel="' . $image . '" src="' . $thumb_src . '" />
 				<a href="#" class="icon-remove"></a>
 			</li>';
 		}
@@ -368,8 +375,6 @@ if ( ! function_exists( 'wpb_resize' ) ) {
 			// this is not an attachment, let's use the image url
 		} else if ( $img_url ) {
 			$file_path = parse_url( $img_url );
-			//			$actual_file_path = $_SERVER['DOCUMENT_ROOT'] . $file_path['path'];
-			//			$actual_file_path = ltrim( $file_path['path'], '/' );
 			$actual_file_path = rtrim( ABSPATH, '/' ) . $file_path['path'];
 			$orig_size = getimagesize( $actual_file_path );
 			$image_src[0] = $img_url;
@@ -401,7 +406,6 @@ if ( ! function_exists( 'wpb_resize' ) ) {
 					return $vt_image;
 				}
 
-				// $crop = false
 				if ( $crop == false ) {
 					// calculate the size proportionaly
 					$proportional_size = wp_constrain_dimensions( $image_src[1], $image_src[2], $width, $height );
@@ -484,7 +488,7 @@ if ( ! function_exists( 'wpb_debug' ) ) {
 	 * @return bool
 	 */
 	function wpb_debug() {
-		if ( ( isset( $_GET['wpb_debug'] ) && $_GET['wpb_debug'] == 'true' ) || ( isset( $_GET['vc_debug'] ) && $_GET['vc_debug'] == 'true' ) ) {
+		if ( ( isset( $_GET['wpb_debug'] ) && $_GET['wpb_debug'] === 'true' ) || ( isset( $_GET['vc_debug'] ) && $_GET['vc_debug'] === 'true' ) ) {
 			return true;
 		} else {
 			return false;
@@ -514,20 +518,6 @@ function js_composer_body_class( $classes ) {
 	}
 
 	return $classes;
-}
-
-/**
- * @todo check for usage, \Vc_Base::jsForceSend
- *
- * @param $args
- *
- * @since 4.2
- * @return array
- */
-function wpb_js_force_send( $args ) {
-	$args['send'] = true;
-
-	return $args;
 }
 
 /**
@@ -563,31 +553,29 @@ function vc_convert_shortcode( $m ) {
 		'el_class' => '',
 		'el_position' => ''
 	), $shortcode_attr ) );
-	if ( $tag == 'vc_row' ) {
+	if ( $tag === 'vc_row' ) {
 		return $output;
 	}
 	// Start
 	if ( preg_match( '/first/', $el_position ) || empty( $shortcode_attr['width'] ) || $shortcode_attr['width'] === '1/1' ) {
 		$result = '[vc_row]';
 	}
-	if ( $tag != 'vc_column' ) {
+	if ( $tag !== 'vc_column' ) {
 		$result .= "\n" . '[vc_column width="' . $width . '"]';
 	}
 
 	// Tag
 	$pattern = get_shortcode_regex();
-	if ( $tag == 'vc_column' ) {
+	if ( $tag === 'vc_column' ) {
 		$result .= "[{$m_one}{$tag} {$attr_string}]" . preg_replace_callback( "/{$pattern}/s", 'vc_convert_inner_shortcode', $content ) . "[/{$tag}{$m_four}]";
-	} elseif ( $tag == 'vc_tabs' || $tag == 'vc_accordion' || $tag == 'vc_tour' ) {
+	} elseif ( $tag === 'vc_tabs' || $tag === 'vc_accordion' || $tag === 'vc_tour' ) {
 		$result .= "[{$m_one}{$tag} {$attr_string}]" . preg_replace_callback( "/{$pattern}/s", 'vc_convert_tab_inner_shortcode', $content ) . "[/{$tag}{$m_four}]";
 	} else {
 		$result .= preg_replace( '/(\"\d\/\d\")/', '"1/1"', $output );
 	}
 
-	// $content = preg_replace_callback( "/{$pattern}/s", 'vc_convert_inner_shortcode', $content );
-
 	// End
-	if ( $tag != 'vc_column' ) {
+	if ( $tag !== 'vc_column' ) {
 		$result .= '[/vc_column]';
 	}
 	if ( preg_match( '/last/', $el_position ) || empty( $shortcode_attr['width'] ) || $shortcode_attr['width'] === '1/1' ) {
@@ -631,16 +619,16 @@ function vc_convert_inner_shortcode( $m ) {
 		'el_class' => '',
 		'el_position' => ''
 	), shortcode_parse_atts( $attr_string ) ) );
-	if ( $width != '1/1' ) {
+	if ( $width !== '1/1' ) {
 		if ( preg_match( '/first/', $el_position ) ) {
 			$result .= '[vc_row_inner]';
 		}
 		$result .= "\n" . '[vc_column_inner width="' . $width . '" el_position="' . $el_position . '"]';
 		$attr = '';
 		foreach ( shortcode_parse_atts( $attr_string ) as $key => $value ) {
-			if ( $key == 'width' ) {
+			if ( $key === 'width' ) {
 				$value = '1/1';
-			} elseif ( $key == 'el_position' ) {
+			} elseif ( $key === 'el_position' ) {
 				$value = 'first last';
 			}
 			$attr .= ' ' . $key . '="' . $value . '"';
@@ -699,19 +687,19 @@ $vc_row_layouts = array(
  */
 function wpb_vc_get_column_width_indent( $width ) {
 	$identy = '11';
-	if ( $width == 'vc_col-sm-6' ) {
+	if ( $width === 'vc_col-sm-6' ) {
 		$identy = '12';
-	} elseif ( $width == 'vc_col-sm-3' ) {
+	} elseif ( $width === 'vc_col-sm-3' ) {
 		$identy = '14';
-	} elseif ( $width == 'vc_col-sm-4' ) {
+	} elseif ( $width === 'vc_col-sm-4' ) {
 		$identy = '13';
-	} elseif ( $width == 'vc_col-sm-8' ) {
+	} elseif ( $width === 'vc_col-sm-8' ) {
 		$identy = '23';
-	} elseif ( $width == 'vc_col-sm-9' ) {
+	} elseif ( $width === 'vc_col-sm-9' ) {
 		$identy = '34';
-	} elseif ( $width == 'vc_col-sm-2' ) {
+	} elseif ( $width === 'vc_col-sm-2' ) {
 		$identy = '16'; // TODO: check why there is no "vc_col-sm-1, -5, -6, -7, -11, -12.
-	} elseif ( $width == 'vc_col-sm-10' ) {
+	} elseif ( $width === 'vc_col-sm-10' ) {
 		$identy = '56';
 	}
 
@@ -775,13 +763,13 @@ function vc_colorCreator( $colour, $per ) {
 function vc_hex2rgb( $color ) {
 	$color = str_replace( '#', '', $color );
 
-	if ( strlen( $color ) == 6 ) {
+	if ( strlen( $color ) === 6 ) {
 		list( $r, $g, $b ) = array(
 			$color[0] . $color[1],
 			$color[2] . $color[3],
 			$color[4] . $color[5]
 		);
-	} elseif ( strlen( $color ) == 3 ) {
+	} elseif ( strlen( $color ) === 3 ) {
 		list( $r, $g, $b ) = array( $color[0] . $color[0], $color[1] . $color[1], $color[2] . $color[2] );
 	} else {
 		return false;
@@ -1193,26 +1181,83 @@ function vc_get_term_object( $term ) {
 	);
 }
 
+/**
+ * Extract width/height from string
+ *
+ * @param string $dimensions WxH
+ *
+ * @return mixed array(width, height) or false
+ */
+function vcExtractDimensions( $dimensions ) {
+	$dimensions = str_replace( ' ', '', $dimensions );
+	$matches = null;
+
+	if ( preg_match( '/(\d+)x(\d+)/', $dimensions, $matches ) ) {
+		return array( $matches[1], $matches[2] );
+	}
+
+	return false;
+}
+
+/**
+ * Check if element has specific class
+ *
+ * E.g. f('foo', 'foo bar baz') -> true
+ *
+ * @param string $class Class to check for
+ * @param string $classes Classes separated by space(s)
+ *
+ * @return boolean
+ */
+function vc_has_class( $class, $classes ) {
+	return in_array( $class, explode( ' ', strtolower( $classes ) ) );
+}
+
+/**
+ * Remove specific class from classes string
+ *
+ * E.g. f('foo', 'foo bar baz') -> 'bar baz'
+ *
+ * @param string $class Class to remove
+ * @param string $classes Classes separated by space(s)
+ *
+ * @return string
+ */
+function vc_remove_class( $class, $classes ) {
+	$list_classes = explode( ' ', strtolower( $classes ) );
+
+	$key = array_search( $class, $list_classes, true );
+
+	if ( false === $key ) {
+		return $classes;
+	}
+
+	unset( $list_classes[ $key ] );
+
+	return implode( ' ', $list_classes );
+}
+
+/**
+ * Convert array of named params to string version
+ * All values will be escaped
+ *
+ * E.g. f(array('name' => 'foo', 'id' => 'bar')) -> 'name="foo" id="bar"'
+ *
+ * @param $attributes
+ *
+ * @return string
+ */
+function vc_stringify_attributes( $attributes ) {
+	$atts = array();
+	foreach ( $attributes as $name => $value ) {
+		$atts[] = $name . '="' . esc_attr( $value ) . '"';
+	}
+
+	return implode( ' ', $atts );
+}
+
 function vc_is_responsive_disabled() {
 	$disable_responsive = vc_settings()->get( 'not_responsive_css' );
 
 	return '1' === $disable_responsive;
-}
-
-/**
- * Build attributes string for html tag from associative array of data.
- *
- * @since 4.6
- *
- * @param array $atts
- *
- * @return string
- */
-function vc_array_to_attr_string( array $atts ) {
-	$output = array();
-	foreach ( $atts as $key => $value ) {
-		$output[] = $key . '="' . esc_attr( $value ) . '"';
-	}
-
-	return implode( ' ', $output );
 }

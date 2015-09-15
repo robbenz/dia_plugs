@@ -72,6 +72,7 @@ class Vc_Vendor_Revslider implements Vc_Vendor_Interface {
 					'param_name' => 'alias',
 					'admin_label' => true,
 					'value' => $revsliders,
+					'save_always' => true,
 					'description' => __( 'Select your Revolution Slider.', 'js_composer' )
 				),
 				array(

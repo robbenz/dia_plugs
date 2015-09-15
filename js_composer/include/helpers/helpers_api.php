@@ -133,9 +133,6 @@ if ( ! function_exists( 'vc_set_as_theme' ) ) {
 	 */
 	function vc_set_as_theme( $disable_updater = false ) {
 		vc_manager()->setIsAsTheme( true );
-		//    	$composer = WPBakeryVisualComposer::getInstance();
-		//    	$composer->setSettingsAsTheme();
-		//    	if($disable_updater) $composer->disableUpdater(); TODO: disable update
 		$disable_updater && vc_manager()->disableUpdater();
 	}
 }
@@ -446,7 +443,7 @@ function vc_map_integrate_include_exclude_fields( $param, $change_fields ) {
  * @return array
  */
 function vc_map_integrate_add_dependency( $param, $dependency ) {
-	//activator must be used for all elements who doesn't have 'dependency'
+	// activator must be used for all elements who doesn't have 'dependency'
 	if ( ! empty( $dependency ) && ( ! isset( $param['dependency'] ) || empty( $param['dependency'] ) ) ) {
 		if ( is_array( $dependency ) ) {
 			$param['dependency'] = $dependency;
@@ -608,5 +605,5 @@ function vc_map_get_defaults( $tag ) {
  *     'b'=>3, 'c'=>4 )
  */
 function vc_map_get_attributes( $tag, $atts = array() ) {
-	return shortcode_atts( vc_map_get_defaults( $tag ), $atts );
+	return shortcode_atts( vc_map_get_defaults( $tag ), $atts, $tag );
 }

@@ -7,7 +7,6 @@
  * ========================================================= */
 var vcGridStyleAllMasonry;
 (function ( $ ) {
-	// vcGridStyleAllMasonry = vcGridStyleAll.bind(); // IE 8 not supported
 	vcGridStyleAllMasonry = function ( grid ) {
 		this.grid = grid;
 		this.settings = grid.settings;
@@ -35,11 +34,11 @@ var vcGridStyleAllMasonry;
 				}
 				self.unsetIsLoading();
 				window.vc_prettyPhoto();
-				jQuery(window).trigger( 'grid:items:added', self.$el );
+				jQuery( window ).trigger( 'grid:items:added', self.$el );
 			} );
 		},
 		filter: function ( filter ) {
-			filter = _.isUndefined( filter ) || filter === '*' ? '' : filter;
+			filter = _.isUndefined( filter ) || '*' === filter ? '' : filter;
 			if ( this.filterValue == filter ) {
 				return false; // already filtred
 			}

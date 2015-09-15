@@ -14,7 +14,7 @@
 		?><a
 			id="vc_no-content-add-text-block" class="vc_add-text-block-button vc_btn vc_btn-sky vc_btn-md vc_btn_3d"
 			href="#"
-			title="<?php _e( 'Add Text Block', 'js_composer' ) ?>"><?php _e( 'Add Text Block', 'js_composer' ) ?></a><?php endif; ?>
+			title="<?php _e( 'Add Text Block', 'js_composer' ) ?>"><?php _e( 'Add Text Block', 'js_composer' ) ?></a><?php endif ?>
 	</div>
 	<?php
 	$total_templates = visual_composer()->templatesPanelEditor()->loadDefaultTemplates();
@@ -25,7 +25,7 @@
 		<div class="vc_default-templates-separator vc_element vc_vc_text_separator">
 			<div class="vc_separator vc_sep_dashed vc_separator_align_center vc_el_width_100 vc_sep_color_outline_grey">
 				<span class="vc_sep_holder vc_sep_holder_l"><span class="vc_sep_line"></span></span>
-				<h4 class="normal"><?php _e( 'Choose Your Layout' ) ?></h4><span
+				<h4 class="normal"><?php _e( 'Choose Your Layout', 'js_composer' ) ?></h4><span
 					class="vc_sep_holder vc_sep_holder_r"><span class="vc_sep_line"></span></span>
 			</div>
 		</div>
@@ -44,7 +44,7 @@
 							<div class="wpb_single_image">
 								<div class="wpb_wrapper">
 									<div
-										class="vc_templates-image"<?php if ( isset( $template['image_path'] ) ): ?> style="background-image:url('<?php echo $template['image_path']; ?>');"<?php endif; ?>></div>
+										class="vc_templates-image"<?php if ( isset( $template['image_path'] ) ): ?> style="background-image:url('<?php echo $template['image_path']; ?>');"<?php endif ?>></div>
 								</div>
 							</div>
 
@@ -60,8 +60,8 @@
 					<div class="vc_default-templates-more-layouts"><a
 							class="vc_btn vc_btn-md vc_btn_3d vc_btn_more-layouts"
 							id="vc_templates-more-layouts"><?php echo __( 'More Layouts', 'js_composer' ); ?></a></div>
-				<?php endif; ?>
+				<?php endif ?>
 			</div>
 		</div>
-	<?php endif; ?>
+	<?php endif ?>
 </div>

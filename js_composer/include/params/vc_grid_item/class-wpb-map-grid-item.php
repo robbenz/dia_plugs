@@ -19,7 +19,6 @@ Class WpbMap_Grid_Item extends WPBMap {
 		if ( ! $force && self::$gitem_user_sc !== false && self::$gitem_user_categories !== false ) {
 			return;
 		}
-		// $settings = self::getSettings();
 		self::$gitem_user_sc = self::$gitem_user_categories = self::$gitem_user_sorted_sc = array();
 		$deprecated = 'deprecated';
 		$add_deprecated = false;
@@ -38,13 +37,13 @@ Class WpbMap_Grid_Item extends WPBMap {
 									if ( array_search( $c, self::$gitem_user_categories ) === false ) {
 										self::$gitem_user_categories[] = $c;
 									}
-									$values['_category_ids'][] = md5( $c ); // array_search($category, self::$categories);
+									$values['_category_ids'][] = md5( $c );
 								}
 							} else {
 								if ( array_search( $categories, self::$gitem_user_categories ) === false ) {
 									self::$gitem_user_categories[] = $categories;
 								}
-								$values['_category_ids'][] = md5( $categories ); // array_search($category, self::$categories);
+								$values['_category_ids'][] = md5( $categories );
 							}
 						}
 					}

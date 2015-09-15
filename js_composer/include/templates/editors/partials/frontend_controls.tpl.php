@@ -236,7 +236,7 @@
 					class="vc_btn-content"><span class="icon"></span></span></a></div>
 	</div><!-- end vc_controls-vc_tta_section -->
 </script>
-<?php if(1===2): ?>
+<?php if ( 1 === 2 ): ?>
 <!-- temporary not used --->
 <script type="text/html" id="vc_controls-template-vc_tta_accordion">
 	<div class="vc_controls-container">
@@ -245,4 +245,4 @@
 					class="vc_btn-content"><span class="icon"></span></span></a></div>
 	</div>
 </script>
-<?php endif; ?>
+<?php endif ?>

@@ -6,7 +6,7 @@ window.jQuery( document ).ready( function ( $ ) {
 			.addClass( 'vc-woocommerce-add-to-cart-loading' )
 			.append( $( '<div class="vc_wc-load-add-to-loader-wrapper"><div class="vc_wc-load-add-to-loader"></div></div>' ) );
 	} ).on( 'added_to_cart', function ( event, fragments, cart_hash, $button ) {
-		if ( undefined === $button ) {
+		if ( 'undefined' === typeof($button) ) {
 			$button = $( '.vc-gitem-add-to-cart-loading-btn' );
 		}
 		$button && $button.hasClass( 'vc_gitem-link' ) && $button

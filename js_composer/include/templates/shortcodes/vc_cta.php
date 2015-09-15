@@ -35,5 +35,5 @@ $this->buildTemplate( $atts, $content );
 		<?php echo $this->getTemplateVariable( 'icons-bottom' ); ?>
 		<?php echo $this->getTemplateVariable( 'icons-right' ); ?>
 	</div>
-</section><?php echo $this->endBlockComment( $this->getShortcode() ); ?>
+</section>
 

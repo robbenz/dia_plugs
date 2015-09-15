@@ -155,7 +155,6 @@ class Vc_ParamGroup {
  * @return mixed|void rendered template for params in edit form
  */
 function vc_param_group_form_field( $param_settings, $param_value, $tag ) {
-	//print_r($param_settings);
 	$param_group = new Vc_ParamGroup( $param_settings, $param_value, $tag );
 
 	return apply_filters( 'vc_param_group_render_filter', $param_group->render() );

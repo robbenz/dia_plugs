@@ -41,6 +41,24 @@ class WpbakeryShortcodeParams {
 	 * @var bool
 	 */
 	protected static $is_enqueue = false;
+	/**
+	 * @since 4.7
+	 * @var array - store params not required to init
+	 */
+	protected static $optional_init_params = array();
+
+	/**
+	 * Get list of params that need to be initialized
+	 *
+	 * @return string[]
+	 */
+	public static function getRequiredInitParams() {
+		$all_params = array_keys( self::$params );
+		$optional_params = apply_filters( 'vc_edit_form_fields_optional_params', self::$optional_init_params );
+		$required_params = array_diff( $all_params, $optional_params );
+
+		return $required_params;
+	}
 
 	/**
 	 * @since 4.2
