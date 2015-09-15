@@ -17,7 +17,7 @@ function wc_predictive_install(){
 
 	delete_option('woocommerce_search_lite_clean_on_deletion');
 
-	update_option('wc_predictive_search_version', '3.0.1');
+	update_option('wc_predictive_search_version', '3.0.2');
 	update_option('wc_predictive_search_plugin', 'woo_predictive_search');
 	delete_transient("woo_predictive_search_update_info");
 	flush_rewrite_rules();
@@ -33,7 +33,7 @@ function wc_predictive_deactivate(){
 	$respone_api = __('Connection Error! Could not reach the a3API on Amazon Cloud, the network may be busy. Please try again in a few minutes.', 'woops');
 	$options = array(
 		'method' 	=> 'POST',
-		'timeout' 	=> 45,
+		'timeout' 	=> 20,
 		'body' 		=> array(
 			'act'			=> 'deactivate',
 			'ssl'			=> get_option('a3rev_auth_woo_predictive_search'),
@@ -212,7 +212,7 @@ function woo_predictive_search_pro_upgrade_plugin () {
 		include( WOOPS_DIR. '/includes/updates/update-3.0.php' );
 	}
 
-	update_option('wc_predictive_search_version', '3.0.1');
+	update_option('wc_predictive_search_version', '3.0.2');
 }
 
 }else{
@@ -236,7 +236,7 @@ function wc_predictive_confirm_pin() {
 		$ji = md5(trim($_POST['P_pin']));
 		$options = array(
 			'method' 	=> 'POST',
-			'timeout' 	=> 45,
+			'timeout' 	=> 20,
 			'body' 		=> array(
 				'act'			=> 'activate',
 				'ssl'			=> $ji,

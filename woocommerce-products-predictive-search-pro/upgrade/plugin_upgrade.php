@@ -42,14 +42,28 @@ class WC_Predictive_Search_Upgrade
 	public static function get_version_info($cache=true){
 		//Getting version number
 		$respone_api = get_transient("woo_predictive_search_update_info");
-		
-		if(!$cache)
-            $respone_api = null;
-		
-		if(!$respone_api){
+
+		if ( ! $cache ) {
+            $respone_api = false;
+		}
+
+        // Fixed for work compatibility WP 4.3 when transient_timeout is deleted
+        if ( false !== $respone_api ) {
+			$transient_timeout = '_transient_timeout_' . 'woo_predictive_search_update_info';
+			$timeout = get_option( $transient_timeout, false );
+			if ( false === $timeout ) {
+				$respone_api = false;
+			}
+		}
+
+		if ( ! $respone_api ) {
+
+				// set caching first before call to server to solve server timeout issue and make cron run again everytime
+				set_transient("woo_predictive_search_update_info", 'cannot_connect_api', 86400); //caching for 24 hours
+
 				$options = array(
-					'method' 	=> 'POST', 
-					'timeout' 	=> 45, 
+					'method' 	=> 'POST',
+					'timeout' 	=> 8,
 					'body' 		=> array(
 									'plugin' 		=> get_option('wc_predictive_search_plugin'),
 									'key'			=> get_option('a3rev_auth_woo_predictive_search'),
@@ -57,7 +71,7 @@ class WC_Predictive_Search_Upgrade
 									'address_ip'	=> $_SERVER['SERVER_ADDR'],
 									'v'				=> get_option('wc_predictive_search_version'),
 									'owner'			=> base64_encode(get_bloginfo('admin_email'))
-								) 
+								)
 				);
 				
 				$raw_response = wp_remote_request(WOO_PREDICTIVE_SEARCH_MANAGER_URL. "/version.php", $options);
@@ -66,13 +80,13 @@ class WC_Predictive_Search_Upgrade
 				} else {
 					$respone_api = 'cannot_connect_api';
 				}
-			
+
 			//caching responses.
             set_transient("woo_predictive_search_update_info", $respone_api, 86400); //caching for 24 hours
 
-			$version_info = explode('||', $respone_api);
-			if(is_array($version_info)){
-				if ($version_info[1] == 'unvalid') {
+            $version_info = explode('||', $respone_api);
+			if ( FALSE !== stristr( $respone_api, '||' ) && is_array( $version_info ) ) {
+				if ( isset( $version_info[1] ) && $version_info[1] == 'unvalid' ) {
 
 					// if called is failed then check number of failures, just allow 10 times failures
 					$number_failures = get_option( 'woo_predictive_search_number_failures', 0 );
@@ -104,12 +118,12 @@ class WC_Predictive_Search_Upgrade
 			}
 			*/
 		}
-		
+
 		$version_info = explode('||', $respone_api);
-		if(is_array($version_info)){
+		if ( FALSE !== stristr( $respone_api, '||' ) && is_array( $version_info ) ) {
 			$info = array("is_valid_key" => $version_info[1], "version" => $version_info[0], "url" => self::get_url_download(), "upgrade_notice" => $version_info[2]);
 			return $info;
-		}else{
+		} else {
 			return '';
 		}
     }
@@ -153,7 +167,7 @@ class WC_Predictive_Search_Upgrade
     public static function get_changelog(){
 		$options = array(
 			'method' 	=> 'POST', 
-			'timeout' 	=> 45, 
+			'timeout' 	=> 8, 
 			'body' 		=> array(
 							'plugin' 		=> get_option('wc_predictive_search_plugin'),
 							'key'			=> get_option('a3rev_auth_woo_predictive_search'),
@@ -199,7 +213,7 @@ class WC_Predictive_Search_Upgrade
 	
 	public static function disable_ssl_verify($args, $url) {
 		if ( stristr($url, WOO_PREDICTIVE_SEARCH_MANAGER_URL) !== false ) {
-			$args['timeout'] = 45;
+			$args['timeout'] = 8;
 			$args['sslverify'] = false; 
 		}
 		

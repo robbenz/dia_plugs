@@ -1,5 +1,11 @@
 *** WooCommerce Predictive Search Changelog ***
 
+= 3.0.2 - 2015/09/07 =
+* Tweak - Tested for full compatibility with WooCommerce Version 2.4.6
+* Fix - Delete check new version transient when transient_timeout is deleted by WordPress 4.3 get_transients function so call to a3api for new version still works.
+* Fix - Change timeout of call to a3API for updates from 45 seconds to 8 seconds to resolve the server PHP timeout 30 seconds default. Server timeout before call finish was causing the 24 hour cron call not to be set and causing the dashboard to load slowly if a3API is not reachable.
+* Fix - Set 24 hours cron before call to a3API so that if have fail to connection then it will call in 24 hours on Cron instead of continue call each time Dashboard is loaded
+
 = 3.0.1 - 2015/08/20 =
 * Tweak - Tested for full compatibility with WooCommerce Version 2.4.4
 * Tweak - Tested for full compatibility with WordPress major version 4.3.0
