@@ -814,7 +814,7 @@ if (!class_exists('WooCommerce_Quote')) {
         {
             echo apply_filters(
                     'woo_quote_button',
-                    '<a  href="' . home_url('/?get_woo_quote=1') . '"><button type="button" class="' .
+                    '<a  href="' . home_url('/?get_woo_quote=1') . '"><button type="button" id="quote-button-id" class="' .
                     join(' ', apply_filters('woocommerce_quote_button_classes', array('button', 'alt', 'woo_quote_button')))
                     . '">' .  $this->opt['woo_quote_title_download_quote'] . '</button></a>',
                     $this->opt['woo_quote_title_download_quote'],
