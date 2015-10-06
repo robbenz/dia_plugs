@@ -16,6 +16,7 @@
  * Shortcode class
  * @var $this WPBakeryShortCode_Vc_Round_Chart
  */
+$el_class = $title = $type = $style = $legend = $animation = $tooltips = $stroke_color = $stroke_width = $values = $css = $custom_stroke_color = '';
 $atts = vc_map_get_attributes( $this->getShortcode(), $atts );
 extract( $atts );
 

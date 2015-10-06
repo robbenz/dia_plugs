@@ -10,6 +10,7 @@
  * Shortcode class
  * @var $this WPBakeryShortCode_VC_Gmaps
  */
+$title = $link = $size = $el_class = $css = '';
 $output = '';
 $atts = vc_map_get_attributes( $this->getShortcode(), $atts );
 extract( $atts );

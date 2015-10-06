@@ -102,12 +102,13 @@
 					function ( model ) {
 						return model.get( 'order' );
 					} ), state );
+				var mapped = vc.getMapped( tag );
 				data = {
 					tag: tag,
 					attrs: paramsForString,
 					content: content,
 					type: _.isUndefined( vc.getParamSettings( tag,
-						'content' ) ) && ! vc.getMapped( tag ).is_container ? 'single' : ''
+						'content' ) ) && ! mapped.is_container && _.isEmpty( mapped.as_parent ) ? 'single' : ''
 				};
 				if ( _.isUndefined( state ) ) {
 					model.trigger( 'stringify', model, data );

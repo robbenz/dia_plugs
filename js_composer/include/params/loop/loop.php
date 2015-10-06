@@ -846,6 +846,9 @@ function vc_build_loop_query( $query, $exclude_id = false ) {
  * @since 4.2
  */
 function vc_get_loop_suggestion() {
+	if ( ! vc_verify_admin_nonce() || ( ! current_user_can( 'edit_posts' ) && ! current_user_can( 'edit_pages' ) ) ) {
+		die();
+	}
 	$loop_suggestions = new VcLoopSuggestions( vc_post_param( 'field' ), vc_post_param( 'query' ), vc_post_param( 'exclude' ) );
 	$loop_suggestions->render();
 	die();
@@ -855,6 +858,9 @@ function vc_get_loop_suggestion() {
  * @since 4.2
  */
 function vc_get_loop_settings_json() {
+	if ( ! vc_verify_admin_nonce() || ( ! current_user_can( 'edit_posts' ) && ! current_user_can( 'edit_pages' ) ) ) {
+		die();
+	}
 	$loop_settings = new VcLoopSettings( vc_post_param( 'value' ), vc_post_param( 'settings' ) );
 	$loop_settings->render();
 	die();

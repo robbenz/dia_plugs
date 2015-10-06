@@ -16,8 +16,8 @@ $atts = vc_map_get_attributes( $this->getShortcode(), $atts );
 extract( $atts );
 
 $css_class = 'vc_gitem-post-meta-field-' . $key
-             . ( strlen( $el_class ) ? ' ' . $el_class : '' )
-             . ( strlen( $align ) ? ' vc_gitem-align-' . $align : '' );
+	. ( strlen( $el_class ) ? ' ' . $el_class : '' )
+	. ( strlen( $align ) ? ' vc_gitem-align-' . $align : '' );
 if ( strlen( $label ) ) {
 	$label_html = '<span class="vc_gitem-post-meta-label">' . esc_html( $label ) . '</span>';
 }

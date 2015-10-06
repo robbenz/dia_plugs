@@ -9,6 +9,7 @@
  * Shortcode class
  * @var $this WPBakeryShortCode_VC_Row_Inner
  */
+$el_class = $css = $el_id = '';
 $output = $after_output = '';
 $atts = vc_map_get_attributes( $this->getShortcode(), $atts );
 extract( $atts );

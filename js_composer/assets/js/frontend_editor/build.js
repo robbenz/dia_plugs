@@ -32,6 +32,7 @@ if ( _.isUndefined( vc ) ) {
 		vc.map = window.vc_mapper; // vc_user_mapper // TODO: check why user mapper
 
 		$( '#wpadminbar' ).remove();
+		$( '#screen-meta-links, #screen-meta' ).hide();
 		var $body = $( 'body' );
 		$body.attr( 'data-vc', true );
 		vc.post_id = $( '#vc_post-id' ).val();

@@ -22,11 +22,16 @@
  * Shortcode class
  * @var $this WPBakeryShortCode_VC_Icon
  */
+$type = $icon_fontawesome = $icon_openiconic = $icon_typicons =
+$icon_entypo = $icon_linecons = $color = $custom_color =
+$background_style = $background_color = $custom_background_color =
+$size = $align = $el_class = $link = $css_animation = $css = '';
+
 $atts = vc_map_get_attributes( $this->getShortcode(), $atts );
 extract( $atts );
 
 $class_to_filter = '';
-$class_to_filter .= vc_shortcode_custom_css_class( $css, ' ' ) . $this->getExtraClass( $el_class );
+$class_to_filter .= vc_shortcode_custom_css_class( $css, ' ' ) . $this->getExtraClass( $el_class ) . $this->getCSSAnimation( $css_animation );
 $css_class = apply_filters( VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, $class_to_filter, $this->settings['base'], $atts );
 
 // Enqueue needed icon font.

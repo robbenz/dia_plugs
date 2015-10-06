@@ -16,7 +16,9 @@ add_action( 'vc_before_init', 'vc_check_for_custom_css_build' );
 function vc_check_for_custom_css_build() {
 	$version = vc_settings()->getCustomCssVersion();
 	if ( vc_settings()->useCustomCss() && ( ! $version || version_compare( WPB_VC_VERSION, $version, '<>' ) ) ) {
-		add_action( 'admin_notices', 'vc_custom_css_admin_notice' );
+		if ( current_user_can( 'manage_options' ) ) {
+			add_action( 'admin_notices', 'vc_custom_css_admin_notice' );
+		}
 	}
 }
 
@@ -27,7 +29,7 @@ function vc_check_for_custom_css_build() {
  */
 function vc_custom_css_admin_notice() {
 	global $current_screen;
-
+	vc_settings()->set('compiled_js_composer_less', '');
 	$class = 'notice notice-warning vc_settings-custom-design-notice';
 	$message_important = __( 'Important notice', 'js_composer' );
 	if ( is_object( $current_screen ) && isset( $current_screen->id ) && 'visual-composer_page_vc-color' === $current_screen->id ) {

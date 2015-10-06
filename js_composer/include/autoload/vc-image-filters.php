@@ -89,6 +89,9 @@ function vc_attachment_filter_field( $form_fields, $post ) {
  * @return string json
  */
 function vc_media_editor_add_image() {
+	if ( ! vc_verify_admin_nonce() || ! current_user_can( 'upload_files' ) ) {
+		die();
+	}
 	require_once vc_path_dir( 'APP_ROOT', 'vendor/mmihey/PHP-Instagram-effects/src/Image/Filter.php' );
 	$response = array(
 		'success' => true,
@@ -207,6 +210,9 @@ function vc_media_editor_add_image() {
  * @return void Results are sent out as json
  */
 function vc_media_editor_preview_image() {
+	if ( ! vc_verify_admin_nonce() || ! current_user_can( 'upload_files' ) ) {
+		die();
+	}
 	require_once vc_path_dir( 'APP_ROOT', 'vendor/mmihey/PHP-Instagram-effects/src/Image/Filter.php' );
 
 	$response = array(

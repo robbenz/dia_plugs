@@ -30,6 +30,8 @@
  * Shortcode class
  * @var $this WPBakeryShortCode_VC_Btn
  */
+$style = $shape = $color = $size = $custom_background = $custom_text = $align = $link = $title = $button_block = $el_class = $outline_custom_color = $outline_custom_hover_background =
+$outline_custom_hover_text = $add_icon = $i_align = $i_type = $i_icon_entypo = $i_icon_fontawesome = $i_icon_linecons = $i_icon_pixelicons = $i_icon_typicons = $css = $css_animation = '';
 $a_href = $a_title = $a_target = '';
 $styles = array();
 $icon_wrapper = false;
@@ -169,8 +171,8 @@ if ( $use_link ) {
 $attributes = implode( ' ', $attributes );
 
 ?>
-	<div class="<?php echo trim( esc_attr( $css_class ) ) ?>"><?php if ( $use_link ) {
-	echo '<a ' . $attributes . '>' . $button_html . '</a>';
-} else {
-	echo '<button ' . $attributes . '>' . $button_html . '</button>';
-} ?></div>
+<div class="<?php echo trim( esc_attr( $css_class ) ) ?>"><?php if ( $use_link ) {
+		echo '<a ' . $attributes . '>' . $button_html . '</a>';
+	} else {
+		echo '<button ' . $attributes . '>' . $button_html . '</button>';
+	} ?></div>

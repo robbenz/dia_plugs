@@ -9,6 +9,7 @@
  * Shortcode class
  * @var $this WPBakeryShortCode_VC_Tabs
  */
+$title = $interval = $el_class = '';
 $atts = vc_map_get_attributes( $this->getShortcode(), $atts );
 extract( $atts );
 

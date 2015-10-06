@@ -8,7 +8,7 @@
  * Shortcode class
  * @var $this WPBakeryShortCode_VC_Empty_space
  */
-$height = $el_class = '';
+$height = $el_class = $css = '';
 $atts = vc_map_get_attributes( $this->getShortcode(), $atts );
 extract( $atts );
 
@@ -25,5 +25,5 @@ $class = 'vc_empty_space ' . $this->getExtraClass( $el_class ). vc_shortcode_cus
 $css_class = apply_filters( VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, $class, $this->settings['base'], $atts );
 
 ?>
-	<div class="<?php echo esc_attr( trim( $css_class ) ); ?>" <?php echo $inline_css; ?> ><span
-			class="vc_empty_space_inner"></span></div>
+<div class="<?php echo esc_attr( trim( $css_class ) ); ?>" <?php echo $inline_css; ?> ><span
+		class="vc_empty_space_inner"></span></div>

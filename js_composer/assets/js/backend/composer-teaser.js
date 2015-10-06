@@ -295,7 +295,8 @@
 					data: {
 						action: 'wpb_single_image_src',
 						content: this.custom_image_attributes.id,
-						size: 'large'
+						size: 'large',
+						_vcnonce: window.vcAdminNonce
 					},
 					dataType: 'html',
 					context: this

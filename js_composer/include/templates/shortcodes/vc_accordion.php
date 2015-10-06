@@ -11,6 +11,7 @@
  * Shortcode class
  * @var $this WPBakeryShortCode_VC_Accordion
  */
+$title = $el_class = $collapsible = $disable_keyboard = $active_tab = '';
 $atts = vc_map_get_attributes( $this->getShortcode(), $atts );
 extract( $atts );
 

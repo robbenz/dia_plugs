@@ -10718,7 +10718,9 @@ body ul.wpb_thumbnails-fluid li .entry-content *:last-child {
   padding: 10px 0 3px 0;
 }
 .wpb_gallery .wpb_flexslider .flex-control-nav {
-  bottom: -35px;
+  bottom: auto;
+  top: 100%;
+  margin-top: 15px;
 }
 .wpb_gallery .wpb_flexslider .flex-caption {
   cursor: default;
@@ -11589,6 +11591,10 @@ body .wpb_gallery_slides ul li,
 }
 .separator_align_right {
   text-align: right;
+}
+.wpb_single_image a {
+  border: none;
+  outline: none;
 }
 .wpb_single_image img {
   vertical-align: top;
@@ -19641,6 +19647,10 @@ body .wpb_gallery_slides ul li,
 .vc_grid.vc_row .vc_grid-item .vc_btn a {
   text-decoration: none;
   border-bottom: 0;
+}
+.vc_grid .vc_gitem-link {
+  border-bottom: none;
+  outline: none;
 }
 .vc_masonry_grid .vc_grid.vc_row .vc_grid-item,
 .vc_masonry_media_grid .vc_grid.vc_row .vc_grid-item {

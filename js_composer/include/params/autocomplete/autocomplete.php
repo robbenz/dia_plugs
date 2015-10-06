@@ -97,8 +97,11 @@ add_action( 'wp_ajax_vc_get_autocomplete_suggestion', 'vc_get_autocomplete_sugge
  * @since 4.4
  */
 function vc_get_autocomplete_suggestion() {
+	if ( ! vc_verify_admin_nonce() || ( ! current_user_can( 'edit_posts' ) && ! current_user_can( 'edit_pages' ) ) ) {
+		die();
+	}
 	$query = vc_post_param( 'query' );
-	$tag = vc_post_param( 'shortcode' );
+	$tag = strip_tags( vc_post_param( 'shortcode' ) );
 	$param_name = vc_post_param( 'param' );
 	vc_render_suggestion( $query, $tag, $param_name );
 }

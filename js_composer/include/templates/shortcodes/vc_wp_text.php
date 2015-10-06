@@ -7,6 +7,7 @@
  * Shortcode class
  * @var $this WPBakeryShortCode_VC_Wp_Text
  */
+$el_class = '';
 $output = '';
 $atts = vc_map_get_attributes( $this->getShortcode(), $atts );
 $atts['filter'] = true; //Hack to make sure that <p> added

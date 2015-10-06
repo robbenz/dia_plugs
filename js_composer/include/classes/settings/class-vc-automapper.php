@@ -247,11 +247,11 @@ if ( ! class_exists( 'Vc_Automapper' ) ) {
 		 */
 		public function renderListItem( $shortcode ) {
 			echo '<li class="vc_automapper-item" data-item-id="">'
-			     . '<label>' . $shortcode->name . '</label>'
-			     . '<span class="vc_automapper-item-controls">'
-			     . '<a href="#" class="vc_automapper-edit-btn" data-id="' . $shortcode->id . '" data-tag="' . $shortcode->tag . '"></a>'
-			     . '<a href="#" class="vc_automapper-delete-btn" data-id="' . $shortcode->id . '" data-tag="' . $shortcode->tag . '"></a>'
-			     . '</span></li>';
+				. '<label>' . $shortcode->name . '</label>'
+				. '<span class="vc_automapper-item-controls">'
+				. '<a href="#" class="vc_automapper-edit-btn" data-id="' . $shortcode->id . '" data-tag="' . $shortcode->tag . '"></a>'
+				. '<a href="#" class="vc_automapper-delete-btn" data-id="' . $shortcode->id . '" data-tag="' . $shortcode->tag . '"></a>'
+				. '</span></li>';
 		}
 
 		/**
@@ -261,13 +261,13 @@ if ( ! class_exists( 'Vc_Automapper' ) ) {
 			?>
 			<script type="text/html" id="vc_automapper-add-form-tpl">
 				<label for="vc_atm-shortcode-string"
-				       class="vc_info"><?php _e( 'Shortcode string', 'js_composer' ) ?></label>
+					   class="vc_info"><?php _e( 'Shortcode string', 'js_composer' ) ?></label>
 
 				<div class="vc_wrapper">
 					<div class="vc_string">
 						<input id="vc_atm-shortcode-string"
-						       placeholder="<?php _e( 'Please enter valid shortcode', 'js_composer' ) ?>"
-						       type="text" class="vc_atm-string">
+							   placeholder="<?php _e( 'Please enter valid shortcode', 'js_composer' ) ?>"
+							   type="text" class="vc_atm-string">
 					</div>
 					<div class="vc_buttons">
 						<a href="#" id="vc_atm-parse-string"
@@ -320,8 +320,8 @@ if ( ! class_exists( 'Vc_Automapper' ) ) {
 					</div>
 					<div class="vc_field vc_is-container">
 						<label for="vc_atm-is-container"><input type="checkbox" name="is_container"
-						                                        id="vc_atm-is-container"
-						                                        value=""> <?php _e( 'Include content param into shortcode', 'js_composer' ) ?>
+																id="vc_atm-is-container"
+																value=""> <?php _e( 'Include content param into shortcode', 'js_composer' ) ?>
 						</label>
 					</div>
 				</div>
@@ -358,16 +358,16 @@ if ( ! class_exists( 'Vc_Automapper' ) ) {
 										<# if ('content' === param_name) { #>
 											<span class="vc_content"><?php _e( 'Content', 'js_composer' ) ?></span>
 											<input type="text" style="display: none;" name="param_name"
-											       value="{{ param_name }}"
-											       placeholder="<?php _e( 'Required value', 'js_composer' ) ?>"
-											       class="vc_param-name"
-											       data-system="true">
+												   value="{{ param_name }}"
+												   placeholder="<?php _e( 'Required value', 'js_composer' ) ?>"
+												   class="vc_param-name"
+												   data-system="true">
 							<span class="description"
-							      style="display: none;"><?php _e( 'Use only letters, numbers and underscore.', 'js_composer' ) ?></span>
+								  style="display: none;"><?php _e( 'Use only letters, numbers and underscore.', 'js_composer' ) ?></span>
 											<# } else { #>
 												<input type="text" name="param_name" value="{{ param_name }}"
-												       placeholder="<?php _e( 'Required value', 'js_composer' ) ?>"
-												       class="vc_param-name">
+													   placeholder="<?php _e( 'Required value', 'js_composer' ) ?>"
+													   class="vc_param-name">
 								<span
 									class="description"><?php _e( 'Please use only letters, numbers and underscore.', 'js_composer' ) ?></span>
 												<# } #>
@@ -375,7 +375,7 @@ if ( ! class_exists( 'Vc_Automapper' ) ) {
 									<div class="vc_heading vc_param-field">
 										<label><?php _e( 'Heading', 'js_composer' ) ?></label>
 										<input type="text" name="heading" value="{{ heading }}"
-										       placeholder="<?php _e( 'Input heading', 'js_composer' ) ?>"
+											   placeholder="<?php _e( 'Input heading', 'js_composer' ) ?>"
 										<# if ( 'hidden' === type ) { #> disabled
 											<# } #> >
 						<span
@@ -419,7 +419,7 @@ if ( ! class_exists( 'Vc_Automapper' ) ) {
 								</div>
 							</div>
 			</script>
-		<?php
+			<?php
 		}
 
 		/**
@@ -443,6 +443,9 @@ if ( ! class_exists( 'Vc_Automapper' ) ) {
 		 *
 		 */
 		public function goAction() {
+			if ( ! vc_verify_admin_nonce() || ! current_user_can( 'manage_options' ) ) {
+				die();
+			}
 			$action = vc_post_param( 'vc_action' );
 			$this->result( $this->$action() );
 		}

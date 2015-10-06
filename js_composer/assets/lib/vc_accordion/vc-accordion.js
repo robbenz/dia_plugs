@@ -693,9 +693,9 @@
 
 		hash = window.location.hash;
 		if ( hash ) {
-			$targetElement = $( '.vc_tta-accordion ' + hash + '.vc_tta-panel' );
+			$targetElement = $( hash );
 			if ( $targetElement.length ) {
-				$accordion = $targetElement.find( '[data-vc-accordion]' );
+				$accordion = $targetElement.find( '[data-vc-accordion][href='+hash+'],[data-vc-accordion][data-vc-target='+hash+']' );
 				if ( $accordion.length ) {
 					setTimeout( function () {
 						$( 'html, body' ).animate( {

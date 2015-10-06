@@ -600,6 +600,23 @@ vc.events.on( 'shortcodes:vc_row:add:param:name:parallax shortcodes:vc_row:updat
 			}
 		}
 	} );
+
+/**
+ * BC for single image
+ *
+ * If we have 'link' attribute, but 'onclick' is empty, set 'onclick' to 'custom_link'
+ *
+ * @since 4.8
+ */
+vc.events.on( 'shortcodes:vc_single_image:sync shortcodes:vc_single_image:add', function ( model ) {
+	var params = model.get( 'params' );
+
+	if ( params.link && ! params.onclick ) {
+		params.onclick = 'custom_link';
+		model.save( { params: params } );
+	}
+} );
+
 /**
  * console.log for every browser
  *

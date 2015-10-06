@@ -125,7 +125,7 @@ function vc_gitem_post_data_get_link_link_frontend_editor( $link ) {
 	return empty( $link ) ? 'a' : $link;
 }
 
-if ( 'true' === vc_request_param( 'vc_editable' ) ) {
+if ( vc_is_page_editable() ) {
 	add_filter( 'vc_gitem_post_data_get_link_link', 'vc_gitem_post_data_get_link_link_frontend_editor' );
 	add_filter( 'vc_gitem_post_data_get_link_real_link', 'vc_gitem_post_data_get_link_link_frontend_editor' );
 	add_filter( 'vc_gitem_post_data_get_link_target', 'vc_gitem_post_data_get_link_target_frontend_editor' );

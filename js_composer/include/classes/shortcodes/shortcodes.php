@@ -863,7 +863,7 @@ if ( ! class_exists( 'WPBakeryShortCode' ) ) {
 				$title = 'title="' . $params['title'] . '" ';
 			}
 
-			return '<i ' . $title . 'class="vc_element-icon' . ( ! empty( $params['icon'] ) ? ' ' . sanitize_text_field( $params['icon'] ) : '' ) . '"' . $data . '></i> ';
+			return '<i ' . $title . 'class="vc_general vc_element-icon' . ( ! empty( $params['icon'] ) ? ' ' . sanitize_text_field( $params['icon'] ) : '' ) . '"' . $data . '></i> ';
 		}
 
 		/**

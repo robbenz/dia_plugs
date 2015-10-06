@@ -1,13 +1,15 @@
 <?php
 $tab = preg_replace( '/^vc\-/', '', $page->getSlug() );
 $use_custom = get_option( vc_settings()->getFieldPrefix() . 'use_custom' );
-$css = $tab === 'color' && $use_custom ? ' color_enabled' : '';
+$css = ( ( 'color' === $tab ) && $use_custom ) ? ' color_enabled' : '';
 ?>
+<script type="text/javascript">
+	var vcAdminNonce = '<?php echo vc_generate_nonce( 'vc-admin-nonce' ); ?>';
+</script>
 <form action="options.php" method="post" id="vc_settings-<?php echo $tab ?>"
-      class="vc_settings-tab-content vc_settings-tab-content-active<?php echo esc_attr( $css ) ?>"<?php echo apply_filters( 'vc_setting-tab-form-' . $tab, '' ) ?>>
+      class="vc_settings-tab-content vc_settings-tab-content-active <?php echo esc_attr( $css ) ?>"<?php echo apply_filters( 'vc_setting-tab-form-' . $tab, '' ) ?>>
 	<?php settings_fields( vc_settings()->getOptionGroup() . '_' . $tab ) ?>
 	<?php do_settings_sections( vc_settings()->page() . '_' . $tab ) ?>
-	<?php wp_nonce_field( 'wpb_js_settings_save_action', 'wpb_js_nonce_field' ); ?>
 	<?php if ( 'general' === $tab && vc_pointers_is_dismissed() ): ?>
 		<table class="form-table">
 			<tr>

@@ -14,6 +14,7 @@
  * Shortcode class
  * @var $this WPBakeryShortCode_Vc_Line_Chart
  */
+$el_class = $title = $type = $legend = $style = $tooltips = $animation = $x_values = $values = $css = '';
 $atts = vc_map_get_attributes( $this->getShortcode(), $atts );
 extract( $atts );
 

@@ -237,7 +237,7 @@ if ( ! function_exists( 'vc_is_inline' ) ) {
 	function vc_is_inline() {
 		global $vc_is_inline;
 		if ( is_null( $vc_is_inline ) ) {
-			$vc_is_inline = vc_action() === 'vc_inline' || ! is_null( vc_request_param( 'vc_inline' ) ) || vc_request_param( 'vc_editable' ) === 'true';
+			$vc_is_inline = ( current_user_can( 'edit_posts' ) || current_user_can( 'edit_pages' ) ) && vc_action() === 'vc_inline' || ! is_null( vc_request_param( 'vc_inline' ) ) || vc_request_param( 'vc_editable' ) === 'true';
 		}
 
 		return $vc_is_inline;
@@ -385,4 +385,41 @@ function vc_file_get_contents( $filename ) {
 	}
 
 	return $output;
+}
+
+/**
+ * @param $data
+ *
+ * @return string
+ */
+function vc_generate_nonce( $data ) {
+	return wp_create_nonce( is_array( $data ) ? ( 'vc-nonce-' . implode( '|', $data ) ) : ( 'vc-nonce-' . $data ) );
+}
+
+/**
+ * @param $nonce
+ * @param $data
+ *
+ * @return bool
+ */
+function vc_verify_nonce( $nonce, $data ) {
+	return (bool) wp_verify_nonce( $nonce, ( is_array( $data ) ? ( 'vc-nonce-' . implode( '|', $data ) ) : ( 'vc-nonce-' . $data ) ) );
+}
+
+/**
+ * @param $nonce
+ *
+ * @return bool
+ */
+function vc_verify_admin_nonce( $nonce = '' ) {
+	return (bool) vc_verify_nonce( ! empty( $nonce ) ? $nonce : vc_request_param( '_vcnonce' ), 'vc-admin-nonce' );
+}
+
+/**
+ * @param $nonce
+ *
+ * @return bool
+ */
+function vc_verify_public_nonce( $nonce = '' ) {
+	return (bool) vc_verify_nonce( ( ! empty( $nonce ) ? $nonce : vc_request_param( '_vcnonce' ) ), 'vc-public-nonce' );
 }

@@ -100,10 +100,6 @@ class Vc_Settings {
 				add_action( 'admin_init', array( $this, 'initAdmin' ) );
 			}
 		}
-		add_action( 'wp_ajax_wpb_remove_settings_notification_element_css_class', array(
-			&$this,
-			'removeNotification'
-		) );
 	}
 
 	/**
@@ -513,8 +509,8 @@ class Vc_Settings {
 			'vc_updater_wrong_data' => sprintf( __( 'Invalid data. Check your information or open support ticket at <a href="%s" target="_blank">%s</a>.', 'js_composer' ), 'http://support.wpbakery.com', 'support.wpbakery.com' ),
 			'vc_updater_already_activated' => __( 'License successfully activated.', 'js_composer' ),
 			'vc_updater_already_activated_another_url' => sprintf( __( 'Your License Key is already activated on another site ({site}), you should deactivate it first or <a href="%s" target="_blank">obtain new License Key</a>.', 'js_composer' ), esc_url( "http://bit.ly/vcomposer" ) ),
-			'vc_updater_activate_license' => __( 'Activate License.', 'js_composer' ),
-			'vc_updater_deactivate_license' => __( 'Deactivate License.', 'js_composer' ),
+			'vc_updater_activate_license' => __( 'Activate License', 'js_composer' ),
+			'vc_updater_deactivate_license' => __( 'Deactivate License', 'js_composer' ),
 			'wrong_username_api_key' => sprintf( __( 'Invalid Username and/or API Key. Check your data or read <a href="%s" target="_blank">tutorial</a>.', 'js_composer' ), 'http://go.wpbakery.com/activation' ),
 			'saving' => __( 'Saving...', 'js_composer' ),
 			'save' => __( 'Save Changes', 'js_composer' ),
@@ -1156,7 +1152,7 @@ class Vc_Settings {
 
 	/**
 	 * Process options data from form and add to js_composer option parameters
-	 *
+	 * @deprecated 4.7.4, unused
 	 *
 	 */
 	public function take_action() {
@@ -1179,13 +1175,6 @@ class Vc_Settings {
 	 */
 	public function showNotification() {
 		echo '<div class="error"><p>' . sprintf( __( 'Visual Composer: Your css class names settings are deprecated. <a href="%s">Click here to resolve</a>.', 'js_composer' ), menu_page_url( $this->page, false ) . '&tab=element_css' ) . '</p></div>';
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public static function removeNotification() {
-		update_option( self::$notification_name, 'false' );
 	}
 
 	/**
@@ -1327,7 +1316,6 @@ EOF;
 						</div>
 						<?php settings_fields( $this->option_group . '_' . $tab ) ?>
 						<?php do_settings_sections( $this->page . '_' . $tab ) ?>
-						<?php wp_nonce_field( 'wpb_js_settings_save_action', 'wpb_js_nonce_field' ); ?>
 						<input type="hidden" name="vc_action" value="<?php echo 'vc_action-' . $tab; ?>"
 						       id="vc_settings-<?php echo $tab ?>-action"/>
 						<a href="#" class="button vc_restore-button"
@@ -1345,7 +1333,6 @@ EOF;
 					      class="vc_settings-tab-content<?php echo ( $this->active_tab == $tab ? ' vc_settings-tab-content-active' : '' ) . $css ?>"<?php echo apply_filters( 'vc_setting-tab-form-' . $tab, '' ) ?>>
 						<?php settings_fields( $this->option_group . '_' . $tab ) ?>
 						<?php do_settings_sections( $this->page . '_' . $tab ) ?>
-						<?php wp_nonce_field( 'wpb_js_settings_save_action', 'wpb_js_nonce_field' ); ?>
 						<?php
 						$submit_button_attributes = array();
 						$license_activation_key = vc_license()->deactivation();

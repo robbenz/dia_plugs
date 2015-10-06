@@ -28,11 +28,11 @@ class WPBakeryShortCode_VC_Tta_Tabs extends WPBakeryShortCode_VC_Tta_Accordion {
 	public function getTtaGeneralClasses() {
 		$classes = parent::getTtaGeneralClasses();
 
-		if ( $this->atts['no_fill_content_area'] ) {
+		if ( ! empty( $this->atts['no_fill_content_area'] ) ) {
 			$classes .= ' vc_tta-o-no-fill';
 		}
 
-		if ( $this->atts['tab_position'] ) {
+		if ( isset( $this->atts['tab_position'] ) ) {
 			$classes .= ' ' . $this->getTemplateVariable( 'tab_position' );
 		}
 

@@ -12,6 +12,7 @@
  * @since   4.2
  */
 class Vc_Shortcode_Edit_Form implements Vc_Render {
+
 	/**
 	 *
 	 */
@@ -41,6 +42,11 @@ class Vc_Shortcode_Edit_Form implements Vc_Render {
 	 * @since 4.4
 	 */
 	public function renderFields() {
+		if ( ! vc_verify_admin_nonce() || ( ! current_user_can( 'edit_posts' ) && ! current_user_can( 'edit_pages' ) ) ) {
+			wp_send_json( array(
+				'success' => false
+			) );
+		}
 		$params = array_map( 'htmlspecialchars_decode', (array) stripslashes_deep( vc_post_param( 'params' ) ) );
 		$tag = stripslashes( vc_post_param( 'tag' ) );
 		require_once vc_path_dir( 'EDITORS_DIR', 'class-vc-edit-form-fields.php' );
@@ -56,6 +62,11 @@ class Vc_Shortcode_Edit_Form implements Vc_Render {
 	 * @use Vc_Shortcode_Edit_Form::renderFields
 	 */
 	public function build() {
+		if ( ! vc_verify_admin_nonce( vc_post_param( 'nonce' ) ) || ( ! current_user_can( 'edit_posts' ) && ! current_user_can( 'edit_pages' ) ) ) {
+			wp_send_json( array(
+				'success' => false
+			) );
+		}
 		$tag = vc_post_param( 'element' );
 		$shortCode = stripslashes( vc_post_param( 'shortcode' ) );
 		require_once vc_path_dir( 'EDITORS_DIR', 'class-vc-edit-form-fields.php' );

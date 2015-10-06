@@ -4,7 +4,6 @@
  * Class Vc_Pageable
  */
 abstract class WPBakeryShortCode_Vc_Pageable extends WPBakeryShortCode {
-
 	/**
 	 * @param $settings
 	 */
@@ -103,4 +102,24 @@ abstract class WPBakeryShortCode_Vc_Pageable extends WPBakeryShortCode {
 	 * @return string - rendered content for ajax
 	 */
 	abstract function renderAjax( $vc_request_param );
+
+	/**
+	 * Check is pageable
+	 * @since 4.7.4
+	 * @return bool
+	 */
+	public function isObjectPageable() {
+		return true;
+	}
+
+	/**
+	 * Check can user manage post.
+	 *
+	 * @param int $page_id
+	 *
+	 * @return bool
+	 */
+	public function currentUserCanManage( $page_id ) {
+		return current_user_can( 'edit_post', (int) $page_id );
+	}
 }

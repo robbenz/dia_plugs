@@ -212,6 +212,9 @@ class Vc_Base {
 	 * @param null $post_id
 	 */
 	public function save( $post_id = null ) {
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
+			return;
+		}
 		/**
 		 * vc_filter: vc_base_save_post_custom_css
 		 * @since 4.4
@@ -272,6 +275,11 @@ class Vc_Base {
 	 * @since 4.2
 	 */
 	public function singleImageSrc() {
+		if ( ! vc_verify_admin_nonce() || ( ! current_user_can( 'edit_posts' ) && ! current_user_can( 'edit_pages' ) ) ) {
+			wp_send_json( array(
+				'success' => false
+			) );
+		}
 		$image_id = (int) vc_post_param( 'content' );
 		$params = vc_post_param( 'params' );
 		$post_id = vc_post_param( 'post_id' );
@@ -326,6 +334,11 @@ class Vc_Base {
 	 * @since 4.2
 	 */
 	public function galleryHTML() {
+		if ( ! vc_verify_admin_nonce() || ( ! current_user_can( 'edit_posts' ) && ! current_user_can( 'edit_pages' ) ) ) {
+			wp_send_json( array(
+				'success' => false
+			) );
+		}
 		$images = vc_post_param( 'content' );
 		if ( ! empty( $images ) ) {
 			echo fieldAttachedImages( explode( ',', $images ) );

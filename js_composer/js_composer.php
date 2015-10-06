@@ -3,7 +3,7 @@
 Plugin Name: WPBakery Visual Composer
 Plugin URI: http://vc.wpbakery.com
 Description: Drag and drop page builder for WordPress. Take full control over your WordPress site, build any layout you can imagine – no programming knowledge required.
-Version: 4.7
+Version: 4.7.4
 Author: Michael M - WPBakery.com
 Author URI: http://wpbakery.com
 */
@@ -19,7 +19,7 @@ if ( ! defined( 'WPB_VC_VERSION' ) ) {
 	/**
 	 *
 	 */
-	define( 'WPB_VC_VERSION', '4.7' );
+	define( 'WPB_VC_VERSION', '4.7.4' );
 }
 
 /**
@@ -344,17 +344,20 @@ class Vc_Manager {
 		 * 6. page_editable - by vc_action
 		 */
 		if ( is_admin() ) {
-			if ( vc_action() === 'vc_inline' ) {
+			if ( vc_action() === 'vc_inline' && ( current_user_can( 'edit_posts' ) || current_user_can( 'edit_pages' ) ) ) {
 				$this->mode = 'admin_frontend_editor';
-			} elseif ( vc_action() === 'vc_upgrade' || ( vc_get_param( 'action' ) === 'update-selected' && vc_get_param( 'plugins' ) === $this->pluginName() ) ) {
+			} elseif ( ( current_user_can( 'edit_posts' ) || current_user_can( 'edit_pages' ) ) && (
+					vc_action() === 'vc_upgrade' ||
+					( vc_get_param( 'action' ) === 'update-selected' && vc_get_param( 'plugins' ) === $this->pluginName() )
+				) ) {
 				$this->mode = 'admin_updater';
-			} elseif ( isset( $_GET['page'] ) && $_GET['page'] === $this->settings()->page() ) {
+			} elseif ( current_user_can( 'manage_options' ) && isset( $_GET['page'] ) && $_GET['page'] === $this->settings()->page() ) {
 				$this->mode = 'admin_settings_page';
 			} else {
 				$this->mode = 'admin_page';
 			}
 		} else {
-			if ( isset( $_GET['vc_editable'] ) && 'true' === $_GET['vc_editable'] ) {
+			if ( vc_verify_admin_nonce() && current_user_can( 'edit_post', (int) vc_request_param( 'vc_post_id' ) ) && isset( $_GET['vc_editable'] ) && 'true' === $_GET['vc_editable'] ) {
 				$this->mode = 'page_editable';
 			} else {
 				$this->mode = 'page';
@@ -549,7 +552,7 @@ class Vc_Manager {
 	 * @return bool
 	 */
 	public function isUpdaterDisabled() {
-		return $this->disable_updater;
+		return is_admin() && $this->disable_updater;
 	}
 
 	/**

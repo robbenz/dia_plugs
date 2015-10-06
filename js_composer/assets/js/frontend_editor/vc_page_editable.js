@@ -54,7 +54,7 @@ var vc_iframe = {
 	vc_iframe.renderPlaceholder = function ( event, element ) {
 		var tag = $( element ).data( 'tag' ),
 			is_container = parent.vc.map[ tag ] === Object( parent.vc.map[ tag ] ) && ( ( (true === parent.vc.map[ tag ].is_container || false === parent.vc.map[ tag ].is_container || '[object Boolean]' === toString.call( parent.vc.map[ tag ].is_container )) && true === parent.vc.map[ tag ].is_container ) || (null != parent.vc.map[ tag ].as_parent && '[object Array]' === Object.prototype.toString.call( parent.vc.map[ tag ].as_parent ) && false != parent.vc.map[ tag ].as_parent) ),
-			$helper = $( '<div class="vc_helper vc_helper-' + tag + '"><i class="vc_element-icon'
+			$helper = $( '<div class="vc_helper vc_helper-' + tag + '"><i class="vc_general vc_element-icon'
 			+ ( parent.vc.map[ tag ].icon ? ' ' + parent.vc.map[ tag ].icon : '' )
 			+ '"'
 			+ ( is_container ? ' data-is-container="true"' : '' )

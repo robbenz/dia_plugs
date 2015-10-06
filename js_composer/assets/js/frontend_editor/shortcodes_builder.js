@@ -38,7 +38,8 @@
 		build: function ( shortcodes, callback ) {
 			this.ajax( {
 					action: 'vc_load_shortcode',
-					shortcodes: shortcodes
+					shortcodes: shortcodes,
+					_vcnonce: window.vcAdminNonce
 				},
 				vc.frame_window.location.href ).done( function ( html ) {
 					_.each( $( html ), function ( block ) {
@@ -214,7 +215,8 @@
 						string: shortcode,
 						tag: tag
 					}
-				]
+				],
+				_vcnonce: window.vcAdminNonce
 			}, vc.frame_window.location.href ).done( function ( html ) {
 				var old_view;
 				old_view = model.view;

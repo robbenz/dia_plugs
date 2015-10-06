@@ -15,23 +15,23 @@ if ( 'yes' === $atts['show_filter'] && ! empty( $filter_terms ) ):
 	) ) : array();
 	if ( 'dropdown' !== $atts['filter_style'] ):
 		echo '<ul class="vc_grid-filter vc_clearfix vc_grid-filter-'
-		     . esc_attr( $atts['filter_style'] )
-		     . ' vc_grid-filter-size-'
-		     . esc_attr( $atts['filter_size'] )
-		     . ' vc_grid-filter-'
-		     . esc_attr( $atts['filter_align'] )
-		     . ' vc_grid-filter-color-'
-		     . esc_attr( $atts['filter_color'] )
-		     . '" data-vc-grid-filter="'
-		     . esc_attr( $atts['filter_source'] )
-		     . '"><li class="vc_active vc_grid-filter-item"><span data-vc-grid-filter-value="*">';
+			. esc_attr( $atts['filter_style'] )
+			. ' vc_grid-filter-size-'
+			. esc_attr( $atts['filter_size'] )
+			. ' vc_grid-filter-'
+			. esc_attr( $atts['filter_align'] )
+			. ' vc_grid-filter-color-'
+			. esc_attr( $atts['filter_color'] )
+			. '" data-vc-grid-filter="'
+			. esc_attr( $atts['filter_source'] )
+			. '"><li class="vc_active vc_grid-filter-item"><span data-vc-grid-filter-value="*">';
 		_e( 'All', 'js_composer' );
 		echo '</span></li>';
 		foreach ( $terms as $term ):
 			echo '<li class="vc_grid-filter-item"><span'
-			     . ' data-vc-grid-filter-value=".vc_grid-term-'
-			     . $term->term_id
-			     . '">';
+				. ' data-vc-grid-filter-value=".vc_grid-term-'
+				. $term->term_id
+				. '">';
 			echo esc_attr( $term->name );
 			echo '</span><!-- fix whitespace
 				--></li>';
@@ -46,10 +46,10 @@ if ( 'yes' === $atts['show_filter'] && ! empty( $filter_terms ) ):
 				<option class="vc_active" value="*"><?php _e( 'All', 'js_composer' ) ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
 				<?php foreach ( $terms as $term ):
 					echo '<option value=".vc_grid-term-'
-					     . esc_attr( $term->term_id )
-					     . '">'
-					     . esc_html( $term->name )
-					     . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>';
+						. esc_attr( $term->term_id )
+						. '">'
+						. esc_html( $term->name )
+						. '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>';
 				endforeach; ?>
 			</select><i class="vc_arrow-icon-navicon"></i>
 		</div>

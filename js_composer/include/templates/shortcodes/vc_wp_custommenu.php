@@ -8,6 +8,7 @@
  * Shortcode class
  * @var $this WPBakeryShortCode_VC_Wp_Custommenu
  */
+$title = $nav_menu = $el_class = '';
 $output = '';
 $atts = vc_map_get_attributes( $this->getShortcode(), $atts );
 extract( $atts );

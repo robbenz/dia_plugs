@@ -16,6 +16,8 @@
  * Shortcode class
  * @var $this WPBakeryShortCode_VC_Posts_Grid
  */
+$title = $grid_columns_count = $grid_teasers_count = $grid_layout =
+$grid_link_target = $filter = $grid_thumb_size = $grid_layout_mode = $el_class = $loop = '';
 
 global $vc_teaser_box;
 $grid_link = '';
@@ -138,7 +140,7 @@ $this->setLinktarget( $grid_link_target );
 
 ?>
 	<div
-		class="<?php echo esc_attr( $css_class ) ?>">
+		class="<?php echo esc_attr( trim( $css_class ) ); ?>">
 		<div class="wpb_wrapper">
 			<?php echo wpb_widget_title( array( 'title' => $title, 'extraclass' => 'wpb_teaser_grid_heading' ) ) ?>
 			<div class="teaser_grid_container">

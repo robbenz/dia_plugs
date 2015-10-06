@@ -23,7 +23,8 @@
  * Shortcode class
  * @var $this WPBakeryShortCode_VC_Single_image
  */
-
+$title = $source = $image = $custom_src = $onclick = $img_size = $external_img_size =
+$caption = $img_link_large = $link = $img_link_target = $alignment = $el_class = $css_animation = $style = $external_style = $border_color = $css = '';
 $atts = vc_map_get_attributes( $this->getShortcode(), $atts );
 extract( $atts );
 
@@ -38,6 +39,7 @@ if ( empty( $onclick ) && isset( $img_link_large ) && 'yes' === $img_link_large 
 
 if ( 'external_link' === $source ) {
 	$style = $external_style;
+	$border_color = $external_border_color;
 }
 
 $border_color = ( $border_color !== '' ) ? ' vc_box_border_' . $border_color : '';
@@ -198,8 +200,10 @@ $css_class = apply_filters( VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, $class_to_filter
 if ( in_array( $source, array( 'media_library', 'featured_image' ) ) && 'yes' === $add_caption ) {
 	$post = get_post( $img_id );
 	$caption = $post->post_excerpt;
-} else if ( 'external_link' === $source ) {
-	$add_caption = 'yes';
+} else {
+	if ( 'external_link' === $source ) {
+		$add_caption = 'yes';
+	}
 }
 
 if ( 'yes' === $add_caption && '' !== $caption ) {

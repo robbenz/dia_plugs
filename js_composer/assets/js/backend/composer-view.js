@@ -164,7 +164,8 @@
 					data: {
 						action: 'wpb_get_element_backend_html',
 						data_element: this.model.get( 'shortcode' ),
-						data_width: _.isUndefined( params.width ) ? '1/1' : params.width
+						data_width: _.isUndefined( params.width ) ? '1/1' : params.width,
+						_vcnonce: window.vcAdminNonce
 					},
 					dataType: 'html',
 					context: this
@@ -273,7 +274,8 @@
 								data: {
 									action: 'wpb_single_image_src',
 									content: value,
-									size: 'thumbnail'
+									size: 'thumbnail',
+									_vcnonce: window.vcAdminNonce
 								},
 								dataType: 'html',
 								context: this
@@ -693,7 +695,7 @@
 		renderPlaceholder: function ( event, element ) {
 			var tag = $( element ).data( 'element_type' );
 			var is_container = _.isObject( vc.map[ tag ] ) && ( ( _.isBoolean( vc.map[ tag ].is_container ) && true === vc.map[ tag ].is_container ) || ! _.isEmpty( vc.map[ tag ].as_parent ) );
-			var $helper = $( '<div class="vc_helper vc_helper-' + tag + '"><i class="vc_element-icon'
+			var $helper = $( '<div class="vc_helper vc_helper-' + tag + '"><i class="vc_general vc_element-icon'
 			+ ( vc.map[ tag ].icon ? ' ' + vc.map[ tag ].icon : '' )
 			+ '"'
 			+ ( is_container ? ' data-is-container="true"' : '' )

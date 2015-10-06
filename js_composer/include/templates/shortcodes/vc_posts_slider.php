@@ -21,6 +21,7 @@
  * Shortcode class
  * @var $this WPBakeryShortCode_VC_Posts_slider
  */
+$title = $type = $count = $interval = $slides_content = $slides_title = $link = $custom_links = $thumb_size = $posttypes = $posts_in = $categories = $order = $orderby = $el_class = $css = '';
 $link_image_start = '';
 $atts = vc_map_get_attributes( $this->getShortcode(), $atts );
 extract( $atts );

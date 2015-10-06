@@ -5,7 +5,7 @@ Class Vc_Grid_Item_Preview {
 	protected $post_id = false;
 
 	public function render() {
-		$this->post_id = vc_request_param( 'post_id' );
+		$this->post_id = (int)vc_request_param( 'post_id' );
 		$this->shortcodes_string = stripslashes( vc_request_param( 'shortcodes_string', true ) );
 		require_once vc_path_dir( 'PARAMS_DIR', 'vc_grid_item/class-vc-grid-item.php' );
 		$grid_item = new Vc_Grid_Item();

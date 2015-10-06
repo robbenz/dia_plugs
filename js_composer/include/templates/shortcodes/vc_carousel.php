@@ -19,6 +19,10 @@
  * Shortcode class
  * @var $this WPBakeryShortCode_Vc_Carousel
  */
+$el_class = $posts_query = $mode = $speed = $slides_per_view =
+$wrap = $autoplay = $hide_pagination_control = $hide_prev_next_buttons =
+$layout = $link_target = $thumb_size = $partial_view = $title = '';
+
 global $vc_teaser_box;
 
 $args = $my_query = '';

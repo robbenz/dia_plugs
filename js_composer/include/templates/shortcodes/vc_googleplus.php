@@ -9,6 +9,7 @@
  * Shortcode class
  * @var $this WPBakeryShortCode_VC_GooglePlus
  */
+$type = $annotation = $widget_width = $css = '';
 $atts = vc_map_get_attributes( $this->getShortcode(), $atts );
 extract( $atts );
 

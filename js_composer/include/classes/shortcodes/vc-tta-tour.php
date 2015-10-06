@@ -8,7 +8,7 @@ class WPBakeryShortCode_VC_Tta_Tour extends WPBakeryShortCode_VC_Tta_Tabs {
 	public function getTtaGeneralClasses() {
 		$classes = parent::getTtaGeneralClasses();
 
-		if ( $this->atts['controls_size'] ) {
+		if ( isset($this->atts['controls_size']) ) {
 			$classes .= ' ' . $this->getTemplateVariable( 'controls_size' );
 		}
 

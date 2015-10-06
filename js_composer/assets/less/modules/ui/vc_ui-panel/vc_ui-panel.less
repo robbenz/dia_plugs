@@ -11,12 +11,14 @@
 @vcui-panel-width: 650px;
 
 .vc_ui-panel {
-  width: @vcui-panel-width;
-  position: fixed;
-  z-index: 100000;
-  top: 74px;
-  left: 50%;
   display: none;
+  &.vc_ui-panel-window {
+    width: @vcui-panel-width;
+    position: fixed;
+    z-index: 100000;
+    top: 74px;
+    left: 50%;
+  }
   &.vc_active {
     display: flex;
   }

@@ -17,6 +17,7 @@
  * Shortcode class
  * @var $this WPBakeryShortCode_VC_Row
  */
+$el_class = $full_height = $full_width = $content_placement = $parallax = $parallax_image = $css = $el_id = $video_bg = $video_bg_url = $video_bg_parallax = '';
 $output = $after_output = '';
 $atts = vc_map_get_attributes( $this->getShortcode(), $atts );
 extract( $atts );

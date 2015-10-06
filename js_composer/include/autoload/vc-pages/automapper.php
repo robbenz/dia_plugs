@@ -4,7 +4,7 @@
  * @since 4.5
  */
 function vc_automapper_init() {
-	vc_automapper()->build();
+	current_user_can( 'manage_options' ) && vc_automapper()->build();
 }
 
 /**

@@ -12,6 +12,7 @@
  * Shortcode class
  * @var $this WPBakeryShortCode_VC_flickr
  */
+$el_class = $title = $flickr_id = $css = $count = $type = $display = '';
 $output = '';
 $atts = vc_map_get_attributes( $this->getShortcode(), $atts );
 extract( $atts );

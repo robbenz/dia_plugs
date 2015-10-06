@@ -170,10 +170,10 @@ class WPBakeryShortCode_VC_Basic_Grid extends WPBakeryShortCode_Vc_Pageable {
 	 */
 	public function findPostShortcodeByHash( $page_id, $hash ) {
 		if ( $hash ) {
-			if ( preg_match( '/\"tag\"\:/', urldecode( $hash ) ) ) {
+			if ( $this->currentUserCanManage( $page_id ) && preg_match( '/\"tag\"\:/', urldecode( $hash ) ) ) {
 				return json_decode( urldecode( $hash ), true ); // if frontend, no hash exists - just RAW data
 			}
-			$post_meta = get_post_meta( $page_id, '_vc_post_settings' );
+			$post_meta = get_post_meta( (int) $page_id, '_vc_post_settings' );
 			if ( is_array( $post_meta ) ) {
 				foreach ( $post_meta as $meta ) {
 					if ( isset( $meta['vc_grid'] ) && ! empty( $meta['vc_grid']['shortcodes'] ) && isset( $meta['vc_grid']['shortcodes'][ $hash ] ) ) {
@@ -187,10 +187,10 @@ class WPBakeryShortCode_VC_Basic_Grid extends WPBakeryShortCode_Vc_Pageable {
 	}
 
 	public function findPostShortcodeById( $page_id, $grid_id ) {
-		if ( preg_match( '/\"tag\"\:/', urldecode( $grid_id ) ) ) {
+		if ( $this->currentUserCanManage( $page_id ) && preg_match( '/\"tag\"\:/', urldecode( $grid_id ) ) ) {
 			return json_decode( urldecode( $grid_id ), true ); // if frontend, no hash exists - just RAW data
 		}
-		$post_meta = get_post_meta( $page_id, '_vc_post_settings' );
+		$post_meta = get_post_meta( (int) $page_id, '_vc_post_settings' );
 		if ( is_array( $post_meta ) ) {
 			foreach ( $post_meta as $meta ) {
 				if ( isset( $meta['vc_grid_id'] ) && ! empty( $meta['vc_grid_id']['shortcodes'] ) && isset( $meta['vc_grid_id']['shortcodes'][ $grid_id ] ) ) {
@@ -266,7 +266,6 @@ class WPBakeryShortCode_VC_Basic_Grid extends WPBakeryShortCode_Vc_Pageable {
 	public function renderAjax( $vc_request_param ) {
 		$this->items = array(); // clear this items array (if used more than once);
 
-		$shortcode = false;
 		$id = isset( $vc_request_param['shortcode_id'] ) ? $vc_request_param['shortcode_id'] : false;
 		if ( ! empty( $id ) ) {
 			$shortcode = $this->findPostShortcodeById( $vc_request_param['page_id'], $id );
@@ -287,9 +286,6 @@ class WPBakeryShortCode_VC_Basic_Grid extends WPBakeryShortCode_Vc_Pageable {
 		$shortcode_atts = $shortcode['atts'];
 		$this->shortcode_content = $shortcode['content'];
 		$this->buildAtts( $shortcode_atts, $shortcode['content'] );
-		if ( isset( $vc_request_param['taxonomies'] ) ) {
-			$this->atts['taxonomies'] = $vc_request_param['taxonomies'];
-		}
 
 		$this->buildItems();
 

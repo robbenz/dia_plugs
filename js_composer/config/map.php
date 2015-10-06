@@ -1206,6 +1206,19 @@ vc_map( array(
 		),
 		array(
 			'type' => 'dropdown',
+			'heading' => __( 'Border color', 'js_composer' ),
+			'param_name' => 'external_border_color',
+			'value' => getVcShared( 'colors' ),
+			'std' => 'grey',
+			'dependency' => array(
+				'element' => 'external_style',
+				'value' => array( 'vc_box_border', 'vc_box_border_circle', 'vc_box_outline', 'vc_box_outline_circle' )
+			),
+			'description' => __( 'Border color.', 'js_composer' ),
+			'param_holder_class' => 'vc_colored-dropdown'
+		),
+		array(
+			'type' => 'dropdown',
 			'heading' => __( 'On click action', 'js_composer' ),
 			'param_name' => 'onclick',
 			'value' => array(
@@ -3434,7 +3447,7 @@ vc_map( array(
 ) );
 
 $tag_taxonomies = array();
-if ( 'vc_edit_form' === vc_post_param( 'action' ) ) {
+if ( 'vc_edit_form' === vc_post_param( 'action' ) && vc_verify_admin_nonce() ) {
 	$taxonomies = get_taxonomies();
 	if ( is_array( $taxonomies ) && ! empty( $taxonomies ) ) {
 		foreach ( $taxonomies as $taxonomy ) {
@@ -3947,7 +3960,7 @@ $post_types_list[] = array( 'ids', __( 'List of IDs', 'js_composer' ) );
 
 $taxonomies_for_filter = array();
 
-if ( 'vc_edit_form' === vc_post_param( 'action' ) ) {
+if ( 'vc_edit_form' === vc_post_param( 'action' ) && vc_verify_admin_nonce() ) {
 	$vc_taxonomies_types = vc_taxonomies_types();
 	if ( is_array( $vc_taxonomies_types ) && ! empty( $vc_taxonomies_types ) ) {
 		foreach ( $vc_taxonomies_types as $t => $data ) {

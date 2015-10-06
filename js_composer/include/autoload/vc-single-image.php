@@ -15,5 +15,9 @@ function vc_single_image_convert_old_link_to_new( $atts ) {
 		unset( $atts['img_link_large'] );
 	}
 
+	if ( empty( $atts['onclick'] ) && ! empty( $atts['link'] ) ) {
+		$atts['onclick'] = 'custom_link';
+	}
+
 	return $atts;
 }

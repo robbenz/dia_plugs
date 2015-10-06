@@ -21,6 +21,11 @@
  * Shortcode class
  * @var $this WPBakeryShortCode_VC_images_carousel
  */
+$title = $onclick = $custom_links = $custom_links_target =
+$img_size = $images = $el_class = $mode = $slides_per_view =
+$wrap = $autoplay = $hide_pagination_control =
+$hide_prev_next_buttons = $speed = $partial_view = $css = '';
+
 $output = '';
 $atts = vc_map_get_attributes( $this->getShortcode(), $atts );
 extract( $atts );

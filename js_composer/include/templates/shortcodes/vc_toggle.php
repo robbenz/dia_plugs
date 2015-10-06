@@ -15,6 +15,7 @@
  * Shortcode class
  * @var $this WPBakeryShortCode_VC_Toggle
  */
+$title = $el_class = $style = $color = $size = $open = $css_animation = $css = $el_id = '';
 $output = '';
 
 $inverted = false;

@@ -23,7 +23,7 @@ Class Vc_Add_Element_Box implements Vc_Render {
 			$data = ' data-is-container="true"';
 		}
 
-		return '<i class="vc_element-icon' . ( ! empty( $params['icon'] ) ? ' ' . sanitize_text_field( $params['icon'] ) : '' ) . '"' . $data . '></i> ';
+		return '<i class="vc_general vc_element-icon' . ( ! empty( $params['icon'] ) ? ' ' . sanitize_text_field( $params['icon'] ) : '' ) . '"' . $data . '></i> ';
 	}
 
 	/**

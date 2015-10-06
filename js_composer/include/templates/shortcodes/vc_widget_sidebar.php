@@ -8,6 +8,7 @@
  * Shortcode class
  * @var $this WPBakeryShortCode_VC_Widget_sidebar
  */
+$title = $el_class = $sidebar_id = '';
 $atts = vc_map_get_attributes( $this->getShortcode(), $atts );
 extract( $atts );
 

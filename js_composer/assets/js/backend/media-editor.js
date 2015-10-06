@@ -78,7 +78,8 @@
 				data: {
 					action: 'vc_media_editor_add_image',
 					filters: window.vc_selectedFilters,
-					ids: ids
+					ids: ids,
+					_vcnonce: window.vcAdminNonce
 				}
 			} ).done( function ( response ) {
 				var newId;
@@ -341,7 +342,8 @@
 				action: 'vc_media_editor_add_image',
 				filters: window.vc_selectedFilters,
 				ids: ids,
-				vc_inline: true
+				vc_inline: true,
+				_vcnonce: window.vcAdminNonce
 			}
 		} ).done( function ( response ) {
 			var attachments, attachment, promises, i;
@@ -474,7 +476,8 @@
 				action: 'vc_media_editor_preview_image',
 				filter: $filter.val(),
 				attachment_id: attachmentId,
-				preferred_size: window.getUserSetting( 'imgsize', 'medium' )
+				preferred_size: window.getUserSetting( 'imgsize', 'medium' ),
+				_vcnonce: window.vcAdminNonce
 			}
 		} ).done( function ( response ) {
 			if ( ! response.success || ! response.data.src.length ) {

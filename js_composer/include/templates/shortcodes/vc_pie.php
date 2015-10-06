@@ -13,7 +13,7 @@
  * Shortcode class
  * @var $this WPBakeryShortCode_Vc_Pie
  */
-$title = '';
+$title = $el_class = $value = $units = $color = $custom_color = $label_value = $css = '';
 $atts = $this->convertOldColorsToNew( $atts );
 $atts = vc_map_get_attributes( $this->getShortcode(), $atts );
 extract( $atts );

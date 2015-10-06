@@ -18,9 +18,9 @@ extract( shortcode_atts( array(
 ), $atts ) );
 
 $css_class = 'vc_gitem_row vc_row'
-             . ( strlen( $el_class ) ? ' ' . $el_class : '' )
-             . vc_shortcode_custom_css_class( $css, ' ' )
-             . ( $position ? ' vc_gitem-row-position-' . $position : '' );
+	. ( strlen( $el_class ) ? ' ' . $el_class : '' )
+	. vc_shortcode_custom_css_class( $css, ' ' )
+	. ( $position ? ' vc_gitem-row-position-' . $position : '' );
 if ( ! vc_gitem_has_content( $content ) ) {
 	return;
 }

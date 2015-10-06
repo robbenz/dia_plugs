@@ -9,9 +9,11 @@
 
 $atts = vc_map_get_attributes( $this->getShortcode(), $atts );
 $this->buildTemplate( $atts, $content );
+$containerClass = 'vc_cta3-container ' . esc_attr( implode( ' ', $this->getTemplateVariable( 'container-class' ) ) );
+$containerClass = trim( $containerClass );
 ?>
 <section
-	class="vc_cta3-container <?php echo esc_attr( implode( ' ', $this->getTemplateVariable( 'container-class' ) ) ); ?>">
+	class="<?php echo $containerClass; ?>">
 	<div class="vc_general <?php echo esc_attr( implode( ' ', $this->getTemplateVariable( 'css-class' ) ) ); ?>"<?php
 	if ( $this->getTemplateVariable( 'inline-css' ) ) {
 		echo ' style="' . esc_attr( implode( ' ', $this->getTemplateVariable( 'inline-css' ) ) ) . '"';

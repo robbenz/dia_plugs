@@ -28,27 +28,20 @@ jQuery( document ).ready( function ( $ ) {
 		var tab_id = $( this ).attr( 'href' );
 		$( '.vc_settings-tabs > .nav-tab-active' ).removeClass( 'nav-tab-active' );
 		$( this ).addClass( 'nav-tab-active' );
+		/*
+		@deprecated since 4.7.1 and will be removed in 4.8. #48381311685558
 		$( '.vc_settings-tab-content' ).hide().removeClass( 'vc_settings-tab-content-active' );
 		$( tab_id ).fadeIn( 400, function () {
 			$( this ).addClass( 'vc_settings-tab-content-active' );
 			if ( window.css_editor ) {
 				window.css_editor.focus();
 			}
-		} );
+		} );*/
 	} );
 	$( '.vc_settings-tab-content' ).submit( function () {
 		return true;
 	} );
 
-	$( '#vc_settings-disable-notification-button' ).click( function ( e ) {
-		e.preventDefault();
-		$.ajax( {
-			type: 'POST',
-			url: window.ajaxurl,
-			data: { action: 'wpb_remove_settings_notification_element_css_class' }
-		} );
-		$( this ).remove();
-	} );
 	$( '.vc_show_example' ).click( function ( e ) {
 		e.preventDefault();
 		var $helper = $( '.vc_helper' );
@@ -113,7 +106,8 @@ jQuery( document ).ready( function ( $ ) {
 				action: 'activated' === status ? 'wpb_deactivate_license' : 'wpb_activate_license',
 				username: $username.val(),
 				key: $key.val(),
-				api_key: $api_key.val()
+				api_key: $api_key.val(),
+				_vcnonce: window.vcAdminNonce
 			}
 		} ).done( function ( data ) {
 			var code;
@@ -206,7 +200,8 @@ jQuery( document ).ready( function ( $ ) {
 	$( '#vc_settings-vc-pointers-reset' ).click( function ( e ) {
 		e.preventDefault();
 		$.post( window.ajaxurl, {
-			action: 'vc_pointer_reset'
+			action: 'vc_pointer_reset',
+			_vcnonce: window.vcAdminNonce
 		} );
 		$( this ).text( $( this ).data( 'vcDoneTxt' ) );
 	} );

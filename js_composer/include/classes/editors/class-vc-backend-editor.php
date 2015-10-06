@@ -213,6 +213,11 @@ class Vc_Backend_Editor implements Vc_Editor_Interface {
 	public function elementBackendHtml() {
 		global $current_user;
 		get_currentuserinfo();
+		if ( ! vc_verify_admin_nonce() || ( ! current_user_can( 'edit_posts' ) && ! current_user_can( 'edit_pages' ) ) ) {
+			wp_send_json( array(
+				'success' => false
+			) );
+		}
 		$data_element = vc_post_param( 'data_element' );
 		/** @var $settings - get use group access rules */
 		$settings = WPBakeryVisualComposerSettings::get( 'groups_access_rules' );

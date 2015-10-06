@@ -204,7 +204,7 @@ class WPBakeryShortCode_VC_Tta_Section extends WPBakeryShortCode_VC_Tta_Accordio
 		$output .= ' data-vc-container=".vc_tta-container">';
 		$output .= $this->getTemplateVariable( 'icon-left' );
 		$output .= '<span class="vc_tta-title-text">'
-		           . esc_html( $this->getTemplateVariable( 'title' ) )
+		           . $this->getTemplateVariable( 'title' )
 		           . '</span>';
 		$output .= $this->getTemplateVariable( 'icon-right' );
 		if ( ! $isPageEditable ) {

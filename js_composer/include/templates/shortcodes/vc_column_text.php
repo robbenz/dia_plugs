@@ -9,6 +9,7 @@
  * Shortcode class
  * @var $this WPBakeryShortCode_VC_Column_text
  */
+$el_class = $css = $css_animation = '';
 $atts = vc_map_get_attributes( $this->getShortcode(), $atts );
 extract( $atts );
 

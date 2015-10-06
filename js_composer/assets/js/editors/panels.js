@@ -646,6 +646,7 @@
 		// @deprecated 4.7
 		notRequestTemplate: false,
 		requiredParamsInitialized: false,
+		currentModelParams: false,
 		events: {
 			'click [data-save=true]': 'save',
 			'click [data-dismiss=panel]': 'hide',
@@ -676,6 +677,7 @@
 				this.notRequestTemplate = true;
 			}
 			this.model = model;
+			this.currentModelParams = this.model.get( 'params' );
 			vc.active_panel = this;
 			this.resetMinimize();
 			this.clicked = false;
@@ -716,7 +718,13 @@
 			$panelHeader = this.$el.find( '[data-vc-ui-element="panel-header-content"]' );
 			$tabs.prependTo( $panelHeader );
 			this.$content.html( $data );
-			this.$content.removeData( 'vcParamInitialized' );
+			this.$content.removeAttr( 'data-vc-param-initialized' );
+			this.active_tab_index = 0;
+			this.tabsInit = false;
+			this.panelInit = false;
+			this.dependent_elements = {};
+			this.requiredParamsInitialized = false;
+			this.$content.find( '[data-vc-param-initialized]' ).removeAttr( 'data-vc-param-initialized' );
 			this.init();
 			// In Firefox, scrollTop(0) is buggy, scrolling to non-0 value first fixes it
 			this.$content.parent().scrollTop( 1 ).scrollTop( 0 );
@@ -731,9 +739,19 @@
 		resetMinimize: function () {
 			this.$el.removeClass( 'vc_panel-opacity' );
 		},
+		saveSettingsAjaxData: function ( shortcode_name, title, is_default, data ) {
+			return {
+				action: 'vc_action_save_settings_preset',
+				shortcode_name: shortcode_name,
+				is_default: is_default ? 1 : 0,
+				vc_inline: true,
+				title: title,
+				data: data,
+				_vcnonce: window.vcAdminNonce
+			};
+		},
 		saveSettings: function ( title, is_default ) {
 			var shortcode_name = this.model.get( 'shortcode' ),
-				that = this,
 				data = JSON.stringify( this.getParams() ),
 				success = false;
 
@@ -749,27 +767,21 @@
 				type: 'POST',
 				dataType: 'json',
 				url: window.ajaxurl,
-				data: {
-					action: 'vc_action_save_settings_preset',
-					shortcode_name: shortcode_name,
-					is_default: is_default ? 1 : 0,
-					vc_inline: true,
-					title: title,
-					data: data
-				}
+				data: this.saveSettingsAjaxData( shortcode_name, title, is_default, data ),
+				context: this
 			} ).done( function ( response ) {
-				var $button = that.$el.find( that.settingsButtonSelector );
+				var $button = this.$el.find( this.settingsButtonSelector );
 
 				if ( response.success ) {
 					success = true;
-					that.setSettingsMenuContent( response.html );
-					that.settingsPresetId = response.id;
+					this.setSettingsMenuContent( response.html );
+					this.settingsPresetId = response.id;
 
 					if ( is_default ) {
-						window.vc_settings_presets[ shortcode_name ] = that.getParams();
+						window.vc_settings_presets[ shortcode_name ] = this.getParams();
 					}
 
-					that.untaintSettingsPresetData();
+					this.untaintSettingsPresetData();
 
 					$button.addClass( 'vc_done' );
 
@@ -782,6 +794,13 @@
 					vcConsoleLog( 'Could not save settings preset' );
 				}
 			} );
+		},
+		fetchSaveSettingsDialogAjaxData: function () {
+			return {
+				action: 'vc_action_render_settings_preset_title_prompt',
+				vc_inline: true,
+				_vcnonce: window.vcAdminNonce
+			};
 		},
 		/**
 		 * Fetch save settings dialog and insert it into DOM
@@ -805,10 +824,7 @@
 				type: 'POST',
 				dataType: 'json',
 				url: window.ajaxurl,
-				data: {
-					action: 'vc_action_render_settings_preset_title_prompt',
-					vc_inline: true
-				}
+				data: this.fetchSaveSettingsDialogAjaxData()
 			} ).done( function ( response ) {
 				if ( response.success ) {
 					success = true;
@@ -888,14 +904,21 @@
 				} );
 			} );
 		},
+		loadSettingsAjaxData: function ( id ) {
+			return {
+				action: 'vc_action_get_settings_preset',
+				vc_inline: true,
+				id: id,
+				_vcnonce: window.vcAdminNonce
+			};
+		},
 		/**
 		 * Load and render specific preset
 		 *
 		 * @param {number} id
 		 */
 		loadSettings: function ( id ) {
-			var that = this,
-				success = false;
+			var success = false;
 
 			this.panelInit = false;
 
@@ -903,22 +926,28 @@
 				type: 'POST',
 				dataType: 'json',
 				url: window.ajaxurl,
-				data: {
-					action: 'vc_action_get_settings_preset',
-					vc_inline: true,
-					id: id
-				}
+				data: this.loadSettingsAjaxData( id ),
+				context: this
 			} ).done( function ( response ) {
 				if ( response.success ) {
 					success = true;
-					that.settingsPresetId = id;
-					that.renderSettingsPreset( response.data );
+					this.settingsPresetId = id;
+					this.renderSettingsPreset( response.data );
 				}
 			} ).always( function () {
 				if ( ! success ) {
 					vcConsoleLog( 'Could not get settings preset' );
 				}
 			} );
+		},
+		deleteSettingsAjaxData: function ( shortcode_name, id ) {
+			return {
+				action: 'vc_action_delete_settings_preset',
+				shortcode_name: shortcode_name,
+				vc_inline: true,
+				id: id,
+				_vcnonce: window.vcAdminNonce
+			};
 		},
 		/**
 		 * Delete specific preset
@@ -927,7 +956,6 @@
 		 */
 		deleteSettings: function ( id ) {
 			var shortcode_name = this.model.get( 'shortcode' ),
-				that = this,
 				success = false;
 
 			if ( ! confirm( window.i18nLocale.delete_preset_confirmation ) ) {
@@ -938,19 +966,15 @@
 				type: 'POST',
 				dataType: 'json',
 				url: window.ajaxurl,
-				data: {
-					action: 'vc_action_delete_settings_preset',
-					shortcode_name: shortcode_name,
-					vc_inline: true,
-					id: id
-				}
+				data: this.deleteSettingsAjaxData( shortcode_name, id ),
+				context: this
 			} ).done( function ( response ) {
 				if ( response.success ) {
 					success = true;
-					that.setSettingsMenuContent( response.html );
+					this.setSettingsMenuContent( response.html );
 
-					if ( id === that.settingsPresetId ) {
-						that.settingsPresetId = null;
+					if ( id === this.settingsPresetId ) {
+						this.settingsPresetId = null;
 					}
 
 					if ( response.default ) {
@@ -963,6 +987,15 @@
 				}
 			} );
 		},
+		saveAsDefaultSettingsAjaxData: function ( shortcode_name ) {
+			return {
+				action: 'vc_action_set_as_default_settings_preset',
+				shortcode_name: shortcode_name,
+				id: this.settingsPresetId,
+				vc_inline: true,
+				_vcnonce: window.vcAdminNonce
+			};
+		},
 		/**
 		 * Save currently loaded preset as default
 		 *
@@ -971,30 +1004,24 @@
 		 */
 		saveAsDefaultSettings: function () {
 			var shortcode_name = this.model.get( 'shortcode' ),
-				that = this,
 				success = false;
 
 			// if user has not loaded preset or made any changes...
-			if ( ! that.settingsPresetId || this.isSettingsPresetDataTainted() ) {
+			if ( ! this.settingsPresetId || this.isSettingsPresetDataTainted() ) {
 				this.showSaveSettingsDialog( true );
 			} else {
 				$.ajax( {
 					type: 'POST',
 					dataType: 'json',
 					url: window.ajaxurl,
-					data: {
-						action: 'vc_action_set_as_default_settings_preset',
-						shortcode_name: shortcode_name,
-						id: that.settingsPresetId,
-						vc_inline: true
-					}
+					data: this.saveAsDefaultSettingsAjaxData( shortcode_name ),
+					context: this
 				} ).done( function ( response ) {
 					if ( response.success ) {
 						success = true;
-						that.setSettingsMenuContent( response.html );
-						that.untaintSettingsPresetData();
-
-						window.vc_settings_presets[ shortcode_name ] = that.getParams();
+						this.setSettingsMenuContent( response.html );
+						this.untaintSettingsPresetData();
+						window.vc_settings_presets[ shortcode_name ] = this.getParams();
 					}
 				} ).always( function () {
 					if ( ! success ) {
@@ -1003,28 +1030,31 @@
 				} );
 			}
 		},
+		restoreDefaultSettingsAjaxData: function ( shortcode_name ) {
+			return {
+				action: 'vc_action_restore_default_settings_preset',
+				shortcode_name: shortcode_name,
+				vc_inline: true,
+				_vcnonce: window.vcAdminNonce
+			};
+		},
 		/**
 		 * Remove "default" flag from currently default preset
 		 */
 		restoreDefaultSettings: function () {
 			var shortcode_name = this.model.get( 'shortcode' ),
-				that = this,
 				success = false;
 
 			$.ajax( {
 				type: 'POST',
 				dataType: 'json',
 				url: window.ajaxurl,
-				data: {
-					action: 'vc_action_restore_default_settings_preset',
-					shortcode_name: shortcode_name,
-					vc_inline: true
-				}
+				data: this.restoreDefaultSettingsAjaxData( shortcode_name ),
+				context: this
 			} ).done( function ( response ) {
 				if ( response.success ) {
 					success = true;
-					that.setSettingsMenuContent( response.html );
-
+					this.setSettingsMenuContent( response.html );
 					delete window.vc_settings_presets[ shortcode_name ];
 				}
 			} ).always( function () {
@@ -1074,6 +1104,14 @@
 			} );
 
 		},
+		reloadSettingsMenuContentAjaxData: function ( shortcode_name ) {
+			return {
+				action: 'vc_action_render_settings_preset_popup',
+				shortcode_name: shortcode_name,
+				vc_inline: true,
+				_vcnonce: window.vcAdminNonce
+			};
+		},
 		/**
 		 * Reload settings menu (popup) content
 		 *
@@ -1083,8 +1121,7 @@
 		reloadSettingsMenuContent: function () {
 			var shortcode_name = this.model.get( 'shortcode' ),
 				$button = this.$el.find( this.settingsButtonSelector ),
-				success = false,
-				self = this;
+				success = false;
 
 			$button.addClass( 'vc_loading' );
 
@@ -1094,15 +1131,12 @@
 				type: 'POST',
 				dataType: 'json',
 				url: window.ajaxurl,
-				data: {
-					action: 'vc_action_render_settings_preset_popup',
-					shortcode_name: shortcode_name,
-					vc_inline: true
-				}
+				data: this.reloadSettingsMenuContentAjaxData( shortcode_name ),
+				context: this
 			} ).done( function ( response ) {
 				if ( response.success ) {
 					success = true;
-					self.setSettingsMenuContent( response.html );
+					this.setSettingsMenuContent( response.html );
 					$button
 						.data( 'vcSettingsMenuLoaded', true )
 						.removeClass( 'vc_loading' );
@@ -1160,6 +1194,20 @@
 
 			this.$el.data( 'vcSettingsPresetHash', vc_globalHashCode( params ) );
 		},
+		renderSettingsPresetAjaxData: function ( params ) {
+			var parent_id;
+
+			parent_id = this.model.get( 'parent_id' );
+
+			return {
+				action: 'vc_edit_form',
+				tag: this.model.get( 'shortcode' ),
+				parent_tag: parent_id ? this.model.collection.get( parent_id ).get( 'shortcode' ) : null,
+				post_id: $( '#post_ID' ).val(),
+				params: params,
+				_vcnonce: window.vcAdminNonce
+			};
+		},
 		/**
 		 * Render preset
 		 *
@@ -1169,9 +1217,7 @@
 		 * @return {vc.EditElementPanelView}
 		 */
 		renderSettingsPreset: function ( params ) {
-			var parent_id;
-
-			parent_id = this.model.get( 'parent_id' );
+			this.currentModelParams = params;
 			// @todo update with event
 			// generate new random tab_id if needed
 
@@ -1185,13 +1231,7 @@
 			this.ajax = $.ajax( {
 				type: 'POST',
 				url: window.ajaxurl,
-				data: {
-					action: 'vc_edit_form',
-					tag: this.model.get( 'shortcode' ),
-					parent_tag: parent_id ? this.model.collection.get( parent_id ).get( 'shortcode' ) : null,
-					post_id: $( '#post_ID' ).val(),
-					params: params
-				},
+				data: this.renderSettingsPresetAjaxData( params ),
 				context: this
 			} ).done( this.buildParamsContent );
 			return this;
@@ -1207,7 +1247,8 @@
 				tag: this.model.get( 'shortcode' ),
 				parent_tag: parent_tag,
 				post_id: $( '#post_ID' ).val(),
-				params: this.model.get( 'params' )
+				params: this.model.get( 'params' ),
+				_vcnonce: window.vcAdminNonce
 			};
 		},
 		init: function () {
@@ -1256,7 +1297,7 @@
 			if ( ! $content.length ) {
 				$content = this.content();
 			}
-			if ( ! $content.data( 'vcParamInitialized' ) ) {
+			if ( ! $content.attr( 'data-vc-param-initialized' ) ) {
 				$( '[data-vc-ui-element="panel-shortcode-param"]', $content ).each( function () {
 					var $field;
 					var param;
@@ -1267,7 +1308,7 @@
 						$field.data( 'vcInitParam', true );
 					}
 				} );
-				$content.data( 'vcParamInitialized', true );
+				$content.attr( 'data-vc-param-initialized', true );
 			}
 			if ( ! this.requiredParamsInitialized && ! _.isUndefined( vc.required_params_to_init ) ) {
 				$( '[data-vc-ui-element="panel-shortcode-param"]', this.content() ).each( function () {
@@ -1460,6 +1501,7 @@
 			this.ajax && this.ajax.abort();
 			this.ajax = false;
 			vc.active_panel = false;
+			this.currentModelParams = false;
 			this._killEditor();
 			this.$el.removeClass( 'vc_active' );
 			this.$el.find( '.vc_properties-list' ).removeClass( 'vc_with-tabs' ).css( 'margin-top', 'auto' );
@@ -1636,7 +1678,8 @@
 					data: {
 						action: 'wpb_delete_template',
 						template_id: $button.attr( 'rel' ),
-						vc_inline: true
+						vc_inline: true,
+						_vcnonce: window.vcAdminNonce
 					},
 					context: this
 				} ).done( function ( html ) {
@@ -1658,7 +1701,8 @@
 				data: {
 					action: 'vc_frontend_template',
 					template_id: $button.data( 'template_id' ),
-					vc_inline: true
+					vc_inline: true,
+					_vcnonce: window.vcAdminNonce
 				},
 				context: this
 			} ).done( function ( html ) {
@@ -1684,7 +1728,8 @@
 			return {
 				action: 'vc_frontend_default_template',
 				template_name: $button.data( 'template_name' ),
-				vc_inline: true
+				vc_inline: true,
+				_vcnonce: window.vcAdminNonce
 			};
 		},
 		/**
@@ -1738,7 +1783,8 @@
 					template: shortcodes,
 					template_name: name,
 					frontend: true,
-					vc_inline: true
+					vc_inline: true,
+					_vcnonce: window.vcAdminNonce
 				};
 				this.$name.val( '' );
 				this.showMessage( window.i18nLocale.template_save, 'success' );
@@ -1762,7 +1808,8 @@
 			return {
 				action: 'vc_backend_template',
 				template_id: $button.attr( 'data-template_id' ),
-				vc_inline: true
+				vc_inline: true,
+				_vcnonce: window.vcAdminNonce
 			};
 		},
 		/**
@@ -1801,7 +1848,8 @@
 				data: {
 					action: 'vc_backend_default_template',
 					template_name: $button.attr( 'data-template_name' ),
-					vc_inline: true
+					vc_inline: true,
+					_vcnonce: window.vcAdminNonce
 				},
 				context: this
 			} ).done( function ( shortcodes ) {
@@ -1867,7 +1915,8 @@
 					action: this.save_template_action,
 					template: shortcodes,
 					template_name: name,
-					vc_inline: true
+					vc_inline: true,
+					_vcnonce: window.vcAdminNonce
 				};
 				this.$name.val( '' );
 				this.reloadTemplateList( data ); // TODO: modify this
@@ -1897,7 +1946,8 @@
 					data: {
 						action: this.delete_template_action,
 						template_id: template_id,
-						vc_inline: true
+						vc_inline: true,
+						_vcnonce: window.vcAdminNonce
 					},
 					context: this
 				} ).done( function () {
@@ -1930,7 +1980,8 @@
 					action: this.template_load_action,
 					template_unique_id: $template_data.data( 'template_unique_id' ),
 					template_type: $template_data.data( 'template_type' ),
-					vc_inline: true
+					vc_inline: true,
+					_vcnonce: window.vcAdminNonce
 				},
 				context: this
 			} ).done( this.renderTemplate );

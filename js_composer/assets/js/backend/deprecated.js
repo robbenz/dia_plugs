@@ -266,7 +266,8 @@
 					action: 'wpb_show_edit_form',
 					element: this.model.get( 'shortcode' ),
 					post_id: $( '#post_ID' ).val(),
-					shortcode: store.createShortcodeString( this.model.toJSON() ) // TODO: do it on server-side
+					shortcode: store.createShortcodeString( this.model.toJSON() ), // TODO: do it on server-side,
+					_vcnonce: window.vcAdminNonce
 				},
 				context: this
 			} ).done( function ( data ) {

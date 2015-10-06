@@ -98,6 +98,9 @@ function vc_pointer_load( $hook_suffix = '' ) {
  */
 function vc_pointer_reset() {
 	global $vc_default_pointers;
+	if ( ! vc_verify_admin_nonce() || ! current_user_can( 'manage_options' ) ) {
+		die();
+	}
 	$pointers = (array) apply_filters( 'vc_pointers_list', $vc_default_pointers );
 	$prev_meta_value = get_user_meta( get_current_user_id(), 'dismissed_wp_pointers', true );
 	$dismissed = explode( ',', (string) $prev_meta_value );

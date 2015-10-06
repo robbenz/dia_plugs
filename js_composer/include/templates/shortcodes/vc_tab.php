@@ -8,6 +8,7 @@
  * Shortcode class
  * @var $this WPBakeryShortCode_VC_Tab
  */
+$tab_id = $title = '';
 $atts = vc_map_get_attributes( $this->getShortcode(), $atts );
 extract( $atts );
 

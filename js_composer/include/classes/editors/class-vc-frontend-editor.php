@@ -197,7 +197,7 @@ Class Vc_Frontend_Editor implements Vc_Editor_Interface {
 	 * @param Wp_Post $post
 	 */
 	public function parseEditableContent( $post ) {
-		if ( vc_action() || vc_post_param( 'action' ) ) {
+		if ( !vc_is_page_editable() || vc_action() || vc_post_param( 'action' ) ) {
 			return;
 		}
 
@@ -401,7 +401,7 @@ Class Vc_Frontend_Editor implements Vc_Editor_Interface {
 		) );
 
 		$this->post_type = get_post_type_object( $this->post->post_type );
-		$this->url = $this->post_url . ( preg_match( '/\?/', $this->post_url ) ? '&' : '?' ) . 'vc_editable=true&vc_post_id=' . $this->post->ID;
+		$this->url = $this->post_url . ( preg_match( '/\?/', $this->post_url ) ? '&' : '?' ) . 'vc_editable=true&vc_post_id=' . $this->post->ID . '&_vcnonce=' . vc_generate_nonce( 'vc-admin-nonce' );
 		$this->url = apply_filters( 'vc_frontend_editor_iframe_url', $this->url );
 		$this->enqueueAdmin();
 		$this->enqueueMappedShortcode();
@@ -586,11 +586,12 @@ Class Vc_Frontend_Editor implements Vc_Editor_Interface {
 		do_action( 'vc_load_iframe_jscss' );
 	}
 
+
 	/**
 	 *
 	 */
 	function loadShortcodes() {
-		if ( is_user_logged_in() ) {
+		if ( vc_is_page_editable() ) {
 			$action = vc_post_param( 'action' );
 			if ( $action === 'vc_load_shortcode' ) {
 				! defined( 'CONCATENATE_SCRIPTS' ) && define( 'CONCATENATE_SCRIPTS', false );
@@ -619,10 +620,9 @@ Class Vc_Frontend_Editor implements Vc_Editor_Interface {
 			} else if ( $action === 'vc_frontend_load_template' ) {
 				$this->setPost();
 				visual_composer()->templatesPanelEditor()->renderFrontendTemplate();
+			} else if ( '' !== $action ) {
+				do_action( 'vc_front_load_page_' . esc_attr( vc_post_param( 'action' ) ) );
 			}
-		}
-		if ( vc_post_param( 'action' ) !== '' ) {
-			do_action( 'vc_front_load_page_' . esc_attr( vc_post_param( 'action' ) ) );
 		}
 	}
 

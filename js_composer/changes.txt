@@ -1,9 +1,39 @@
+2.10.2015 - ver 4.7.4
+   - Fixed: Bug in grid builder presets
+   - Added extra ajax check
+
+29.09.2015 - ver 4.7.3
+   - Re: Backwards compatibility for images with custom link
+   - Added border for single image with external source
+   - Width of vc icon in "Add element" window fixed
+   - Presets saving mechanism optimized
+
+22.09.2015 - ver 4.7.2
+   - "Undefined index" notice in tabs, tour, accordion removed (for cases when vc_remove_param() was called)
+   - Bottom border in image gallery fixed
+   - <br> now works in mobile view tabs
+   - Backwards compatibility for images with custom link
+   - Minor css improvements and fixes
+
+16.09.2015 - ver 4.7.1.1
+   - Fixed: CSS conflict with Ninja Forms
+
+15.09.2015 - ver 4.7.1
+   - Improved: Dependency are now called whe preset is selected for element
+   - Improved: Old Tabs, Accordions and Tours removed from default templates
+   - Fixed: Direct link to tabs (tour or accordion)
+   - Fixed: Raw HTML (Cannot read property 'trim' of undefined)
+   - Fixed: Nested elements saving in template
+   - Fixed: Remove params function call and Notice: Undefined variable
+   - Fixed: Html tags entered in text block now are decoded and not converted to actual tags
+   - Fixed: LESS regeneration after plugin version increment
+
 28.08.2015 - ver 4.7
    - Compatibility with WP 4.3
    - New: Element Preset mechanism added (Save, Set as Default)
    - New: More predefined layouts added
    - New: Param Window and other window update
-   - New: Param Window is resizable
+   - New: Param Window is resizeable
    - New: Pageable Content Element based on Tabs added
    - New: Single Image Zoom option added to On Click Action
    - Improved: Pie Chart element has new Visual Composer colors

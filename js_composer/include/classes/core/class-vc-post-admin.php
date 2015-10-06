@@ -27,6 +27,9 @@ Class Vc_Post_Admin {
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 			return;
 		}
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
+			return;
+		}
 		$this->setJsStatus( $post_id );
 		if ( ! ( isset( $_POST['wp-preview'] ) && 'dopreview' === $_POST['wp-preview'] ) ) {
 

@@ -15,6 +15,7 @@
  * Shortcode class
  * @var $this WPBakeryShortCode_VC_Cta_button
  */
+$color = $icon = $size = $target = $href = $target = $call_text = $position = $el_class = $css_animation = '';
 $output = '';
 $atts = vc_map_get_attributes( $this->getShortcode(), $atts );
 extract( $atts );
