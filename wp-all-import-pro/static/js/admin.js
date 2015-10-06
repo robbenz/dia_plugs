@@ -155,7 +155,7 @@
 
 		var $wrap = $('.wrap');
 
-		var formHeight = $wrap.height();
+		var formHeight = ($('.wpallimport-layout').height() < 730) ? 730 : $('.wpallimport-layout').height();
 
 		$('#file_selector').ddslick({
 			width: 600,	
@@ -181,15 +181,15 @@
 		$('#custom_type_selector').ddslick({
 			width: 590,	
 			onSlideDownOptions: function(o){		
-				formHeight = $wrap.height();						
+				formHeight = ($('.wpallimport-layout').height() < 730) ? 730 : $('.wpallimport-layout').height();				
 				$wrap.css({'height': formHeight + $('#custom_type_selector').find('.dd-options').height() + 'px'});				
 			},
 			onSlideUpOptions: function(o){						
-				$wrap.css({'height': formHeight + 'px'});				
+				$wrap.css({'height': 'auto'});				
 			},
 			onSelected: function(selectedData){								
 				if (fixWrapHeight)
-					$wrap.css({'height': formHeight + 'px'});				
+					$wrap.css({'height': 'auto'});				
 				else
 					fixWrapHeight = true;
 		        $('input[name=custom_type]').val(selectedData.selectedData.value);		        
@@ -238,7 +238,7 @@
 						
 		var $wrap = $('.wrap');
 
-		var formHeight = $wrap.height();
+		var formHeight = ($('.wpallimport-layout').height() < 730) ? 730 : $('.wpallimport-layout').height();
 
 		$('.wpallimport-import-from').click(function(){			
 			
@@ -363,15 +363,15 @@
 		$('#custom_type_selector').ddslick({
 			width: 300,		
 			onSlideDownOptions: function(o){	
-				formHeight = $wrap.height();			
+				formHeight = ($('.wpallimport-layout').height() < 730) ? 730 : $('.wpallimport-layout').height();
 				$wrap.css({'height': formHeight + $('#custom_type_selector').find('.dd-options').height() + 'px'});				
 			},
 			onSlideUpOptions: function(o){
-				$wrap.css({'height' : formHeight + 'px'});				
+				$wrap.css({'height' : 'auto'});				
 			},		
 			onSelected: function(selectedData){					
 				if (fixWrapHeight)
-					$wrap.css({'height' : formHeight + 'px'});									
+					$wrap.css({'height' : 'auto'});									
 				else
 					fixWrapHeight = true;
 
@@ -1520,7 +1520,7 @@
 	// [/xml representation dynamic]
 	
 	$('.wpallimport-custom-fields').each(function(){		
-		$(this).find('.autocomplete').each(function(){
+		$(this).find('.wp_all_import_autocomplete').each(function(){
 			if ( ! $(this).parents('tr:first').hasClass('template')){
 				$(this).autocomplete({
 					source: eval('__META_KEYS'),
@@ -1794,12 +1794,11 @@
 			browse_button : 'select-files',
 			file_data_name : 'async-upload',
 			flash_swf_url : plugin_url + '/static/js/plupload/plupload.flash.swf',
-			silverlight_xap_url : plugin_url + '/static/js/plupload/plupload.silverlight.xap',
-		
+			silverlight_xap_url : plugin_url + '/static/js/plupload/plupload.silverlight.xap',		
 			multipart: false,
 			max_file_size: '1000mb',
 			chunk_size: '1mb',			
-			drop_element: 'plupload-ui'
+			drop_element: 'plupload-ui'				
 		});
 	}	
 
@@ -1930,6 +1929,54 @@
 		$(this).hide();        
 	});	
 
+	if ($('#wp_all_import_code').length){
+		var editor = CodeMirror.fromTextArea(document.getElementById("wp_all_import_code"), {
+	        lineNumbers: true,
+	        matchBrackets: true,
+	        mode: "application/x-httpd-php",
+	        indentUnit: 4,
+	        indentWithTabs: true
+	    });
+	    editor.setCursor(1);
+	}
+
+    $('.wp_all_import_save_functions').click(function(){
+    	var request = {
+			action: 'save_import_functions',	
+			data: editor.getValue(),				
+			security: wp_all_import_security				
+	    };    
+	    $('.wp_all_import_functions_preloader').show();
+	    $('.wp_all_import_saving_status').html('');
+		$.ajax({
+			type: 'POST',
+			url: ajaxurl + ((typeof export_id != "undefined") ? '?id=' + import_id : ''),
+			data: request,
+			success: function(response) {						
+				$('.wp_all_import_functions_preloader').hide();
+				
+				if (response.result)
+				{
+					$('.wp_all_import_saving_status').css({'color':'green'});
+					setTimeout(function() {
+						$('.wp_all_import_saving_status').html('').fadeOut();
+					}, 3000);
+				}
+				else
+				{
+					$('.wp_all_import_saving_status').css({'color':'red'});
+				}
+
+				$('.wp_all_import_saving_status').html(response.msg).show();
+									
+			},
+			error: function( jqXHR, textStatus ) {						
+				$('.wp_all_import_functions_preloader').hide();
+			},
+			dataType: "json"
+		});
+    }); 
+
 	$('.wpallimport-collapsed').each(function(){
 
 		if ( ! $(this).hasClass('closed')) $(this).find('.wpallimport-collapsed-content:first').slideDown();
@@ -1940,7 +1987,9 @@
 		var $parent = $(this).parents('.wpallimport-collapsed:first');
 		if ($parent.hasClass('closed')){			
 			$parent.removeClass('closed');
-			$parent.find('.wpallimport-collapsed-content:first').slideDown();
+			$parent.find('.wpallimport-collapsed-content:first').slideDown(400, function(){
+				if ($('#wp_all_import_code').length) editor.setCursor(1);
+			});
 		}
 		else{
 			$parent.addClass('closed');			
@@ -1963,7 +2012,7 @@
 
 	$('.wpallimport-delete-and-edit').click(function(){
     	window.location.href = $(this).attr('rel');
-    });
+    });    
 
 	var fix_tag_position = function(){
 		if ($('.wpallimport-layout').length && $('.tag').length){

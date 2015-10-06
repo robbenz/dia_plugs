@@ -86,11 +86,11 @@ if ( ! function_exists('wp_all_import_addon_notifications') ){
 					'title' => 'Jobify',
 					'url'   => 'https://wordpress.org/plugins/jobify-xml-csv-listings-import/'
 				);
-			}
+			}			
 			// Yoast SEO Add-On
 			if ( is_plugin_active('wordpress-seo/wp-seo.php')
 				and is_wp_error(validate_plugin('yoast-seo-settings-xml-csv-import/yoast-addon.php')))
-			{
+			{				
 				$recommended_addons[] = array(
 					'title' => 'Yoast SEO',
 					'url'   => 'https://wordpress.org/plugins/yoast-seo-settings-xml-csv-import/'

@@ -3,7 +3,7 @@
 Plugin Name: WP All Import - WooCommerce Add-On Pro
 Plugin URI: http://www.wpallimport.com/
 Description: Import to WooCommerce. Adds a section to WP All Import that looks just like WooCommerce. Requires WP All Import.
-Version: 2.2.0
+Version: 2.2.2
 Author: Soflyy
 */
 /**
@@ -24,7 +24,7 @@ define('PMWI_ROOT_URL', rtrim(plugin_dir_url(__FILE__), '/'));
  */
 define('PMWI_PREFIX', 'pmwi_');
 
-define('PMWI_VERSION', '2.2.0');
+define('PMWI_VERSION', '2.2.2');
 
 if ( class_exists('PMWI_Plugin') and PMWI_EDITION == "free"){
 
@@ -486,6 +486,17 @@ else {
 				'is_visible' => array(),
 				'is_taxonomy' => array(),
 				'create_taxonomy_in_not_exists' => array(),
+
+				'is_advanced' => array(),
+				'advanced_in_variations' => array(),
+				'advanced_in_variations_xpath' => array(),
+				'advanced_is_visible' => array(),
+				'advanced_is_visible_xpath' => array(),
+				'advanced_is_taxonomy' => array(),
+				'advanced_is_taxonomy_xpath' => array(),
+				'advanced_is_create_terms' => array(),
+				'advanced_is_create_terms_xpath' => array(),
+
 				'single_product_purchase_note' => '',
 				'single_product_menu_order' => 0,			
 				'is_product_enable_reviews' => 'no',
@@ -582,6 +593,7 @@ else {
 				'disable_sku_matching' => 1,
 				'disable_prepare_price' => 1,
 				'prepare_price_to_woo_format' => 0,
+				'convert_decimal_separator' => 1,
 				'grouping_indicator' => 'xpath',				
 				'custom_grouping_indicator_name' => '',
 				'custom_grouping_indicator_value' => '',

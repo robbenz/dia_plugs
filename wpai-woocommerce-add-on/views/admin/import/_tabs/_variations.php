@@ -81,9 +81,7 @@
 			</p>			
 		</div>																
 
-		<div class="wpallimport-clear" style="margin-top:5px;"></div>
-		
-		<?php if ( "new" == $post['wizard_type']): ?>
+		<div class="wpallimport-clear" style="margin-top:5px;"></div>			
 		
 		<p class="form-field wpallimport-radio-field">
 			<input type="radio" id="xml_matching_parent" class="switcher" name="matching_parent" value="xml" <?php echo 'xml' == $post['matching_parent'] ? 'checked="checked"': '' ?> style="float:left;"/>
@@ -642,9 +640,7 @@
 			</div>
 		</div>
 		
-		<div class="clear" style="margin-top:5px;"></div>
-		
-		<?php endif; ?>
+		<div class="clear" style="margin-top:5px;"></div>			
 
 	</div>
 

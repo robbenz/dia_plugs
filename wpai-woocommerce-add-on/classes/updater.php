@@ -7,6 +7,7 @@ if( ! class_exists('PMWI_Updater') ) {
         private $api_data = array();
         private $name     = '';
         private $slug     = '';
+        private $_plugin_file = '';
         private $did_check = false;
         private $version;
 
@@ -64,6 +65,7 @@ if( ! class_exists('PMWI_Updater') ) {
         function check_update( $_transient_data ) {
 
             global $pagenow;
+            global $wpdb;
 
             if( ! is_object( $_transient_data ) ) {
                 $_transient_data = new stdClass;
@@ -77,13 +79,37 @@ if( ! class_exists('PMWI_Updater') ) {
 
             if ( empty( $_transient_data->response ) || empty( $_transient_data->response[ $this->name ] ) ) {
 
-                $cache_key    = md5( 'edd_plugin_' . sanitize_key( $this->name ) . '_version_info' );
+                $cache_key    = md5( 'edd_plugin_' .sanitize_key( $this->name ) . '_version_info' );
                 $version_info = get_transient( $cache_key );
 
                 if( false === $version_info ) {
 
-                    $version_info = $this->api_request( 'check_update', array( 'slug' => $this->slug ) );
-                    set_transient( $cache_key, $version_info, 3600 );
+                    $timeout = $wpdb->get_row( $wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name = %s LIMIT 1", $this->slug . '_timeout_' . $cache_key ) );
+
+                    // Has to be get_row instead of get_var because of funkiness with 0, false, null values
+                    if ( is_object( $timeout ) ) {
+                        $value = $timeout->option_value;
+                        // cache time is not expired
+                        if ( $value >= strtotime("now") )
+                        {
+                            $cache_value = $wpdb->get_row( $wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name = %s LIMIT 1", $this->slug . '_' . $cache_key ) );        
+                            if ( is_object( $cache_value ) ) {
+                                $version_info = maybe_unserialize($cache_value->option_value);
+                            }
+                        }
+                    }
+
+                    if( false === $version_info ) {
+                        $version_info = $this->api_request( 'check_update', array( 'slug' => $this->slug ) );
+                        $transient_result = set_transient( $cache_key, $version_info, 3600 );
+
+                        $wpdb->query( $wpdb->prepare("DELETE FROM $wpdb->options WHERE option_name = %s", $this->slug . '_' . $cache_key) );
+                        $wpdb->query( $wpdb->prepare("DELETE FROM $wpdb->options WHERE option_name = %s", $this->slug . '_timeout_' . $cache_key) );
+                                         
+                        $wpdb->query( $wpdb->prepare("INSERT INTO $wpdb->options ( option_value, option_name ) VALUES ( %s, %s )", maybe_serialize( $version_info ), $this->slug . '_' . $cache_key) );                        
+                        $wpdb->query( $wpdb->prepare("INSERT INTO $wpdb->options ( option_value, option_name ) VALUES ( %s, %s )", strtotime("+1 hour"), $this->slug . '_timeout_' . $cache_key) );
+                        
+                    }
 
                 }
 
@@ -138,16 +164,42 @@ if( ! class_exists('PMWI_Updater') ) {
 
             if ( ! is_object( $update_cache ) || empty( $update_cache->response ) || empty( $update_cache->response[ $this->name ] ) ) {
 
+                global $wpdb;
+
                 $cache_key    = md5( 'edd_plugin_' .sanitize_key( $this->name ) . '_version_info' );
                 $version_info = get_transient( $cache_key );
 
                 if( false === $version_info ) {
 
-                    $version_info = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug ) );
+                    $timeout = $wpdb->get_row( $wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name = %s LIMIT 1", $this->slug . '_timeout_' . $cache_key ) );
 
-                    set_transient( $cache_key, $version_info, 3600 );
+                    // Has to be get_row instead of get_var because of funkiness with 0, false, null values
+                    if ( is_object( $timeout ) ) {
+                        $value = $timeout->option_value;
+                        // cache time is not expired
+                        if ( $value >= strtotime("now") )
+                        {
+                            $cache_value = $wpdb->get_row( $wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name = %s LIMIT 1", $this->slug . '_' . $cache_key ) );        
+                            if ( is_object( $cache_value ) ) {
+                                $version_info = maybe_unserialize($cache_value->option_value);
+                            }
+                        }
+                    }
+
+                    if( false === $version_info ) {
+
+                        $version_info = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug ) );
+
+                        $transient_result = set_transient( $cache_key, $version_info, 3600 );
+
+                        $wpdb->query( $wpdb->prepare("DELETE FROM $wpdb->options WHERE option_name = %s", $this->slug . '_' . $cache_key) );
+                        $wpdb->query( $wpdb->prepare("DELETE FROM $wpdb->options WHERE option_name = %s", $this->slug . '_timeout_' . $cache_key) );
+                                         
+                        $wpdb->query( $wpdb->prepare("INSERT INTO $wpdb->options ( option_value, option_name ) VALUES ( %s, %s )", maybe_serialize( $version_info ), $this->slug . '_' . $cache_key) );                        
+                        $wpdb->query( $wpdb->prepare("INSERT INTO $wpdb->options ( option_value, option_name ) VALUES ( %s, %s )", strtotime("+1 hour"), $this->slug . '_timeout_' . $cache_key) );                       
+                        
+                    }
                 }
-
 
                 if( ! is_object( $version_info ) ) {
                     return;
@@ -227,27 +279,52 @@ if( ! class_exists('PMWI_Updater') ) {
 
             }
 
+            global $wpdb;
+
             $cache_key    = md5( 'edd_plugin_' .sanitize_key( $this->name ) . '_version_info' );
             $_data = get_transient( $cache_key );
 
             if( false === $_data ) {
 
-                $to_send = array(
-                    'slug'   => $this->slug,
-                    'is_ssl' => is_ssl(),
-                    'fields' => array(
-                        'banners' => false, // These will be supported soon hopefully
-                        'reviews' => false
-                    )
-                );
+                $timeout = $wpdb->get_row( $wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name = %s LIMIT 1", $this->slug . '_timeout_' . $cache_key ) );
 
-                $api_response = $this->api_request( 'plugin_information', $to_send );
+                // Has to be get_row instead of get_var because of funkiness with 0, false, null values
+                if ( is_object( $timeout ) ) {
+                    $value = $timeout->option_value;
+                    // cache time is not expired
+                    if ( $value >= strtotime("now") )
+                    {
+                        $cache_value = $wpdb->get_row( $wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name = %s LIMIT 1", $this->slug . '_' . $cache_key ) );        
+                        if ( is_object( $cache_value ) ) {
+                            $_data = maybe_unserialize($cache_value->option_value);
+                        }
+                    }
+                }
 
-                if ( false !== $api_response ) {
-                    $_data = $api_response;
-                    set_transient( $cache_key, $_data, 3600 );
-                }                            
+                if( false === $_data ) {
+                    $to_send = array(
+                        'slug'   => $this->slug,
+                        'is_ssl' => is_ssl(),
+                        'fields' => array(
+                            'banners' => false, // These will be supported soon hopefully
+                            'reviews' => false
+                        )
+                    );
 
+                    $_data = $this->api_request( 'plugin_information', $to_send );
+
+                    if ( false !== $_data ) {
+                        
+                        $transient_result = set_transient( $cache_key, $_data, 3600 );
+
+                        $wpdb->query( $wpdb->prepare("DELETE FROM $wpdb->options WHERE option_name = %s", $this->slug . '_' . $cache_key) );
+                        $wpdb->query( $wpdb->prepare("DELETE FROM $wpdb->options WHERE option_name = %s", $this->slug . '_timeout_' . $cache_key) );
+                                         
+                        $wpdb->query( $wpdb->prepare("INSERT INTO $wpdb->options ( option_value, option_name ) VALUES ( %s, %s )", maybe_serialize( $_data ), $this->slug . '_' . $cache_key) );                        
+                        $wpdb->query( $wpdb->prepare("INSERT INTO $wpdb->options ( option_value, option_name ) VALUES ( %s, %s )", strtotime("+1 hour"), $this->slug . '_timeout_' . $cache_key) );
+                                                                      
+                    }   
+                }                         
             }
 
             return $_data;
@@ -307,6 +384,12 @@ if( ! class_exists('PMWI_Updater') ) {
                 'version'    => $this->version
             );            
 
+            // if ( defined('WP_DEBUG') and WP_DEBUG )
+            // {
+            //     $uploads = wp_upload_dir();
+            //     file_put_contents($uploads['basedir'] . "/log.txt", date("d-m-Y H:i:s") . ' - ' .json_encode($api_params) . "\n", FILE_APPEND);
+            // }
+            
             $request = wp_remote_post( $this->api_url, array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
 
             if ( ! is_wp_error( $request ) ) {

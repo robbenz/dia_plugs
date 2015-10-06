@@ -19,7 +19,7 @@ function pmxi_admin_menu() {
 
 		$wpai_menu = apply_filters('pmxi_admin_menu', $wpai_menu);		
 
-		add_menu_page(__('WP All Import', 'wp_all_import_plugin'), __('All Import', 'wp_all_import_plugin'), 'manage_options', 'pmxi-admin-home', array(PMXI_Plugin::getInstance(), 'adminDispatcher'), PMXI_Plugin::ROOT_URL . '/static/img/xmlicon.png');
+		add_menu_page(__('WP All Import', 'wp_all_import_plugin'), __('All Import', 'wp_all_import_plugin'), 'manage_options', 'pmxi-admin-home', array(PMXI_Plugin::getInstance(), 'adminDispatcher'), PMXI_Plugin::ROOT_URL . '/static/img/xmlicon.png', 112);
 		// workaround to rename 1st option to `Home`
 		$submenu['pmxi-admin-home'] = array();
 

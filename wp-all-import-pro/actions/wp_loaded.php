@@ -23,7 +23,7 @@ function pmxi_wp_loaded() {
 	/* Check if cron is manualy, then execute import */
 	$cron_job_key = PMXI_Plugin::getInstance()->getOption('cron_job_key');
 	
-	if (!empty($cron_job_key) and !empty($_GET['import_id']) and !empty($_GET['import_key']) and $_GET['import_key'] == $cron_job_key and !empty($_GET['action']) and in_array($_GET['action'], array('processing','trigger','pipe'))) {		
+	if (!empty($cron_job_key) and !empty($_GET['import_id']) and !empty($_GET['import_key']) and $_GET['import_key'] == $cron_job_key and !empty($_GET['action']) and in_array($_GET['action'], array('processing','trigger','pipe','cancel'))) {		
 		
 		$logger = create_function('$m', 'echo "<p>$m</p>\\n";');								
 
@@ -235,6 +235,23 @@ function pmxi_wp_loaded() {
 						case 'pipe':					
 
 							$import->execute($logger);
+
+							break;
+
+						case 'cancel':
+
+							$import->set(array(
+								'triggered'   => 0,
+								'processing'  => 0,
+								'executing'   => 0,
+								'canceled'    => 1,
+								'canceled_on' => date('Y-m-d H:i:s')
+							))->update();
+
+							wp_send_json(array(
+								'status'     => 200,
+								'message'    => sprintf(__('Import #%s canceled', 'wp_all_import_plugin'), $import->id)
+							));
 
 							break;
 					}								
