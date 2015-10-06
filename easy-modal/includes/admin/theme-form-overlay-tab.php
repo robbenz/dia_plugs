@@ -2,7 +2,7 @@
 add_filter('emodal_admin_theme_form_tabs', 'emodal_admin_theme_form_overlay_tab', 20);
 function emodal_admin_theme_form_overlay_tab($tabs)
 {
-	$tabs[] = array( 'id' => 'overlay', 'label' => __('Overlay', EMCORE_SLUG) );
+	$tabs[] = array( 'id' => 'overlay', 'label' => __('Overlay', 'easy-modal' ) );
 	return $tabs;
 }
 
@@ -21,21 +21,21 @@ function emodal_admin_theme_form_overlay_tab_settings_background()
 {
 	?><tr>
 		<th scope="row">
-			<label for="overlay_background_color"><?php _e('Color', EMCORE_SLUG);?></label>
+			<label for="overlay_background_color"><?php _e('Color', 'easy-modal' );?></label>
 		</th>
 		<td>
 			<input type="text" name="theme[meta][overlay][background][color]" id="overlay_background_color" value="<?php esc_attr_e(get_current_modal_theme('meta.overlay.background.color'))?>" class="color-picker background-color" />
-			<p class="description"><?php _e('Choose the overlay color.', EMCORE_SLUG)?></p>
+			<p class="description"><?php _e('Choose the overlay color.', 'easy-modal' )?></p>
 		</td>
 	</tr>
 	<tr class="background-opacity">
 		<th scope="row">
-			<label for="overlay_background_opacity"><?php _e('Opacity', EMCORE_SLUG);?></label>
+			<label for="overlay_background_opacity"><?php _e('Opacity', 'easy-modal' );?></label>
 		</th>
 		<td>
 			<input type="range" name="theme[meta][overlay][background][opacity]" id="overlay_background_opacity" min="0" max="100" step="1" value="<?php esc_attr_e(get_current_modal_theme('meta.overlay.background.opacity'))?>" />
 			<span class="range-value regular-text"><span class="value"><?php esc_html_e(get_current_modal_theme('meta.overlay.background.opacity'));?></span>%</span>
-			<p class="description"><?php _e('The opacity value for the overlay.',EMCORE_SLUG)?></p>
+			<p class="description"><?php _e('The opacity value for the overlay.', 'easy-modal' )?></p>
 		</td>
 	</tr><?php
 	if(!class_exists('EMAdvancedThemeEditor')){?>

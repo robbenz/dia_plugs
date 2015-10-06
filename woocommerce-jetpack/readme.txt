@@ -4,7 +4,7 @@ Donate link: http://algoritmika.com/donate/
 Tags: woocommerce,booster for woocommerce,woocommerce jetpack,custom price labels,call for price,currency symbol,remove sorting,remove old product slugs,add to cart text,order number,sequential order numbering,email pdf invoice,pdf invoice,pdf invoices,already in cart,empty cart,redirect to checkout,minimum order amount,customize checkout fields,checkout fields,email,customize product tabs,product tabs,related products number,empty cart,redirect add to cart,redirect to checkout,product already in cart,custom payment gateway,payment gateway icon,auto-complete all orders,custom order statuses,custom order status,remove text from price,custom css,hide categories count,hide subcategories count,hide category count,hide subcategory count,display total sales,custom product tabs,remove product tab,payment gateway fee,
 Requires at least: 3.8
 Tested up to: 4.3
-Stable tag: 2.2.9
+Stable tag: 2.3.5
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -20,6 +20,7 @@ Booster for WooCommerce is a WordPress plugin that supercharges your site with a
 
 * *Bulk Price Converter* - Multiply all WooCommerce products prices by set value.
 * *Currencies* - Add all world currencies to your WooCommerce store; change currency symbol.
+* *Currency Exchange Rates* - Automatic currency exchange rates for WooCommerce.
 * *Currency for External Products* - Set different currency for external WooCommerce products.
 * *Prices and Currencies by Country* - Change WooCommerce product price and currency automatically by customer's country.
 * *Wholesale Price* - Set WooCommerce wholesale pricing depending on product quantity in cart (buy more pay less).
@@ -51,12 +52,16 @@ Booster for WooCommerce is a WordPress plugin that supercharges your site with a
 * *Checkout Core Fields* - Customize WooCommerce core checkout fields. Disable/enable fields, set required, change labels and/or placeholders.
 * *Checkout Custom Fields* - Add custom fields to WooCommerce checkout page.
 * *Checkout Custom Info* - Add custom info to WooCommerce checkout page.
-* *Custom Payment Gateways* - Add multiple custom payment gateways to WooCommerce.
 * *Empty Cart Button* - Add and customize "Empty Cart" button to cart page.
 * *Mini Cart* - Customize WooCommerce mini cart widget.
-* *Payment Gateways Fees* - Enable extra fees for WooCommerce payment gateways.
-* *Payment Gateways Icons* - Change icons (images) for all default WooCommerce payment gateways.
-* *Payment Gateways per Category* - Show gateway only if there is product of selected category in WooCommerce cart.
+
+**Payment Gateways**
+
+* *Custom Gateways* - Add multiple custom payment gateways to WooCommerce.
+* *Gateways Currency* - Currency per WooCommerce payment gateway.
+* *Gateways Fees* - Enable extra fees for WooCommerce payment gateways.
+* *Gateways Icons* - Change or completely remove icons (images) for any (default or custom) WooCommerce payment gateway.
+* *Gateways per Category* - Show payment gateway only if there is product of selected category in WooCommerce cart.
 
 **Shipping & Orders**
 
@@ -110,6 +115,57 @@ To unlock all Booster for WooCommerce features, please install additional <a hre
 1. Plugin admin area.
 
 == Changelog ==
+
+= 2.3.5 - 05/10/2015 =
+* Fix - PAYMENT GATEWAYS - Gateways Currency - Bug, causing module not to work properly (prices didn't change at checkout), fixed.
+
+= 2.3.4 - 04/10/2015 =
+* Fix - PRICES & CURRENCIES - Prices and Currencies by Country - Bug, showing changed prices by countries in admin products backend, fixed.
+
+= 2.3.3 - 03/10/2015 =
+* Fix - Bug, breaking some WP dashboard functions, fixed (e.g. Admin WP Menus manager).
+
+= 2.3.2 - 03/10/2015 =
+* Fix - PAYMENT GATEWAYS - Gateways Currency - Bug, breaking some WP dashboard functions, fixed (e.g. Admin WP Media uploader).
+
+= 2.3.1 - 02/10/2015 =
+* Dev - PAYMENT GATEWAYS - Gateways Icons - Remove Icon option added.
+* Dev - PAYMENT GATEWAYS - Gateways Icons - Module extended to include all payment gateways (including custom, created with other plugins).
+
+= 2.3.0 - 01/10/2015 =
+* Fix - `time` function calls replaced with `current_time` in: crowdfunding module and shortcode, invoicing, stock report.
+* Dev - `WCJ_Module` code refactoring.
+* Dev - Shortcodes - Orders - `[wcj_order_checkout_field]` shortcode modified. `[wcj_order_custom_meta_field]` depreciated (now duplicates `[wcj_order_checkout_field]`).
+* Dev - PAYMENT GATEWAYS category added and modules renamed.
+* Dev - PAYMENT GATEWAYS - Gateways Currency - Initial module release.
+* Dev - PAYMENT GATEWAYS - Gateways Fees and Discounts - "Fee (or discount) type" option unlocked.
+* Dev - PAYMENT GATEWAYS - Custom Gateways - Renaming Jetpack to Booster continued.
+* Fix - PRICES & CURRENCIES - Currency for External Products - Additional product object validation added.
+* Fix - PRICES & CURRENCIES - Prices and Currencies by Country - Variable product price bug fixed.
+* Fix - PRICES & CURRENCIES - Prices and Currencies by Country - Price by Country on per Product Basis - Variable product bug fixed.
+* Dev - PRICES & CURRENCIES - Prices and Currencies by Country - Exchange rates moved to new module.
+* Dev - PRICES & CURRENCIES - Prices and Currencies by Country - `[wcj_country_select_drop_down_list]` shortcode - option to limit country list added.
+* Dev - PRICES & CURRENCIES - Prices and Currencies by Country - Code refactoring.
+* Dev - PRICES & CURRENCIES - Currency Exchange Rates - Initial module release (works with Gateways Currency and Prices and Currencies by Country modules).
+* Dev - PRICES & CURRENCIES - Bulk Price Converter - Code refactoring; tool link added to module settings; tool visualisation html slightly modified.
+* Dev - PRICES & CURRENCIES - Currency for External Products - Code refactoring.
+* Fix - BUTTON & PRICE LABELS - Custom Price Labels - Labels not showing in ajax, fixed.
+* Dev - PRODUCTS - Product Input Fields - List of available field types extended (select, radio, datepicker, timepicker etc.).
+* Fix - CART & CHECKOUT - Checkout Custom Fields - Add new order from back end bug fixed.
+* Dev - CART & CHECKOUT - Checkout Custom Fields - List of available field types extended (select, radio etc.).
+* Dev - CART & CHECKOUT - Checkout Custom Fields - Major code refactoring.
+* Fix - PDF Invoicing - "Cannot redeclare class TCPDF_FONT_DATA" warning fixed.
+* Fix - PDF Invoicing - "TCPDF ERROR: [Image] Unable to get the size of the image" fixed.
+* Dev - PDF Invoicing - Manual invoice creation option added (in invoicing display).
+* Dev - PDF Invoicing - Code refactoring.
+* Dev - PDF Invoicing - "powered by" removed in invoicing header.
+* Dev - PDF Invoicing - Manual invoice create/delete option added.
+* Dev - PDF Invoicing - Numbering - Code refactoring; "Renumerate Invoices" tool link added to submodule settings.
+* Dev - PDF Invoicing - Renaming from Jetpack continued in "Booster - Renumerate Invoices".
+* Dev - PDF Invoicing - TCPDF library loading only on PDF creation.
+* Fix - EMAILS & MISC. - Reports - Stock reports - Code refactoring in `gather_orders_data` function - now no errors on gathering data in shops with large number of orders.
+* Dev - EMAILS & MISC. - Reports - Stock reports - Category column added.
+* Dev - EMAILS & MISC. - Reports - "Booster: Product Sales" report added.
 
 = 2.2.9 - 01/09/2015 =
 * Dev - Shortcodes - Orders - `[wcj_order_meta]` shortcode added (attribute: `meta_key`).

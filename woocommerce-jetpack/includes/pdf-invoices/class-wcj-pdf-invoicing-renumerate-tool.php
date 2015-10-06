@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack PDF Invoices Renumerate Tool class.
  *
- * @version 2.2.1
+ * @version 2.3.0
  * @author  Algoritmika Ltd.
  */
 
@@ -18,9 +18,9 @@ class WCJ_PDF_Invoicing_Renumerate_Tool {
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_filter( 'wcj_tools_tabs', 				 array( $this, 'add_renumerate_invoices_tool_tab' ), 						100 );
-		add_action( 'wcj_tools_renumerate_invoices', array( $this, 'create_renumerate_invoices_tool' ), 						100 );
-		add_action( 'wcj_tools_dashboard', 			 array( $this, 'add_renumerate_invoices_tool_info_to_tools_dashboard' ), 	100 );
+		add_filter( 'wcj_tools_tabs',                array( $this, 'add_renumerate_invoices_tool_tab' ),                     100 );
+		add_action( 'wcj_tools_renumerate_invoices', array( $this, 'create_renumerate_invoices_tool' ),                      100 );
+		add_action( 'wcj_tools_dashboard',           array( $this, 'add_renumerate_invoices_tool_info_to_tools_dashboard' ), 100 );
 	}
 
 	/**
@@ -60,6 +60,8 @@ class WCJ_PDF_Invoicing_Renumerate_Tool {
 
 	/**
 	 * Add Renumerate Invoices tool to WooCommerce menu (the content).
+	 *
+	 * @version 2.3.0
 	 */
 	public function create_renumerate_invoices_tool() {
 		$result_message = '';
@@ -81,8 +83,8 @@ class WCJ_PDF_Invoicing_Renumerate_Tool {
 			//$result_message .= '<p>' . $renumerate_result . '</p>';
 		}
 		?><div>
-			<h2><?php echo __( 'WooCommerce Jetpack - Renumerate Invoices', 'woocommerce-jetpack' ); ?></h2>
-			<p><?php echo __( 'The tool renumerates invoices from choosen date. Invoice number format is set in WooCommerce > Settings > Jetpack > PDF Invoices (v2) > Numbering.', 'woocommerce-jetpack' ); ?></p>
+			<h2><?php echo __( 'Booster - Renumerate Invoices', 'woocommerce-jetpack' ); ?></h2>
+			<p><?php echo __( 'The tool renumerates invoices from choosen date. Invoice number format is set in WooCommerce > Settings > Booster > PDF Invoicing & Packing Slips > Numbering.', 'woocommerce-jetpack' ); ?></p>
 			<?php echo $result_message; ?>
 			<p><form method="post" action="">
 				<?php

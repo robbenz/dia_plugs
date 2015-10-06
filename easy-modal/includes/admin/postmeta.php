@@ -15,7 +15,7 @@ function emodal_post_meta_box_setting_load($object)
 	<?php if(count($modals)):?>
 	<tr>
 		<th scope="row">
-			<label><?php _e('Select which modals to load', EMCORE_SLUG);?></label>
+			<label><?php _e('Select which modals to load', 'easy-modal' );?></label>
 		</th>
 		<td>
 			<div class="scrollable-checkboxes" style="padding:5px 10px;border:1px solid #eee;max-height:200px;overflow-y:scroll;">
@@ -23,7 +23,7 @@ function emodal_post_meta_box_setting_load($object)
 				<label class="selectit"><input type="checkbox" name="emodal_post_modals[]" value="<?php esc_attr_e($modal->id);?>"<?php esc_attr_e(is_array($current_modals) && in_array($modal->id,$current_modals) ? ' checked="checked"' : '');?>> <?php esc_html_e($modal->name);?></label><br/>
 				<?php endforeach;?>
 			</div>
-			<p class="description"><?php _e('Choose witch modal will be loaded on this page.', EMCORE_SLUG)?></p>
+			<p class="description"><?php _e('Choose witch modal will be loaded on this page.', 'easy-modal' )?></p>
 		</td>
 	</tr>
 	<?php endif;

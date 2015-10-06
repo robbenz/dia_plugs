@@ -2,7 +2,7 @@
 add_filter('emodal_admin_settings_form_tabs', 'emodal_admin_settings_licenses_tab', 10);
 function emodal_admin_settings_licenses_tab($tabs)
 {
-	$tabs[] = array( 'id' => 'licenses', 'label' => __('Licenses', EMCORE_SLUG) );
+	$tabs[] = array( 'id' => 'licenses', 'label' => __('Licenses', 'easy-modal' ) );
 	return $tabs;
 }
 
@@ -22,7 +22,7 @@ function emodal_admin_settings_form_glicenses_tab_no_licensed_products()
 {?>
 	<tr class="form-field">
 		<th colspan="2" scope="row">
-			<p><?php _e( 'No licensed addons detected.',EMCORE_SLUG)?></p>
+			<p><?php _e( 'No licensed addons detected.', 'easy-modal' )?></p>
 		</td>
 	</tr><?php
 }
@@ -32,11 +32,11 @@ function emodal_admin_settings_form_glicenses_tab_access_key()
 {?>
 	<tr class="form-field">
 		<th scope="row">
-			<label for="access_key"><?php _e('Access Key', EMCORE_SLUG);?></label>
+			<label for="access_key"><?php _e('Access Key', 'easy-modal' );?></label>
 		</th>
 		<td>
 			<input type="<?php echo emodal_get_option('access_key') ? 'password' : 'text'?>" id="access_key" name="access_key" value="<?php esc_attr_e(emodal_get_option('access_key'))?>" class="regular-text"/>
-			<p class="description"><?php _e( 'Enter your access key to unlock addons.',EMCORE_SLUG)?></p>
+			<p class="description"><?php _e( 'Enter your access key to unlock addons.', 'easy-modal' )?></p>
 		</td>
 	</tr><?php
 }

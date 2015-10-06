@@ -3,7 +3,7 @@
 Plugin Name: Booster for WooCommerce
 Plugin URI: http://BoostWoo.com
 Description: Supercharge your WooCommerce site with these awesome powerful features.
-Version: 2.2.9
+Version: 2.3.5
 Author: Algoritmika Ltd
 Author URI: http://www.algoritmika.com
 Copyright: © 2015 Algoritmika Ltd.
@@ -20,7 +20,8 @@ if ( ! class_exists( 'WC_Jetpack' ) ) :
 /**
  * Main WC_Jetpack Class
  *
- * @class WC_Jetpack
+ * @class   WC_Jetpack
+ * @version 2.3.3
  */
 
 final class WC_Jetpack {
@@ -70,6 +71,8 @@ final class WC_Jetpack {
 		/* echo 'Constructor Start: memory_get_usage( false )' . number_format( memory_get_usage( false ), 0, '.', ',' );
 		echo 'Constructor Start: memory_get_usage( true )' . number_format( memory_get_usage( true ), 0, '.', ',' ); */
 
+		//require_once( WP_PLUGIN_DIR . '/woocommerce/woocommerce.php' );
+
 		// Include required files
 		$this->includes();
 
@@ -99,11 +102,57 @@ final class WC_Jetpack {
 			}
 		}
 
+		if (
+			'yes' === get_option( 'wcj_product_input_fields_enabled' ) ||
+			'yes' === get_option( 'wcj_checkout_custom_fields_enabled' )
+		){
+			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_frontend_scripts' ) );
+			add_action( 'init',               array( $this, 'register_frontend_scripts' ) );
+		}
+
 		// Loaded action
 		do_action( 'wcj_loaded' );
 
 		/* echo 'Constructor End: memory_get_usage( false )' . number_format( memory_get_usage( false ), 0, '.', ',' );
 		echo 'Constructor End: memory_get_usage( true )' . number_format( memory_get_usage( true ), 0, '.', ',' ); */
+	}
+
+	/**
+	 * enqueue_frontend_scripts.
+	 *
+	 * @version 2.3.3
+	 * @since   2.3.0
+	 */
+	function enqueue_frontend_scripts() {
+		wp_enqueue_script( 'jquery-ui-datepicker' );
+		wp_enqueue_script( 'jquery-ui-timepicker' );
+		wp_enqueue_script( 'wcj-datepicker', wcj_plugin_url() . '/includes/js/wcj-datepicker.js',
+			array( 'jquery' ),
+			false,
+			true );
+		wp_enqueue_script( 'wcj-timepicker', wcj_plugin_url() . '/includes/js/wcj-timepicker.js',
+			array( 'jquery' ),
+			false,
+			true );
+
+		wp_enqueue_style( 'jquery-ui-css', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css' );
+		wp_enqueue_style( 'wcj-timepicker-css', wcj_plugin_url() . '/includes/css/jquery.timepicker.min.css' );
+	}
+
+	/**
+	 * register_frontend_scripts.
+	 *
+	 * @version 2.3.0
+	 * @since   2.3.0
+	 */
+	public function register_frontend_scripts() {
+		wp_register_script(
+			'jquery-ui-timepicker',
+			wcj_plugin_url() . '/includes/js/jquery.timepicker.min.js',
+			array( 'jquery' ),
+			false,
+			true
+		);
 	}
 
 	/**
@@ -201,22 +250,22 @@ final class WC_Jetpack {
 
 			case 'global':
 				return	'<div class="updated">
-								<p class="main"><strong>' . __( 'Install Booster for WooCommerce Plus to unlock all features', 'woocommerce-jetpack' ) . '</strong></p>
+								<p class="main"><strong>' . __( 'Install Booster Plus to unlock all features', 'woocommerce-jetpack' ) . '</strong></p>
 								<span>' . sprintf( __('Some settings fields are locked and you will need %s to modify all locked fields.', 'woocommerce-jetpack'), '<a href="http://BoostWoo.com/plus/">Booster for WooCommerce Plus</a>' ) . '</span>
 								<p><a href="http://BoostWoo.com/plus/" target="_blank" class="button button-primary">' . __( 'Buy now', 'woocommerce-jetpack' ) . '</a> <a href="http://BoostWoo.com" target="_blank" class="button">'. sprintf( __( 'Visit %s', 'woocommerce-jetpack' ), 'BoostWoo.com' ) . '</a></p>
 						</div>';
 
 			case 'desc':
-				return __( 'Get <a href="http://BoostWoo.com/plus/" target="_blank">Booster for WooCommerce Plus</a> to change value.', 'woocommerce-jetpack' );
+				return __( 'Get <a href="http://BoostWoo.com/plus/" target="_blank">Booster Plus</a> to change value.', 'woocommerce-jetpack' );
 
 			case 'desc_below':
-				return __( 'Get <a href="http://BoostWoo.com/plus/" target="_blank">Booster for WooCommerce Plus</a> to change values below.', 'woocommerce-jetpack' );
+				return __( 'Get <a href="http://BoostWoo.com/plus/" target="_blank">Booster Plus</a> to change values below.', 'woocommerce-jetpack' );
 
 			case 'desc_above':
-				return __( 'Get <a href="http://BoostWoo.com/plus/" target="_blank">Booster for WooCommerce Plus</a> to change values above.', 'woocommerce-jetpack' );
+				return __( 'Get <a href="http://BoostWoo.com/plus/" target="_blank">Booster Plus</a> to change values above.', 'woocommerce-jetpack' );
 
 			case 'desc_no_link':
-				return __( 'Get Booster for WooCommerce Plus to change value.', 'woocommerce-jetpack' );
+				return __( 'Get Booster Plus to change value.', 'woocommerce-jetpack' );
 
 			case 'readonly':
 				return array( 'readonly' => 'readonly' );
@@ -322,6 +371,7 @@ final class WC_Jetpack {
 		$settings[] = include_once( 'includes/class-wcj-payment-gateways-icons.php' );
 		$settings[] = include_once( 'includes/class-wcj-payment-gateways-fees.php' );
 		$settings[] = include_once( 'includes/class-wcj-payment-gateways-per-category.php' );
+		$settings[] = include_once( 'includes/class-wcj-payment-gateways-currency.php' );
 
 		$settings[] = include_once( 'includes/class-wcj-shipping.php' );
 		$settings[] = include_once( 'includes/class-wcj-shipping-calculator.php' );
@@ -350,6 +400,7 @@ final class WC_Jetpack {
 		$settings[] = include_once( 'includes/class-wcj-currencies.php' );
 		$settings[] = include_once( 'includes/class-wcj-currency-external-products.php' );
 		$settings[] = include_once( 'includes/class-wcj-price-by-country.php' );
+		$settings[] = include_once( 'includes/class-wcj-currency-exchange-rates.php' );
 
 		$settings[] = include_once( 'includes/class-wcj-general.php' );
 		$settings[] = include_once( 'includes/class-wcj-old-slugs.php' );
@@ -364,7 +415,7 @@ final class WC_Jetpack {
 			foreach ( $settings as $section ) {
 
 				$values = $section->get_settings();
-				
+
 				// Modules statuses
 				$submodules_classes = array(
 					'WCJ_PDF_Invoicing_Display',

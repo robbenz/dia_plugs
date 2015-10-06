@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Price Labels class.
  *
- * @version 2.2.0
+ * @version 2.3.0
  * @author  Algoritmika Ltd.
  */
 
@@ -414,12 +414,13 @@ class WCJ_Price_Labels {
 	}
 
 	/*
-	 * front end
+	 * front end.
+	 *
+	 * @version 2.3.0
 	 */
 	public function custom_price( $price, $product ) {
 
-		if ( is_admin() )
-			return $price;
+		if ( ! wcj_is_frontend() ) return $price;
 
 		//if ( 'simple' === $product->product_type )
 		//	return $price;
@@ -483,10 +484,10 @@ class WCJ_Price_Labels {
 			if ( 'on' === $labels_array[ 'variation_enabled' ] ) {
 
 				if (
-					( ( 'off' === $labels_array['variation_home'] ) 	&& ( is_front_page() ) ) ||
+					( ( 'off' === $labels_array['variation_home'] )     && ( is_front_page() ) ) ||
 					( ( 'off' === $labels_array['variation_products'] ) && ( is_archive() ) ) ||
-					( ( 'off' === $labels_array['variation_single'] ) 	&& ( is_single() ) ) ||
-					( ( 'off' === $labels_array['variation_page'] ) 	&& ( is_page() ) )
+					( ( 'off' === $labels_array['variation_single'] )   && ( is_single() ) ) ||
+					( ( 'off' === $labels_array['variation_page'] )     && ( is_page() ) )
 				   )
 					{
 						//$current_filter_name = current_filter();

@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Checkout Custom Fields class.
  *
- * @version 2.2.7
+ * @version 2.3.0
  * @author  Algoritmika Ltd.
  */
 
@@ -16,8 +16,10 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 
 	/**
 	 * Constructor.
+	 *
+	 * @version 2.3.0
 	 */
-	public function __construct() {
+	function __construct() {
 
 		$this->id         = 'checkout_custom_fields';
 		$this->short_desc = __( 'Checkout Custom Fields', 'woocommerce-jetpack' );
@@ -26,60 +28,77 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 
 		if ( $this->is_enabled() ) {
 
-			add_filter( 'woocommerce_checkout_fields',                          array( $this, 'add_custom_checkout_fields' ), PHP_INT_MAX );
+			add_filter( 'woocommerce_checkout_fields',                  array( $this, 'add_custom_checkout_fields' ), PHP_INT_MAX );
 
-			add_action( 'woocommerce_admin_order_data_after_billing_address',   array( $this, 'add_custom_billing_fields_to_admin_order_display' ), PHP_INT_MAX );
-			add_action( 'woocommerce_admin_order_data_after_shipping_address',  array( $this, 'add_custom_shipping_fields_to_admin_order_display' ), PHP_INT_MAX );
-//			add_action( 'woocommerce_admin_order_data_after_order_details',   array( $this, 'add_custom_order_and_account_fields_to_admin_order_display' ), PHP_INT_MAX );
-			add_action( 'woocommerce_admin_order_data_after_shipping_address',  array( $this, 'add_custom_order_and_account_fields_to_admin_order_display' ), PHP_INT_MAX );
+			add_action( 'woocommerce_admin_billing_fields',             array( $this, 'add_custom_billing_fields_to_admin_order_display' ), PHP_INT_MAX );
+			add_action( 'woocommerce_admin_shipping_fields',            array( $this, 'add_custom_shipping_fields_to_admin_order_display' ), PHP_INT_MAX );
+			add_action( 'woocommerce_admin_shipping_fields',            array( $this, 'add_custom_order_and_account_fields_to_admin_order_display' ), PHP_INT_MAX );
 
-			add_action( 'woocommerce_order_details_after_order_table',          array( $this, 'add_custom_billing_fields_to_admin_order_display' ), PHP_INT_MAX );
-			add_action( 'woocommerce_order_details_after_order_table',          array( $this, 'add_custom_shipping_fields_to_admin_order_display' ), PHP_INT_MAX );
-			add_action( 'woocommerce_order_details_after_order_table',          array( $this, 'add_custom_order_and_account_fields_to_admin_order_display' ), PHP_INT_MAX );
+			add_action( 'woocommerce_order_details_after_order_table',  array( $this, 'add_custom_fields_to_order_display' ), PHP_INT_MAX );
+			add_action( 'woocommerce_email_after_order_table',          array( $this, 'add_custom_fields_to_emails' ), PHP_INT_MAX, 2 );
 
-			add_action( 'woocommerce_email_after_order_table',                  array( $this, 'add_custom_fields_to_emails' ), PHP_INT_MAX, 2 );
+			add_filter( 'woo_ce_order_fields',                          array( $this, 'add_custom_fields_to_store_exporter' ) );
+			add_filter( 'woo_ce_order',                                 array( $this, 'add_custom_fields_to_store_exporter_order' ), PHP_INT_MAX, 2 );
 
-			add_filter( 'woo_ce_order_fields',                                  array( $this, 'add_custom_fields_to_store_exporter' ) );
-			add_filter( 'woo_ce_order',                                         array( $this, 'add_custom_fields_to_store_exporter_order' ), PHP_INT_MAX, 2 );
+			add_action( 'woocommerce_checkout_update_order_meta',       array( $this, 'update_custom_checkout_fields_order_meta' ) );
 
-			add_action( 'woocommerce_checkout_update_order_meta',               array( $this, 'update_custom_checkout_fields_order_meta' ) );
+/* 			add_action( 'wp_enqueue_scripts',                           array( $this, 'enqueue_scripts' ) );
+//			add_action( 'wp_head',                                      array( $this, 'add_datepicker_script' ) );
+			add_action( 'init',                                         array( $this, 'register_script' ) );
+ */
+//			add_action( 'woocommerce_order_formatted_shipping_address', array( $this, 'add_custom_shipping_fields_to_formatted_address' ), PHP_INT_MAX, 2 );
 
-			add_action( 'wp_enqueue_scripts',                                   array( $this, 'enqueue_scripts' ) );
-			add_action( 'wp_head',                                              array( $this, 'add_datepicker_script' ) );
-
-//			add_action( 'woocommerce_order_formatted_shipping_address',         array( $this, 'add_custom_shipping_fields_to_formatted_address' ), PHP_INT_MAX, 2 );
+//			add_filter( 'woocommerce_form_field_' . 'number',           array( $this, 'woocommerce_form_field_type_number' ), PHP_INT_MAX, 4 );
+			add_filter( 'woocommerce_form_field_' . 'text',             array( $this, 'woocommerce_form_field_type_number' ), PHP_INT_MAX, 4 );
 		}
 	}
 
 	/**
-	 * add_custom_fields_to_admin_emails.
+	 * woocommerce_form_field_type_number.
+	 *
+	 * @version 2.3.0
+	 * @since   2.3.0
 	 */
-	public function add_custom_fields_to_emails( $order, $sent_to_admin ) {
-		if ( ( $sent_to_admin && 'yes' === get_option( 'wcj_checkout_custom_fields_email_all_to_admin' ) ) ||
-		     ( ! $sent_to_admin && 'yes' === get_option( 'wcj_checkout_custom_fields_email_all_to_customer' ) ) ) {
-				$this->add_custom_billing_fields_to_admin_order_display( $order );
-				$this->add_custom_shipping_fields_to_admin_order_display( $order );
-				$this->add_custom_order_and_account_fields_to_admin_order_display( $order );
+	function woocommerce_form_field_type_number( $field, $key, $args, $value ) {
+		/* $args['input_class'] = array();
+		$args['maxlength'] = '';
+		$custom_attributes = array();
+		$field = '<input type="number" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) .'" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" '.$args['maxlength'].' value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
+		return $field; */
+		if ( isset( $args['custom_attributes']['display'] ) && 'number' === $args['custom_attributes']['display'] ) {
+			$field = str_replace( '<input type="text" ', '<input type="number" ', $field );
+		}
+		return $field;
+	}
+
+	/**
+	 * add_custom_fields_to_admin_emails.
+	 *
+	 * @version 2.3.0
+	 */
+	function add_custom_fields_to_emails( $order, $sent_to_admin ) {
+		if (
+			(   $sent_to_admin && 'yes' === get_option( 'wcj_checkout_custom_fields_email_all_to_admin' ) ) ||
+			( ! $sent_to_admin && 'yes' === get_option( 'wcj_checkout_custom_fields_email_all_to_customer' ) )
+		) {
+				$this->add_custom_fields_to_order_display( $order );
 		}
 	}
 
 	/**
 	 * add_custom_fields_to_store_exporter_order.
 	 *
-	 * since 2.2.7
+	 * @version 2.3.0
+	 * @since   2.2.7
 	 */
-	public function add_custom_fields_to_store_exporter_order( $order, $order_id ) {
-
-		for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_checkout_custom_fields_total_number', 1 ) ); $i++ ) {
-			if ( 'yes' === get_option( 'wcj_checkout_custom_field_enabled_' . $i ) ) {
-
-				$the_section = get_option( 'wcj_checkout_custom_field_section_' . $i );
-				$the_key = 'wcj_checkout_field_' . $i;
-				$the_field = $the_section . '_' . $the_key;
-				$the_value = get_post_meta( $order_id, '_' . $the_field, true );
-				$the_value = ( isset( $the_value['value'] ) ) ? $the_value['value'] : $the_value;
-
-				$order->$the_field = $the_value;
+	function add_custom_fields_to_store_exporter_order( $order, $order_id ) {
+		$post_meta = get_post_meta( $order_id );
+		foreach( $post_meta as $key => $values ) {
+			if ( false !== strpos( $key, 'wcj_checkout_field_' ) && isset( $values[0] ) ) {
+				if ( false !== strpos( $key, '_label_' ) ) {
+					continue;
+				}
+				$order->$key = isset( $values[0]['value'] ) ? $values[0]['value'] : $values[0];
 			}
 		}
 
@@ -92,32 +111,53 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 	public function add_custom_fields_to_store_exporter( $fields ) {
 		for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_checkout_custom_fields_total_number', 1 ) ); $i++ ) {
 			if ( 'yes' === get_option( 'wcj_checkout_custom_field_enabled_' . $i ) ) {
-
 				$the_section = get_option( 'wcj_checkout_custom_field_section_' . $i );
 				$the_key = 'wcj_checkout_field_' . $i;
-
 				$fields[] = array(
 					'name'  => $the_section . '_' . $the_key,
 					'label' => get_option( 'wcj_checkout_custom_field_label_' . $i ),
 				);
 			}
 		}
-        return $fields;
+	    return $fields;
 	}
 
 	/**
 	 * enqueue_scripts.
-	 */
-	public function enqueue_scripts() {
-		wp_enqueue_script('jquery-ui-datepicker');
+	 *
+	 * @version 2.3.0
+	 *
+	function enqueue_scripts() {
+		wp_enqueue_script( 'jquery-ui-datepicker' );
+		wp_enqueue_script( 'jquery-ui-timepicker' );
+		wp_enqueue_script( 'wcj-datepicker', wcj_plugin_url() . '/includes/js/wcj-datepicker.js',
+			array( 'jquery' ),
+			false,
+			true );
+
 		wp_enqueue_style( 'jquery-ui-css', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css' );
+		wp_enqueue_style( 'wcj-timepicker', wcj_plugin_url() . '/includes/css/jquery.timepicker.min.css' );
+	}
+
+	/**
+	 * register_script.
+	 *
+	 * @version 2.3.0
+	 * @since   2.3.0
+	 *
+	public function register_script() {
+		wp_register_script(
+			'jquery-ui-timepicker',
+			wcj_plugin_url() . '/includes/js/jquery.timepicker.min.js',
+			array( 'jquery' ),
+			false,
+			true
+		);
 	}
 
 	/**
 	 * Convert the php date format string to a js date format
 	 *
-	 * https://gist.github.com/clubduece/4053820
-	 */
 	public function date_format_php_to_js( $php_date_format ) {
 		$date_formats_php_to_js = array(
 			'F j, Y' => 'MM dd, yy',
@@ -130,13 +170,20 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 
 	/**
 	 * add_datepicker_script.
-	 */
+	 *
+	 * @version 2.3.0
+	 *
 	public function add_datepicker_script() {
 		?>
 		<script>
 		jQuery(document).ready(function() {
 		 jQuery('input[display=\'date\']').datepicker({
 		 dateFormat : '<?php echo $this->date_format_php_to_js( get_option( 'date_format' ) ); ?>'
+		 });
+		});
+		jQuery(document).ready(function() {
+		 jQuery('input[display=\'time\']').timepicker({
+		 timeFormat: 'h:mm:ss p'
 		 });
 		});
 		</script>
@@ -161,78 +208,107 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 
 	/**
 	 * update_custom_checkout_fields_order_meta.
+	 *
+	 * @version 2.3.0
 	 */
 	public function update_custom_checkout_fields_order_meta( $order_id ) {
 		for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_checkout_custom_fields_total_number', 1 ) ); $i++ ) {
 			if ( 'yes' === get_option( 'wcj_checkout_custom_field_enabled_' . $i ) ) {
 				$the_section = get_option( 'wcj_checkout_custom_field_section_' . $i );
-				$option_name = $the_section . '_' . 'wcj_checkout_field_' . $i;
+				$option_name       = $the_section . '_' . 'wcj_checkout_field_'       . $i;
+				$option_name_label = $the_section . '_' . 'wcj_checkout_field_label_' . $i;
 				if ( ! empty( $_POST[ $option_name ] ) ) {
-//					update_post_meta( $order_id, '_' . $option_name, sanitize_text_field( $_POST[ $option_name ] ) );
-					update_post_meta(
-						$order_id,
-						'_' . $option_name,
-						array(
-							'value'		=> sanitize_text_field( $_POST[ $option_name ] ),
-							'label'		=> get_option( 'wcj_checkout_custom_field_label_' . $i ),
-							'section'	=> get_option( 'wcj_checkout_custom_field_section_' . $i ),
-						)
-					);
+					update_post_meta( $order_id, '_' . $option_name_label, get_option( 'wcj_checkout_custom_field_label_' . $i ) );
+					update_post_meta( $order_id, '_' . $option_name,       wc_clean( $_POST[ $option_name ] ) );
 				}
 			}
 		}
 	}
 
 	/**
+	 * add_custom_fields_to_order_display.
+	 *
+	 * @version 2.3.0
+	 * @since   2.3.0
+	 */
+	function add_custom_fields_to_order_display( $order ) {
+		$post_meta = get_post_meta( $order->id );
+		foreach( $post_meta as $key => $values ) {
+			if ( false !== strpos( $key, 'wcj_checkout_field_' ) && isset( $values[0] ) ) {
+				if ( false !== strpos( $key, '_label_' ) ) {
+					continue;
+				}
+				$the_label_key = str_replace( 'wcj_checkout_field_', 'wcj_checkout_field_label_', $key );
+				if ( isset( $post_meta[ $the_label_key ][0] ) ) echo $post_meta[ $the_label_key ][0] . ': ';
+				else if ( isset( $post_meta[ $the_label_key ][0]['label'] ) ) echo $post_meta[ $the_label_key ][0]['label'] . ': ';
+				echo isset( $values[0]['value'] ) ? $values[0]['value'] : $values[0];
+			}
+		}
+	}
+
+	/**
+	 * add_woocommerce_admin_fields.
+	 */
+	public function add_woocommerce_admin_fields( $fields, $section ) {
+		for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_checkout_custom_fields_total_number', 1 ) ); $i++ ) {
+			if ( 'yes' === get_option( 'wcj_checkout_custom_field_enabled_' . $i ) ) {
+				$the_type = get_option( 'wcj_checkout_custom_field_type_' . $i );
+				if ( 'datepicker' === $the_type || 'timepicker' === $the_type || 'number' === $the_type ) {
+					$the_type = 'text';
+				}
+				$the_section = get_option( 'wcj_checkout_custom_field_section_' . $i );
+				if ( $section != $the_section ) continue;
+				$the_key = 'wcj_checkout_field_' . $i;
+				$the_key_label = 'wcj_checkout_field_label_' . $i;
+
+				$the_meta = get_post_meta( get_the_ID(), '_' . $section . '_' . $the_key, true );
+				if ( is_array( $the_meta ) ) {
+					// Converting from before v2.3.0
+					if ( isset( $the_meta['value'] ) ) update_post_meta( get_the_ID(), '_' . $section . '_' . $the_key,       $the_meta['value'] );
+					if ( isset( $the_meta['label'] ) ) update_post_meta( get_the_ID(), '_' . $section . '_' . $the_key_label, $the_meta['label'] );
+				}
+
+				$fields[ $the_key ] = array(
+					'type'  => $the_type,
+					'label' => get_option( 'wcj_checkout_custom_field_label_' . $i ),//@todo label from post meta?
+					'show'  => true,
+				);
+			}
+		}
+		return $fields;
+	}
+
+	/**
 	 * add_custom_billing_fields_to_admin_order_display.
 	 */
-	public function add_custom_billing_fields_to_admin_order_display( $order ) {
-		$this->add_custom_fields_to_admin_order_display( $order, 'billing' );
+	public function add_custom_billing_fields_to_admin_order_display( $fields ) {
+		return $this->add_woocommerce_admin_fields( $fields, 'billing' );
 	}
 
 	/**
 	 * add_custom_shipping_fields_to_admin_order_display.
 	 */
-	public function add_custom_shipping_fields_to_admin_order_display( $order ) {
-		$this->add_custom_fields_to_admin_order_display( $order, 'shipping' );
+	public function add_custom_shipping_fields_to_admin_order_display( $fields ) {
+		return $this->add_woocommerce_admin_fields( $fields, 'shipping' );
 	}
 
 	/**
-	 * add_custom_order_and_account_fields_to_admin_order_display.
+	 * add_custom_order_and_account_fields_to_admin_order_display
 	 */
-	public function add_custom_order_and_account_fields_to_admin_order_display( $order ) {
-		$this->add_custom_fields_to_admin_order_display( $order, 'order' );
-		$this->add_custom_fields_to_admin_order_display( $order, 'account' );
-	}
-
-	/**
-	 * add_custom_fields_to_admin_order_display.
-	 */
-	public function add_custom_fields_to_admin_order_display( $order, $section ) {
-
-		$post_meta = get_post_meta( $order->id );//, $post_meta_name, false );
-		foreach( $post_meta as $key => $values ) {
-//			$value = unserialize( $values[0] );
-			$value = maybe_unserialize( $values[0] );
-//			foreach( $values as $value ) {
-				if ( isset( $value['section'] ) && $section === $value['section'] ) {
-					if ( isset( $value['value'] ) && '' != $value['value']  ) {
-						$the_label = $value['label'];
-						if ( '' != $the_label )
-							$the_label = '<strong>' . $the_label . ':</strong> ';
-						echo '<p>' . $the_label . $value['value'] . '</p>';
-					}
-				}
-//			}
-		}
+	public function add_custom_order_and_account_fields_to_admin_order_display( $fields ) {
+		$fields = $this->add_woocommerce_admin_fields( $fields, 'order' );
+		$fields = $this->add_woocommerce_admin_fields( $fields, 'account' );
+		return $fields;
 	}
 
 	/**
 	 * add_custom_checkout_fields.
+	 *
+	 * @version 2.3.0
 	 */
 	public function add_custom_checkout_fields( $fields ) {
 
-	for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_checkout_custom_fields_total_number', 1 ) ); $i++ ) {
+		for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_checkout_custom_fields_total_number', 1 ) ); $i++ ) {
 
 			if ( 'yes' === get_option( 'wcj_checkout_custom_field_enabled_' . $i ) ) {
 
@@ -244,7 +320,6 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 						$product_categories = get_the_terms( $values['product_id'], 'product_cat' );
 						if ( empty( $product_categories ) ) continue;
 						foreach( $product_categories as $product_category ) {
-//							if ( in_array( $product_category->term_id, $cats_in ) ) {
 							if ( in_array( $product_category->term_id, $categories_in ) ) {
 								$do_skip = false;
 								break;
@@ -257,23 +332,38 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 
 				$the_type = get_option( 'wcj_checkout_custom_field_type_' . $i );
 				$custom_attributes = array();
-				if ( 'datepicker' === $the_type ) {
+				if ( 'datepicker' === $the_type || 'timepicker' === $the_type || 'number' === $the_type ) {
+					if ( 'datepicker' === $the_type || 'timepicker' === $the_type ) {
+						$custom_attributes['display'] = ( 'datepicker' === $the_type ) ? 'date' : 'time';
+					} else/* if ( 'number' === $the_type ) */ {
+						$custom_attributes['display'] = $the_type;
+					}
 					$the_type = 'text';
-					$custom_attributes['display'] = 'date';
 				}
 				$the_section = get_option( 'wcj_checkout_custom_field_section_' . $i );
 				$the_key = 'wcj_checkout_field_' . $i;
 
-				$fields[ $the_section ][ $the_section . '_' . $the_key ] =
-					array(
-						'type'              => $the_type,
-						'label'             => get_option( 'wcj_checkout_custom_field_label_' . $i ),
-						'placeholder'       => get_option( 'wcj_checkout_custom_field_placeholder_' . $i ),
-						'required'          => ( 'yes' === get_option( 'wcj_checkout_custom_field_required_' . $i ) ) ? true : false,
-						'custom_attributes' => $custom_attributes,
-						'clear'             => ( 'yes' === get_option( 'wcj_checkout_custom_field_clear_' . $i ) ) ? true : false,
-						'class'             => array( get_option( 'wcj_checkout_custom_field_class_' . $i ), ),
-					);
+				$the_field = array(
+					'type'              => $the_type,
+					'label'             => get_option( 'wcj_checkout_custom_field_label_' . $i ),
+					'placeholder'       => get_option( 'wcj_checkout_custom_field_placeholder_' . $i ),
+					'required'          => ( 'yes' === get_option( 'wcj_checkout_custom_field_required_' . $i ) ) ? true : false,
+					'custom_attributes' => $custom_attributes,
+					'clear'             => ( 'yes' === get_option( 'wcj_checkout_custom_field_clear_' . $i ) ) ? true : false,
+					'class'             => array( get_option( 'wcj_checkout_custom_field_class_' . $i ), ),
+				);
+
+				if ( 'select' === $the_type || 'radio' === $the_type ) {
+					$select_options_raw = get_option( 'wcj_checkout_custom_field_select_options_' . $i );
+					$select_options = wcj_get_select_options( $select_options_raw );
+					$the_field['options'] = $select_options;
+					if ( ! empty( $select_options ) ) {
+						reset( $select_options );
+						$the_field['default'] = key( $select_options );
+					}
+				}
+
+				$fields[ $the_section ][ $the_section . '_' . $the_key ] = $the_field;
 			}
 		}
 		return $fields;
@@ -281,8 +371,10 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 
 	/**
 	 * get_settings.
+	 *
+	 * @version 2.3.0
 	 */
-    public function get_settings() {
+	public function get_settings() {
 
 		$settings = array(
 
@@ -363,13 +455,27 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 						'options'     => array(
 							'text'       => __( 'Text', 'woocommerce-jetpack' ),
 							'textarea'   => __( 'Textarea', 'woocommerce-jetpack' ),
-							//'number'   => __( 'Number', 'woocommerce-jetpack' ),
-							'datepicker' => __( 'Datepicker', 'woocommerce-jetpack' ),
+							'number'     => __( 'Number', 'woocommerce-jetpack' ),//custom-todo - filter
 							'checkbox'   => __( 'Checkbox', 'woocommerce-jetpack' ),
-							//'select'   => __( 'Select', 'woocommerce-jetpack' ),
+//							'file'       => __( 'File', 'woocommerce-jetpack' ),//todo
+							'datepicker' => __( 'Datepicker', 'woocommerce-jetpack' ),//custom (passed as `text`)
+							'timepicker' => __( 'Timepicker', 'woocommerce-jetpack' ),//custom (passed as `text`)
+							'select'     => __( 'Select', 'woocommerce-jetpack' ),//?
+							'radio'      => __( 'Radio', 'woocommerce-jetpack' ),//?
 							'password'   => __( 'Password', 'woocommerce-jetpack' ),
+							'country'    => __( 'Country', 'woocommerce-jetpack' ),//
+							'state'      => __( 'State', 'woocommerce-jetpack' ),//
+							'email'      => __( 'Email', 'woocommerce-jetpack' ),//
+							'tel'        => __( 'Phone', 'woocommerce-jetpack' ),//
 						),
 						'css'       => 'width:200px;',
+					),
+					array(
+						'title'     => '',
+						'desc'      => __( 'options (only if "select" or "radio" type is selected)', 'woocommerce-jetpack' ),
+						'id'        => 'wcj_checkout_custom_field_select_options_' . $i,
+						'default'   => '',
+						'type'      => 'textarea',
 					),
 					array(
 						'title'     => '',
@@ -446,16 +552,6 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 						'type'      => 'checkbox',
 					),
 
-					/* array(
-						'title'     => '',
-						'desc'      => __( 'categories', 'woocommerce-jetpack' ),
-						'desc_tip'  => __( 'Comma separated list of product categories IDs', 'woocommerce-jetpack' ),
-						'id'        => 'wcj_checkout_custom_field_cats_in_' . $i,
-						'default'   => '',
-						'css'       => 'width:400px;',
-						'type'      => 'text',
-					), */
-
 					array(
 						'title'     => '',
 						'desc'      => __( 'categories', 'woocommerce-jetpack' ),
@@ -468,15 +564,6 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 						'options'   => $product_cats,
 					),
 
-					/**
-					array(
-						'title'     => '',
-						'desc'      => __( 'position', 'woocommerce-jetpack' ),
-						'id'        => 'wcj_checkout_custom_field_position_' . $i,
-						'default'   => 20,
-						'type'      => 'number',
-					),
-					/**/
 				)
 			);
 		}

@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Products Shortcodes class.
  *
- * @version 2.2.6
+ * @version 2.3.0
  * @author  Algoritmika Ltd.
  */
 
@@ -162,11 +162,11 @@ class WCJ_Products_Shortcodes extends WCJ_Shortcodes {
 	/**
 	 * wcj_product_crowdfunding_time_remaining.
 	 *
-	 * @version 2.2.6
+	 * @version 2.3.0
 	 * @since   2.2.6
 	 */
 	function wcj_product_crowdfunding_time_remaining( $atts ) {
-		$seconds_remaining = strtotime( $this->wcj_product_crowdfunding_deadline( $atts ) ) - time();
+		$seconds_remaining = strtotime( $this->wcj_product_crowdfunding_deadline( $atts ) ) - current_time( 'timestamp' );
 		$days_remaining    = floor( $seconds_remaining / ( 24 * 60 * 60 ) );
 		$hours_remaining   = floor( $seconds_remaining / (      60 * 60 ) );
 		$minutes_remaining = floor( $seconds_remaining /             60   );

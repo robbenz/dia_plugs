@@ -72,8 +72,6 @@ class WCJ_Price_by_Country_Local {
 
 		if ( $the_product->is_type( 'variation' ) ) {
 			$html .= $this->get_all_options_html( $simple_or_variable, $current_post_id, $total_country_groups_number, '_' . $current_post_id );
-			//wcj_log( $simple_or_variable . '|' . $current_post_id . '|' . $total_country_groups_number . '|' . '_' . $current_post_id );
-			//wcj_log( $current_post_id );
 			//$html = '</p>' . $html . '<p>';
 		}
 		/*

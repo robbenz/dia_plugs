@@ -3,7 +3,7 @@
 	{
 		extract($this->values);?>
 		<div class="wrap">
-			<h2><?php esc_html_e(__($title, EMCORE_SLUG) );?></h2>
+			<h2><?php esc_html_e(__($title, 'easy-modal' ) );?></h2>
 			<div id="poststuff">
 				<div id="post-body" class="metabox-holder">
 					<div id="post-body-content"><?php

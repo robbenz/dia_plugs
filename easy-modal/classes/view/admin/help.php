@@ -3,7 +3,7 @@
 	{
 		extract($this->values);?>
 		<div class="wrap">
-			<h2><?php esc_html_e(__($title, EMCORE_SLUG) );?></h2>
+			<h2><?php esc_html_e(__($title, 'easy-modal' ) );?></h2>
 			<h2 id="emodal-tabs" class="nav-tab-wrapper">
 			<?php foreach($tabs as $tab){ ?>
 				<a href="#<?php echo $tab['id']?>" id="<?php echo $tab['id']?>-tab" class="nav-tab emodal-tab"><?php echo $tab['label'];?></a>

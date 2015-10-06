@@ -11,8 +11,8 @@
 	public function admin_menus()
 	{
 		add_menu_page(
-			apply_filters('emodal_admin_menu_page_title', __(EMCORE_NAME, EMCORE_SLUG)), // Page Title
-			apply_filters('emodal_admin_menu_menu_title', __(EMCORE_NAME, EMCORE_SLUG)), // Menu Title
+			apply_filters('emodal_admin_menu_page_title', __(EMCORE_NAME, 'easy-modal' )), // Page Title
+			apply_filters('emodal_admin_menu_menu_title', __(EMCORE_NAME, 'easy-modal' )), // Menu Title
 			apply_filters('emodal_admin_menu_capability', 'edit_posts'), // Menu Capabilities
 			emodal_admin_slug(), // Menu Slug
 			apply_filters('emodal_admin_menu_function',array('EModal_Controller_Admin_Modals', 'render')), // Menu Page Function
@@ -29,8 +29,8 @@
 	{
 
 		$submenu[] = array(
-			'page_title' => apply_filters('emodal_admin_submenu_modals_page_title', __('Modals', EMCORE_SLUG)),
-			'menu_title' => apply_filters('emodal_admin_submenu_modals_menu_title', __('Modals', EMCORE_SLUG)),
+			'page_title' => apply_filters('emodal_admin_submenu_modals_page_title', __('Modals', 'easy-modal' )),
+			'menu_title' => apply_filters('emodal_admin_submenu_modals_menu_title', __('Modals', 'easy-modal' )),
 			'capability' => apply_filters('emodal_admin_submenu_modals_capability', 'edit_posts'),
 			'menu_slug' => emodal_admin_slug(),
 			'function' => apply_filters('emodal_admin_submenu_modals_function',array('EModal_Controller_Admin_Modals', 'render'))
@@ -40,8 +40,8 @@
 	public function themes_page($submenu)
 	{
 		$submenu[] = array(
-			'page_title' => apply_filters('emodal_admin_submenu_themes_page_title', __('Theme', EMCORE_SLUG)),
-			'menu_title' => apply_filters('emodal_admin_submenu_themes_menu_title', __('Theme', EMCORE_SLUG)),
+			'page_title' => apply_filters('emodal_admin_submenu_themes_page_title', __('Theme', 'easy-modal' )),
+			'menu_title' => apply_filters('emodal_admin_submenu_themes_menu_title', __('Theme', 'easy-modal' )),
 			'capability' => apply_filters('emodal_admin_submenu_themes_capability', 'edit_themes'),
 			'menu_slug' => emodal_admin_slug('themes'),
 			'function' => apply_filters('emodal_admin_submenu_themes_function',array('EModal_Controller_Admin_Theme', 'render'))
@@ -51,8 +51,8 @@
 	public function settings_page($submenu)
 	{
 		$submenu[] = array(
-			'page_title' => apply_filters('emodal_admin_submenu_settings_page_title', __('Settings', EMCORE_SLUG)),
-			'menu_title' => apply_filters('emodal_admin_submenu_settings_menu_title', __('Settings', EMCORE_SLUG)),
+			'page_title' => apply_filters('emodal_admin_submenu_settings_page_title', __('Settings', 'easy-modal' )),
+			'menu_title' => apply_filters('emodal_admin_submenu_settings_menu_title', __('Settings', 'easy-modal' )),
 			'capability' => apply_filters('emodal_admin_submenu_settings_capability', 'manage_options'),
 			'menu_slug' => emodal_admin_slug('settings'),
 			'function' => apply_filters('emodal_admin_submenu_settings_function',array('EModal_Controller_Admin_Settings', 'render'))
@@ -62,8 +62,8 @@
 	public function addons_page($submenu)
 	{
 		$submenu[] = array(
-			'page_title' => apply_filters('emodal_admin_submenu_addons_page_title', __('Add Ons', EMCORE_SLUG)),
-			'menu_title' => apply_filters('emodal_admin_submenu_addons_menu_title', __('Add Ons', EMCORE_SLUG)),
+			'page_title' => apply_filters('emodal_admin_submenu_addons_page_title', __('Add Ons', 'easy-modal' )),
+			'menu_title' => apply_filters('emodal_admin_submenu_addons_menu_title', __('Add Ons', 'easy-modal' )),
 			'capability' => apply_filters('emodal_admin_submenu_addons_capability', 'manage_options'),
 			'menu_slug' => emodal_admin_slug('addons'),
 			'function' => apply_filters('emodal_admin_submenu_addons_function',array('EModal_Controller_Admin_Addons', 'render'))
@@ -73,8 +73,8 @@
 	public function help_page($submenu)
 	{
 		$submenu[] = array(
-			'page_title' => apply_filters('emodal_admin_submenu_help_page_title', __('Help', EMCORE_SLUG)),
-			'menu_title' => apply_filters('emodal_admin_submenu_help_menu_title', __('Help', EMCORE_SLUG)),
+			'page_title' => apply_filters('emodal_admin_submenu_help_page_title', __('Help', 'easy-modal' )),
+			'menu_title' => apply_filters('emodal_admin_submenu_help_menu_title', __('Help', 'easy-modal' )),
 			'capability' => apply_filters('emodal_admin_submenu_help_capability', 'edit_posts'),
 			'menu_slug' => emodal_admin_slug('help'),
 			'function' => apply_filters('emodal_admin_submenu_help_function',array('EModal_Controller_Admin_Help', 'render'))

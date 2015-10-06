@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Reports class.
  *
- * @version 2.2.4
+ * @version 2.3.0
  * @author  Algoritmika Ltd.
  */
 
@@ -33,10 +33,12 @@ class WCJ_Reports {
 			if ( is_admin() ) {
 				add_filter( 'woocommerce_admin_reports', 		array( $this, 'add_customers_by_country_report' ) );
 				add_filter( 'woocommerce_admin_reports', 		array( $this, 'add_stock_reports' ) );
+				add_filter( 'woocommerce_admin_reports', 		array( $this, 'add_sales_reports' ) );
 				add_action( 'init',						 		array( $this, 'catch_arguments' ) );
 
 				include_once( 'reports/wcj-class-reports-customers.php' );
 				include_once( 'reports/wcj-class-reports-stock.php' );
+				include_once( 'reports/wcj-class-reports-sales.php' );
 
 				add_action( 'admin_bar_menu', 					array( $this, 'add_custom_order_reports_ranges_to_admin_bar' ), PHP_INT_MAX );
 				add_action( 'admin_bar_menu', 					array( $this, 'add_custom_order_reports_ranges_by_month_to_admin_bar' ), PHP_INT_MAX );
@@ -64,7 +66,7 @@ class WCJ_Reports {
 			$args = array(
 				'parent' => false,
 				'id' => $parent,
-				'title' => __( 'WooJetpack: More Ranges - Months', 'woocommerce-jetpack' ),
+				'title' => __( 'Booster: More Ranges - Months', 'woocommerce-jetpack' ),
 				'href'  => false,
 				'meta' => array( 'title' => __( 'Select Range', 'woocommerce-jetpack' ), ),
 			);
@@ -99,7 +101,7 @@ class WCJ_Reports {
 			$args = array(
 				'parent' => false,
 				'id' => $parent,
-				'title' => __( 'WooJetpack: More Ranges', 'woocommerce-jetpack' ),
+				'title' => __( 'Booster: More Ranges', 'woocommerce-jetpack' ),
 				'href'  => false,
 				'meta' => array( 'title' => __( 'Select Range', 'woocommerce-jetpack' ), ),
 			);
@@ -186,6 +188,14 @@ class WCJ_Reports {
 	}
 
 	/**
+	 * get_report_sales.
+	 */
+	public function get_report_sales() {
+		$report = new WCJ_Reports_Sales();
+		echo $report->get_report();
+	}
+
+	/**
 	 * get_report_stock.
 	 */
 	public function get_report_stock() {
@@ -205,26 +215,44 @@ class WCJ_Reports {
 	}
 
 	/**
+	 * Add reports to WooCommerce > Reports > Sales
+	 *
+	 * @version 2.3.0
+	 * @since   2.3.0
+	 */
+	public function add_sales_reports( $reports ) {
+
+		$reports['orders']['reports']['booster_products_sales'] = array(
+			'title'       => __( 'Booster: Product Sales', 'woocommerce-jetpack' ),
+			'description' => '',
+			'hide_title'  => true,
+			'callback'    => array( $this, 'get_report_sales' ),
+		);
+
+		return $reports;
+	}
+
+	/**
 	 * Add reports to WooCommerce > Reports > Stock
 	 */
 	public function add_stock_reports( $reports ) {
 
 		$reports['stock']['reports']['on_stock'] = array(
-			'title'       => __( 'WooJetpack: All in stock', 'woocommerce-jetpack' ),
+			'title'       => __( 'Booster: All in stock', 'woocommerce-jetpack' ),
 			'description' => '',
 			'hide_title'  => true,
 			'callback'    => array( $this, 'get_report_stock' ),
 		);
 
 		$reports['stock']['reports']['understocked'] = array(
-			'title'       => __( 'WooJetpack: Understocked', 'woocommerce-jetpack' ),
+			'title'       => __( 'Booster: Understocked', 'woocommerce-jetpack' ),
 			'description' => '',
 			'hide_title'  => true,
 			'callback'    => array( $this, 'get_report_stock' ),
 		);
 
 		$reports['stock']['reports']['overstocked'] = array(
-			'title'       => __( 'WooJetpack: Overstocked', 'woocommerce-jetpack' ),
+			'title'       => __( 'Booster: Overstocked', 'woocommerce-jetpack' ),
 			'description' => '',
 			'hide_title'  => true,
 			'callback'    => array( $this, 'get_report_stock' ),
@@ -239,14 +267,14 @@ class WCJ_Reports {
 	public function add_customers_by_country_report( $reports ) {
 
 		$reports['customers']['reports']['customers_by_country'] = array(
-			'title'       => __( 'WooJetpack: Customers by Country', 'woocommerce-jetpack' ),
+			'title'       => __( 'Booster: Customers by Country', 'woocommerce-jetpack' ),
 			'description' => '',
 			'hide_title'  => true,
 			'callback'    => array( $this, 'get_report_customers' ),
 		);
 
 		$reports['customers']['reports']['customers_by_country_sets'] = array(
-			'title'       => __( 'WooJetpack: Customers by Country Sets', 'woocommerce-jetpack' ),
+			'title'       => __( 'Booster: Customers by Country Sets', 'woocommerce-jetpack' ),
 			'description' => '',
 			'hide_title'  => true,
 			'callback'    => array( $this, 'get_report_customers' ),
@@ -288,15 +316,15 @@ class WCJ_Reports {
 				'title' 	=> __( 'Available Reports', 'woocommerce-jetpack' ),
 				'type' 		=> 'title',
 				'desc' 		=> '<p>'
-							   . __( 'WooJetpack: Customers by Country. Available in WooCommerce > Reports > Customers.', 'woocommerce-jetpack' )
+							   . __( 'Booster: Customers by Country. Available in WooCommerce > Reports > Customers.', 'woocommerce-jetpack' )
 							   . '</p><p>'
-							   . __( 'WooJetpack: Customers by Country Sets. Available in WooCommerce > Reports > Customers.', 'woocommerce-jetpack' )
+							   . __( 'Booster: Customers by Country Sets. Available in WooCommerce > Reports > Customers.', 'woocommerce-jetpack' )
 							   . '</p><p>'
-							   . __( 'WooJetpack: All in Stock with sales data. Available in WooCommerce > Reports > Stock.', 'woocommerce-jetpack' )
+							   . __( 'Booster: All in Stock with sales data. Available in WooCommerce > Reports > Stock.', 'woocommerce-jetpack' )
 							   . '</p><p>'
-							   . __( 'WooJetpack: Understocked products (calculated by sales data). Available in WooCommerce > Reports > Stock.', 'woocommerce-jetpack' )
+							   . __( 'Booster: Understocked products (calculated by sales data). Available in WooCommerce > Reports > Stock.', 'woocommerce-jetpack' )
 							   . '</p><p>'
-							   . __( 'WooJetpack: Overstocked products (calculated by sales data). Available in WooCommerce > Reports > Stock.', 'woocommerce-jetpack' )
+							   . __( 'Booster: Overstocked products (calculated by sales data). Available in WooCommerce > Reports > Stock.', 'woocommerce-jetpack' )
 							   . '</p>',
 				'id' 		=> 'wcj_reports_more_options'
 			),

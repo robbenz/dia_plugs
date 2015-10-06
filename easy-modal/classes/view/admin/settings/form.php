@@ -27,13 +27,13 @@
 							<div class="meta-box-sortables ui-sortable" id="side-sortables">
 								<div class="postbox " id="submitdiv">
 									<div title="Click to toggle" class="handlediv"><br></div>
-									<h3 class="hndle"><span><?php _e('Save', EMCORE_SLUG);?></span></h3>
+									<h3 class="hndle"><span><?php _e('Save', 'easy-modal' );?></span></h3>
 									<div class="inside">
 										<div id="submitpost" class="submitbox">
 											<div id="major-publishing-actions" class="submitbox">
 												<div id="publishing-action">
 													<span class="spinner"></span>
-													<input type="submit" accesskey="p" value="<?php _e('Save', EMCORE_SLUG);?>" class="button button-primary button-large" id="publish" name="publish">
+													<input type="submit" accesskey="p" value="<?php _e('Save', 'easy-modal' );?>" class="button button-primary button-large" id="publish" name="publish">
 												</div>
 												<div class="clear"></div>
 											</div>

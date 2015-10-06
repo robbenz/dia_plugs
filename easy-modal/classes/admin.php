@@ -126,8 +126,8 @@
 		if($file == plugin_basename(EMCORE))
 		{
 			foreach(apply_filters('emodal_action_links', array(
-				'settings' => '<a href="'.emodal_admin_url('settings') .'">'.__('Settings', EMCORE_SLUG).'</a>',
-				'gopro' => '<a href="https://easy-modal.com/pricing?utm_source=em-free&utm_medium=plugins+page&utm_campaign=go+pro" target="_blank">'.__('Go Pro', EMCORE_SLUG).'</a>',
+				'settings' => '<a href="'.emodal_admin_url('settings') .'">'.__('Settings', 'easy-modal' ).'</a>',
+				'gopro' => '<a href="https://easy-modal.com/pricing?utm_source=em-free&utm_medium=plugins+page&utm_campaign=go+pro" target="_blank">'.__('Go Pro', 'easy-modal' ).'</a>',
 			)) as $link)
 			{
 				array_unshift( $links, $link );

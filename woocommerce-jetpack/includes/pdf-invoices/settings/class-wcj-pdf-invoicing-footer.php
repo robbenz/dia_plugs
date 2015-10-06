@@ -14,22 +14,21 @@ if ( ! class_exists( 'WCJ_PDF_Invoicing_Footer' ) ) :
 
 class WCJ_PDF_Invoicing_Footer extends WCJ_Module {
 
-    /**
-     * Constructor.
-     */
-    public function __construct() {
-
+	/**
+	 * Constructor.
+	 */
+	public function __construct() {
 		$this->id         = 'pdf_invoicing_footer';
 		$this->parent_id  = 'pdf_invoicing';
 		$this->short_desc = __( 'Footer', 'woocommerce-jetpack' );
 		$this->desc       = '';
 		parent::__construct( 'submodule' );
-    }
+	}
 
-    /**
-     * get_settings.
-     */
-    function get_settings() {
+	/**
+	 * get_settings.
+	 */
+	function get_settings() {
 
 		$settings = array();
 		$invoice_types = wcj_get_invoice_types();

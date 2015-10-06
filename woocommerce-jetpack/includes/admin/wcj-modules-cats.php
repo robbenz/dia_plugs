@@ -4,7 +4,7 @@
  *
  * The WooCommerce Modules Array.
  *
- * @version 2.2.6
+ * @version 2.3.0
  * @since   2.2.0
  * @author  Algoritmika Ltd.
  */
@@ -30,6 +30,7 @@ return array(
 			'currency_external_products',
 			'bulk_price_converter',
 			'wholesale_price',
+			'currency_exchange_rates',
 		),
 	),
 
@@ -72,10 +73,18 @@ return array(
 			'checkout_core_fields',
 			'checkout_custom_fields',
 			'checkout_custom_info',
+		),
+	),
+
+	'payment_gateways' => array(
+		'label'          => __( 'Payment Gateways', 'woocommerce-jetpack' ),
+		'default_cat_id' => 'payment_gateways',
+		'all_cat_ids'    => array(
 			'payment_gateways',
 			'payment_gateways_icons',
 			'payment_gateways_fees',
 			'payment_gateways_per_category',
+			'payment_gateways_currency',
 		),
 	),
 

@@ -54,12 +54,12 @@
 			$new_values = apply_filters('emodal_settings_pre_save', emodal_get_option('emodal_settings'));
 			emodal_update_option('emodal_settings', $new_values);
 			do_action('emodal_settings_save', $new_values);	
-			EModal_Admin_Notice::add(__('Settings Updated.',EMCORE_SLUG), 'updated');
+			EModal_Admin_Notice::add(__('Settings Updated.', 'easy-modal' ), 'updated');
 			//EModal_Admin::check_updates();
 			$this->redirect_to_edit();
 		}
 		$view = new EModal_View_Admin_Settings_Form;
-		$view->set('title', __('Easy Modal Settings', EMCORE_SLUG));
+		$view->set('title', __('Easy Modal Settings', 'easy-modal' ));
 		$view->set('tabs', apply_filters('emodal_admin_settings_form_tabs', array()));
 		self::$instance->view = $view;
 	}

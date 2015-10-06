@@ -1,7 +1,7 @@
 <?php
 if(!function_exists("is_emodal_admin_page")){
 function is_emodal_admin_page(){
-    if(is_admin() && !empty($_GET['page']) && ( strpos($_GET['page'], EMCORE_SLUG) === 0 || in_array($_GET['page'], apply_filters('emodal_admin_pages', array()))))
+    if(is_admin() && !empty($_GET['page']) && ( strpos($_GET['page'], 'easy-modal' ) === 0 || in_array($_GET['page'], apply_filters('emodal_admin_pages', array()))))
     {
         return true;
     }

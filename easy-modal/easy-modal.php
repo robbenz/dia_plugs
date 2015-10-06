@@ -3,9 +3,9 @@
 Plugin Name: Easy Modal
 Plugin URI: http://easy-modal.com
 Description: Easily create & style modals with any content. Theme editor to quickly style your modals. Add forms, social media boxes, videos & more. 
-Author: Wizard Internet Solutions
-Version: 2.0.16
-Author URI: http://wizardinternetsolutions.com
+Author: Daniel Iser
+Version: 2.0.17
+Author URI: http://danieliser.com
 Text Domain: easy-modal
 */
 if (!defined('EMCORE'))
@@ -21,7 +21,7 @@ if (!defined('EMCORE_URL'))
 if (!defined('EMCORE_NONCE'))
 	define('EMCORE_NONCE', EMCORE_SLUG.'_nonce' );
 if (!defined('EMCORE_VERSION'))
-	define('EMCORE_VERSION', '2.0.16' );
+	define('EMCORE_VERSION', '2.0.17' );
 if (!defined('EMCORE_DB_VERSION'))
 	define('EMCORE_DB_VERSION', '1.1' );
 if (!defined('EMCORE_API_URL'))

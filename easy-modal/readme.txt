@@ -6,7 +6,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: modal,modal box,modal form,modal window,popup,popup box,popup form,popup window,ajax forms, lightbox
 Requires at least: 3.4
 Tested up to: 4.0
-Stable tag: 2.0.16
+Stable tag: 2.0.17
 The #1 WordPress Popup Plugin! Make glorious & powerful popups and market your content like never before - all in minutes!
 
 == Description ==
@@ -16,13 +16,10 @@ We hope you enjoy using Popup Maker to destroy your old conversion rates!
 
 [Continue to Popup Maker](https://wppopupmaker.com "Popup Maker Website")
 
-
 If you're an existing Easy Modal user, transitioning from Easy Modal to Popup Maker is a snap with our custom Importer! [See How!](https://wppopupmaker.com/kb/upgrading-easy-modal-popup-maker "Upgrade from Easy Modal to Popup Maker")
 
-If you own Easy Modal Addons, you can upgrade to Popup Maker for free:
-
+If you own Easy Modal Addons, you can upgrade to Popup Maker for free.
 * [Yes, I want to upgrade for free!](https://wppopupmaker.com/easy-modal-customer-upgrade "Upgrade Your Easy Modal Product for Free") (recommended)
-
 * No thanks! I just [need support on my Easy Modal product](https://easy-modal.com/support "Get Support on Your Easy Modal Product").
 
 == Installation ==
@@ -31,6 +28,10 @@ If you own Easy Modal Addons, you can upgrade to Popup Maker for free:
 4. Theme, customize, and make a popup in minutes.
 
 == Changelog ==
+
+= v2.0.17 =
+* Tweak: Updated language domain information for upcoming translation by glotpress.
+
 = v2.0.16 =
 * Bug
  * Added backward compatibiilty fix for deprecated JS function.

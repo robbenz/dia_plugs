@@ -26,11 +26,11 @@
 			$current_theme->set_fields(apply_filters("emodal_model_theme_meta_defaults", $new_values));
 			$current_theme->save();
 			do_action('emodal_theme_save', $current_theme);			
-			EModal_Admin_Notice::add(__('Theme Updated.',EMCORE_SLUG), 'updated');
+			EModal_Admin_Notice::add(__('Theme Updated.', 'easy-modal' ), 'updated');
 			$this->redirect_to_edit();
 		}
 		$view = new EModal_View_Admin_Theme_Form;
-		$view->set('title', __('Edit Theme', EMCORE_SLUG));
+		$view->set('title', __('Edit Theme', 'easy-modal' ));
 		$view->set('tabs', apply_filters('emodal_admin_theme_form_tabs', array()));
 		self::$instance->view = $view;
 	}

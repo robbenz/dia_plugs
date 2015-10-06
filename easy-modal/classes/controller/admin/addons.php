@@ -25,7 +25,7 @@
 	public function action_browse()
 	{
 		$view = new EModal_View_Admin_Addons;
-		$view->set('title', __('Easy Modal Add Ons', EMCORE_SLUG));
+		$view->set('title', __('Easy Modal Add Ons', 'easy-modal' ));
 		$view->set('tabs', apply_filters('emodal_admin_addons_tabs', array()));
 		self::$instance->view = $view;
 	}

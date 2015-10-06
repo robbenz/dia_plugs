@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Price by Country Core class.
  *
- * @version 2.2.6
+ * @version 2.3.0
  * @author  Algoritmika Ltd.
  */
 
@@ -24,6 +24,8 @@ class WCJ_Price_by_Country_Core {
 
 	/**
 	 * add_hooks.
+	 *
+	 * @version 2.3.0
 	 */
 	function add_hooks() {
 
@@ -38,22 +40,26 @@ class WCJ_Price_by_Country_Core {
 			}
 		}
 
-		// Price hooks
-		add_filter( 'woocommerce_get_price',                   array( $this, 'change_price_by_country' ), PHP_INT_MAX, 2 );
-		add_filter( 'woocommerce_get_sale_price',              array( $this, 'change_price_by_country' ), PHP_INT_MAX, 2 );
-		add_filter( 'woocommerce_get_regular_price',           array( $this, 'change_price_by_country' ), PHP_INT_MAX, 2 );
-//		add_filter( 'woocommerce_get_variation_price',         array( $this, 'change_price_by_country' ), PHP_INT_MAX, 2 );
-		add_filter( 'woocommerce_get_variation_sale_price',    array( $this, 'change_price_by_country' ), PHP_INT_MAX, 2 );
-		add_filter( 'woocommerce_get_variation_regular_price', array( $this, 'change_price_by_country' ), PHP_INT_MAX, 2 );
-//		add_filter( 'booking_form_calculated_booking_cost',    array( $this, 'change_price_by_country' ), PHP_INT_MAX );
-//		add_filter( 'woocommerce_get_price_html',              array( $this, 'fix_variable_product_price_on_sale' ), 10 , 2 );
+		//if (  ) { //todo
 
-		// Currency hooks
-		add_filter( 'woocommerce_currency_symbol',             array( $this, 'change_currency_symbol' ), PHP_INT_MAX, 2 );
-		add_filter( 'woocommerce_currency',                    array( $this, 'change_currency_code' ), PHP_INT_MAX, 1 );
+			// Price hooks
+			add_filter( 'woocommerce_variation_prices',            array( $this, 'change_price_by_country_variations' ), PHP_INT_MAX, 2 );
+			add_filter( 'woocommerce_get_price',                   array( $this, 'change_price_by_country' ), PHP_INT_MAX, 2 );
+			add_filter( 'woocommerce_get_sale_price',              array( $this, 'change_price_by_country' ), PHP_INT_MAX, 2 );
+			add_filter( 'woocommerce_get_regular_price',           array( $this, 'change_price_by_country' ), PHP_INT_MAX, 2 );
+//			add_filter( 'woocommerce_get_variation_price',         array( $this, 'change_price_by_country' ), PHP_INT_MAX, 2 );
+//			add_filter( 'woocommerce_get_variation_sale_price',    array( $this, 'change_price_by_country' ), PHP_INT_MAX, 2 );
+//			add_filter( 'woocommerce_get_variation_regular_price', array( $this, 'change_price_by_country' ), PHP_INT_MAX, 2 );
+//			add_filter( 'booking_form_calculated_booking_cost',    array( $this, 'change_price_by_country' ), PHP_INT_MAX );
+//			add_filter( 'woocommerce_get_price_html',              array( $this, 'fix_variable_product_price_on_sale' ), 10 , 2 );
 
-		// Shipping
-		add_filter( 'woocommerce_package_rates',               array( $this, 'change_shipping_price_by_country' ), PHP_INT_MAX, 2 );
+			// Currency hooks
+			add_filter( 'woocommerce_currency_symbol',             array( $this, 'change_currency_symbol' ), PHP_INT_MAX, 2 );
+			add_filter( 'woocommerce_currency',                    array( $this, 'change_currency_code' ), PHP_INT_MAX, 1 );
+
+			// Shipping
+			add_filter( 'woocommerce_package_rates',               array( $this, 'change_shipping_price_by_country' ), PHP_INT_MAX, 2 );
+		//}
 
 		// Country selection box
 		/* if ( 'by_user_selection' === get_option( 'wcj_price_by_country_customer_country_detection_method', 'by_ip' ) ) {
@@ -226,7 +232,6 @@ class WCJ_Price_by_Country_Core {
 			}
 		}
 
-
 		if ( null === $country ) {
 			$this->customer_country_group_id = -1;
 			return null;
@@ -274,11 +279,30 @@ class WCJ_Price_by_Country_Core {
 	}
 
 	/**
+	 * change_price_by_country_variations.
+	 *
+	 * @version 2.3.0
+	 * @since   2.3.0
+	 */
+	public function change_price_by_country_variations( $prices_array, $product ) {
+		$modified_prices_array = $prices_array;
+		foreach ( $prices_array as $price_type => $prices ) {
+			foreach ( $prices as $variation_id => $price ) {
+				$modified_prices_array[ $price_type ][ $variation_id ] = $this->change_price_by_country( $price, $variation_id );
+			}
+		}
+		return $modified_prices_array;
+	}
+
+	/**
 	 * change_price_by_country.
+	 *
+	 * @version 2.3.0
 	 */
 	public function change_price_by_country( $price, $product ) {
 
-		$the_product_id = ( isset( $product->variation_id ) ) ? $product->variation_id : $product->id;
+		if ( is_numeric( $product ) ) $the_product_id = $product;
+		else $the_product_id = ( isset( $product->variation_id ) ) ? $product->variation_id : $product->id;
 
 		if ( null != ( $group_id = $this->get_customer_country_group_id() ) ) {
 
@@ -294,6 +318,7 @@ class WCJ_Price_by_Country_Core {
 					return '';
 				}
 
+				$price_by_country = '';
 				if ( 'woocommerce_get_price' == current_filter() ) {
 
 					$regular_or_sale = '_regular_price_';

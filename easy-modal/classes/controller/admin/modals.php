@@ -42,7 +42,7 @@
 	public function action_index()
 	{
 		$view = new EModal_View_Admin_Modal_Index;
-		$view->set('title', __('Modals', EMCORE_SLUG));
+		$view->set('title', __('Modals', 'easy-modal' ));
 		$view->set('modal_new_url', $this->new_url());
 		self::$instance->view = $view;
 	}
@@ -59,11 +59,11 @@
 			if(!$current_modal->id)
 				do_action('emodal_modal_new', $current_modal);	
 			do_action('emodal_modal_save', $current_modal);	
-			EModal_Admin_Notice::add($current_modal->id ? __('Modal Updated.',EMCORE_SLUG) : __('Modal Created.',EMCORE_SLUG), 'updated');
+			EModal_Admin_Notice::add($current_modal->id ? __('Modal Updated.', 'easy-modal' ) : __('Modal Created.', 'easy-modal' ), 'updated');
 			$this->redirect_to_edit();
 		}
 		$view = new EModal_View_Admin_Modal_Form;
-		$view->set('title', $current_modal->id ? __('Edit Modal', EMCORE_SLUG) : __('Add New Modal', EMCORE_SLUG));
+		$view->set('title', $current_modal->id ? __('Edit Modal', 'easy-modal' ) : __('Add New Modal', 'easy-modal' ));
 		$view->set('modal_new_url', $this->new_url());
 		$view->set('tabs', apply_filters('emodal_admin_modal_form_tabs', array()));
 		self::$instance->view = $view;
@@ -78,7 +78,7 @@
 			$current_modal->meta->id = NULL;
 			$current_modal->save();
 			do_action('emodal_modal_clone', $current_modal);
-			EModal_Admin_Notice::add(__('Modal cloned successfully',EMCORE_SLUG), 'updated');
+			EModal_Admin_Notice::add(__('Modal cloned successfully', 'easy-modal' ), 'updated');
 			$this->redirect_to_edit();
 		}
 		wp_redirect($this->index_url(), 302);
@@ -102,14 +102,14 @@
 			}
 			if(empty($ids))
 			{
-				EModal_Admin_Notice::add(__('No modals selected for deletion.', EMCORE_SLUG), 'updated');				
+				EModal_Admin_Notice::add(__('No modals selected for deletion.', 'easy-modal' ), 'updated');				
 				wp_redirect($this->index_url(), 302);
 				exit();
 			}
 			global $wpdb;
 			$wpdb->query("UPDATE {$wpdb->prefix}em_modals SET is_trash = 1 WHERE id IN (".implode(',', $ids).")");
 			do_action('emodal_modal_delete');
-			EModal_Admin_Notice::add(count($ids) . __(' modals moved to the trash', EMCORE_SLUG), 'updated');
+			EModal_Admin_Notice::add(count($ids) . __(' modals moved to the trash', 'easy-modal' ), 'updated');
 		}
 		wp_redirect($this->index_url(), 302);
 		exit();
@@ -132,13 +132,13 @@
 			}
 			if(empty($ids))
 			{
-				EModal_Admin_Notice::add(__('No modals selected for undeletion.', EMCORE_SLUG), 'updated');				
+				EModal_Admin_Notice::add(__('No modals selected for undeletion.', 'easy-modal' ), 'updated');				
 				wp_redirect($this->index_url(), 302);
 				exit();
 			}
 			global $wpdb;
 			$wpdb->query("UPDATE {$wpdb->prefix}em_modals SET is_trash = 0 WHERE id IN ($ids)");
-			EModal_Admin_Notice::add(count($ids) . __(' modal restored from trash.',EMCORE_SLUG), 'updated');
+			EModal_Admin_Notice::add(count($ids) . __(' modal restored from trash.', 'easy-modal' ), 'updated');
 			do_action('emodal_modal_untrash');
 		}
 		wp_redirect($this->index_url(), 302);
@@ -150,7 +150,7 @@
 		{
 			global $wpdb;
 			$wpdb->delete( $wpdb->prefix.'em_modals', array('is_trash' => 1));
-			EModal_Admin_Notice::add(__('Modal trash has been permanantly removed.',EMCORE_SLUG), 'updated');
+			EModal_Admin_Notice::add(__('Modal trash has been permanantly removed.', 'easy-modal' ), 'updated');
 			do_action('emodal_modal_trash');
 		}
 		wp_redirect($this->index_url(), 302);

@@ -2,7 +2,7 @@
 add_filter('emodal_admin_theme_form_tabs', 'emodal_admin_theme_form_general_tab', 10);
 function emodal_admin_theme_form_general_tab($tabs)
 {
-	$tabs[] = array( 'id' => 'general', 'label' => __('General', EMCORE_SLUG) );
+	$tabs[] = array( 'id' => 'general', 'label' => __('General', 'easy-modal' ) );
 	return $tabs;
 }
 
@@ -22,7 +22,7 @@ function emodal_admin_theme_form_general_tab_settings_name()
 	?><tr>
 		<th scope="row">
 			<label for="name">
-				<?php _e('Name', EMCORE_SLUG);?>
+				<?php _e('Name', 'easy-modal' );?>
 				<span class="description">(required)</span>
 			</label>
 		</th>

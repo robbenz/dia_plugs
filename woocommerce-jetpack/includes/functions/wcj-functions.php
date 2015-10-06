@@ -4,9 +4,28 @@
  *
  * The WooCommerce Jetpack Functions.
  *
- * @version 2.2.7
+ * @version 2.3.0
  * @author  Algoritmika Ltd.
  */
+
+/*
+ * wcj_get_select_options()
+ *
+ * @version  2.3.0
+ * @since    2.3.0
+ * @return   array
+ */
+if ( ! function_exists( 'wcj_get_select_options' ) ) {
+	function wcj_get_select_options( $select_options_raw ) {
+		$select_options_raw = explode( PHP_EOL, $select_options_raw );
+		$select_options = array();
+		foreach ( $select_options_raw as $select_options_title ) {
+			$select_options_key = sanitize_title( $select_options_title );
+			$select_options[ $select_options_key ] = $select_options_title;
+		}
+		return $select_options;
+	}
+}
 
 /*
  * is_frontend()
@@ -16,7 +35,7 @@
  */
 if ( ! function_exists( 'wcj_is_frontend' ) ) {
 	function wcj_is_frontend() {
-	   return ( ! is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) ? true : false;
+		return ( ! is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) ? true : false;
 	}
 }
 
@@ -31,7 +50,7 @@ if ( ! function_exists( 'wcj_get_wcj_uploads_dir' ) ) {
 		if ( '' != $subdir ) $upload_dir = $upload_dir . '/' . $subdir;
 		return $upload_dir;
 	}
- }
+}
 
 /**
  * wcj_is_product_wholesale_enabled.
@@ -259,12 +278,12 @@ if ( ! function_exists( 'convert_number_to_words' ) ) {
 /**
  * wcj_plugin_url.
  *
- * @todo
- *
+ * @version 2.3.0
+ */
 if ( ! function_exists( 'wcj_plugin_url' ) ) {
 	function wcj_plugin_url() {
-		return untrailingslashit( plugin_dir_url( __FILE__ ) );
-		//return untrailingslashit( realpath( dirname(__FILE__) . '/..' ) );
+		return untrailingslashit( plugin_dir_url( realpath( dirname( __FILE__ ) . '/..' ) ) );
+		//return untrailingslashit( realpath( dirname( __FILE__ ) . '/..' ) );
 	}
 }
 

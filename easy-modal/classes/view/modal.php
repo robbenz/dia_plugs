@@ -75,7 +75,7 @@ add_filter('emodal_modal_inner', 'emodal_modal_inner_close', 15, 2);
 function emodal_modal_inner_close($output, $modal)
 {
 	$output .= apply_filters('emodal_before_modal_close', '', $modal);
-	$output .= '<a class="'. esc_attr( apply_filters('emodal_modal_close_class_attr', 'emodal-close', $modal) ) .'">'. apply_filters('emodal_modal_close', __("&#215;", EMCORE_SLUG), $modal) .'</a>';
+	$output .= '<a class="'. esc_attr( apply_filters('emodal_modal_close_class_attr', 'emodal-close', $modal) ) .'">'. apply_filters('emodal_modal_close', __("&#215;", 'easy-modal' ), $modal) .'</a>';
 	$output .= apply_filters('emodal_after_modal_close', '', $modal);
 	return $output;
 }

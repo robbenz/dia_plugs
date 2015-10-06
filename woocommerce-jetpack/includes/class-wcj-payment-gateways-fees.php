@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Payment Gateways Fees class.
  *
- * @version 2.2.9
+ * @version 2.3.0
  * @since   2.2.2
  * @author  Algoritmika Ltd.
  */
@@ -18,12 +18,12 @@ class WCJ_Payment_Gateways_Fees extends WCJ_Module {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.2.6
+	 * @version 2.3.0
 	 */
 	function __construct() {
 
 		$this->id         = 'payment_gateways_fees';
-		$this->short_desc = __( 'Payment Gateways Fees and Discounts', 'woocommerce-jetpack' );
+		$this->short_desc = __( 'Gateways Fees and Discounts', 'woocommerce-jetpack' );
 		$this->desc       = __( 'Enable extra fees or discounts for WooCommerce payment gateways.', 'woocommerce-jetpack' );
 		parent::__construct();
 
@@ -31,7 +31,7 @@ class WCJ_Payment_Gateways_Fees extends WCJ_Module {
 
 		if ( $this->is_enabled() ) {
 			add_action( 'woocommerce_cart_calculate_fees', array( $this, 'gateways_fees' ) );
-			add_action( 'wp_enqueue_scripts' , array( $this, 'enqueue_checkout_script' ) );
+			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_checkout_script' ) );
 //			add_filter( 'woocommerce_payment_gateways_settings', array( $this, 'add_fees_settings' ), 100 );
 			add_action( 'init', array( $this, 'register_script' ) );
 		}
@@ -51,7 +51,7 @@ class WCJ_Payment_Gateways_Fees extends WCJ_Module {
 	 * add_hooks.
 	 */
 	function add_hooks() {
-		add_filter( 'wcj_payment_gateways_fees_settings',  array( $this, 'add_fees_settings' ) );
+		add_filter( 'wcj_payment_gateways_fees_settings', array( $this, 'add_fees_settings' ) );
 	}
 
 	/**
@@ -73,7 +73,7 @@ class WCJ_Payment_Gateways_Fees extends WCJ_Module {
 	/**
 	 * gateways_fees.
 	 *
-	 * @version 2.2.9
+	 * @version 2.3.0
 	 */
 	function gateways_fees() {
 		global $woocommerce;
@@ -93,7 +93,7 @@ class WCJ_Payment_Gateways_Fees extends WCJ_Module {
 			$total_in_cart = $woocommerce->cart->cart_contents_total + $woocommerce->cart->shipping_total;
 			if ( '' != $fee_text && $total_in_cart >= $min_cart_amount  && ( 0 == $max_cart_amount || $total_in_cart <= $max_cart_amount ) ) {
 				$fee_value = get_option( 'wcj_gateways_fees_value_' . $current_gateway );
-				$fee_type  = apply_filters( 'wcj_get_option_filter', 'fixed', get_option( 'wcj_gateways_fees_type_' . $current_gateway ) );
+				$fee_type  = get_option( 'wcj_gateways_fees_type_'  . $current_gateway );
 				$final_fee_to_add = 0;
 				switch ( $fee_type ) {
 					case 'fixed':
@@ -123,16 +123,17 @@ class WCJ_Payment_Gateways_Fees extends WCJ_Module {
 	/**
 	 * add_fees_settings.
 	 *
-	 * @version 2.2.9
+	 * @version 2.3.0
 	 */
 	function add_fees_settings( $settings ) {
 		// Gateway's Extra Fees
 		$settings[] = array(
 			'title' => __( 'Payment Gateways Fees and Discounts Options', 'woocommerce-jetpack' ),
-			'type' => 'title',
-			'desc' => __( 'This section lets you set extra fees for payment gateways.', 'woocommerce-jetpack' ),
-//					  __( 'Fees are applied BEFORE taxes.', 'woocommerce-jetpack' ),
-			'id' => 'wcj_payment_gateways_fees_options' );
+			'type'  => 'title',
+			'desc'  => __( 'This section lets you set extra fees for payment gateways.', 'woocommerce-jetpack' ),
+//					   __( 'Fees are applied BEFORE taxes.', 'woocommerce-jetpack' ),
+			'id'    => 'wcj_payment_gateways_fees_options'
+		);
 
 		//$available_gateways = WC()->payment_gateways->payment_gateways();
 		global $woocommerce;
@@ -159,9 +160,9 @@ class WCJ_Payment_Gateways_Fees extends WCJ_Module {
 				array(
 					'title'    	=> '',
 					'desc'    	=> __( 'Fee (or discount) type.', 'woocommerce-jetpack' ),
-					'desc_tip'	=> __( 'Percent or fixed value.', 'woocommerce-jetpack' ) . ' ' . apply_filters( 'get_wc_jetpack_plus_message', '', 'desc_no_link' ),
-					'custom_attributes'
-								=> apply_filters( 'get_wc_jetpack_plus_message', '', 'disabled' ),
+					'desc_tip'	=> __( 'Percent or fixed value.', 'woocommerce-jetpack' )/*  . ' ' . apply_filters( 'get_wc_jetpack_plus_message', '', 'desc_no_link' ) */,
+					/* 'custom_attributes'
+								=> apply_filters( 'get_wc_jetpack_plus_message', '', 'disabled' ), */
 					'id'       	=> 'wcj_gateways_fees_type_' . $key,
 					'default'  	=> 'fixed',
 					'type'		=> 'select',

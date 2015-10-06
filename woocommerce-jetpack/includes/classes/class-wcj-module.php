@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Module class.
  *
- * @version 2.2.7
+ * @version 2.3.0
  * @since   2.2.0
  * @author  Algoritmika Ltd.
  */
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 if ( ! class_exists( 'WCJ_Module' ) ) :
 
-class WCJ_Module {
+/* abstract */ class WCJ_Module {
 
 	public $id;
 	public $short_desc;
@@ -63,16 +63,21 @@ class WCJ_Module {
 	/**
 	 * add_meta_box.
 	 *
-	 * @since 2.2.6
+	 * @version 2.3.0
+	 * @since   2.2.6
 	 */
 	function add_meta_box() {
+		$screen   = ( isset( $this->meta_box_screen ) )   ? $this->meta_box_screen   : 'product';
+		$context  = ( isset( $this->meta_box_context ) )  ? $this->meta_box_context  : 'normal';
+		$priority = ( isset( $this->meta_box_priority ) ) ? $this->meta_box_priority : 'high';
 		add_meta_box(
 			'wc-jetpack-' . $this->id,
 			__( 'WooCommerce Jetpack', 'woocommerce-jetpack' ) . ': ' . $this->short_desc,
 			array( $this, 'create_meta_box' ),
-			'product',
-			'normal',
-			'high' );
+			$screen,
+			$context,
+			$priority
+		);
 	}
 
 	/**
@@ -133,9 +138,11 @@ class WCJ_Module {
 
 	/**
 	 * settings_section.
+	 *
+	 * @version 2.3.0
 	 */
 	function settings_section( $sections ) {
-		$sections[ $this->id ] = $this->short_desc;
+		$sections[ $this->id ] = isset( $this->section_title ) ? $this->section_title : $this->short_desc;
 		return $sections;
 	}
 
@@ -211,7 +218,7 @@ class WCJ_Module {
 	 * add_tool_link.
 	 *
 	 * @version 2.2.3
-	 * @since 2.2.3
+	 * @since   2.2.3
 	 */
 	function add_tool_link() {
 		//echo '<ul>';

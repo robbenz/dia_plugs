@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Stock Reports class.
  *
- * @version 2.2.6
+ * @version 2.3.0
  * @author  Algoritmika Ltd.
  */
 
@@ -93,13 +93,15 @@ class WCJ_Reports_Stock {
 
 	/*
 	 * gather_products_data.
+	 *
+	 * @version 2.3.0
 	 */
 	public function gather_products_data( &$products_info ) {
 
 		//return array();
 
 		$args = array(
-			'post_type' => 'product',
+			'post_type'      => 'product',
 			'posts_per_page' => -1,
 		);
 
@@ -116,6 +118,7 @@ class WCJ_Reports_Stock {
 				//if ( 0 == $the_stock )
 					//$the_stock = get_post_meta( $the_ID, '_stock', true );
 				$the_title = get_the_title();
+				$the_categories = $the_product->get_categories();
 				$the_date = get_the_date();
 				$the_permalink = get_the_permalink();
 
@@ -133,6 +136,7 @@ class WCJ_Reports_Stock {
 				$products_info[$the_ID] = array(
 					'ID'				=> $the_ID,
 					'title'				=> $the_title,
+					'category'			=> $the_categories,
 					'permalink'			=> $the_permalink,
 					'price'				=> $the_price,
 					'stock'				=> $the_stock,
@@ -153,61 +157,70 @@ class WCJ_Reports_Stock {
 	/*
 	 * gather_orders_data.
 	 *
-	 * @version 2.2.6
+	 * @version 2.3.0
 	 */
 	function gather_orders_data( &$products_info ) {
 
-		$args_orders = array(
-			'post_type'			=> 'shop_order',
-			'post_status' 		=> 'wc-completed',
-			'posts_per_page' 	=> -1,
-			'orderby'			=> 'date',
-			'order'				=> 'DESC',
-			'date_query' => array(
-				array(
-					'column' => 'post_date_gmt',
-					'after'  => $this->range_days . ' days ago',
+		$offset = 0;
+		$block_size = 96;
+		while( true ) {
+
+			$args_orders = array(
+				'post_type'      => 'shop_order',
+				'post_status'    => 'wc-completed',
+				'posts_per_page' => $block_size,
+				'offset'         => $offset,
+				'orderby'        => 'date',
+				'order'          => 'DESC',
+				'date_query'     => array(
+					array(
+						'column' => 'post_date_gmt',
+						'after'  => $this->range_days . ' days ago',
+					),
 				),
-			),
-		);
+			);
 
-		//$one_day_seconds = ( 24 * 60 * 60 );
-		//$now_time = time();
+			//$one_day_seconds = ( 24 * 60 * 60 );
+			//$now_time = time();
 
-		$the_period = $this->range_days;
+			$the_period = $this->range_days;
 
-		$loop_orders = new WP_Query( $args_orders );
-		while ( $loop_orders->have_posts() ) : $loop_orders->the_post();
+			$loop_orders = new WP_Query( $args_orders );
+			if ( ! $loop_orders->have_posts() ) break;
+			while ( $loop_orders->have_posts() ) : $loop_orders->the_post();
 
-			$order_id = $loop_orders->post->ID;
-			$order = new WC_Order( $order_id );
-			$items = $order->get_items();
+				$order_id = $loop_orders->post->ID;
+				$order = new WC_Order( $order_id );
+				$items = $order->get_items();
 
-			//$the_timestamp =  get_the_time( 'U' );
-			//$order_age = ( $now_time - $the_timestamp );
+				//$the_timestamp =  get_the_time( 'U' );
+				//$order_age = ( $now_time - $the_timestamp );
 
 
-			foreach ( $items as $item ) {
+				foreach ( $items as $item ) {
 
-				//$products_info_sales_in_period = $products_info[$item['product_id']]['sales_in_period'];
-				//echo '<pre>' . print_r( $products_info_sales_in_period, true ) . '</pre>';
+					//$products_info_sales_in_period = $products_info[$item['product_id']]['sales_in_period'];
+					//echo '<pre>' . print_r( $products_info_sales_in_period, true ) . '</pre>';
 
-				//if ( ! empty( $products_info_sales_in_period ) ) {
+					//if ( ! empty( $products_info_sales_in_period ) ) {
 
-					//foreach ( $products_info_sales_in_period as $the_period => $the_value ) {
-						//if ( $order_age < ( $the_period * $one_day_seconds ) ) {
-							$products_info[ $item['product_id'] ]['sales_in_period'][ $the_period ] += $item['qty'];
+						//foreach ( $products_info_sales_in_period as $the_period => $the_value ) {
+							//if ( $order_age < ( $the_period * $one_day_seconds ) ) {
+								$products_info[ $item['product_id'] ]['sales_in_period'][ $the_period ] += $item['qty'];
+							//}
 						//}
 					//}
-				//}
 
-				if ( 0 == $products_info[ $item['product_id'] ]['last_sale'] ) {
-					$products_info[ $item['product_id'] ]['last_sale'] = get_the_time( 'U' );//$the_timestamp;
+					if ( 0 == $products_info[ $item['product_id'] ]['last_sale'] ) {
+						$products_info[ $item['product_id'] ]['last_sale'] = get_the_time( 'U' );//$the_timestamp;
+					}
+
 				}
 
-			}
+			endwhile;
 
-		endwhile;
+			$offset += $block_size;
+		}
 
 		//wp_reset_query();
 	}
@@ -265,6 +278,8 @@ class WCJ_Reports_Stock {
 
 	/*
 	 * get_report_html.
+	 *
+	 * @version 2.3.0
 	 */
 	public function get_report_html() {
 
@@ -285,6 +300,7 @@ class WCJ_Reports_Stock {
 		$html .= '<tr>';
 		$html .= '<th>#</th>';
 		$html .= '<th>' . __( 'Product', 'woocommerce-jetpack' ) . '</th>';
+		$html .= '<th>' . __( 'Category', 'woocommerce-jetpack' ) . '</th>';
 		$html .= '<th>' . __( 'Price', 'woocommerce-jetpack' ) . '</th>';
 		$html .= '<th>' . __( 'Stock', 'woocommerce-jetpack' ) . '</th>';
 		$html .= '<th>' . __( 'Stock price', 'woocommerce-jetpack' ) . '</th>';
@@ -310,8 +326,8 @@ class WCJ_Reports_Stock {
 
 					( ( 'overstocked' === $report_info['id'] ) &&
 					  ( $product_info['stock'] > 0 ) &&
-					  //( $product_info['total_sales'] > 0 ) &&
-					  ( ( time() - strtotime( $product_info['date_added'] ) ) > $this->range_days * 24 * 60 * 60 ) &&
+					  //( 0 == $product_info['total_sales'] ) &&
+					  ( ( current_time( 'timestamp' ) - strtotime( $product_info['date_added'] ) ) > $this->range_days * 24 * 60 * 60 ) &&
 					  //( $product_info['sales_in_period'][ $this->range_days ] * 12 < $product_info['stock'] ) ) ||
 					  ( 0 === $product_info['sales_in_period'][ $this->range_days ] ) ) ||
 
@@ -326,6 +342,7 @@ class WCJ_Reports_Stock {
 				$html .= '<tr>';
 				$html .= '<td>' . $product_counter . '</td>';
 				$html .= '<th>' . '<a href='. $product_info['permalink'] . '>' . $product_info['title'] . '</a>' . '</th>';
+				$html .= '<th>' . '<a href='. $product_info['permalink'] . '>' . $product_info['category'] . '</a>' . '</th>';
 				$purchase_price_html = ( $product_info['purchase_price'] > 0 ) ?
 					'<br><em>' . __( 'purchase price:', 'woocommerce-jetpack' ) . '</em>' . ' ' . wc_price( $product_info['purchase_price'] ) :
 					'';

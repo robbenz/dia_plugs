@@ -2,7 +2,7 @@
 add_filter('emodal_admin_theme_form_tabs', 'emodal_admin_theme_form_close_tab', 70);
 function emodal_admin_theme_form_close_tab($tabs)
 {
-	$tabs[] = array( 'id' => 'close', 'label' => __('Close', EMCORE_SLUG) );
+	$tabs[] = array( 'id' => 'close', 'label' => __('Close', 'easy-modal' ) );
 	return $tabs;
 }
 
@@ -21,11 +21,11 @@ function emodal_admin_theme_form_close_tab_settings_text()
 {
 	?><tr>
 		<th scope="row">
-			<label for="close_text"><?php _e('Text', EMCORE_SLUG);?></label>
+			<label for="close_text"><?php _e('Text', 'easy-modal' );?></label>
 		</th>
 		<td>
 			<input type="text" name="theme[meta][close][text]" id="close_text" value="<?php esc_attr_e(get_current_modal_theme('meta.close.text'))?>" />
-			<p class="description"><?php _e('Enter the close button text.', EMCORE_SLUG)?></p>
+			<p class="description"><?php _e('Enter the close button text.', 'easy-modal' )?></p>
 		</td>
 	</tr><?php
 }
@@ -36,7 +36,7 @@ function emodal_admin_theme_form_close_tab_settings_padding()
 {
 	?><tr>
 		<th scope="row">
-			<label for="close_padding"><?php _e('Padding', EMCORE_SLUG);?></label> 
+			<label for="close_padding"><?php _e('Padding', 'easy-modal' );?></label> 
 		</th>
 		<td>
 			<input type="range" name="theme[meta][close][padding]" id="close_padding" min="0" max="100" step="1" value="<?php esc_attr_e(get_current_modal_theme('meta.close.padding'))?>" />
@@ -51,7 +51,7 @@ function emodal_admin_theme_form_close_tab_settings_location()
 {
 	?><tr>
 		<th scope="row">
-			<label for="close_location"><?php _e('Location', EMCORE_SLUG);?></label>
+			<label for="close_location"><?php _e('Location', 'easy-modal' );?></label>
 		</th>
 		<td>
 			<select name="theme[meta][close][location]" id="close_location">
@@ -62,15 +62,15 @@ function emodal_admin_theme_form_close_tab_settings_location()
 				><?php echo $option;?></option>
 			<?php endforeach ?>
 			</select>
-			<p class="description"><?php _e('Choose which corner the close button will be positioned.', EMCORE_SLUG)?></p>
+			<p class="description"><?php _e('Choose which corner the close button will be positioned.', 'easy-modal' )?></p>
 		</td>
 	</tr>
 	<tr class="title-divider">
-		<th colspan="2"><h3 class="title"><?php _e('Position', EMCORE_SLUG);?></h3></th>
+		<th colspan="2"><h3 class="title"><?php _e('Position', 'easy-modal' );?></h3></th>
 	</tr>
 	<tr class="topright topleft">
 		<th scope="row">
-			<label for="close_position_top"><?php _e('Top', EMCORE_SLUG);?></label> 
+			<label for="close_position_top"><?php _e('Top', 'easy-modal' );?></label> 
 		</th>
 		<td>
 			<input type="range" name="theme[meta][close][position][top]" id="close_position_top" min="-100" max="100" step="1" value="<?php esc_attr_e(get_current_modal_theme('meta.close.position.top'))?>" />
@@ -79,7 +79,7 @@ function emodal_admin_theme_form_close_tab_settings_location()
 	</tr>
 	<tr class="topleft bottomleft">
 		<th scope="row">
-			<label for="close_position_left"><?php _e('Left', EMCORE_SLUG);?></label> 
+			<label for="close_position_left"><?php _e('Left', 'easy-modal' );?></label> 
 		</th>
 		<td>
 			<input type="range" name="theme[meta][close][position][left]" id="close_position_left" min="-100" max="100" step="1" value="<?php esc_attr_e(get_current_modal_theme('meta.close.position.left'))?>" />
@@ -88,7 +88,7 @@ function emodal_admin_theme_form_close_tab_settings_location()
 	</tr>
 	<tr class="bottomleft bottomright">
 		<th scope="row">
-			<label for="close_position_bottom"><?php _e('Bottom', EMCORE_SLUG);?></label> 
+			<label for="close_position_bottom"><?php _e('Bottom', 'easy-modal' );?></label> 
 		</th>
 		<td>
 			<input type="range" name="theme[meta][close][position][bottom]" id="close_position_bottom" min="-100" max="100" step="1" value="<?php esc_attr_e(get_current_modal_theme('meta.close.position.bottom'))?>" />
@@ -97,7 +97,7 @@ function emodal_admin_theme_form_close_tab_settings_location()
 	</tr>
 	<tr class="topright bottomright">
 		<th scope="row">
-			<label for="close_position_right"><?php _e('Right', EMCORE_SLUG);?></label> 
+			<label for="close_position_right"><?php _e('Right', 'easy-modal' );?></label> 
 		</th>
 		<td>
 			<input type="range" name="theme[meta][close][position][right]" id="close_position_right" min="-100" max="100" step="1" value="<?php esc_attr_e(get_current_modal_theme('meta.close.position.right'))?>" />
@@ -112,11 +112,11 @@ add_action('emodal_admin_theme_form_tab_close_settings', 'emodal_admin_theme_for
 function emodal_admin_theme_form_close_tab_settings_font()
 {
 	?><tr class="title-divider">
-		<th colspan="2"><h3 class="title"><?php _e('Font', EMCORE_SLUG);?></h3></th>
+		<th colspan="2"><h3 class="title"><?php _e('Font', 'easy-modal' );?></h3></th>
 	</tr>
 	<tr>
 		<th scope="row">
-			<label for="close_font_color"><?php _e('Color', EMCORE_SLUG);?></label>
+			<label for="close_font_color"><?php _e('Color', 'easy-modal' );?></label>
 		</th>
 		<td>
 			<input type="text" name="theme[meta][close][font][color]" id="close_font_color" value="<?php esc_attr_e(get_current_modal_theme('meta.close.font.color'))?>" class="color-picker" />
@@ -125,7 +125,7 @@ function emodal_admin_theme_form_close_tab_settings_font()
 
 	<tr>
 		<th scope="row">
-			<label for="close_font_size"><?php _e('Size', EMCORE_SLUG);?></label> 
+			<label for="close_font_size"><?php _e('Size', 'easy-modal' );?></label> 
 		</th>
 		<td>
 			<input type="range" name="theme[meta][close][font][size]" id="close_font_size" min="8" max="32" step="1" value="<?php esc_attr_e(get_current_modal_theme('meta.close.font.size'))?>" />
@@ -134,7 +134,7 @@ function emodal_admin_theme_form_close_tab_settings_font()
 	</tr>
 	<tr>
 		<th scope="row">
-			<label for="close_font_family"><?php _e('Family', EMCORE_SLUG);?></label>
+			<label for="close_font_family"><?php _e('Family', 'easy-modal' );?></label>
 		</th>
 		<td>
 			<select name="theme[meta][close][font][family]" id="close_font_family">
@@ -154,11 +154,11 @@ add_action('emodal_admin_theme_form_tab_close_settings', 'emodal_admin_theme_for
 function emodal_admin_theme_form_close_tab_settings_background()
 {
 	?><tr class="title-divider">
-		<th colspan="2"><h3 class="title"><?php _e('Background', EMCORE_SLUG);?></ h3></th>
+		<th colspan="2"><h3 class="title"><?php _e('Background', 'easy-modal' );?></ h3></th>
 	</tr>
 	<tr>
 		<th scope="row">
-			<label for="close_background_color"><?php _e('Color', EMCORE_SLUG);?></label>
+			<label for="close_background_color"><?php _e('Color', 'easy-modal' );?></label>
 		</th>
 		<td>
 			<input type="text" name="theme[meta][close][background][color]" id="close_background_color" value="<?php esc_attr_e(get_current_modal_theme('meta.close.background.color'))?>" class="color-picker background-color" />
@@ -166,7 +166,7 @@ function emodal_admin_theme_form_close_tab_settings_background()
 	</tr>
 	<tr class="background-opacity">
 		<th scope="row">
-			<label for="close_background_opacity"><?php _e('Opacity', EMCORE_SLUG);?></label> 
+			<label for="close_background_opacity"><?php _e('Opacity', 'easy-modal' );?></label> 
 		</th>
 		<td>
 			<input type="range" name="theme[meta][close][background][opacity]" id="close_background_opacity" min="0" max="100" step="1" value="<?php esc_attr_e(get_current_modal_theme('meta.close.background.opacity'))?>" />
@@ -188,21 +188,21 @@ add_action('emodal_admin_theme_form_tab_close_settings', 'emodal_admin_theme_for
 function emodal_admin_theme_form_close_tab_settings_border()
 {
 	?><tr class="title-divider">
-		<th colspan="2"><h3 class="title"><?php _e('Border', EMCORE_SLUG);?></h3></th>
+		<th colspan="2"><h3 class="title"><?php _e('Border', 'easy-modal' );?></h3></th>
 	</tr>
 	<tr>
 		<th scope="row">
-			<label for="close_border_radius"><?php _e('Radius', EMCORE_SLUG);?></label> 
+			<label for="close_border_radius"><?php _e('Radius', 'easy-modal' );?></label> 
 		</th>
 		<td>
 			<input type="range" name="theme[meta][close][border][radius]" id="close_border_radius" min="0" max="28" step="1" value="<?php esc_attr_e(get_current_modal_theme('meta.close.border.radius'))?>" />
 			<span class="range-value regular-text"><span class="value"><?php esc_html_e(get_current_modal_theme('meta.close.border.radius'));?></span>px</span>
-			<p class="description"><?php _e('Choose a corner radius for your close button.',EMCORE_SLUG)?></p>
+			<p class="description"><?php _e('Choose a corner radius for your close button.', 'easy-modal' )?></p>
 		</td>
 	</tr>
 	<tr>
 		<th scope="row">
-			<label for="close_border_style"><?php _e('Style', EMCORE_SLUG);?></label>
+			<label for="close_border_style"><?php _e('Style', 'easy-modal' );?></label>
 		</th>
 		<td>
 			<select name="theme[meta][close][border][style]" id="close_border_style" class="border-style">
@@ -213,12 +213,12 @@ function emodal_admin_theme_form_close_tab_settings_border()
 				><?php echo $option;?></option>
 			<?php endforeach ?>
 			</select>
-			<p class="description"><?php _e('Choose a border style for your close button.', EMCORE_SLUG)?></p>
+			<p class="description"><?php _e('Choose a border style for your close button.', 'easy-modal' )?></p>
 		</td>
 	</tr>
 	<tr class="border-options">
 		<th scope="row">
-			<label for="close_border_color"><?php _e('Color', EMCORE_SLUG);?></label>
+			<label for="close_border_color"><?php _e('Color', 'easy-modal' );?></label>
 		</th>
 		<td>
 			<input type="text" name="theme[meta][close][border][color]" id="close_border_color" value="<?php esc_attr_e(get_current_modal_theme('meta.close.border.color'))?>" class="color-picker" />
@@ -226,7 +226,7 @@ function emodal_admin_theme_form_close_tab_settings_border()
 	</tr>
 	<tr class="border-options">
 		<th scope="row">
-			<label for="close_border_width"><?php _e('Thickness', EMCORE_SLUG);?></label> 
+			<label for="close_border_width"><?php _e('Thickness', 'easy-modal' );?></label> 
 		</th>
 		<td>
 			<input type="range" name="theme[meta][close][border][width]" id="close_border_width" min="0" max="5" step="1" value="<?php esc_attr_e(get_current_modal_theme('meta.close.border.width'))?>" />
@@ -240,17 +240,17 @@ add_action('emodal_admin_theme_form_tab_close_settings', 'emodal_admin_theme_for
 function emodal_admin_theme_form_close_tab_settings_boxshadow()
 {
 	?><tr class="title-divider">
-		<th colspan="2"><h3 class="title"><?php _e('Drop Shadow', EMCORE_SLUG);?></h3></th>
+		<th colspan="2"><h3 class="title"><?php _e('Drop Shadow', 'easy-modal' );?></h3></th>
 	</tr>
 	<tr>
 		<th scope="row">
-			<label for="close_boxshadow_inset"><?php _e('Inset', EMCORE_SLUG);?></label>
+			<label for="close_boxshadow_inset"><?php _e('Inset', 'easy-modal' );?></label>
 		</th>
 		<td>
 			<select name="theme[meta][close][boxshadow][inset]" id="close_boxshadow_inset">
 			<?php foreach(array(
-				__('No', EMCORE_SLUG) => 'no',
-				__('Yes', EMCORE_SLUG) => 'yes'
+				__('No', 'easy-modal' ) => 'no',
+				__('Yes', 'easy-modal' ) => 'yes'
 			) as $option => $value) : ?>
 				<option
 					value="<?php echo $value;?>"
@@ -258,12 +258,12 @@ function emodal_admin_theme_form_close_tab_settings_boxshadow()
 				><?php echo $option;?></option>
 			<?php endforeach ?>
 			</select>
-			<p class="description"><?php _e('Set the box shadow to inset (inner shadow).', EMCORE_SLUG)?></p>
+			<p class="description"><?php _e('Set the box shadow to inset (inner shadow).', 'easy-modal' )?></p>
 		</td>
 	</tr>
 	<tr>
 		<th scope="row">
-			<label for="close_boxshadow_horizontal"><?php _e('Horizontal Position', EMCORE_SLUG);?></label> 
+			<label for="close_boxshadow_horizontal"><?php _e('Horizontal Position', 'easy-modal' );?></label> 
 		</th>
 		<td>
 			<input type="range" name="theme[meta][close][boxshadow][horizontal]" id="close_boxshadow_horizontal" min="-50" max="50" step="1" value="<?php esc_attr_e(get_current_modal_theme('meta.close.boxshadow.horizontal'))?>" />
@@ -272,7 +272,7 @@ function emodal_admin_theme_form_close_tab_settings_boxshadow()
 	</tr>
 	<tr>
 		<th scope="row">
-			<label for="close_boxshadow_vertical"><?php _e('Vertical Position', EMCORE_SLUG);?></label> 
+			<label for="close_boxshadow_vertical"><?php _e('Vertical Position', 'easy-modal' );?></label> 
 		</th>
 		<td>
 			<input type="range" name="theme[meta][close][boxshadow][vertical]" id="close_boxshadow_vertical" min="-50" max="50" step="1" value="<?php esc_attr_e(get_current_modal_theme('meta.close.boxshadow.vertical'))?>" />
@@ -281,7 +281,7 @@ function emodal_admin_theme_form_close_tab_settings_boxshadow()
 	</tr>
 	<tr>
 		<th scope="row">
-			<label for="close_boxshadow_blur"><?php _e('Blur Radius', EMCORE_SLUG);?></label> 
+			<label for="close_boxshadow_blur"><?php _e('Blur Radius', 'easy-modal' );?></label> 
 		</th>
 		<td>
 			<input type="range" name="theme[meta][close][boxshadow][blur]" id="close_boxshadow_blur" min="0" max="100" step="1" value="<?php esc_attr_e(get_current_modal_theme('meta.close.boxshadow.blur'))?>" />
@@ -290,7 +290,7 @@ function emodal_admin_theme_form_close_tab_settings_boxshadow()
 	</tr>
 	<tr>
 		<th scope="row">
-			<label for="close_boxshadow_spread"><?php _e('Spread', EMCORE_SLUG);?></label> 
+			<label for="close_boxshadow_spread"><?php _e('Spread', 'easy-modal' );?></label> 
 		</th>
 		<td>
 			<input type="range" name="theme[meta][close][boxshadow][spread]" id="close_boxshadow_spread" min="-100" max="100" step="1" value="<?php esc_attr_e(get_current_modal_theme('meta.close.boxshadow.spread'))?>" />
@@ -299,7 +299,7 @@ function emodal_admin_theme_form_close_tab_settings_boxshadow()
 	</tr>
 	<tr>
 		<th scope="row">
-			<label for="close_boxshadow_color"><?php _e('Color', EMCORE_SLUG);?></label>
+			<label for="close_boxshadow_color"><?php _e('Color', 'easy-modal' );?></label>
 		</th>
 		<td>
 			<input type="text" name="theme[meta][close][boxshadow][color]" id="close_boxshadow_color" value="<?php esc_attr_e(get_current_modal_theme('meta.close.boxshadow.color'))?>" class="color-picker boxshadow-color" />
@@ -307,7 +307,7 @@ function emodal_admin_theme_form_close_tab_settings_boxshadow()
 	</tr>
 	<tr>
 		<th scope="row">
-			<label for="close_boxshadow_opacity"><?php _e('Opacity', EMCORE_SLUG);?></label> 
+			<label for="close_boxshadow_opacity"><?php _e('Opacity', 'easy-modal' );?></label> 
 		</th>
 		<td>
 			<input type="range" name="theme[meta][close][boxshadow][opacity]" id="close_boxshadow_opacity" min="0" max="100" step="1" value="<?php esc_attr_e(get_current_modal_theme('meta.close.boxshadow.opacity'))?>" />
@@ -320,11 +320,11 @@ add_action('emodal_admin_theme_form_tab_close_settings', 'emodal_admin_theme_for
 function emodal_admin_theme_form_close_tab_settings_textshadow()
 {
 	?><tr class="title-divider">
-		<th colspan="2"><h3 class="title"><?php _e('Text Shadow', EMCORE_SLUG);?></h3></th>
+		<th colspan="2"><h3 class="title"><?php _e('Text Shadow', 'easy-modal' );?></h3></th>
 	</tr>
 	<tr>
 		<th scope="row">
-			<label for="close_textshadow_horizontal"><?php _e('Horizontal Position', EMCORE_SLUG);?></label> 
+			<label for="close_textshadow_horizontal"><?php _e('Horizontal Position', 'easy-modal' );?></label> 
 		</th>
 		<td>
 			<input type="range" name="theme[meta][close][textshadow][horizontal]" id="close_textshadow_horizontal" min="-50" max="50" step="1" value="<?php esc_attr_e(get_current_modal_theme('meta.close.textshadow.horizontal'))?>" />
@@ -333,7 +333,7 @@ function emodal_admin_theme_form_close_tab_settings_textshadow()
 	</tr>
 	<tr>
 		<th scope="row">
-			<label for="close_textshadow_vertical"><?php _e('Vertical Position', EMCORE_SLUG);?></label> 
+			<label for="close_textshadow_vertical"><?php _e('Vertical Position', 'easy-modal' );?></label> 
 		</th>
 		<td>
 			<input type="range" name="theme[meta][close][textshadow][vertical]" id="close_textshadow_vertical" min="-50" max="50" step="1" value="<?php esc_attr_e(get_current_modal_theme('meta.close.textshadow.vertical'))?>" />
@@ -342,7 +342,7 @@ function emodal_admin_theme_form_close_tab_settings_textshadow()
 	</tr>
 	<tr>
 		<th scope="row">
-			<label for="close_textshadow_blur"><?php _e('Blur Radius', EMCORE_SLUG);?></label> 
+			<label for="close_textshadow_blur"><?php _e('Blur Radius', 'easy-modal' );?></label> 
 		</th>
 		<td>
 			<input type="range" name="theme[meta][close][textshadow][blur]" id="close_textshadow_blur" min="0" max="100" step="1" value="<?php esc_attr_e(get_current_modal_theme('meta.close.textshadow.blur'))?>" />
@@ -351,7 +351,7 @@ function emodal_admin_theme_form_close_tab_settings_textshadow()
 	</tr>
 	<tr>
 		<th scope="row">
-			<label for="close_textshadow_color"><?php _e('Color', EMCORE_SLUG);?></label>
+			<label for="close_textshadow_color"><?php _e('Color', 'easy-modal' );?></label>
 		</th>
 		<td>
 			<input type="text" name="theme[meta][close][textshadow][color]" id="close_textshadow_color" value="<?php esc_attr_e(get_current_modal_theme('meta.close.textshadow.color'))?>" class="color-picker textshadow-color" />
@@ -359,7 +359,7 @@ function emodal_admin_theme_form_close_tab_settings_textshadow()
 	</tr>
 	<tr>
 		<th scope="row">
-			<label for="close_textshadow_opacity"><?php _e('Opacity', EMCORE_SLUG);?></label> 
+			<label for="close_textshadow_opacity"><?php _e('Opacity', 'easy-modal' );?></label> 
 		</th>
 		<td>
 			<input type="range" name="theme[meta][close][textshadow][opacity]" id="close_textshadow_opacity" min="0" max="100" step="1" value="<?php esc_attr_e(get_current_modal_theme('meta.close.textshadow.opacity'))?>" />

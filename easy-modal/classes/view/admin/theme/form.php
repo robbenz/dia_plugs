@@ -4,9 +4,9 @@
 		extract($this->values)
 		?><div class="wrap">
 			<h2><?php 
-				esc_html_e(__($title, EMCORE_SLUG) );
+				esc_html_e(__($title, 'easy-modal' ) );
 				if(!empty($theme_new_url))
-					echo ' <a href="' . esc_url( admin_url( $theme_new_url ) ) . '" class="add-new-h2">' . __('Add New', EMCORE_SLUG) . '</a>';
+					echo ' <a href="' . esc_url( admin_url( $theme_new_url ) ) . '" class="add-new-h2">' . __('Add New', 'easy-modal' ) . '</a>';
 			?></h2>
 			<h2 id="emodal-tabs" class="nav-tab-wrapper">
 			<?php foreach($tabs as $tab){ ?>
@@ -23,12 +23,12 @@
 								<div id="EModal-Preview">
 									<div class="example-modal-overlay"></div>
 									<h2>
-										<?php _e('Theme Preview', EMCORE_SLUG)?>
+										<?php _e('Theme Preview', 'easy-modal' )?>
 									</h2>
 									<div class="example-modal">
-										<div class="title"><?php _e('Title Text', EMCORE_SLUG);?></div>
+										<div class="title"><?php _e('Title Text', 'easy-modal' );?></div>
 										<div class="content"><?php do_action('emodal_example_modal_content');?></div>
-										<a class="close-modal"><?php _e('&#215;', EMCORE_SLUG);?></a>
+										<a class="close-modal"><?php _e('&#215;', 'easy-modal' );?></a>
 									</div>
 								</div>
 							</div>
@@ -44,7 +44,7 @@
 							<div class="meta-box-sortables ui-sortable" id="side-sortables">
 								<div class="postbox " id="submitdiv">
 									<div title="Click to toggle" class="handlediv"><br></div>
-									<h3 class="hndle"><span><?php _e('Publish', EMCORE_SLUG);?></span></h3>
+									<h3 class="hndle"><span><?php _e('Publish', 'easy-modal' );?></span></h3>
 									<div class="inside">
 										<div id="submitpost" class="submitbox">
 											<div id="minor-publishing">
@@ -52,7 +52,7 @@
 													<?php do_action('emodal_theme_form_minor_actions');?>
 													<!--
 													<div id="preview-action">
-														<a id="post-preview" href="#" class="preview button"><?php _e('Preview', EMCORE_SLUG);?></a>
+														<a id="post-preview" href="#" class="preview button"><?php _e('Preview', 'easy-modal' );?></a>
 														<input type="hidden" value="" id="wp-preview" name="wp-preview">
 													</div>
 													-->
@@ -63,7 +63,7 @@
 											<div id="major-publishing-actions" class="submitbox">
 												<div id="publishing-action">
 													<span class="spinner"></span>
-													<input type="submit" accesskey="p" value="<?php _e('Save', EMCORE_SLUG);?>" class="button button-primary button-large" id="publish" name="publish">
+													<input type="submit" accesskey="p" value="<?php _e('Save', 'easy-modal' );?>" class="button button-primary button-large" id="publish" name="publish">
 												</div>
 												<div class="clear"></div>
 											</div>
@@ -84,7 +84,7 @@
 	{
 		extract($this->values);
 		$output = '<div class="wrap">'
-			.'<h2>'. esc_html( __($title, EMCORE_SLUG) ) .'</h2>'
+			.'<h2>'. esc_html( __($title, 'easy-modal' ) ) .'</h2>'
 			.'<h2 id="emodal-tabs" class="nav-tab-wrapper">';
 			foreach($tabs as $tab)
 			{
@@ -100,12 +100,12 @@
 								.'<div id="EModal-Preview">'
 									.'<div class="example-modal-overlay"></div>'
 									.'<h2>'
-										.__('Theme Preview', EMCORE_SLUG)
+										.__('Theme Preview', 'easy-modal' )
 									.'</h2>'
 									.'<div class="example-modal">'
-										.'<div class="title">'. __('Title Text', EMCORE_SLUG) .'</div>'
+										.'<div class="title">'. __('Title Text', 'easy-modal' ) .'</div>'
 										.'<div class="content">'. apply_filters('emodal_example_modal_content', '') .'</div>'
-										.'<a class="close-modal">'. __('&#215;', EMCORE_SLUG) .'</a>'
+										.'<a class="close-modal">'. __('&#215;', 'easy-modal' ) .'</a>'
 									.'</div>'
 								.'</div>'
 							.'</div>'
@@ -122,13 +122,13 @@
 							.'<div class="meta-box-sortables ui-sortable" id="side-sortables">'
 								.'<div class="postbox " id="submitdiv">'
 									.'<div title="Click to toggle" class="handlediv"><br></div>'
-									.'<h3 class="hndle"><span>'. __('Publish', EMCORE_SLUG). '</span></h3>'
+									.'<h3 class="hndle"><span>'. __('Publish', 'easy-modal' ). '</span></h3>'
 									.'<div class="inside">'
 										.'<div id="submitpost" class="submitbox">'
 											.'<div id="minor-publishing">'
 												.'<div id="minor-publishing-actions">'
 													.'<div id="preview-action">'
-														.'<a id="post-preview" href="#" class="preview button">'. __('Preview', EMCORE_SLUG) .'</a>'
+														.'<a id="post-preview" href="#" class="preview button">'. __('Preview', 'easy-modal' ) .'</a>'
 														.'<input type="hidden" value="" id="wp-preview" name="wp-preview">'
 													.'</div>'
 													.'<div class="clear"></div>'
@@ -138,7 +138,7 @@
 											.'<div id="major-publishing-actions" class="submitbox">'
 												.'<div id="publishing-action">'
 													.'<span class="spinner"></span>'
-													.'<input type="submit" accesskey="p" value="'. __('Save', EMCORE_SLUG) .'" class="button button-primary button-large" id="publish" name="publish">'
+													.'<input type="submit" accesskey="p" value="'. __('Save', 'easy-modal' ) .'" class="button button-primary button-large" id="publish" name="publish">'
 												.'</div>'
 												.'<div class="clear"></div>'
 											.'</div>'

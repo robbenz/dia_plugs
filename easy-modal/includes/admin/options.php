@@ -80,7 +80,7 @@ function emodal_model_theme_meta_core_defaults($options){
 	if(empty($options['content']['font']['color'])) $options['content']['font']['color'] = '#8c8c8c';
 	if(empty($options['content']['font']['family'])) $options['content']['font']['family'] = 'Times New Roman';
 
-	if(empty($options['close']['text'])) $options['close']['text'] = __('CLOSE', EMCORE_SLUG);
+	if(empty($options['close']['text'])) $options['close']['text'] = __('CLOSE', 'easy-modal' );
 	if(empty($options['close']['location'])) $options['close']['location'] = 'topright';
 	if(empty($options['close']['position']['top'])) $options['close']['position']['top'] = 0;
 	if(empty($options['close']['position']['left'])) $options['close']['position']['left'] = 0;
@@ -116,10 +116,10 @@ add_filter('emodal_size_unit_options', 'emodal_core_size_unit_options',10);
 function emodal_core_size_unit_options($options){
 	return array_merge($options, array(
 		// option => value
-		__('PX', EMCORE_SLUG) => 'px',
-		__('%', EMCORE_SLUG) => '%',
-		__('EM', EMCORE_SLUG) => 'em',
-		__('REM', EMCORE_SLUG) => 'rem',
+		__('PX', 'easy-modal' ) => 'px',
+		__('%', 'easy-modal' ) => '%',
+		__('EM', 'easy-modal' ) => 'em',
+		__('REM', 'easy-modal' ) => 'rem',
 	));
 }
 
@@ -127,15 +127,15 @@ add_filter('emodal_border_style_options', 'emodal_core_border_style_options',10)
 function emodal_core_border_style_options($options){
 	return array_merge($options, array(
 		// option => value
-		__('None', EMCORE_SLUG) => 'none',
-		__('Solid', EMCORE_SLUG) => 'solid',
-		__('Dotted', EMCORE_SLUG) => 'dotted',
-		__('Dashed', EMCORE_SLUG) => 'dashed',
-		__('Double', EMCORE_SLUG) => 'double',
-		__('Groove', EMCORE_SLUG) => 'groove',
-		__('Inset', EMCORE_SLUG) => 'inset',
-		__('Outset', EMCORE_SLUG) => 'outset',
-		__('Ridge', EMCORE_SLUG) => 'ridge',
+		__('None', 'easy-modal' ) => 'none',
+		__('Solid', 'easy-modal' ) => 'solid',
+		__('Dotted', 'easy-modal' ) => 'dotted',
+		__('Dashed', 'easy-modal' ) => 'dashed',
+		__('Double', 'easy-modal' ) => 'double',
+		__('Groove', 'easy-modal' ) => 'groove',
+		__('Inset', 'easy-modal' ) => 'inset',
+		__('Outset', 'easy-modal' ) => 'outset',
+		__('Ridge', 'easy-modal' ) => 'ridge',
 	));
 }
 
@@ -143,13 +143,13 @@ add_filter('emodal_font_family_options', 'emodal_core_font_family_options',10);
 function emodal_core_font_family_options($options){
 	return array_merge($options, array(
 		// option => value
-		__('Sans-Serif', EMCORE_SLUG) => 'Sans-Serif',
-		__('Tahoma', EMCORE_SLUG) => 'Tahoma',
-		__('Georgia', EMCORE_SLUG) => 'Georgia',
-		__('Comic Sans MS', EMCORE_SLUG) => 'Comic Sans MS',
-		__('Arial', EMCORE_SLUG) => 'Arial',
-		__('Lucida Grande', EMCORE_SLUG) => 'Lucida Grande',
-		__('Times New Roman', EMCORE_SLUG) => 'Times New Roman',
+		__('Sans-Serif', 'easy-modal' ) => 'Sans-Serif',
+		__('Tahoma', 'easy-modal' ) => 'Tahoma',
+		__('Georgia', 'easy-modal' ) => 'Georgia',
+		__('Comic Sans MS', 'easy-modal' ) => 'Comic Sans MS',
+		__('Arial', 'easy-modal' ) => 'Arial',
+		__('Lucida Grande', 'easy-modal' ) => 'Lucida Grande',
+		__('Times New Roman', 'easy-modal' ) => 'Times New Roman',
 	));
 }
 
@@ -157,9 +157,9 @@ add_filter('emodal_text_align_options', 'emodal_core_text_align_options',10);
 function emodal_core_text_align_options($options){
 	return array_merge($options, array(
 		// option => value
-		__('Left', EMCORE_SLUG) => 'left',
-		__('Center', EMCORE_SLUG) => 'center',
-		__('Right', EMCORE_SLUG) => 'right'
+		__('Left', 'easy-modal' ) => 'left',
+		__('Center', 'easy-modal' ) => 'center',
+		__('Right', 'easy-modal' ) => 'right'
 	));
 }
 
@@ -176,15 +176,15 @@ add_filter('emodal_modal_display_size_options', 'emodal_modal_display_size_optio
 function emodal_modal_display_size_options_responsive($options){
 	return array_merge($options, array(
 		// option => value
-		__('Auto', EMCORE_SLUG) => 'auto',
-		__('Responsive', EMCORE_SLUG) => '',
-		__('Normal', EMCORE_SLUG) => 'normal',
-		__('Nano', EMCORE_SLUG) => 'nano',
-		__('Tiny', EMCORE_SLUG) => 'tiny',
-		__('Small', EMCORE_SLUG) => 'small',
-		__('Medium', EMCORE_SLUG) => 'medium',
-		__('Large', EMCORE_SLUG) => 'large',
-		__('X Large', EMCORE_SLUG) => 'x-large'
+		__('Auto', 'easy-modal' ) => 'auto',
+		__('Responsive', 'easy-modal' ) => '',
+		__('Normal', 'easy-modal' ) => 'normal',
+		__('Nano', 'easy-modal' ) => 'nano',
+		__('Tiny', 'easy-modal' ) => 'tiny',
+		__('Small', 'easy-modal' ) => 'small',
+		__('Medium', 'easy-modal' ) => 'medium',
+		__('Large', 'easy-modal' ) => 'large',
+		__('X Large', 'easy-modal' ) => 'x-large'
 	));
 }
 
@@ -192,8 +192,8 @@ add_filter('emodal_modal_display_size_options', 'emodal_modal_display_size_optio
 function emodal_modal_display_size_options_nonresponsive($options){
 	return array_merge($options, array(
 		// value => option
-		'<strong>' . __('Non-Responsive', EMCORE_SLUG) . '</strong>' => '',
-		__('Custom', EMCORE_SLUG) => 'custom',
+		'<strong>' . __('Non-Responsive', 'easy-modal' ) . '</strong>' => '',
+		__('Custom', 'easy-modal' ) => 'custom',
 	));
 }
 
@@ -202,12 +202,12 @@ add_filter('emodal_modal_display_animation_type_options', 'emodal_core_modal_dis
 function emodal_core_modal_display_animation_type_options($options){
 	return array_merge($options, array(
 		// option => value
-		__('None', EMCORE_SLUG) => 'none',
-		__('Slide', EMCORE_SLUG) => 'slide',
-		__('Fade', EMCORE_SLUG) => 'fade',
-		__('Fade and Slide', EMCORE_SLUG) => 'fadeAndSlide',
-		__('Grow', EMCORE_SLUG) => 'grow',
-		__('Grow and Slide', EMCORE_SLUG) => 'growAndSlide',
+		__('None', 'easy-modal' ) => 'none',
+		__('Slide', 'easy-modal' ) => 'slide',
+		__('Fade', 'easy-modal' ) => 'fade',
+		__('Fade and Slide', 'easy-modal' ) => 'fadeAndSlide',
+		__('Grow', 'easy-modal' ) => 'grow',
+		__('Grow and Slide', 'easy-modal' ) => 'growAndSlide',
 	));
 }
 
@@ -216,20 +216,20 @@ add_filter('emodal_modal_display_animation_origin_options', 'emodal_core_modal_d
 function emodal_core_modal_display_animation_origins_options($options){
 	return array_merge($options, array(
 		// option => value
-		__('Top', EMCORE_SLUG) => 'top',
-		__('Left', EMCORE_SLUG) => 'left',
-		__('Bottom', EMCORE_SLUG) => 'bottom',
-		__('Right', EMCORE_SLUG) => 'right',
-		__('Top Left', EMCORE_SLUG) => 'left top',
-		__('Top Center', EMCORE_SLUG) => 'center top',
-		__('Top Right', EMCORE_SLUG) => 'right top',
-		__('Middle Left', EMCORE_SLUG) => 'left center',
-		__('Middle Center', EMCORE_SLUG) => 'center center',
-		__('Middle Right', EMCORE_SLUG) => 'right center',
-		__('Bottom Left', EMCORE_SLUG) => 'left bottom',
-		__('Bottom Center', EMCORE_SLUG) => 'center bottom',
-		__('Bottom Right', EMCORE_SLUG) => 'right bottom',
-		//__('Mouse', EMCORE_SLUG) => 'mouse',
+		__('Top', 'easy-modal' ) => 'top',
+		__('Left', 'easy-modal' ) => 'left',
+		__('Bottom', 'easy-modal' ) => 'bottom',
+		__('Right', 'easy-modal' ) => 'right',
+		__('Top Left', 'easy-modal' ) => 'left top',
+		__('Top Center', 'easy-modal' ) => 'center top',
+		__('Top Right', 'easy-modal' ) => 'right top',
+		__('Middle Left', 'easy-modal' ) => 'left center',
+		__('Middle Center', 'easy-modal' ) => 'center center',
+		__('Middle Right', 'easy-modal' ) => 'right center',
+		__('Bottom Left', 'easy-modal' ) => 'left bottom',
+		__('Bottom Center', 'easy-modal' ) => 'center bottom',
+		__('Bottom Right', 'easy-modal' ) => 'right bottom',
+		//__('Mouse', 'easy-modal' ) => 'mouse',
 	));
 }
 
@@ -237,15 +237,15 @@ add_filter('emodal_modal_display_location_options', 'emodal_core_modal_display_l
 function emodal_core_modal_display_location_options($options){
 	return array_merge($options, array(
 		// option => value
-		__('Top Left', EMCORE_SLUG) => 'left top',
-		__('Top Center', EMCORE_SLUG) => 'center top',
-		__('Top Right', EMCORE_SLUG) => 'right top',
-		__('Middle Left', EMCORE_SLUG) => 'left center',
-		__('Middle Center', EMCORE_SLUG) => 'center ',
-		__('Middle Right', EMCORE_SLUG) => 'right center',
-		__('Bottom Left', EMCORE_SLUG) => 'left bottom',
-		__('Bottom Center', EMCORE_SLUG) => 'center bottom',
-		__('Bottom Right', EMCORE_SLUG) => 'right bottom',
+		__('Top Left', 'easy-modal' ) => 'left top',
+		__('Top Center', 'easy-modal' ) => 'center top',
+		__('Top Right', 'easy-modal' ) => 'right top',
+		__('Middle Left', 'easy-modal' ) => 'left center',
+		__('Middle Center', 'easy-modal' ) => 'center ',
+		__('Middle Right', 'easy-modal' ) => 'right center',
+		__('Bottom Left', 'easy-modal' ) => 'left bottom',
+		__('Bottom Center', 'easy-modal' ) => 'center bottom',
+		__('Bottom Right', 'easy-modal' ) => 'right bottom',
 	));
 }
 
@@ -253,9 +253,9 @@ add_filter('emodal_theme_close_location_options', 'emodal_core_theme_close_locat
 function emodal_core_theme_close_location_options($options){
 	return array_merge($options, array(
 		// option => value
-		__('Top Left', EMCORE_SLUG) => 'topleft',
-		__('Top Right', EMCORE_SLUG) => 'topright',
-		__('Bottom Left', EMCORE_SLUG) => 'bottomleft',
-		__('Bottom Right', EMCORE_SLUG) => 'bottomright',
+		__('Top Left', 'easy-modal' ) => 'topleft',
+		__('Top Right', 'easy-modal' ) => 'topright',
+		__('Bottom Left', 'easy-modal' ) => 'bottomleft',
+		__('Bottom Right', 'easy-modal' ) => 'bottomright',
 	));
 }

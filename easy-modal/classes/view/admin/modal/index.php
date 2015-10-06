@@ -6,7 +6,7 @@
 			<h2><?php 
 				esc_html_e($title );
 				if(!empty($modal_new_url))
-					echo ' <a href="' . esc_url( $modal_new_url ) . '" class="add-new-h2">' . __('Add New', EMCORE_SLUG) . '</a>';
+					echo ' <a href="' . esc_url( $modal_new_url ) . '" class="add-new-h2">' . __('Add New', 'easy-modal' ) . '</a>';
 				if(!count_all_modals())
 					echo ' <div class="add-new-get-started">Add a new modal to get started!</div>';
 			?></h2>
@@ -169,11 +169,11 @@ class EModal_Modal_List_Table extends WP_List_Table {
 	}
 
 	function get_bulk_actions() {
-		$actions = array('delete' => __('Delete', EMCORE_SLUG));
+		$actions = array('delete' => __('Delete', 'easy-modal' ));
 		if(!empty($_GET['status']) && $_GET['status'] == 'trash')
 			$actions['untrash'] = __( 'Restore' );
 		if(count_deleted_modals())
-			$actions['empty_trash'] = __('Empty Trash', EMCORE_SLUG);
+			$actions['empty_trash'] = __('Empty Trash', 'easy-modal' );
 		return $actions;
 	}
 
@@ -194,16 +194,16 @@ class EModal_Modal_List_Table extends WP_List_Table {
 		$edit_link = esc_url( emodal_admin_url() .'&action=edit&id='. $item->id);
 		$delete_link = esc_url( wp_nonce_url( emodal_admin_url() .'&action=delete&id[]='. $item->id, EMCORE_NONCE, EMCORE_NONCE));
 
-		$out = '<strong><a class="row-title" href="' . $edit_link . '" title="' . esc_attr(sprintf( __( 'Edit &#8220;%s&#8221;', EMCORE_SLUG), $item->name)) . '">' . $item->name . '</a></strong><br />';
+		$out = '<strong><a class="row-title" href="' . $edit_link . '" title="' . esc_attr(sprintf( __( 'Edit &#8220;%s&#8221;', 'easy-modal' ), $item->name)) . '">' . $item->name . '</a></strong><br />';
 
 		$actions = array();
 		//if ( current_user_can( $tax->cap->edit_terms ) ) {
-			$actions['edit'] = '<a href="' . $edit_link . '">' . __('Edit', EMCORE_SLUG) . '</a>';
+			$actions['edit'] = '<a href="' . $edit_link . '">' . __('Edit', 'easy-modal' ) . '</a>';
 			//$actions['inline hide-if-no-js'] = '<a href="#" class="editinline">' . __( 'Quick&nbsp;Edit' ) . '</a>';
 		//}
-			$actions['clone'] = '<a href="' . $clone_link . '">' . __('Clone', EMCORE_SLUG) . '</a>';
+			$actions['clone'] = '<a href="' . $clone_link . '">' . __('Clone', 'easy-modal' ) . '</a>';
 		//if ( current_user_can( $tax->cap->delete_terms ) && $tag->term_id != $default_term )
-			$actions['delete'] = "<a class='delete-tag' href='" . $delete_link . "'>" . __('Delete', EMCORE_SLUG) . "</a>";
+			$actions['delete'] = "<a class='delete-tag' href='" . $delete_link . "'>" . __('Delete', 'easy-modal' ) . "</a>";
 		//if ( $tax->public )
 
 		//$actions = apply_filters( 'tag_row_actions', $actions, $tag );
