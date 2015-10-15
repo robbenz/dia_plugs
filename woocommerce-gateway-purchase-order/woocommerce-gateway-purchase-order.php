@@ -3,7 +3,7 @@
  * Plugin Name: WooCommerce Purchase Order Payment Gateway
  * Plugin URI: http://woothemes.com/products/woocommerce-gateway-purchase-order/
  * Description: Receive payments via purchase order with Woocommerce.
- * Version: 1.1.1
+ * Version: 1.1.2
  * Author: WooThemes
  * Author URI: http://woothemes.com/
  * Requires at least: 4.1.0

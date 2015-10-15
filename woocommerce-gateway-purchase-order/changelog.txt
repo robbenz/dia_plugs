@@ -1,5 +1,8 @@
 ** WooCommerce Gateway Purchase Order Changelog **
 
+2015.10.07 - version 1.1.2
+ * Fix - On checkout, if a PO has been entered, it will no longer disappear on AJAX refresh 
+
 2015.03.20 - version 1.1.1
  * Fix - Makes sure translation files are loaded correctly.
  * Fix - Fixes the warning notice about the deprecation of WC()->add_error().

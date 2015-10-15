@@ -3,7 +3,8 @@
 Plugin Name: CategoryTinymce
 Plugin URI: http://wp.ypraise.com/2014/boost-your-categories-with-categorytinymce-4-0/
 Description: Adds a tinymce enable box to the category descriptions and taxonomy page.
-Version: 3.6.3
+Version: 3.6.4
+Text Domain: categorytinymce
 Author: Kevin Heath
 Author URI: http://wp.ypraise.com/
 License: GPL
@@ -46,24 +47,39 @@ register_setting('catMCE_options', 'catMCE_seo');
 
 function catMCE_options() {
 	if ( !current_user_can( 'manage_options' ) )  {
-		wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
+		wp_die( __e( 'You do not have sufficient permissions to access this page.', 'categorytinymce' ) );
 	}
 	?>
 	<div class="wrap">
-	<h2>CategoryTinyMCE SEO Settings</h2>
+	<h2>
+	<?php
+	_e('CategoryTinyMCE SEO Settings', 'categorytinymce');
+	?>
+	</h2>
 	<div id="donate_container">
-     The latest fully maintained version (Categorytinymce 4.x) which includes the bottom listing description box can be found at http://wp.ypraise.com/. Adding a bottom description for your categories and tags can help you with your user experience and SEO.
-    </div>
+	<?php
+	
+    _e('The latest fully maintained version (Categorytinymce 4.x) which includes the bottom listing description box can be found at http://wp.ypraise.com/. Adding a bottom description for your categories and tags can help you with your user experience and SEO.','categorytinymce');
+  
+?>
+  </div>
 	
 	<p><form method="post" action="options.php">	</p>
-	<p>SEO Settings for CategoryTinyMCE:</p>
+	<p>
+	<?php
+	_e('SEO Settings for CategoryTinyMCE:', 'categorytinymce');
+	?>
+	</p>
 	
 	<?php
 	
 	settings_fields( 'catMCE_options' );
 	
 ?>
-<p>Choose SEO:  
+<p>
+<?php
+_e('Choose SEO: ','categorytinymce');
+?> 
 
 <input type="checkbox" name="catMCE_seo" value="1" <?php checked( '1', get_option( 'catMCE_seo' ) ); ?> />
 							</p>
@@ -115,13 +131,13 @@ function description1($tag) {
 
 <table class="form-table">
         <tr class="form-field">
-            <th scope="row" valign="top"><label for="description"><?php _ex('Description', 'Taxonomy Description'); ?></label></th>
+            <th scope="row" valign="top"><label for="description"><?php _e('Description', 'categorytinymce'); ?></label></th>
 			<td>
 	<?php  
 	$settings = array('wpautop' => true, 'media_buttons' => true, 'quicktags' => true, 'textarea_rows' => '15', 'textarea_name' => 'description' );	
 		wp_editor(html_entity_decode($tag->description , ENT_QUOTES, 'UTF-8'), 'description1', $settings); ?>	
 	<br />
-	<span class="description"><?php _e('The description is not prominent by default, however some themes may show it.'); ?></span>
+	<span class="description"><?php _e('The description is not prominent by default, however some themes may show it.', 'categorytinymce'); ?></span>
 	</td>	
         </tr>
      
@@ -140,10 +156,10 @@ function extra_category_fields( $tag ) {    //check for existing featured ID
 <table class="form-table">
 <tr></tr>
 <tr class="form-field">
-<th scope="row" valign="top"><label for="cat_Image_url"><?php _e('Category Image Url'); ?></label></th>
+<th scope="row" valign="top"><label for="cat_Image_url"><?php _e('Category Image Url', 'categorytinymce'); ?></label></th>
 <td>
 <input type="text" name="Cat_meta[img]" id="Cat_meta[img]" size="3" style="width:60%;" value="<?php echo $cat_meta['img'] ? $cat_meta['img'] : ''; ?>"><br />
-            <span class="description"><?php _e('Image for category: use full url with http://'); ?></span>
+            <span class="description"><?php _e('Image for category: use full url with http://', 'categorytinymce'); ?></span>
         </td>
 </tr>
 
@@ -151,28 +167,28 @@ function extra_category_fields( $tag ) {    //check for existing featured ID
 <?php $catseo = get_option('catMCE_seo');
 if ($catseo == "1") { ?>
 <tr class="form-field">
-<th scope="row" valign="top"><label for="seo_met_title"><?php _e('SEO Meta Title'); ?></label></th>
+<th scope="row" valign="top"><label for="seo_met_title"><?php _e('SEO Meta Title', 'categorytinymce'); ?></label></th>
 <td>
 <input type="text" name="Cat_meta[seo_met_title]" id="Cat_meta[seo_met_title]" size="3" style="width:60%;" value="<?php echo $cat_meta['seo_met_title'] ? $cat_meta['seo_met_title'] : ''; ?>"><br />
-            <span class="description"><?php _e('Add title for head section. recommended 60 characters max'); ?></span>
+            <span class="description"><?php _e('Add title for head section. recommended 60 characters max', 'categorytinymce'); ?></span>
         </td>
 </tr>
 
 <tr></tr>
 <tr class="form-field">
-<th scope="row" valign="top"><label for="seo_met_keywords"><?php _e('SEO Meta Keywords'); ?></label></th>
+<th scope="row" valign="top"><label for="seo_met_keywords"><?php _e('SEO Meta Keywords', 'categorytinymce'); ?></label></th>
 <td>
 <input type="text" name="Cat_meta[seo_met_keywords]" id="Cat_meta[seo_met_keywords]" size="3" style="width:60%;" value="<?php echo $cat_meta['seo_met_keywords'] ? $cat_meta['seo_met_keywords'] : ''; ?>"><br />
-            <span class="description"><?php _e('Add keywords for head section. separate with commas'); ?></span>
+            <span class="description"><?php _e('Add keywords for head section. separate with commas', 'categorytinymce'); ?></span>
         </td>
 </tr>
 
 <tr></tr>
 <tr class="form-field">
-<th scope="row" valign="top"><label for="seo_met_description"><?php _e('SEO Meta Description'); ?></label></th>
+<th scope="row" valign="top"><label for="seo_met_description"><?php _e('SEO Meta Description', 'categorytinymce'); ?></label></th>
 <td>
 <textarea rows="4" name="Cat_meta[seo_met_description]" id="Cat_meta[seo_met_description]" size="3" style="width:60%;" ><?php echo $cat_meta['seo_met_description'] ? $cat_meta['seo_met_description'] : ''; ?></textarea><br />
-            <span class="description"><?php _e('Add description for head section. recommended 140 characters max'); ?></span>
+            <span class="description"><?php _e('Add description for head section. recommended 140 characters max', 'categorytinymce'); ?></span>
         </td>
 </tr>
 	<?php } ?>
@@ -217,13 +233,13 @@ function description2($tag) {
 
 <table class="form-table">
         <tr class="form-field">
-            <th scope="row" valign="top"><label for="description"><?php _ex('Description', 'Taxonomy Description'); ?></label></th>
+            <th scope="row" valign="top"><label for="description"><?php _ex('Description', 'categorytinymce'); ?></label></th>
 			<td>
 	<?php  
 	$settings = array('wpautop' => true, 'media_buttons' => true, 'quicktags' => true, 'textarea_rows' => '15', 'textarea_name' => 'description' );	
 	wp_editor(html_entity_decode($tag->description , ENT_QUOTES, 'UTF-8'), 'description2', $settings ); ?>	
 	<br />
-	<span class="description"><?php _e('The description is not prominent by default, however some themes may show it.'); ?></span>
+	<span class="description"><?php _e('The description is not prominent by default, however some themes may show it.', 'categorytinymce'); ?></span>
 	</td>	
         </tr>
      
@@ -243,10 +259,10 @@ function extra_tag_fields( $tag ) {    //check for existing featured ID
 ?>
 <table class="form-table">
 <tr class="form-field">
-<th scope="row" valign="top"><label for="tag_Image_url"><?php _e('Tag Image Url'); ?></label></th>
+<th scope="row" valign="top"><label for="tag_Image_url"><?php _e('Tag Image Url', 'categorytinymce'); ?></label></th>
 <td>
 <input type="text" name="tag_meta[img]" id="tag_meta[img]" size="3" style="width:60%;" value="<?php echo $tag_meta['img'] ? $tag_meta['img'] : ''; ?>"><br />
-            <span class="description"><?php _e('Image for tag: use full url with http://'); ?></span>
+            <span class="description"><?php _e('Image for tag: use full url with http://', 'categorytinymce'); ?></span>
         </td>
 </tr>
 
@@ -254,28 +270,28 @@ function extra_tag_fields( $tag ) {    //check for existing featured ID
 <?php $catseo = get_option('catMCE_seo');
 if ($catseo == "1") { ?>
 <tr class="form-field">
-<th scope="row" valign="top"><label for="seo_met_title"><?php _e('SEO Meta Title'); ?></label></th>
+<th scope="row" valign="top"><label for="seo_met_title"><?php _e('SEO Meta Title', 'categorytinymce'); ?></label></th>
 <td>
 <input type="text" name="tag_meta[seo_met_title]" id="tag_meta[seo_met_title]" size="3" style="width:60%;" value="<?php echo $tag_meta['seo_met_title'] ? $tag_meta['seo_met_title'] : ''; ?>"><br />
-            <span class="description"><?php _e('Add title for head section. recommended 60 characters max'); ?></span>
+            <span class="description"><?php _e('Add title for head section. recommended 60 characters max', 'categorytinymce'); ?></span>
         </td>
 </tr>
 
 <tr></tr>
 <tr class="form-field">
-<th scope="row" valign="top"><label for="seo_met_keywords"><?php _e('SEO Meta Keywords'); ?></label></th>
+<th scope="row" valign="top"><label for="seo_met_keywords"><?php _e('SEO Meta Keywords', 'categorytinymce'); ?></label></th>
 <td>
 <input type="text" name="tag_meta[seo_met_keywords]" id="tag_meta[seo_met_keywords]" size="3" style="width:60%;" value="<?php echo $tag_meta['seo_met_keywords'] ? $tag_meta['seo_met_keywords'] : ''; ?>"><br />
-            <span class="description"><?php _e('Add keywords for head section. separate with commas'); ?></span>
+            <span class="description"><?php _e('Add keywords for head section. separate with commas', 'categorytinymce'); ?></span>
         </td>
 </tr>
 
 <tr></tr>
 <tr class="form-field">
-<th scope="row" valign="top"><label for="seo_met_description"><?php _e('SEO Meta Description'); ?></label></th>
+<th scope="row" valign="top"><label for="seo_met_description"><?php _e('SEO Meta Description', 'categorytinymce'); ?></label></th>
 <td>
 <textarea rows="4" name="tag_meta[seo_met_description]" id="tag_meta[seo_met_description]" size="3" style="width:60%;" ><?php echo $tag_meta['seo_met_description'] ? $tag_meta['seo_met_description'] : ''; ?></textarea><br />
-            <span class="description"><?php _e('Add description for head section. recommended 140 characters max'); ?></span>
+            <span class="description"><?php _e('Add description for head section. recommended 140 characters max', 'categorytinymce'); ?></span>
         </td>
 </tr>
 	<?php } ?>

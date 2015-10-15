@@ -37,7 +37,7 @@ final class Woocommerce_Gateway_Purchase_Order extends WC_Payment_Gateway {
 		$this->token 			= 'woocommerce-gateway-purchase-order';
 		$this->plugin_url 		= plugin_dir_url( __FILE__ );
 		$this->plugin_path 		= plugin_dir_path( __FILE__ );
-		$this->version 			= '1.1.1';
+		$this->version 			= '1.1.2';
 
 		register_activation_hook( __FILE__, array( $this, 'install' ) );
 
@@ -114,11 +114,20 @@ final class Woocommerce_Gateway_Purchase_Order extends WC_Payment_Gateway {
 	 */
     public function payment_fields () {
         if( $this->description ) echo wpautop( wptexturize( $this->description ) );
+        
+        // In case of an AJAX refresh of the page, check the form post data to see if we can repopulate an previously entered PO
+		$po_number = '';
+		if ( isset( $_REQUEST[ 'post_data' ] ) ) {
+			parse_str( $_REQUEST[ 'post_data' ], $post_data );
+	        if ( isset( $post_data[ 'po_number_field' ] ) ) {
+				$po_number = $post_data[ 'po_number_field' ];
+	        }
+		}
 ?>
 		<fieldset>
 			<p class="form-row form-row-first">
 				<label for="poorder"><?php _e( 'Purchase Order', 'woocommerce-gateway-purchase-order' ); ?> <span class="required">*</span></label>
-				<input type="text" class="input-text" id="po_number_field" name="po_number_field" />
+				<input type="text" class="input-text" value="<?php echo esc_attr( $po_number ); ?>" id="po_number_field" name="po_number_field" />
 			</p>
 		</fieldset>
 <?php
@@ -171,7 +180,7 @@ final class Woocommerce_Gateway_Purchase_Order extends WC_Payment_Gateway {
 		if ( $order->payment_method !== $this->id ) return;
 		$po_number = get_post_meta( $order->id, '_po_number', true ) ;
 		if ( '' != $po_number ) {
-           echo '<p><strong>' . __( 'Purchase Order Number:', 'woocommerce-gateway-purchase-order' ) . '</strong> ' . $po_number . '</p>';
+			echo '<p><strong>' . __( 'Purchase Order Number:', 'woocommerce-gateway-purchase-order' ) . '</strong> ' . $po_number . '</p>';
 		}
 	} // End my_custom_checkout_field_order_details()
 
