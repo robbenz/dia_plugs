@@ -8,7 +8,7 @@ class WCUF_OrderDetailAddon
 		add_action( 'add_meta_boxes', array( &$this, 'woocommerce_metaboxes' ) );
 		add_action( 'woocommerce_order_details_after_order_table', array( &$this, 'front_end_order_page_addon' ) );
 		add_action( 'woocommerce_process_shop_order_meta', array( &$this, 'woocommerce_process_shop_ordermeta' ), 5, 2 );
-		add_action( 'woocommerce_after_checkout_billing_form', array( &$this, 'add_uploads_checkout_page' ), 10, 1 ); //Checkout page
+		add_action( 'woocommerce_checkout_after_customer_details', array( &$this, 'add_uploads_checkout_page' ), 10, 1 ); //Checkout page
 		//add_action('woocommerce_checkout_update_order_meta', array( &$this, 'save_uploads_after_checkout' )); //After checkout
 		add_action('woocommerce_checkout_order_processed', array( &$this, 'save_uploads_after_checkout' )); //After checkout
 		//add_action('save_post', array( &$this, 'save_uploads_after_checkout' )); //After checkout

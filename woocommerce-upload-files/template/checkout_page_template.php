@@ -1,4 +1,4 @@
-<style>
+<!--<style>
 .spacer
 {
 	display:block; height:10px;
@@ -7,7 +7,7 @@
 {
 	display:block; height:25px;
 }
-</style>
+</style>-->
 
 <!--<h2 id="upload-title"><?php _e('Upload files', 'woocommerce-files-upload'); ?></h2> -->
 
@@ -98,15 +98,16 @@ foreach($file_fields_groups as $file_fields):
 			if($can_render):
 				if(!$disable_stacking):
 				?>
-				<h4 style="margin-bottom:5px;"><?php  echo $file_fields['title'] ?></h4>
+    <!--BENZ--> <div id="purchase-order-upload-wrap">
+				<h4><?php  echo $file_fields['title'] ?></h4>
 				<p><?php echo $file_fields['description'] ?></p>
 				<?php if(!isset($file_order_metadata[$file_fields['id']])): ?>
 					
 						<input type="hidden" name="wcuf[<?php echo $file_fields['id']; ?>][title]" value="<?php echo $file_fields['title']; ?>"></input>
 						<input type="hidden" name="wcuf[<?php echo $file_fields['id']; ?>][id]" value="<?php echo $file_fields['id']; ?>"></input>
 						<input type="hidden" id="wcuf-filename-<?php echo $file_fields['id']; ?>" name="wcuf[<?php echo $file_fields['id']; ?>][file_name]" value=""></input>
-						<input type="file"  data-id="<?php echo $file_fields['id']; ?>" multiple="true" class="wcuf_file_input" name="wcufuploadedfile_<?php echo $file_fields['id']?>" <?php if($file_fields['types'] != '') echo 'accept="'.$file_fields['types'].'"';?> data-size="<?php echo $file_fields['size']*1048576; ?>" value="<?php echo $file_fields['size']*1048576; ?>"></input><strong>(<?php echo __('Max size: ', 'woocommerce-files-upload').$file_fields['size']; ?>MB)</strong>
-						<div class="spacer2"></div>
+						<input type="file"  data-id="<?php echo $file_fields['id']; ?>" multiple="true" class="wcuf_file_input" name="wcufuploadedfile_<?php echo $file_fields['id']?>" <?php if($file_fields['types'] != '') echo 'accept="'.$file_fields['types'].'"';?> data-size="<?php echo $file_fields['size']*1048576; ?>" value="<?php echo $file_fields['size']*1048576; ?>"></input><br /><strong>(<?php echo __('Max size: ', 'woocommerce-files-upload').$file_fields['size']; ?>MB)</strong>
+						<div class="spacer2"></div></div>
 					
 			<?php endif;
 				  else://else disable stacking 
