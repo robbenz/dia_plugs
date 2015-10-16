@@ -1,0 +1,40 @@
+.input_box
+{
+	margin-top:15px;
+	padding:50px;
+	background: white;
+	width:80%;
+	box-shadow: 5px 0 20px;
+    box-sizing: border-box;
+} 
+label
+{
+	display:block;
+	margin-bottom:5px;
+}
+textarea
+{
+	display:block;
+	margin-bottom:10px;
+	clear:both;
+}
+.spacer
+{
+	margin-top:20px;
+	display:block;
+	clear:both;
+}
+input
+{
+	margin-bottom:35px;
+}
+.upload_categories_box
+{
+	display:none;
+}
+.input_box h3
+{
+	margin-top:40px;
+	padding-bottom:5px;
+	border-bottom:1px solid #a0a0a0;
+}
