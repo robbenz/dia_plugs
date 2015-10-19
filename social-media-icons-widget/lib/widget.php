@@ -28,10 +28,12 @@ $ul_class .= 'icons-'.$siw_icons;
 		global $siw_data;
 		global $siw_icon_output;
 
+		$imgsize = '';
+
 		$siw_data['id'] = $id;
 		$siw_data['url'] = $instance[$id];
 		$siw_custom_sizes = array('custom_small','custom_medium','custom_large');
-		
+
 		if (in_array($siw_icons, $siw_custom_sizes)) {
 			$size = str_replace("custom_","",$siw_icons);
 			$siw_icon_path = get_stylesheet_directory() .'/social_icons/'.$size.'/'.$id.'.{gif,jpg,jpeg,png}';
@@ -55,7 +57,7 @@ $ul_class .= 'icons-'.$siw_icons;
 		if($result) {
 			if (in_array($siw_icons, $siw_custom_sizes)) {
 				$siw_path = explode('themes', $result[0]);
-				$siw_icon = get_bloginfo('url').'/wp-content/themes'.$siw_path[1];
+				$siw_icon = site_url().'/wp-content/themes'.$siw_path[1];
 			}
 			else {
 				$siw_path = explode('plugins', $result[0]);

@@ -3,8 +3,8 @@ Contributors: dannisbet, nisbetcreative
 Tags: social, media, widget, follow, profile, icons, 500px, About.me, Behance, Dribbble, Codepen, Email, Envato, Facebook, Flickr, FourSquare, GitHub, Google+, Instagram, Kickstarter, Klout, LinkedIn, Medium, Path, Pinterest, RSS, Speaker Deck, StumbleUpon, Technorati, Tumblr, Twitter, Vimeo, Vine, WordPress, Yelp, YouTube, Zerply
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CJN7XU3Z7XHDL
 Requires at least: 3.5.1
-Tested up to: 4.1
-Stable tag: 15.07
+Tested up to: 4.3
+Stable tag: 15.10.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -73,6 +73,9 @@ The opening and closing unordered list tags can be edited or changed with the so
 2. Widget settings via the Appearance > Widgets screen.
 
 == Changelog ==
+
+= 15.10 =
+* Fix error with WPML where changing languages broke the icon path.
 
 = 15.07 =
 * Replaced http:// in unused input boxes with placeholder attribute instead.
