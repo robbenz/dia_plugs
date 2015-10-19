@@ -226,6 +226,7 @@ function wcdn_get_order_info( $order ) {
 	global $wcdn;
 	$fields = array();
 	$create_invoice_number = get_option( WooCommerce_Delivery_Notes::$plugin_prefix . 'create_invoice_number' );
+    $po_number = get_post_meta( $order->id, '_po_number', true );
 	
 	if( wcdn_get_template_type() == 'invoice' && !empty( $create_invoice_number ) ) {
 		$fields['invoice_number'] = array( 
@@ -243,11 +244,17 @@ function wcdn_get_order_info( $order ) {
 		'label' => __( 'Order Date', 'woocommerce-delivery-notes' ),
 		'value' => date_i18n( get_option( 'date_format' ), strtotime( $order->order_date ) )
 	);
-	
+	if ( '' != $po_number ) {
 	$fields['payment_method'] = array( 
 		'label' => __( 'Payment Method', 'woocommerce-delivery-notes' ),
-		'value' => __( $order->payment_method_title, 'woocommerce' )
+		'value' => __( $order->payment_method_title . ': ' . $po_number, 'woocommerce' ),
 	);
+    } else {
+  $fields['payment_method'] = array( 
+		'label' => __( 'Payment Method', 'woocommerce-delivery-notes' ),
+		'value' => __( $order->payment_method_title, 'woocommerce' ),
+	);   
+    }
 	
 	if( $order->billing_email ) {
 		$fields['billing_email'] = array(
