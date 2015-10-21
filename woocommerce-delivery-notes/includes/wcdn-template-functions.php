@@ -94,8 +94,8 @@ function wcdn_navigation_style() {
 		
 		#navigation .button:hover,
 		#navigation .button:focus {
-			background: #1e8cbe;
-			border-color: #0074a2;
+			background: #00426a;
+			border-color: #00426a;
 		 	-webkit-box-shadow: inset 0 1px 0 rgba(120,200,230,0.6);
 		 	box-shadow: inset 0 1px 0 rgba(120,200,230,0.6);
 			color: #fff;
