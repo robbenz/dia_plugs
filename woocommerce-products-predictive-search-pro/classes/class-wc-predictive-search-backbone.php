@@ -118,7 +118,7 @@ class WC_Predictive_Search_Hook_Backbone
 					<?php wc_ps_ict_t_e( 'Mft', __('Mft', 'woops') ); ?>: 
 					{{ var number_cat = 0; }}
 					{{ _.each( categories, function( cat_data ) { number_cat++; }}
-						{{ if ( number_cat > 1 ) { }}, {{ } }}<a href="{{= cat_data.url }}">{{= cat_data.name }}</a>
+						{{ if ( number_cat > 1 ) { }}, {{ } }}{{= cat_data.url }}{{= cat_data.name }}
 					{{ }); }}
 				</div>
                 
