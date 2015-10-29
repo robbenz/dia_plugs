@@ -203,7 +203,7 @@ class WC_Shortcode_My_Account {
 				$args['login'] = esc_attr( $_GET['login'] );
 			}
 		} elseif ( isset( $_GET['reset'] ) ) {
-			wc_add_notice( __( 'Your password has been reset.', 'woocommerce' ) . ' <a href="' . wc_get_page_permalink( 'myaccount' ) . '">' . __( 'Log in', 'woocommerce' ) . '</a>' );
+			wc_add_notice( __( 'Your password has been reset.', 'woocommerce' ) . ' <a href="' . wc_get_page_permalink( 'myaccount' ) . '">' . __( 'Click Here to Log in', 'woocommerce' ) . '</a>' );
 		}
 
 		wc_get_template( 'myaccount/form-lost-password.php', $args );
