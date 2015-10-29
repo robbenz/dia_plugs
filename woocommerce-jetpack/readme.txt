@@ -4,7 +4,7 @@ Donate link: http://algoritmika.com/donate/
 Tags: woocommerce,booster for woocommerce,woocommerce jetpack,custom price labels,call for price,currency symbol,remove sorting,remove old product slugs,add to cart text,order number,sequential order numbering,email pdf invoice,pdf invoice,pdf invoices,already in cart,empty cart,redirect to checkout,minimum order amount,customize checkout fields,checkout fields,email,customize product tabs,product tabs,related products number,empty cart,redirect add to cart,redirect to checkout,product already in cart,custom payment gateway,payment gateway icon,auto-complete all orders,custom order statuses,custom order status,remove text from price,custom css,hide categories count,hide subcategories count,hide category count,hide subcategory count,display total sales,custom product tabs,remove product tab,payment gateway fee,
 Requires at least: 3.8
 Tested up to: 4.3
-Stable tag: 2.3.7
+Stable tag: 2.3.8
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -87,11 +87,11 @@ Booster for WooCommerce is a WordPress plugin that supercharges your site with a
 
 = Feedback =
 * We are open to your suggestions and feedback - thank you for using or trying out one of our plugins!
-* If you have any ideas how to upgrade the plugin to make it better, or if you have ideas about the features that are missing from our plugin, please [fill the form](http://boostwoo.com/submit-idea/).
-* For support visit the [contact page](http://boostwoo.com/contact-us/).
+* If you have any ideas how to upgrade the plugin to make it better, or if you have ideas about the features that are missing from our plugin, please [fill the form](http://booster.io/submit-idea/).
+* For support visit the [contact page](http://booster.io/contact-us/).
 
 = More =
-* Visit the [Booster for WooCommerce plugin page](http://boostwoo.com/)
+* Visit the [Booster for WooCommerce plugin page](http://booster.io/)
 
 = Available Translations =
 * French - `fr_FR` by Jean-Marc Schreiber.
@@ -108,13 +108,29 @@ Booster for WooCommerce is a WordPress plugin that supercharges your site with a
 
 = How to unlock those some features settings that are locked? =
 
-To unlock all Booster for WooCommerce features, please install additional <a href="http://boostwoo.com/plus/">Booster for WooCommerce Plus</a> plugin.
+To unlock all Booster for WooCommerce features, please install additional <a href="http://booster.io/plus/">Booster for WooCommerce Plus</a> plugin.
 
 == Screenshots ==
 
 1. Plugin admin area.
 
 == Changelog ==
+
+= 2.3.8 - 26/10/2015 =
+* Dev - Link changed to http://booster.io
+* Fix - Shortcodes - Products - Crowdfunding - `[wcj_product_crowdfunding_time_remaining]` singular form bug fixed.
+* Dev - PRODUCTS - Product Input Fields - *Placeholder* for *select* type added.
+* Dev - PRODUCTS - Product Input Fields - *Default value* for *checkbox* type added.
+* Dev - CART & CHECKOUT - Cart - Module description added.
+* Fix - CART & CHECKOUT - Checkout Core Fields - Bug, causing message that some not existing field (e.g. State / County) is required, fixed.
+* Fix - CART & CHECKOUT - Checkout Core Fields - Bug with changing label and/or placeholder for some core checkout fields (e.g. address), fixed.
+* Fix - CART & CHECKOUT - Checkout Custom Fields - Bug, causing PHP notices on order admin save (on orders with some types of custom checkout fields), fixed.
+* Dev - CART & CHECKOUT - Checkout Custom Fields - *Placeholder* for *select* type added.
+* Dev - CART & CHECKOUT - Checkout Custom Fields - *Default value* for *checkbox* type added.
+* Dev - CART & CHECKOUT - Checkout Custom Fields - *Values options* for *checkbox* type added.
+* Dev - EMAILS & MISC. - General - CSS fields changed from `textarea` to `custom_textarea`.
+* Fix - SHIPPING & ORDERS - Order Custom Statuses - Custom statuses now counted in admin reports (and "Add Custom Statuses to Admin Reports" option added).
+* Dev - SHIPPING & ORDERS - Order Custom Statuses - Tool link added to module settings.
 
 = 2.3.7 - 17/10/2015 =
 * Dev - General Shortcodes - `[wcj_tcpdf_pagebreak]` shortcode added.
@@ -555,7 +571,7 @@ To unlock all Booster for WooCommerce features, please install additional <a hre
   %price%, %price_excluding_tax% (suggested by Josh),
   %stock_availability% (by https://wordpress.org/support/topic/custom-tabs-1),
   %time_since_last_sale%, %weight%, %list_attributes% etc.
-  For full list of short codes, please visit http://boostwoo.com/features/product-info/
+  For full list of short codes, please visit http://booster.io/features/product-info/
 * Feature Upgraded - Product Listings - Option to change default WooCommerce behavior on displaying all products if none categories are dispalyed.
   Now it's possible to disable displaying the products. Suggested by Xavier.
 * Feature Upgraded - PDF Invoices - Order date and time added. Suggested by https://wordpress.org/support/topic/order-time

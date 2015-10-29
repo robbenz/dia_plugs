@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Checkout Custom Fields class.
  *
- * @version 2.3.7
+ * @version 2.3.8
  * @author  Algoritmika Ltd.
  */
 
@@ -209,20 +209,30 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 	/**
 	 * update_custom_checkout_fields_order_meta.
 	 *
-	 * @version 2.3.7
+	 * @version 2.3.8
 	 */
 	public function update_custom_checkout_fields_order_meta( $order_id ) {
 		for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_checkout_custom_fields_total_number', 1 ) ); $i++ ) {
 			if ( 'yes' === get_option( 'wcj_checkout_custom_field_enabled_' . $i ) ) {
 				$the_section = get_option( 'wcj_checkout_custom_field_section_' . $i );
+				$the_type = get_option( 'wcj_checkout_custom_field_type_' . $i );
 				$option_name       = $the_section . '_' . 'wcj_checkout_field_'       . $i;
 				$option_name_label = $the_section . '_' . 'wcj_checkout_field_label_' . $i;
-				if ( ! empty( $_POST[ $option_name ] ) ) {
+				$option_name_type  = $the_section . '_' . 'wcj_checkout_field_type_'  . $i;
+				if ( ! empty( $_POST[ $option_name ] ) || 'checkbox' === $the_type ) {
+					update_post_meta( $order_id, '_' . $option_name_type,  $the_type );
 					update_post_meta( $order_id, '_' . $option_name_label, get_option( 'wcj_checkout_custom_field_label_' . $i ) );
-					update_post_meta( $order_id, '_' . $option_name,       wc_clean( $_POST[ $option_name ] ) );
-				} elseif ( 'checkbox' === get_option( 'wcj_checkout_custom_field_type_' . $i ) ) {
-					update_post_meta( $order_id, '_' . $option_name_label, get_option( 'wcj_checkout_custom_field_label_' . $i ) );
-					update_post_meta( $order_id, '_' . $option_name,       0 );
+					if ( 'checkbox' === $the_type ) {
+						$the_value = ( isset( $_POST[ $option_name ] ) ) ? 1 : 0;
+						update_post_meta( $order_id, '_' . $option_name, $the_value );
+						$option_name_checkbox_value  = $the_section . '_' . 'wcj_checkout_field_checkbox_value_' . $i;
+						$checkbox_value = ( 1 == $the_value ) ?
+							get_option( 'wcj_checkout_custom_field_checkbox_yes_' . $i ) :
+							get_option( 'wcj_checkout_custom_field_checkbox_no_' . $i );
+						update_post_meta( $order_id, '_' . $option_name_checkbox_value, $checkbox_value );
+					} else {
+						update_post_meta( $order_id, '_' . $option_name,       wc_clean( $_POST[ $option_name ] ) );
+					}
 				}
 			}
 		}
@@ -231,7 +241,7 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 	/**
 	 * add_custom_fields_to_order_display.
 	 *
-	 * @version 2.3.7
+	 * @version 2.3.8
 	 * @since   2.3.0
 	 */
 	function add_custom_fields_to_order_display( $order ) {
@@ -240,7 +250,11 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 
 			if ( false !== strpos( $key, 'wcj_checkout_field_' ) && isset( $values[0] ) ) {
 
-				if ( false !== strpos( $key, '_label_' ) ) {
+				if (
+					false !== strpos( $key, '_label_' ) ||
+					false !== strpos( $key, '_type_' ) ||
+					false !== strpos( $key, '_checkbox_value_' )
+				) {
 					continue;
 				}
 
@@ -248,16 +262,21 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 
 				$the_label_key = str_replace( 'wcj_checkout_field_', 'wcj_checkout_field_label_', $key );
 				if ( isset( $post_meta[ $the_label_key ][0] ) ) {
-					if ( is_array( $post_meta[ $the_label_key ][0] ) ) {
-						if ( isset( $post_meta[ $the_label_key ][0]['label'] ) ) {
-							$output .= $post_meta[ $the_label_key ][0]['label'] . ': ';
-						}
-					} else {
-						$output .= $post_meta[ $the_label_key ][0] . ': ';
-					}
+					$output .= $post_meta[ $the_label_key ][0] . ': ';
+				} elseif ( is_array( $values[0] ) && isset( $values[0]['label'] ) ) {
+					$output .= $values[0]['label'] . ': ';
+					// TODO convert from before version 2.3.0
 				}
 
-				$output .= ( is_array( $values[0] ) && isset( $values[0]['value'] ) ) ? $values[0]['value'] : $values[0];
+				$the_value = ( is_array( $values[0] ) && isset( $values[0]['value'] ) ) ? $values[0]['value'] : $values[0];
+
+				$the_type_key = str_replace( 'wcj_checkout_field_', 'wcj_checkout_field_type_', $key );
+				if ( isset( $post_meta[ $the_type_key ][0] ) && 'checkbox' === $post_meta[ $the_type_key ][0] ) {
+					$the_checkbox_value_key = str_replace( 'wcj_checkout_field_', 'wcj_checkout_field_checkbox_value_', $key );
+					$output .= ( isset( $post_meta[ $the_checkbox_value_key ][0] ) ) ? $post_meta[ $the_checkbox_value_key ][0] : $the_value;
+				} else {
+					$output .= $the_value;
+				}
 
 				if ( '' != $output ) echo $output . '<br>';
 			}
@@ -266,6 +285,8 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 
 	/**
 	 * add_woocommerce_admin_fields.
+	 *
+	 * @version 2.3.8
 	 */
 	public function add_woocommerce_admin_fields( $fields, $section ) {
 		for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_checkout_custom_fields_total_number', 1 ) ); $i++ ) {
@@ -274,21 +295,25 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 				if ( 'datepicker' === $the_type || 'timepicker' === $the_type || 'number' === $the_type ) {
 					$the_type = 'text';
 				}
+				if ( 'checkbox' === $the_type || 'select' === $the_type || 'radio' === $the_type ) {
+					$the_type = 'text';
+				}
 				$the_section = get_option( 'wcj_checkout_custom_field_section_' . $i );
 				if ( $section != $the_section ) continue;
 				$the_key = 'wcj_checkout_field_' . $i;
 				$the_key_label = 'wcj_checkout_field_label_' . $i;
-
 				$the_meta = get_post_meta( get_the_ID(), '_' . $section . '_' . $the_key, true );
 				if ( is_array( $the_meta ) ) {
-					// Converting from before v2.3.0
+					// Converting from before version 2.3.0
 					if ( isset( $the_meta['value'] ) ) update_post_meta( get_the_ID(), '_' . $section . '_' . $the_key,       $the_meta['value'] );
 					if ( isset( $the_meta['label'] ) ) update_post_meta( get_the_ID(), '_' . $section . '_' . $the_key_label, $the_meta['label'] );
+					// TODO section?
 				}
-
 				$fields[ $the_key ] = array(
 					'type'  => $the_type,
-					'label' => get_option( 'wcj_checkout_custom_field_label_' . $i ),//@todo label from post meta?
+					'label' => ( '' != get_post_meta( get_the_ID(), '_' . $section . '_' . $the_key_label, true ) ) ?
+						get_post_meta( get_the_ID(), '_' . $section . '_' . $the_key_label, true ) :
+						get_option( 'wcj_checkout_custom_field_label_' . $i ),
 					'show'  => true,
 				);
 			}
@@ -322,7 +347,7 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 	/**
 	 * add_custom_checkout_fields.
 	 *
-	 * @version 2.3.0
+	 * @version 2.3.8
 	 */
 	public function add_custom_checkout_fields( $fields ) {
 
@@ -374,11 +399,21 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 				if ( 'select' === $the_type || 'radio' === $the_type ) {
 					$select_options_raw = get_option( 'wcj_checkout_custom_field_select_options_' . $i );
 					$select_options = wcj_get_select_options( $select_options_raw );
+					if ( 'select' === $the_type ) {
+						$placeholder = get_option( 'wcj_checkout_custom_field_placeholder_' . $i );
+						if ( '' != $placeholder ) {
+							$select_options = array_merge( array( '' => $placeholder ), $select_options );
+						}
+					}
 					$the_field['options'] = $select_options;
 					if ( ! empty( $select_options ) ) {
 						reset( $select_options );
 						$the_field['default'] = key( $select_options );
 					}
+				}
+
+				if ( 'checkbox' === $the_type ) {
+					$the_field['default'] = ( 'yes' === get_option( 'wcj_checkout_custom_field_checkbox_default_' . $i ) ) ? 1 : 0;
 				}
 
 				$fields[ $the_section ][ $the_section . '_' . $the_key ] = $the_field;
@@ -390,7 +425,7 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 	/**
 	 * get_settings.
 	 *
-	 * @version 2.3.0
+	 * @version 2.3.8
 	 */
 	public function get_settings() {
 
@@ -463,6 +498,7 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 						'id'        => 'wcj_checkout_custom_field_enabled_' . $i,
 						'default'   => 'no',
 						'type'      => 'checkbox',
+						'css'       => 'min-width:300px;width:50%;',
 					),
 					array(
 						'title'     => '',
@@ -473,27 +509,56 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 						'options'     => array(
 							'text'       => __( 'Text', 'woocommerce-jetpack' ),
 							'textarea'   => __( 'Textarea', 'woocommerce-jetpack' ),
-							'number'     => __( 'Number', 'woocommerce-jetpack' ),//custom-todo - filter
+							'number'     => __( 'Number', 'woocommerce-jetpack' ),
 							'checkbox'   => __( 'Checkbox', 'woocommerce-jetpack' ),
-//							'file'       => __( 'File', 'woocommerce-jetpack' ),//todo
-							'datepicker' => __( 'Datepicker', 'woocommerce-jetpack' ),//custom (passed as `text`)
-							'timepicker' => __( 'Timepicker', 'woocommerce-jetpack' ),//custom (passed as `text`)
-							'select'     => __( 'Select', 'woocommerce-jetpack' ),//?
-							'radio'      => __( 'Radio', 'woocommerce-jetpack' ),//?
+//							'file'       => __( 'File', 'woocommerce-jetpack' ),
+							'datepicker' => __( 'Datepicker', 'woocommerce-jetpack' ),
+							'timepicker' => __( 'Timepicker', 'woocommerce-jetpack' ),
+							'select'     => __( 'Select', 'woocommerce-jetpack' ),
+							'radio'      => __( 'Radio', 'woocommerce-jetpack' ),
 							'password'   => __( 'Password', 'woocommerce-jetpack' ),
-							'country'    => __( 'Country', 'woocommerce-jetpack' ),//
-							'state'      => __( 'State', 'woocommerce-jetpack' ),//
-							'email'      => __( 'Email', 'woocommerce-jetpack' ),//
-							'tel'        => __( 'Phone', 'woocommerce-jetpack' ),//
+							'country'    => __( 'Country', 'woocommerce-jetpack' ),
+							'state'      => __( 'State', 'woocommerce-jetpack' ),
+							'email'      => __( 'Email', 'woocommerce-jetpack' ),
+							'tel'        => __( 'Phone', 'woocommerce-jetpack' ),
 						),
-						'css'       => 'width:200px;',
+						'css'       => 'min-width:300px;width:50%;',
 					),
 					array(
 						'title'     => '',
-						'desc'      => __( 'options (only if "select" or "radio" type is selected)', 'woocommerce-jetpack' ),
+						'desc'      => __( 'options (only if "select" or "radio" type is selected). One option per line', 'woocommerce-jetpack' ),
 						'id'        => 'wcj_checkout_custom_field_select_options_' . $i,
 						'default'   => '',
 						'type'      => 'textarea',
+						'css'       => 'min-width:300px;width:50%;',
+					),
+					array(
+						'title'     => '',
+						'id'        => 'wcj_checkout_custom_field_checkbox_yes_' . $i,
+						'desc'      => __( 'If checkbox is selected, set value for ON here', 'woocommerce-jetpack' ),
+						'type'      => 'text',
+						'default'   => __( 'Yes', 'woocommerce-jetpack' ),
+						'css'       => 'min-width:300px;width:50%;',
+					),
+					array(
+						'title'     => '',
+						'id'        => 'wcj_checkout_custom_field_checkbox_no_' . $i,
+						'desc'      => __( 'If checkbox is selected, set value for OFF here', 'woocommerce-jetpack' ),
+						'type'      => 'text',
+						'default'   => __( 'No', 'woocommerce-jetpack' ),
+						'css'       => 'min-width:300px;width:50%;',
+					),
+					array(
+						'title'     => '',
+						'id'        => 'wcj_checkout_custom_field_checkbox_default_' . $i,
+						'desc'      => __( 'If checkbox is selected, set default value here', 'woocommerce-jetpack' ),
+						'type'      => 'select',
+						'default'   => 'no',
+						'options'   => array(
+							'no'  => __( 'Not Checked', 'woocommerce-jetpack' ),
+							'yes' => __( 'Checked', 'woocommerce-jetpack' ),
+						),
+						'css'       => 'min-width:300px;width:50%;',
 					),
 					array(
 						'title'     => '',
@@ -501,6 +566,7 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 						'id'        => 'wcj_checkout_custom_field_required_' . $i,
 						'default'   => 'no',
 						'type'      => 'checkbox',
+						'css'       => 'min-width:300px;width:50%;',
 					),
 					array(
 						'title'     => '',
@@ -508,7 +574,7 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 						'id'        => 'wcj_checkout_custom_field_label_' . $i,
 						'default'   => '',
 						'type'      => 'textarea',
-						'css'       => 'width:200px;',
+						'css'       => 'min-width:300px;width:50%;',
 					),
 					/*array(
 						'title'     => '',
@@ -530,7 +596,7 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 						'id'        => 'wcj_checkout_custom_field_placeholder_' . $i,
 						'default'   => '',
 						'type'      => 'textarea',
-						'css'       => 'width:200px;',
+						'css'       => 'min-width:300px;width:50%;',
 					),
 
 					array(
@@ -545,7 +611,7 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 							'order'     => __( 'Order Notes', 'woocommerce-jetpack' ),
 							'account'   => __( 'Account', 'woocommerce-jetpack' ),
 						),
-						'css'       => 'width:200px;',
+						'css'       => 'min-width:300px;width:50%;',
 					),
 
 					array(
@@ -559,7 +625,7 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 							'form-row-first' => __( 'First', 'woocommerce-jetpack' ),
 							'form-row-last'  => __( 'Last', 'woocommerce-jetpack' ),
 						),
-						'css'       => 'width:200px;',
+						'css'       => 'min-width:300px;width:50%;',
 					),
 
 					array(
@@ -568,6 +634,7 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 						'id'        => 'wcj_checkout_custom_field_clear_' . $i,
 						'default'   => 'yes',
 						'type'      => 'checkbox',
+						'css'       => 'min-width:300px;width:50%;',
 					),
 
 					array(
@@ -578,7 +645,7 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 						'default'   => '',
 						'type'      => 'multiselect',
 						'class'     => 'chosen_select',
-						'css'       => 'width: 450px;',
+						'css'       => 'min-width:300px;width:50%;',
 						'options'   => $product_cats,
 					),
 
