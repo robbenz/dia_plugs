@@ -1,0 +1,928 @@
+msgid ""
+msgstr "MIME-Version: 1.0\n"
+
+#. Name.
+msgid "Profile Builder - front-end user registration, login and edit profile"
+msgstr ""
+
+#. Short description.
+msgid "Simple to use profile plugin allowing front-end login, user registration and edit profile by using shortcodes."
+msgstr ""
+
+#. Screenshot description.
+msgid "Basic Information - Profile Builder, front-end user registration plugin"
+msgstr ""
+
+#. Screenshot description.
+msgid "General Settings - Profile Builder, front-end user registration plugin"
+msgstr ""
+
+#. Screenshot description.
+msgid "Show/Hide Admin Bar"
+msgstr ""
+
+#. Screenshot description.
+msgid "Profile Builder - Manage Default User Fields (Add, Edit or Delete)"
+msgstr ""
+
+#. Screenshot description.
+msgid "Profile Builder - Drag &amp; Drop to Reorder User Profile Fields"
+msgstr ""
+
+#. Screenshot description.
+msgid "Register Form - Front-end User Registration Page"
+msgstr ""
+
+#. Screenshot description.
+msgid "User Login Page"
+msgstr ""
+
+#. Screenshot description.
+msgid "Edit User Profile Page"
+msgstr ""
+
+#. Screenshot description.
+msgid "Recover Password Page"
+msgstr ""
+
+#. Screenshot description.
+msgid "Profile Builder Login Widget"
+msgstr ""
+
+#. Found in description header.
+msgid "Front-end User Registration, Login, Edit Profile and Password Recovery Shortcodes"
+msgstr ""
+
+#. Found in description header.
+msgid "Profile Builder in your Language"
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>[wppb-edit-profile]</strong> - to grant users front-end access to their user profile (requires user to be logged in)."
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>[wppb-login]</strong> - to add a front-end login form."
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>[wppb-logout]</strong> - to add logout functionality."
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>[wppb-register]</strong> - register users via a front-end register form."
+msgstr ""
+
+#. Found in description list item.
+msgid "<strong>[wppb-recover-password]</strong> - to add a password recovery form."
+msgstr ""
+
+#. Found in description list item.
+msgid "drag &amp; drop to reorder user profile fields"
+msgstr ""
+
+#. Found in description list item.
+msgid "enable <strong>Email Confirmation</strong> (on registration users will receive a notification to confirm their email address)."
+msgstr ""
+
+#. Found in description list item.
+msgid "allow users to <strong>Log-in with their Username or Email</strong>"
+msgstr ""
+
+#. Found in description list item.
+msgid "enforce a <strong>minimum password length</strong> and <strong>minimum password strength</strong> (using the default WordPress password strength meter)"
+msgstr ""
+
+#. Found in description list item.
+msgid "assign users a specific role at registration (using <strong>[wppb-register role=\"desired_role\"]</strong> shortcode argument for the register form)"
+msgstr ""
+
+#. Found in description list item.
+msgid "redirect users after login, register and edit-profile using redirect_url shortcode argument ( e.g <strong>[wppb-login redirect_url=\"www.example.com\"]</strong> )"
+msgstr ""
+
+#. Found in description list item.
+msgid "add register and lost password links below the login form (using <strong>[wppb-login register_url=\"www.example.com\" lostpassword_url=\"www.example.com\"]</strong> shortcode arguments)"
+msgstr ""
+
+#. Found in description list item.
+msgid "customizable user login widget"
+msgstr ""
+
+#. Found in description list item.
+msgid "add a custom stylesheet/inherit values from the current theme or use the default one built into this plugin."
+msgstr ""
+
+#. Found in description list item.
+msgid "chose which user roles view the admin bar in the front-end of the website (Admin Bar Settings page)."
+msgstr ""
+
+#. Found in description list item.
+msgid "select which profile fields users can see/modify."
+msgstr ""
+
+#. Found in description list item.
+msgid "extended functionality available via <a href=\"http://www.cozmoslabs.com/profile-builder-add-ons/?utm_source=wp.org&amp;utm_medium=plugin-description-page&amp;utm_campaign=PBFree\">Add-ons</a>"
+msgstr ""
+
+#. Found in description list item.
+msgid "Create Extra User Fields (Heading, Input, Hidden-Input, Checkbox, Agree to Terms Checkbox, Radio Buttons, DatePicker, Textareas, WYSIWYG, reCAPTCHA, Upload fields, Selects, User Role Select, Country Selects, Timezone selects, Avatar Upload)"
+msgstr ""
+
+#. Found in description list item.
+msgid "Add Avatar Upload for users"
+msgstr ""
+
+#. Found in description list item.
+msgid "Front-end User Listing (fully customizable, sorting included)"
+msgstr ""
+
+#. Found in description list item.
+msgid "Create Multiple User Listings"
+msgstr ""
+
+#. Found in description list item.
+msgid "Custom Redirects"
+msgstr ""
+
+#. Found in description list item.
+msgid "Multiple Registration Forms (set up multiple registration forms with different profile fields for certain user roles)"
+msgstr ""
+
+#. Found in description list item.
+msgid "Multiple Edit Profile Forms"
+msgstr ""
+
+#. Found in description list item.
+msgid "Admin Approval"
+msgstr ""
+
+#. Found in description list item.
+msgid "Email Customizer (Personalize all emails sent to your users or admins; customize default WordPress registration email)"
+msgstr ""
+
+#. Found in description list item.
+msgid "reCAPTCHA on user registration form"
+msgstr ""
+
+#. Found in description list item.
+msgid "Advanced Modules (e.g. custom redirects, user listing, multiple registration forms etc.)"
+msgstr ""
+
+#. Found in description list item.
+msgid "Access to support forums and documentation"
+msgstr ""
+
+#. Found in description list item.
+msgid "1 Year of Updates / Priority Support"
+msgstr ""
+
+#. Found in description paragraph.
+msgid "<strong>Profile Builder is WordPress user registration done right.</strong>"
+msgstr ""
+
+#. Found in description paragraph.
+msgid ""
+"It lets you customize your website by adding a front-end menu for all your users, \n"
+"giving them a more flexible way to modify their user profile or register users (front-end user registration).\n"
+"Users with administrator rights can customize basic user fields or add custom user fields to the front-end forms."
+msgstr ""
+
+#. Found in description paragraph.
+msgid ""
+"To achieve this, simply create a new page and give it an intuitive name(i.e. Edit Profile).\n"
+"Now all you need to do is add the following shortcode: [wppb-edit-profile].\n"
+"Publish the page and you are done!"
+msgstr ""
+
+#. Found in description paragraph.
+msgid "You can use the following shortcode list:"
+msgstr ""
+
+#. Found in description paragraph.
+msgid "Users with administrator rights have access to the following features:"
+msgstr ""
+
+#. Found in description paragraph.
+msgid "<strong>PROFILE BUILDER PRO</strong>"
+msgstr ""
+
+#. Found in description paragraph.
+msgid "The <a href=\"http://www.cozmoslabs.com/wordpress-profile-builder/?utm_source=wp.org&amp;utm_medium=plugin-description-page&amp;utm_campaign=PBFree\">Pro version</a> has the following extra features:"
+msgstr ""
+
+#. Found in description paragraph.
+msgid "<a href=\"http://www.cozmoslabs.com/wordpress-profile-builder/?utm_source=wp.org&amp;utm_medium=plugin-description-page&amp;utm_campaign=PBFree\">Find out more about Profile Builder PRO</a>"
+msgstr ""
+
+#. Found in description paragraph.
+msgid "<strong>Profile Builder Add-ons</strong>"
+msgstr ""
+
+#. Found in description paragraph.
+msgid "For more functionality check out Profile Builder <a href=\"http://www.cozmoslabs.com/profile-builder-add-ons/?utm_source=wp.org&amp;utm_medium=plugin-description-page&amp;utm_campaign=PBFree\">Add-ons page</a>"
+msgstr ""
+
+#. Found in description paragraph.
+msgid ""
+"We're focusing on translating Profile Builder in as many languages as we can. So far, the translations for 10 languages are almost complete, but we still need help on a lot of other languages, so please join us at <a href=\"http://translate.cozmoslabs.com/projects/profilebuilder\">translate.cozmoslabs.com.</a>\n"
+"You will be able to download all the <a href=\"http://translate.cozmoslabs.com/projects/profilebuilder\">available language packs</a> as well as help us translate Profile Builder in your language."
+msgstr ""
+
+#. Found in description paragraph.
+msgid ""
+"NOTE:\n"
+"This plugin adds/removes user fields in the front-end. Both default and extra profile fields will be visible in the back-end as well."
+msgstr ""
+
+#. Found in installation list item.
+msgid "Upload the profile-builder folder to the '/wp-content/plugins/' directory"
+msgstr ""
+
+#. Found in installation list item.
+msgid "Activate the plugin through the 'Plugins' menu in WordPress"
+msgstr ""
+
+#. Found in installation list item.
+msgid "Create a new page and use one of the shortcodes available. Publish the page and you're done!"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed issue that prevented  the value 0 to be set as default value"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed xss vulnerability"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed issue that was preventing to change back to original email address in edit-profile, after changing to a new one"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Removed default value option from PB Password and Repeat Password fields"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Changed name of japanese translation file"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed updating edit-profile form without email field, when allowing users to login only with email"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Translation Updates"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed website field not saving on registering with email confirmation"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed a potential security vulnerability"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Removed condition in edit-users dropdown to allow custom ones"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed notice that was thrown in WordPress 4.3 related to WP_Widget constructor being deprecated in login widget."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Changed recover password link from using username to using the user-nicename"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "We no longer strip spaces from usernames on singele-site registration when Email Confirmation is on and we also do not allow usernames with spaces on multisite installs"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Changed message in Manage Fields sidebar"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed issue that prevented sometimes 0 values to be saved"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Add attribute filter to each Profile Builder form input: apply_filters( 'wppb_extra_attribute', '', $field )"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Added Japanese translation"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Updated translation files"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Added filter to wppb_curpageurl() function to easily modify returned URL: apply_filters('wppb_curpageurl', $pageURL)"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed a issue with default fields not having labels and descriptions localized sometimes"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Removed link to author page in logged in user shortcode"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Shortcodes on Basic Info page should no longer be translated"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Replaced home_url with site_url in login.php"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed an error when admin was editing another user from the front end sometimes we got 'This email is already reserved to be used soon.'"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Select a User to edit (as admin) adds HTML special char (&amp;) in URL when should not"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Added filters that can be used to stop emails being sent to users or admins"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Redirect registration form after login to same page. Also added a filter on the url"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Added reCaptcha support for default login, register and lost password forms as well as PB forms + our own login widget"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Added RTL support for Profile Buider Forms"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed a problem regarding required fields"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Added filter on add custom field values on user signup 'wppb_add_to_user_signup_form_meta'"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed issue where username was sent instead of email when Login with Email was set in the user emails"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Updated translation files."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Bulk approve email in Email Confirmation now functions as expected"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Now the Addons Page in Profile Builder is compatible with Multisite."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Added filter to add extra css classes directly on the fields input: apply_filters( 'wppb_fields_extra_css_class', '', $field )"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "The Show Meta button in the Email Confirmation admin screen no longer throws js errors when site in other language."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed bug that was preventing Checkboxes, Selects and Radios to not save correctly if they had special chars in their values"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Added compatibility with \"Captcha\" plugin"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed issue on Add-Ons Page that prevented addons to be activated right after install"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed issue on multisite where Adminstrator roles were able to edit other users from frontend"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Added filters to edit other users dropdown:'wppb_display_edit_other_users_dropdown' and 'wppb_edit_profile_user_dropdown_role'"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed vulnerability regarding activating/deactivationg addons through ajax. We added nonces and permission checks."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Added a filter in which we can change the classes on the li element for fields: 'wppb_field_css_class'"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed automatic login on registration when filtering the random username generated when login with email is active"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed bug that prevented non-administrator roles to save fields in their profile on the admin area"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Added Spanish translation"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Styled the alerts and errors in registration/edit profile, above the forms"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Added line in footer that asks users to leave a review if they enjoyed the plugin"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed bug in registration forms that allowed users to create accounts even when they removed the email box from the DOM"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed bug that was outputting wrong successful user registration message on multisite"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "We now can add fields from Addons that will save on user activation"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Now WPPB_PLUGIN_DIR is pointing to the correct directory"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Created Add-On Page in Profile Builder"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Added support for Twenty Fifteen theme to better target inputs"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Add support for \"redirect_url\" parameter to Login shortcode (will do the same thing as \"redirect\" - for consistency)"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Added \"redirect_url\" parameter to Register and Edit-profile shortcodes"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Added username validation for illegal characters"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed wp_mail() From headers being set sitewide"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Added option to Log In with either Username or Email."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Added default values for \"Logout\" shortcode so it displays even if you don't pass any arguments to it."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed bug that was causing the username to be sent instead of the email when login with email was set to true in the default registration emails."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed bug in Password Reset email when Login with email was on."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "The \"This email is already reserved to be used soon\" error wasn't appearing on single site when Email Confirmation was on. Now it does when it is the case."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed bug that was causing an upload incompatibility with WordPress media uploader."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed bug that was causing Password strength and Password length error messages to not be translatable."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Interface changes to forms in admin area on Profile Builder Pages."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Added possibility to edit other users from the front end edit form when an admin is logged in."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Added a popup in unconfirmed email user listing in admin area where the admin can see the users meta information."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Add logout shortcode and menu link to Profile Builder."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed problem that when Email Confirmation was active the password in the registration emails was empty. We now have a placeholder for when we can't send the actual password."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Added 'wppb_login_form_args' filter to filter wp_login_form() arguments."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Added css classes to loged in message links so we can style."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed bug that was allowing us to change meta_name on un-editable fields:First Name, Last Name etc."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed \"Display Name Publicly as” field on front-end."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Now User Email Confirmation works on multisite as expected."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed bug that was throwing “This email is already reserved to be used soon” ERROR on Edit Profile form on multisite."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed bug that caused metaboxes and the Profile Builder page to appeared for roles that shouldn't have."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Added icon with tooltip on registration pages 'Users can register themselves or you can manually create users here' message"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Removed some php notices from the code-base"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Improved theme compatibility for the submit buttons inside the Profile Builder forms"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Removed UL dots from Register form in Chrome, Safari"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed a bug with checkbox field that didn't pass the required if the value of the checkbox contained spaces"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "When email confirmation is enabled we no longer can send the selected password via email because we now store the hased password inside wp-signups table and not a encoded version of it. This was done to improve security"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed problem that was causing \"Insert into post\" image button not to work"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed Fatal error when having both Free and Premium versions activated."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Removing the meta name for extra fields is no longer possible"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Added translation files"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Added notification to enable user registration via Profile Builder (Anyone can register checkbox)."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Add register_url and lostpassword_url parameters to login shortcode."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Added filter to allow changing Lost Password link in login shortcode."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Added $account_name as a parameter in the wppb_register_success_message filter"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed typo in password strength meeter."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed bug that made radio buttons field types not to throw error when they are required"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed XSS security vulnerability in fallback-page.php"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Reintroduced the filters:'wppb_generated_random_username', 'wppb_userlisting_extra_meta_email' and 'wppb_userlisting_extra_meta_user_name'"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed the bug when changing the password in a edit profile form we were logged out"
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Brand new user interface."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Drag &amp; drop to reorder User Profile Fields."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "More flexibility for Managing Default User Fields."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Better Security by Enforcing Minimum Password Length and Minimum Password Strength on all forms (front-end and back-end)."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "NOTE: upgrading from Profile Builder 1.1.x to 2.0.2 might make some of your plugin customization (if you have any ) not work because in the restructuring we had to drop some of the filters from 1.1.x."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Added stripslashes to register shortcode."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Sanitized forms against XSS exploits."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Minor changes in the readme and index files."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Changes weren't saving on the Edit Profile page when profile was not fully updated."
+msgstr ""
+
+#. Found in changelog list item, changelog paragraph.
+msgid "Minor changes to the readme file."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Fixed a few notices in the plugin."
+msgstr ""
+
+#. Found in changelog list item.
+msgid "Emergency security update regarding the password recovery feature."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Improved some of the queries meant to select users at certain points, hidden input value on front-end (Pro version) and the remember me checkbox on the login page."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Small changes to the index.php file"
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Fixed some bugs which only appeared in WPMU sites."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Minor changes to the readme.txt file."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Added activation_url and activation_link to the \"Email Customizer\" feature (pro). Also, once the \"Email Confirmation\" feature is activated, an option will appear to select the registration page for the \"Resend confirmation email\" feature, which was also added to the back-end userlisting."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Minor changes in the plugin's readme file and updated the screenshots."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Minor changes in the plugin's readme file."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Improved the userlisting feature in the Pro version."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Fixed \"Edit Profile\" bug and impred the \"Admin Approval\" default listing (in the paid versions)."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Improved a few existing features (like WPML compatibility), and added a new feature: login with email address."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid ""
+"Improved the \"Email Confirmation\" feature and a few other functions.\n"
+"Added new options for the \"Userlisting\" feature (available in the Pro version of Profile Buildeer).\n"
+"Added translations: persian (thanks to Ali Mirzaei, info@alimir.ir)"
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Improved a few existing functions."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Fixed a few warnings on the register page."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Activation bug fixed."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Added a few improvements and fixed a few bugs."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Email Confirmation bug on WPMU fixed."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Security issue fixed regarding the \"Email Confirmation\" feature"
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Added a fix (suggested by http://wordpress.org/support/profile/maximinime) regarding the admin bar not displaying properly in some instances."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Added support for WP 3.5"
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Separated some of the plugin's functions into separate files. Also fixed a few bugs."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Fixed function where it wouldn't create the _signups table in the free version."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Error fixed."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Minor updates to the plugin files."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Minor changes to the plugin."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Changes to the readme file."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Fixed few warnings."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Minor changes"
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Different security issues fixed with other updates."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Wordpress 3.3 support"
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Consecutive bugfixes."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Compatibility fix for WP version 3.3"
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Minor changes to different parts of the plugin. Also updated the english translation."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Minor changes to readme file."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid ""
+"Added the possibility to set the default fields as required (only works in the front end for now), and added a lot of new filters for a better and easier way to personalize the plugin. Also added a recover password feature (shortcode) to be in tune with the rest of the theme.\n"
+"Added translations:\n"
+"*italian (thanks to Gabriele, globalwebadvices@gmail.com)\n"
+"*updated the english translation"
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Minor modification in the readme file."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Minor upload bug on WP repository."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid ""
+"Added translations:\n"
+"*czech (thanks to Martin Jurica, martin@jurica.info)\n"
+"*updated the english translation"
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid ""
+"Added the possibility to set up the default user-role on registration; by adding the role=\"role_name\" argument (e.g. [wppb-register role=\"editor\"]) the role is automaticly set to all new users. \n"
+"Added translations:\n"
+"*norvegian (thanks to Havard Ulvin, haavard@ulvin.no)\n"
+"*dutch (thanks to Pascal Frencken, pascal.frencken@dedeelgaard.nl)\n"
+"*german (thanks to Simon Stich, simon@1000ff.de)\n"
+"*spanish (thanks to redywebs, www.redywebs.com)"
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Minor bugfix."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid ""
+"Added translations to: \n"
+"*hungarian(thanks to Peter VIOLA, info@violapeter.hu)\n"
+"*french(thanks to Sebastien CEZARD, sebastiencezard@orange.fr)"
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid ""
+"Bugfixes/enhancements:\n"
+"*login page now automaticly refreshes itself after 1 second, a little less annoying than clicking the refresh button manually\n"
+"*fixed bug where translation didn't load like it should\n"
+"*added new user notification: the admin will now know about every new subscriber\n"
+"*fixed issue where adding one or more spaces in the checkbox options list, the user can't save values."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Added a new user-interface (borrowed from the awesome plugin OptionTree created by Derek Herman), and bugfixes."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid ""
+"Bugfix - The wp_update_user attempts to clear and reset cookies if it's updating the password.\n"
+" Because of that we get \"headers already sent\". Fixed by hooking into the init."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid ""
+"Bugfix - On the edit profile page the website field added a new http:// everytime you updated your profile.\n"
+"Bugfix/ExtraFeature - Add support for shortcodes to be run in a text widget area."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Apparently the WordPress.org svn converts my EOL from Windows to Mac and because of that you get \"The plugin does not have a valid header.\""
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "You can now actualy install the plugin. All because of a silly line break."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Still no Change."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "No Change."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Small changes."
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Changes to the ReadMe File"
+msgstr ""
+
+#. Found in changelog paragraph.
+msgid "Added the posibility of displaying/hiding default WordPress information-fields, and to modify basic layout."
+msgstr ""
+
+#. Found in faq header.
+msgid "I navigated away from Profile Builder and now I can�t find it anymore; where is it?"
+msgstr ""
+
+#. Found in faq header.
+msgid "Why do the default WordPress user fields still show up in the back-end?"
+msgstr ""
+
+#. Found in faq header.
+msgid "I can’t find a question similar to my issue; Where can I find support?"
+msgstr ""
