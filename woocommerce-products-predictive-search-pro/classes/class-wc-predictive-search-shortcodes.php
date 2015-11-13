@@ -316,7 +316,7 @@ class WC_Predictive_Search_Shortcodes
             </div>
             <div class="ps_more_result" id="ps_no_result_popup"><em><?php wc_ps_ict_t_e( 'No Fetching Result Text', __('No Results to Show', 'woops') ); ?></em></div>
             <div id="ps_footer_container">
-                <p style="float:left;margin:0;">Searching For Your Part!</p>
+              <p style="float:left;margin:0;">Searching For Your Part!</p>
             </div>
 		</div>
         <script type="text/javascript">
@@ -326,9 +326,6 @@ class WC_Predictive_Search_Shortcodes
 		});
 		})(jQuery);
 		</script>
-
-
-
 		<?php
 			
 			$output = ob_get_clean();

@@ -140,6 +140,9 @@ class WC_Predictive_Search_Global_Settings extends WC_Predictive_Search_Admin_UI
 
 		if ( isset( $_POST['bt_save_settings'] ) ) {
 			flush_rewrite_rules();
+		} elseif ( 1 == get_option( 'a3rev_woo_predictivesearch_just_confirm', 0 ) ) {
+			delete_option( 'a3rev_woo_predictivesearch_just_confirm' );
+			flush_rewrite_rules();
 		}
 	}
 
@@ -360,11 +363,45 @@ class WC_Predictive_Search_Global_Settings extends WC_Predictive_Search_Admin_UI
 	}
 
 	public function predictive_search_synch_data() {
+		global $wc_ps_posts_data;
 	?>
 		<tr valign="top" class="">
 			<th class="titledesc" scope="row"><label><?php _e('Sync Search Data', 'woops');?></label></th>
 			<td class="forminp">
-				<input type="submit" class="button button-primary" name="predicitve-search-synch-wp-data" value="<?php _e('Sync Now', 'woops');?>" />
+				<input type="submit" class="button button-primary" name="predicitve-search-synch-wp-data" value="<?php _e('Sync Now', 'woops');?>" /><br />
+				<p>
+					<span class="a3-ps-synched-title"><?php _e('You have synced', 'woops');?>:</span>
+					<span class="a3-ps-synched-products">
+						<?php
+						$total_products = $wc_ps_posts_data->get_total_items_synched('product');
+						if ( $total_products > 0 ) {
+							echo sprintf( _n( '%s Product', '%s Products', $total_products, 'woops' ), number_format( $total_products ) );
+						} else {
+							echo sprintf( __( '%s Product', 'woops' ), $total_products );
+						}
+						?>
+					</span>-
+					<span class="a3-ps-synched-posts">
+						<?php
+						$total_posts = $wc_ps_posts_data->get_total_items_synched('post');
+						if ( $total_posts > 0 ) {
+							echo sprintf( _n( '%s Post', '%s Posts', $total_posts, 'woops' ), number_format( $total_posts ) );
+						} else {
+							echo sprintf( __( '%s Post', 'woops' ), $total_posts );
+						}
+						?>
+					</span>-
+					<span class="a3-ps-synched-pages">
+						<?php
+						$total_pages = $wc_ps_posts_data->get_total_items_synched('page');
+						if ( $total_pages > 0 ) {
+							echo sprintf( _n( '%s Page', '%s Pages', $total_pages, 'woops' ), number_format( $total_pages ) );
+						} else {
+							echo sprintf( __( '%s Page', 'woops' ), $total_pages );
+						}
+						?>
+					</span>
+				</p>
 			</td>
 		</tr>
 	<?php
@@ -372,6 +409,17 @@ class WC_Predictive_Search_Global_Settings extends WC_Predictive_Search_Admin_UI
 
 	public function include_script() {
 	?>
+	<style type="text/css">
+		.a3-ps-synched-products {
+			color: #96587d;
+		}
+		.a3-ps-synched-posts {
+			color: #7ad03a;
+		}
+		.a3-ps-synched-pages {
+			color: #0073aa;
+		}
+	</style>
 <script>
 (function($) {
 

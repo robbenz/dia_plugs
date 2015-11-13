@@ -50,7 +50,7 @@ class WC_Predictive_Search_Legacy_API {
 
 		$current_lang = '';
 		if ( class_exists('SitePress') ) {
-			$current_lang = $_REQUEST['lang'];
+			$current_lang = $_REQUEST['ps_lang'];
 		}
 
 		$rs_items = array();
@@ -250,7 +250,7 @@ class WC_Predictive_Search_Legacy_API {
 
 		$current_lang = '';
 		if ( class_exists('SitePress') ) {
-			$current_lang = $_REQUEST['lang'];
+			$current_lang = $_REQUEST['ps_lang'];
 		}
 
 		$psp = 1;

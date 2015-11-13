@@ -9,8 +9,7 @@ class WC_Predictive_Search_Synch
 	public function __construct() {
 
 		// Synch for post
-		add_action( 'save_post', array( $this, 'synch_save_post' ), 102, 2 );
-		add_action( 'delete_post', array( $this, 'synch_delete_post' ) );
+		add_action( 'init', array( $this, 'sync_process_post' ), 1 );
 
 		// Synch for Product Category
 		add_action( 'created_product_cat', array( $this, 'synch_save_product_cat' ), 10, 2 );
@@ -32,6 +31,11 @@ class WC_Predictive_Search_Synch
 		 * do_action( 'mysql_inserted_post', $post_id );
 		 */
 		add_action( 'mysql_inserted_post', array( $this, 'synch_mysql_inserted_post' ) );
+	}
+
+	public function sync_process_post() {
+		add_action( 'save_post', array( $this, 'synch_save_post' ), 102, 2 );
+		add_action( 'delete_post', array( $this, 'synch_delete_post' ) );
 	}
 
 	public function migrate_posts() {
@@ -76,7 +80,10 @@ class WC_Predictive_Search_Synch
 			foreach ( $all_posts as $item ) {
 				$post_id       = $item->ID;
 
-				$wc_ps_posts_data->insert_item( $post_id, $item->post_title, $item->post_type );
+				$item_existed = $wc_ps_posts_data->get_item( $post_id );
+				if ( NULL == $item_existed ) {
+					$wc_ps_posts_data->insert_item( $post_id, $item->post_title, $item->post_type );
+				}
 
 				if ( 'yes' == $woocommerce_search_focus_enable && 'none' != $woocommerce_search_focus_plugin ) {
 
@@ -98,7 +105,10 @@ class WC_Predictive_Search_Synch
 				if ( 'product' == $item->post_type ) {
 					$sku = get_post_meta( $post_id, '_sku', true );
 					if ( ! empty( $sku ) && '' != trim( $sku ) ) {
-						$wc_ps_product_sku_data->insert_item( $post_id, $sku );
+						$item_existed = $wc_ps_product_sku_data->get_item( $post_id );
+						if ( NULL == $item_existed ) {
+							$wc_ps_product_sku_data->insert_item( $post_id, $sku );
+						}
 					}
 				}
 			}
@@ -122,7 +132,10 @@ class WC_Predictive_Search_Synch
 
 		if ( $all_categories ) {
 			foreach ( $all_categories as $item ) {
-				$wc_ps_product_categories_data->insert_item( $item->term_id, $item->term_taxonomy_id, $item->name );
+				$item_existed = $wc_ps_product_categories_data->get_item( $item->term_id );
+				if ( NULL == $item_existed ) {
+					$wc_ps_product_categories_data->insert_item( $item->term_id, $item->term_taxonomy_id, $item->name );
+				}
 			}
 		}
 	}
@@ -142,7 +155,10 @@ class WC_Predictive_Search_Synch
 
 		if ( $all_tags ) {
 			foreach ( $all_tags as $item ) {
-				$wc_ps_product_tags_data->insert_item( $item->term_id, $item->term_taxonomy_id, $item->name );
+				$item_existed = $wc_ps_product_tags_data->get_item( $item->term_id );
+				if ( NULL == $item_existed ) {
+					$wc_ps_product_tags_data->insert_item( $item->term_id, $item->term_taxonomy_id, $item->name );
+				}
 			}
 		}
 	}
@@ -306,7 +322,10 @@ class WC_Predictive_Search_Synch
 			$yoast_keyword = get_post_meta( $post_id, '_yoast_wpseo_focuskw', true );
 			$wpseo_keyword = get_post_meta( $post_id, '_aioseop_keywords', true );
 
-			$wc_ps_posts_data->insert_item( $post_id, $item->post_title, $item->post_type );
+			$item_existed = $wc_ps_posts_data->get_item( $post_id );
+			if ( NULL == $item_existed ) {
+				$wc_ps_posts_data->insert_item( $post_id, $item->post_title, $item->post_type );
+			}
 
 			if ( ! empty( $yoast_keyword ) && '' != trim( $yoast_keyword ) ) {
 				$wc_ps_postmeta_data->add_item_meta( $post_id, '_yoast_wpseo_focuskw', $yoast_keyword );
@@ -319,7 +338,10 @@ class WC_Predictive_Search_Synch
 			if ( 'product' == $item->post_type ) {
 				$sku = get_post_meta( $post_id, '_sku', true );
 				if ( ! empty( $sku ) && '' != trim( $sku ) ) {
-					$wc_ps_product_sku_data->insert_item( $post_id, $sku );
+					$item_existed = $wc_ps_product_sku_data->get_item( $post_id );
+					if ( NULL == $item_existed ) {
+						$wc_ps_product_sku_data->insert_item( $post_id, $sku );
+					}
 				}
 			}
 		}

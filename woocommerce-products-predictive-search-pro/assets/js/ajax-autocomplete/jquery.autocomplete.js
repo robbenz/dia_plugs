@@ -21,6 +21,7 @@ $.fn.extend({
 		var ps_cat_in = this.data('ps-cat_in');
 		var ps_popup_search_in = this.data('ps-popup_search_in');
 		var ps_show_price = this.data('ps-show_price');
+		var ps_lang = this.data('ps-lang');
 		
 		var ps_extra_parameters = { 
 			'row': ps_row, 
@@ -28,6 +29,10 @@ $.fn.extend({
 			'show_price': ps_show_price
 		};
 		
+		if ( typeof ps_lang != 'undefined' && ps_lang != '' ) {
+			ps_extra_parameters.ps_lang = ps_lang;
+		}
+
 		if ( typeof ps_cat_in != 'undefined' && ps_cat_in != '' ) {
 			ps_extra_parameters.cat_in = ps_cat_in;
 		} else {

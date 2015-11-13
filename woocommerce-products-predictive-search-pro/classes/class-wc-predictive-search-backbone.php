@@ -46,8 +46,9 @@ class WC_Predictive_Search_Hook_Backbone
 		</div>
 	</script>
     
+    
     <?php
-		wp_register_script( 'ajax-woo-autocomplete-script', WOOPS_JS_URL . '/ajax-autocomplete/jquery.autocomplete.js', array(), '3.0.0', true );
+		wp_register_script( 'ajax-woo-autocomplete-script', WOOPS_JS_URL . '/ajax-autocomplete/jquery.autocomplete.js', array(), '3.0.3', true );
 		wp_register_script( 'backbone.localStorage', WOOPS_JS_URL . '/backbone.localStorage.js', array() , '1.1.9', true );
 		wp_register_script( 'wc-predictive-search-backbone', WOOPS_JS_URL . '/predictive-search.backbone.js', array(), '1.0.0', true );
 		wp_enqueue_script( 'jquery' );
@@ -59,9 +60,6 @@ class WC_Predictive_Search_Hook_Backbone
 		global $wc_ps_legacy_api;
 		$legacy_api_url = $wc_ps_legacy_api->get_legacy_api_url();
 		$legacy_api_url = add_query_arg( 'action', 'get_result_popup', $legacy_api_url );
-		if ( class_exists( 'SitePress' ) ) {
-			$legacy_api_url = add_query_arg( 'lang', ICL_LANGUAGE_CODE, $legacy_api_url );
-		}
 		$min_characters = get_option( 'woocommerce_search_min_characters', 1 );
 		$delay_time = get_option( 'woocommerce_search_delay_time', 600 );
 		wp_localize_script( 'wc-predictive-search-popup-backbone', 'wc_ps_vars', apply_filters( 'wc_ps_vars', array( 'minChars' => $min_characters, 'delay' => $delay_time, 'legacy_api_url' => $legacy_api_url, 'search_page_url' => get_permalink( $woocommerce_search_page_id ), 'permalink_structure' => get_option('permalink_structure' ) ) ) );
@@ -156,18 +154,16 @@ class WC_Predictive_Search_Hook_Backbone
 		{{ } }}
 	</script>
     
+    
     <?php
 		wp_enqueue_script( 'jquery' );
 		wp_enqueue_script( 'underscore' );
 		wp_enqueue_script( 'backbone' );
-		wp_enqueue_script( 'wc-predictive-search-results-backbone', WOOPS_JS_URL . '/predictive-search-results.backbone.min.js', array( 'wc-predictive-search-backbone' ), '3.0.0', true );
+		wp_enqueue_script( 'wc-predictive-search-results-backbone', WOOPS_JS_URL . '/predictive-search-results.backbone.min.js', array( 'wc-predictive-search-backbone' ), '3.0.3', true );
 		
 		global $wc_ps_legacy_api;
 		$legacy_api_url = $wc_ps_legacy_api->get_legacy_api_url();
 		$legacy_api_url = add_query_arg( 'action', 'get_results', $legacy_api_url );
-		if ( class_exists( 'SitePress' ) ) {
-			$legacy_api_url = add_query_arg( 'lang', ICL_LANGUAGE_CODE, $legacy_api_url );
-		}
 		$legacy_api_url .= '&q=' . $search_keyword;
 		if ( $cat_in != '' ) $legacy_api_url .= '&cat_in=' . $cat_in;
 		else $legacy_api_url .= '&cat_in=all';
@@ -299,7 +295,7 @@ class WC_Predictive_Search_Hook_Backbone
 			$default_navigate = 'keyword/'.urlencode($search_keyword).'/search-in/'.$ps_current_search_in.'/cat-in/'.$cat_in.'/search-other/'.$search_other;
 		}
 
-		wp_localize_script( 'wc-predictive-search-results-backbone', 'wc_ps_results_vars', apply_filters( 'wc_ps_results_vars', array( 'default_navigate' => $default_navigate, 'search_in' => $ps_current_search_in, 'legacy_api_url' => $legacy_api_url, 'search_page_path' => $search_page_path, 'permalink_structure' => get_option('permalink_structure' ) ) ) );
+		wp_localize_script( 'wc-predictive-search-results-backbone', 'wc_ps_results_vars', apply_filters( 'wc_ps_results_vars', array( 'default_navigate' => $default_navigate, 'search_in' => $ps_current_search_in, 'ps_lang' => $current_lang, 'legacy_api_url' => $legacy_api_url, 'search_page_path' => $search_page_path, 'permalink_structure' => get_option('permalink_structure' ) ) ) );
 	}
 }
 

@@ -156,6 +156,18 @@ class WC_PS_Posts_Data
 	}
 
 	/**
+	 * Get Total Items Synched
+	 */
+	public function get_total_items_synched( $post_type = '' ) {
+		global $wpdb;
+		if ( '' == trim( $post_type ) ) {
+			return $wpdb->get_var( "SELECT COUNT(post_id) FROM {$wpdb->ps_posts} " );
+		} else {
+			return $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(post_id) FROM {$wpdb->ps_posts} WHERE post_type = %s ", $post_type ) );
+		}
+	}
+
+	/**
 	 * Delete Predictive Search Post
 	 */
 	public function delete_item( $post_id ) {

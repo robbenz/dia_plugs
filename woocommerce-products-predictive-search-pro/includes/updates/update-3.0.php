@@ -16,7 +16,10 @@ global $wc_ps_keyword_data;
 $list_old_ps_keywords = $wpdb->get_results( "SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE meta_key= '_predictive_search_focuskw' AND meta_value != '' " );
 if ( is_array( $list_old_ps_keywords ) && count( $list_old_ps_keywords ) > 0 ) {
 	foreach ( $list_old_ps_keywords as $post_data ) {
-		$wc_ps_keyword_data->insert_item( $post_data->post_id, $post_data->meta_value );
+		$item_existed = $wc_ps_keyword_data->get_item( $post_data->post_id );
+		if ( NULL == $item_existed ) {
+			$wc_ps_keyword_data->insert_item( $post_data->post_id, $post_data->meta_value );
+		}
 	}
 }
 

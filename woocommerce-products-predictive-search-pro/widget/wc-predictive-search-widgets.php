@@ -113,17 +113,20 @@ class WC_Predictive_Search_Widgets extends WP_Widget
 			if (get_option('permalink_structure') == '') {
 			?>
             <input type="hidden" name="page_id" value="<?php echo $woocommerce_search_page_id; ?>"  />
-             <?php if ( class_exists('SitePress') ) { ?>
+            <?php if ( class_exists('SitePress') ) { ?>
             <input type="hidden" name="lang" value="<?php echo ICL_LANGUAGE_CODE; ?>"  />
 			<?php } ?>
             <?php } ?>
    			<div class="ctr_search">
-			<input type="text" tabindex="13" id="pp_course_<?php echo $id; ?>" onblur="if (this.value == '') {this.value = '<?php echo esc_js( $search_box_text ); ?>';}" onfocus="if (this.value == '<?php echo esc_js( $search_box_text ); ?>') {this.value = '';}" value="<?php echo esc_attr( $search_box_text ); ?>" name="rs" class="txt_livesearch predictive_search_input" 
+	<input type="text" tabindex="13" id="pp_course_<?php echo $id; ?>" onblur="if (this.value == '') {this.value = '<?php echo esc_js( $search_box_text ); ?>';}" onfocus="if (this.value == '<?php echo esc_js( $search_box_text ); ?>') {this.value = '';}" value="<?php echo esc_attr( $search_box_text ); ?>" name="rs" class="txt_livesearch predictive_search_input"
             data-ps-id="<?php echo $id; ?>"
             data-ps-default_text="<?php echo esc_attr( $search_box_text ); ?>" 
             data-ps-row="<?php echo esc_attr( $row ); ?>" 
             data-ps-text_lenght="<?php echo esc_attr( $text_lenght ); ?>" 
             data-ps-cat_in="<?php echo esc_attr( $cat_in ); ?>"
+            <?php if ( class_exists('SitePress') ) { ?>
+            data-ps-lang="<?php echo ICL_LANGUAGE_CODE; ?>"
+			<?php } ?>
             <?php if ( $search_in != '' ) { ?>data-ps-popup_search_in="<?php echo esc_attr( $search_in ); ?>" <?php } ?>
             <?php if ( count( $search_list ) > 0 ) { ?>data-ps-search_in="<?php echo esc_attr( $search_list[0] ); ?>" <?php } ?>
             <?php if ( count( $search_list ) > 0 ) { ?>data-ps-search_other="<?php echo esc_attr( implode(",", $search_list) ); ?>" <?php } ?>
@@ -133,7 +136,7 @@ class WC_Predictive_Search_Widgets extends WP_Widget
             </div>
             <input type="hidden" name="search_in" value="<?php echo $search_list[0]; ?>"  />
             <input type="hidden" name="cat_in" value="<?php echo esc_attr( $cat_in ); ?>"  />
-            <input type="hidden" name="search_other" value="<?php echo implode(",", $search_list); ?>"  />
+            <input type="hidden" name="search_other" value="<?php echo implode(",", $search_list); ?>"  />          
             <!-- begin BENZ hack -->
             <span data-ps-id="<?php echo $id;?>" class="bt_search predictive_search_bt" id="bt_pp_search_100"></span>
             <!-- end BENZ hack -->

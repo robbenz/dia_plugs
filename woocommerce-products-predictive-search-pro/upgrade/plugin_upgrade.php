@@ -212,7 +212,10 @@ class WC_Predictive_Search_Upgrade
 	}
 	
 	public static function disable_ssl_verify($args, $url) {
-		if ( stristr($url, WOO_PREDICTIVE_SEARCH_MANAGER_URL) !== false ) {
+		if ( stristr($url, WOO_PREDICTIVE_SEARCH_MANAGER_URL . "/download.php" ) !== false ) {
+			$args['timeout'] = 60;
+			$args['sslverify'] = false;
+		} elseif ( stristr($url, WOO_PREDICTIVE_SEARCH_MANAGER_URL) !== false ) {
 			$args['timeout'] = 8;
 			$args['sslverify'] = false; 
 		}

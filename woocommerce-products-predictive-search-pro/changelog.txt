@@ -1,5 +1,19 @@
 *** WooCommerce Predictive Search Changelog ***
 
+= 3.0.3 - 2015/11/03 =
+* Tweak - Show total items synced on Plugin Settings below Sync Now button. Allows admin to see current synch status and continue manual click on Sync Now button until all products and posts are synched
+* Tweak - Added 'ps_lang' parameter to backbone script to know the current language of site for compatibility with WPML version 3.2.7 or higher
+* Tweak - Add new 'data-ps-lang' attribute for Predictive Search widget
+* Tweak - Removed 'lang' parameter on Legacy API to avoid conflict with WPML plugin version 3.2.7 or higher
+* Tweak - Updated AutoComplete script for get 'ps_lang' parameter instead of 'lang'
+* Tweak - Set timeout to 60 seconds instead of short timeout 8 seconds for when download the latest version from Amazon S3. Some users where seeing 'Download timeout' when upgrading the plugin on a slow network
+* Tweak - Tested for full compatibility with WPML v 3.2.7
+* Tweak - Tested for full compatibility with WooCommerce v 2.4.8
+* Tweak - Tested for full compatibility with WordPress major version 4.3.1
+* Fix - Auto flush rewrite rules on first install for Search Result page to prevent a 404 error.
+* Fix - Called 'save_post' action after Predictive Search table is defined and added to WP table list to fix MySQL syntax error on initial install
+* Credit - Thanks to Kevin Champlin for notifying us of the issue https://a3rev.com/forums/topic/activation-of-the-pluging-crashes-wp/
+
 = 3.0.2 - 2015/09/07 =
 * Tweak - Tested for full compatibility with WooCommerce Version 2.4.6
 * Fix - Delete check new version transient when transient_timeout is deleted by WordPress 4.3 get_transients function so call to a3api for new version still works.

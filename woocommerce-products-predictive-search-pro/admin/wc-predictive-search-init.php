@@ -17,7 +17,7 @@ function wc_predictive_install(){
 
 	delete_option('woocommerce_search_lite_clean_on_deletion');
 
-	update_option('wc_predictive_search_version', '3.0.2');
+	update_option('wc_predictive_search_version', '3.0.3');
 	update_option('wc_predictive_search_plugin', 'woo_predictive_search');
 	delete_transient("woo_predictive_search_update_info");
 	flush_rewrite_rules();
@@ -212,7 +212,7 @@ function woo_predictive_search_pro_upgrade_plugin () {
 		include( WOOPS_DIR. '/includes/updates/update-3.0.php' );
 	}
 
-	update_option('wc_predictive_search_version', '3.0.2');
+	update_option('wc_predictive_search_version', '3.0.3');
 }
 
 }else{
