@@ -41,7 +41,7 @@ class PMXI_Chunk {
    */
   public $reader;  
   public $cloud = array();      
-  public $loop = 1;
+  public $loop = 1;  
     
   /**
    * handle
@@ -67,7 +67,7 @@ class PMXI_Chunk {
    * @author Dom Hastings
    * @access public
    */
-  public function __construct($file, $options = array()) {
+  public function __construct($file, $options = array(), $debug = false) {
     
     // merge the options together
     $this->options = array_merge($this->options, (is_array($options) ? $options : array()));                       
@@ -99,14 +99,15 @@ class PMXI_Chunk {
       $reader = new XMLReader();
       $reader->open($path);
       $reader->setParserProperty(XMLReader::VALIDATE, false);
-      while ( @$reader->read()) {
+      while ( @$reader->read() ) {
          switch ($reader->nodeType) {
-           case (XMLREADER::ELEMENT):              
-              if (array_key_exists(str_replace(":", "_", $reader->localName), $this->cloud))
-                $this->cloud[str_replace(":", "_", $reader->localName)]++;
+           case (XMLREADER::ELEMENT):                    
+              $localName = str_replace("_____", ":", $reader->localName);     
+              if (array_key_exists(str_replace(":", "_", $localName), $this->cloud))
+                $this->cloud[str_replace(":", "_", $localName)]++;
               else
-                $this->cloud[str_replace(":", "_", $reader->localName)] = 1;                       
-              break;
+                $this->cloud[str_replace(":", "_", $localName)] = 1;                                     
+              break;                            
             default:
 
               break;
@@ -145,7 +146,6 @@ class PMXI_Chunk {
     $this->reader = new XMLReader();        
     @$this->reader->open($path);
     @$this->reader->setParserProperty(XMLReader::VALIDATE, false);
-    
 
   }  
 
@@ -183,7 +183,8 @@ class PMXI_Chunk {
       while ( @$this->reader->read() ) {        
           switch ($this->reader->nodeType) {
            case (XMLREADER::ELEMENT):            
-              if ( strtolower(str_replace(":", "_", $this->reader->localName)) == strtolower($element) ) {                
+              $localName = str_replace("_____", ":", $this->reader->localName);     
+              if ( strtolower(str_replace(":", "_", $localName)) == strtolower($element) ) {
 
                   if ($this->loop < $this->options['pointer']){
                     $this->loop++;                  
@@ -201,15 +202,16 @@ class PMXI_Chunk {
           }               
       }
     } catch (XmlImportException $e) {
-      $xml = false;
+      $xml = false;      
     }        
     
-    return ( ! empty($xml) ) ? $this->removeColonsFromRSS(preg_replace('%xmlns.*=\s*([\'"&quot;]).*\1%sU', '', $xml)) : false;
+    return ( ! empty($xml) ) ? self::removeColonsFromRSS(preg_replace('%xmlns.*=\s*([\'"&quot;]).*\1%sU', '', $xml)) : false;
 
   }  
 
-  function removeColonsFromRSS($feed) {
-                  
+  public static function removeColonsFromRSS($feed) {
+        
+        $feed = str_replace("_____", ":", $feed);
         // pull out colons from start tags
         // (<\w+):(\w+>)
         $pattern = '/(<\w+):(\w+[ |>]{1})/i';
@@ -236,16 +238,28 @@ class PMXI_Chunk {
 
 }
 
-class preprocessXml_filter extends php_user_filter {
+class preprocessXml_filter extends php_user_filter {    
 
     function filter($in, $out, &$consumed, $closing)
     {
       while ($bucket = stream_bucket_make_writeable($in)) {
-        PMXI_Import_Record::preprocessXml($bucket->data);         
+        PMXI_Import_Record::preprocessXml($bucket->data);
+        
+        $is_remove_colons_from_rss = apply_filters('wp_all_import_remove_colons_from_rss', true);
+        if ($is_remove_colons_from_rss)
+        {
+          $bucket->data = $this->replace_colons($bucket->data);              
+        }
+        
         $consumed += $bucket->datalen;        
         stream_bucket_append($out, $bucket);
       }      
       return PSFS_PASS_ON;
+    }
+
+    function replace_colons($data)
+    {
+      return str_replace(":", "_____", $data);
     }
 
 }

@@ -215,7 +215,7 @@
 									<label for="is_multiple_page_parent_yes"><?php _e('Select page parent', 'wp_all_import_plugin') ?></label>
 									<div class="switcher-target-is_multiple_page_parent_yes">
 										<div class="input">
-										<?php wp_dropdown_pages(array('post_type' => 'page', 'selected' => $post['parent'], 'name' => 'parent', 'show_option_none' => __('(no parent)', 'wp_all_import_plugin'), 'sort_column'=> 'menu_order, post_title',)) ?>
+										<?php wp_dropdown_pages(array('post_type' => 'page', 'selected' => $post['parent'], 'name' => 'parent', 'show_option_none' => __('(no parent)', 'wp_all_import_plugin'), 'sort_column'=> 'menu_order, post_title', 'number' => 500)); ?>
 										</div>
 									</div>
 								</div>

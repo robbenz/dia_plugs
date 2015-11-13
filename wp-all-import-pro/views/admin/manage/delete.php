@@ -26,10 +26,13 @@
 			?>
 		<?php endif; ?>
 	</div>
-	<p class="submit">
+	<div class="submit" style="width: 90px;">
 		<?php wp_nonce_field('delete-import', '_wpnonce_delete-import') ?>
 		<input type="hidden" name="is_confirmed" value="1" />
-		<input type="submit" class="button-primary" value="Delete" />
-	</p>
-	
+		<input type="hidden" name="import_ids[]" value="<?php echo esc_attr($item->id); ?>" />
+		<input type="hidden" name="base_url" value="<?php echo $this->baseUrl; ?>">
+		<input type="submit" class="button-primary <?php echo ("ajax" == $item->options['import_processing']) ? 'wp_all_import_ajax_deletion' : '';?>" value="Delete" />
+		<div class="wp_all_import_functions_preloader"></div>
+	</div>
+	<div class="wp_all_import_deletion_log"></div>
 </form>

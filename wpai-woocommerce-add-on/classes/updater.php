@@ -93,7 +93,7 @@ if( ! class_exists('PMWI_Updater') ) {
                         if ( $value >= strtotime("now") )
                         {
                             $cache_value = $wpdb->get_row( $wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name = %s LIMIT 1", $this->slug . '_' . $cache_key ) );        
-                            if ( is_object( $cache_value ) ) {
+                            if ( is_object( $cache_value ) and ! empty($cache_value->option_value)) {
                                 $version_info = maybe_unserialize($cache_value->option_value);
                             }
                         }
@@ -180,7 +180,7 @@ if( ! class_exists('PMWI_Updater') ) {
                         if ( $value >= strtotime("now") )
                         {
                             $cache_value = $wpdb->get_row( $wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name = %s LIMIT 1", $this->slug . '_' . $cache_key ) );        
-                            if ( is_object( $cache_value ) ) {
+                            if ( is_object( $cache_value ) and ! empty($cache_value->option_value)) {
                                 $version_info = maybe_unserialize($cache_value->option_value);
                             }
                         }
@@ -295,7 +295,7 @@ if( ! class_exists('PMWI_Updater') ) {
                     if ( $value >= strtotime("now") )
                     {
                         $cache_value = $wpdb->get_row( $wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name = %s LIMIT 1", $this->slug . '_' . $cache_key ) );        
-                        if ( is_object( $cache_value ) ) {
+                        if ( is_object( $cache_value ) and ! empty($cache_value->option_value)) {
                             $_data = maybe_unserialize($cache_value->option_value);
                         }
                     }

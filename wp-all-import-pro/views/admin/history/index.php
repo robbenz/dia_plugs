@@ -133,7 +133,7 @@ $columns = array(
 									<?php if ('0000-00-00 00:00:00' == $item['date']): ?>
 										<em>never</em>
 									<?php else: ?>
-										<?php echo mysql2date(__('Y/m/d g:i a', 'wp_all_import_plugin'), $item['date']) ?>
+										<?php echo get_date_from_gmt($item['date'], "m/d/Y g:i a"); ?>
 									<?php endif ?>
 								</td>
 								<?php

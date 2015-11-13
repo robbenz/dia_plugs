@@ -3,7 +3,7 @@ if ( ! function_exists('wp_all_import_template_notifications') )
 {
 	function wp_all_import_template_notifications( $post, $type = 'warning')
 	{
-		$notifications = array();
+		$notifications = array();		
 		// import template was generated via WP All Export
 		if ( ! empty($post['required_add_ons']) )
 		{
@@ -37,7 +37,7 @@ if ( ! function_exists('wp_all_import_template_notifications') )
 						and ! is_plugin_active('wp-residence-add-on-for-wp-all-import/wp-residence-add-on.php') )
 			{
 				$notifications[] = __('The import template you are using requires the WP Residence Add-On. If you continue without it your data may import incorrectly.<br/><br/><a href="https://wordpress.org/plugins/wp-residence-add-on-for-wp-all-import/" target="_blank">Download the WP Residence Add-On</a>.', 'wp_all_import_plugin');
-			}
+			}			
 			// RealHomes Add-On
 			elseif ( ! empty($post['realhomes_addon']) 
 					and isset($post['realhomes_addon']['REAL_HOMES_property_price']) 

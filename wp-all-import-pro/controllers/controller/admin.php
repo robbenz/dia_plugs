@@ -31,9 +31,10 @@ abstract class PMXI_Controller_Admin extends PMXI_Controller {
 		$url = $p_url['scheme'] . '://' . $p_url['host'];
 
 		if (!empty($_POST['is_settings_submitted'])) { // save settings form			
-			$post = array(
-				'port' => $_POST['port']
-			);
+			$input = new PMXI_Input();
+			$post = $input->post(array(
+				'port' => ''
+			));	
 			PMXI_Plugin::getInstance()->updateOption($post);
 		}
 		
