@@ -8,33 +8,12 @@
  */
 
 /**
- * ConfigPress handler
+ * ConfigPress layer
  * 
  * @package AAM
- * @author Vasyl Martyniuk <support@wpaam.com>
- * @copyright Copyright C 2013 Vasyl Martyniuk
- * @license GNU General Public License {@link http://www.gnu.org/licenses/}
+ * @author Vasyl Martyniuk <vasyl@vasyltech.com>
  */
-final class aam_Core_ConfigPress {
-
-    /**
-     * Read ConfigPress File content
-     * 
-     * @return string
-     * 
-     * @access public
-     * @static
-     */
-    public static function read() {
-        $filename = aam_Core_API::getBlogOption('aam_configpress', '');
-        if ($filename && file_exists(AAM_TEMP_DIR . $filename)) {
-            $content = file_get_contents(AAM_TEMP_DIR . $filename);
-        } else {
-            $content = '';
-        }
-
-        return $content;
-    }
+final class AAM_Core_ConfigPress {
 
     /**
      * Get ConfigPress parameter
@@ -47,7 +26,7 @@ final class aam_Core_ConfigPress {
      * @access public
      * @static
      */
-    public static function getParam($param, $default = null) {
+    public static function get($param, $default = null) {
         if (class_exists('ConfigPress')) {
             $response = ConfigPress::get($param, $default);
         } else {

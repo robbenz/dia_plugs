@@ -248,6 +248,10 @@ msgid "Create a new page and use one of the shortcodes available. Publish the pa
 msgstr ""
 
 #. Found in changelog list item.
+msgid "Email Confirmation can now be disabled on WordPress multisite"
+msgstr ""
+
+#. Found in changelog list item.
 msgid "Fixed issue that prevented  the value 0 to be set as default value"
 msgstr ""
 

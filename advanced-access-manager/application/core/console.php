@@ -14,11 +14,9 @@
  * execution. The consol is used only when AAM interface was triggered in Admin side.
  * 
  * @package AAM
- * @author Vasyl Martyniuk <support@wpaam.com>
- * @copyright Copyright C 2013 Vasyl Martyniuk
- * @license GNU General Public License {@link http://www.gnu.org/licenses/}
+ * @author Vasyl Martyniuk <vasyl@vasyltech.com>
  */
-class aam_Core_Console {
+class AAM_Core_Console {
 
     /**
      * List of Runtime errors related to AAM
@@ -66,6 +64,14 @@ class aam_Core_Console {
      */
     public static function getWarnings() {
         return self::$_warnings;
+    }
+    
+    /**
+     * 
+     * @return type
+     */
+    public static function count() {
+        return count(self::$_warnings);
     }
 
 }

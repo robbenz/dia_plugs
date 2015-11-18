@@ -8,13 +8,12 @@
  */
 
 /**
- *
+ * HTTP request layer
+ * 
  * @package AAM
- * @author Vasyl Martyniuk <support@wpaam.com>
- * @copyright Copyright C 2013 Vasyl Martyniuk
- * @license GNU General Public License {@link http://www.gnu.org/licenses/}
+ * @author Vasyl Martyniuk <vasyl@vasyltech.com>
  */
-class aam_Core_Request {
+class AAM_Core_Request {
 
     /**
      * Get parameter from global _GET array

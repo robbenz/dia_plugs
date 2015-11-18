@@ -11,66 +11,46 @@
  * Extension Repository
  * 
  * @package AAM
- * @author Vasyl Martyniuk <support@wpaam.com>
- * @copyright Copyright C 2014 Vasyl Martyniuk
- * @license GNU General Public License {@link http://www.gnu.org/licenses/}
+ * @author Vasyl Martyniuk <vasyl@vasyltech.com>
  */
-class aam_Core_Repository {
+class AAM_Core_Repository {
+    
+    /**
+     * Extension status: installed
+     * 
+     * Extension has been installed and is up to date
+     */
+    const STATUS_INSTALLED = 'installed';
+    
+    /**
+     * Extension status: download
+     * 
+     * Extension is not installed and either needs to be purchased or 
+     * downloaded for free.
+     */
+    const STATUS_DOWNLOAD = 'download';
+    
+    /**
+     * Extension status: update
+     * 
+     * New version of the extension has been detected.
+     */
+    const STATUS_UPDATE = 'update';
+
+    /**
+     * Relative path to extension directory
+     */
+    const RELPATH = '/aam/extension';
 
     /**
      * Single instance of itself
      * 
-     * @var aam_Core_Repository
+     * @var AAM_Core_Repository
      * 
      * @access private
      * @static 
      */
     private static $_instance = null;
-    
-    /**
-     * Extension repository
-     * 
-     * @var array
-     * 
-     * @access private 
-     */
-    private $_repository = array();
-
-    /**
-     * Basedir to Extentions repository
-     *
-     * @var string
-     *
-     * @access private
-     */
-    private $_basedir = '';
-
-    /**
-     * Extension list cache
-     * 
-     * @var array
-     * 
-     * @access private
-     */
-    private $_cache = array();
-    
-    /**
-     * Repository Errors
-     * 
-     * @var array
-     * 
-     * @access private 
-     */
-    private $_errors = array();
-
-    /**
-     * Main AAM class
-     *
-     * @var aam
-     *
-     * @access private
-     */
-    private $_parent;
 
     /**
      * Consturctor
@@ -79,31 +59,23 @@ class aam_Core_Repository {
      *
      * @access protected
      */
-    protected function __construct(aam $parent = null) {
-        $this->setParent($parent);
-        $this->_basedir = AAM_BASE_DIR . 'extension';
-        //retrieve list of extensions from the database
-        $repository = aam_Core_API::getBlogOption('aam_extensions', array(), 1);
-        if (is_array($repository)){
-            $this->_repository = $repository;
-        }
-    }
-    
+    protected function __construct() {}
+
     /**
      * Get single instance of itself
      * 
-     * @param aam $parent
+     * @param AAM $parent
      * 
-     * @return aam_Core_Repository
+     * @return AAM_Core_Repository
      * 
      * @access public
      * @static
      */
-    public static function getInstance(aam $parent = null){
-        if (is_null(self::$_instance)){
-            self::$_instance = new self($parent);
+    public static function getInstance() {
+        if (is_null(self::$_instance)) {
+            self::$_instance = new self;
         }
-        
+
         return self::$_instance;
     }
 
@@ -115,213 +87,16 @@ class aam_Core_Repository {
      * @access public
      */
     public function load() {
-        //iterate through each active extension and load it
-        foreach (scandir($this->_basedir) as $module) {
-            if (!in_array($module, array('.', '..'))) {
-                $status = aam_Core_ConfigPress::getParam(
-                        "aam.extension.{$module}.status"
-                );
-                if (strtolower($status) !== 'off'){
-                    $this->bootstrapExtension($module);
+        $basedir = WP_CONTENT_DIR . self::RELPATH;
+
+        if (file_exists($basedir)) {
+            //iterate through each active extension and load it
+            foreach (scandir($basedir) as $module) {
+                if (!in_array($module, array('.', '..'))) {
+                    $this->bootstrapExtension($basedir . '/' . $module);
                 }
             }
         }
-    }
-    
-    /**
-     * Check if extensions exists
-     *
-     * @param string $extension
-     *
-     * @return boolean
-     *
-     * @access public
-     */
-    public function hasExtension($extension){
-        return file_exists(
-                $this->_basedir . '/' . $this->prepareExtFName($extension)
-        );
-    }
-    
-    /**
-     * Check if license exists
-     * 
-     * @param string $extension
-     * 
-     * @return boolean
-     * 
-     * @access public
-     */
-    public function hasLicense($extension) {
-        return (isset($this->_repository[$extension]) ? true : false);
-    }
-    
-    /**
-     * Get Extension info
-     * 
-     * @param string $ext
-     * 
-     * @return stdClass
-     * 
-     * @access public
-     */
-    public function getLicense($ext){
-        return ($this->hasLicense($ext) ? $this->_repository[$ext]->license : '');
-    }
-
-    /**
-     * Download extension from the external server
-     * 
-     * @return void
-     * 
-     * @access public
-     */
-    public function download() {
-        $this->initFilesystem();
-        $repository = aam_Core_API::getBlogOption('aam_extensions', array(), 1);
-
-        if (is_array($repository)) {
-            //get the list of extensions
-            foreach ($repository as $data) {
-                $this->retrieve($data->license);
-            }
-            aam_Core_API::updateBlogOption('aam_extensions', $repository, 1);
-        }
-    }
-
-    /**
-     * Add new extension to repository
-     *
-     * @param string $extension
-     * @param string $license
-     *
-     * @return boolean
-     *
-     * @access public
-     */
-    public function add($extension, $license){
-        $this->initFilesystem();
-        $repository = aam_Core_API::getBlogOption('aam_extensions', array(), 1);
-
-        if ($this->retrieve($license)){
-            $repository[$extension] = (object) array(
-                'license' => $license
-            );
-            aam_Core_API::updateBlogOption('aam_extensions', $repository, 1);
-            $response = true;
-        } else {
-            $response = false;
-        }
-
-        return $response;
-    }
-
-    /**
-     * Remove Extension from the repository
-     *
-     * @param string $extension
-     *
-     * @return boolean
-     *
-     * @access public
-     */
-    public function remove($extension){
-        global $wp_filesystem;
-
-        $repository = aam_Core_API::getBlogOption('aam_extensions', array(), 1);
-
-        //if extension has been downloaded as part of dev license, it'll be
-        //not present in the repository list
-        if (isset($repository[$extension])){
-            unset($repository[$extension]);
-            aam_Core_API::updateBlogOption('aam_extensions', $repository, 1);
-        }
-                
-        if ($this->hasExtension($extension)){
-            $this->initFilesystem();
-            $wp_filesystem->rmdir(
-                    $this->_basedir . '/' . $this->prepareExtFName($extension), true
-            );
-        }
-
-        return true;
-    }
-    
-    /**
-     * 
-     * @param type $extension
-     * @return type
-     */
-    protected function prepareExtFName($extension) {
-        return str_replace(' ', '_', $extension);
-    }
-
-    /**
-     * Initialize WordPress filesystem
-     *
-     * @return void
-     *
-     * @access protected
-     */
-    protected function initFilesystem(){
-         require_once ABSPATH . 'wp-admin/includes/file.php';
-
-        //initialize Filesystem
-        WP_Filesystem();
-    }
-
-    /**
-     * Retrieve extension based on license key
-     *
-     * @global WP_Filesystem $wp_filesystem
-     * @param string $license
-     *
-     * @return boolean
-     *
-     * @access protected
-     */
-    protected function retrieve($license) {
-        global $wp_filesystem;
-        
-        $url = WPAAM_REST_API . '?method=exchange&license=' . $license;
-        $res = wp_remote_request($url, array('timeout' => 10));
-        $response = false;
-        if (!is_wp_error($res)) {
-            //write zip archive to the filesystem first
-            $zip = AAM_TEMP_DIR . '/' . uniqid();
-            $content = base64_decode($res['body']);
-            if ($content && $wp_filesystem->put_contents($zip, $content)) {
-                $response = $this->insert($zip);
-                $wp_filesystem->delete($zip);
-            } elseif (empty($content)){
-                $this->addError(__('Invalid License Key', 'aam'));
-            } else {
-                $this->addError(
-                        __('Failed to write file to wp-content/aam folder', 'aam')
-                );
-            }
-        } else {
-            $this->addError(__('Failed to reach the WPAAM Server', 'aam'));
-        }
-
-        return $response;
-    }
-
-    /**
-     *
-     * @param type $zip
-     * @return boolean
-     */
-    protected function insert($zip) {
-        $response = true;
-        if (is_wp_error(unzip_file($zip, $this->_basedir))) {
-            $response = false;
-            $this->addError(
-                    __('Failed to insert extension to extension folder', 'aam')
-            );
-        }
-
-        return $response;
     }
 
     /**
@@ -329,65 +104,114 @@ class aam_Core_Repository {
      *
      * In case of any errors, the output can be found in console
      *
-     * @param string $extension
+     * @param string $path
      *
      * @return void
-     *
      * @access protected
      */
-    protected function bootstrapExtension($extension) {
-        $bootstrap = $this->_basedir . "/{$extension}/index.php";
-        if (file_exists($bootstrap) && !isset($this->_cache[$extension])) {
-            //bootstrap the extension
-            $this->_cache[$extension] = require_once($bootstrap);
-            $this->_cache[$extension]->activate();
+    protected function bootstrapExtension($path) {
+        $bootstrap = "{$path}/bootstrap.php";
+
+        if (file_exists($bootstrap)) { //bootstrap the extension
+            require($bootstrap);
         }
     }
 
     /**
-     * Set Parent class
-     *
-     * @param aam $parent
-     *
-     * @return void
-     *
+     * Add new extension
+     * 
+     * @param blob $content
+     * 
+     * @return boolean|WP_Error
+     * @access public
+     * @global type $wp_filesystem
+     */
+    public function addExtension($content) {
+        $filepath  = WP_CONTENT_DIR . self::RELPATH . '/' . uniqid('aam_');
+        
+        $response = file_put_contents($filepath, $content);
+        if (!is_wp_error($response)) { //unzip the archive
+            WP_Filesystem(false, false, true); //init filesystem
+            $response = unzip_file($filepath, WP_CONTENT_DIR . self::RELPATH);
+            if (!is_wp_error($response)) {
+                $response = true;
+            }
+            @unlink($filepath); //remove the working archive
+        }
+
+        return $response;
+    }
+    
+    /**
+     * Check extension status
+     * 
+     * The list of extensions is comming from the external server. This list is
+     * updated daily by the registered cron-job.
+     * Each extension is following by next naming convension and stardard - the 
+     * title of an extension contains only latin letters and spaces and name is 
+     * no longer than 50 characters. As a standard, each extension defines the 
+     * global contant that indicates an extension version. The name of the 
+     * contants derives from the extension title by transforming all letters to 
+     * upper case and replacing the white spaces with underscore "_" 
+     * (e.g AAM Plus Package defines the contant AAM_PLUS_PACKAGE). 
+     * 
+     * @param string $title
+     * 
+     * @return string
+     * 
      * @access public
      */
-    public function setParent($parent){
-        $this->_parent = $parent;
+    public function extensionStatus($title) {
+        static $cache = null;
+        
+        $status = self::STATUS_INSTALLED;
+        $const = str_replace(' ', '_', strtoupper($title));
+        
+        if (is_null($cache)) {
+            $list = AAM_Core_API::getOption('aam-extension-list', array());
+            $cache = array();
+            foreach($list as $row) {
+                $cache[$row->title] = $row;
+            }
+        }
+        
+        if (!defined($const)) { //extension does not exist
+            $status = self::STATUS_DOWNLOAD;
+        } elseif (!empty($cache[$title])) {
+            $version = constant($const);
+            if ($version != $cache[$title]->version) { //version mismatch?
+                $status = self::STATUS_UPDATE;
+            }
+        }
+        
+        return $status;
     }
 
     /**
-     * Get Parent class
-     *
-     * @return aam
-     *
-     * @access public
-     */
-    public function getParent(){
-        return $this->_parent;
-    }
-    
-    /**
-     * Add error
+     * Check extension directory
      * 
-     * @param string $message
+     * @return boolean|sstring
      * 
      * @access public
-     */
-    public function addError($message){
-        $this->_errors[] = $message;
-    }
-    
-    /**
-     * Get all errors
      * 
-     * @return array
-     * 
-     * @access public
+     * @global type $wp_filesystem
      */
-    public function getErrors(){
-        return $this->_errors;
+    public function checkDirectory() {
+        $error = false;
+
+        //create a directory if does not exist
+        $basedir = WP_CONTENT_DIR . self::RELPATH;
+        if (!file_exists($basedir)) {
+            if (!@mkdir($basedir, fileperms(ABSPATH) & 0777 | 0755, true)) {
+                $error = sprintf(__('Failed to create %s', AAM_KEY), $basedir);
+            }
+        } elseif (!is_writable($basedir)) {
+            $error = sprintf(
+                    __('Directory %s is not writable', AAM_KEY), $basedir
+            );
+        }
+
+        return $error;
     }
 
 }
