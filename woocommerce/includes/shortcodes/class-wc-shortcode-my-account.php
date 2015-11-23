@@ -288,7 +288,7 @@ class WC_Shortcode_My_Account {
 		WC()->mailer(); // load email classes
 		do_action( 'woocommerce_reset_password_notification', $user_login, $key );
 
-		wc_add_notice( __( 'Check your e-mail for the confirmation link.', 'woocommerce' ) );
+		wc_add_notice( __( 'Check your e-mail for the confirmation link. Please be patient, this can take a minute.', 'woocommerce' ) );
 		return true;
 	}
 
