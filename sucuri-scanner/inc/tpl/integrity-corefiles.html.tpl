@@ -14,12 +14,12 @@
 
     <div class="inside">
         <p>
-            Error retrieving the WordPress core hashes. The information used by the plugin
-            to determine the integrity of the core files is retrieved and controlled by
-            WordPress. Any error message related with this tool is likely related with a
-            modification in their API service that is not supported yet. It is also possible
-            that your website is not able to communicate with this server due to a missing
-            HTTP transport tool.
+            Error retrieving the <a href="%%SUCURI.CoreFiles.RemoteChecksumsURL%%" target="_blank">
+            WordPress core hashes</a>. The information used by the plugin to determine the
+            integrity of the core files is retrieved and controlled by WordPress. Any error
+            message related with this tool is likely related with a modification in their
+            API service that is not supported yet. It is also possible that your website is
+            not able to communicate with this server due to a missing HTTP transport tool.
         </p>
     </div>
 </div>
@@ -58,7 +58,7 @@
                 </th>
                 <th width="80" class="manage-column">Status</th>
                 <th width="100" class="manage-column">File Size</th>
-                <th width="170" class="manage-column">Modified At</th>
+                <th width="180" class="manage-column">Modified At</th>
                 <th class="manage-column">File Path</th>
             </tr>
         </thead>

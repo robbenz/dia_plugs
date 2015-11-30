@@ -16,13 +16,20 @@
 		var is_variable = ($('#product-type').val() == 'variable');
 		var is_grouped = ($('#product-type').val() == 'grouped');
 		var is_simple = ($('#product-type').val() == 'simple');
-		var is_external = ($('#product-type').val() == 'external');
+		var is_external = ($('#product-type').val() == 'external');		
 		var is_downloadable = !($('input[name=is_product_downloadable]:checked').val() == 'no');
 		var is_variable_downloadable = !($('input[name=is_variable_product_downloadable]:checked').val() == 'no');		
 		var is_virtual = ($('#_virtual').is(':checked'));			
 		var is_multiple_product_type = ($('input[name=is_multiple_product_type]:checked').val() == 'yes');		
 
 		if (!is_multiple_product_type) $('.product_data_tabs li, .options_group').show();
+
+		if ( ! is_variable && ! is_grouped && ! is_external && is_multiple_product_type )
+		{
+			is_simple = true;
+		}
+
+		console.log(is_simple);
 
 		$('.product_data_tabs li, .options_group').each(function(){
 
@@ -156,21 +163,6 @@
 		$('input[name=is_variable_sale_price_shedule]').val('0');		
 		$('#variable_sale_price_shedule').show();
 	});
-
-	// $('#_variable_virtual').click(function(){
-	// 	if ($(this).is(':checked')){
-	// 		$('#variable_virtual').show();
-	// 		$('#variable_dimensions').hide();
-	// 	}
-	// 	else{
-	// 		$('#variable_virtual').hide();
-	// 		$('#variable_dimensions').show();
-	// 	}
-	// });
-
-	// $('#_variable_downloadable').click(function(){
-	// 	if ($(this).is(':checked')) $('.variable_downloadable').show(); else $('.variable_downloadable').hide();
-	// });	
 
 	var variation_xpath = $('#variations_xpath').val();
 

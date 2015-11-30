@@ -3,7 +3,7 @@
 Plugin Name: WP All Import - WooCommerce Add-On Pro
 Plugin URI: http://www.wpallimport.com/
 Description: Import to WooCommerce. Adds a section to WP All Import that looks just like WooCommerce. Requires WP All Import.
-Version: 2.2.3
+Version: 2.2.5
 Author: Soflyy
 */
 /**
@@ -24,7 +24,7 @@ define('PMWI_ROOT_URL', rtrim(plugin_dir_url(__FILE__), '/'));
  */
 define('PMWI_PREFIX', 'pmwi_');
 
-define('PMWI_VERSION', '2.2.3');
+define('PMWI_VERSION', '2.2.5');
 
 if ( class_exists('PMWI_Plugin') and PMWI_EDITION == "free"){
 
@@ -32,7 +32,7 @@ if ( class_exists('PMWI_Plugin') and PMWI_EDITION == "free"){
 		
 		?>
 		<div class="error"><p>
-			<?php printf(__('Please de-activate and remove the free version of the WooCommere add-on before activating the paid version.', 'pmwi_plugin'));
+			<?php printf(__('Please de-activate and remove the free version of the WooCommere add-on before activating the paid version.', 'wpai_woocommerce_addon_plugin'));
 			?>
 		</p></div>
 		<?php				
@@ -176,7 +176,7 @@ else {
 		 * @param string $pluginFilePath Plugin main file
 		 */
 		protected function __construct() {
-
+			
 			// create/update required database tables
 
 			// regirster autoloading method
@@ -235,9 +235,28 @@ else {
 
 			// register admin page pre-dispatcher
 			add_action('admin_init', array($this, '__adminInit'));		
-
-
+			add_action('init', array($this, 'init'));
 		}
+
+		public function init()
+		{
+			$this->load_plugin_textdomain();
+		}
+
+		/**
+		 * Load Localisation files.
+		 *
+		 * Note: the first-loaded translation file overrides any following ones if the same translation is present
+		 *
+		 * @access public
+		 * @return void
+		 */
+		public function load_plugin_textdomain() {
+			
+			$locale = apply_filters( 'plugin_locale', get_locale(), 'wpai_woocommerce_addon_plugin' );							
+			
+			load_plugin_textdomain( 'wpai_woocommerce_addon_plugin', false, dirname( plugin_basename( __FILE__ ) ) . "/i18n/languages" );
+		}	
 
 		/**
 		 * pre-dispatching logic for admin page controllers
@@ -438,7 +457,9 @@ else {
 				'is_product_downloadable' => 'no',
 				'single_product_downloadable' => '',			
 				'is_product_enabled' => 'yes',
-				'single_product_enabled' => '',			
+				'single_product_enabled' => '',
+				'is_variation_enabled' => 'yes',
+				'single_variation_enabled' => '',			
 				'is_product_featured' => 'no',
 				'single_product_featured' => '',
 				'is_product_visibility' => 'visible',
