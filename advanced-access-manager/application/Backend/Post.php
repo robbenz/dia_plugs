@@ -24,7 +24,7 @@ class AAM_Backend_Post {
      */
     public function getContent() {
         ob_start();
-        require_once(dirname(__FILE__) . '/view/object/post.phtml');
+        require_once(dirname(__FILE__) . '/view/post.phtml');
         $content = ob_get_contents();
         ob_end_clean();
 
@@ -163,10 +163,9 @@ class AAM_Backend_Post {
             }
         }
 
-        //retrieve all posts
+        //retrieve all posts that do not have parent category
         $posts = get_posts(array(
-            'post_type' => $type, 'category' => 0, 
-            'numberposts' => -1, 'post_status' => 'any'
+            'post_type' => $type, 'category' => 0, 'numberposts' => -1
         ));
 
         foreach ($posts as $post) {
@@ -276,10 +275,12 @@ class AAM_Backend_Post {
             $error  = __('You reached your limitation.', AAM_KEY);
         }
 
-        return json_encode(array(
+        return json_encode(
+                array(
                     'status' => ($result ? 'success' : 'failure'),
                     'error' => (empty($error) ? '' : $error)
-        ));
+                )
+        );
     }
 
     /**

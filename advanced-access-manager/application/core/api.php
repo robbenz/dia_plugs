@@ -89,21 +89,20 @@ final class AAM_Core_API {
      * @param string $url Requested URL
      * @param bool $send_cookies Wheather send cookies or not
      * 
-     * @return WP_Error|array
-     * 
-     * @access public
      */
     public static function cURL($url, $send_cookies = TRUE) {
-        $header = array('User-Agent' => AAM_Core_Request::server('HTTP_USER_AGENT'));
+        $header = array(
+            'User-Agent' => AAM_Core_Request::server('HTTP_USER_AGENT')
+        );
 
-        $cookies = AAM_Core_Request::cookie(null, array());
-        $requestCookies = array();
-        if (is_array($cookies) && $send_cookies) {
-            foreach ($cookies as $key => $value) {
+        $cookies = array();
+        if (is_array($_COOKIE) && $send_cookies) {
+            foreach ($_COOKIE as $key => $value) {
                 //SKIP PHPSESSID - some servers don't like it for security reason
-                if ($key !== session_name()) {
-                    $requestCookies[] = new WP_Http_Cookie(array(
-                        'name' => $key, 'value' => $value
+                if ($key !== 'PHPSESSID') {
+                    $cookies[] = new WP_Http_Cookie(array(
+                        'name' => $key,
+                        'value' => $value
                     ));
                 }
             }
@@ -111,13 +110,12 @@ final class AAM_Core_API {
 
         return wp_remote_request($url, array(
             'headers' => $header,
-            'cookies' => $requestCookies,
-            'timeout' => 5
-        ));
+            'cookies' => $cookies,
+            'timeout' => 5)
+        );
     }
     
     /**
-     * Get role list
      * 
      * @global WP_Roles $wp_roles
      * 
@@ -137,29 +135,7 @@ final class AAM_Core_API {
         return $roles;
     }
     
-    /**
-     * Return max capability level
-     * 
-     * @param array $caps
-     * @param int   $default
-     * 
-     * @return int
-     * 
-     * @access public
-     */
-    public static function maxLevel($caps, $default = 0) {
-        $levels = array($default);
-        
-        foreach($caps as $cap => $granted) {
-            if ($granted && preg_match('/^level_(10|[0-9])$/i', $cap, $match)) {
-                $levels[] = intval($match[1]);
-            }
-        }
-        
-        return max($levels);
-    }
-
-    /**
+     /**
      * Reject the request
      *
      * Redirect or die the execution based on ConfigPress settings
@@ -182,25 +158,6 @@ final class AAM_Core_API {
             wp_die($message);
         }
         exit;
-    }
-    
-    /**
-     * Remove directory recursively
-     * 
-     * @param string $pathname
-     * 
-     * @return void
-     * 
-     * @access public
-     */
-    public static function removeDirectory($pathname) {
-        $files = glob($pathname . '/*');
-        
-	foreach ($files as $file) {
-		is_dir($file) ? self::removeDirectory($file) : @unlink($file);
-	}
-        
-	@rmdir($pathname);
     }
 
 }

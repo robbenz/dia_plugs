@@ -5,13 +5,6 @@
  * ======================================================================
  */
 
-/**
- * Role List Interface
- * 
- * @param {jQuery} $
- * 
- * @returns {void}
- */
 (function ($) {
     
     /**
@@ -137,9 +130,6 @@
                             );
                             //Show add capability that may be hidden after manager user
                             $('#add-capability').show();
-                        }).attr({
-                                'data-toggle' :"tooltip",
-                                'title' : aam.__('Manage Role')
                         }));
                         break;
 
@@ -152,9 +142,6 @@
                             $('#edit-role-modal').modal('show').on('shown.bs.modal', function () {
                                 $('#edit-role-name').focus();
                             });
-                        }).attr({
-                                'data-toggle' :"tooltip",
-                                'title' : aam.__('Edit Role Name')
                         }));
                         break;
 
@@ -172,9 +159,6 @@
                             );
 
                             $('#delete-role-modal').modal('show');
-                        }).attr({
-                                'data-toggle' :"tooltip",
-                                'title' : aam.__('Delete Role')
                         }));
                         break;
 
@@ -341,12 +325,12 @@
 
 
 /**
- * User List Interface
- * 
- * @param {jQuery} $
- * 
- * @returns {void}
+ * ======================================================================
+ * LICENSE: This file is subject to the terms and conditions defined in *
+ * file 'license.txt', which is part of this source code package.       *
+ * ======================================================================
  */
+
 (function ($) {
     
     /**
@@ -385,17 +369,9 @@
             success: function (response) {
                 if (response.status === 'success') {
                     if (state === 1) {
-                        $(btn).attr({
-                            'class' : 'aam-row-action icon-lock text-danger',
-                            'title' : aam.__('Unlock User'),
-                            'data-original-title' : aam.__('Unlock User')
-                        });
+                        $(btn).attr('class', 'aam-row-action icon-lock text-danger');
                     } else {
-                        $(btn).attr({
-                            'class' : 'aam-row-action icon-lock-open-alt text-warning',
-                            'title' : aam.__('Lock User'),
-                            'data-original-title' : aam.__('Lock User')
-                        });
+                        $(btn).attr('class', 'aam-row-action icon-lock-open-alt text-warning');
                     }
                 } else {
                     aam.notification(
@@ -478,17 +454,6 @@
                             $('i.icon-spin4', container).attr('class', 'aam-row-action icon-cog text-info');
                             //make sure that there is no way user add's new capability
                             $('#add-capability').hide();
-                        }).attr({
-                                'data-toggle' :"tooltip",
-                                'title' : aam.__('Manage User')
-                        }));
-                        break;
-                        
-                    case 'no-manage':
-                        $(container).append($('<i/>', {
-                            'class': 'aam-row-action icon-cog text-muted'
-                        }).bind('click', function () {
-                            $('#user-notification-modal').modal('show');
                         }));
                         break;
 
@@ -499,17 +464,6 @@
                             window.open(
                                 aamLocal.url.editUser + '?user_id=' + data[0], '_blank'
                             );
-                        }).attr({
-                                'data-toggle' :"tooltip",
-                                'title' : aam.__('Edit User')
-                        }));
-                        break;
-                    
-                    case 'no-edit':
-                        $(container).append($('<i/>', {
-                            'class': 'aam-row-action icon-pencil text-muted'
-                        }).bind('click', function () {
-                            $('#user-notification-modal').modal('show');
                         }));
                         break;
 
@@ -518,9 +472,6 @@
                             'class': 'aam-row-action icon-lock-open-alt text-warning'
                         }).bind('click', function () {
                             blockUser(data[0], $(this));
-                        }).attr({
-                                'data-toggle' :"tooltip",
-                                'title' : aam.__('Lock User')
                         }));
                         break;
                         
@@ -529,9 +480,6 @@
                             'class': 'aam-row-action icon-lock text-danger'
                         }).bind('click', function () {
                             blockUser(data[0], $(this));
-                        }).attr({
-                                'data-toggle' :"tooltip",
-                                'title' : aam.__('Unlock User')
                         }));
                         break;
                         
@@ -574,12 +522,12 @@
 
 
 /**
- * Visitor Interface
- * 
- * @param {jQuery} $
- * 
- * @returns {void}
+ * ======================================================================
+ * LICENSE: This file is subject to the terms and conditions defined in *
+ * file 'license.txt', which is part of this source code package.       *
+ * ======================================================================
  */
+
 (function ($) {
 
     /**
@@ -605,12 +553,12 @@
 
 
 /**
- * Admin Menu Interface
- * 
- * @param {jQuery} $
- * 
- * @returns {void}
+ * ======================================================================
+ * LICENSE: This file is subject to the terms and conditions defined in *
+ * file 'license.txt', which is part of this source code package.       *
+ * ======================================================================
  */
+
 (function ($) {
 
     /**
@@ -620,7 +568,7 @@
     function initialize() {
         $('.aam-restrict-menu').each(function () {
             $(this).bind('click', function () {
-                var status = $('i', $(this)).hasClass('icon-eye-off');
+                var status = ($('i', $(this)).hasClass('icon-eye-off') ? 1 : 0);
                 var target = $(this).data('target');
 
                 $('i', $(this)).attr('class', 'icon-spin4 animate-spin');
@@ -628,7 +576,7 @@
                 var result = aam.save($(this).data('menu-id'), status, 'menu');
                 
                 if (result.status === 'success') {
-                    if (status) { //locked the menu
+                    if (status === 1) { //locked the menu
                         $('input', target).each(function () {
                             $(this).attr('checked', true);
                             aam.save($(this).data('menu-id'), status, 'menu');
@@ -658,7 +606,7 @@
                         $('.panel-title .icon-eye-off', target + '-heading').remove();
                     }
                 } else {
-                    $(this).attr('checked', !status);
+                    $(this).attr('checked', (status ? false : true));
                 }
             });
         });
@@ -666,9 +614,7 @@
         $('input[type="checkbox"]', '#admin-menu').each(function () {
             $(this).bind('click', function () {
                 aam.save(
-                    $(this).data('menu-id'), 
-                    $(this).attr('checked') ? true : false, 
-                    'menu'
+                    $(this).data('menu-id'), !$(this).attr('checked'), 'menu'
                 );
             });
         });
@@ -680,12 +626,12 @@
 
 
 /**
- * Metaboxes & Widgets Interface
- * 
- * @param {jQuery} $
- * 
- * @returns {void}
+ * ======================================================================
+ * LICENSE: This file is subject to the terms and conditions defined in *
+ * file 'license.txt', which is part of this source code package.       *
+ * ======================================================================
  */
+
 (function ($) {
 
     /**
@@ -760,9 +706,7 @@
         $('input[type="checkbox"]', '#metabox-list').each(function () {
             $(this).bind('click', function () {
                 aam.save(
-                    $(this).data('metabox'), 
-                    $(this).attr('checked') ? true : false, 
-                    'metabox'
+                    $(this).data('metabox'), !$(this).attr('checked'), 'metabox'
                 );
             });
         });
@@ -774,12 +718,12 @@
 
 
 /**
- * Capabilities Interface
- * 
- * @param {jQuery} $
- * 
- * @returns {void}
+ * ======================================================================
+ * LICENSE: This file is subject to the terms and conditions defined in *
+ * file 'license.txt', which is part of this source code package.       *
+ * ======================================================================
  */
+
 (function ($) {
 
     /**
@@ -848,6 +792,9 @@
 
                 var container = $('<div/>', {'class': 'aam-row-actions'});
                 $.each(actions, function (i, action) {
+                    var checkbox = $('<input/>').attr({
+                            'type': 'checkbox'
+                    });
                     switch (action) {
                         case 'unchecked':
                             $(container).append($('<i/>', {
@@ -871,6 +818,11 @@
                 });
                 $('td:eq(2)', row).html(container);
             }
+        });
+
+        //filter capability dropdown
+        $('#capability-filter').bind('click', function () {
+            $('.dropdown-menu').dropdown('toggle');
         });
 
         $('a', '#capability-groups').each(function () {
@@ -934,13 +886,6 @@
         $('#add-capability-modal').on('shown.bs.modal', function (e) {
             $('#new-capability-name').focus();
         });
-        
-        //show or hide capability user note based on current subject
-        if (aam.getSubject().type === 'user') {
-            $('#user-capability-note').removeClass('hidden');
-        } else {
-            $('#user-capability-note').addClass('hidden');
-        }
 
     }
 
@@ -950,12 +895,12 @@
 
 
 /**
- * Posts & Pages Interface
- * 
- * @param {jQuery} $
- * 
- * @returns {void}
+ * ======================================================================
+ * LICENSE: This file is subject to the terms and conditions defined in *
+ * file 'license.txt', which is part of this source code package.       *
+ * ======================================================================
  */
+
 (function ($) {
 
     /**
@@ -1120,9 +1065,6 @@
      * @returns {undefined}
      */
     function initialize() {
-        //reset filter to default list of post types
-        filter.type = null;
-        
         //initialize the role list table
         $('#post-list').DataTable({
             autoWidth: false,
@@ -1164,7 +1106,7 @@
                 //reset the ajax queue
                 queue = new Array();
             },
-            rowCallback: function (row, data) {
+            createdRow: function (row, data) {
                 //object type icon
                 switch (data[2]) {
                     case 'type':
@@ -1202,8 +1144,6 @@
 
                     }).html(data[3]);
                     $('td:eq(1)', row).html(link);
-                } else { //reset the post/term title
-                    $('td:eq(1)', row).html(data[3]);
                 }
 
                 //add breadcrumb but only if not a type
@@ -1222,8 +1162,8 @@
                             success: function (response) {
                                 if (response.status === 'success') {
                                     $('td:eq(1) span', row).html(
-                                        response.breadcrumb
-                                    );
+                                            response.breadcrumb
+                                            );
                                 }
                             },
                             error: function () {
@@ -1255,9 +1195,6 @@
                             }).bind('click', function () {
                                 loadAccessForm(data[2], data[0], $(this));
                                 addBreadcrumbLevel('edit', data[2], data[3]);
-                            }).attr({
-                                'data-toggle' :"tooltip",
-                                'title' : aam.__('Manage Access')
                             }));
                             break;
 
@@ -1266,10 +1203,8 @@
                                 'class': 'aam-row-action text-warning icon-pencil'
                             }).bind('click', function () {
                                 window.open(data[1], '_blank');
-                            }).attr({
-                                'data-toggle' :"tooltip",
-                                'title' : aam.__('Edit')
                             }));
+                            break;
                             break;
 
                         default:
@@ -1310,14 +1245,13 @@
 
 })(jQuery);
 
-
 /**
- * Extensions Interface
- * 
- * @param {jQuery} $
- * 
- * @returns {void}
+ * ======================================================================
+ * LICENSE: This file is subject to the terms and conditions defined in *
+ * file 'license.txt', which is part of this source code package.       *
+ * ======================================================================
  */
+
 (function ($) {
 
     var dump = null;
@@ -1426,7 +1360,7 @@
                     dump.title + '.zip',
                     'application/zip'
                     );
-            $('#extension-notification-modal').modal('hide');
+            $('#extension-notification-modal').hide();
         });
     }
 
@@ -1436,12 +1370,12 @@
 
 
 /**
- * Main Panel Interface
- * 
- * @param {jQuery} $
- * 
- * @returns {void}
+ * ======================================================================
+ * LICENSE: This file is subject to the terms and conditions defined in *
+ * file 'license.txt', which is part of this source code package.       *
+ * ======================================================================
  */
+
 (function ($) {
 
     /**

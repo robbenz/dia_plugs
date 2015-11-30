@@ -53,13 +53,14 @@ class AAM_Frontend_Manager {
      * @return void
      *
      * @access public
+     * @global WP_Query $wp_query
      * @global WP_Post $post
      */
     public function wp() {
-        global $post;
+        global $wp_query, $post;
 
         $user = AAM::getUser();
-        if (is_single() || is_page()) {
+        if (!$wp_query->is_home() && ($post instanceof WP_Post)) {
             if ($user->getObject('post', $post->ID)->has('frontend.read')) {
                 AAM_Core_API::reject();
             }

@@ -81,18 +81,12 @@ class AAM_Backend_User {
      * @access protected
      */
     protected function prepareRowActions(WP_User $user) {
-        $max = AAM_Core_API::maxLevel(wp_get_current_user()->allcaps);
+        $actions = array('manage');
         
-        if ($max < AAM_Core_API::maxLevel($user->allcaps)) {
-            $actions = array('no-manage', 'no-lock', 'no-edit');
-        } else {
-            $actions = array('manage');
-
-            $prefix = ($user->ID == get_current_user_id() ? 'no-' : '');
-            $actions[] = $prefix . ($user->user_status ? 'unlock' : 'lock');
-
-            $actions[] = 'edit';
-        }
+        $prefix = ($user->ID == get_current_user_id() ? 'no-' : '');
+        $actions[] = $prefix . ($user->user_status ? 'unlock' : 'lock');
+        
+        $actions[] = 'edit';
         
         return $actions;
     }

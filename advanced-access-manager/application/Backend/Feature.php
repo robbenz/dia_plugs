@@ -34,7 +34,7 @@ class AAM_Backend_Feature {
 
         if (empty($feature->capability)){
             $cap = AAM_Core_ConfigPress::get(
-                    'aam.feature.capability', 'administrator'
+                    'aam.default_feature_capability', 'administrator'
             );
         } else {
             $cap = $feature->capability;
