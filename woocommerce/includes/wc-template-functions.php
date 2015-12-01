@@ -1911,7 +1911,7 @@ if ( ! function_exists( 'wc_dropdown_variation_attribute_options' ) ) {
 			'selected' 	       => false,
 			'name'             => '',
 			'id'               => '',
-			'class'            => '',
+			'class'            => ''
 			//'show_option_none' => __( 'Choose an option', 'woocommerce' )
 		) );
 
