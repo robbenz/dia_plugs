@@ -10,10 +10,6 @@
  * @version     2.1.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
-}
-
 /**
  * Replace a page title with the endpoint title
  * @param  string $title
@@ -68,8 +64,8 @@ function wc_get_page_id( $page ) {
  * @return string
  */
 function wc_get_page_permalink( $page ) {
-	$page_id   = wc_get_page_id( $page );
-	$permalink = $page_id ? get_permalink( $page_id ) : '';
+	$permalink = get_permalink( wc_get_page_id( $page ) );
+
 	return apply_filters( 'woocommerce_get_' . $page . '_page_permalink', $permalink );
 }
 
@@ -132,19 +128,13 @@ function wc_edit_address_i18n( $id, $flip = false ) {
  * Returns the url to the lost password endpoint url
  *
  * @access public
- * @param  string $default_url
  * @return string
  */
-function wc_lostpassword_url( $default_url = '' ) {
-	$wc_password_reset_url = wc_get_page_permalink( 'myaccount' );
-
-	if ( false !== $wc_password_reset_url ) {
-    	return wc_get_endpoint_url( 'lost-password', '', $wc_password_reset_url );
-	} else {
-		return $default_url;
-	}
+function wc_lostpassword_url() {
+    return wc_get_endpoint_url( 'lost-password', '', wc_get_page_permalink( 'myaccount' ) );
 }
-add_filter( 'lostpassword_url',  'wc_lostpassword_url', 10, 1 );
+add_filter( 'lostpassword_url',  'wc_lostpassword_url', 10, 0 );
+
 
 /**
  * Get the link to the edit account details page
@@ -167,11 +157,9 @@ function wc_nav_menu_items( $items ) {
 	if ( ! is_user_logged_in() ) {
 		$customer_logout = get_option( 'woocommerce_logout_endpoint', 'customer-logout' );
 
-		if ( ! empty( $customer_logout ) ) {
-			foreach ( $items as $key => $item ) {
-				if ( strstr( $item->url, $customer_logout ) ) {
-					unset( $items[ $key ] );
-				}
+		foreach ( $items as $key => $item ) {
+			if ( strstr( $item->url, $customer_logout ) ) {
+				unset( $items[ $key ] );
 			}
 		}
 	}

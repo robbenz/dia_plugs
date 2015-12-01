@@ -53,15 +53,4 @@ jQuery(function( $ ) {
 		}
 	}).change();
 
-	$('.button-next').on( 'click', function() {
-		$('.wc-setup-content').block({
-			message: null,
-			overlayCSS: {
-				background: '#fff',
-				opacity: 0.6
-			}
-		});
-		return true;
-	});
-
 });

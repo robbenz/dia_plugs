@@ -367,14 +367,8 @@ class WC_API_Products extends WC_API_Resource {
 			$this->save_product_meta( $id, $data );
 
 			// Save variations
-			$product = get_product( $id );
-			if ( $product->is_type( 'variable' ) ) {
-				if ( isset( $data['variations'] ) && is_array( $data['variations'] ) ) {
-					$this->save_variations( $id, $data );
-				} else {
-					// Just sync variations
-					WC_Product_Variable::sync( $id );
-				}
+			if ( isset( $data['type'] ) && 'variable' == $data['type'] && isset( $data['variations'] ) && is_array( $data['variations'] ) ) {
+				$this->save_variations( $id, $data );
 			}
 
 			do_action( 'woocommerce_api_edit_product', $id, $data );
@@ -616,8 +610,6 @@ class WC_API_Products extends WC_API_Resource {
 				'value'   => $args['sku'],
 				'compare' => '='
 			);
-
-			$query_args['post_type'] = array( 'product', 'product_variation' );
 		}
 
 		$query_args = $this->merge_query_args( $query_args, $args );
@@ -845,8 +837,8 @@ class WC_API_Products extends WC_API_Resource {
 			$attributes = array();
 
 			foreach ( $data['attributes'] as $attribute ) {
-				$is_taxonomy = 0;
-				$taxonomy    = 0;
+				$is_taxonomy    = 0;
+				$taxonomy       = 0;
 
 				if ( ! isset( $attribute['name'] ) ) {
 					continue;
@@ -866,14 +858,15 @@ class WC_API_Products extends WC_API_Resource {
 				if ( $is_taxonomy ) {
 
 					if ( isset( $attribute['options'] ) ) {
-						$options = $attribute['options'];
+						// Select based attributes - Format values (posted values are slugs)
+						if ( is_array( $attribute['options'] ) ) {
+							$values = array_map( 'sanitize_title', $attribute['options'] );
 
-						if ( ! is_array( $attribute['options'] ) ) {
-							// Text based attributes - Posted values are term names
-							$options = explode( WC_DELIMITER, $options );
+						// Text based attributes - Posted values are term names - don't change to slugs
+						} else {
+							$values = array_map( 'stripslashes', array_map( 'strip_tags', explode( WC_DELIMITER, $attribute['options'] ) ) );
 						}
 
-						$values = array_map( 'wc_sanitize_term_text_based', $options );
 						$values = array_filter( $values, 'strlen' );
 					} else {
 						$values = array();
@@ -1462,15 +1455,11 @@ class WC_API_Products extends WC_API_Resource {
 						continue;
 					}
 
-					$taxonomy   = 0;
+					$taxonomy   = sanitize_title( $attribute['name'] );
 					$_attribute = array();
 
 					if ( isset( $attribute['slug'] ) ) {
 						$taxonomy = $this->get_attribute_taxonomy_by_slug( $attribute['slug'] );
-					}
-
-					if ( ! $taxonomy ) {
-						$taxonomy = sanitize_title( $attribute['name'] );
 					}
 
 					if ( isset( $attributes[ $taxonomy ] ) ) {

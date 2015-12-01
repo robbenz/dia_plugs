@@ -9,6 +9,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Based on EvalMath by Miles Kaufman Copyright (C) 2005 Miles Kaufmann http://www.twmagic.com/
  */
 class WC_Eval_Math {
+	/** @var bool */
+	public static $suppress_errors = false;
+
 	/** @var string */
 	public static $last_error = null;
 
@@ -249,7 +252,7 @@ class WC_Eval_Math {
 	// trigger an error, but nicely, if need be
 	private static function trigger( $msg ) {
 		self::$last_error = $msg;
-		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+		if ( ! self::$suppress_errors ) {
 			echo "\nError found in:";
 			self::debugPrintCallingFunction();
 			trigger_error( $msg, E_USER_WARNING );

@@ -241,7 +241,7 @@ class WC_API_Customers extends WC_API_Resource {
 
 			$query = $this->query_customers( $filter );
 
-			return array( 'count' => $query->get_total() );
+			return array( 'count' => count( $query->get_results() ) );
 		} catch ( WC_API_Exception $e ) {
 			return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
 		}

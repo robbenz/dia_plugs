@@ -14,6 +14,7 @@ class WC_Shortcode_My_Account {
 	/**
 	 * Get the shortcode content.
 	 *
+	 * @access public
 	 * @param array $atts
 	 * @return string
 	 */
@@ -24,7 +25,9 @@ class WC_Shortcode_My_Account {
 	/**
 	 * Output the shortcode.
 	 *
+	 * @access public
 	 * @param array $atts
+	 * @return void
 	 */
 	public static function output( $atts ) {
 		global $wp;
@@ -182,6 +185,9 @@ class WC_Shortcode_My_Account {
 	 * Lost password page
 	 */
 	public static function lost_password() {
+
+		global $post;
+
 		// arguments to pass to template
 		$args = array( 'form' => 'lost_password' );
 
@@ -197,7 +203,7 @@ class WC_Shortcode_My_Account {
 				$args['login'] = esc_attr( $_GET['login'] );
 			}
 		} elseif ( isset( $_GET['reset'] ) ) {
-			wc_add_notice( __( 'Your password has been reset.', 'woocommerce' ) . ' <a href="' . wc_get_page_permalink( 'myaccount' ) . '">' . __( 'Log in', 'woocommerce' ) . '</a>' );
+			wc_add_notice( __( 'Your password has been reset.', 'woocommerce' ) . ' <a href="' . wc_get_page_permalink( 'myaccount' ) . '">' . __( 'Click Here to Log in', 'woocommerce' ) . '</a>' );
 		}
 
 		wc_get_template( 'myaccount/form-lost-password.php', $args );
@@ -215,21 +221,20 @@ class WC_Shortcode_My_Account {
 	public static function retrieve_password() {
 		global $wpdb, $wp_hasher;
 
-		$login = trim( $_POST['user_login'] );
-
-		if ( empty( $login ) ) {
+		if ( empty( $_POST['user_login'] ) ) {
 
 			wc_add_notice( __( 'Enter a username or e-mail address.', 'woocommerce' ), 'error' );
 			return false;
 
 		} else {
 			// Check on username first, as customers can use emails as usernames.
+			$login = trim( $_POST['user_login'] );
 			$user_data = get_user_by( 'login', $login );
 		}
 
 		// If no user found, check if it login is email and lookup user based on email.
-		if ( ! $user_data && is_email( $login ) && apply_filters( 'woocommerce_get_username_from_email', true ) ) {
-			$user_data = get_user_by( 'email', $login );
+		if ( ! $user_data && is_email( $_POST['user_login'] ) && apply_filters( 'woocommerce_get_username_from_email', true ) ) {
+			$user_data = get_user_by( 'email', trim( $_POST['user_login'] ) );
 		}
 
 		do_action( 'lostpassword_post' );
@@ -246,6 +251,7 @@ class WC_Shortcode_My_Account {
 
 		// redefining user_login ensures we return the right case in the email
 		$user_login = $user_data->user_login;
+		$user_email = $user_data->user_email;
 
 		do_action( 'retrieve_password', $user_login );
 
@@ -254,11 +260,13 @@ class WC_Shortcode_My_Account {
 		if ( ! $allow ) {
 
 			wc_add_notice( __( 'Password reset is not allowed for this user', 'woocommerce' ), 'error' );
+
 			return false;
 
 		} elseif ( is_wp_error( $allow ) ) {
 
 			wc_add_notice( $allow->get_error_message(), 'error' );
+
 			return false;
 		}
 
@@ -280,7 +288,7 @@ class WC_Shortcode_My_Account {
 		WC()->mailer(); // load email classes
 		do_action( 'woocommerce_reset_password_notification', $user_login, $key );
 
-		wc_add_notice( __( 'Check your e-mail for the confirmation link.', 'woocommerce' ) );
+		wc_add_notice( __( 'Check your e-mail for the confirmation link. Please be patient, this can take a minute.', 'woocommerce' ) );
 		return true;
 	}
 
@@ -330,8 +338,10 @@ class WC_Shortcode_My_Account {
 	/**
 	 * Handles resetting the user's password.
 	 *
+	 * @access public
 	 * @param object $user The user
 	 * @param string $new_pass New password for the user in plaintext
+	 * @return void
 	 */
 	public static function reset_password( $user, $new_pass ) {
 		do_action( 'password_reset', $user, $new_pass );

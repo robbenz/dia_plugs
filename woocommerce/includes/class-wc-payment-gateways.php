@@ -1,9 +1,4 @@
 <?php
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
-}
-
 /**
  * WooCommerce Payment Gateways class
  *
@@ -61,7 +56,10 @@ class WC_Payment_Gateways {
 	}
 
 	/**
-	 * Initialize payment gateways.
+	 * __construct function.
+	 *
+	 * @access public
+	 * @return void
 	 */
 	public function __construct() {
 		$this->init();
@@ -69,6 +67,9 @@ class WC_Payment_Gateways {
 
 	/**
 	 * Load gateways and hook in functions.
+	 *
+	 * @access public
+	 * @return void
 	 */
 	public function init() {
 		$load_gateways = array(
@@ -78,15 +79,9 @@ class WC_Payment_Gateways {
 			'WC_Gateway_Paypal',
 		);
 
-		$simplify_countries = (array) apply_filters( 'woocommerce_gateway_simplify_commerce_supported_countries', array( 'US', 'IE' ) );
-
-		if ( in_array( WC()->countries->get_base_country(), $simplify_countries ) ) {
+		if ( 'US' === WC()->countries->get_base_country() ) {
 			if ( class_exists( 'WC_Subscriptions_Order' ) || class_exists( 'WC_Pre_Orders_Order' ) ) {
-				if ( ! function_exists( 'wcs_create_renewal_order' ) ) { // Subscriptions < 2.0
-					$load_gateways[] = 'WC_Addons_Gateway_Simplify_Commerce_Deprecated';
-				} else {
-					$load_gateways[] = 'WC_Addons_Gateway_Simplify_Commerce';
-				}
+				$load_gateways[] = 'WC_Addons_Gateway_Simplify_Commerce';
 			} else {
 				$load_gateways[] = 'WC_Gateway_Simplify_Commerce';
 			}
@@ -172,6 +167,9 @@ class WC_Payment_Gateways {
 
 	/**
 	 * Save options in admin.
+	 *
+	 * @access public
+	 * @return void
 	 */
 	public function process_admin_options() {
 

@@ -49,6 +49,8 @@ class WC_Widget_Layered_Nav extends WC_Widget {
 	 * @see WP_Widget->form
 	 *
 	 * @param array $instance
+	 *
+	 * @return void
 	 */
 	public function form( $instance ) {
 		$this->init_settings();
@@ -58,6 +60,8 @@ class WC_Widget_Layered_Nav extends WC_Widget {
 
 	/**
 	 * Init settings after post types are registered
+	 *
+	 * @return void
 	 */
 	public function init_settings() {
 		$attribute_array      = array();
@@ -111,6 +115,8 @@ class WC_Widget_Layered_Nav extends WC_Widget {
 	 *
 	 * @param array $args
 	 * @param array $instance
+	 *
+	 * @return void
 	 */
 	public function widget( $args, $instance ) {
 		global $_chosen_attributes;
@@ -231,7 +237,7 @@ class WC_Widget_Layered_Nav extends WC_Widget {
 					wc_enqueue_js( "
 						jQuery( '.dropdown_layered_nav_$taxonomy_filter' ).change( function() {
 							var term_id = parseInt( jQuery( this ).val(), 10 );
-							location.href = '" . preg_replace( '%\/page\/[0-9]+%', '', str_replace( array( '&amp;', '%2C' ), array( '&', ',' ), esc_js( add_query_arg( 'filtering', '1', remove_query_arg( array( 'page', 'filter_' . $taxonomy_filter ) ) ) ) ) ) . "&filter_$taxonomy_filter=' + ( isNaN( term_id ) ? '' : term_id );
+							location.href = '" . str_replace( array( '%\/page/[0-9]+%', '&amp;', '%2C' ), array( '', '&', ',' ), esc_js( add_query_arg( 'filtering', '1', remove_query_arg( array( 'page', 'filter_' . $taxonomy_filter ) ) ) ) ) . "&filter_$taxonomy_filter=' + ( isNaN( term_id ) ? '' : term_id );
 						});
 					" );
 
