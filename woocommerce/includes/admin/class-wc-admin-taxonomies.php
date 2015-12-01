@@ -22,7 +22,6 @@ class WC_Admin_Taxonomies {
 	 * Constructor
 	 */
 	public function __construct() {
-
 		// Category/term ordering
 		add_action( 'create_term', array( $this, 'create_term' ), 5, 3 );
 		add_action( 'delete_term', array( $this, 'delete_term' ), 5 );
@@ -40,6 +39,14 @@ class WC_Admin_Taxonomies {
 		// Taxonomy page descriptions
 		add_action( 'product_cat_pre_add_form', array( $this, 'product_cat_description' ) );
 		add_action( 'product_shipping_class_pre_add_form', array( $this, 'shipping_class_description' ) );
+
+		$attribute_taxonomies = wc_get_attribute_taxonomies();
+
+		if ( $attribute_taxonomies ) {
+			foreach ( array_keys( $attribute_taxonomies ) as $attribute ) {
+				add_action( $attribute . '_pre_add_form', array( $this, 'product_attribute_description' ) );
+			}
+		}
 
 		// Maintain hierarchy of terms
 		add_filter( 'wp_terms_checklist_args', array( $this, 'disable_checked_ontop' ) );
@@ -68,15 +75,13 @@ class WC_Admin_Taxonomies {
 	 * @param mixed $term_id
 	 */
 	public function delete_term( $term_id ) {
-
-		$term_id = (int) $term_id;
-
-		if ( ! $term_id ) {
-			return;
-		}
-
 		global $wpdb;
-		$wpdb->query( "DELETE FROM {$wpdb->woocommerce_termmeta} WHERE `woocommerce_term_id` = " . $term_id );
+
+		$term_id = absint( $term_id );
+
+		if ( $term_id ) {
+			$wpdb->delete( $wpdb->woocommerce_termmeta, array( 'woocommerce_term_id' => $term_id ), array( '%d' ) );
+		}
 	}
 
 	/**
@@ -135,7 +140,7 @@ class WC_Admin_Taxonomies {
 						var attachment = file_frame.state().get( 'selection' ).first().toJSON();
 
 						jQuery( '#product_cat_thumbnail_id' ).val( attachment.id );
-						jQuery( '#product_cat_thumbnail img' ).attr( 'src', attachment.sizes.thumbnail.url );
+						jQuery( '#product_cat_thumbnail' ).find( 'img' ).attr( 'src', attachment.sizes.thumbnail.url );
 						jQuery( '.remove_image_button' ).show();
 					});
 
@@ -144,7 +149,7 @@ class WC_Admin_Taxonomies {
 				});
 
 				jQuery( document ).on( 'click', '.remove_image_button', function() {
-					jQuery( '#product_cat_thumbnail img' ).attr( 'src', '<?php echo esc_js( wc_placeholder_img_src() ); ?>' );
+					jQuery( '#product_cat_thumbnail' ).find( 'img' ).attr( 'src', '<?php echo esc_js( wc_placeholder_img_src() ); ?>' );
 					jQuery( '#product_cat_thumbnail_id' ).val( '' );
 					jQuery( '.remove_image_button' ).hide();
 					return false;
@@ -226,7 +231,7 @@ class WC_Admin_Taxonomies {
 							var attachment = file_frame.state().get( 'selection' ).first().toJSON();
 
 							jQuery( '#product_cat_thumbnail_id' ).val( attachment.id );
-							jQuery( '#product_cat_thumbnail img' ).attr( 'src', attachment.sizes.thumbnail.url );
+							jQuery( '#product_cat_thumbnail' ).find( 'img' ).attr( 'src', attachment.sizes.thumbnail.url );
 							jQuery( '.remove_image_button' ).show();
 						});
 
@@ -235,7 +240,7 @@ class WC_Admin_Taxonomies {
 					});
 
 					jQuery( document ).on( 'click', '.remove_image_button', function() {
-						jQuery( '#product_cat_thumbnail img' ).attr( 'src', '<?php echo esc_js( wc_placeholder_img_src() ); ?>' );
+						jQuery( '#product_cat_thumbnail' ).find( 'img' ).attr( 'src', '<?php echo esc_js( wc_placeholder_img_src() ); ?>' );
 						jQuery( '#product_cat_thumbnail_id' ).val( '' );
 						jQuery( '.remove_image_button' ).hide();
 						return false;
@@ -274,6 +279,13 @@ class WC_Admin_Taxonomies {
 	 */
 	public function shipping_class_description() {
 		echo wpautop( __( 'Shipping classes can be used to group products of similar type. These groups can then be used by certain shipping methods to provide different rates to different products.', 'woocommerce' ) );
+	}
+
+	/**
+	 * Description for shipping class page to aid users.
+	 */
+	public function product_attribute_description() {
+		echo wpautop( __( 'Attribute terms can be assigned to products and variations.<br/><br/><b>Note</b>: Deleting a term will remove it from all products and variations to which it has been assigned. Recreating a term will not automatically assign it back to products.', 'woocommerce' ) );
 	}
 
 	/**
@@ -316,7 +328,7 @@ class WC_Admin_Taxonomies {
 			// Ref: http://core.trac.wordpress.org/ticket/23605
 			$image = str_replace( ' ', '%20', $image );
 
-			$columns .= '<img src="' . esc_url( $image ) . '" alt="' . __( 'Thumbnail', 'woocommerce' ) . '" class="wp-post-image" height="48" width="48" />';
+			$columns .= '<img src="' . esc_url( $image ) . '" alt="' . esc_attr__( 'Thumbnail', 'woocommerce' ) . '" class="wp-post-image" height="48" width="48" />';
 
 		}
 

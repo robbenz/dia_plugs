@@ -31,8 +31,11 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway {
 			'subscription_reactivation',
 			'subscription_suspension',
 			'subscription_amount_changes',
-			'subscription_payment_method_change',
+			'subscription_payment_method_change', // Subscriptions 1.n compatibility
+			'subscription_payment_method_change_customer',
+			'subscription_payment_method_change_admin',
 			'subscription_date_changes',
+			'multiple_subscriptions',
 			'default_credit_card_form',
 			'refunds',
 			'pre-orders'
@@ -67,8 +70,6 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway {
 
 	/**
 	 * Init Simplify SDK.
-	 *
-	 * @return void
 	 */
 	protected function init_simplify_sdk() {
 		// Include lib
@@ -82,13 +83,10 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway {
 	/**
 	 * Admin Panel Options
 	 * - Options for bits like 'title' and availability on a country-by-country basis
-	 *
-	 * @access public
-	 * @return void
 	 */
 	public function admin_options() {
 		?>
-		<h3><?php _e( 'Simplify Commerce by Mastercard', 'woocommerce' ); ?></h3>
+		<h3><?php _e( 'Simplify Commerce by MasterCard', 'woocommerce' ); ?></h3>
 
 		<?php if ( empty( $this->public_key ) ) : ?>
 			<div class="simplify-commerce-banner updated">
@@ -199,7 +197,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway {
 				'title'       => __( 'Description', 'woocommerce' ),
 				'type'        => 'text',
 				'description' => __( 'This controls the description which the user sees during checkout.', 'woocommerce' ),
-				'default'     => 'Pay with your credit card via Simplify Commerce by Mastercard.',
+				'default'     => 'Pay with your credit card via Simplify Commerce by MasterCard.',
 				'desc_tip'    => true
 			),
 			'mode' => array(
@@ -307,7 +305,8 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway {
 	 *
 	 * @param  WC_Order $order
 	 * @param  string   $cart_token
-	 *
+	 * @uses   Simplify_ApiException
+	 * @uses   Simplify_BadRequestException
 	 * @return array
 	 */
 	protected function process_standard_payments( $order, $cart_token = '' ) {
@@ -328,13 +327,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway {
 				'token'               => $cart_token,
 				'description'         => sprintf( __( '%s - Order #%s', 'woocommerce' ), esc_html( get_bloginfo( 'name', 'display' ) ), $order->get_order_number() ),
 				'currency'            => strtoupper( get_woocommerce_currency() ),
-				'reference'           => $order->id,
-				'card.addressCity'    => $order->billing_city,
-				'card.addressCountry' => $order->billing_country,
-				'card.addressLine1'   => $order->billing_address_1,
-				'card.addressLine2'   => $order->billing_address_2,
-				'card.addressState'   => $order->billing_state,
-				'card.addressZip'     => $order->billing_postcode
+				'reference'           => $order->id
 			) );
 
 			$order_complete = $this->process_order_status( $order, $payment->id, $payment->paymentStatus, $payment->authCode );
@@ -405,14 +398,19 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway {
 	 */
 	protected function get_hosted_payments_args( $order ) {
 		$args = apply_filters( 'woocommerce_simplify_commerce_hosted_args', array(
-			'sc-key'       => $this->public_key,
-			'amount'       => $order->order_total * 100,
-			'reference'    => $order->id,
-			'name'         => esc_html( get_bloginfo( 'name', 'display' ) ),
-			'description'  => sprintf( __( 'Order #%s', 'woocommerce' ), $order->get_order_number() ),
-			'receipt'      => 'false',
-			'color'        => $this->modal_color,
-			'redirect-url' => WC()->api_request_url( 'WC_Gateway_Simplify_Commerce' )
+			'sc-key'          => $this->public_key,
+			'amount'          => $order->order_total * 100,
+			'reference'       => $order->id,
+			'name'            => esc_html( get_bloginfo( 'name', 'display' ) ),
+			'description'     => sprintf( __( 'Order #%s', 'woocommerce' ), $order->get_order_number() ),
+			'receipt'         => 'false',
+			'color'           => $this->modal_color,
+			'redirect-url'    => WC()->api_request_url( 'WC_Gateway_Simplify_Commerce' ),
+			'address'         => $order->billing_address_1 . ' ' . $order->billing_address_2,
+			'address-city'    => $order->billing_city,
+			'address-state'   => $order->billing_state,
+			'address-zip'     => $order->billing_postcode,
+			'address-country' => $order->billing_country
 		), $order->id );
 
 		return $args;
@@ -501,6 +499,8 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway {
 	 * @param  int $order_id
 	 * @param  float $amount
 	 * @param  string $reason
+	 * @uses   Simplify_ApiException
+	 * @uses   Simplify_BadRequestException
 	 * @return bool|WP_Error
 	 */
 	public function process_refund( $order_id, $amount = null, $reason = '' ) {
@@ -541,7 +541,7 @@ class WC_Gateway_Simplify_Commerce extends WC_Payment_Gateway {
 	 */
 	public function get_icon() {
 		$icon  = '<img src="' . WC_HTTPS::force_https_url( WC()->plugin_url() . '/assets/images/icons/credit-cards/visa.png' ) . '" alt="Visa" />';
-		$icon .= '<img src="' . WC_HTTPS::force_https_url( WC()->plugin_url() . '/assets/images/icons/credit-cards/mastercard.png' ) . '" alt="Mastercard" />';
+		$icon .= '<img src="' . WC_HTTPS::force_https_url( WC()->plugin_url() . '/assets/images/icons/credit-cards/mastercard.png' ) . '" alt="MasterCard" />';
 		$icon .= '<img src="' . WC_HTTPS::force_https_url( WC()->plugin_url() . '/assets/images/icons/credit-cards/discover.png' ) . '" alt="Discover" />';
 		$icon .= '<img src="' . WC_HTTPS::force_https_url( WC()->plugin_url() . '/assets/images/icons/credit-cards/amex.png' ) . '" alt="Amex" />';
 		$icon .= '<img src="' . WC_HTTPS::force_https_url( WC()->plugin_url() . '/assets/images/icons/credit-cards/jcb.png' ) . '" alt="JCB" />';

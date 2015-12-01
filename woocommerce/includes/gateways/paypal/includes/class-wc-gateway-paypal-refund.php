@@ -41,7 +41,7 @@ class WC_Gateway_Paypal_Refund {
 			$request['CURRENCYCODE'] = $order->get_order_currency();
 			$request['REFUNDTYPE']   = 'Partial';
 		}
-		return $request;
+		return apply_filters( 'woocommerce_paypal_refund_request', $request, $order, $amount, $reason );
 	}
 
 	/**
@@ -63,6 +63,8 @@ class WC_Gateway_Paypal_Refund {
 				'httpversion' => '1.1'
 			)
 		);
+
+		WC_Gateway_Paypal::log( 'Refund Response: ' . print_r( $response, true ) );
 
 		if ( is_wp_error( $response ) ) {
 			return $response;

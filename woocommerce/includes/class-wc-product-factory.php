@@ -1,4 +1,9 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
+}
+
 /**
  * Product Factory Class
  *
@@ -76,7 +81,7 @@ class WC_Product_Factory {
 	/**
 	 * Get the product object
 	 * @param  mixed $the_product
-	 * @uses   WP_POST
+	 * @uses   WP_Post
 	 * @return WP_Post|bool false on failure
 	 */
 	private function get_product_object( $the_product ) {
