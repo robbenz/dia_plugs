@@ -2,10 +2,10 @@
 /**
  * WooCommerce Admin Functions
  *
- * @author      WooThemes
- * @category    Core
- * @package     WooCommerce/Admin/Functions
- * @version     2.1.0
+ * @author   WooThemes
+ * @category Core
+ * @package  WooCommerce/Admin/Functions
+ * @version  2.4.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -60,41 +60,63 @@ function wc_get_screen_ids() {
 function wc_create_page( $slug, $option = '', $page_title = '', $page_content = '', $post_parent = 0 ) {
 	global $wpdb;
 
-	$option_value = get_option( $option );
+	$option_value     = get_option( $option );
 
-	if ( $option_value > 0 && get_post( $option_value ) ) {
-		return -1;
+	if ( $option_value > 0 ) {
+		$page_object = get_post( $option_value );
+
+		if ( 'page' === $page_object->post_type && ! in_array( $page_object->post_status, array( 'pending', 'trash', 'future', 'auto-draft' ) ) ) {
+			// Valid page is already in place
+			return $page_object->ID;
+		}
 	}
 
 	if ( strlen( $page_content ) > 0 ) {
 		// Search for an existing page with the specified page content (typically a shortcode)
-		$page_found = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM " . $wpdb->posts . " WHERE post_type='page' AND post_content LIKE %s LIMIT 1;", "%{$page_content}%" ) );
+		$valid_page_found = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_type='page' AND post_status NOT IN ( 'pending', 'trash', 'future', 'auto-draft' ) AND post_content LIKE %s LIMIT 1;", "%{$page_content}%" ) );
 	} else {
 		// Search for an existing page with the specified page slug
-		$page_found = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM " . $wpdb->posts . " WHERE post_type='page' AND post_name = %s LIMIT 1;", $slug ) );
+		$valid_page_found = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_type='page' AND post_status NOT IN ( 'pending', 'trash', 'future', 'auto-draft' )  AND post_name = %s LIMIT 1;", $slug ) );
 	}
 
-	$page_found = apply_filters( 'woocommerce_create_page_id', $page_found, $slug, $page_content );
+	$valid_page_found = apply_filters( 'woocommerce_create_page_id', $valid_page_found, $slug, $page_content );
 
-	if ( $page_found ) {
-		if ( ! $option_value ) {
-			update_option( $option, $page_found );
+	if ( $valid_page_found ) {
+		if ( $option ) {
+			update_option( $option, $valid_page_found );
 		}
-
-		return $page_found;
+		return $valid_page_found;
 	}
 
-	$page_data = array(
-		'post_status'       => 'publish',
-		'post_type'         => 'page',
-		'post_author'       => 1,
-		'post_name'         => $slug,
-		'post_title'        => $page_title,
-		'post_content'      => $page_content,
-		'post_parent'       => $post_parent,
-		'comment_status'    => 'closed'
-	);
-	$page_id = wp_insert_post( $page_data );
+	// Search for a matching valid trashed page
+	if ( strlen( $page_content ) > 0 ) {
+		// Search for an existing page with the specified page content (typically a shortcode)
+		$trashed_page_found = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_type='page' AND post_status = 'trash' AND post_content LIKE %s LIMIT 1;", "%{$page_content}%" ) );
+	} else {
+		// Search for an existing page with the specified page slug
+		$trashed_page_found = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_type='page' AND post_status = 'trash' AND post_name = %s LIMIT 1;", $slug ) );
+	}
+
+	if ( $trashed_page_found ) {
+		$page_id   = $trashed_page_found;
+		$page_data = array(
+			'ID'             => $page_id,
+			'post_status'    => 'publish',
+		);
+	 	wp_update_post( $page_data );
+	} else {
+		$page_data = array(
+			'post_status'    => 'publish',
+			'post_type'      => 'page',
+			'post_author'    => 1,
+			'post_name'      => $slug,
+			'post_title'     => $page_title,
+			'post_content'   => $page_content,
+			'post_parent'    => $post_parent,
+			'comment_status' => 'closed'
+		);
+		$page_id = wp_insert_post( $page_data );
+	}
 
 	if ( $option ) {
 		update_option( $option, $page_id );
@@ -227,16 +249,23 @@ function wc_save_order_items( $order_id, $items ) {
 
 	foreach ( $meta_keys as $id => $meta_key ) {
 		$meta_value = ( empty( $meta_values[ $id ] ) && ! is_numeric( $meta_values[ $id ] ) ) ? '' : $meta_values[ $id ];
-		$wpdb->update(
-			$wpdb->prefix . 'woocommerce_order_itemmeta',
-			array(
-				'meta_key'   => wp_unslash( $meta_key ),
-				'meta_value' => wp_unslash( $meta_value )
-			),
-			array( 'meta_id' => $id ),
-			array( '%s', '%s' ),
-			array( '%d' )
-		);
+
+		// Delele blank item meta entries
+		if ( $meta_key === '' && $meta_value === '' ) {
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}woocommerce_order_itemmeta WHERE meta_id = %d", $id ) );
+		} else {
+
+			$wpdb->update(
+				$wpdb->prefix . 'woocommerce_order_itemmeta',
+				array(
+					'meta_key'   => wp_unslash( $meta_key ),
+					'meta_value' => wp_unslash( $meta_value )
+				),
+				array( 'meta_id' => $id ),
+				array( '%s', '%s' ),
+				array( '%d' )
+			);
+		}
 	}
 
 	// Shipping Rows
@@ -247,7 +276,7 @@ function wc_save_order_items( $order_id, $items ) {
 		foreach ( $items['shipping_method_id'] as $item_id ) {
 			$item_id      = absint( $item_id );
 			$method_id    = isset( $items['shipping_method'][ $item_id ] ) ? wc_clean( $items['shipping_method'][ $item_id ] ) : '';
-			$method_title = isset( $items['shipping_method_title'][ $item_id ] ) ? wc_clean( $items['shipping_method_title'][ $item_id ] ) : '';
+			$method_title = isset( $items['shipping_method_title'][ $item_id ] ) ? wc_clean( wp_unslash( $items['shipping_method_title'][ $item_id ] ) ) : '';
 			$cost         = isset( $items['shipping_cost'][ $item_id ] ) ? wc_format_decimal( $items['shipping_cost'][ $item_id ] ) : '';
 			$ship_taxes   = isset( $items['shipping_taxes'][ $item_id ] ) ? array_map( 'wc_format_decimal', $items['shipping_taxes'][ $item_id ] ) : array();
 

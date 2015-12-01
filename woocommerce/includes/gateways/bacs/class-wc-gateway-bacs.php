@@ -24,7 +24,7 @@ class WC_Gateway_BACS extends WC_Payment_Gateway {
 	 * Constructor for the gateway.
 	 */
 	public function __construct() {
-		
+
 		$this->id                 = 'bacs';
 		$this->icon               = apply_filters('woocommerce_bacs_icon', '');
 		$this->has_fields         = false;
@@ -74,7 +74,7 @@ class WC_Gateway_BACS extends WC_Payment_Gateway {
 				'title'   => __( 'Enable/Disable', 'woocommerce' ),
 				'type'    => 'checkbox',
 				'label'   => __( 'Enable Bank Transfer', 'woocommerce' ),
-				'default' => 'yes'
+				'default' => 'no'
 			),
 			'title' => array(
 				'title'       => __( 'Title', 'woocommerce' ),
@@ -163,7 +163,7 @@ class WC_Gateway_BACS extends WC_Payment_Gateway {
 					jQuery(function() {
 						jQuery('#bacs_accounts').on( 'click', 'a.add', function(){
 
-							var size = jQuery('#bacs_accounts tbody .account').size();
+							var size = jQuery('#bacs_accounts').find('tbody .account').size();
 
 							jQuery('<tr class="account">\
 									<td class="sort"></td>\
@@ -237,11 +237,9 @@ class WC_Gateway_BACS extends WC_Payment_Gateway {
 	/**
 	 * Add content to the WC emails.
 	 *
-	 * @access public
 	 * @param WC_Order $order
 	 * @param bool $sent_to_admin
 	 * @param bool $plain_text
-	 * @return void
 	 */
 	public function email_instructions( $order, $sent_to_admin, $plain_text = false ) {
 
@@ -269,15 +267,15 @@ class WC_Gateway_BACS extends WC_Payment_Gateway {
 		// Get the order country and country $locale
 		$country 	= $order->billing_country;
 		$locale		= $this->get_country_locale();
-		
+
 		// Get sortcode label in the $locale array and use appropriate one
 		$sortcode = isset( $locale[ $country ]['sortcode']['label'] ) ? $locale[ $country ]['sortcode']['label'] : __( 'Sort Code', 'woocommerce' );
-
-		echo '<h2>' . __( 'Our Bank Details', 'woocommerce' ) . '</h2>' . PHP_EOL;
 
 		$bacs_accounts = apply_filters( 'woocommerce_bacs_accounts', $this->account_details );
 
 		if ( ! empty( $bacs_accounts ) ) {
+			echo '<h2>' . __( 'Our Bank Details', 'woocommerce' ) . '</h2>' . PHP_EOL;
+			
 			foreach ( $bacs_accounts as $bacs_account ) {
 
 				$bacs_account = (object) $bacs_account;
