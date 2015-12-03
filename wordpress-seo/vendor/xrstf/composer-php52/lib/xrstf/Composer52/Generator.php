@@ -28,12 +28,17 @@ class Generator {
 		// it expects a full definition of the current command line and we can't
 		// provide that.
 
-		$args     = $_SERVER['argv'];
-		$optimize = in_array('-o', $args) || in_array('--optimize-autoloader', $args) || in_array('--optimize', $args);
+//		$def   = new InputDefinition(array(new InputOption('optimize', 'o', InputOption::VALUE_NONE)));
+//		$input = new ArgvInput(null, $def);
+//		var_dump($input->hasOption('o')); // "Too many arguments"
 
-		$suffix   = $config->get('autoloader-suffix');
+//		$options  = getopt('o', array('optimize-autoloader')); // always array()
+//		$optimize = !empty($options);
+
+		$args     = $_SERVER['argv'];
+		$optimize = in_array('-o', $args) || in_array('-o', $args);
 
 		$generator = new AutoloadGenerator();
-		$generator->dump($config, $localRepo, $package, $installationManager, 'composer', $optimize, $suffix);
+		$generator->dump($config, $localRepo, $package, $installationManager, 'composer', $optimize);
 	}
 }

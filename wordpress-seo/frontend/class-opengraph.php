@@ -60,8 +60,8 @@ class WPSEO_OpenGraph {
 	/**
 	 * Internal function to output FB tags. This also adds an output filter to each bit of output based on the property.
 	 *
-	 * @param string $property Property attribute value.
-	 * @param string $content  Content attribute value.
+	 * @param string $property
+	 * @param string $content
 	 *
 	 * @return boolean
 	 */
@@ -185,12 +185,7 @@ class WPSEO_OpenGraph {
 			 */
 			$adminstr = apply_filters( 'wpseo_opengraph_admin', $adminstr );
 			if ( is_string( $adminstr ) && $adminstr !== '' ) {
-
-				$admins = explode( ',', $adminstr );
-
-				foreach ( $admins as $admin_id ) {
-					$this->og_tag( 'fb:admins', $admin_id );
-				}
+				$this->og_tag( 'fb:admins', $adminstr );
 
 				return true;
 			}
@@ -229,16 +224,6 @@ class WPSEO_OpenGraph {
 		}
 		else if ( is_front_page() ) {
 			$title = ( isset( $this->options['og_frontpage_title'] ) && $this->options['og_frontpage_title'] !== '' ) ? $this->options['og_frontpage_title'] : $frontend->title( '' );
-		}
-		elseif ( is_category() || is_tax() || is_tag() ) {
-			$title = WPSEO_Taxonomy_Meta::get_meta_without_term( 'opengraph-title' );
-			if ( $title === '' ) {
-				$title = $frontend->get_taxonomy_title( '' );
-			}
-			else {
-				// Replace Yoast SEO Variables.
-				$title = wpseo_replace_vars( $title, $GLOBALS['wp_query']->get_queried_object() );
-			}
 		}
 		else {
 			$title = $frontend->title( '' );
@@ -491,7 +476,7 @@ class WPSEO_OpenGraph {
 	/**
 	 * Create new WPSEO_OpenGraph_Image class and get the images to set the og:image
 	 *
-	 * @param string|boolean $image Optional image URL.
+	 * @param mixed $image
 	 */
 	public function image( $image = false ) {
 		$opengraph_images = new WPSEO_OpenGraph_Image( $this->options, $image );
@@ -504,7 +489,7 @@ class WPSEO_OpenGraph {
 	/**
 	 * Fallback method for plugins using image_output
 	 *
-	 * @param string $image Image URL.
+	 * @param string $image
 	 */
 	public function image_output( $image ) {
 		$this->image( $image );
@@ -552,17 +537,16 @@ class WPSEO_OpenGraph {
 		}
 
 		if ( is_category() || is_tag() || is_tax() ) {
-			$ogdesc = WPSEO_Taxonomy_Meta::get_meta_without_term( 'opengraph-description' );
-			if ( $ogdesc === '' ) {
-				$ogdesc = $frontend->metadesc( false );
-			}
 
-			if ( $ogdesc === '' ) {
+			$ogdesc = $frontend->metadesc( false );
+
+			if ( '' == $ogdesc ) {
 				$ogdesc = trim( strip_tags( term_description() ) );
 			}
 
-			if ( $ogdesc === '' ) {
-				$ogdesc = WPSEO_Taxonomy_Meta::get_meta_without_term( 'desc' );
+			if ( '' == $ogdesc ) {
+				$term   = $GLOBALS['wp_query']->get_queried_object();
+				$ogdesc = WPSEO_Taxonomy_Meta::get_term_meta( $term, $term->taxonomy, 'desc' );
 			}
 		}
 
@@ -702,8 +686,8 @@ class WPSEO_OpenGraph_Image {
 	/**
 	 * Constructor
 	 *
-	 * @param array          $options Options set.
-	 * @param string|boolean $image   Optional image URL.
+	 * @param array      $options
+	 * @param bool|mixed $image
 	 */
 	public function __construct( $options, $image = false ) {
 		$this->options = $options;
@@ -735,10 +719,6 @@ class WPSEO_OpenGraph_Image {
 			$this->get_singular_image();
 		}
 
-		if ( is_category() || is_tax() || is_tag() ) {
-			$this->get_opengraph_image_taxonomy();
-		}
-
 		$this->get_default_image();
 	}
 
@@ -757,7 +737,7 @@ class WPSEO_OpenGraph_Image {
 	private function get_singular_image() {
 		global $post;
 
-		if ( $this->get_opengraph_image_post() ) {
+		if ( $this->get_opengraph_image() ) {
 			return;
 		}
 
@@ -782,23 +762,12 @@ class WPSEO_OpenGraph_Image {
 	 *
 	 * @return bool
 	 */
-	private function get_opengraph_image_post() {
+	private function get_opengraph_image() {
 		$ogimg = WPSEO_Meta::get_value( 'opengraph-image' );
 		if ( $ogimg !== '' ) {
 			$this->add_image( $ogimg );
 
 			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Check if taxonomy has an image and add this image
-	 */
-	private function get_opengraph_image_taxonomy() {
-		if ( ( $ogimg = WPSEO_Taxonomy_Meta::get_meta_without_term( 'opengraph-image' ) ) !== '' ) {
-			$this->add_image( $ogimg );
 		}
 	}
 
@@ -822,8 +791,6 @@ class WPSEO_OpenGraph_Image {
 				return $this->add_image( $thumb[0] );
 			}
 		}
-
-		return false;
 	}
 
 	/**
@@ -853,11 +820,6 @@ class WPSEO_OpenGraph_Image {
 	 * @return bool
 	 */
 	private function check_featured_image_size( $img_data ) {
-
-		if ( ! is_array( $img_data ) ) {
-			return false;
-		}
-
 		// Get the width and height of the image.
 		if ( $img_data[1] < 200 || $img_data[2] < 200 ) {
 			return false;
@@ -896,7 +858,7 @@ class WPSEO_OpenGraph_Image {
 	/**
 	 * Get the relative path of the image
 	 *
-	 * @param array $img Image data array.
+	 * @param array $img
 	 *
 	 * @return bool|string
 	 */

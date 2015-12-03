@@ -28,33 +28,11 @@ use Composer\Repository\InstalledRepositoryInterface;
 use Composer\Util\Filesystem;
 
 class AutoloadGenerator extends BaseGenerator {
-
-	/**
-	 * @var bool
-	 */
-	private $classMapAuthoritative = false;
-
 	public function __construct() {
 		// do nothing (but keep this constructor so we can build an instance without the need for an event dispatcher)
 	}
 
-	/**
-	 * Whether or not generated autoloader considers the class map
-	 * authoritative.
-	 *
-	 * @param bool $classMapAuthoritative
-	 */
-	public function setClassMapAuthoritative($classMapAuthoritative)
-	{
-		$this->classMapAuthoritative = (boolean) $classMapAuthoritative;
-	}
-
 	public function dump(Config $config, InstalledRepositoryInterface $localRepo, PackageInterface $mainPackage, InstallationManager $installationManager, $targetDir, $scanPsr0Packages = false, $suffix = '') {
-		if ($this->classMapAuthoritative) {
-			// Force scanPsr0Packages when classmap is authoritative
-			$scanPsr0Packages = true;
-		}
-	
 		$filesystem = new Filesystem();
 		$filesystem->ensureDirectoryExists($config->get('vendor-dir'));
 
@@ -138,7 +116,7 @@ EOF;
 		$includePathFile = $this->getIncludePathsFile($packageMap, $filesystem, $basePath, $vendorPath, $vendorPathCode, $appBaseDirCode);
 
 		file_put_contents($vendorPath.'/autoload_52.php', $this->getAutoloadFile($vendorPathToTargetDirCode, $suffix));
-		file_put_contents($targetDir.'/autoload_real_52.php', $this->getAutoloadRealFile(true, (bool) $includePathFile, $targetDirLoader, $filesCode, $vendorPathCode, $appBaseDirCode, $suffix, $useGlobalIncludePath, $prependAutoloader));
+		file_put_contents($targetDir.'/autoload_real_52.php', $this->getAutoloadRealFile(true, (bool) $includePathFile, $targetDirLoader, $filesCode, $vendorPathCode, $appBaseDirCode, $suffix, $useGlobalIncludePath, $prependAutoloader, $classMapAuthoritative));
 
 		// use stream_copy_to_stream instead of copy
 		// to work around https://bugs.php.net/bug.php?id=64634
@@ -228,7 +206,7 @@ return ComposerAutoloaderInit$suffix::getLoader();
 AUTOLOAD;
 	}
 
-	protected function getAutoloadRealFile($useClassMap, $useIncludePath, $targetDirLoader, $filesCode, $vendorPathCode, $appBaseDirCode, $suffix, $useGlobalIncludePath, $prependAutoloader) {
+	protected function getAutoloadRealFile($useClassMap, $useIncludePath, $targetDirLoader, $filesCode, $vendorPathCode, $appBaseDirCode, $suffix, $useGlobalIncludePath, $prependAutoloader, $classMapAuthoritative) {
 		// TODO the class ComposerAutoloaderInit should be revert to a closure
 		// when APC has been fixed:
 		// - https://github.com/composer/composer/issues/959
@@ -303,7 +281,7 @@ PSR0;
 CLASSMAP;
 		}
 
-		if ($this->classMapAuthoritative) {
+		if ($classMapAuthoritative) {
 			$file .= <<<'CLASSMAPAUTHORITATIVE'
 		$loader->setClassMapAuthoritative(true);
 

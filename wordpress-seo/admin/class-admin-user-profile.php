@@ -21,7 +21,7 @@ class WPSEO_Admin_User_Profile {
 	/**
 	 * Filter POST variables.
 	 *
-	 * @param string $var_name Name of the variable to filter.
+	 * @param string $var_name
 	 *
 	 * @return mixed
 	 */
@@ -41,12 +41,6 @@ class WPSEO_Admin_User_Profile {
 	public function process_user_option_update( $user_id ) {
 		update_user_meta( $user_id, '_yoast_wpseo_profile_updated', time() );
 
-		$nonce_value = $this->filter_input_post( 'wpseo_nonce' );
-
-		if ( empty( $nonce_value ) ) { // Submit from alternate forms.
-			return;
-		}
-
 		check_admin_referer( 'wpseo_user_profile_update', 'wpseo_nonce' );
 
 		update_user_meta( $user_id, 'wpseo_title', $this->filter_input_post( 'wpseo_author_title' ) );
@@ -58,7 +52,7 @@ class WPSEO_Admin_User_Profile {
 	/**
 	 * Add the inputs needed for SEO values to the User Profile page
 	 *
-	 * @param WP_User $user User instance to output for.
+	 * @param    object $user
 	 */
 	public function user_profile( $user ) {
 		$options = WPSEO_Options::get_all();
@@ -67,4 +61,5 @@ class WPSEO_Admin_User_Profile {
 
 		require_once( 'views/user-profile.php' );
 	}
+
 }

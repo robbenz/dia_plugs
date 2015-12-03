@@ -40,8 +40,8 @@ class Yoast_Social_Facebook {
 	/**
 	 * Adding a new admin
 	 *
-	 * @param string $admin_name Name string.
-	 * @param string $admin_id   ID string.
+	 * @param string $admin_name
+	 * @param string $admin_id
 	 *
 	 * @return string
 	 */
@@ -77,7 +77,7 @@ class Yoast_Social_Facebook {
 			}
 		}
 
-		return WPSEO_Utils::json_encode(
+		return json_encode(
 			array(
 				'success' => $success,
 				'html'    => $response_body,
@@ -88,7 +88,7 @@ class Yoast_Social_Facebook {
 	/**
 	 * Fetches the id if the full meta tag or a full url was given
 	 *
-	 * @param string $admin_id Admin ID input string to process.
+	 * @param string $admin_id
 	 *
 	 * @return string
 	 */
@@ -103,9 +103,9 @@ class Yoast_Social_Facebook {
 	/**
 	 * Returns a different response body depending on the response type
 	 *
-	 * @param string $type Type string.
+	 * @param string $type
 	 *
-	 * @return string
+	 * @return null|string
 	 */
 	private function get_response_body( $type ) {
 		switch ( $type ) {
@@ -141,7 +141,7 @@ class Yoast_Social_Facebook {
 	/**
 	 * Deletes the admin from the options
 	 *
-	 * @param string $delfbadmin Facebook admin ID.
+	 * @param string $delfbadmin
 	 */
 	private function delete_admin( $delfbadmin ) {
 		$this->verify_nonce( 'delfbadmin' );
@@ -198,7 +198,7 @@ class Yoast_Social_Facebook {
 	/**
 	 * When something is going well, show a success notice
 	 *
-	 * @param string $notice_text Message string.
+	 * @param string $notice_text
 	 */
 	private function success_notice( $notice_text ) {
 		add_settings_error( 'yoast_wpseo_social_options', 'success', $notice_text, 'updated' );
@@ -207,7 +207,7 @@ class Yoast_Social_Facebook {
 	/**
 	 * Verify the nonce from the URL with the saved nonce
 	 *
-	 * @param string $nonce_name Nonce name string.
+	 * @param string $nonce_name
 	 */
 	private function verify_nonce( $nonce_name ) {
 		if ( wp_verify_nonce( filter_input( INPUT_GET, 'nonce' ), $nonce_name ) != 1 ) {
@@ -221,6 +221,7 @@ class Yoast_Social_Facebook {
 	private function save_options() {
 		update_option( 'wpseo_social', $this->options );
 	}
+
 }
 
 /**
@@ -265,9 +266,9 @@ class Yoast_Social_Facebook_Form {
 	/**
 	 * Parses the admin_link
 	 *
-	 * @param string      $admin_id Facebook admin ID string.
-	 * @param array       $admin    Admin data array.
-	 * @param string|bool $nonce    Optional nonce string.
+	 * @param string      $admin_id
+	 * @param array       $admin
+	 * @param string|bool $nonce
 	 *
 	 * @return string
 	 */
@@ -391,7 +392,7 @@ class Yoast_Social_Facebook_Form {
 	/**
 	 * Loop through the fb-admins to parse the output for them
 	 *
-	 * @param string $nonce Nonce string.
+	 * @param string $nonce
 	 */
 	private function show_user_admins( $nonce ) {
 		foreach ( $this->options['fb_admins'] as $admin_id => $admin ) {
@@ -402,8 +403,8 @@ class Yoast_Social_Facebook_Form {
 	/**
 	 * Parsing the link that directs to the admin removal
 	 *
-	 * @param string $admin_id Facebook admin ID.
-	 * @param string $nonce    Nonce string.
+	 * @param string $admin_id
+	 * @param string $nonce
 	 *
 	 * @return string
 	 */
@@ -422,7 +423,7 @@ class Yoast_Social_Facebook_Form {
 	/**
 	 * Adding a button to the button property
 	 *
-	 * @param array $args Arguments data array.
+	 * @param array $args
 	 */
 	private function add_button( $args ) {
 		$args = wp_parse_args(
@@ -480,4 +481,5 @@ class Yoast_Social_Facebook_Form {
 	private function get_delete_nonce() {
 		return wp_create_nonce( 'delfbadmin' );
 	}
+
 }

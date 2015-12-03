@@ -132,11 +132,9 @@ class WPSEO_Sitemaps {
 	/**
 	 * This query invalidates the main query on purpose so it returns nice and quickly
 	 *
-	 * @param string $where SQL strong for WHERE part.
+	 * @param string $where
 	 *
 	 * @deprecated The relevant sitemap code now hijacks main query before this filter can act on it.
-	 *
-	 * @todo Should be safe to drop now. R.
 	 *
 	 * @return string
 	 */
@@ -237,7 +235,7 @@ class WPSEO_Sitemaps {
 	/**
 	 * Hijack requests for potential sitemaps and XSL files.
 	 *
-	 * @param \WP_Query $query Main query instance.
+	 * @param \WP_Query $query
 	 */
 	function redirect( $query ) {
 
@@ -695,7 +693,7 @@ class WPSEO_Sitemaps {
 
 			// Optimized query per this thread: http://wordpress.org/support/topic/plugin-wordpress-seo-by-yoast-performance-suggestion.
 			// Also see http://explainextended.com/2009/10/23/mysql-order-by-limit-performance-late-row-lookups/.
-			$query = $wpdb->prepare( "SELECT l.ID, post_title, post_content, post_name, post_parent, post_author, post_modified_gmt, post_date, post_date_gmt FROM ( SELECT ID FROM $wpdb->posts {$join_filter} WHERE post_status = '%s' AND post_password = '' AND post_type = '%s' AND post_date != '0000-00-00 00:00:00' {$where_filter} ORDER BY post_modified ASC LIMIT %d OFFSET %d ) o JOIN $wpdb->posts l ON l.ID = o.ID ORDER BY l.ID",
+			$query = $wpdb->prepare( "SELECT l.ID, post_title, post_content, post_name, post_parent, post_modified_gmt, post_date, post_date_gmt FROM ( SELECT ID FROM $wpdb->posts {$join_filter} WHERE post_status = '%s' AND post_password = '' AND post_type = '%s' AND post_date != '0000-00-00 00:00:00' {$where_filter} ORDER BY post_modified ASC LIMIT %d OFFSET %d ) o JOIN $wpdb->posts l ON l.ID = o.ID ORDER BY l.ID",
 				$status, $post_type, $steps, $offset
 			);
 
@@ -852,10 +850,10 @@ class WPSEO_Sitemaps {
 	/**
 	 * Parsing the matched images
 	 *
-	 * @param array  $matches Set of matches.
-	 * @param object $p       Post object.
-	 * @param string $scheme  URL scheme.
-	 * @param string $host    URL host.
+	 * @param array  $matches
+	 * @param object $p
+	 * @param string $scheme
+	 * @param string $host
 	 *
 	 * @return array
 	 */
@@ -1133,7 +1131,7 @@ class WPSEO_Sitemaps {
 	/**
 	 * Spits out the XSL for the XML sitemap.
 	 *
-	 * @param string $type Type to output.
+	 * @param string $type
 	 *
 	 * @since 1.4.13
 	 */
@@ -1338,7 +1336,7 @@ class WPSEO_Sitemaps {
 	 *
 	 * Also filtering users that should be exclude by excluded role.
 	 *
-	 * @param array $users Set of users to filter.
+	 * @param array $users
 	 *
 	 * @return array all the user that aren't excluded from the sitemap
 	 */
@@ -1378,7 +1376,7 @@ class WPSEO_Sitemaps {
 	/**
 	 * Get attached image URL - Adapted from core for speed
 	 *
-	 * @param int $post_id ID of the post.
+	 * @param int $post_id
 	 *
 	 * @return string
 	 */
@@ -1417,7 +1415,7 @@ class WPSEO_Sitemaps {
 	/**
 	 * Getting the attachments from database
 	 *
-	 * @param string $post_ids Set of post IDs.
+	 * @param string $post_ids
 	 *
 	 * @return mixed
 	 */
@@ -1433,7 +1431,7 @@ class WPSEO_Sitemaps {
 	/**
 	 * Getting thumbnails
 	 *
-	 * @param array $post_ids Set of post IDs.
+	 * @param array $post_ids
 	 *
 	 * @return mixed
 	 */
@@ -1453,8 +1451,8 @@ class WPSEO_Sitemaps {
 	 * Function will pluck ID from attachments and meta_value from thumbnails and marge them into one array. This
 	 * array will be used to do the caching
 	 *
-	 * @param array $attachments Set of attachments data.
-	 * @param array $thumbnails  Set of thumbnail IDs.
+	 * @param array $attachments
+	 * @param array $thumbnails
 	 */
 	private function do_attachment_ids_caching( $attachments, $thumbnails ) {
 		$attachment_ids = wp_list_pluck( $attachments, 'ID' );
@@ -1469,8 +1467,8 @@ class WPSEO_Sitemaps {
 	/**
 	 * Parses the given attachments
 	 *
-	 * @param array   $attachments Set of attachments.
-	 * @param WP_Post $post        Post object.
+	 * @param array     $attachments
+	 * @param stdobject $post
 	 *
 	 * @return array
 	 */
@@ -1507,7 +1505,7 @@ class WPSEO_Sitemaps {
 	/**
 	 * Calculate the priority of the post
 	 *
-	 * @param WP_Post $post Post object.
+	 * @param stdobject $post
 	 *
 	 * @return float|mixed
 	 */
@@ -1537,4 +1535,5 @@ class WPSEO_Sitemaps {
 
 		return $return;
 	}
+
 } /* End of class */

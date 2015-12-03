@@ -39,7 +39,7 @@ class WPSEO_GSC_Mapper {
 	/**
 	 * If there is no platform, just get the first key out of the array and redirect to it.
 	 *
-	 * @param string $platform Platform (desktop, mobile, feature phone).
+	 * @param string $platform
 	 *
 	 * @return mixed
 	 */
@@ -55,7 +55,7 @@ class WPSEO_GSC_Mapper {
 	/**
 	 * Mapping the platform
 	 *
-	 * @param string $platform Platform (desktop, mobile, feature phone).
+	 * @param string $platform
 	 *
 	 * @return mixed
 	 */
@@ -68,7 +68,7 @@ class WPSEO_GSC_Mapper {
 	/**
 	 * Mapping the given platform by value and return its key
 	 *
-	 * @param string $platform Platform (desktop, mobile, feature phone).
+	 * @param string $platform
 	 *
 	 * @return string
 	 */
@@ -83,11 +83,11 @@ class WPSEO_GSC_Mapper {
 	/**
 	 * Mapping the given category by searching for its key.
 	 *
-	 * @param string $category Issue type.
+	 * @param string $category
 	 *
 	 * @return mixed
 	 */
-	public static function category_to_api( $category ) {
+	public static function category_to_api( $category) {
 		if ( ! empty( $category ) && array_key_exists( $category, self::$categories ) ) {
 			return self::$categories[ $category ];
 		}
@@ -98,7 +98,7 @@ class WPSEO_GSC_Mapper {
 	/**
 	 * Mapping the given category by value and return its key
 	 *
-	 * @param string $category Issue type.
+	 * @param string $category
 	 *
 	 * @return string
 	 */
@@ -109,4 +109,5 @@ class WPSEO_GSC_Mapper {
 
 		return $category;
 	}
+
 }

@@ -36,12 +36,12 @@ class WPSEO_GSC_Bulk_Action {
 	 */
 	private function determine_bulk_action() {
 		// If posted action is the selected one above the table, return that value.
-		if ( ( $action = filter_input( INPUT_POST, 'action' ) ) && $action !== '-1' ) {
+		if ( $action = filter_input( INPUT_POST, 'action' ) ) {
 			return $action;
 		}
 
 		// If posted action is the selected one below the table, return that value.
-		if ( ( $action = filter_input( INPUT_POST, 'action2' ) ) && $action !== '-1' ) {
+		if ( $action = filter_input( INPUT_POST, 'action2' ) ) {
 			return $action;
 		}
 
@@ -65,8 +65,8 @@ class WPSEO_GSC_Bulk_Action {
 	/**
 	 * Runs the bulk action
 	 *
-	 * @param string $bulk_action Action type.
-	 * @param array  $issues      Set of issues to apply to.
+	 * @param string $bulk_action
+	 * @param array  $issues
 	 */
 	private function run_bulk_action( $bulk_action, $issues ) {
 		switch ( $bulk_action ) {
@@ -80,7 +80,7 @@ class WPSEO_GSC_Bulk_Action {
 	/**
 	 * Marks the issue as fixed
 	 *
-	 * @param string $issue Issue URL.
+	 * @param string $issue
 	 *
 	 * @return string
 	 */
@@ -89,4 +89,5 @@ class WPSEO_GSC_Bulk_Action {
 
 		return $issue;
 	}
+
 }

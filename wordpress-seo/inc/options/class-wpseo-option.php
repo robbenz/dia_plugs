@@ -224,11 +224,7 @@ abstract class WPSEO_Option {
 	 *
 	 * @see http://core.trac.wordpress.org/ticket/25705
 	 *
-	 * @param   mixed $new_value Pass through value in filter.
-	 *
-	 * @deprecated 3.7 version no longer supported.
-	 *
-	 * @todo Drop this and logic adding it. R.
+	 * @param   mixed $new_value
 	 *
 	 * @return  mixed   unchanged value
 	 */
@@ -241,10 +237,10 @@ abstract class WPSEO_Option {
 	/**
 	 * Validate webmaster tools & Pinterest verification strings
 	 *
-	 * @param string $key   Key to check, by type of service.
-	 * @param array  $dirty Dirty data.
-	 * @param array  $old   Old data.
-	 * @param array  $clean Clean data by reference.
+	 * @param string $key
+	 * @param array  $dirty
+	 * @param array  $old
+	 * @param array  $clean (passed by reference).
 	 */
 	public function validate_verification_string( $key, $dirty, $old, &$clean ) {
 		if ( isset( $dirty[ $key ] ) && $dirty[ $key ] !== '' ) {
@@ -307,10 +303,12 @@ abstract class WPSEO_Option {
 	}
 
 	/**
-	 * @param string $key   Key to check, by type of service.
-	 * @param array  $dirty Dirty data.
-	 * @param array  $old   Old data.
-	 * @param array  $clean Clean data by reference.
+	 *
+	 *
+	 * @param string $key
+	 * @param array  $dirty
+	 * @param array  $old
+	 * @param array  $clean (passed by reference).
 	 */
 	public function validate_url( $key, $dirty, $old, &$clean ) {
 		if ( isset( $dirty[ $key ] ) && $dirty[ $key ] !== '' ) {
@@ -731,7 +729,7 @@ abstract class WPSEO_Option {
 	 * @deprecated use WPSEO_Utils::sanitize_text_field()
 	 * @see        WPSEO_Utils::sanitize_text_field()
 	 *
-	 * @param string $value String value to sanitize.
+	 * @param string $value
 	 *
 	 * @return string
 	 */
@@ -750,8 +748,8 @@ abstract class WPSEO_Option {
 	 * @deprecated use WPSEO_Utils::sanitize_url()
 	 * @see        WPSEO_Utils::sanitize_url()
 	 *
-	 * @param  string $value             URL string to sanitize.
-	 * @param  array  $allowed_protocols Set of allowed protocols.
+	 * @param  string $value
+	 * @param  array  $allowed_protocols
 	 *
 	 * @return  string
 	 */
@@ -770,7 +768,7 @@ abstract class WPSEO_Option {
 	 *
 	 * @static
 	 *
-	 * @param mixed $value Value to validate.
+	 * @param  mixed $value
 	 *
 	 * @return  bool
 	 */
@@ -807,7 +805,9 @@ abstract class WPSEO_Option {
 	 * @deprecated use WPSEO_Utils::validate_int()
 	 * @see        WPSEO_Utils::validate_int()
 	 *
-	 * @param mixed $value Value to validate.
+	 * @static
+	 *
+	 * @param  mixed $value
 	 *
 	 * @return  mixed  int or false in case of failure to convert to int
 	 */
