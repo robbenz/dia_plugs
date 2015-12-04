@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: AAM\n"
-"POT-Creation-Date: 2015-11-25 19:27-0500\n"
+"POT-Creation-Date: 2015-12-03 20:09-0500\n"
 "PO-Revision-Date: \n"
 "Language-Team: WP AAM <vasyl@vasyltech.com>\n"
 "MIME-Version: 1.0\n"

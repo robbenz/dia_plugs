@@ -190,7 +190,7 @@ class AAM_Core_Repository {
      * @return type
      */
     protected function prepareExtensionCache() {
-        $list = AAM_Core_API::getOption('aam-extension-list', array());
+        $list = AAM_Core_API::getOption('aam-extension-repository', array());
         $licenses = AAM_Core_API::getOption('aam-extension-license', array());
 
         $cache = array();

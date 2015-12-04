@@ -13,7 +13,7 @@
  * @returns {void}
  */
 (function ($) {
-    
+
     /**
      * 
      * @param {type} id
@@ -21,7 +21,7 @@
      */
     function isCurrent(id) {
         var subject = aam.getSubject();
-        
+
         return (subject.type === 'role' && subject.id === id);
     }
 
@@ -45,7 +45,7 @@
             },
             success: function (response) {
                 $('#inherit-role-list').html(
-                        '<option value="">' + aam.__('Select Role') + '</option>'
+                    '<option value="">' + aam.__('Select Role') + '</option>'
                 );
                 for (var i in response) {
                     $('#inherit-role-list').append(
@@ -84,20 +84,20 @@
         },
         initComplete: function () {
             var create = $('<a/>', {
-                'href'  : '#',
-                'class' : 'btn btn-primary'
+                'href': '#',
+                'class': 'btn btn-primary'
             }).html('<i class="icon-plus"></i> ' + aam.__('Create'))
-              .bind('click', function (event) {
-                event.preventDefault();
-                
-                //clear add role form first
-                $('#new-role-name', '#add-role-modal').val('');
-                fetchRoleList();
+                    .bind('click', function (event) {
+                        event.preventDefault();
 
-                $('#add-role-modal').modal('show').on('shown.bs.modal', function (e) {
-                    $('#new-role-name', '#add-role-modal').focus();
-                });
-            });
+                        //clear add role form first
+                        $('#new-role-name', '#add-role-modal').val('');
+                        fetchRoleList();
+
+                        $('#add-role-modal').modal('show').on('shown.bs.modal', function (e) {
+                            $('#new-role-name', '#add-role-modal').focus();
+                        });
+                    });
 
             $('.dataTables_filter', '#role-list_wrapper').append(create);
         },
@@ -107,14 +107,14 @@
             } else {
                 $('td:eq(0)', row).html('<span>' + data[2] + '</span>');
             }
-            
+
             //add subtitle
             $('td:eq(0)', row).append(
                 $('<i/>', {'class': 'aam-row-subtitle'}).text(
                     aam.__('Users') + ': ' + parseInt(data[1])
                 )
             );
-            
+
             var actions = data[3].split(',');
 
             var container = $('<div/>', {'class': 'aam-row-actions'});
@@ -123,23 +123,23 @@
                     case 'manage':
                         $(container).append($('<i/>', {
                             'class': 'aam-row-action icon-cog text-info'
-                        }).bind('click', function() {
+                        }).bind('click', function () {
                             aam.setSubject('role', data[0], data[2]);
                             $('td:eq(0) span', row).replaceWith(
                                     '<strong>' + data[2] + '</strong>'
-                            );
+                                    );
                             $('i.icon-cog', container).attr(
-                                'class', 'aam-row-action icon-spin4 animate-spin'
-                            );
+                                    'class', 'aam-row-action icon-spin4 animate-spin'
+                                    );
                             aam.fetchContent();
                             $('i.icon-spin4', container).attr(
-                                'class', 'aam-row-action icon-cog text-info'
-                            );
+                                    'class', 'aam-row-action icon-cog text-info'
+                                    );
                             //Show add capability that may be hidden after manager user
                             $('#add-capability').show();
                         }).attr({
-                                'data-toggle' :"tooltip",
-                                'title' : aam.__('Manage Role')
+                            'data-toggle': "tooltip",
+                            'title': aam.__('Manage Role')
                         }));
                         break;
 
@@ -153,8 +153,8 @@
                                 $('#edit-role-name').focus();
                             });
                         }).attr({
-                                'data-toggle' :"tooltip",
-                                'title' : aam.__('Edit Role Name')
+                            'data-toggle': "tooltip",
+                            'title': aam.__('Edit Role Name')
                         }));
                         break;
 
@@ -165,16 +165,16 @@
                             $('#delete-role-btn').data('role', data[0]);
                             var message = $('#delete-role-modal .aam-confirm-message').data('message');
                             $('#delete-role-modal .aam-confirm-message').html(
-                                message.replace(
-                                    '%s',
-                                    '<strong>' + event.data.role[2] + '</strong>'
-                                )
-                            );
+                                    message.replace(
+                                            '%s',
+                                            '<strong>' + event.data.role[2] + '</strong>'
+                                            )
+                                    );
 
                             $('#delete-role-modal').modal('show');
                         }).attr({
-                                'data-toggle' :"tooltip",
-                                'title' : aam.__('Delete Role')
+                            'data-toggle': "tooltip",
+                            'title': aam.__('Delete Role')
                         }));
                         break;
 
@@ -226,7 +226,7 @@
                     } else {
                         aam.notification(
                                 'danger', aam.__('Failed to add new role')
-                        );
+                                );
                     }
                 },
                 error: function () {
@@ -269,7 +269,7 @@
                     } else {
                         aam.notification(
                                 'danger', aam.__('Failed to update role')
-                        );
+                                );
                     }
                 },
                 error: function () {
@@ -284,7 +284,7 @@
             $('#edit-role-name').focus().parent().addClass('has-error');
         }
     });
-    
+
     //edit role button
     $('#delete-role-btn').bind('click', function (event) {
         var _this = this;
@@ -310,7 +310,7 @@
                 }
             },
             error: function () {
-                    aam.notification('danger', aam.__('Application error'));
+                aam.notification('danger', aam.__('Application error'));
             },
             complete: function () {
                 $('#delete-role-modal').modal('hide');
@@ -318,7 +318,7 @@
             }
         });
     });
-    
+
     //add setSubject hook
     aam.addHook('setSubject', function () {
         //clear highlight
@@ -331,7 +331,7 @@
         //show post & pages access control groups that belong to backend
         $('.aam-backend-post-access').show();
     });
-    
+
     //in case interface needed to be reloaded
     aam.addHook('refresh', function () {
         $('#role-list').DataTable().ajax.url(aamLocal.ajaxurl).load();
@@ -348,7 +348,7 @@
  * @returns {void}
  */
 (function ($) {
-    
+
     /**
      * 
      * @param {type} id
@@ -356,10 +356,10 @@
      */
     function isCurrent(id) {
         var subject = aam.getSubject();
-        
+
         return (subject.type === 'user' && parseInt(subject.id) === id);
     }
-    
+
     /**
      * 
      * @param {type} id
@@ -368,7 +368,7 @@
      */
     function blockUser(id, btn) {
         var state = ($(btn).hasClass('icon-lock') ? 0 : 1);
-        
+
         $.ajax(aamLocal.ajaxurl, {
             type: 'POST',
             dataType: 'json',
@@ -386,21 +386,21 @@
                 if (response.status === 'success') {
                     if (state === 1) {
                         $(btn).attr({
-                            'class' : 'aam-row-action icon-lock text-danger',
-                            'title' : aam.__('Unlock User'),
-                            'data-original-title' : aam.__('Unlock User')
+                            'class': 'aam-row-action icon-lock text-danger',
+                            'title': aam.__('Unlock User'),
+                            'data-original-title': aam.__('Unlock User')
                         });
                     } else {
                         $(btn).attr({
-                            'class' : 'aam-row-action icon-lock-open-alt text-warning',
-                            'title' : aam.__('Lock User'),
-                            'data-original-title' : aam.__('Lock User')
+                            'class': 'aam-row-action icon-lock-open-alt text-warning',
+                            'title': aam.__('Lock User'),
+                            'data-original-title': aam.__('Lock User')
                         });
                     }
                 } else {
                     aam.notification(
-                        'danger', aam.__('Failed to block user')
-                    );
+                            'danger', aam.__('Failed to block user')
+                            );
                 }
             },
             error: function () {
@@ -408,7 +408,7 @@
             }
         });
     }
-    
+
     //initialize the user list table
     $('#user-list').DataTable({
         autoWidth: false,
@@ -436,9 +436,9 @@
             infoFiltered: ''
         },
         initComplete: function () {
-             var create = $('<a/>', {
-                'href'  : '#',
-                'class' : 'btn btn-primary'
+            var create = $('<a/>', {
+                'href': '#',
+                'class': 'btn btn-primary'
             }).html('<i class="icon-plus"></i> ' + aam.__('Create')).bind('click', function (event) {
                 event.preventDefault();
                 window.open(aamLocal.url.addUser, '_blank');
@@ -452,14 +452,14 @@
             } else {
                 $('td:eq(0)', row).html('<span>' + data[2] + '</span>');
             }
-            
+
             //add subtitle
             $('td:eq(0)', row).append(
-                $('<i/>', {'class': 'aam-row-subtitle'}).text(
+                    $('<i/>', {'class': 'aam-row-subtitle'}).text(
                     aam.__('Role') + ': ' + data[1]
-                )
-            );
-    
+                    )
+                    );
+
             var actions = data[3].split(',');
 
             var container = $('<div/>', {'class': 'aam-row-actions'});
@@ -468,22 +468,22 @@
                     case 'manage':
                         $(container).append($('<i/>', {
                             'class': 'aam-row-action icon-cog text-info'
-                        }).bind('click', function() {
+                        }).bind('click', function () {
                             aam.setSubject('user', data[0], data[2]);
                             $('td:eq(0) span', row).replaceWith(
                                     '<strong>' + data[2] + '</strong>'
-                            );
+                                    );
                             $('i.icon-cog', container).attr('class', 'aam-row-action icon-spin4 animate-spin');
                             aam.fetchContent();
                             $('i.icon-spin4', container).attr('class', 'aam-row-action icon-cog text-info');
                             //make sure that there is no way user add's new capability
                             $('#add-capability').hide();
                         }).attr({
-                                'data-toggle' :"tooltip",
-                                'title' : aam.__('Manage User')
+                            'data-toggle': "tooltip",
+                            'title': aam.__('Manage User')
                         }));
                         break;
-                        
+
                     case 'no-manage':
                         $(container).append($('<i/>', {
                             'class': 'aam-row-action icon-cog text-muted'
@@ -497,14 +497,14 @@
                             'class': 'aam-row-action icon-pencil text-warning'
                         }).bind('click', function () {
                             window.open(
-                                aamLocal.url.editUser + '?user_id=' + data[0], '_blank'
-                            );
+                                    aamLocal.url.editUser + '?user_id=' + data[0], '_blank'
+                                    );
                         }).attr({
-                                'data-toggle' :"tooltip",
-                                'title' : aam.__('Edit User')
+                            'data-toggle': "tooltip",
+                            'title': aam.__('Edit User')
                         }));
                         break;
-                    
+
                     case 'no-edit':
                         $(container).append($('<i/>', {
                             'class': 'aam-row-action icon-pencil text-muted'
@@ -519,31 +519,31 @@
                         }).bind('click', function () {
                             blockUser(data[0], $(this));
                         }).attr({
-                                'data-toggle' :"tooltip",
-                                'title' : aam.__('Lock User')
+                            'data-toggle': "tooltip",
+                            'title': aam.__('Lock User')
                         }));
                         break;
-                        
+
                     case 'unlock':
                         $(container).append($('<i/>', {
                             'class': 'aam-row-action icon-lock text-danger'
                         }).bind('click', function () {
                             blockUser(data[0], $(this));
                         }).attr({
-                                'data-toggle' :"tooltip",
-                                'title' : aam.__('Unlock User')
+                            'data-toggle': "tooltip",
+                            'title': aam.__('Unlock User')
                         }));
                         break;
-                        
-                      case 'no-lock':
-                      case 'no-unlock':
+
+                    case 'no-lock':
+                    case 'no-unlock':
                         $(container).append($('<i/>', {
                             'class': 'aam-row-action icon-lock text-muted'
                         }).bind('click', function () {
                             $('#user-notification-modal').modal('show');
                         }));
                         break;
-                        
+
                     default:
                         break;
                 }
@@ -551,7 +551,7 @@
             $('td:eq(1)', row).html(container);
         }
     });
-    
+
     //add setSubject hook
     aam.addHook('setSubject', function () {
         //clear highlight
@@ -564,12 +564,12 @@
         //show post & pages access control groups that belong to backend
         $('.aam-backend-post-access').show();
     });
-    
+
     //in case interface needed to be reloaded
     aam.addHook('refresh', function () {
         $('#user-list').DataTable().ajax.url(aamLocal.ajaxurl).load();
     });
-    
+
 })(jQuery);
 
 
@@ -626,7 +626,7 @@
                 $('i', $(this)).attr('class', 'icon-spin4 animate-spin');
 
                 var result = aam.save($(this).data('menu-id'), status, 'menu');
-                
+
                 if (result.status === 'success') {
                     if (status) { //locked the menu
                         $('input', target).each(function () {
@@ -635,14 +635,14 @@
                         });
                         $('.aam-bordered', target).append(
                                 $('<div/>', {'class': 'aam-lock'})
-                        );
+                                );
                         $(this).removeClass('btn-danger').addClass('btn-primary');
                         $(this).html(
-                            '<i class="icon-eye"></i>' + aam.__('Show Menu')
-                        );
+                                '<i class="icon-eye"></i>' + aam.__('Show Menu')
+                                );
                         //add menu restricted indicator
                         var ind = $('<i/>', {
-                            'class' : 'aam-panel-title-icon icon-eye-off text-danger'
+                            'class': 'aam-panel-title-icon icon-eye-off text-danger'
                         });
                         $('.panel-title', target + '-heading').append(ind);
                     } else {
@@ -653,8 +653,8 @@
                         $('.aam-lock', target).remove();
                         $(this).removeClass('btn-primary').addClass('btn-danger');
                         $(this).html(
-                            '<i class="icon-eye-off"></i>' + aam.__('Hide Menu')
-                        );
+                                '<i class="icon-eye-off"></i>' + aam.__('Hide Menu')
+                                );
                         $('.panel-title .icon-eye-off', target + '-heading').remove();
                     }
                 } else {
@@ -666,10 +666,32 @@
         $('input[type="checkbox"]', '#admin-menu').each(function () {
             $(this).bind('click', function () {
                 aam.save(
-                    $(this).data('menu-id'), 
-                    $(this).attr('checked') ? true : false, 
+                    $(this).data('menu-id'),
+                    $(this).attr('checked') ? true : false,
                     'menu'
                 );
+            });
+        });
+        
+        //reset button
+        $('#menu-reset').bind('click', function (event) {
+            event.preventDefault();
+            
+            $.ajax(aamLocal.ajaxurl, {
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    action: 'aam',
+                    sub_action: 'Menu.reset',
+                    _ajax_nonce: aamLocal.nonce,
+                    subject: aam.getSubject().type,
+                    subjectId: aam.getSubject().id
+                },
+                success: function (response) {
+                    if (response.status === 'success') {
+                        aam.fetchContent();
+                    }
+                }
             });
         });
     }
@@ -741,8 +763,8 @@
                         getContent();
                     } else {
                         aam.notification(
-                            'danger', aam.__('Failed to retrieve mataboxes')
-                        );
+                                'danger', aam.__('Failed to retrieve mataboxes')
+                                );
                     }
                 },
                 error: function () {
@@ -751,23 +773,45 @@
                 complete: function () {
                     $('i', '#refresh-metabox-list').attr(
                             'class', 'icon-arrows-cw'
-                    );
+                            );
                 }
             });
 
         });
         
+         //reset button
+        $('#metabox-reset').bind('click', function (event) {
+            event.preventDefault();
+            
+            $.ajax(aamLocal.ajaxurl, {
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    action: 'aam',
+                    sub_action: 'Metabox.reset',
+                    _ajax_nonce: aamLocal.nonce,
+                    subject: aam.getSubject().type,
+                    subjectId: aam.getSubject().id
+                },
+                success: function (response) {
+                    if (response.status === 'success') {
+                        aam.fetchContent();
+                    }
+                }
+            });
+        });
+
         $('input[type="checkbox"]', '#metabox-list').each(function () {
             $(this).bind('click', function () {
                 aam.save(
-                    $(this).data('metabox'), 
-                    $(this).attr('checked') ? true : false, 
-                    'metabox'
-                );
+                        $(this).data('metabox'),
+                        $(this).attr('checked') ? true : false,
+                        'metabox'
+                        );
             });
         });
     }
-    
+
     aam.addHook('init', initialize);
 
 })(jQuery);
@@ -790,10 +834,10 @@
      */
     function save(capability, btn) {
         var granted = $(btn).hasClass('icon-check-empty') ? 1 : 0;
-        
+
         //show indicator
         $(btn).attr('class', 'aam-row-action icon-spin4 animate-spin');
-        
+
         if (aam.save(capability, granted, 'capability').status === 'success') {
             if (granted) {
                 $(btn).attr('class', 'aam-row-action text-success icon-check');
@@ -801,10 +845,10 @@
                 $(btn).attr('class', 'aam-row-action text-muted icon-check-empty');
             }
         } else {
-             if (granted) {
+            if (granted) {
                 aam.notification(
-                    'danger', aam.__('Failed to grand capability - WordPress policy')
-                );
+                        'danger', aam.__('Failed to grand capability - WordPress policy')
+                        );
                 $(btn).attr('class', 'aam-row-action text-muted icon-check-empty');
             } else {
                 $(btn).attr('class', 'aam-row-action text-success icon-check');
@@ -915,8 +959,8 @@
                             $('#capability-list').DataTable().ajax.reload();
                         } else {
                             aam.notification(
-                                'danger', aam.__('Failed to add new capability')
-                            );
+                                    'danger', aam.__('Failed to add new capability')
+                                    );
                         }
                     },
                     error: function () {
@@ -934,12 +978,12 @@
         $('#add-capability-modal').on('shown.bs.modal', function (e) {
             $('#new-capability-name').focus();
         });
-        
+
         //show or hide capability user note based on current subject
         if (aam.getSubject().type === 'user') {
-            $('#user-capability-note').removeClass('hidden');
+            $('.aam-user-note').removeClass('hidden');
         } else {
-            $('#user-capability-note').addClass('hidden');
+            $('.aam-user-note').addClass('hidden');
         }
 
     }
@@ -1002,14 +1046,14 @@
     function loadAccessForm(object, id, btn) {
         //reset the form first
         var container = $('.aam-post-manager[data-type="' + object + '"]');
-        
-        $('.aam-row-action', container).each(function() {
+
+        $('.aam-row-action', container).each(function () {
             $(this).attr({
-                'class' : 'aam-row-action text-muted icon-check-empty',
-                'data-type' : object,
-                'data-id' : id
+                'class': 'aam-row-action text-muted icon-check-empty',
+                'data-type': object,
+                'data-id': id
             });
-            
+
             //initialize each access property
             $(this).unbind('click').bind('click', function (event) {
                 event.preventDefault();
@@ -1035,9 +1079,9 @@
                     }
                 }
             });
-            
+
         });
-        
+
         $.ajax(aamLocal.ajaxurl, {
             type: 'POST',
             dataType: 'json',
@@ -1052,15 +1096,36 @@
             },
             beforeSend: function () {
                 $(btn).attr('class', 'aam-row-action icon-spin4 animate-spin');
+                $('#post-overwritten, #post-inherited').addClass('hidden');
             },
             success: function (response) {
                 //iterate through each property
-                for (var property in response) {
-                    var checked = (response[property] ? 'text-danger icon-check' : 'text-muted icon-check-empty');
+                for (var property in response.access) {
+                    var checked = (response.access[property] ? 'text-danger icon-check' : 'text-muted icon-check-empty');
 
                     $('[data-property="' + property + '"]', container).attr({
-                        'class' : 'aam-row-action ' + checked
+                        'class': 'aam-row-action ' + checked
                     });
+
+                    //check metadata and show message if necessary
+                    if (response.meta.overwritten === true) {
+                        $('#post-overwritten').removeClass('hidden');
+                        //add some specific attributes to reset button
+                        $('#post-reset').attr({
+                            'data-type': object,
+                            'data-id': id
+                        });
+                    } else if (response.meta.inherited !== null) {
+                        if (response.meta.inherited === 'role') {
+                            $('#post-parent').text(aam.__('parent role'));
+                        } else if (response.meta.inherited === 'default') {
+                            $('#post-parent').text(aam.__('default settings'));
+                        } else if (response.meta.inherited === 'term') {
+                            $('#post-parent').text(aam.__('parent category'));
+                        }
+                        $('#post-inherited').removeClass('hidden');
+                    }
+
                 }
 
                 $('#post-list_wrapper').addClass('aam-hidden');
@@ -1074,7 +1139,7 @@
             }
         });
     }
-    
+
     /**
      * 
      * @param {type} param
@@ -1085,7 +1150,7 @@
      */
     function save(param, value, object, object_id) {
         var result = null;
-        
+
         $.ajax(aamLocal.ajaxurl, {
             type: 'POST',
             dataType: 'json',
@@ -1111,10 +1176,10 @@
                 aam.notification('danger', aam.__('Application error'));
             }
         });
-        
+
         return result;
-    };
-    
+    }
+
     /**
      * 
      * @returns {undefined}
@@ -1122,7 +1187,7 @@
     function initialize() {
         //reset filter to default list of post types
         filter.type = null;
-        
+
         //initialize the role list table
         $('#post-list').DataTable({
             autoWidth: false,
@@ -1189,7 +1254,7 @@
                         //visual feedback - show loading icon
                         $('td:eq(0)', row).html(
                                 '<i class="icon-spin4 animate-spin"></i>'
-                        );
+                                );
                         //set filter
                         filter[data[2]] = data[0];
                         //reset the ajax queue
@@ -1222,8 +1287,8 @@
                             success: function (response) {
                                 if (response.status === 'success') {
                                     $('td:eq(1) span', row).html(
-                                        response.breadcrumb
-                                    );
+                                            response.breadcrumb
+                                            );
                                 }
                             },
                             error: function () {
@@ -1237,10 +1302,10 @@
                         });
                     });
                     $('td:eq(1)', row).append(
-                        $('<span/>', {'class': 'aam-row-subtitle'}).text(
+                            $('<span/>', {'class': 'aam-row-subtitle'}).text(
                             aam.__('Loading...')
-                        )
-                   );
+                            )
+                            );
                 }
 
                 //update the actions
@@ -1256,8 +1321,8 @@
                                 loadAccessForm(data[2], data[0], $(this));
                                 addBreadcrumbLevel('edit', data[2], data[3]);
                             }).attr({
-                                'data-toggle' :"tooltip",
-                                'title' : aam.__('Manage Access')
+                                'data-toggle': "tooltip",
+                                'title': aam.__('Manage Access')
                             }));
                             break;
 
@@ -1267,8 +1332,8 @@
                             }).bind('click', function () {
                                 window.open(data[1], '_blank');
                             }).attr({
-                                'data-toggle' :"tooltip",
-                                'title' : aam.__('Edit')
+                                'data-toggle': "tooltip",
+                                'title': aam.__('Edit')
                             }));
                             break;
 
@@ -1292,6 +1357,41 @@
             $(this).nextAll().remove();
             $('.aam-post-manager').removeClass('active');
             $('#post-list_wrapper').removeClass('aam-hidden');
+            $('#post-overwritten, #post-inherited').addClass('hidden');
+        });
+
+        //reset button
+        $('#post-reset').bind('click', function (event) {
+            event.preventDefault();
+            
+            var type = $(this).attr('data-type');
+            var id   = $(this).attr('data-id');
+
+            $.ajax(aamLocal.ajaxurl, {
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    action: 'aam',
+                    sub_action: 'Post.reset',
+                    _ajax_nonce: aamLocal.nonce,
+                    type: type,
+                    id: id,
+                    subject: aam.getSubject().type,
+                    subjectId: aam.getSubject().id
+                },
+                beforeSend: function () {
+                },
+                success: function (response) {
+                    if (response.status === 'success') {
+                        $('#post-overwritten').addClass('hidden');
+                        loadAccessForm(type, id);
+                    }
+                },
+                error: function () {
+                },
+                complete: function () {
+                }
+            });
         });
 
         //go back button
@@ -1303,6 +1403,7 @@
             $('.aam-post-manager[data-type="' + type + '"]').removeClass('active');
             $('#post-list_wrapper').removeClass('aam-hidden');
             $('.aam-post-breadcrumb span:last').remove();
+            $('#post-overwritten, #post-inherited').addClass('hidden');
         });
     }
 
@@ -1402,7 +1503,7 @@
                 $('i', $(this)).attr('class', 'icon-arrows-cw');
             });
         });
-        
+
         //download extension
         $('.aam-download-extension').each(function () {
             $(this).bind('click', function (event) {
@@ -1458,10 +1559,15 @@
                 $(this).addClass('active');
                 //show feature content
                 $('#' + $(this).data('feature') + '-content').addClass('active');
+                location.hash = $(this).data('feature');
             });
         });
-
-        $('li:eq(0)', '#feature-list').trigger('click');
+        
+         if (location.hash !== '') {
+            $('li[data-feature="' + location.hash.substr(1) + '"]', '#feature-list').trigger('click');
+        } else {
+            $('li:eq(0)', '#feature-list').trigger('click');
+        }
     }
 
     /**
@@ -1482,7 +1588,7 @@
             beforeSend: function () {
                 var loader = $('<div/>', {'class': 'aam-loading'}).html(
                         '<i class="icon-spin4 animate-spin"></i>'
-                );
+                        );
                 $('#aam-content').html(loader);
             },
             success: function (response) {

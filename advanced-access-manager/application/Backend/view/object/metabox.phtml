@@ -1,4 +1,14 @@
 <div class="aam-feature" id="metabox-content">
+    
+    <div class="row<?php echo ($this->isOverwritten() ? '' : ' hidden'); ?>">
+        <div class="col-xs-12">
+            <div class="aam-overwrite">
+                <span><i class="icon-attention-circled"></i> <?php echo __('Settings may not be inherited', AAM_KEY); ?></span>
+                <span><a href="#" id="metabox-reset"><?php echo __('Reset', AAM_KEY); ?></a>
+            </div>
+        </div>
+    </div>
+    
     <div class="aam-feature-top-actions text-right">
         <a href="#" class="btn btn-xs btn-primary" id="refresh-metabox-list"><i class="icon-arrows-cw"></i> <?php echo __('Refresh', AAM_KEY); ?></a>
     </div>

@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: AAM\n"
-"POT-Creation-Date: 2015-11-25 19:27-0500\n"
+"POT-Creation-Date: 2015-12-03 20:11-0500\n"
 "PO-Revision-Date: \n"
 "Last-Translator: WPAAM <support@wpaam.com>\n"
 "Language-Team: WP AAM <vasyl@vasyltech.com>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: media/js/aam-ui.js:43 media/js/aam-ui.js:1238
+#: media/js/aam-ui.js:43 media/js/aam-ui.js:1306
 #: Application/Backend/Localization.php:23
 msgid "Loading..."
 msgstr ""
@@ -62,7 +62,7 @@ msgstr ""
 msgid "Delete Role"
 msgstr ""
 
-#: media/js/aam-ui.js:220 media/js/aam-ui.js:264 media/js/aam-ui.js:909
+#: media/js/aam-ui.js:220 media/js/aam-ui.js:264 media/js/aam-ui.js:954
 #: Application/Backend/Localization.php:13
 msgid "Saving..."
 msgstr ""
@@ -72,9 +72,9 @@ msgid "Failed to add new role"
 msgstr ""
 
 #: media/js/aam-ui.js:233 media/js/aam-ui.js:276 media/js/aam-ui.js:313
-#: media/js/aam-ui.js:407 media/js/aam-ui.js:710 media/js/aam-ui.js:747
-#: media/js/aam-ui.js:922 media/js/aam-ui.js:1069 media/js/aam-ui.js:1110
-#: media/js/aam-ui.js:1348 media/js/aam.js:230
+#: media/js/aam-ui.js:407 media/js/aam-ui.js:734 media/js/aam-ui.js:771
+#: media/js/aam-ui.js:967 media/js/aam-ui.js:1135 media/js/aam-ui.js:1176
+#: media/js/aam-ui.js:1452 media/js/aam.js:230
 #: Application/Backend/Localization.php:15
 msgid "Application error"
 msgstr ""
@@ -89,10 +89,10 @@ msgid "Failed to update role"
 msgstr ""
 
 #: media/js/aam-ui.js:280 Application/Backend/Localization.php:32
-#: Application/Backend/view/extension.phtml:41
-#: Application/Backend/view/extension.phtml:59
-#: Application/Backend/view/extension.phtml:77
-#: Application/Backend/view/extension.phtml:95
+#: Application/Backend/view/extension.phtml:42
+#: Application/Backend/view/extension.phtml:60
+#: Application/Backend/view/extension.phtml:78
+#: Application/Backend/view/extension.phtml:96
 msgid "Update"
 msgstr ""
 
@@ -144,59 +144,71 @@ msgid "Anonymous"
 msgstr ""
 
 #: media/js/aam-ui.js:641 Application/Backend/Localization.php:17
-#: Application/Backend/view/object/menu.phtml:43
+#: Application/Backend/view/object/menu.phtml:53
 msgid "Show Menu"
 msgstr ""
 
 #: media/js/aam-ui.js:656 Application/Backend/Localization.php:18
-#: Application/Backend/view/object/menu.phtml:47
+#: Application/Backend/view/object/menu.phtml:57
 msgid "Hide Menu"
 msgstr ""
 
-#: media/js/aam-ui.js:742 Application/Backend/Localization.php:19
+#: media/js/aam-ui.js:766 Application/Backend/Localization.php:19
 msgid "Failed to retrieve mataboxes"
 msgstr ""
 
-#: media/js/aam-ui.js:802 Application/Backend/Localization.php:53
+#: media/js/aam-ui.js:850 Application/Backend/Localization.php:53
 msgid "Failed to grand capability - WordPress policy"
 msgstr ""
 
-#: media/js/aam-ui.js:837 Application/Backend/Localization.php:11
+#: media/js/aam-ui.js:885 Application/Backend/Localization.php:11
 msgid "Search Capability"
 msgstr ""
 
-#: media/js/aam-ui.js:838 Application/Backend/Localization.php:12
+#: media/js/aam-ui.js:886 Application/Backend/Localization.php:12
 msgid "_TOTAL_ capability(s)"
 msgstr ""
 
-#: media/js/aam-ui.js:917 Application/Backend/Localization.php:14
+#: media/js/aam-ui.js:962 Application/Backend/Localization.php:14
 msgid "Failed to add new capability"
 msgstr ""
 
-#: media/js/aam-ui.js:925 Application/Backend/Localization.php:16
+#: media/js/aam-ui.js:970 Application/Backend/Localization.php:16
 #: Application/Backend/view/object/capability.phtml:51
 msgid "Add Capability"
 msgstr ""
 
-#: media/js/aam-ui.js:1150 Application/Backend/Localization.php:20
+#: media/js/aam-ui.js:1120
+msgid "parent role"
+msgstr ""
+
+#: media/js/aam-ui.js:1122
+msgid "default settings"
+msgstr ""
+
+#: media/js/aam-ui.js:1124
+msgid "parent category"
+msgstr ""
+
+#: media/js/aam-ui.js:1216 Application/Backend/Localization.php:20
 msgid "Search"
 msgstr ""
 
-#: media/js/aam-ui.js:1151 Application/Backend/Localization.php:21
+#: media/js/aam-ui.js:1217 Application/Backend/Localization.php:21
 msgid "_TOTAL_ object(s)"
 msgstr ""
 
-#: media/js/aam-ui.js:1227 Application/Backend/Localization.php:22
+#: media/js/aam-ui.js:1295 Application/Backend/Localization.php:22
 msgid "Failed"
 msgstr ""
 
-#: media/js/aam-ui.js:1257 Application/Backend/Localization.php:43
-#: Application/Backend/Manager.php:143
+#: media/js/aam-ui.js:1325 Application/Backend/Localization.php:43
+#: Application/Backend/Manager.php:152
 msgid "Manage Access"
 msgstr ""
 
-#: media/js/aam-ui.js:1268 Application/Backend/Localization.php:44
-#: Application/Backend/view/object/post.phtml:114
+#: media/js/aam-ui.js:1336 Application/Backend/Localization.php:44
+#: Application/Backend/view/object/post.phtml:124
 msgid "Edit"
 msgstr ""
 
@@ -216,7 +228,7 @@ msgid "System"
 msgstr ""
 
 #: Application/Backend/Capability.php:127
-#: Application/Backend/Capability.php:167 Application/Backend/Post.php:318
+#: Application/Backend/Capability.php:167 Application/Backend/Post.php:351
 msgid "Posts & Pages"
 msgstr ""
 
@@ -244,7 +256,7 @@ msgstr ""
 msgid "Extensions"
 msgstr ""
 
-#: Application/Backend/Filter.php:196 Application/Core/API.php:180
+#: Application/Backend/Filter.php:193 Application/Core/API.php:180
 msgid "Access Denied"
 msgstr ""
 
@@ -261,23 +273,23 @@ msgstr ""
 msgid "Extension %s has new update available for download."
 msgstr ""
 
-#: Application/Backend/Manager.php:103
+#: Application/Backend/Manager.php:112
 msgid "AAM caching is off. To speed-up the website turn it on."
 msgstr ""
 
-#: Application/Backend/Manager.php:106
+#: Application/Backend/Manager.php:115
 msgid "Read more."
 msgstr ""
 
-#: Application/Backend/Manager.php:258 Application/Backend/Manager.php:259
+#: Application/Backend/Manager.php:267 Application/Backend/Manager.php:268
 msgid "AAM"
 msgstr ""
 
-#: Application/Backend/Menu.php:161 Application/Backend/view/index.phtml:66
+#: Application/Backend/Menu.php:183 Application/Backend/view/index.phtml:66
 msgid "Backend Menu"
 msgstr ""
 
-#: Application/Backend/Metabox.php:195
+#: Application/Backend/Metabox.php:217
 msgid "Metaboxes & Widgets"
 msgstr ""
 
@@ -285,7 +297,7 @@ msgstr ""
 msgid "Base Level"
 msgstr ""
 
-#: Application/Backend/Post.php:276
+#: Application/Backend/Post.php:284
 msgid "You reached your limitation."
 msgstr ""
 
@@ -299,11 +311,11 @@ msgstr ""
 msgid "Directory %s is not writable"
 msgstr ""
 
-#: aam.php:149
+#: aam.php:152
 msgid "PHP 5.2 or higher is required."
 msgstr ""
 
-#: aam.php:151
+#: aam.php:154
 msgid "WP 3.8 or higher is required."
 msgstr ""
 
@@ -329,18 +341,25 @@ msgstr ""
 msgid "Action"
 msgstr ""
 
-#: Application/Backend/view/extension.phtml:36
+#: Application/Backend/view/extension.phtml:35
 msgid ""
 "Development license gives you an ability to download all the available "
 "extensions and use them to up to 5 life domains."
 msgstr ""
 
-#: Application/Backend/view/extension.phtml:43
-#: Application/Backend/view/extension.phtml:61
+#: Application/Backend/view/extension.phtml:40
+#: Application/Backend/view/extension.phtml:58
+#: Application/Backend/view/extension.phtml:76
+#: Application/Backend/view/extension.phtml:94
+msgid "Installed"
+msgstr ""
+
+#: Application/Backend/view/extension.phtml:44
+#: Application/Backend/view/extension.phtml:62
 msgid "Purchase"
 msgstr ""
 
-#: Application/Backend/view/extension.phtml:54
+#: Application/Backend/view/extension.phtml:53
 msgid ""
 "Unlock limitations related to Posts and Pages feature. Extend basic AAM "
 "functionality with Page Categories and ability to manage access to your "
@@ -349,17 +368,17 @@ msgid ""
 "etc.)."
 msgstr ""
 
-#: Application/Backend/view/extension.phtml:72
+#: Application/Backend/view/extension.phtml:71
 msgid "Various useful tools for AAM like caching or clear all settings."
 msgstr ""
 
-#: Application/Backend/view/extension.phtml:79
-#: Application/Backend/view/extension.phtml:97
+#: Application/Backend/view/extension.phtml:80
+#: Application/Backend/view/extension.phtml:98
 #: Application/Backend/view/extension.phtml:132
 msgid "Download"
 msgstr ""
 
-#: Application/Backend/view/extension.phtml:90
+#: Application/Backend/view/extension.phtml:89
 msgid ""
 "Convenient way to navigate between different sites in the Network Admin "
 "Panel. This extension adds additional widget to the AAM page that allows to "
@@ -384,6 +403,8 @@ msgstr ""
 #: Application/Backend/view/index.phtml:234
 #: Application/Backend/view/object/capability.phtml:41
 #: Application/Backend/view/object/capability.phtml:52
+#: Application/Backend/view/object/post.phtml:159
+#: Application/Backend/view/object/post.phtml:188
 msgid "Close"
 msgstr ""
 
@@ -460,6 +481,8 @@ msgstr ""
 #: Application/Backend/view/index.phtml:34
 #: Application/Backend/view/index.phtml:210
 #: Application/Backend/view/index.phtml:241
+#: Application/Backend/view/object/post.phtml:178
+#: Application/Backend/view/object/post.phtml:195
 msgid "OK"
 msgstr ""
 
@@ -791,6 +814,18 @@ msgid "Enter Capability"
 msgstr ""
 
 #: Application/Backend/view/object/menu.phtml:5
+#: Application/Backend/view/object/metabox.phtml:6
+#: Application/Backend/view/object/post.phtml:17
+msgid "Settings may not be inherited"
+msgstr ""
+
+#: Application/Backend/view/object/menu.phtml:6
+#: Application/Backend/view/object/metabox.phtml:7
+#: Application/Backend/view/object/post.phtml:18
+msgid "Reset"
+msgstr ""
+
+#: Application/Backend/view/object/menu.phtml:14
 msgid ""
 "If checked, then menu is filtered. [Please notice]! This does not restrict "
 "direct access to the page but rather filters it from the menu. In order to "
@@ -799,19 +834,19 @@ msgid ""
 "title)]."
 msgstr ""
 
-#: Application/Backend/view/object/metabox.phtml:3
+#: Application/Backend/view/object/metabox.phtml:13
 msgid "Refresh"
 msgstr ""
 
-#: Application/Backend/view/object/metabox.phtml:19
+#: Application/Backend/view/object/metabox.phtml:29
 msgid "Dashboard Widgets"
 msgstr ""
 
-#: Application/Backend/view/object/metabox.phtml:23
+#: Application/Backend/view/object/metabox.phtml:33
 msgid "Frontend Widgets"
 msgstr ""
 
-#: Application/Backend/view/object/metabox.phtml:54
+#: Application/Backend/view/object/metabox.phtml:64
 msgid ""
 "The list of metaboxes and widgets is not initialized. Click Refresh button "
 "above."
@@ -821,89 +856,155 @@ msgstr ""
 msgid "Root"
 msgstr ""
 
+#: Application/Backend/view/object/post.phtml:18
 #: Application/Backend/view/object/post.phtml:23
+msgid "Help"
+msgstr ""
+
+#: Application/Backend/view/object/post.phtml:22
+msgid "Settings inherited from"
+msgstr ""
+
+#: Application/Backend/view/object/post.phtml:33
 msgid "Title"
 msgstr ""
 
-#: Application/Backend/view/object/post.phtml:24
+#: Application/Backend/view/object/post.phtml:34
 msgid "Actions"
 msgstr ""
 
-#: Application/Backend/view/object/post.phtml:32
-#: Application/Backend/view/object/post.phtml:37
-#: Application/Backend/view/object/post.phtml:141
+#: Application/Backend/view/object/post.phtml:42
+#: Application/Backend/view/object/post.phtml:47
+#: Application/Backend/view/object/post.phtml:151
 msgid "Go Back"
 msgstr ""
 
-#: Application/Backend/view/object/post.phtml:45
+#: Application/Backend/view/object/post.phtml:55
 msgid "Frontend"
 msgstr ""
 
-#: Application/Backend/view/object/post.phtml:51
-#: Application/Backend/view/object/post.phtml:99
+#: Application/Backend/view/object/post.phtml:61
+#: Application/Backend/view/object/post.phtml:109
 msgid "List"
 msgstr ""
 
-#: Application/Backend/view/object/post.phtml:53
+#: Application/Backend/view/object/post.phtml:63
 msgid "Filter (exclude) post from any list on your website frontend."
 msgstr ""
 
-#: Application/Backend/view/object/post.phtml:54
-#: Application/Backend/view/object/post.phtml:102
+#: Application/Backend/view/object/post.phtml:64
+#: Application/Backend/view/object/post.phtml:112
 msgid "Warning!"
 msgstr ""
 
-#: Application/Backend/view/object/post.phtml:55
+#: Application/Backend/view/object/post.phtml:65
 msgid ""
 "If checked, this property may slowdown your website with large amount of "
 "posts."
 msgstr ""
 
-#: Application/Backend/view/object/post.phtml:66
+#: Application/Backend/view/object/post.phtml:76
 msgid "Read"
 msgstr ""
 
-#: Application/Backend/view/object/post.phtml:68
+#: Application/Backend/view/object/post.phtml:78
 msgid ""
 "Restrict access to read a post. If \"List\" option is not checked, a post "
 "will be still listed on your website frontend."
 msgstr ""
 
-#: Application/Backend/view/object/post.phtml:79
+#: Application/Backend/view/object/post.phtml:89
 msgid "Comment"
 msgstr ""
 
-#: Application/Backend/view/object/post.phtml:81
+#: Application/Backend/view/object/post.phtml:91
 msgid ""
 "Restrict access to comment on a post (if commenting feature is activated)."
 msgstr ""
 
-#: Application/Backend/view/object/post.phtml:93
+#: Application/Backend/view/object/post.phtml:103
 msgid "Backend"
 msgstr ""
 
-#: Application/Backend/view/object/post.phtml:101
+#: Application/Backend/view/object/post.phtml:111
 msgid "Filter (exclude) post from any list on your website backend."
 msgstr ""
 
-#: Application/Backend/view/object/post.phtml:103
+#: Application/Backend/view/object/post.phtml:113
 msgid ""
 "If checked, this property may slowdown your backend with large amount of "
 "posts."
 msgstr ""
 
-#: Application/Backend/view/object/post.phtml:116
+#: Application/Backend/view/object/post.phtml:126
 msgid ""
 "Restrict access to edit a post (also the link \"Edit\" and \"Quick Edit\" "
 "will be removed below the post title)."
 msgstr ""
 
-#: Application/Backend/view/object/post.phtml:127
+#: Application/Backend/view/object/post.phtml:137
 msgid "Delete"
 msgstr ""
 
-#: Application/Backend/view/object/post.phtml:129
+#: Application/Backend/view/object/post.phtml:139
 msgid ""
 "Restrict access to trash or permanently delete a post (also the link \"Trash"
 "\" or \"Delete Permanently\" will be removed for a post)."
+msgstr ""
+
+#: Application/Backend/view/object/post.phtml:160
+msgid "Inheritance"
+msgstr ""
+
+#: Application/Backend/view/object/post.phtml:163
+msgid ""
+"If no access settings defined for post* or category* AAM triggers the "
+"inheritance mechanism in order listed below. The inheritance process "
+"terminates when the first defined set of settings is found."
+msgstr ""
+
+#: Application/Backend/view/object/post.phtml:165
+msgid "If caching is on, read the cached settings"
+msgstr ""
+
+#: Application/Backend/view/object/post.phtml:166
+msgid "Read post's or category's settings"
+msgstr ""
+
+#: Application/Backend/view/object/post.phtml:167
+msgid ""
+"If AAM Plus Package installed, iterate through the tree of parent categories "
+"and read settings"
+msgstr ""
+
+#: Application/Backend/view/object/post.phtml:168
+msgid ""
+"If AAM Plus Package installed, read the default access settings for posts or "
+"categories"
+msgstr ""
+
+#: Application/Backend/view/object/post.phtml:169
+msgid ""
+"If user, read settings from the parent role and repeat the same sequence of "
+"steps"
+msgstr ""
+
+#: Application/Backend/view/object/post.phtml:173
+msgid "[post] - any post, page or custom post type"
+msgstr ""
+
+#: Application/Backend/view/object/post.phtml:174
+msgid "[category] - any taxonomy/term or custom taxonomy"
+msgstr ""
+
+#: Application/Backend/view/object/post.phtml:189
+msgid "Reset Information"
+msgstr ""
+
+#: Application/Backend/view/object/post.phtml:192
+msgid ""
+"[Settings may not be inherited] message indicates that access settings for "
+"current post or category are not inherited from parent category, role or "
+"default settings because they were modified for this particular post or "
+"category. Click [Reset] if you need to reset the access."
 msgstr ""

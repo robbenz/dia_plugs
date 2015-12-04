@@ -1,4 +1,13 @@
 <div class="aam-feature" id="admin_menu-content">
+    <div class="row<?php echo ($this->isOverwritten() ? '' : ' hidden'); ?>">
+        <div class="col-xs-12">
+            <div class="aam-overwrite">
+                <span><i class="icon-attention-circled"></i> <?php echo __('Settings may not be inherited', AAM_KEY); ?></span>
+                <span><a href="#" id="menu-reset"><?php echo __('Reset', AAM_KEY); ?></a>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-xs-12">
             <p class="aam-info">
@@ -6,6 +15,7 @@
             </p>
         </div>
     </div>
+
     <div class="panel-group" id="admin-menu" role="tablist" aria-multiselectable="true">
         <?php
         $object = AAM_Backend_View::getSubject()->getObject('menu');
