@@ -282,7 +282,7 @@ function wc_cart_totals_shipping_method_label( $method ) {
 			}
 		}
 	} elseif ( $method->id !== 'free_shipping' ) {
-		$label .= __( '', 'woocommerce' );
+		$label .= ' (' . __( 'Free', 'woocommerce' ) . ')';
 	}
 
 	return apply_filters( 'woocommerce_cart_shipping_method_full_label', $label, $method );
