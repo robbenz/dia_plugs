@@ -1,7 +1,7 @@
 
-%%SUCURI.ModalWhenAPIRegistered%%
+%%%SUCURI.ModalWhenAPIRegistered%%%
 
-%%SUCURI.ModalForApiKeyRecovery%%
+%%%SUCURI.ModalForApiKeyRecovery%%%
 
 <div class="postbox">
     <h3>Plugin API Key</h3>
@@ -49,7 +49,7 @@
         </div>
 
         <div class="sucuriscan-hstatus sucuriscan-hstatus-1 sucuriscan-%%SUCURI.APIKey.RemoveVisibility%%">
-            <div class="sucuriscan-monospace">Plugin API Key: ec456e75e9e5ad48577da3382b627a42</div>
+            <div class="sucuriscan-monospace">Plugin API Key: %%SUCURI.APIKey%%</div>
             <form action="%%SUCURI.URL.Settings%%" method="post">
                 <input type="hidden" name="sucuriscan_page_nonce" value="%%SUCURI.PageNonce%%" />
                 <button type="submit" name="sucuriscan_remove_api_key" class="button-primary button-danger">Remove</button>

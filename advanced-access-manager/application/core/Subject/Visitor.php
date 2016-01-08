@@ -23,12 +23,12 @@ class AAM_Core_Subject_Visitor extends AAM_Core_Subject {
     /**
      * Retrieve Visitor Subject
      *
-     * @return stdClass
+     * @return null|AAM_Core_Subject
      *
      * @access protected
      */
     protected function retrieveSubject() {
-        return new stdClass;
+        return null;
     }
 
     /**

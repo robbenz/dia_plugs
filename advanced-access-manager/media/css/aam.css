@@ -88,6 +88,9 @@
 .icon-download-cloud:before { content: '\e818'; } /* '' */
 .icon-github:before { content: '\e819'; } /* '' */
 .icon-twitter:before { content: '\e81a'; } /* '' */
+.icon-sort-down:before { content: '\e81b'; } /* '' */
+.icon-sort-up:before { content: '\e81c'; } /* '' */
+.icon-sort:before { content: '\e81d'; } /* '' */
 
 .animate-spin {
     -moz-animation: spin 2s infinite linear;
@@ -402,6 +405,10 @@ input[type="checkbox"]:focus, input[type="radio"]:focus {
 
 .aam-outer-top-xs {
     margin-top: 30px;
+}
+
+.aam-block {
+    display: block;
 }
 
 .aam-lock {

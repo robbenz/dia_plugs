@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Price by Country class.
  *
- * @version 2.3.8
+ * @version 2.3.9
  * @author  Algoritmika Ltd.
  */
 
@@ -17,7 +17,7 @@ class WCJ_Price_By_Country extends WCJ_Module {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.3.4
+	 * @version 2.3.9
 	 */
 	public function __construct() {
 
@@ -26,9 +26,12 @@ class WCJ_Price_By_Country extends WCJ_Module {
 		$this->desc       = __( 'Change WooCommerce product price and currency automatically by customer\'s country.', 'woocommerce-jetpack' );
 		parent::__construct();
 
+		global $wcj_notice;
+		$wcj_notice = '';
+
 		if ( $this->is_enabled() ) {
 
-			if ( ! is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+			if ( ! is_admin() ) { // || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
 				// Frontend
 				include_once( 'price-by-country/class-wcj-price-by-country-core.php' );
 			}
@@ -40,14 +43,20 @@ class WCJ_Price_By_Country extends WCJ_Module {
 				}
 			}
 		}
+
+		if ( is_admin() ) {
+			include_once( 'price-by-country/class-wcj-price-by-country-group-generator.php' );
+		}
 	}
 
 	/**
 	 * get_settings.
 	 *
-	 * @version 2.3.8
+	 * @version 2.3.9
 	 */
 	function get_settings() {
+
+		global $wcj_notice;
 
 		$settings = array(
 
@@ -85,7 +94,7 @@ class WCJ_Price_By_Country extends WCJ_Module {
 			array(
 				'title'    => __( 'Override Country on Checkout with Billing Country', 'woocommerce-jetpack' ),
 				'id'       => 'wcj_price_by_country_override_on_checkout_with_billing_country',
-				'desc'     => __( 'Enable.', 'woocommerce-jetpack' ),
+				'desc'     => __( 'Enable', 'woocommerce-jetpack' ),
 				'default'  => 'no',
 				'type'     => 'checkbox',
 			),
@@ -116,6 +125,30 @@ class WCJ_Price_By_Country extends WCJ_Module {
 			array( 'type'  => 'sectionend', 'id' => 'wcj_price_by_country_options' ),
 
 			array( 'title' => __( 'Country Groups', 'woocommerce-jetpack' ), 'type' => 'title', 'desc' => '', 'id' => 'wcj_price_by_country_country_groups_options' ),
+
+			array(
+				'title'    => __( 'Autogenerate Groups', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_' . $this->id . '_module_tools',
+				'type'     => 'custom_link',
+				'link'     => /* '<pre>' . $wcj_notice . '</pre>' . */
+					'<pre>' .
+						__( 'Currencies supported in both PayPal and Yahoo Exchange Rates:', 'woocommerce-jetpack' ) . ' ' .
+						'<a href="' . add_query_arg( 'wcj_generate_country_groups', 'paypal_and_yahoo_exchange_rates_only', remove_query_arg( 'wcj_generate_country_groups_confirm' ) ) . '">' .
+						__( 'Generate', 'woocommerce-jetpack' ) . '</a>.' .
+					'</pre>' .
+					'<pre>' .
+						__( 'Currencies supported in Yahoo Exchange Rates:', 'woocommerce-jetpack' ) . ' ' .
+						'<a href="' . add_query_arg( 'wcj_generate_country_groups', 'yahoo_exchange_rates_only', remove_query_arg( 'wcj_generate_country_groups_confirm' ) ) . '">' .
+						__( 'Generate', 'woocommerce-jetpack' ) . '</a>.' .
+					'</pre>' .
+					'<pre>' .
+						__( 'All Countries and Currencies:', 'woocommerce-jetpack' ) . ' ' .
+						'<a href="' . add_query_arg( 'wcj_generate_country_groups', 'all', remove_query_arg( 'wcj_generate_country_groups_confirm' ) ) . '">' .
+						__( 'Generate', 'woocommerce-jetpack' ) . '</a>' .
+					'</pre>',
+					/* '<pre><a href="' . add_query_arg( 'wcj_generate_country_groups', 'paypal_only', remove_query_arg( 'wcj_generate_country_groups_confirm' ) ) . '">' .
+						__( 'Create only PayPal country groups', 'woocommerce-jetpack' ) . '</a></pre>' . */
+			),
 
 			array(
 				'title'    => __( 'Groups Number', 'woocommerce-jetpack' ),

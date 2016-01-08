@@ -21,7 +21,7 @@
 
         <div class="inside">
             <p>
-                This is a list of registered <a href="http://codex.wordpress.org/Post_Types"
+                This is a list of registered <a href="https://codex.wordpress.org/Post_Types"
                 target="_blank">Post Types</a>, since you have enabled the <strong>email alerts
                 for new or modified content</strong>, we will send you an alert if any of these
                 <code>post-types</code> are created and/or updated. You may want to ignore some
@@ -44,6 +44,6 @@
     </thead>
 
     <tbody>
-        %%SUCURI.IgnoreRules.PostTypes%%
+        %%%SUCURI.IgnoreRules.PostTypes%%%
     </tbody>
 </table>

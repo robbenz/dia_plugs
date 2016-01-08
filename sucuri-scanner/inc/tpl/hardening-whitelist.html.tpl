@@ -76,7 +76,7 @@
         </thead>
 
         <tbody>
-            %%SUCURI.HardeningWhitelist.List%%
+            %%%SUCURI.HardeningWhitelist.List%%%
 
             <tr class="sucuriscan-%%SUCURI.HardeningWhitelist.NoItemsVisibility%%">
                 <td colspan="4">

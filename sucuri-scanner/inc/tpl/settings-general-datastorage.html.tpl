@@ -1,6 +1,6 @@
 
 <div class="postbox">
-    <h3>Plugin Data Storage Path</h3>
+    <h3>Data Storage Path</h3>
 
     <div class="inside">
         <p>
@@ -45,7 +45,7 @@
         <form action="%%SUCURI.URL.Settings%%" method="post">
             <input type="hidden" name="sucuriscan_page_nonce" value="%%SUCURI.PageNonce%%" />
             <span class="sucuriscan-input-group">
-                <label>Data storage path:</label>
+                <label>Data Storage Path:</label>
                 <input type="text" name="sucuriscan_datastore_path" class="input-text" />
             </span>
             <button type="submit" class="button-primary">Proceed</button>

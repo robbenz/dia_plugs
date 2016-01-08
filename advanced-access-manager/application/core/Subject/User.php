@@ -211,7 +211,7 @@ class AAM_Core_Subject_User extends AAM_Core_Subject {
      * 
      * @access public
      */
-    public function deleteOption($object, $id) {
+    public function deleteOption($object, $id = 0) {
         return delete_user_option(
                 $this->getId(), $this->getOptionName($object, $id)
         );

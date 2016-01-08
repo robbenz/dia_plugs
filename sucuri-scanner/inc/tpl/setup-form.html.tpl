@@ -32,7 +32,7 @@
                 <td>E-mail Address:</td>
                 <td>
                     <select name="sucuriscan_setup_user">
-                        %%SUCURI.AdminEmails%%
+                        %%%SUCURI.AdminEmails%%%
                     </select>
                 </td>
             </tr>

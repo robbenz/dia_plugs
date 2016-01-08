@@ -94,4 +94,4 @@ function wppb_scroll_down_to_widget($content){
 function wppb_require_jquery(){
 	wp_enqueue_script( 'jquery' );
 }
-//add_action( 'wp_enqueue_scripts', 'wppb_require_jquery' ); 
+//add_action( 'wp_enqueue_scripts', 'wppb_require_jquery' );

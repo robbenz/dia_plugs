@@ -12,7 +12,7 @@
             </div>
         </div>
 
-        <a href="http://goo.gl/9sD2sh" target="_blank" class="sucuriscan-ad-btn">Protect Your Website Today</a>
+        <a href="https://goo.gl/9sD2sh" target="_blank" class="sucuriscan-ad-btn">Protect Your Website Today</a>
 
         <div class="sucuriscan-ad-footer">
             <ul>
@@ -33,7 +33,7 @@
             <h4>Blacklisted by Google?</h4>
         </div>
 
-        <a href="http://goo.gl/vEwZq6" target="_blank" class="sucuriscan-ad-btn">Get Clean Today</a>
+        <a href="https://goo.gl/vEwZq6" target="_blank" class="sucuriscan-ad-btn">Get Clean Today</a>
 
         <div class="sucuriscan-ad-footer sucuriscan-clearfix">
             <div class="sucuriscan-pull-left">

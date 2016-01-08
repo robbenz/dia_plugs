@@ -59,7 +59,7 @@
     //initialize the role list table
     $('#role-list').DataTable({
         autoWidth: false,
-        ordering: false,
+        ordering: true,
         dom: 'ftrip',
         pagingType: 'simple',
         processing: true,
@@ -74,7 +74,8 @@
             }
         },
         columnDefs: [
-            {visible: false, targets: [0, 1]}
+            {visible: false, targets: [0, 1]},
+            {sorting: false, targets: [0, 1, 3]}
         ],
         language: {
             search: '_INPUT_',
@@ -87,17 +88,17 @@
                 'href': '#',
                 'class': 'btn btn-primary'
             }).html('<i class="icon-plus"></i> ' + aam.__('Create'))
-                    .bind('click', function (event) {
-                        event.preventDefault();
+            .bind('click', function (event) {
+                event.preventDefault();
 
-                        //clear add role form first
-                        $('#new-role-name', '#add-role-modal').val('');
-                        fetchRoleList();
+                //clear add role form first
+                $('#new-role-name', '#add-role-modal').val('');
+                fetchRoleList();
 
-                        $('#add-role-modal').modal('show').on('shown.bs.modal', function (e) {
-                            $('#new-role-name', '#add-role-modal').focus();
-                        });
-                    });
+                $('#add-role-modal').modal('show').on('shown.bs.modal', function (e) {
+                    $('#new-role-name', '#add-role-modal').focus();
+                });
+            });
 
             $('.dataTables_filter', '#role-list_wrapper').append(create);
         },
@@ -268,8 +269,8 @@
                         $('#role-list').DataTable().ajax.reload();
                     } else {
                         aam.notification(
-                                'danger', aam.__('Failed to update role')
-                                );
+                            'danger', aam.__('Failed to update role')
+                        );
                     }
                 },
                 error: function () {
@@ -847,8 +848,8 @@
         } else {
             if (granted) {
                 aam.notification(
-                        'danger', aam.__('Failed to grand capability - WordPress policy')
-                        );
+                    'danger', aam.__('Failed to grand capability - WordPress policy')
+                );
                 $(btn).attr('class', 'aam-row-action text-muted icon-check-empty');
             } else {
                 $(btn).attr('class', 'aam-row-action text-success icon-check');
@@ -888,6 +889,12 @@
                 lengthMenu: '_MENU_'
             },
             createdRow: function (row, data) {
+                //add also the internal capability representation next to the
+                //capability title
+                $('td:eq(1)', row).append(
+                    '&nbsp;<small class="aam-block">' + data[0] + '</small>'
+                );
+                
                 var actions = data[3].split(',');
 
                 var container = $('<div/>', {'class': 'aam-row-actions'});
@@ -910,6 +917,11 @@
                             break;
 
                         default:
+                            aam.triggerHook('decorate-capability-row', {
+                                action: action,
+                                container: container,
+                                data: data
+                            });
                             break;
                     }
                 });
@@ -1523,10 +1535,10 @@
         //bind the download handler
         $('#download-extension').bind('click', function () {
             download(
-                    'data:image/gif;base64,' + dump.content,
+                    'data:application/zip;base64,' + dump.content,
                     dump.title + '.zip',
                     'application/zip'
-                    );
+            );
             $('#extension-notification-modal').modal('hide');
         });
     }
@@ -1563,7 +1575,7 @@
             });
         });
         
-         if (location.hash !== '') {
+        if (location.hash !== '') {
             $('li[data-feature="' + location.hash.substr(1) + '"]', '#feature-list').trigger('click');
         } else {
             $('li:eq(0)', '#feature-list').trigger('click');
@@ -1580,7 +1592,7 @@
             dataType: 'html',
             async: false,
             data: {
-                action: 'aam-content',
+                action: 'aamc',
                 _ajax_nonce: aamLocal.nonce,
                 subject: this.getSubject().type,
                 subjectId: this.getSubject().id

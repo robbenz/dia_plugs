@@ -45,13 +45,14 @@
      * Trigger UI hook
      * 
      * @param {String} name
+     * @param {Object} params
      * 
      * @returns {void}
      */
-    AAM.prototype.triggerHook = function (name) {
+    AAM.prototype.triggerHook = function (name, params) {
         if (typeof this.hooks[name] !== 'undefined') {
             for (var i in this.hooks[name]) {
-                this.hooks[name][i].call(this);
+                this.hooks[name][i].call(this, params);
             }
         }
     };

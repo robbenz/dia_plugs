@@ -138,12 +138,12 @@ function wppb_activate_signup( $key ) {
 				if( $wppb_general_settings != 'not_found' && ! empty( $wppb_general_settings['adminApprovalOnUserRole'] ) ) {
 					foreach( $user_data->roles as $role ) {
 						if( in_array( $role, $wppb_general_settings['adminApprovalOnUserRole'] ) ) {
-							return $success_message . $admin_approval_message;
+							return $success_message . $admin_approval_message. ( ! empty ( $wppb_cr_success_message ) ? $wppb_cr_success_message : '' );
 						} else {
 							wp_set_object_terms( $user_id, NULL, 'user_status' );
 							clean_object_term_cache( $user_id, 'user_status' );
 
-							return $success_message;
+							return $success_message. ( ! empty ( $wppb_cr_success_message ) ? $wppb_cr_success_message : '' );
 						}
 					}
 				} else {

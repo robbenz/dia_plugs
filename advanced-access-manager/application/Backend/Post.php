@@ -66,12 +66,10 @@ class AAM_Backend_Post {
             $breadcrub = $this->renderPostBreadcrumb();
         }
 
-        return json_encode(
-            array(
+        return json_encode(array(
                 'status' => 'success',
                 'breadcrumb' => ($breadcrub ? $breadcrub : __('Base Level', AAM_KEY))
-            )
-        );
+        ));
     }
 
     /**
@@ -83,9 +81,8 @@ class AAM_Backend_Post {
      */
     protected function renderTermBreadcrumb() {
         list($term, $taxonomy) = explode('|', AAM_Core_Request::post('id'));
-        $ancestors = array_reverse(
-                get_ancestors($term, $taxonomy, 'taxonomy')
-        );
+        $ancestors = array_reverse(get_ancestors($term, $taxonomy, 'taxonomy'));
+        
         $breadcrumb = array();
         foreach ($ancestors as $id) {
             $breadcrumb[] = get_term($id, $taxonomy)->name;

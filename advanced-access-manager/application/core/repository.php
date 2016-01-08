@@ -51,6 +51,15 @@ class AAM_Core_Repository {
      * @static 
      */
     private static $_instance = null;
+    
+    /**
+     * Extension cache
+     * 
+     * @var array
+     * 
+     * @access protected 
+     */
+    protected $cache = array();
 
     /**
      * Consturctor
@@ -87,13 +96,13 @@ class AAM_Core_Repository {
      * @access public
      */
     public function load() {
-        $basedir = WP_CONTENT_DIR . self::RELPATH;
+        $basedir = $this->getBasedir();
 
         if (file_exists($basedir)) {
             //iterate through each active extension and load it
-            foreach (scandir($basedir) as $module) {
-                if (!in_array($module, array('.', '..'))) {
-                    $this->bootstrapExtension($basedir . '/' . $module);
+            foreach (scandir($basedir) as $extension) {
+                if (!in_array($extension, array('.', '..'))) {
+                    $this->bootstrapExtension($basedir . '/' . $extension);
                 }
             }
         }
@@ -127,12 +136,12 @@ class AAM_Core_Repository {
      * @global type $wp_filesystem
      */
     public function addExtension($content) {
-        $filepath  = WP_CONTENT_DIR . self::RELPATH . '/' . uniqid('aam_');
+        $filepath  = $this->getBasedir() . '/' . uniqid('aam_');
         
         $response = file_put_contents($filepath, $content);
         if (!is_wp_error($response)) { //unzip the archive
             WP_Filesystem(false, false, true); //init filesystem
-            $response = unzip_file($filepath, WP_CONTENT_DIR . self::RELPATH);
+            $response = unzip_file($filepath, $this->getBasedir());
             if (!is_wp_error($response)) {
                 $response = true;
             }
@@ -174,10 +183,10 @@ class AAM_Core_Repository {
         if (!defined($const)) { //extension does not exist
             $status = self::STATUS_DOWNLOAD;
         } elseif (!empty($cache[$title])) {
-            $ver = constant($const);
-            //Check if there is a version mismatch. Also ignore if there is no 
+            //Check if user has the latest extension. Also ignore if there is no 
             //license stored for this extension
-            if ($ver != $cache[$title]->version && !empty($cache[$title]->license)) { 
+            $version = version_compare(constant($const), $cache[$title]->version);
+            if ($version == -1 && !empty($cache[$title]->license)) { 
                 $status = self::STATUS_UPDATE;
             }
         }
@@ -187,21 +196,36 @@ class AAM_Core_Repository {
     
     /**
      * 
+     * @param type $title
+     * @return type
+     */
+    public function pluginStatus($slug) {
+        require_once( ABSPATH . 'wp-admin/includes/plugin-install.php' );
+        
+        $plugin = plugins_api('plugin_information', array('slug' => $slug));
+        
+        return install_plugin_install_status( $plugin);
+    }
+    
+    /**
+     * 
      * @return type
      */
     protected function prepareExtensionCache() {
-        $list = AAM_Core_API::getOption('aam-extension-repository', array());
-        $licenses = AAM_Core_API::getOption('aam-extension-license', array());
+        if (empty($this->cache)) {
+            $list = AAM_Core_API::getOption('aam-extension-repository', array());
+            $licenses = AAM_Core_API::getOption('aam-extension-license', array());
 
-        $cache = array();
-        foreach ($list as $row) {
-            $cache[$row->title] = $row;
-            if (isset($licenses[$row->title])) {
-                $cache[$row->title]->license = $licenses[$row->title];
+            $this->cache = array();
+            foreach ($list as $row) {
+                $this->cache[$row->title] = $row;
+                if (isset($licenses[$row->title])) {
+                    $this->cache[$row->title]->license = $licenses[$row->title];
+                }
             }
         }
         
-        return $cache;
+        return $this->cache;
     }
 
     /**
@@ -217,7 +241,7 @@ class AAM_Core_Repository {
         $error = false;
 
         //create a directory if does not exist
-        $basedir = WP_CONTENT_DIR . self::RELPATH;
+        $basedir = $this->getBasedir();
         if (!file_exists($basedir)) {
             if (!@mkdir($basedir, fileperms(ABSPATH) & 0777 | 0755, true)) {
                 $error = sprintf(__('Failed to create %s', AAM_KEY), $basedir);
@@ -229,6 +253,16 @@ class AAM_Core_Repository {
         }
 
         return $error;
+    }
+    
+    /**
+     * 
+     * @return type
+     */
+    public function getBasedir() {
+        $basedir = WP_CONTENT_DIR . self::RELPATH;
+        
+        return AAM_Core_ConfigPress::get('aam.extentionDir', $basedir);
     }
 
 }

@@ -215,7 +215,7 @@ function wppb_front_end_login( $atts ){
 
         $login_form .= '</div>';
 		return $login_form;
-	
+
 	}else{
 		$user_ID = get_current_user_id();
 		$wppb_user = get_userdata( $user_ID );

@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Module class.
  *
- * @version 2.3.8
+ * @version 2.3.10
  * @since   2.2.0
  * @author  Algoritmika Ltd.
  */
@@ -36,6 +36,19 @@ if ( ! class_exists( 'WCJ_Module' ) ) :
 	}
 
 	/**
+	 * add_standard_settings.
+	 *
+	 * @version 2.3.10
+	 * @since   2.3.10
+	 */
+	function add_standard_settings( $settings = array(), $module_desc = '' ) {
+		if ( isset( $this->tools_array ) && ! empty( $this->tools_array ) ) {
+			$settings = $this->add_tools_list( $settings );
+		}
+		return $this->add_enable_module_setting( $settings, $module_desc );
+	}
+
+	/**
 	 * get_settings.
 	 *
 	 * @since 2.2.6
@@ -63,7 +76,7 @@ if ( ! class_exists( 'WCJ_Module' ) ) :
 	/**
 	 * add_meta_box.
 	 *
-	 * @version 2.3.0
+	 * @version 2.3.10
 	 * @since   2.2.6
 	 */
 	function add_meta_box() {
@@ -72,7 +85,7 @@ if ( ! class_exists( 'WCJ_Module' ) ) :
 		$priority = ( isset( $this->meta_box_priority ) ) ? $this->meta_box_priority : 'high';
 		add_meta_box(
 			'wc-jetpack-' . $this->id,
-			__( 'WooCommerce Jetpack', 'woocommerce-jetpack' ) . ': ' . $this->short_desc,
+			__( 'Booster', 'woocommerce-jetpack' ) . ': ' . $this->short_desc,
 			array( $this, 'create_meta_box' ),
 			$screen,
 			$context,
@@ -168,13 +181,13 @@ if ( ! class_exists( 'WCJ_Module' ) ) :
 	/**
 	 * get_back_to_settings_link_html.
 	 *
-	 * @version 2.2.3
+	 * @version 2.3.10
 	 * @since   2.2.3
 	 */
 	function get_back_to_settings_link_html() {
 		$cat_id = $this->get_cat_by_section( $this->id );
 		$the_link = admin_url( 'admin.php?page=wc-settings&tab=jetpack&wcj-cat=' . $cat_id . '&section=' . $this->id );
-		return '<a href="' .  $the_link . '">' . __( 'Back to Module Settings', 'woocommerce-jetpack' ) . '</a>';
+		return '<a href="' .  $the_link . '"><< ' . __( 'Back to Module Settings', 'woocommerce-jetpack' ) . '</a>';
 	}
 
 	/**
@@ -204,36 +217,102 @@ if ( ! class_exists( 'WCJ_Module' ) ) :
 	}
 
 	/**
+	 * get_tool_header_html.
+	 *
+	 * @version 2.3.10
+	 * @since   2.3.10
+	 */
+	function get_tool_header_html( $tool_id ) {
+		$html = '';
+		if ( isset( $this->tools_array[ $tool_id ] ) ) {
+			$html .= '<p>' .  $this->get_back_to_settings_link_html() . '</p>';
+			$html .= '<h3>' . __( 'Booster', 'woocommerce-jetpack' ) . ' - ' . $this->tools_array[ $tool_id ]['title'] . '</h3>';
+			$html .= '<p style="font-style:italic;">' . $this->tools_array[ $tool_id ]['desc']  . '</p>';
+		}
+		return $html;
+	}
+
+	/**
 	 * add_tools.
 	 *
-	 * @version 2.2.3
+	 * @version 2.3.10
 	 * @since   2.2.3
 	 */
-	function add_tools( $tools_array ) {
+	function add_tools( $tools_array, $args = array() ) {
 		$this->tools_array = $tools_array;
 		add_action( 'wcj_module_tools_' . $this->id, array( $this, 'add_tool_link' ), PHP_INT_MAX );
+		$hook_priority = isset( $args['tools_dashboard_hook_priority'] ) ? $args['tools_dashboard_hook_priority'] : 10;
+		if ( $this->is_enabled() ) {
+			add_filter( 'wcj_tools_tabs', array( $this, 'add_module_tools_tabs' ), $hook_priority );
+			foreach ( $this->tools_array as $tool_id => $tool_data ) {
+				add_action( 'wcj_tools_' . $tool_id, array( $this, 'create_' . $tool_id . '_tool' ) );
+			}
+		}
+		add_action( 'wcj_tools_dashboard', array( $this, 'add_module_tools_info_to_tools_dashboard' ), $hook_priority );
+	}
+
+	/**
+	 * add_module_tools_tabs.
+	 *
+	 * @version 2.3.10
+	 * @since   2.3.10
+	 */
+	function add_module_tools_tabs( $tabs ) {
+		foreach ( $this->tools_array as $tool_id => $tool_data ) {
+			$tool_title = ( isset( $tool_data['tab_title'] ) ) ?
+				$tool_data['tab_title'] :
+				$tool_data['title'];
+			$tabs[] = array(
+				'id'    => $tool_id,
+				'title' => $tool_title,
+			);
+		}
+		return $tabs;
+	}
+
+	/**
+	 * add_module_tools_info_to_tools_dashboard.
+	 *
+	 * @version 2.3.10
+	 * @since   2.3.10
+	 */
+	public function add_module_tools_info_to_tools_dashboard() {
+		$is_enabled_html = ( $this->is_enabled() ) ?
+			'<span style="color:green;font-style:italic;">' . __( 'enabled', 'woocommerce-jetpack' )  . '</span>' :
+			'<span style="color:gray;font-style:italic;">'  . __( 'disabled', 'woocommerce-jetpack' ) . '</span>';
+		foreach ( $this->tools_array as $tool_id => $tool_data ) {
+			$tool_title = $tool_data['title'];
+			$tool_desc  = $tool_data['desc'];
+			$additional_style_html = '';
+			$additional_info_html = '';
+			if ( isset( $tool_data['depreciated'] ) && true === $tool_data['depreciated'] ) {
+				$additional_style_html = 'color:gray;font-style:italic;';
+				$additional_info_html  = ' - ' . __( 'Depreciated', 'woocommerce-jetpack' );
+			}
+			echo '<tr>';
+			echo '<td style="' . $additional_style_html . '">' . $tool_title . $additional_info_html . '</td>';
+			echo '<td style="' . $additional_style_html . '">' . $this->short_desc . '</td>';
+			echo '<td style="' . $additional_style_html . '">' . $tool_desc . '</td>';
+			echo '<td style="' . $additional_style_html . '">' . $is_enabled_html . '</td>';
+			echo '</tr>';
+		}
 	}
 
 	/**
 	 * add_tool_link.
 	 *
-	 * @version 2.2.3
+	 * @version 2.3.10
 	 * @since   2.2.3
 	 */
 	function add_tool_link() {
-		//echo '<ul>';
-		foreach ( $this->tools_array as $tool_id => $tool_desc ) {
-			//echo '<li>';
-			if ( $this->is_enabled() ) {
-				echo '<a href="' . admin_url( 'admin.php?page=wcj-tools&tab=' . $tool_id ) . '"><code>' . $tool_desc . '</code></a>';
-			}
-			else {
-				echo '<code>' . $tool_desc . '</code>';
-			}
-			//echo '</li>';
-			echo '<br>';
+		foreach ( $this->tools_array as $tool_id => $tool_data ) {
+			$tool_title = $tool_data['title'];
+			echo '<p>';
+			echo ( $this->is_enabled() ) ?
+				'<a href="' . admin_url( 'admin.php?page=wcj-tools&tab=' . $tool_id ) . '"><code>' . $tool_title . '</code></a>' :
+				'<code>' . $tool_title . '</code>';
+			echo '</p>';
 		}
-		//echo '</ul>';
 	}
 
 	/**

@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Profile Builder package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2015-09-29 11:50:16+0000\n"
+"PO-Revision-Date: 2015-10-27 13:39:55+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -10,17 +10,302 @@ msgstr ""
 "X-Generator: GlotPress/0.1\n"
 "Project-Id-Version: Profile Builder\n"
 
+#: ../admin/add-ons.php:190
+msgid "Recommended Plugins"
+msgstr ""
+
+#: ../admin/add-ons.php:219 ../admin/pms-cross-promotion.php:102
+msgid "Free"
+msgstr ""
+
+#: ../admin/add-ons.php:221
+msgid "Accept user payments, create subscription plans and restrict content on your membership site."
+msgstr ""
+
+#: ../admin/add-ons.php:222 ../admin/pms-cross-promotion.php:105
+msgid "More Details"
+msgstr ""
+
+#: ../admin/add-ons.php:240 ../admin/pms-cross-promotion.php:88
+#: ../admin/pms-cross-promotion.php:123 ../admin/pms-cross-promotion.php:202
+msgid "Plugin is <strong>inactive</strong>"
+msgstr ""
+
+#: ../admin/add-ons.php:242 ../admin/pms-cross-promotion.php:87
+#: ../admin/pms-cross-promotion.php:125 ../admin/pms-cross-promotion.php:204
+msgid "Plugin is <strong>active</strong>"
+msgstr ""
+
+#: ../admin/add-ons.php:263 ../admin/pms-cross-promotion.php:146
+msgid "Could not install plugin. Retry or <a href=\"%s\" target=\"_blank\">install manually</a>."
+msgstr ""
+
+#: ../admin/general-settings.php:62
+msgid "This works with front-end forms only. Recommended to redirect WP default registration to a Profile Builder one using \"Custom Redirects\" addon."
+msgstr ""
+
+#: ../admin/pms-cross-promotion.php:10
+msgid "Paid Accounts"
+msgstr ""
+
+#: ../admin/pms-cross-promotion.php:33
+msgid "Paid Member Subscriptions - a free WordPress plugin"
+msgstr ""
+
+#: ../admin/pms-cross-promotion.php:37
+msgid "With the new Subscriptions Field in Profile Builder, your registration forms will allow your users to sign up for paid accounts."
+msgstr ""
+
+#: ../admin/pms-cross-promotion.php:40
+msgid "Paid & Free Subscriptions"
+msgstr ""
+
+#: ../admin/pms-cross-promotion.php:41
+msgid "Restrict Content"
+msgstr ""
+
+#: ../admin/pms-cross-promotion.php:42
+msgid "Member Management"
+msgstr ""
+
+#: ../admin/pms-cross-promotion.php:43
+msgid "Email Templates"
+msgstr ""
+
+#: ../admin/pms-cross-promotion.php:44
+msgid "Account Management"
+msgstr ""
+
+#: ../admin/pms-cross-promotion.php:45
+msgid "Subscription Management"
+msgstr ""
+
+#: ../admin/pms-cross-promotion.php:46
+msgid "Payment Management"
+msgstr ""
+
+#: ../admin/pms-cross-promotion.php:83
+msgid "Plugin is Active"
+msgstr ""
+
+#: ../admin/pms-cross-promotion.php:84
+msgid "Plugin has been activated"
+msgstr ""
+
+#: ../admin/pms-cross-promotion.php:91
+msgid "Plugin has been deactivated."
+msgstr ""
+
+#: ../admin/pms-cross-promotion.php:104
+msgid "Accept user payments, create subscription plans and restrict content on your website."
+msgstr ""
+
+#: ../admin/pms-cross-promotion.php:155
+msgid "Step by Step Quick Setup"
+msgstr ""
+
+#: ../admin/pms-cross-promotion.php:239
+msgid "Allow your users to have <strong>paid accounts with Profile Builder</strong>. %1$sFind out how >%2$s. %3$sDismiss%4$s"
+msgstr ""
+
+#: ../features/email-confirmation/email-confirmation.php:392
+msgid "To activate your user, please click the following link:<br><br>%s%s%s<br><br>After you activate it you will receive yet *another email* with your login."
+msgstr ""
+
+#: ../front-end/register.php:130
+msgid "You will soon be redirected automatically."
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:45
+msgid "After Login"
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:46
+msgid "After Logout"
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:47
+msgid "After Registration"
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:48
+msgid "After Edit Profile"
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:49
+msgid "After Successful Email Confirmation"
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:50
+msgid "After Successful Password Reset"
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:51
+msgid "Dashboard (redirect users from accessing the dashboard)"
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:55
+msgid "User ID"
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:61
+msgid "User ID or Username"
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:62
+msgid "User ID / Username"
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:62
+msgid "Please select and enter the ID or username of your user."
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:63
+#: ../modules/custom-redirects/custom_redirects_admin.php:93
+#: ../modules/custom-redirects/custom_redirects_admin.php:112
+#: ../modules/custom-redirects/custom_redirects_admin.php:131
+msgid "Redirect Type"
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:64
+#: ../modules/custom-redirects/custom_redirects_admin.php:94
+#: ../modules/custom-redirects/custom_redirects_admin.php:113
+#: ../modules/custom-redirects/custom_redirects_admin.php:138
+msgid "Redirect URL"
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:64
+#: ../modules/custom-redirects/custom_redirects_admin.php:94
+#: ../modules/custom-redirects/custom_redirects_admin.php:113
+#: ../modules/custom-redirects/custom_redirects_admin.php:138
+msgid "Can contain the following dynamic tags:{{homeurl}}, {{siteurl}}, {{user_id}}, {{user_nicename}}, {{http_referer}}"
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:71
+#: ../modules/custom-redirects/custom_redirects_admin.php:240
+msgid "Individual User Redirects"
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:84
+msgid "... Choose"
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:92
+msgid "Select a user role."
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:101
+#: ../modules/custom-redirects/custom_redirects_admin.php:241
+msgid "User Role based Redirects"
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:120
+#: ../modules/custom-redirects/custom_redirects_admin.php:242
+msgid "Global Redirects"
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:133
+msgid "Login ( wp_login.php )"
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:134
+msgid "Register ( wp-login.php?action=register )"
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:135
+msgid "Lost Password ( wp-login.php?action=lostpassword )"
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:136
+msgid "Author Archive ( http://sitename.com/author/admin )"
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:145
+msgid "Redirect Default WordPress Forms and Pages"
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:157
+msgid "How does this work?"
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:179
+msgid "<pre>User ID / Username</pre><pre>Redirect</pre><pre>URL</pre>"
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:193
+msgid "<pre>User Role</pre><pre>Redirect</pre><pre>URL</pre>"
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:207
+#: ../modules/custom-redirects/custom_redirects_admin.php:221
+msgid "<pre>Redirect</pre><pre>URL</pre>"
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:236
+msgid "These redirects happen after a successful action, like registration or after a successful login."
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:238
+msgid "Which redirect happens depends on the following priority:"
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:243
+msgid "Individual redirects defined in shortcodes or in the Multiple Registration and Edit Profile form settings. (<strong><em>redirect_priority=\"top\"</em></strong> parameter can be added in any shortcode, then that shortcode redirect will have priority over all other redirects)"
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:246
+msgid "Redirect Default WordPress forms and pages"
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:247
+msgid "With these you can redirect various WordPress forms and pages to pages created with profile builder."
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:249
+msgid "Available tags for dynamic URLs"
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:250
+msgid "You use the following tags in your URLs to redirect users to various pages."
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:252
+msgid "generates a url of the current website homepage."
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:253
+msgid "in WordPress the <a target='_blank' href='https://codex.wordpress.org/Function_Reference/site_url'>site url</a> can be different then the home url"
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:254
+msgid "the ID of the user"
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:255
+msgid "the URL sanitized version of the username, the user nicename can be safely used in URLs since it can't contain special characters or spaces."
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:256
+msgid "the URL of the previously visited page"
+msgstr ""
+
+#: ../modules/custom-redirects/custom_redirects_admin.php:339
+#: ../modules/custom-redirects/custom_redirects_admin.php:345
+#: ../modules/custom-redirects/custom_redirects_admin.php:351
+msgid "You can't add duplicate redirects!"
+msgstr ""
+
 #: ../admin/admin-functions.php:40
 msgid "Display name publicly as - only appears on the Edit Profile page!"
-msgstr ""
+msgstr "Den Namen öffentlich anzeigen - erscheint nur auf der Edit Profile Seite!"
 
 #: ../admin/basic-info.php:37
 msgid "Friction-less login using %s shortcode or a widget."
-msgstr ""
+msgstr "Reibungsloser Login indem man %s oder ein Widget benutzt."
 
 #: ../admin/basic-info.php:41
 msgid "Beautiful registration forms fully customizable using the %s shortcode."
-msgstr ""
+msgstr "Wunderschöne und voll anpassbare Registrierformulare mit der Nutzung von %s Shortcode."
 
 #: ../admin/basic-info.php:45
 msgid "Straight forward edit profile forms using %s shortcode."
@@ -34,11 +319,11 @@ msgstr ""
 msgid "To create a page containing the users registered to this current site/blog, insert the following shortcode in a page of your chosing: %s."
 msgstr ""
 
-#: ../admin/general-settings.php:125
+#: ../admin/general-settings.php:118
 msgid "\"Admin Approval\" on User Role:"
 msgstr ""
 
-#: ../admin/general-settings.php:144
+#: ../admin/general-settings.php:137
 msgid "Select on what user roles to activate Admin Approval."
 msgstr ""
 
@@ -1098,7 +1383,7 @@ msgstr ""
 msgid "Your account has been successfully created!"
 msgstr ""
 
-#: ../features/functions.php:607
+#: ../features/functions.php:620
 #: ../front-end/extra-fields/recaptcha/recaptcha.php:374
 #: ../front-end/extra-fields/recaptcha/recaptcha.php:379
 #: ../front-end/extra-fields/recaptcha/recaptcha.php:421
@@ -1139,7 +1424,8 @@ msgstr ""
 msgid "Descending"
 msgstr ""
 
-#: ../admin/add-ons.php:144
+#: ../admin/add-ons.php:144 ../admin/add-ons.php:251
+#: ../admin/pms-cross-promotion.php:134 ../admin/pms-cross-promotion.php:213
 msgid "Download Now"
 msgstr "Jetzt downloaden"
 
@@ -1183,15 +1469,17 @@ msgstr "Du musst den geheimen Schlüssel eingeben\n"
 msgid "Add-Ons"
 msgstr "Add-Ons"
 
-#: ../admin/add-ons.php:34 ../admin/add-ons.php:124
+#: ../admin/add-ons.php:34 ../admin/add-ons.php:124 ../admin/add-ons.php:231
+#: ../admin/pms-cross-promotion.php:78 ../admin/pms-cross-promotion.php:114
+#: ../admin/pms-cross-promotion.php:193
 msgid "Activate"
 msgstr "Aktivieren"
 
-#: ../admin/add-ons.php:36
+#: ../admin/add-ons.php:36 ../admin/pms-cross-promotion.php:80
 msgid "Downloading and installing..."
 msgstr "Downloaden und installieren..."
 
-#: ../admin/add-ons.php:37
+#: ../admin/add-ons.php:37 ../admin/pms-cross-promotion.php:81
 msgid "Installation complete"
 msgstr "Installation abgeschlossen"
 
@@ -1203,7 +1491,7 @@ msgstr "Add-On ist aktiv"
 msgid "Add-On has been activated"
 msgstr "Add-On wurde aktiviert"
 
-#: ../admin/add-ons.php:41
+#: ../admin/add-ons.php:41 ../admin/pms-cross-promotion.php:85
 msgid "Retry Install"
 msgstr "Installation erneut versuchen"
 
@@ -1215,7 +1503,9 @@ msgstr "Add-On ist <strong>aktiv</strong>"
 msgid "Add-On is <strong>inactive</strong>"
 msgstr "Add-On ist <strong>inaktiv</strong>"
 
-#: ../admin/add-ons.php:46 ../admin/add-ons.php:128
+#: ../admin/add-ons.php:46 ../admin/add-ons.php:128 ../admin/add-ons.php:235
+#: ../admin/pms-cross-promotion.php:90 ../admin/pms-cross-promotion.php:118
+#: ../admin/pms-cross-promotion.php:197
 msgid "Deactivate"
 msgstr "Deaktivieren"
 
@@ -1231,11 +1521,13 @@ msgstr "Etwas ist falsch gelaufen, wir konnten uns nicht mit dem Server verbinde
 msgid "Buy Now"
 msgstr "Jetzt kaufen"
 
-#: ../admin/add-ons.php:147
+#: ../admin/add-ons.php:147 ../admin/add-ons.php:254
+#: ../admin/pms-cross-promotion.php:137 ../admin/pms-cross-promotion.php:216
 msgid "Install Now"
 msgstr "Jetzt installieren"
 
-#: ../admin/add-ons.php:153
+#: ../admin/add-ons.php:153 ../admin/add-ons.php:258
+#: ../admin/pms-cross-promotion.php:141 ../admin/pms-cross-promotion.php:220
 msgid "Compatible with your version of Profile Builder."
 msgstr "Kompatibel mit deiner Version von Profile Builder."
 
@@ -1353,19 +1645,19 @@ msgstr "<strong>FEHLER</strong>: Das Passwort muss mindestens %s Zeichen lang se
 msgid "<strong>ERROR</strong>: The password must have a minimum strength of %s"
 msgstr "<strong>FEHLER</strong>: Das Passwort muss eine Mindeststärke von %s haben"
 
-#: ../admin/general-settings.php:170
+#: ../admin/general-settings.php:163
 msgid "Username and Email"
 msgstr "Benutzername und E-Mail"
 
-#: ../admin/general-settings.php:175
+#: ../admin/general-settings.php:168
 msgid "\"Username and Email\" - users can Log In with both Username and Email."
 msgstr "\"Benutzername und E-Mail\" - Benutzer können sich mit Ihrem Benutzernamen und EMail-Adresse anmelden."
 
-#: ../admin/general-settings.php:176
+#: ../admin/general-settings.php:169
 msgid "\"Username\" - users can Log In only with Username."
 msgstr "\"Benutzername\" - Benutzer können sich nur mit Ihrem Benutzernamen anmelden"
 
-#: ../admin/general-settings.php:177
+#: ../admin/general-settings.php:170
 msgid "\"Email\" - users can Log In only with Email."
 msgstr "\"E-Mail\" - Benutzer können sich nur mit Ihrer E-Mail-Adresse anmelden."
 
@@ -1423,11 +1715,11 @@ msgstr "Eintrag hinzufügen"
 msgid "show"
 msgstr "zeigen"
 
-#: ../features/functions.php:659
+#: ../features/functions.php:672
 msgid "To allow users to register for your website via Profile Builder, you first must enable user registration. Go to %1$sNetwork Settings%2$s, and under Registration Settings make sure to check “User accounts may be registered”. %3$sDismiss%4$s"
 msgstr "Damit sich Benutzer auf Ihre Website über Profile Builder registrieren können, müssen Sie zunächst die Benutzerregistrierung ermöglichen. Gehen Sie unter %1$sEinstellungen -> Allgemein%2$s und unter Mitgliedschaft stellen Sie sicher, dass das Kontrollkästchen \"Jeder kann sich registrieren\" angekreuzt ist . %3$sVerwerfen%4$s"
 
-#: ../front-end/class-formbuilder.php:509
+#: ../front-end/class-formbuilder.php:562
 msgid "User to edit:"
 msgstr "Benutzer editieren"
 
@@ -1445,11 +1737,11 @@ msgstr "Das Passwort muss eine Mindeststärke von %s haben"
 msgid "You cannot register this user role"
 msgstr "Sie können diese Benutzerrolle nicht registrieren"
 
-#: ../front-end/login.php:105
+#: ../front-end/login.php:108
 msgid "username or email"
 msgstr "Benutzername oder E-Mail-Adresse"
 
-#: ../front-end/login.php:174
+#: ../front-end/login.php:177
 msgid "Username or Email"
 msgstr "Benutzername oder E-Mail-Adresse"
 
@@ -1461,6 +1753,7 @@ msgstr "Sie sind als %s eingeloggt."
 msgid "Log out &raquo;"
 msgstr "Ausloggen &raquo;"
 
+#: ../modules/custom-redirects/custom_redirects_admin.php:92
 #: ../modules/email-customizer/email-customizer.php:31
 msgid "User Role"
 msgstr "Benutzerrolle"
@@ -1477,11 +1770,12 @@ msgstr "nur die Benutzer anzeigen, denen Sie die user_id vergeben haben"
 msgid "displays all users except the ones you specified the user_id for"
 msgstr "alle Benutzer anzeigen, außer denen Sie die user_id vergeben haben"
 
-#: ../features/functions.php:526
+#: ../features/functions.php:539
 msgid "Minimum length of %d characters"
 msgstr "Mindestlänge von %d Zeichen"
 
-#: ../front-end/class-formbuilder.php:99 ../front-end/class-formbuilder.php:102
+#: ../front-end/class-formbuilder.php:142
+#: ../front-end/class-formbuilder.php:145
 msgid "This message is only visible by administrators"
 msgstr "Diese Nachricht ist nur für Administratoren sichtbar"
 
@@ -1535,37 +1829,37 @@ msgstr "... wähle"
 msgid "1 item"
 msgstr "1 Artikel"
 
-#: ../features/functions.php:512
+#: ../features/functions.php:525
 msgid "Very Weak"
 msgstr "sehr schwach"
 
-#: ../features/functions.php:600
+#: ../features/functions.php:613
 msgid "This field is required"
 msgstr "Dieses Feld ist erforderlich"
 
-#: ../features/functions.php:627
+#: ../features/functions.php:640
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: ../features/functions.php:663
+#: ../features/functions.php:676
 msgid "To allow users to register for your website via Profile Builder, you first must enable user registration. Go to %1$sSettings -> General%2$s tab, and under Membership make sure to check “Anyone can register”. %3$sDismiss%4$s"
 msgstr ""
 "Damit sich Benutzer auf Ihre Website über Profile Builder registrieren können, müssen Sie zunächst die Benutzerregistrierung ermöglichen. Gehen Sie unter %1$sEinstellungen -> Allgemein%2$s und unter Mitgliedschaft stellen Sie sicher, dass das\n"
 "Kontrollkästchen \"Jeder kann sich registrieren\" angekreuzt ist . %3$sentlassen%4$s"
 
-#: ../front-end/login.php:96
+#: ../front-end/login.php:99
 msgid "Invalid username."
 msgstr "Ungültiger Benutzername."
 
-#: ../front-end/login.php:101 ../front-end/login.php:105
+#: ../front-end/login.php:104 ../front-end/login.php:108
 msgid "username"
 msgstr "Benutzername"
 
-#: ../front-end/login.php:101
+#: ../front-end/login.php:104
 msgid "email"
 msgstr "E-Mail-Adresse"
 
-#: ../front-end/login.php:208
+#: ../front-end/login.php:211
 msgid "Lost your password?"
 msgstr "Passwort vergessen?"
 
@@ -1578,8 +1872,8 @@ msgstr "ist ebenfalls aktiviert. Sie müssen es vor der Aktivierung dieser Versi
 msgid "Must be a valid email address or the tag {{reply_to}} which defaults to the administrator email"
 msgstr "Es muss eine gültige E-Mail-Adresse oder der Tag  {{reply_to}} sein der die Standardeinstellung für den E-Mail des Administrators ist."
 
-#: ../features/email-confirmation/email-confirmation.php:554
-#: ../features/email-confirmation/email-confirmation.php:557
+#: ../features/email-confirmation/email-confirmation.php:561
+#: ../features/email-confirmation/email-confirmation.php:564
 #: ../modules/email-customizer/email-customizer.php:413
 #: ../modules/email-customizer/email-customizer.php:420
 #: ../modules/email-customizer/email-customizer.php:434
@@ -1594,11 +1888,11 @@ msgstr "Diese Einstellungen werden nach dem Abspeichern auch auf der Einstellung
 msgid "This form is empty."
 msgstr "Dieses Formular ist leer."
 
-#: ../modules/multiple-forms/multiple-forms.php:416
+#: ../modules/multiple-forms/multiple-forms.php:399
 msgid "Delete all items"
 msgstr "Löschen Sie alle Einträge"
 
-#: ../modules/multiple-forms/multiple-forms.php:416
+#: ../modules/multiple-forms/multiple-forms.php:399
 msgid "Delete all"
 msgstr "alles löschen"
 
@@ -1638,10 +1932,9 @@ msgstr "Anzeigen"
 msgid "Hide"
 msgstr "Verbergen"
 
-#: ../admin/admin-bar.php:86 ../admin/general-settings.php:215
-#: ../admin/register-version.php:95 ../features/functions.php:620
-#: ../modules/custom-redirects/custom-redirects.php:136
-#: ../modules/modules.php:142
+#: ../admin/admin-bar.php:86 ../admin/general-settings.php:208
+#: ../admin/register-version.php:95 ../features/functions.php:633
+#: ../modules/modules.php:117
 msgid "Save Changes"
 msgstr "Änderungen speichern"
 
@@ -1654,22 +1947,22 @@ msgstr "Anmeldung soll über die E-Mail-Adresse erfolgen. Dieses Feld erscheint 
 msgid "General Settings"
 msgstr "Allgemeine Einstellungen"
 
-#: ../admin/admin-functions.php:134 ../admin/general-settings.php:201
+#: ../admin/admin-functions.php:134 ../admin/general-settings.php:194
 msgid "Very weak"
 msgstr "Sehr schwach"
 
-#: ../admin/admin-functions.php:134 ../admin/general-settings.php:202
-#: ../features/functions.php:512
+#: ../admin/admin-functions.php:134 ../admin/general-settings.php:195
+#: ../features/functions.php:525
 msgid "Weak"
 msgstr "schwach"
 
-#: ../admin/admin-functions.php:134 ../admin/general-settings.php:203
-#: ../features/functions.php:512
+#: ../admin/admin-functions.php:134 ../admin/general-settings.php:196
+#: ../features/functions.php:525
 msgid "Medium"
 msgstr "Medium"
 
-#: ../admin/admin-functions.php:134 ../admin/general-settings.php:204
-#: ../features/functions.php:512
+#: ../admin/admin-functions.php:134 ../admin/general-settings.php:197
+#: ../features/functions.php:525
 msgid "Strong"
 msgstr "stark"
 
@@ -1842,7 +2135,7 @@ msgstr "Aktivieren Sie Ihre Module"
 msgid "Find out more about PRO Modules"
 msgstr "Erfahren Sie mehr über die PRO-Module"
 
-#: ../admin/basic-info.php:126 ../modules/modules.php:111
+#: ../admin/basic-info.php:126 ../modules/modules.php:86
 #: ../modules/user-listing/userlisting.php:11
 #: ../modules/user-listing/userlisting.php:12
 #: ../modules/user-listing/userlisting.php:17
@@ -1863,8 +2156,9 @@ msgid "Personalize all emails sent to your users or admins. On registration, ema
 msgstr "Personalisieren Sie alle E-Mails die an Benutzer oder Administratoren gesendet werden. Bei der Registrierung, E-Mail-Bestätigung, Admin Genehmigung / un-Zulassung."
 
 #: ../admin/basic-info.php:138
-#: ../modules/custom-redirects/custom-redirects.php:29
-#: ../modules/modules.php:32 ../modules/modules.php:132
+#: ../modules/custom-redirects/custom_redirects_admin.php:32
+#: ../modules/custom-redirects/custom_redirects_admin.php:33
+#: ../modules/modules.php:107
 msgid "Custom Redirects"
 msgstr "Benutzerdefinierte Umleitungen"
 
@@ -1872,7 +2166,7 @@ msgstr "Benutzerdefinierte Umleitungen"
 msgid "Keep your users out of the WordPress dashboard, redirect them to the front-page after login or registration, everything is just a few clicks away."
 msgstr "Halten Sie Ihre Benutzer heraus aus dem WordPress-Dashboard, leiten Sie sie an der Front-Seite nach dem Login oder Registrierung um, alles ist nur wenige Klicks entfernt."
 
-#: ../admin/basic-info.php:144 ../modules/modules.php:97
+#: ../admin/basic-info.php:144 ../modules/modules.php:72
 msgid "Multiple Registration Forms"
 msgstr "Mehrere Anmeldeformulare"
 
@@ -1880,7 +2174,7 @@ msgstr "Mehrere Anmeldeformulare"
 msgid "Set up multiple registration forms with different fields for certain user roles. Capture different information from different types of users."
 msgstr "Richten Sie mehrere Anmeldeformulare mit verschiedenen Feldern für bestimmte Benutzerrollen ein. Erfassen Sie verschiedene Informationen von verschiedene Arten von Benutzern."
 
-#: ../admin/basic-info.php:148 ../modules/modules.php:104
+#: ../admin/basic-info.php:148 ../modules/modules.php:79
 msgid "Multiple Edit-profile Forms"
 msgstr "Mehrere Profilbearbeitungs-Formulare"
 
@@ -1888,11 +2182,11 @@ msgstr "Mehrere Profilbearbeitungs-Formulare"
 msgid "Allow different user roles to edit their specific information. Set up multiple edit-profile forms with different fields for certain user roles."
 msgstr "Ermöglichen Sie verschiedenen Benutzerrollen, ihre spezifischen Informationen zu bearbeiten. Errichten Sie mehrere Profil Bearbeitungs-Formulare mit verschiedenen Felder für bestimmte Benutzerrollen."
 
-#: ../admin/basic-info.php:161
+#: ../admin/basic-info.php:173
 msgid " * only available in the %1$sHobbyist and Pro versions%2$s."
 msgstr "* nur verfügbar in den %1$sHobbyist und Pro-Versionen %2$s."
 
-#: ../admin/basic-info.php:162
+#: ../admin/basic-info.php:174
 msgid "** only available in the %1$sPro version%2$s."
 msgstr "** nur in der %1$sPro Version%2$s verfügbar."
 
@@ -1900,8 +2194,8 @@ msgstr "** nur in der %1$sPro Version%2$s verfügbar."
 msgid "Load Profile Builder's own CSS file in the front-end:"
 msgstr "Laden Sie die CSS-Datei vom Profil-Generator in die Front-End hoch"
 
-#: ../admin/general-settings.php:45 ../admin/general-settings.php:60
-#: ../admin/general-settings.php:114
+#: ../admin/general-settings.php:45 ../admin/general-settings.php:58
+#: ../admin/general-settings.php:107
 #: ../modules/multiple-forms/register-forms.php:225
 #: ../modules/multiple-forms/register-forms.php:226
 #: ../modules/user-listing/userlisting.php:1303
@@ -1912,63 +2206,56 @@ msgstr "Ja"
 msgid "You can find the default file here: %1$s"
 msgstr "Sie finden die Standard-Datei hier:%1$s"
 
-#: ../admin/general-settings.php:56
+#: ../admin/general-settings.php:54
 msgid "\"Email Confirmation\" Activated:"
 msgstr "\"E-Mail-Bestätigung\" aktiviert:"
 
-#: ../admin/general-settings.php:61 ../admin/general-settings.php:115
+#: ../admin/general-settings.php:59 ../admin/general-settings.php:108
 #: ../modules/multiple-forms/register-forms.php:225
 #: ../modules/multiple-forms/register-forms.php:226
 msgid "No"
 msgstr "Nein"
 
 #: ../admin/general-settings.php:64
-msgid "On single-site installations this works with front-end forms only. Recommended to redirect WP default registration to a Profile Builder one using \"Custom Redirects\" addon."
-msgstr "Auf Einzelstandort-Site Installationen funktioniert dieses nur mit Front-End-Formen . Es wird empfohlen die WP-Standard-Registrierung auf einen Profil-Generator umzuleiten, indem man das \"Custom Redirects\" Addon benutzt."
-
-#: ../admin/general-settings.php:65
-msgid "The \"Email Confirmation\" feature is active (by default) on WPMU installations."
-msgstr "Die Feature \"E-Mail-Bestätigung\" ist aktiv (standardmäßig) auf WPMU-Installationen."
-
-#: ../admin/general-settings.php:67
 msgid "You can find a list of unconfirmed email addresses %1$sUsers > All Users > Email Confirmation%2$s."
 msgstr "Sie können eine Liste der unbestätigten Emailadressen unter %1$sUsers > alle Benutzer > E-Mail Bestätigung%2$s finden."
 
-#: ../admin/general-settings.php:79
+#: ../admin/general-settings.php:72
 msgid "\"Email Confirmation\" Landing Page:"
 msgstr "\"E-Mail-Bestätigung\" Landeseite:"
 
-#: ../admin/general-settings.php:84
+#: ../admin/general-settings.php:77
 msgid "Existing Pages"
 msgstr "Vorhandene Seiten"
 
-#: ../admin/general-settings.php:99
+#: ../admin/general-settings.php:92
 msgid "Specify the page where the users will be directed when confirming the email account. This page can differ from the register page(s) and can be changed at any time. If none selected, a simple confirmation page will be displayed for the user."
 msgstr "Geben Sie die Seite ein, wo der Benutzer umgeleitet werden sollte, wenn er sein E-Mail-Konto  bestätigt. Diese Seite kann von der Registerungs- Seite(n) unterschiedlich sein und kann jederzeit geändert werden. Wenn nichts ausgewähltw wird, wird eine einfache Bestätigungsseite für den Benutzer angezeigt."
 
-#: ../admin/general-settings.php:110
+#: ../admin/general-settings.php:103
 msgid "\"Admin Approval\" Activated:"
 msgstr "\"Admin Genehmigung\" aktiviert:"
 
-#: ../admin/general-settings.php:118
+#: ../admin/general-settings.php:111
 msgid "You can find a list of users at %1$sUsers > All Users > Admin Approval%2$s."
 msgstr "Sie können eine Liste mit allen Benutzer unter %1$sUsers > alle Benutzer > Admin Genehmigung%2$s finden."
 
-#: ../admin/general-settings.php:156
+#: ../admin/general-settings.php:149
 msgid "\"Admin Approval\" Feature:"
 msgstr "\"Admin Genehmigung\" Feature:"
 
-#: ../admin/general-settings.php:159
+#: ../admin/general-settings.php:152
 msgid "You decide who is a user on your website. Get notified via email or approve multiple users at once from the WordPress UI. Enable Admin Approval by upgrading to %1$sHobbyist or PRO versions%2$s."
 msgstr "Sie entscheiden, wer ein Benutzer auf Ihrer Website ist. Sie können Benachrichtigungen per E-Mail bekommen oder können mehrere Benutzer gleichzeitig über das WordPress-UI genehmigen. Aktivieren Sie die Admin-Genehmigung mit einem Upgrade auf %1$s der Hobbyist oder PRO Versionen %2$s."
 
-#: ../admin/general-settings.php:166
+#: ../admin/general-settings.php:159
 msgid "Allow Users to Log in With:"
 msgstr "Benutzerberechtigungen zum Einloggen mit:"
 
-#: ../admin/general-settings.php:171 ../admin/manage-fields.php:159
+#: ../admin/general-settings.php:164 ../admin/manage-fields.php:159
 #: ../features/admin-approval/class-admin-approval.php:177
 #: ../features/email-confirmation/class-email-confirmation.php:167
+#: ../modules/custom-redirects/custom_redirects_admin.php:56
 #: ../modules/email-customizer/email-customizer.php:28
 #: ../modules/user-listing/userlisting.php:92
 #: ../modules/user-listing/userlisting.php:248
@@ -1977,26 +2264,26 @@ msgstr "Benutzerberechtigungen zum Einloggen mit:"
 msgid "Username"
 msgstr "Benutzername"
 
-#: ../admin/general-settings.php:172 ../front-end/login.php:170
+#: ../admin/general-settings.php:165 ../front-end/login.php:173
 #: ../modules/email-customizer/email-customizer.php:29
 #: ../modules/user-listing/userlisting.php:617
 #: ../modules/user-listing/userlisting.php:1260
 msgid "Email"
 msgstr "E-Mail"
 
-#: ../admin/general-settings.php:184
+#: ../admin/general-settings.php:177
 msgid "Minimum Password Length:"
 msgstr "Minimale Kennwortlänge:"
 
-#: ../admin/general-settings.php:189
+#: ../admin/general-settings.php:182
 msgid "Enter the minimum characters the password should have. Leave empty for no minimum limit"
 msgstr "Geben Sie die minimalen Zeichen ein, die das Kennwort haben sollten. Lassen Sie es leer für keine Untergrenze"
 
-#: ../admin/general-settings.php:196
+#: ../admin/general-settings.php:189
 msgid "Minimum Password Strength:"
 msgstr "Minimale Passwortstärke:"
 
-#: ../admin/general-settings.php:200
+#: ../admin/general-settings.php:193
 msgid "Disabled"
 msgstr "Deaktiviert"
 
@@ -2031,6 +2318,10 @@ msgid "Use this in conjuction with WordPress functions to display the value in t
 msgstr "Benutzen Sie das in Verbindung mit den WordPress-Funktionen um den Wert in die Seite Ihrer Wahl anzuzeigen <br/> automatisch vervollständigt, aber in einigen Fällen editierbar (in diesem Fall muss es aber einzigartig sein) <br/> Die Änderung kann bei einer Anzahl von vielen Benutzer, lange dauern"
 
 #: ../admin/manage-fields.php:97
+#: ../modules/custom-redirects/custom_redirects_admin.php:65
+#: ../modules/custom-redirects/custom_redirects_admin.php:95
+#: ../modules/custom-redirects/custom_redirects_admin.php:114
+#: ../modules/custom-redirects/custom_redirects_admin.php:139
 #: ../modules/multiple-forms/edit-profile-forms.php:242
 #: ../modules/multiple-forms/register-forms.php:263
 msgid "ID"
@@ -2300,21 +2591,29 @@ msgstr "<pre>Titel</pre><pre>Typ</pre><pre>Meta Name</pre><pre class=\"wppb-mb-h
 
 #: ../admin/manage-fields.php:817
 #: ../assets/lib/wck-api/wordpress-creation-kit.php:440
-#: ../assets/lib/wck-api/wordpress-creation-kit.php:529
+#: ../assets/lib/wck-api/wordpress-creation-kit.php:531
 #: ../features/admin-approval/class-admin-approval.php:119
-#: ../features/functions.php:641 ../features/functions.php:648
-#: ../modules/multiple-forms/multiple-forms.php:416
+#: ../features/functions.php:654 ../features/functions.php:661
+#: ../modules/custom-redirects/custom_redirects_admin.php:179
+#: ../modules/custom-redirects/custom_redirects_admin.php:193
+#: ../modules/custom-redirects/custom_redirects_admin.php:207
+#: ../modules/custom-redirects/custom_redirects_admin.php:221
+#: ../modules/multiple-forms/multiple-forms.php:399
 msgid "Edit"
 msgstr "Bearbeiten"
 
 #: ../admin/manage-fields.php:817
 #: ../assets/lib/wck-api/wordpress-creation-kit.php:440
-#: ../assets/lib/wck-api/wordpress-creation-kit.php:530
+#: ../assets/lib/wck-api/wordpress-creation-kit.php:532
 #: ../features/admin-approval/class-admin-approval.php:124
 #: ../features/admin-approval/class-admin-approval.php:235
 #: ../features/email-confirmation/class-email-confirmation.php:120
 #: ../features/email-confirmation/class-email-confirmation.php:217
-#: ../features/functions.php:634 ../features/functions.php:648
+#: ../features/functions.php:647 ../features/functions.php:661
+#: ../modules/custom-redirects/custom_redirects_admin.php:179
+#: ../modules/custom-redirects/custom_redirects_admin.php:193
+#: ../modules/custom-redirects/custom_redirects_admin.php:207
+#: ../modules/custom-redirects/custom_redirects_admin.php:221
 msgid "Delete"
 msgstr "Löschen"
 
@@ -2363,19 +2662,19 @@ msgid "(e.g. RMPB-15-SN-253a55baa4fbe7bf595b2aabb8d72985)"
 msgstr "(z.B. RMPB-15-SN-253a55baa4fbe7bf595b2aabb8d72985) "
 
 #: ../assets/lib/wck-api/wordpress-creation-kit.php:440
-#: ../features/functions.php:648
+#: ../features/functions.php:661
 msgid "Content"
 msgstr "Inhalt"
 
-#: ../assets/lib/wck-api/wordpress-creation-kit.php:529
+#: ../assets/lib/wck-api/wordpress-creation-kit.php:531
 msgid "Edit this item"
 msgstr "Dieses Element bearbeiten"
 
-#: ../assets/lib/wck-api/wordpress-creation-kit.php:530
+#: ../assets/lib/wck-api/wordpress-creation-kit.php:532
 msgid "Delete this item"
 msgstr "Dieses Element löschen"
 
-#: ../assets/lib/wck-api/wordpress-creation-kit.php:676
+#: ../assets/lib/wck-api/wordpress-creation-kit.php:700
 msgid "Please enter a value for the required field "
 msgstr "Bitte geben Sie einen Wert für das erforderliche Feld ein"
 
@@ -2388,11 +2687,11 @@ msgstr "Wählen Sie eine Datei"
 msgid "Remove"
 msgstr "Löschen"
 
-#: ../assets/lib/wck-api/wordpress-creation-kit.php:1155
+#: ../assets/lib/wck-api/wordpress-creation-kit.php:1179
 msgid "Syncronize WCK"
 msgstr "synchronisieren vom WCK"
 
-#: ../assets/lib/wck-api/wordpress-creation-kit.php:1167
+#: ../assets/lib/wck-api/wordpress-creation-kit.php:1191
 msgid "Syncronize WCK Translation"
 msgstr "Synchronisierung der WCK Übersetzung"
 
@@ -2445,15 +2744,15 @@ msgstr "%1$s von %2$s"
 msgid "Select All"
 msgstr "Wählen Sie alle"
 
-#: ../features/functions.php:281
+#: ../features/functions.php:297
 msgid "The user-validation has failed - the avatar was not deleted!"
 msgstr "Die Benutzer-Validierung hat fehlgeschlagen - das Profilbild wurde nicht gelöscht!"
 
-#: ../features/functions.php:292
+#: ../features/functions.php:308
 msgid "The user-validation has failed - the attachment was not deleted!"
 msgstr "Die Benutzer-Validierung hat fehlgeschlagen - die Anlage wurde nicht gelöscht!"
 
-#: ../features/functions.php:487
+#: ../features/functions.php:500
 msgid "Strength indicator"
 msgstr "Stärkeanzeige"
 
@@ -2617,7 +2916,7 @@ msgid "Unapproved"
 msgstr "Verwehrt"
 
 #: ../features/admin-approval/class-admin-approval.php:461
-#: ../features/email-confirmation/class-email-confirmation.php:469
+#: ../features/email-confirmation/class-email-confirmation.php:465
 msgid "All Users"
 msgstr "Alle Benutzer"
 
@@ -2659,7 +2958,7 @@ msgstr "Die ausgewählten Benutzer wurden aktiviert"
 msgid "The selected users have had their activation emails resent"
 msgstr "Die ausgewählten Benutzer haben ihre Aktivierung E-Mails erneut gesendet bekommen. "
 
-#: ../features/email-confirmation/class-email-confirmation.php:466
+#: ../features/email-confirmation/class-email-confirmation.php:462
 #: ../features/email-confirmation/email-confirmation.php:47
 msgid "Users with Unconfirmed Email Address"
 msgstr "Benutzer mit unbestätigte E-Mail-Adresse"
@@ -2676,60 +2975,46 @@ msgstr "Der ausgewählte Benutzer konnte nicht gelöscht werden"
 msgid "Email notification resent to user"
 msgstr "Die E-Mail-Benachrichtigung wurde dem Benutzer erneut geschickt."
 
-#: ../features/email-confirmation/email-confirmation.php:384
+#: ../features/email-confirmation/email-confirmation.php:389
 msgid "[%1$s] Activate %2$s"
 msgstr "[%1$s] Aktivieren %2$s"
 
-#: ../features/email-confirmation/email-confirmation.php:387
-msgid ""
-"To activate your user, please click the following link:\n"
-"\n"
-"%s%s%s\n"
-"\n"
-"After you activate it you will receive yet *another email* with your login."
-msgstr ""
-"Um den Benutzer zu aktivieren, klicken Sie bitte auf den folgenden Link:\n"
-"\n"
-" %s%s%s\n"
-"\n"
-"nach der Aktivierung werden Sie noch * eine weitere E-Mail * mit Ihrem Login erhalten."
-
-#: ../features/email-confirmation/email-confirmation.php:428
+#: ../features/email-confirmation/email-confirmation.php:433
 #: ../front-end/register.php:68
 msgid "Could not create user!"
 msgstr "Benutzer konnte nicht erstellt werden!"
 
-#: ../features/email-confirmation/email-confirmation.php:431
+#: ../features/email-confirmation/email-confirmation.php:436
 msgid "That username is already activated!"
 msgstr "Dieser Benutzername ist bereits aktiviert worden!"
 
-#: ../features/email-confirmation/email-confirmation.php:453
+#: ../features/email-confirmation/email-confirmation.php:457
 msgid "There was an error while trying to activate the user"
 msgstr "Es ist ein Fehler beim Versuch, den Benutzer zu aktivieren aufgetreten "
 
-#: ../features/email-confirmation/email-confirmation.php:501
+#: ../features/email-confirmation/email-confirmation.php:505
 #: ../modules/email-customizer/admin-email-customizer.php:73
 msgid "A new subscriber has (been) registered!"
 msgstr "Ein neuer Benutzer ist (wurde) registriert!"
 
-#: ../features/email-confirmation/email-confirmation.php:504
+#: ../features/email-confirmation/email-confirmation.php:508
 msgid "New subscriber on %1$s.<br/><br/>Username:%2$s<br/>E-mail:%3$s<br/>"
 msgstr "Neuen Abonnenten auf %1$s. <br/> <br/>Benutzername:%2$s <br/> E-Mail: %3$s <br/>"
 
-#: ../features/email-confirmation/email-confirmation.php:605
+#: ../features/email-confirmation/email-confirmation.php:615
 msgid "The \"Admin Approval\" feature was activated at the time of registration, so please remember that you need to approve this user before he/she can log in!"
 msgstr "Das \"Admin Approval\" Feature  war zum Zeitpunkt der Registrierung aktiv, also bitte denken Sie daran, dass man diesen Benutzer genehmigen muss, bevor er sich anmelden kann!"
 
-#: ../features/email-confirmation/email-confirmation.php:550
+#: ../features/email-confirmation/email-confirmation.php:557
 msgid "[%1$s] Your new account information"
 msgstr "[%1$s] Ihre neuen Kontodaten"
 
-#: ../features/email-confirmation/email-confirmation.php:556
+#: ../features/email-confirmation/email-confirmation.php:563
 msgid "Welcome to %1$s!<br/><br/><br/>Your username is:%2$s and password:%3$s"
 msgstr "Willkommen bei %1$s! <br/> <br/> <br/>Ihr Benutzername ist: %2$s und das Kennwort: %3$s"
 
-#: ../features/email-confirmation/email-confirmation.php:613
-#: ../front-end/register.php:116
+#: ../features/email-confirmation/email-confirmation.php:623
+#: ../front-end/register.php:127
 msgid "Before you can access your account, an administrator needs to approve it. You will be notified via email."
 msgstr "Bevor Sie in ihrem Konto zugreifen können, muss ein Administrator diesen genehmigen. Sie werden per E-Mail dafür benachrichtigt."
 
@@ -2741,7 +3026,7 @@ msgstr "Mit diesem Login-Widget können Sie ein Anmeldeformular in der Seitenlei
 msgid "Profile Builder Login Widget"
 msgstr "Profile Builder Login Widget"
 
-#: ../front-end/class-formbuilder.php:294 ../front-end/login.php:202
+#: ../front-end/class-formbuilder.php:348 ../front-end/login.php:205
 msgid "Register"
 msgstr "Anmelden"
 
@@ -2766,117 +3051,117 @@ msgstr "Kennwort Wiederherstellungs-URL (optional):"
 msgid "The usernames cannot be changed."
 msgstr "Die Benutzernamen können nicht geändert werden."
 
-#: ../front-end/class-formbuilder.php:89
+#: ../front-end/class-formbuilder.php:132
 msgid "Only an administrator can add new users."
 msgstr "Nur ein Administrator kann neue Benutzer hinzufügen."
 
-#: ../front-end/class-formbuilder.php:99
+#: ../front-end/class-formbuilder.php:142
 msgid "Users can register themselves or you can manually create users here."
 msgstr "Benutzer können sich selbst anmelden, oder Sie können bei Hand Benutzer hier erstellen."
 
-#: ../front-end/class-formbuilder.php:102
+#: ../front-end/class-formbuilder.php:145
 msgid "Users cannot currently register themselves, but you can manually create users here."
 msgstr "Benutzer können sich derzeit sich selbst nicht registrieren, aber Sie können Benutzer hier manuell erstellen"
 
-#: ../front-end/class-formbuilder.php:114
+#: ../front-end/class-formbuilder.php:167
 msgid "You are currently logged in as %1s. You don't need another account. %2s"
 msgstr "Sie sind derzeit als %1S angemeldet  . Sie brauchen kein anderes Konto. %2s"
 
-#: ../front-end/class-formbuilder.php:114
+#: ../front-end/class-formbuilder.php:167
 msgid "Log out of this account."
 msgstr "Abmeldung von diesem Konto."
 
-#: ../front-end/class-formbuilder.php:114
+#: ../front-end/class-formbuilder.php:167
 msgid "Logout"
 msgstr "Ausloggen"
 
-#: ../front-end/class-formbuilder.php:120
+#: ../front-end/class-formbuilder.php:174
 msgid "You must be logged in to edit your profile."
 msgstr "Sie müssen angemeldet sein, um Ihr Profil zu bearbeiten."
 
-#: ../front-end/class-formbuilder.php:142
+#: ../front-end/class-formbuilder.php:203
 msgid "here"
 msgstr "hier"
 
-#: ../front-end/class-formbuilder.php:144
+#: ../front-end/class-formbuilder.php:205
 msgid "You will soon be redirected automatically. If you see this page for more than %1$d seconds, please click %2$s.%3$s"
 msgstr "Sie werden bald automatisch umgeleitet. Wenn Sie diese Seite mehr als %1$d Sekunden sehen, klicken Sie bitte hier %2$s.%3$s"
 
-#: ../front-end/class-formbuilder.php:239
-#: ../front-end/class-formbuilder.php:246
+#: ../front-end/class-formbuilder.php:293
+#: ../front-end/class-formbuilder.php:300
 msgid "The account %1s has been successfully created!"
 msgstr "Das Konto %1S wurde erfolgreich erstellt!"
 
-#: ../front-end/class-formbuilder.php:242
-#: ../front-end/class-formbuilder.php:252
+#: ../front-end/class-formbuilder.php:296
+#: ../front-end/class-formbuilder.php:306
 msgid "Before you can access your account %1s, you need to confirm your email address. Please check your inbox and click the activation link."
 msgstr "Bevor Sie auf Ihr Konto %1S zugreifen können, müssen Sie Ihre E-Mail-Adresse bestätigen. Bitte überprüfen Sie Ihren Posteingang und klicken Sie auf den Aktivierungslink."
 
-#: ../front-end/class-formbuilder.php:248
+#: ../front-end/class-formbuilder.php:302
 msgid "Before you can access your account %1s, an administrator has to approve it. You will be notified via email."
 msgstr "Bevor Sie auf Ihr Konto %1S zugreifen können, muss ein Administrator diesen genehmigen. Sie werden darüber per E-Mail weiter benachrichtigt."
 
-#: ../front-end/class-formbuilder.php:262
+#: ../front-end/class-formbuilder.php:316
 msgid "Your profile has been successfully updated!"
 msgstr "Ihr Profil wurde erfolgreich aktualisiert!"
 
-#: ../front-end/class-formbuilder.php:272
+#: ../front-end/class-formbuilder.php:326
 msgid "There was an error in the submitted form"
 msgstr "Es gab einen Fehler in das gesendete Formular"
 
-#: ../front-end/class-formbuilder.php:294
+#: ../front-end/class-formbuilder.php:348
 msgid "Add User"
 msgstr "Benutzer hinzufügen"
 
-#: ../admin/add-ons.php:170 ../front-end/class-formbuilder.php:297
+#: ../admin/add-ons.php:170 ../front-end/class-formbuilder.php:351
 msgid "Update"
 msgstr "Aktualisierung"
 
-#: ../front-end/class-formbuilder.php:340
+#: ../front-end/class-formbuilder.php:401
 #: ../front-end/extra-fields/extra-fields.php:35
 msgid "The avatar was successfully deleted!"
 msgstr "Das Profilbild wurde erfolgreich gelöscht!"
 
-#: ../front-end/class-formbuilder.php:340
+#: ../front-end/class-formbuilder.php:401
 #: ../front-end/extra-fields/extra-fields.php:37
 msgid "The following attachment was successfully deleted:"
 msgstr "Die folgende Anlage wurde erfolgreich gelöscht:"
 
-#: ../front-end/class-formbuilder.php:352
+#: ../front-end/class-formbuilder.php:413
 msgid "Send these credentials via email."
 msgstr "Senden Sie diese Anmeldeinformationen per E-Mail."
 
-#: ../front-end/extra-fields/extra-fields.php:99 ../front-end/login.php:89
-#: ../front-end/login.php:96 ../front-end/login.php:110
+#: ../front-end/extra-fields/extra-fields.php:99 ../front-end/login.php:92
+#: ../front-end/login.php:99 ../front-end/login.php:113
 #: ../front-end/recover.php:17 ../front-end/recover.php:228
 msgid "ERROR"
 msgstr "FEHLER"
 
-#: ../front-end/login.php:89
+#: ../front-end/login.php:92
 msgid "The password you entered is incorrect."
 msgstr "Das eingegebene Kennwort ist falsch."
 
-#: ../front-end/login.php:90 ../front-end/login.php:97
+#: ../front-end/login.php:93 ../front-end/login.php:100
 msgid "Password Lost and Found."
 msgstr "Kennwort vergessen und gefunden."
 
-#: ../front-end/login.php:90 ../front-end/login.php:97
+#: ../front-end/login.php:93 ../front-end/login.php:100
 msgid "Lost your password"
 msgstr "Passwort vergessen"
 
-#: ../front-end/login.php:110
+#: ../front-end/login.php:113
 msgid "Both fields are empty."
 msgstr "Beide Felder sind leer."
 
-#: ../front-end/login.php:241
+#: ../front-end/login.php:254
 msgid "You are currently logged in as %1$s. %2$s"
 msgstr "Sie sind derzeit als %1$s angemeldet. %2$s "
 
-#: ../front-end/login.php:240 ../front-end/logout.php:17
+#: ../front-end/login.php:253 ../front-end/logout.php:26
 msgid "Log out of this account"
 msgstr "Von diesem Konto abmelden"
 
-#: ../front-end/login.php:240
+#: ../front-end/login.php:253
 msgid "Log out"
 msgstr "Ausloggen"
 
@@ -2956,11 +3241,11 @@ msgstr "%1$s hat eine Kennwortänderung über die Funktion \"Kennwort zurückset
 msgid "The entered passwords don't match!"
 msgstr "Die eingegebenen Kennworte stimmen nicht überein!"
 
-#: ../front-end/recover.php:353
+#: ../front-end/recover.php:375
 msgid "ERROR:"
 msgstr "FEHLER:"
 
-#: ../front-end/recover.php:353
+#: ../front-end/recover.php:375
 msgid "Invalid key!"
 msgstr "Ungültiger Schlüssel!"
 
@@ -2976,11 +3261,11 @@ msgstr "Dieser Benutzername ist jetzt aktiv!"
 msgid "This username is already activated!"
 msgstr "Dieser Benutzername ist bereits aktiviert!"
 
-#: ../front-end/register.php:115
+#: ../front-end/register.php:126
 msgid "Your email was successfully confirmed."
 msgstr "Ihre E-Mail wurde erfolgreich bestätigt."
 
-#: ../front-end/register.php:144
+#: ../front-end/register.php:159
 msgid "There was an error while trying to activate the user."
 msgstr "Ein Fehler ist aufgetreten, während es versucht wurde den Benutzer zu aktivieren."
 
@@ -3051,57 +3336,43 @@ msgstr "Aus Sicherheitsgründen müssen Sie den remote-Ip eingeben um ReCAPTCHA 
 msgid "To use reCAPTCHA you must get an API public key from:"
 msgstr "Um ReCAPTCHA zu verwenden muss man eine öffentliche API-Key von hier hohlen:"
 
-#: ../modules/modules.php:11 ../modules/modules.php:80
+#: ../modules/modules.php:11 ../modules/modules.php:55
 msgid "Modules"
 msgstr "Module"
 
-#: ../modules/modules.php:81
+#: ../modules/modules.php:56
 msgid "Here you can activate / deactivate available modules for Profile Builder."
 msgstr "Hier können Sie die verfügbaren Module für Profil-Generator aktivieren/deaktivieren."
 
-#: ../modules/modules.php:91
+#: ../modules/modules.php:66
 msgid "Name/Description"
 msgstr "Name/Beschreibung"
 
-#: ../modules/modules.php:92
+#: ../modules/modules.php:67
 msgid "Status"
 msgstr "Status"
 
-#: ../modules/custom-redirects/custom-redirects.php:48
-#: ../modules/custom-redirects/custom-redirects.php:58
-#: ../modules/custom-redirects/custom-redirects.php:68
-#: ../modules/custom-redirects/custom-redirects.php:94
-#: ../modules/custom-redirects/custom-redirects.php:104
-#: ../modules/custom-redirects/custom-redirects.php:114
-#: ../modules/custom-redirects/custom-redirects.php:124
-#: ../modules/modules.php:99 ../modules/modules.php:106
-#: ../modules/modules.php:113 ../modules/modules.php:120
-#: ../modules/modules.php:127 ../modules/modules.php:134
+#: ../modules/modules.php:74 ../modules/modules.php:81
+#: ../modules/modules.php:88 ../modules/modules.php:95
+#: ../modules/modules.php:102 ../modules/modules.php:109
 msgid "Active"
 msgstr "Aktiv"
 
-#: ../modules/custom-redirects/custom-redirects.php:49
-#: ../modules/custom-redirects/custom-redirects.php:59
-#: ../modules/custom-redirects/custom-redirects.php:69
-#: ../modules/custom-redirects/custom-redirects.php:95
-#: ../modules/custom-redirects/custom-redirects.php:105
-#: ../modules/custom-redirects/custom-redirects.php:115
-#: ../modules/custom-redirects/custom-redirects.php:125
-#: ../modules/modules.php:100 ../modules/modules.php:107
-#: ../modules/modules.php:114 ../modules/modules.php:121
-#: ../modules/modules.php:128 ../modules/modules.php:135
+#: ../modules/modules.php:75 ../modules/modules.php:82
+#: ../modules/modules.php:89 ../modules/modules.php:96
+#: ../modules/modules.php:103 ../modules/modules.php:110
 msgid "Inactive"
 msgstr "inaktiv"
 
 #: ../modules/email-customizer/admin-email-customizer.php:11
 #: ../modules/email-customizer/admin-email-customizer.php:12
-#: ../modules/modules.php:118
+#: ../modules/modules.php:93
 msgid "Admin Email Customizer"
 msgstr "Anpassen der Admin-E-Mails"
 
 #: ../modules/email-customizer/user-email-customizer.php:11
 #: ../modules/email-customizer/user-email-customizer.php:12
-#: ../modules/modules.php:125
+#: ../modules/modules.php:100
 msgid "User Email Customizer"
 msgstr "Anpassen der Benutzer-E-Mails"
 
@@ -3110,68 +3381,15 @@ msgstr "Anpassen der Benutzer-E-Mails"
 msgid "Save"
 msgstr "Speichern"
 
-#: ../modules/custom-redirects/custom-redirects.php:35
-msgid "Redirects on custom page requests:"
-msgstr "Umleitung auf benutzerdefinierte Seitenanfragen:"
-
-#: ../modules/custom-redirects/custom-redirects.php:39
-#: ../modules/custom-redirects/custom-redirects.php:85
-msgid "Action"
-msgstr "Aktion"
-
-#: ../modules/custom-redirects/custom-redirects.php:40
-#: ../modules/custom-redirects/custom-redirects.php:86
 #: ../modules/multiple-forms/edit-profile-forms.php:202
 #: ../modules/multiple-forms/register-forms.php:226
 msgid "Redirect"
 msgstr "Umadressierung "
 
-#: ../modules/custom-redirects/custom-redirects.php:41
-#: ../modules/custom-redirects/custom-redirects.php:87
 #: ../modules/multiple-forms/edit-profile-forms.php:204
 #: ../modules/multiple-forms/register-forms.php:228
 msgid "URL"
 msgstr "URL"
-
-#: ../modules/custom-redirects/custom-redirects.php:46
-msgid "After Registration:"
-msgstr "Nach der Anmeldung:"
-
-#: ../modules/custom-redirects/custom-redirects.php:56
-msgid "After Login:"
-msgstr "Nach dem Login:"
-
-#: ../modules/custom-redirects/custom-redirects.php:66
-msgid "Recover Password (*)"
-msgstr "Kennwort zurücksetzen (*)"
-
-#: ../modules/custom-redirects/custom-redirects.php:77
-msgid "When activated this feature will redirect the user on both the default Wordpress password recovery page and the \"Lost password?\" link used by Profile Builder on the front-end login page."
-msgstr "Wenn aktiviert, leitet diese Funktion den Benutzer auf der Standard-Wordpress-Kennwortwiederherstellungsseite und auf dem \"Kennwort vergessen?\"-Link  der auf Front-End-Login-Seite von Profil-Generator verwendet wird, um."
-
-#: ../modules/custom-redirects/custom-redirects.php:81
-msgid "Redirects on default WordPress page requests:"
-msgstr "Leitet auf der Standard-WordPress-Seiten-Anforderungen um:"
-
-#: ../modules/custom-redirects/custom-redirects.php:92
-msgid "Default WordPress Login Page"
-msgstr "Standard WordPress Anmelde-Seite"
-
-#: ../modules/custom-redirects/custom-redirects.php:102
-msgid "Default WordPress Logout Page"
-msgstr "Standard WordPress-Abmeldeseite"
-
-#: ../modules/custom-redirects/custom-redirects.php:112
-msgid "Default WordPress Register Page"
-msgstr "Standard WordPress Registrierungs-Seite"
-
-#: ../modules/custom-redirects/custom-redirects.php:122
-msgid "Default WordPress Dashboard (*)"
-msgstr "Standard-WordPress-Dashboard (*)"
-
-#: ../modules/custom-redirects/custom-redirects.php:133
-msgid "Redirects every user-role EXCEPT the ones with administrator privileges (can manage options)."
-msgstr "Leitet jede Benutzerrolle außer denen mit Administratorrechten (können Optionen verwalten) um."
 
 #: ../modules/email-customizer/admin-email-customizer.php:38
 msgid "These settings are also replicated in the \"User Email Customizer\" settings-page upon save."
@@ -3478,11 +3696,11 @@ msgstr "Neues Feld zur Liste hinzufügen"
 msgid "Choose one of the supported fields you manage <a href=\""
 msgstr "Wählen Sie eines der unterstützten Felder, die Sie verwalten aus <a href=\""
 
-#: ../modules/multiple-forms/multiple-forms.php:416
+#: ../modules/multiple-forms/multiple-forms.php:399
 msgid "<pre>Title (Type)</pre>"
 msgstr "<pre>Titel (Type)</pre>"
 
-#: ../modules/multiple-forms/multiple-forms.php:232
+#: ../modules/multiple-forms/multiple-forms.php:215
 msgid "You need to specify the title of the form before creating it"
 msgstr "Sie müssen einen Titel dem Formular geben, bevor Sie diesen erstellen"
 

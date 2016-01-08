@@ -7,6 +7,7 @@ class Profile_Builder_Form_Creator{
 							'role' 					=> '', //used only for the register-form settings
                             'redirect_url'          => '',
 							'redirect_priority'		=> 'normal',
+                            'ID'                    => null
 						);
 	private $args;	
 	
@@ -15,6 +16,11 @@ class Profile_Builder_Form_Creator{
 	function __construct( $args ) {
 		// Merge the input arguments and the defaults
 		$this->args = wp_parse_args( $args, $this->defaults );
+
+        /* set up the ID here if it is a multi form */
+        if( $this->args['form_name'] != 'unspecified' ){
+            $this->args['ID'] = Profile_Builder_Form_Creator::wppb_get_form_id_from_form_name( $this->args['form_name'], $this->args['form_type'] );
+        }
 
         global $wppb_shortcode_on_front;
         $wppb_shortcode_on_front = true;
@@ -34,6 +40,43 @@ class Profile_Builder_Form_Creator{
         if( ( !is_multisite() && current_user_can( 'edit_users' ) ) || ( is_multisite() && current_user_can( 'manage_network' ) ) )
             add_action( 'wppb_before_edit_profile_fields', array( &$this, 'wppb_edit_profile_select_user_to_edit' ) );
 	}
+
+    /**
+     * @param $form_name The "slug" generated from the current Form Title
+     * @param $form_type the form type of the form: register, edit_profile
+     * @return null
+     */
+    static function wppb_get_form_id_from_form_name( $form_name, $form_type ){
+        global $wpdb;
+
+        if( $form_type == 'edit_profile' ){
+            $post_type = 'wppb-epf-cpt';
+        }elseif( $form_type == 'register' ){
+            $post_type = 'wppb-rf-cpt';
+        }
+
+        $all_forms = $wpdb->get_results(
+                            "
+                    SELECT ID, post_title
+                    FROM $wpdb->posts
+                    WHERE post_status = 'publish'
+                        AND post_type = '$post_type'
+                    "
+                    );
+
+        if( !empty( $all_forms ) ) {
+            foreach ($all_forms as $form) {
+                if( empty( $form->post_title ) )
+                    $form->post_title = '(no title)';
+
+                if ($form_name == Wordpress_Creation_Kit_PB::wck_generate_slug($form->post_title)) {
+                    return $form->ID;
+                }
+            }
+        }
+
+        return null;
+    }
 	
 	function wppb_retrieve_custom_settings(){
 		$this->args['login_after_register'] = apply_filters( 'wppb_automatically_login_after_register', 'No' ); //used only for the register-form settings
@@ -58,31 +101,25 @@ class Profile_Builder_Form_Creator{
         }
 		$this->args['redirect_url'] = apply_filters( 'wppb_after_'.$this->args['form_type'].'_redirect_url', $this->args['redirect_url'] );
 		$this->args['redirect_delay'] = apply_filters( 'wppb_redirect_default_duration', 3 );
-	
-		if ( $this->args['form_name'] != 'unspecified' ){
-			$post_type = ( ( $this->args['form_type'] == 'register' ) ? 'wppb-rf-cpt' : 'wppb-epf-cpt' );
-			$meta_name = ( ( $this->args['form_type'] == 'register' ) ? 'wppb_rf_page_settings' : 'wppb_epf_page_settings' );
-			
-			$ep_r_posts = get_posts( array( 'posts_per_page' => -1, 'post_status' => apply_filters ( 'wppb_get_ep_r_posts_on_front_end', array( 'publish' ) ), 'post_type' => $post_type, 'orderby' => 'post_date', 'order' => 'ASC' ) );
-			foreach ( $ep_r_posts as $key => $value ){
-				if ( trim( Wordpress_Creation_Kit_PB::wck_generate_slug( $value->post_title ) ) == $this->args['form_name'] ){
-					$page_settings = get_post_meta( $value->ID, $meta_name, true );
 
-                    if( !empty( $page_settings[0]['set-role'] ) ){
-                        if( $page_settings[0]['set-role'] == 'default role' ){
-                            $selected_role = trim( get_option( 'default_role' ) );
-                        }
-                        else
-                            $selected_role = $page_settings[0]['set-role'];
-                    }
-					
-					$this->args['role'] = ( isset( $selected_role ) ? $selected_role : $this->args['role'] );
-					$this->args['login_after_register'] = ( isset( $page_settings[0]['automatically-log-in'] ) ? $page_settings[0]['automatically-log-in'] : $this->args['login_after_register'] );
-					$this->args['redirect_activated'] = ( isset( $page_settings[0]['redirect'] ) ? $page_settings[0]['redirect'] : $this->args['redirect_activated'] );
-					$this->args['redirect_url'] = ( isset( $page_settings[0]['url'] ) ? $page_settings[0]['url'] : $this->args['redirect_url'] );
-					$this->args['redirect_delay'] = ( isset( $page_settings[0]['display-messages'] ) ? $page_settings[0]['display-messages'] : $this->args['redirect_delay'] );
-				}
-			}
+		if ( !is_null( $this->args['ID'] ) ){
+			$meta_name = ( ( $this->args['form_type'] == 'register' ) ? 'wppb_rf_page_settings' : 'wppb_epf_page_settings' );
+
+            $page_settings = get_post_meta( $this->args['ID'], $meta_name, true );
+
+            if( !empty( $page_settings[0]['set-role'] ) ){
+                if( $page_settings[0]['set-role'] == 'default role' ){
+                    $selected_role = trim( get_option( 'default_role' ) );
+                }
+                else
+                    $selected_role = $page_settings[0]['set-role'];
+            }
+
+            $this->args['role'] = ( isset( $selected_role ) ? $selected_role : $this->args['role'] );
+            $this->args['login_after_register'] = ( isset( $page_settings[0]['automatically-log-in'] ) ? $page_settings[0]['automatically-log-in'] : $this->args['login_after_register'] );
+            $this->args['redirect_activated'] = ( isset( $page_settings[0]['redirect'] ) ? $page_settings[0]['redirect'] : $this->args['redirect_activated'] );
+            $this->args['redirect_url'] = ( isset( $page_settings[0]['url'] ) ? $page_settings[0]['url'] : $this->args['redirect_url'] );
+            $this->args['redirect_delay'] = ( isset( $page_settings[0]['display-messages'] ) ? $page_settings[0]['display-messages'] : $this->args['redirect_delay'] );
 		}
 	}
 
@@ -312,10 +349,17 @@ class Profile_Builder_Form_Creator{
 					
 				elseif( $this->args['form_type'] == 'edit_profile' )
 					$button_name = __( 'Update', 'profile-builder' );
-				?>			
+				?>
 				<input name="<?php echo $this->args['form_type']; ?>" type="submit" id="<?php echo $this->args['form_type']; ?>" class="submit button" value="<?php echo apply_filters( 'wppb_'. $this->args['form_type'] .'_button_name', $button_name ); ?>" />
 				<input name="action" type="hidden" id="action" value="<?php echo $this->args['form_type']; ?>" />
 				<input name="form_name" type="hidden" id="form_name" value="<?php echo $this->args['form_name']; ?>" />
+				<?php
+				$wppb_module_settings = get_option( 'wppb_module_settings' );
+
+				if( isset( $wppb_module_settings['wppb_customRedirect'] ) && $wppb_module_settings['wppb_customRedirect'] == 'show' ) {
+					echo '<input type="hidden" name="wppb_referer_url" value="'.esc_url( isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : '' ).'"/>';
+				}
+				?>
 			</p><!-- .form-submit -->
 			<?php wp_nonce_field( 'verify_form_submission', $this->args['form_type'].'_nonce_field' ); ?>
 		</form>

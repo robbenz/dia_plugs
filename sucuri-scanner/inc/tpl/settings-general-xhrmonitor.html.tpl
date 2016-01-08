@@ -31,7 +31,7 @@
         </div>
 
         <div class="sucuriscan-hstatus sucuriscan-hstatus-2">
-            <span>User Comment Monitor is %%SUCURI.XhrMonitorStatus%%</span>
+            <span>XML HTTP Request Monitor is %%SUCURI.XhrMonitorStatus%%</span>
 
             <form action="%%SUCURI.URL.Settings%%" method="post">
                 <input type="hidden" name="sucuriscan_page_nonce" value="%%SUCURI.PageNonce%%" />

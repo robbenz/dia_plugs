@@ -1,10 +1,9 @@
 === Booster for WooCommerce ===
 Contributors: algoritmika,anbinder,solovjov
-Donate link: http://algoritmika.com/donate/
-Tags: woocommerce,booster for woocommerce,woocommerce jetpack,custom price labels,call for price,currency symbol,remove sorting,remove old product slugs,add to cart text,order number,sequential order numbering,email pdf invoice,pdf invoice,pdf invoices,already in cart,empty cart,redirect to checkout,minimum order amount,customize checkout fields,checkout fields,email,customize product tabs,product tabs,related products number,empty cart,redirect add to cart,redirect to checkout,product already in cart,custom payment gateway,payment gateway icon,auto-complete all orders,custom order statuses,custom order status,remove text from price,custom css,hide categories count,hide subcategories count,hide category count,hide subcategory count,display total sales,custom product tabs,remove product tab,payment gateway fee,
+Tags: woocommerce,booster for woocommerce,woocommerce jetpack,custom price labels,call for price,currency symbol,remove sorting,remove old product slugs,add to cart text,order number,sequential order numbering,email pdf invoice,pdf invoice,pdf invoices,already in cart,empty cart,redirect to checkout,minimum order amount,customize checkout fields,checkout fields,email,customize product tabs,product tabs,related products number,empty cart,redirect add to cart,redirect to checkout,product already in cart,custom payment gateway,payment gateway icon,auto-complete all orders,custom order statuses,custom order status,remove text from price,custom css,hide categories count,hide subcategories count,hide category count,hide subcategory count,display total sales,custom product tabs,remove product tab,payment gateway fee,vat
 Requires at least: 3.8
-Tested up to: 4.3
-Stable tag: 2.3.8
+Tested up to: 4.4
+Stable tag: 2.3.11
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -79,7 +78,8 @@ Booster for WooCommerce is a WordPress plugin that supercharges your site with a
 **Emails & Misc.**
 
 * *Admin Tools* - Booster for WooCommerce debug and log tools.
-* *Emails* - Add another email recipient(s) to all WooCommerce emails.
+* *Emails* - Add custom emails. Add another email recipient(s) to all WooCommerce emails.
+* *EU VAT Number* - Collect and validate EU VAT numbers on WooCommerce checkout. Automatically disable VAT for valid numbers. Add all EU countries VAT standard rates to WooCommerce.
 * *General* - Separate custom CSS for front and back end. Shortcodes in Wordpress text widgets.
 * *Old Slugs* - Remove old WooCommerce products slugs.
 * *Reports* - WooCommerce stock, sales, customers etc. reports.
@@ -115,6 +115,50 @@ To unlock all Booster for WooCommerce features, please install additional <a hre
 1. Plugin admin area.
 
 == Changelog ==
+
+= 2.3.11 - 29/12/2015 =
+* Fix - Orders Shortcodes - `[wcj_order_total_tax_percent]` shortcode "rounding bug" fixed.
+* Fix - PDF Invoicing - "Invoices Report" tool - Tax percent column "rounding bug" fixed.
+* Dev - PDF Invoicing - "Invoices Report" tool - "Customer VAT ID" column added to invoices reports table.
+
+= 2.3.10 - 26/12/2015 =
+* Dev - `WCJ_Tools` and `WCJ_Module` - Code refactoring (mostly Tools related). Additionally modified modules:
+  Admin Tools, Bulk Price Converter, Custom Price Labels, EU VAT Number, General, Old Slugs, Order Custom Statuses, Order Numbers, PDF Invoicing, SKU.
+* Dev - PDF Invoicing - "Invoices Report" tool - Code refactoring.
+* Dev - PDF Invoicing - "Invoices Report" tool - "Document Type" select option added.
+* Dev - PDF Invoicing - "Invoices Report" tool - "Download all monthly invoices PDFs in single ZIP file" button added.
+* Dev - PDF Invoicing - "Renumerate Invoices" tool - "End Date" field added.
+* Dev - PDF Invoicing - Display - Admin's "Orders" Page - "Column Title", "Create Button" and "Delete Button" options added.
+* Dev - PDF Invoicing - Display - "Misc." menu renamed to "Display & Misc.".
+* Dev - PDF Invoicing - Display - Customer's "My Account" Page - "Add link" and "Link text" options unlocked.
+* Dev - PDF Invoices (v1) marked as "Depreciated".
+* Fix - EMAILS & MISC. - General - Tabs on "Booster Tools" page fixed (caused other module's tools tabs disappear). Info on "Booster Tools Dashboard" page fixed.
+* Dev - EMAILS & MISC. - EU VAT Number - "EU Countries VAT Rates" tool added.
+* Dev - Donate link removed.
+
+= 2.3.9 - 18/12/2015 =
+* Fix - Shortcodes - `lang` and `not_lang` params PHP notice fixed.
+* Dev - Shortcodes - `wcj_order_billing_address` filter added.
+* Fix - BUTTON & PRICE LABELS - Custom Price Labels - `wcj_local_price_labels_enabled` defaults to `yes`.
+* Fix - PRICES & CURRENCIES - Price by Country - Per product - Variable products - Admin wrong base currency for variations (taken by admin country), fixed.
+* Fix - PRICES & CURRENCIES - Price by Country - Per product - Variable products - Admin variations "Save Changes" button fix.
+* Dev - PRICES & CURRENCIES - Price by Country - "Autogenerate Groups" option added.
+* Fix - PRODUCTS - Product Images - All settings will handle HTML now.
+* Dev - CART & CHECKOUT - Cart - "Cart Items Table Custom Info" added.
+* Fix - PAYMENT GATEWAYS - Custom Gateways - Addition check to prevent PHP notices.
+* Fix - PDF Invoicing - Display - `remove_query_arg` added.
+* Dev - PDF Invoicing - Styling - "Droid Sans Fallback" font added (can display Chinese).
+* Dev - PDF Invoicing - Renumerate Invoices Tool - Fixed for operations with large number of orders.
+* Fix - EMAILS & MISC. - Reports - Product Sales - PHP notices fixed.
+* Dev - EMAILS & MISC. - Reports - Product Sales - Filter by product title option added.
+* Dev - EMAILS & MISC. - EU VAT Number - Initial module release.
+* Dev - EMAILS & MISC. - General - "Export Customers" tool added.
+* Dev - EMAILS & MISC. - General - "All Products and All Attributes" tool added.
+* Dev - EMAILS & MISC. - Emails - "Custom Emails" added.
+* Dev - EMAILS & MISC. - Emails - Code refactoring. Cc/Bcc Emails unlocked.
+* Fix - EMAILS & MISC. - Remove Old Slugs - PHP notices fixed.
+* Dev - EMAILS & MISC. - Remove Old Slugs - Code refactoring. Tool link added to module's settings.
+* Dev - EMAILS & MISC. - Remove Old Slugs - Some text from Jetpack to Booster renamed.
 
 = 2.3.8 - 26/10/2015 =
 * Dev - Link changed to http://booster.io

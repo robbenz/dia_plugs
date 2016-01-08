@@ -32,6 +32,27 @@
         </div>
 
         <p>
+            Once the feature is enabled you may choose the HTTP header that will be used by
+            default to retrieve the real IP address of each HTTP request, generally you do
+            not need to set this but in rare cases your hosting provider may have a load
+            balancer that can interfere in the process, in which case you will have to
+            explicitly specify the main HTTP header. Note that if you select a HTTP header
+            that is not being set by the server the plugin will fallback to the default
+            <em>Remote-Addr</em>.
+        </p>
+
+        <form action="%%SUCURI.URL.Settings%%" method="post">
+            <input type="hidden" name="sucuriscan_page_nonce" value="%%SUCURI.PageNonce%%" />
+            <span class="sucuriscan-input-group">
+                <label>Main IP HTTP Header:</label>
+                <select name="sucuriscan_addr_header">
+                    %%%SUCURI.AddrHeaderOptions%%%
+                </select>
+            </span>
+            <button type="submit" class="button-primary">Proceed</button>
+        </form>
+
+        <p>
             If you are experiencing issues with the automatic detection of IP address of
             your visitors, with the security logs, or with the response time of your website
             please send an email to <a href="mailto:info@sucuri.net">info@sucuri.net</a>

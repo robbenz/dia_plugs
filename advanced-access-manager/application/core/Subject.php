@@ -78,7 +78,7 @@ abstract class AAM_Core_Subject {
         $subject = $this->getSubject();
         
         //make sure that method is callable
-        if (method_exists($subject, $name)) {
+        if ($subject instanceof AAM_Core_Subject && method_exists($subject, $name)) {
             $response = call_user_func_array(array($subject, $name), $args);
         } else {
             $response = null;
@@ -212,7 +212,9 @@ abstract class AAM_Core_Subject {
      * @return type
      */
     public function hasCapability($capability) {
-        return $this->getSubject()->has_cap($capability);
+        $subject = $this->getSubject();
+        
+        return ($subject ? $subject->has_cap($capability) : false);
     }
     
     /**
@@ -230,13 +232,11 @@ abstract class AAM_Core_Subject {
     /**
      *
      * @param type $object
-     * @param type $object_id
+     * @param type $id
      * @return type
      */
-    public function deleteOption($object, $object_id = 0) {
-        return AAM_Core_API::deleteOption(
-                        $this->getOptionName($object, $object_id)
-        );
+    public function deleteOption($object, $id = 0) {
+        return AAM_Core_API::deleteOption($this->getOptionName($object, $id));
     }
 
     /**

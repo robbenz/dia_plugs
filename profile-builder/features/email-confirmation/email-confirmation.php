@@ -538,6 +538,9 @@ function wppb_notify_user_registration_email( $bloginfo, $user_name, $email, $se
 
 			$message_context = 'email_admin_approve';
 		}
+        else{
+            $message_content = apply_filters( 'wppb_register_admin_email_message_without_admin_approval', $message_content, $email, $password, $message_from, 'wppb_admin_emailc_default_registration_email_content' );
+        }
 	} else {
 		$message_content = apply_filters( 'wppb_register_admin_email_message_without_admin_approval', $message_content, $email, $password, $message_from, 'wppb_admin_emailc_default_registration_email_content' );
 	}
@@ -594,6 +597,9 @@ function wppb_notify_user_registration_email( $bloginfo, $user_name, $email, $se
 
 				$user_message_content = apply_filters( 'wppb_register_user_email_message_with_admin_approval', $user_message_content, $email, $password, $user_message_subject, 'wppb_user_emailc_registration_with_admin_approval_email_content' );
 			}
+            else{
+                $user_message_content = apply_filters( 'wppb_register_user_email_message_without_admin_approval', $user_message_content, $email, $password, $user_message_subject, 'wppb_user_emailc_default_registration_email_content' );
+            }
 		} else
 			$user_message_content = apply_filters( 'wppb_register_user_email_message_without_admin_approval', $user_message_content, $email, $password, $user_message_subject, 'wppb_user_emailc_default_registration_email_content' );
 
