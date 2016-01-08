@@ -2,14 +2,14 @@
 
 	<div class="options_group">
 		<p class="form-field">
-			<label><?php _e("Weight (" . get_option('woocommerce_weight_unit') . ")"); ?></label>
+			<label><?php printf(__("Weight (%s)", 'wpai_woocommerce_addon_plugin'), get_option('woocommerce_weight_unit')); ?></label>
 			<input type="text" class="short" placeholder="0.00" name="single_product_weight" style="" value="<?php echo esc_attr($post['single_product_weight']) ?>"/>
 		</p>
 		<p class="form-field">
-			<label><?php _e("Dimensions (" . get_option( 'woocommerce_dimension_unit' ) . ")"); ?></label>
-			<input type="text" class="short" placeholder="Length" name="single_product_length" style="margin-right:5px;" value="<?php echo esc_attr($post['single_product_length']) ?>"/>
-			<input type="text" class="short" placeholder="Width" name="single_product_width" style="margin-right:5px;" value="<?php echo esc_attr($post['single_product_width']) ?>"/>
-			<input type="text" class="short" placeholder="Height" name="single_product_height" style="" value="<?php echo esc_attr($post['single_product_height']) ?>"/>
+			<label><?php printf(__("Dimensions (%s)", "wpai_woocommerce_addon_plugin"), get_option( 'woocommerce_dimension_unit' )); ?></label>
+			<input type="text" class="short" placeholder="<?php _e('Length','wpai_woocommerce_addon_plugin');?>" name="single_product_length" style="margin-right:5px;" value="<?php echo esc_attr($post['single_product_length']) ?>"/>
+			<input type="text" class="short" placeholder="<?php _e('Width','wpai_woocommerce_addon_plugin');?>" name="single_product_width" style="margin-right:5px;" value="<?php echo esc_attr($post['single_product_width']) ?>"/>
+			<input type="text" class="short" placeholder="<?php _e('Height','wpai_woocommerce_addon_plugin');?>" name="single_product_height" style="" value="<?php echo esc_attr($post['single_product_height']) ?>"/>
 		</p>
 	</div> <!-- End options group -->
 

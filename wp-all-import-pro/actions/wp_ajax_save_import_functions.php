@@ -6,7 +6,7 @@ function pmxi_wp_ajax_save_import_functions(){
 		exit( json_encode(array('html' => __('Security check', 'wp_all_import_plugin'))) );
 	}
 
-	if ( ! current_user_can('manage_options') ){
+	if ( ! current_user_can( PMXI_Plugin::$capabilities ) ){
 		exit( json_encode(array('html' => __('Security check', 'wp_all_import_plugin'))) );
 	}
 

@@ -28,13 +28,16 @@ $.fn.wplupload  = function($options) {
 		
 		$up.bind('Error', function(up, err) {									
 			//$('#upload_process').html(err.message);
-			$('.wpallimport-header').next('.clear').after(err.message);
+			//$('.wpallimport-header').next('.clear').after(err.message);
+			$('.error-upload-rejected').show();
 		});
 		
 		$up.bind('FilesAdded', function(up, files) {
 			// Disable submit and enable cancel
 			
 			$('.error.inline').remove();
+
+			$('.first-step-errors').hide();
 
 			$('.wpallimport-choose-file').find('.wpallimport-upload-resource-step-two').slideUp();
 
@@ -71,8 +74,9 @@ $.fn.wplupload  = function($options) {
 				$('#progress').hide();
 				$('#progressbar').html('<span></span>');
 				$('#select-files').fadeIn();
-
-				$('.wpallimport-header').next('.clear').after('<div class="error inline"><p>' + response + '</p></div>');
+				
+				//$('.wpallimport-header').next('.clear').after('<div class="error inline"><p>' + response + '</p></div>');
+				$('.error-upload-rejected').show();
 			}
 			else
 			{
@@ -86,7 +90,15 @@ $.fn.wplupload  = function($options) {
 					$('#progressbar').html('<span></span>');
 					$('#select-files').fadeIn();
 
-					$('.wpallimport-header').next('.clear').after('<div class="error inline"><p>' + r.error.message + '</p></div>');
+					if (typeof(r.is_valid) != 'undefined')
+					{
+						$('.error-file-validation').find('h4').html(r.error.message);
+						$('.error-file-validation').show();
+					}
+					else
+					{
+						$('.wpallimport-header').next('.clear').after('<div class="error inline"><p>' + r.error.message + '</p></div>');					
+					}					
 
 				}
 				else{
@@ -97,7 +109,19 @@ $.fn.wplupload  = function($options) {
 						if (index != -1)
 						{
 							$('#custom_type_selector').ddslick('select', {index: index });
-							$('.auto-generate-template').css({'display':'inline-block'}).attr('rel', 'upload_type');
+							
+							if (typeof r.url_bundle != "undefined")
+							{								
+								$('.auto-generate-template').css({'display':'inline-block'}).attr('rel', 'url_type');
+								$('.wpallimport-url-type').click();
+								$('input[name=url]').val(r.name);
+								$('input[name=template]').val(r.template);
+								$('.wpallimport-download-from-url').click();
+							}
+							else
+							{
+								$('.auto-generate-template').css({'display':'inline-block'}).attr('rel', 'upload_type');
+							}							
 						}
 						else
 						{
@@ -122,7 +146,8 @@ $.fn.wplupload  = function($options) {
 						if (r.OK) {					
 
 						} else if (r.error != undefined && '' != r.error.message) {
-							$('#progressbar').html(r.error.message);
+							//$('#progressbar').html(r.error.message);
+							$('.error-upload-rejected').show();
 						}
 
 					}, 1000);			 			

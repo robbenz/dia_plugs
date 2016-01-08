@@ -17,7 +17,13 @@
 		</div>	
 		<div class="clear"></div>
 	</div>
-	
+	<?php
+	$is_valid_root_element = true;	
+	if ($this->errors->get_error_codes('root-element-validation'))
+	{
+		$is_valid_root_element = false;
+	}
+	?>
 	<div class="ajax-console">
 		<?php if ($this->errors->get_error_codes()): ?>
 			<?php $this->error() ?>
@@ -31,52 +37,69 @@
 		?>
 	</div>
 
+	<div class="rad4 first-step-errors error-no-root-element" <?php if ($is_valid_root_element === false):?>style="display:block;"<?php endif; ?>>
+		<div class="wpallimport-notify-wrapper">
+			<div class="error-headers exclamation">
+				<?php if ($is_404 and $import->type == 'url'): ?>
+				<h3><?php _e('This URL no longer returns an import file', 'wp_all_import_plugin');?></h3>
+				<h4><?php _e("You must provide a URL that returns a valid import file.", "wp_all_import_plugin"); ?></h4>
+				<?php else: ?>
+				<h3><?php _e('There\'s a problem with your import file', 'wp_all_import_plugin');?></h3>
+				<h4><?php _e("It has changed and is not compatible with this import template.", "wp_all_import_plugin"); ?></h4>
+				<?php endif; ?>
+			</div>		
+		</div>		
+		<a class="button button-primary button-hero wpallimport-large-button wpallimport-notify-read-more" href="http://www.wpallimport.com/documentation/troubleshooting/problems-with-import-files/#invalid" target="_blank"><?php _e('Read More', 'wp_all_import_plugin');?></a>		
+	</div>
+
 	<?php $custom_type = get_post_type_object( PMXI_Plugin::$session->custom_type ); ?>
 		
-	<div class="wpallimport-content-section" style="padding: 30px; overflow: hidden;">
-		<div class="wpallimport-ready-to-go">
-			
+	<?php if ($is_valid_root_element):?>
+		<div class="wpallimport-content-section" style="padding: 30px; overflow: hidden;">			
+			<div class="wpallimport-ready-to-go">
+				
+				<?php if ($is_new_import):?>
+				<h3><?php _e('Your file is all set up!', 'wp_all_import_plugin'); ?></h3>
+				<?php else: ?>
+				<h3><?php _e('This import did not finish successfuly last time it was run.', 'wp_all_import_plugin'); ?></h3>
+				<?php endif; ?>				
+
+				<?php if ($is_new_import):?>				
+					<h4><?php _e('Check the settings below, then click the green button to run the import.', 'wp_all_import_plugin'); ?></h4>
+				<?php else: ?>
+					<h4><?php _e('You can attempt to continue where it left off.', 'wp_all_import_plugin'); ?></h4>
+				<?php endif; ?>				
+
+			</div>				
 			<?php if ($is_new_import):?>
-			<h3><?php _e('Your file is all set up!', 'wp_all_import_plugin'); ?></h3>
+				<form class="confirm <?php echo ! $isWizard ? 'edit' : '' ?>" method="post" style="float:right;">
+					<?php wp_nonce_field('confirm', '_wpnonce_confirm') ?>
+					<input type="hidden" name="is_confirmed" value="1" />
+					<input type="submit" class="rad10" value="<?php _e('Confirm & Run Import', 'wp_all_import_plugin') ?>" />											
+				</form>	
 			<?php else: ?>
-			<h3><?php _e('This import did not finish successfuly last time it was run.', 'wp_all_import_plugin'); ?></h3>
-			<?php endif; ?>				
-
-			<?php if ($is_new_import):?>				
-				<h4><?php _e('Check the settings below, then click the green button to run the import.', 'wp_all_import_plugin'); ?></h4>
-			<?php else: ?>
-				<h4><?php _e('You can attempt to continue where it left off.', 'wp_all_import_plugin'); ?></h4>
-			<?php endif; ?>				
-
-		</div>		
-		<?php if ($is_new_import):?>
-			<form class="confirm <?php echo ! $isWizard ? 'edit' : '' ?>" method="post" style="float:right;">
-				<?php wp_nonce_field('confirm', '_wpnonce_confirm') ?>
-				<input type="hidden" name="is_confirmed" value="1" />
-				<input type="submit" class="rad10" value="<?php _e('Confirm & Run Import', 'wp_all_import_plugin') ?>" />											
-			</form>	
-		<?php else: ?>
-			<form class="confirm <?php echo ! $isWizard ? 'edit' : '' ?>" method="post" style="float: right;">
-				<?php wp_nonce_field('confirm', '_wpnonce_confirm') ?>				
-				<input type="hidden" name="is_confirmed" value="1" />
-				<!--input type="hidden" name="is_continue" value="1" /-->
-				<div class="input wpallimport-is-continue">
-					<div class="input">
-						<input type="radio" name="is_continue" value="yes" checked="checked" id="is_continue_yes"/>
-						<label for="is_continue_yes"><?php _e('Continue from the last run', 'wp_all_import_plugin'); ?></label>
+				<form class="confirm <?php echo ! $isWizard ? 'edit' : '' ?>" method="post" style="float: right;">
+					<?php wp_nonce_field('confirm', '_wpnonce_confirm') ?>				
+					<input type="hidden" name="is_confirmed" value="1" />
+					<!--input type="hidden" name="is_continue" value="1" /-->
+					<div class="input wpallimport-is-continue">
+						<div class="input">
+							<input type="radio" name="is_continue" value="yes" checked="checked" id="is_continue_yes"/>
+							<label for="is_continue_yes"><?php _e('Continue from the last run', 'wp_all_import_plugin'); ?></label>
+						</div>
+						<div class="input">
+							<input type="radio" name="is_continue" value="no" id="is_continue_no"/>
+							<label for="is_continue_no"><?php _e('Run from the beginning', 'wp_all_import_plugin'); ?></label>
+						</div>			
 					</div>
-					<div class="input">
-						<input type="radio" name="is_continue" value="no" id="is_continue_no"/>
-						<label for="is_continue_no"><?php _e('Run from the beginning', 'wp_all_import_plugin'); ?></label>
-					</div>			
-				</div>
-				<input type="submit" class="rad10" value="<?php _e('Continue Import', 'wp_all_import_plugin') ?>" style="margin-left: 0px; float: right;"/>						
-				<!--div class="input" style="margin-top:20px;">
-					<a href="<?php echo add_query_arg(array('id' => $import->id, 'action' => 'update', 'continue' => 'no'), $this->baseUrl); ?>" id="entire_run"><?php _e('Run entire import from the beginning', 'wp_all_import_plugin'); ?></a>
-				</div-->
-			</form>	
-		<?php endif; ?>
-	</div>
+					<input type="submit" class="rad10" value="<?php _e('Continue Import', 'wp_all_import_plugin') ?>" style="margin-left: 0px; float: right;"/>						
+					<!--div class="input" style="margin-top:20px;">
+						<a href="<?php echo add_query_arg(array('id' => $import->id, 'action' => 'update', 'continue' => 'no'), $this->baseUrl); ?>" id="entire_run"><?php _e('Run entire import from the beginning', 'wp_all_import_plugin'); ?></a>
+					</div-->
+				</form>	
+			<?php endif; ?>		
+		</div>
+	<?php endif; ?>
 			
 	<div class="clear"></div>
 
@@ -101,9 +124,12 @@
 						<?php endif;?>
 						
 						<!-- General -->
-						<?php			
-							$path = wp_all_import_get_absolute_path($source['path']);				
+						<?php										
 							$import_type = (!empty($source['type'])) ? $source['type'] : $import['type'];
+							$path = $source['path'];
+							if ( in_array($import_type, array('upload', 'file'))){
+								$path = wp_all_import_get_absolute_path($source['path']);				
+							}
 							if ( in_array($import_type, array('upload'))){
 								$path_parts = pathinfo($source['path']);
 								if ( ! empty($path_parts['dirname'])){

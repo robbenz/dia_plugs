@@ -29,6 +29,34 @@ $l10n = array(
 </script>
 
 <div class="change_file">
+
+	<div class="rad4 first-step-errors error-upload-rejected">
+		<div class="wpallimport-notify-wrapper">
+			<div class="error-headers exclamation">
+				<h3><?php _e('File upload rejected by server', 'wp_all_import_plugin');?></h3>
+				<h4><?php _e("Contact your host and have them check your server's error log.", "wp_all_import_plugin"); ?></h4>
+			</div>		
+		</div>		
+		<a class="button button-primary button-hero wpallimport-large-button wpallimport-notify-read-more" href="http://www.wpallimport.com/documentation/troubleshooting/problems-with-import-files/" target="_blank"><?php _e('Read More', 'wp_all_import_plugin');?></a>		
+	</div>
+
+	<div class="rad4 first-step-errors error-file-validation" <?php if ( ! empty($upload_validation) ): ?> style="display:block;" <?php endif; ?>>
+		<div class="wpallimport-notify-wrapper">
+			<div class="error-headers exclamation">
+				<h3><?php _e('There\'s a problem with your import file', 'wp_all_import_plugin');?></h3>
+				<h4>
+					<?php 
+					if ( ! empty($upload_validation) ): 										
+						$file_type = strtoupper(pmxi_getExtension($post['file']));
+						printf(__('This %s file has errors and is not valid.', 'wp_all_import_plugin'), $file_type); 
+					endif;
+					?>
+				</h4>
+			</div>		
+		</div>		
+		<a class="button button-primary button-hero wpallimport-large-button wpallimport-notify-read-more" href="http://www.wpallimport.com/documentation/troubleshooting/problems-with-import-files/#invalid" target="_blank"><?php _e('Read More', 'wp_all_import_plugin');?></a>		
+	</div>		
+
 	<div class="wpallimport-content-section">
 		<div class="wpallimport-collapsed-header" style="padding-left:30px;">
 			<h3><?php _e('Import File','wp_all_import_plugin');?></h3>	

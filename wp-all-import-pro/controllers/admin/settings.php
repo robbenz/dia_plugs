@@ -366,6 +366,13 @@ class PMXI_Admin_Settings extends PMXI_Controller_Admin {
 
 		exit('OK');
 	}
+
+	public function dismiss_speed_up(){
+
+		PMXI_Plugin::getInstance()->updateOption("dismiss_speed_up", 1);
+
+		exit('OK');
+	}
 	
 	public function meta_values(){
 
@@ -435,7 +442,7 @@ class PMXI_Admin_Settings extends PMXI_Controller_Admin {
 		$maxFileAge = 5 * 3600; // Temp file age in seconds
 
 		// 5 minutes execution time
-		@set_time_limit(5 * 60);
+		@set_time_limit(5 * 60);		
 
 		// Uncomment this one to fake upload time
 		// usleep(5000);
@@ -567,77 +574,95 @@ class PMXI_Admin_Settings extends PMXI_Controller_Admin {
 				ob_start();
 				?>
 				<?php foreach ($msgs as $msg): ?>
-					<div class="error inline"><p><?php echo $msg ?></p></div>
+					<p><?php echo $msg ?></p>
 				<?php endforeach ?>
 				<?php
 				$response = ob_get_clean();
 
 				exit(json_encode(array("jsonrpc" => "2.0", "error" => array("code" => 102, "message" => $response), "id" => "id")));
 			}
-			else {
-
-				// validate XML
-				$file = new PMXI_Chunk($upload_result['filePath'], array('element' => $upload_result['root_element']));										    					    					   												
-
-				$is_valid = true;
-
-				if ( ! empty($file->options['element']) ) 						
-					$defaultXpath = "/". $file->options['element'];																			    		  
-				else
-					$is_valid = false;
-
-				if ( $is_valid ){
-
-					while ($xml = $file->read()) {
-
-				    	if ( ! empty($xml) ) { 
-
-				      		PMXI_Import_Record::preprocessXml($xml);
-				      		$xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" . "\n" . $xml;
-				    	
-					      	$dom = new DOMDocument( '1.0', 'UTF-8' );
-							$old = libxml_use_internal_errors(true);
-							$dom->loadXML($xml);
-							libxml_use_internal_errors($old);
-							$xpath = new DOMXPath($dom);									
-							if (($elements = $xpath->query($defaultXpath)) and $elements->length){
-								break;
-							}												
-					    }
-					    /*else {
-					    	$is_valid = false;
-					    	break;
-					    }*/
-
-					}
-
-					if ( empty($xml) ) $is_valid = false;
-				}
-
-				unset($file);
-
-				if ( ! preg_match('%\W(xml)$%i', trim($upload_result['source']['path']))) @unlink($upload_result['filePath']);
-				
-				if ( ! $is_valid )
-				{
-					ob_start();					
-					?>
-					
-					<div class="error inline"><p><?php _e('Please confirm you are importing a valid feed.<br/> Often, feed providers distribute feeds with invalid data, improperly wrapped HTML, line breaks where they should not be, faulty character encodings, syntax errors in the XML, and other issues.<br/><br/>WP All Import has checks in place to automatically fix some of the most common problems, but we can’t catch every single one.<br/><br/>It is also possible that there is a bug in WP All Import, and the problem is not with the feed.<br/><br/>If you need assistance, please contact support – <a href="mailto:support@wpallimport.com">support@wpallimport.com</a> – with your XML/CSV file. We will identify the problem and release a bug fix if necessary.', 'wp_all_import_plugin'); ?></p></div>
-					
-					<?php
-					$response = ob_get_clean();
-					exit(json_encode(array("jsonrpc" => "2.0", "error" => array("code" => 102, "message" => $response), "id" => "id")));
-				}
-				else
-				{
-					$wp_uploads = wp_upload_dir();
-					$uploads    = $wp_uploads['basedir'] . DIRECTORY_SEPARATOR . PMXI_Plugin::FILES_DIRECTORY . DIRECTORY_SEPARATOR;
-
-					if ( ! file_exists($uploads . basename($filePath))) @copy($filePath, $uploads . basename($filePath));
-				}
+			else 
+			{
 				
 				if ( ! empty($upload_result['post_type'])) $post_type = $upload_result['post_type'];
+
+				if ( ! empty($upload_result['is_empty_bundle_file']))
+				{
+					// Return JSON-RPC response
+					exit(json_encode(array("jsonrpc" => "2.0", "error" => null, "result" => null, "id" => "id", "name" => $upload_result['filePath'], "post_type" => $post_type, "template" => $upload_result['template'], "url_bundle" => true)));
+				}
+				else
+				{
+					// validate XML
+					$file = new PMXI_Chunk($upload_result['filePath'], array('element' => $upload_result['root_element']));										    					    					   												
+
+					$is_valid = true;
+
+					if ( ! empty($file->options['element']) ) 						
+						$defaultXpath = "/". $file->options['element'];																			    		  
+					else
+						$is_valid = false;
+
+					if ( $is_valid ){
+
+						while ($xml = $file->read()) {
+
+					    	if ( ! empty($xml) ) { 
+
+					      		//PMXI_Import_Record::preprocessXml($xml);
+					      		$xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" . "\n" . $xml;
+					    	
+						      	$dom = new DOMDocument( '1.0', 'UTF-8' );
+								$old = libxml_use_internal_errors(true);
+								$dom->loadXML($xml);
+								libxml_use_internal_errors($old);
+								$xpath = new DOMXPath($dom);									
+								if (($elements = $xpath->query($defaultXpath)) and $elements->length){
+									break;
+								}												
+						    }
+						    /*else {
+						    	$is_valid = false;
+						    	break;
+						    }*/
+
+						}
+
+						if ( empty($xml) ) $is_valid = false;
+					}
+
+					unset($file);
+
+					if ( ! preg_match('%\W(xml)$%i', trim($upload_result['source']['path']))) @unlink($upload_result['filePath']);
+					
+					if ( ! $is_valid )
+					{
+						ob_start();					
+						
+						?>
+						
+						<div class="error inline"><p><?php _e('Please confirm you are importing a valid feed.<br/> Often, feed providers distribute feeds with invalid data, improperly wrapped HTML, line breaks where they should not be, faulty character encodings, syntax errors in the XML, and other issues.<br/><br/>WP All Import has checks in place to automatically fix some of the most common problems, but we can’t catch every single one.<br/><br/>It is also possible that there is a bug in WP All Import, and the problem is not with the feed.<br/><br/>If you need assistance, please contact support – <a href="mailto:support@wpallimport.com">support@wpallimport.com</a> – with your XML/CSV file. We will identify the problem and release a bug fix if necessary.', 'wp_all_import_plugin'); ?></p></div>
+						
+						<?php
+
+						$response = ob_get_clean();
+
+						$file_type = strtoupper(pmxi_getExtension($upload_result['source']['path']));
+
+						$error_message = sprintf(__("This %s file has errors and is not valid.", "wp_all_import_plugin"), $file_type);
+
+						exit(json_encode(array("jsonrpc" => "2.0", "error" => array("code" => 102, "message" => $error_message), "is_valid" => false, "id" => "id")));
+					
+					}
+					else
+					{
+						$wp_uploads = wp_upload_dir();
+						$uploads    = $wp_uploads['basedir'] . DIRECTORY_SEPARATOR . PMXI_Plugin::FILES_DIRECTORY . DIRECTORY_SEPARATOR;
+
+						if ( ! file_exists($uploads . basename($filePath))) @copy($filePath, $uploads . basename($filePath));
+					}
+				}				
+								
 			}		
 
 		}			

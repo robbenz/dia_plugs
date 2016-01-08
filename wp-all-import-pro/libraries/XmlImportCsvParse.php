@@ -150,7 +150,7 @@ class PMXI_CsvParser
      */
     public function set_settings($array)
     {
-        $this->settings = array_merge($this->settings, $array);
+        $this->settings = apply_filters('wp_all_import_csv_parser_settings', array_merge($this->settings, $array));
     }
 
     /**

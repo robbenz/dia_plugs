@@ -148,7 +148,7 @@
 							<div class="wpallimport-collapsed-content" style="padding: 0;">
 								<div class="wpallimport-collapsed-content-inner">									
 
-									<textarea id="wp_all_import_code" name="wp_all_import_code"><?php echo (empty($functions_content)) ? "<?php\n\n?>": $functions_content;?></textarea>						
+									<textarea id="wp_all_import_code" name="wp_all_import_code"><?php echo (empty($functions_content)) ? "<?php\n\n?>": esc_textarea($functions_content);?></textarea>						
 
 									<div class="input" style="margin-top: 10px;">
 

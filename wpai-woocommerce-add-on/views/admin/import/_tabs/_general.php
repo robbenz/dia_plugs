@@ -1,18 +1,18 @@
 <div class="panel woocommerce_options_panel" id="general_product_data">
 	<div class="options_group hide_if_grouped">
 		<p class="form-field">
-			<label><?php _e("SKU", "woocommerce"); ?></label>
+			<label><?php _e("SKU", "wpai_woocommerce_addon_plugin"); ?></label>
 			<input type="text" class="short" name="single_product_sku" style="" value="<?php echo esc_attr($post['single_product_sku']) ?>"/>			
 		</p>
 	</div>
 	<div class="options_group show_if_external">
 		<p class="form-field">
-			<label><?php _e("Product URL", "woocommerce"); ?></label>
+			<label><?php _e("Product URL", "wpai_woocommerce_addon_plugin"); ?></label>
 			<input type="text" class="short" name="single_product_url" value="<?php echo esc_attr($post['single_product_url']) ?>"/>
 			<a href="#help" class="wpallimport-help" title="<?php _e('The external/affiliate link URL to the product.', 'wpai_woocommerce_addon_plugin') ?>">?</a>
 		</p>
 		<p class="form-field">
-			<label><?php _e("Button text"); ?></label>
+			<label><?php _e("Button text", "wpai_woocommerce_addon_plugin"); ?></label>
 			<input type="text" class="short" name="single_product_button_text" value="<?php echo esc_attr($post['single_product_button_text']) ?>"/>
 			<a href="#help" class="wpallimport-help" title="<?php _e('This text will be shown on the button linking to the external product.', 'wpai_woocommerce_addon_plugin') ?>">?</a>
 		</p>
@@ -22,12 +22,12 @@
 		<p class="form-field"><i><?php _e('Prices should be presented as you would enter them manually in WooCommerce - with no currency symbol.', 'wpai_woocommerce_addon_plugin'); ?></i></p>
 
 		<p class="form-field">
-			<label><?php _e("Regular Price (".get_woocommerce_currency_symbol().")"); ?></label>
+			<label><?php printf(__("Regular Price (%s)", "wpai_woocommerce_addon_plugin"), get_woocommerce_currency_symbol()); ?></label>
 			<input type="text" class="short" name="single_product_regular_price" value="<?php echo esc_attr($post['single_product_regular_price']) ?>"/> <strong class="options_group show_if_variable" style="position:relative; top:4px; left:4px;">(<?php _e('required', 'wpai_woocommerce_addon_plugin'); ?>)</strong>
 		</p>
 		<p class="form-field">
-			<label><?php _e("Sale Price (".get_woocommerce_currency_symbol().")"); ?></label>
-			<input type="text" class="short" name="single_product_sale_price" value="<?php echo esc_attr($post['single_product_sale_price']) ?>"/>&nbsp;<a id="regular_price_shedule" href="javascript:void(0);" <?php if ($post['is_regular_price_shedule']):?>style="display:none;"<?php endif; ?>><?php _e('schedule');?></a>
+			<label><?php printf(__("Sale Price (%s)", "wpai_woocommerce_addon_plugin"), get_woocommerce_currency_symbol()); ?></label>
+			<input type="text" class="short" name="single_product_sale_price" value="<?php echo esc_attr($post['single_product_sale_price']) ?>"/>&nbsp;<a id="regular_price_shedule" href="javascript:void(0);" <?php if ($post['is_regular_price_shedule']):?>style="display:none;"<?php endif; ?>><?php _e('schedule', 'wpai_woocommerce_addon_plugin');?></a>
 			<input type="hidden" name="is_regular_price_shedule" value="<?php echo esc_attr($post['is_regular_price_shedule']) ?>"/>
 		</p>
 		<p class="form-field" <?php if ( ! $post['is_regular_price_shedule']):?>style="display:none;"<?php endif; ?> id="sale_price_range">
@@ -46,7 +46,7 @@
 		
 		<div class="pmwi_adjust_prices" <?php if (!empty($post['single_product_regular_price_adjust']) or !empty($post['single_product_sale_price_adjust'])):?>style="display:block;"<?php endif; ?>>
 			<p class="form-field">
-				<label><?php _e("Regular Price (".get_woocommerce_currency_symbol().")"); ?></label>
+				<label><?php printf(__("Regular Price (%s)", "wpai_woocommerce_addon_plugin"), get_woocommerce_currency_symbol()); ?></label>
 				<input type="text" class="short" name="single_product_regular_price_adjust" value="<?php echo esc_attr($post['single_product_regular_price_adjust']) ?>"/>
 				<select name="single_product_regular_price_adjust_type" class="pmwi_adjust_type">
 					<option value="%" <?php echo ($post['single_product_regular_price_adjust_type'] == '%') ? 'selected="selected"' : ''; ?>>%</option>
@@ -58,7 +58,7 @@
 			</p>			
 
 			<p class="form-field">
-				<label><?php _e("Sale Price (".get_woocommerce_currency_symbol().")"); ?></label>
+				<label><?php printf(__("Sale Price (%s)", "wpai_woocommerce_addon_plugin"), get_woocommerce_currency_symbol()); ?></label>
 				<input type="text" class="short" name="single_product_sale_price_adjust" value="<?php echo esc_attr($post['single_product_sale_price_adjust']) ?>"/>			
 				<select name="single_product_sale_price_adjust_type" class="pmwi_adjust_type">
 					<option value="%" <?php echo ($post['single_product_sale_price_adjust_type'] == '%') ? 'selected="selected"' : ''; ?>>%</option>

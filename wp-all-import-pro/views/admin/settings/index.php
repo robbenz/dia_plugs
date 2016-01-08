@@ -194,7 +194,7 @@
 <h3><?php _e('Function Editor', 'wp_all_import_plugin') ?></h3>
 
 
-<textarea id="wp_all_import_code" name="wp_all_import_code"><?php echo (empty($functions_content)) ? "<?php\n\n?>": $functions_content;?></textarea>						
+<textarea id="wp_all_import_code" name="wp_all_import_code"><?php echo (empty($functions_content)) ? "<?php\n\n?>": esc_textarea($functions_content);?></textarea>						
 
 <div class="input" style="margin-top: 10px;">
 

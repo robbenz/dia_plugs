@@ -67,13 +67,10 @@
 										<p class="drag_an_element_ico"><?php _e('Drag an element, or combo of elements, to the box above. The Unique Identifier should be unique for each record in your file, and should stay the same even if your file is updated. Things like product IDs, titles, and SKUs are good Unique Identifiers because they probably won\'t change. Don\'t use a description or price, since that might be changed.', 'wp_all_import_plugin'); ?></p>
 										<p class="info_ico"><?php printf(__('If you run this import again with an updated file, the Unique Identifier allows WP All Import to correctly link the records in your updated file with the %s it will create right now. If multiple records in this file have the same Unique Identifier, only the first will be created. The others will be detected as duplicates.', 'wp_all_import_plugin'), $custom_type->labels->name); ?></p>
 									<?php endif; ?>
-								</div>					
-								<?php 
-								if ( ! $this->isWizard  or ! empty(PMXI_Plugin::$session->deligate) and PMXI_Plugin::$session->deligate == 'wpallexport'):?>
-									
-									<?php include( '_reimport_options.php' ); ?>
-
-								<?php endif; ?>					
+								</div>													
+								
+								<?php include( '_reimport_options.php' ); ?>
+								
 							</td>
 						</tr>
 					</table>

@@ -8,7 +8,7 @@ function wp_all_import_sanitize_filename($filename) {
 		// Replace all weird characters
 		$sanitized = sanitize_file_name(substr($filename, 0, -(strlen($ext)+1)));
 		// Replace dots inside filename
-		$sanitized = str_replace('.','-', $sanitized);
+		//$sanitized = str_replace('.','-', $sanitized);
 		return $sanitized . '.' . $ext;
 	}
 	return $filename;

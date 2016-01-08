@@ -255,7 +255,7 @@
 					<div class="options_group" <?php if ( ! $post['is_variable_sale_price_shedule']):?>style="display:none;"<?php endif; ?> id="variable_sale_price_range">
 						<p class="form-field">
 							<span style="vertical-align:middle">
-								<label style="width:150px;"><?php _e("Variable Sale Price Dates", "woocommerce"); ?></label>
+								<label style="width:150px;"><?php _e("Variable Sale Price Dates", "wpai_woocommerce_addon_plugin"); ?></label>
 								<span class="use_parent">
 									<input type="hidden" name="variable_sale_dates_use_parent" value="0"/>
 									<input type="checkbox" name="variable_sale_dates_use_parent" id="variable_sale_dates_use_parent" style="position:relative; top:1px; margin-left:5px; margin-right:5px;" <?php echo ($post['variable_sale_dates_use_parent']) ? 'checked="checked"' : ''; ?>>
@@ -373,7 +373,7 @@
 						<!-- Tax class -->
 						<div class="form-field wpallimport-radio-field">
 							<input type="radio" id="multiple_variable_product_tax_class_yes" class="switcher" name="is_multiple_variable_product_tax_class" value="yes" <?php echo 'no' != $post['is_multiple_variable_product_tax_class'] ? 'checked="checked"': '' ?>/>
-							<label for="multiple_variable_product_tax_class_yes" style="width:150px;"><?php _e("Tax Class", "woocommerce"); ?></label>
+							<label for="multiple_variable_product_tax_class_yes" style="width:150px;"><?php _e("Tax Class", "wpai_woocommerce_addon_plugin"); ?></label>
 							<span class="wpallimport-clear"></span>
 							<div class="switcher-target-multiple_variable_product_tax_class_yes set_with_xpath">
 								<span class="wpallimport-slide-content" style="padding-left:0;">

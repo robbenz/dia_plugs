@@ -48,8 +48,8 @@ $l10n = array(
 					</div>
 				</div>			
 
-				<div class="clear"></div>				
-				
+				<div class="clear"></div>											
+
 				<?php if ($this->errors->get_error_codes()): ?>
 					<?php $this->error() ?>
 				<?php endif ?>				
@@ -112,6 +112,7 @@ $l10n = array(
 								<?php _e('<strong>Hint:</strong> After you create this import, you can schedule it to run automatically, on a pre-defined schedule, with cron jobs. If anything in your file has changed, WP All Import can update your site with the changed data automatically.', 'wp_all_import_plugin'); ?>
 							</div>
 							<input type="hidden" name="downloaded" value="<?php echo $post['downloaded']; ?>"/>
+							<input type="hidden" name="template" value="<?php echo $post['template']; ?>"/>
 						</div>
 						<div class="wpallimport-upload-type-container" rel="file_type">			
 							<?php $upload_dir = wp_upload_dir(); ?>					
@@ -241,6 +242,33 @@ $l10n = array(
 							</div>
 						</div>
 						<?php endif; ?>
+					</div>					
+
+					<div class="rad4 first-step-errors error-upload-rejected">
+						<div class="wpallimport-notify-wrapper">
+							<div class="error-headers exclamation">
+								<h3><?php _e('File upload rejected by server', 'wp_all_import_plugin');?></h3>
+								<h4><?php _e("Contact your host and have them check your server's error log.", "wp_all_import_plugin"); ?></h4>
+							</div>		
+						</div>		
+						<a class="button button-primary button-hero wpallimport-large-button wpallimport-notify-read-more" href="http://www.wpallimport.com/documentation/troubleshooting/problems-with-import-files/" target="_blank"><?php _e('Read More', 'wp_all_import_plugin');?></a>		
+					</div>
+
+					<div class="rad4 first-step-errors error-file-validation" <?php if ( ! empty($upload_validation) ): ?> style="display:block;" <?php endif; ?>>
+						<div class="wpallimport-notify-wrapper">
+							<div class="error-headers exclamation">
+								<h3><?php _e('There\'s a problem with your import file', 'wp_all_import_plugin');?></h3>
+								<h4>
+									<?php 
+									if ( ! empty($upload_validation) ): 										
+										$file_type = strtoupper(pmxi_getExtension($post['file']));
+										printf(__('Please verify that the file you using is a valid %s file.', 'wp_all_import_plugin'), $file_type); 
+									endif;
+									?>
+								</h4>
+							</div>		
+						</div>		
+						<a class="button button-primary button-hero wpallimport-large-button wpallimport-notify-read-more" href="http://www.wpallimport.com/documentation/troubleshooting/problems-with-import-files/#invalid" target="_blank"><?php _e('Read More', 'wp_all_import_plugin');?></a>		
 					</div>					
 
 					<p class="wpallimport-submit-buttons">

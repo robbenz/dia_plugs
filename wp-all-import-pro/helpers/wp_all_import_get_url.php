@@ -7,7 +7,7 @@
 
 if ( ! function_exists('wp_all_import_get_url')){
 
-	function wp_all_import_get_url($filePath, $targetDir = false, $contentType = false, $contentEncoding = false, $detect = false){
+	function wp_all_import_get_url($filePath, $targetDir = false, $contentType = false, $contentEncoding = false, $detect = false){		
 		
 		$type = $contentType;
 
@@ -55,7 +55,7 @@ if ( ! function_exists('wp_all_import_get_url')){
 
 			    	if ( ! empty($xml) ) { 
 
-			      		PMXI_Import_Record::preprocessXml($xml);
+			      		//PMXI_Import_Record::preprocessXml($xml);
 			      		$xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" . "\n" . $xml;
 			    	
 				      	$dom = new DOMDocument( '1.0', 'UTF-8' );

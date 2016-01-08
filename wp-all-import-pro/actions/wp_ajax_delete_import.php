@@ -5,7 +5,7 @@ function pmxi_wp_ajax_delete_import(){
 		exit( json_encode(array('result' => false, 'msg' => __('Security check', 'wp_all_import_plugin'))) );
 	}
 
-	if ( ! current_user_can('manage_options') ){
+	if ( ! current_user_can( PMXI_Plugin::$capabilities ) ){
 		exit( json_encode(array('result' => false, 'msg' => __('Security check', 'wp_all_import_plugin'))) );
 	}
 	
@@ -24,9 +24,27 @@ function pmxi_wp_ajax_delete_import(){
 
 	$response = array(
 		'result' => false,
-		'msg' => '',
-		'redirect' => add_query_arg('pmxi_nt', urlencode(__('Import deleted', 'wp_all_import_plugin')), $params['base_url'])
+		'msg' => ''		
 	);	
+
+	if ( $params['is_delete_import'] and ! $params['is_delete_posts'] )
+	{
+		$response['redirect'] = add_query_arg('pmxi_nt', urlencode(__('Import deleted', 'wp_all_import_plugin')), $params['base_url']);
+	}
+	elseif( ! $params['is_delete_import'] and $params['is_delete_posts'])
+	{
+		$response['redirect'] = add_query_arg('pmxi_nt', urlencode(__('All associated posts deleted.', 'wp_all_import_plugin')), $params['base_url']);
+	}
+	elseif( $params['is_delete_import'] and $params['is_delete_posts'])
+	{
+		$response['redirect'] = add_query_arg('pmxi_nt', urlencode(__('Import and all associated posts deleted.', 'wp_all_import_plugin')), $params['base_url']);
+	}
+	else
+	{
+		$response['redirect'] = add_query_arg('pmxi_nt', urlencode(__('Nothing to delete.', 'wp_all_import_plugin')), $params['base_url']);
+		exit( json_encode( $response ));
+	}
+
 
 	if ( ! empty($params['import_ids']))
 	{
@@ -49,7 +67,7 @@ function pmxi_wp_ajax_delete_import(){
 
 				if ( $is_all_records_deleted === true )
 				{
-					$import->delete( ! $params['is_delete_posts'], $params['is_delete_images'], $params['is_delete_attachments'] );
+					$import->delete( ! $params['is_delete_posts'], $params['is_delete_images'], $params['is_delete_attachments'], $params['is_delete_import'] );
 				}
 			}				
 		}

@@ -637,8 +637,8 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 		$product_type 	= empty( $product_types[$i] ) ? 'simple' : sanitize_title( stripslashes( $product_types[$i] ) );
 
 		if ($this->options['update_all_data'] == 'no' and ! $this->options['is_update_product_type'] and ! $is_new_product ){			
-			$product 	  = get_product($pid);
-			$product_type = $product->product_type;			
+			$product 	  = get_product($pid);			
+			if ( ! empty($product->product_type) ) $product_type = $product->product_type;
 		}		
 
 		$this->existing_meta_keys = array();
@@ -855,7 +855,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 				 	}
 
 					// Update only these Attributes, leave the rest alone
-					if ($this->options['update_all_data'] == "no" and $this->options['is_update_attributes'] and $this->options['update_attributes_logic'] == 'only'){
+					if ( ! $is_new_product and $this->options['update_all_data'] == "no" and $this->options['is_update_attributes'] and $this->options['update_attributes_logic'] == 'only'){
 						if ( ! empty($this->options['attributes_list']) and is_array($this->options['attributes_list'])) {
 							if ( ! in_array( ( ($is_taxonomy) ? wc_attribute_taxonomy_name( $attr_name ) : $attr_name ) , array_filter($this->options['attributes_list'], 'trim'))){ 
 								$attribute_position++;
@@ -869,7 +869,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 					}
 
 					// Leave these attributes alone, update all other Attributes
-					if ($this->options['update_all_data'] == "no" and $this->options['is_update_attributes'] and $this->options['update_attributes_logic'] == 'all_except'){
+					if ( ! $is_new_product and $this->options['update_all_data'] == "no" and $this->options['is_update_attributes'] and $this->options['update_attributes_logic'] == 'all_except'){
 						if ( ! empty($this->options['attributes_list']) and is_array($this->options['attributes_list'])) {
 							if ( in_array( ( ($is_taxonomy) ? wc_attribute_taxonomy_name( $attr_name ) : $attr_name ) , array_filter($this->options['attributes_list'], 'trim'))){ 
 								$attribute_position++;
@@ -1013,8 +1013,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 			// Update price if on sale			
 			if ( ! empty($this->articleData['ID']) and ! $this->is_update_cf('_sale_price') )
 			{
-				$product_sale_price[$i] = get_post_meta($pid, '_sale_price', true);
-				
+				$product_sale_price[$i] = get_post_meta($pid, '_sale_price', true);				
 			}
 
 			if ( $product_sale_price[$i] != '' && $date_to == '' && $date_from == '' ){				
@@ -1263,16 +1262,17 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 		wc_delete_product_transients($pid);
 		
 		// VARIATIONS
-		if ( in_array($product_type, array('variation', 'variable')) and ! $this->options['link_all_variations'] and "xml" != $import->options['matching_parent'] ){												
+		if ( $product_types[$i] == "variable" and ! $this->options['link_all_variations'] and "xml" != $import->options['matching_parent'] ){												
 
 			$set_defaults = false;
 
 			$product_parent_post_id = false;			
 				
 			//[search parent product]
-			$first_is_parent = "yes";												
-										
-			if ("manual" != $this->options['duplicate_matching']){					
+			$first_is_parent =  ( in_array($import->options['matching_parent'], array("auto", "first_is_parent_title")) ) ? "yes" : "no";																														
+			
+			if ( "manual" != $this->options['duplicate_matching'] or $is_new_product )
+			{
 				
 				// find corresponding article among previously imported
 				if ( ! empty($single_product_parent_ID[$i]) ){
@@ -1289,7 +1289,8 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 				}
 			
 			}
-			else{											
+			else
+			{											
 
 				if (empty($articleData['post_parent'])){
 
@@ -1340,302 +1341,381 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 				{					
 					if (!empty($articleData['post_parent']))
 					{
-						$product_parent_post_id = $articleData['post_parent'];
-						$product_parent_post = get_post($product_parent_post_id);							
+						$product_parent_post_id = $articleData['post_parent'];						
 					}	
-					elseif($articleData['post_type'] == 'product_variation'){
+					elseif($articleData['post_type'] == 'product_variation')
+					{
 						$variation_post = get_post($pid);
-						$product_parent_post_id = $variation_post->post_parent;
-						$product_parent_post = get_post($product_parent_post_id);								
+						$product_parent_post_id = $variation_post->post_parent;												
 					}				
 				}
 				
-			}												
+				$product_parent_post = $product_parent_post_id ? get_post($product_parent_post_id) : false;	
 
-			$first_is_parent = ( in_array($import->options['matching_parent'], array("auto", "first_is_parent_title")) ) ? "yes" : "no";																
-			//[\search parent product]
+			}	
+			//[\search parent product]		
 
-			if ( ! empty($product_parent_post_id) 
-					and ( (int)$product_parent_post_id != (int)$pid or (int)$product_parent_post_id == (int)$pid and $first_is_parent == "no" and ( ! $this->options['make_simple_product'] and "manual" != $this->options['duplicate_matching']) )) {		
+			if (in_array($product_type, array('variation', 'variable')))
+			{
 
-				$create_new_variation = false;
+				//$first_is_parent = ( in_array($import->options['matching_parent'], array("auto", "first_is_parent_title")) ) ? "yes" : "no";								
 
-				$product_ids = array();
+				if ( ! empty($product_parent_post_id) and ( (int)$product_parent_post_id != (int)$pid or (int)$product_parent_post_id == (int)$pid and $first_is_parent == "no" and ( ! $this->options['make_simple_product'] and ("manual" != $this->options['duplicate_matching'] or $is_new_product) ) )) {
 
-				if ($first_is_parent == "no")
-				{
-					$is_first_variation_created = get_post_meta($product_parent_post_id, '_is_first_variation_created', true);
-					if ( ! $is_first_variation_created )
+					$create_new_variation = false;
+
+					$product_ids = array();
+
+					if ($first_is_parent == "no")
 					{
-						$create_new_variation = true;
-						update_post_meta($product_parent_post_id, '_is_first_variation_created', 1);
-						
-						$product_ids[] = ("manual" == $this->options['duplicate_matching']) ? $pid : $product_parent_post_id;
-					}
-
-					if ( ! in_array($pid, $product_ids)) $product_ids[] = $pid;
-				}
-				else
-				{
-					$product_ids[] = $pid;
-				}				
-
-				foreach ($product_ids as $iter => $pid):	
-
-					$create_new_variation = ($create_new_variation && !$iter) ? true : false;				
-					
-					$parent_sku = get_post_meta($product_parent_post_id, '_sku', true);
-
-					if ( $create_new_variation) {
-
-						$postRecord = new PMXI_Post_Record();
-						
-						$postRecord->clear();
-						
-						if ("manual" != $this->options['duplicate_matching']){
-							// find corresponding article among previously imported
-							$postRecord->getBy(array(
-								'unique_key' => 'Variation ' . $parent_sku,
-								'import_id'  => $import->id,
-							));
-							
-							$pid = ( ! $postRecord->isEmpty() ) ? $postRecord->post_id : false;
-						}						
-							
-					}
-
-					$is_product_enabled = ($create_new_variation and $this->options['make_simple_product']) ? get_post_meta($product_parent_post_id, '_v_variation_enabled', true) : $product_enabled[$i];
-
-					$variable_enabled = ($is_product_enabled == "yes") ? 'yes' : 'no'; 
-
-					$attributes = array(); 
-
-					// Enabled or disabled
-					$post_status = ( $variable_enabled == 'yes' ) ? 'publish' : 'private';
-
-					// Generate a useful post title
-					if ("manual" != $this->options['duplicate_matching'] and $this->options['is_update_title'] ){					
-						$variation_post_title = sprintf( __( 'Variation #%s of %s', 'wpai_woocommerce_addon_plugin' ), absint( $pid ), $articleData['post_title'] );
-					}
-					else{
-						$variation_post_title = $articleData['post_title'];
-					}								
-
-					// Update or Add post							
-					$variation = array(
-						'post_title' 	=> $variation_post_title,
-						'post_content' 	=> '',	
-						'post_status'   => $post_status,					
-						'post_parent' 	=> $product_parent_post_id,
-						'post_type' 	=> 'product_variation'									
-					);		
-
-					if ( $pid and ! $is_new_product and ! $this->is_update_data_allowed('is_update_status'))
-					{						
-						$variation['post_status'] = get_post_status($pid);						
-					}							
-
-					if ( ! $pid ) {
-
-						if ($this->options['create_new_records']){
-							
-							$pid = wp_insert_post( $variation );															
-
-							//$logger and call_user_func($logger, sprintf(__('<b>CREATED</b>: %s variation from parent product %s.', 'wpai_woocommerce_addon_plugin'), $variation_post_title, $articleData['post_title']));	
-
-							if ($create_new_variation){															
-								
-								$this->duplicate_post_meta($pid, $product_parent_post_id);
-
-								//$this->pushmeta($pid, '_sku', 'v' . get_post_meta($pid, '_sku', true));	
-
-								// associate variation with import
-								$postRecord->isEmpty() and $postRecord->set(array(
-									'post_id' => $pid,
-									'import_id' => $import->id,
-									'unique_key' => 'Variation ' . $parent_sku,
-									'product_key' => ''
-								))->insert();
-
-								$postRecord->set(array('iteration' => $import->iteration))->update();							
-
-							}												
-						}				
-					} 
-					else 
-					{
-
-						if ($create_new_variation) 
-						{								
-
-							if ("manual" != $this->options['duplicate_matching'])
-							{
-								$this->duplicate_post_meta($pid, $product_parent_post_id);									
-							}							
-							
-							if ( ! $postRecord->isEmpty()) $postRecord->set(array('iteration' => $import->iteration))->update();
-
-							if ("manual" == $this->options['duplicate_matching'])
-							{
-								$create_new_variation = false;
-							}
-						}						
-
-						$this->wpdb->update( $this->wpdb->posts, $variation, array( 'ID' => $pid ) );	
-
-						//$logger and call_user_func($logger, sprintf(__('<b>UPDATED</b>: %s variation for parent product %s.', 'wpai_woocommerce_addon_plugin'), $variation_post_title, $articleData['post_title']));		
-
-					}		
-
-					if ( ! $this->options['make_simple_product'] ) $create_new_variation = false;						
-
-					if ($pid){									
-
-						if ( $this->options['create_draft'] == "yes" ) $this->wpdb->update( $this->wpdb->posts, array('post_status' => 'publish' ), array('ID' => $pid));												
-
-						if ( $first_is_parent == "no" ){
-
-							// if ($this->is_update_data_allowed('is_update_status')) 
-							// {
-							// 	$this->wpdb->update( $this->wpdb->posts, array('post_status' => get_post_status($product_parent_post_id) ), array('ID' => $pid));
-							// }
-							
-							$_v_product_manage_stock = $create_new_variation ? get_post_meta($product_parent_post_id, '_v_product_manage_stock', true) : $v_product_manage_stock[$i];
-							$_v_stock = $create_new_variation ? get_post_meta($product_parent_post_id, '_v_stock', true) : $v_stock[ $i ];
-							$_v_stock_status = $create_new_variation ? get_post_meta($product_parent_post_id, '_v_stock_status', true) : $v_stock_status[ $i ];							
-
-							// Stock handling						
-							$this->pushmeta($pid, '_manage_stock', $_v_product_manage_stock);							
-
-							if ( 'yes' === $_v_product_manage_stock ) {							
-								$this->is_update_cf('_stock') and update_post_meta( $pid, '_stock', wc_stock_amount( $_v_stock ) );
-							} else {
-								$this->is_update_cf('_backorders') and delete_post_meta( $pid, '_backorders' );
-								$this->is_update_cf('_stock') and delete_post_meta( $pid, '_stock' );
-							}		
-
-							if ( empty($this->options['set_parent_stock']) ) 
-							{
-								$this->pmwi_buf_prices($product_parent_post_id);	
-								$this->is_update_cf('_stock') and delete_post_meta( $product_parent_post_id, '_stock' );
-							}							
-
-							// Only update stock status to user setting if changed by the user, but do so before looking at stock levels at variation level
-							if ( ! empty( $_v_stock_status ) and $this->is_update_cf('_stock_status') ) {														
-								update_post_meta( $pid, '_stock_status', $_v_stock_status );
-							}
-
-							if ( pmwi_is_update_taxonomy($articleData, $this->options, 'product_shipping_class') ){							
-								if ($create_new_variation)
-								{
-									$v_shipping_class = get_post_meta($product_parent_post_id, '_v_shipping_class', true);									
-									$this->associate_terms( $pid, array( $v_shipping_class ), 'product_shipping_class' );															
-								}			
-								else
-								{
-									$this->associate_terms( $pid, array( $p_shipping_class ), 'product_shipping_class' );
-								}													
-							}				
-
-						}					
-						else
+						$is_first_variation_created = get_post_meta($product_parent_post_id, '_is_first_variation_created', true);
+						if ( ! $is_first_variation_created )
 						{
+							$create_new_variation = true;
+							update_post_meta($product_parent_post_id, '_is_first_variation_created', 1);
 							
-							$stock_status = wc_clean( $product_stock_status[$i] );	
-
-							if ( $stock_status and $this->is_update_cf('_stock_status') ) {								
-								update_post_meta( $pid, '_stock_status', $stock_status );
-							}
-
-							if (empty($articleData['ID']) or $this->is_update_cf('_tax_class'))
-							{
-								if ( $product_tax_class[ $i ] !== 'parent' )
-									$this->pushmeta($pid, '_tax_class', sanitize_text_field( $product_tax_class[ $i ] ));										
-								else
-									delete_post_meta( $pid, '_tax_class' );
-							}
-
-							if ( $is_downloadable == 'yes' ) {
-								$this->pushmeta($pid, '_download_limit', sanitize_text_field( $product_download_limit[ $i ] ));	
-								$this->pushmeta($pid, '_download_expiry', sanitize_text_field( $product_download_expiry[ $i ] ));	
-								$this->pushmeta($pid, '_download_type', sanitize_text_field( $product_download_type[ $i ] ));									
-
-								$_file_paths = array();
-								
-								if ( !empty($product_files[$i]) ) {
-									$file_paths = explode( $import->options['product_files_delim'] , $product_files[$i] );
-									$file_names = explode( $import->options['product_files_names_delim'] , $product_files_names[$i] );
-
-									foreach ( $file_paths as $fn => $file_path ) {
-										$file_path = sanitize_text_field( $file_path );							
-										$_file_paths[ md5( $file_path ) ] = array('name' => ((!empty($file_names[$fn])) ? $file_names[$fn] : basename($file_path)), 'file' => $file_path);
-									}
-								}
-
-								$this->pushmeta($pid, '_downloadable_files', $_file_paths);									
-
-							} else {
-								$this->pushmeta($pid, '_download_limit', '');	
-								$this->pushmeta($pid, '_download_expiry', '');	
-								$this->pushmeta($pid, '_download_type', '');	
-								$this->pushmeta($pid, '_downloadable_files', '');									
-							}
-						}											
-
-						if ($this->options['update_all_data'] == 'yes' or $this->options['update_all_data'] == 'no' and $this->options['is_update_product_type']){
-							//wp_set_object_terms( $pid, NULL, 'product_type' );
-							$this->associate_terms( $pid, NULL, 'product_type' );	
+							$product_ids[] = ("manual" == $this->options['duplicate_matching'] and ! $is_new_product) ? $pid : $product_parent_post_id;
 						}
 
-						// Remove old taxonomies attributes so data is kept up to date
-						if ( $pid and ($import->options['update_all_data'] == "yes" or ( $import->options['update_all_data'] == "no" and $import->options['is_update_attributes']))) {
-							// Update all Attributes
-							if ( $import->options['update_all_data'] == "yes" or $import->options['update_attributes_logic'] == 'full_update' ) 
-								$this->wpdb->query( $this->wpdb->prepare( "DELETE FROM {$this->wpdb->postmeta} WHERE meta_key LIKE 'attribute_%%' AND post_id = %d;", $pid ) );					
+						if ( ! in_array($pid, $product_ids)) $product_ids[] = $pid;
+					}
+					else
+					{
+						$product_ids[] = $pid;
+					}				
 
-							wp_cache_delete( $pid, 'post_meta');
-						}										
+					foreach ($product_ids as $iter => $pid):	
 
-						// Update taxonomies
-						if ( $import->options['update_all_data'] == "yes" or ( $import->options['update_all_data'] == "no" and $import->options['is_update_attributes']) or $is_new_product){
+						$create_new_variation = ($create_new_variation && !$iter) ? true : false;				
+						
+						$parent_sku = get_post_meta($product_parent_post_id, '_sku', true);
+
+						if ( $create_new_variation) {
+
+							$postRecord = new PMXI_Post_Record();
 							
-							if ( $create_new_variation )
-							{
-								$parent_attributes = get_post_meta($product_parent_post_id, '_first_variation_attributes', true);								
+							$postRecord->clear();
+							
+							if ("manual" != $this->options['duplicate_matching'] or $is_new_product){
+								// find corresponding article among previously imported
+								$postRecord->getBy(array(
+									'unique_key' => 'Variation ' . $parent_sku,
+									'import_id'  => $import->id,
+								));
+								
+								$pid = ( ! $postRecord->isEmpty() ) ? $postRecord->post_id : false;
+							}						
+								
+						}
 
-								if ( ! empty($parent_attributes))
+						$is_product_enabled = ($create_new_variation and $this->options['make_simple_product']) ? get_post_meta($product_parent_post_id, '_v_variation_enabled', true) : $product_enabled[$i];
+
+						$variable_enabled = ($is_product_enabled == "yes") ? 'yes' : 'no'; 
+
+						$attributes = array(); 
+
+						// Enabled or disabled
+						$post_status = ( $variable_enabled == 'yes' ) ? 'publish' : 'private';
+
+						// Generate a useful post title
+						$variation_post_title = sprintf( __( 'Variation #%s of %s', 'wpai_woocommerce_addon_plugin' ), absint( $pid ), $product_parent_post->post_title);						
+						// Update or Add post							
+						$variation = array(
+							'post_title' 	=> $variation_post_title,
+							'post_content' 	=> '',	
+							'post_status'   => $post_status,					
+							'post_parent' 	=> $product_parent_post_id,
+							'post_type' 	=> 'product_variation'									
+						);		
+
+						if ( $pid and ! $is_new_product and ! $this->is_update_data_allowed('is_update_status'))
+						{						
+							$variation['post_status'] = get_post_status($pid);						
+						}							
+
+						if ( ! $pid ) {
+
+							if ($this->options['create_new_records']){
+								
+								$pid = wp_insert_post( $variation );															
+
+								//$logger and call_user_func($logger, sprintf(__('<b>CREATED</b>: %s variation from parent product %s.', 'wpai_woocommerce_addon_plugin'), $variation_post_title, $articleData['post_title']));	
+
+								if ($create_new_variation){															
+									
+									$this->duplicate_post_meta($pid, $product_parent_post_id);
+
+									//$this->pushmeta($pid, '_sku', 'v' . get_post_meta($pid, '_sku', true));	
+
+									// associate variation with import
+									$postRecord->isEmpty() and $postRecord->set(array(
+										'post_id' => $pid,
+										'import_id' => $import->id,
+										'unique_key' => 'Variation ' . $parent_sku,
+										'product_key' => ''
+									))->insert();
+
+									$postRecord->set(array('iteration' => $import->iteration))->update();							
+
+								}												
+							}				
+						} 
+						else 
+						{
+
+							if ($create_new_variation) 
+							{								
+
+								if ("manual" != $this->options['duplicate_matching'] or $is_new_product)
 								{
-									foreach ($parent_attributes as $key => $attr_data) 
-									{
-										
-										$attr_name = $key;
+									$this->duplicate_post_meta($pid, $product_parent_post_id);									
+								}							
+								
+								if ( ! $postRecord->isEmpty()) $postRecord->set(array('iteration' => $import->iteration))->update();
 
-										if ( intval($attr_data['is_taxonomy']) and ( strpos($attr_name, "pa_") === false or strpos($attr_name, "pa_") !== 0 ) ) $attr_name = "pa_" . $attr_name;
+								if ("manual" == $this->options['duplicate_matching'] and ! $is_new_product)
+								{
+									$create_new_variation = false;
+								}
+							}						
+
+							$this->wpdb->update( $this->wpdb->posts, $variation, array( 'ID' => $pid ) );	
+
+							//$logger and call_user_func($logger, sprintf(__('<b>UPDATED</b>: %s variation for parent product %s.', 'wpai_woocommerce_addon_plugin'), $variation_post_title, $articleData['post_title']));		
+
+						}		
+
+						if ( ! $this->options['make_simple_product'] ) $create_new_variation = false;						
+
+						if ($pid){									
+
+							if ( $this->options['create_draft'] == "yes" ) $this->wpdb->update( $this->wpdb->posts, array('post_status' => 'publish' ), array('ID' => $pid));												
+
+							if ( $first_is_parent == "no" ){
+
+								// if ($this->is_update_data_allowed('is_update_status')) 
+								// {
+								// 	$this->wpdb->update( $this->wpdb->posts, array('post_status' => get_post_status($product_parent_post_id) ), array('ID' => $pid));
+								// }
+								
+								$_v_product_manage_stock = $create_new_variation ? get_post_meta($product_parent_post_id, '_v_product_manage_stock', true) : $v_product_manage_stock[$i];
+								$_v_stock = $create_new_variation ? get_post_meta($product_parent_post_id, '_v_stock', true) : $v_stock[ $i ];
+								$_v_stock_status = $create_new_variation ? get_post_meta($product_parent_post_id, '_v_stock_status', true) : $v_stock_status[ $i ];							
+
+								// Stock handling						
+								$this->pushmeta($pid, '_manage_stock', $_v_product_manage_stock);							
+
+								if ( 'yes' === $_v_product_manage_stock ) {							
+									$this->is_update_cf('_stock') and update_post_meta( $pid, '_stock', wc_stock_amount( $_v_stock ) );
+								} else {
+									$this->is_update_cf('_backorders') and delete_post_meta( $pid, '_backorders' );
+									$this->is_update_cf('_stock') and delete_post_meta( $pid, '_stock' );
+								}		
+
+								if ( empty($this->options['set_parent_stock']) ) 
+								{
+									$this->pmwi_buf_prices($product_parent_post_id);	
+									$this->is_update_cf('_stock') and delete_post_meta( $product_parent_post_id, '_stock' );
+								}							
+
+								// Only update stock status to user setting if changed by the user, but do so before looking at stock levels at variation level
+								if ( ! empty( $_v_stock_status ) and $this->is_update_cf('_stock_status') ) {														
+									update_post_meta( $pid, '_stock_status', $_v_stock_status );
+								}
+
+								if ( pmwi_is_update_taxonomy($articleData, $this->options, 'product_shipping_class') ){							
+									if ($create_new_variation)
+									{
+										$v_shipping_class = get_post_meta($product_parent_post_id, '_v_shipping_class', true);									
+										$this->associate_terms( $pid, array( $v_shipping_class ), 'product_shipping_class' );															
+									}			
+									else
+									{
+										$this->associate_terms( $pid, array( $p_shipping_class ), 'product_shipping_class' );
+									}													
+								}				
+
+							}					
+							else
+							{
+								
+								$stock_status = wc_clean( $product_stock_status[$i] );	
+
+								if ( $stock_status and $this->is_update_cf('_stock_status') ) {								
+									update_post_meta( $pid, '_stock_status', $stock_status );
+								}
+
+								if (empty($articleData['ID']) or $this->is_update_cf('_tax_class'))
+								{
+									if ( $product_tax_class[ $i ] !== 'parent' )
+										$this->pushmeta($pid, '_tax_class', sanitize_text_field( $product_tax_class[ $i ] ));										
+									else
+										delete_post_meta( $pid, '_tax_class' );
+								}
+
+								if ( $is_downloadable == 'yes' ) {
+									$this->pushmeta($pid, '_download_limit', sanitize_text_field( $product_download_limit[ $i ] ));	
+									$this->pushmeta($pid, '_download_expiry', sanitize_text_field( $product_download_expiry[ $i ] ));	
+									$this->pushmeta($pid, '_download_type', sanitize_text_field( $product_download_type[ $i ] ));									
+
+									$_file_paths = array();
+									
+									if ( !empty($product_files[$i]) ) {
+										$file_paths = explode( $import->options['product_files_delim'] , $product_files[$i] );
+										$file_names = explode( $import->options['product_files_names_delim'] , $product_files_names[$i] );
+
+										foreach ( $file_paths as $fn => $file_path ) {
+											$file_path = sanitize_text_field( $file_path );							
+											$_file_paths[ md5( $file_path ) ] = array('name' => ((!empty($file_names[$fn])) ? $file_names[$fn] : basename($file_path)), 'file' => $file_path);
+										}
+									}
+
+									$this->pushmeta($pid, '_downloadable_files', $_file_paths);									
+
+								} else {
+									$this->pushmeta($pid, '_download_limit', '');	
+									$this->pushmeta($pid, '_download_expiry', '');	
+									$this->pushmeta($pid, '_download_type', '');	
+									$this->pushmeta($pid, '_downloadable_files', '');									
+								}
+							}											
+
+							if ($this->options['update_all_data'] == 'yes' or $this->options['update_all_data'] == 'no' and $this->options['is_update_product_type']){
+								//wp_set_object_terms( $pid, NULL, 'product_type' );
+								$this->associate_terms( $pid, NULL, 'product_type' );	
+							}
+
+							// Remove old taxonomies attributes so data is kept up to date
+							if ( $pid and ($import->options['update_all_data'] == "yes" or ( $import->options['update_all_data'] == "no" and $import->options['is_update_attributes']))) {
+								// Update all Attributes
+								if ( $import->options['update_all_data'] == "yes" or $import->options['update_attributes_logic'] == 'full_update' ) 
+									$this->wpdb->query( $this->wpdb->prepare( "DELETE FROM {$this->wpdb->postmeta} WHERE meta_key LIKE 'attribute_%%' AND post_id = %d;", $pid ) );					
+
+								wp_cache_delete( $pid, 'post_meta');
+							}										
+
+							// Update taxonomies
+							if ( $import->options['update_all_data'] == "yes" or ( $import->options['update_all_data'] == "no" and $import->options['is_update_attributes']) or $is_new_product){
+								
+								if ( $create_new_variation )
+								{
+									$parent_attributes = get_post_meta($product_parent_post_id, '_first_variation_attributes', true);								
+
+									if ( ! empty($parent_attributes))
+									{
+										foreach ($parent_attributes as $key => $attr_data) 
+										{
+											
+											$attr_name = $key;
+
+											if ( intval($attr_data['is_taxonomy']) and ( strpos($attr_name, "pa_") === false or strpos($attr_name, "pa_") !== 0 ) ) $attr_name = "pa_" . $attr_name;
+
+											// Update only these Attributes, leave the rest alone
+											if ( ! $is_new_product and $import->options['update_all_data'] == "no" and $import->options['is_update_attributes'] and $import->options['update_attributes_logic'] == 'only'){
+												if ( ! empty($import->options['attributes_list']) and is_array($import->options['attributes_list'])){
+													if ( ! in_array( $attr_name , array_filter($import->options['attributes_list'], 'trim'))) continue;
+												}
+												else break;								
+											}	
+
+											// Leave these attributes alone, update all other Attributes
+											if ( ! $is_new_product and $import->options['update_all_data'] == "no" and $import->options['is_update_attributes'] and $import->options['update_attributes_logic'] == 'all_except'){
+												if ( ! empty($import->options['attributes_list']) and is_array($import->options['attributes_list'])) {
+													if ( in_array( $attr_name , array_filter($import->options['attributes_list'], 'trim'))) continue;									
+												}
+											}											
+
+											$is_variation 	= intval( $attr_data['is_variation']);			
+
+											if (intval($attr_data['is_taxonomy']))
+											{
+												$cname = wc_attribute_taxonomy_name( preg_replace("%^pa_%", "", $attr_name) );
+												$this->associate_terms( $pid, NULL, $cname );	
+											} 										
+
+											if ( $is_variation)
+											{
+												// Don't use woocommerce_clean as it destroys sanitized characters																								
+												$values = substr((intval($attr_data['is_taxonomy'])) ? $attr_data['value'] : $attr_data['value'], 0, 199);	
+												
+												if (intval($attr_data['is_taxonomy'])){
+																									
+													$cname = wc_attribute_taxonomy_name( preg_replace("%^pa_%", "", $attr_name) );
+
+													$term = get_term_by('name', $values, $cname, ARRAY_A);
+
+											 		if ( empty($term) and !is_wp_error($term) ){	
+														$term = term_exists($values, $cname);
+
+														if ( empty($term) and !is_wp_error($term) ){																																
+															$term = term_exists(htmlspecialchars($values), $cname);
+														}
+													}
+
+													if ( ! empty($term) and ! is_wp_error($term) ){	
+														$term = get_term_by('id', $term['term_id'], $cname);									
+														if ( ! empty($term) and ! is_wp_error($term) )
+															update_post_meta($pid, 'attribute_' . sanitize_title( $attr_name ), $term->slug);																					
+													}
+													else{																																	
+														update_post_meta($pid, 'attribute_' . sanitize_title( $attr_name ), '');
+													}
+
+												} else {
+													update_post_meta($pid, 'attribute_' . sanitize_title( $attr_name ), $attr_data['value']);																											
+												}
+											}
+											else
+											{										
+												delete_post_meta($pid, 'attribute_' . sanitize_title( $attr_name ));
+											}																			
+										}
+									}
+								}
+								else
+								{
+									$attr_names = array();
+
+									foreach ($serialized_attributes as $anum => $attr_data) {
+
+										$attr_name = $attr_data['names'][$i];
+
+										if (empty($attr_name) or in_array($attr_name, $attr_names)) continue;
+												
+										$attr_names[] = $attr_name;
 
 										// Update only these Attributes, leave the rest alone
-										if ( $import->options['update_all_data'] == "no" and $import->options['is_update_attributes'] and $import->options['update_attributes_logic'] == 'only'){
+										if ( ! $is_new_product and $import->options['update_all_data'] == "no" and $import->options['is_update_attributes'] and $import->options['update_attributes_logic'] == 'only'){
 											if ( ! empty($import->options['attributes_list']) and is_array($import->options['attributes_list'])){
-												if ( ! in_array( $attr_name , array_filter($import->options['attributes_list'], 'trim'))) continue;
+												if ( ! in_array( ( (intval($attr_data['in_taxonomy'][$i])) ? wc_attribute_taxonomy_name( $attr_name ) : $attr_name ) , array_filter($import->options['attributes_list'], 'trim'))) continue;
 											}
 											else break;								
 										}	
 
 										// Leave these attributes alone, update all other Attributes
-										if ( $import->options['update_all_data'] == "no" and $import->options['is_update_attributes'] and $import->options['update_attributes_logic'] == 'all_except'){
+										if ( ! $is_new_product and $import->options['update_all_data'] == "no" and $import->options['is_update_attributes'] and $import->options['update_attributes_logic'] == 'all_except'){
 											if ( ! empty($import->options['attributes_list']) and is_array($import->options['attributes_list'])) {
-												if ( in_array( $attr_name , array_filter($import->options['attributes_list'], 'trim'))) continue;									
+												if ( in_array( ( ($is_taxonomy) ? wc_attribute_taxonomy_name( $attr_name ) : $attr_name ) , array_filter($import->options['attributes_list'], 'trim'))) continue;									
 											}
-										}											
+										}						
 
-										$is_variation 	= intval( $attr_data['is_variation']);													
+										if ( intval($attr_data['in_taxonomy'][$i]) and ( strpos($attr_name, "pa_") === false or strpos($attr_name, "pa_") !== 0 ) ) $attr_name = "pa_" . $attr_name;	
 
-										if ( $is_variation)
+										$is_variation 	= intval( $attr_data['in_variation'][$i]);													
+
+										if (intval($attr_data['in_taxonomy'][$i]))
 										{
-											// Don't use woocommerce_clean as it destroys sanitized characters																								
-											$values = substr((intval($attr_data['is_taxonomy'])) ? $attr_data['value'] : $attr_data['value'], 0, 199);	
+											$cname = wc_attribute_taxonomy_name( preg_replace("%^pa_%", "", $attr_name) );
+											$this->associate_terms( $pid, NULL, $cname );	
+										} 
+
+										if ($is_variation){
 											
-											if (intval($attr_data['is_taxonomy'])){
-																								
+											// Don't use woocommerce_clean as it destroys sanitized characters																								
+											$values = substr((intval($attr_data['in_taxonomy'][$i])) ? $attr_data['value'][$i] : $attr_data['value'][$i], 0, 199);	
+											
+											if (intval($attr_data['in_taxonomy'][$i])){
+												
 												$cname = wc_attribute_taxonomy_name( preg_replace("%^pa_%", "", $attr_name) );
 
 												$term = get_term_by('name', $values, $cname, ARRAY_A);
@@ -1653,167 +1733,94 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 													if ( ! empty($term) and ! is_wp_error($term) )
 														update_post_meta($pid, 'attribute_' . sanitize_title( $attr_name ), $term->slug);																					
 												}
-												else{																																	
+												else{
+													//$this->pushmeta($pid, 'attribute_' . sanitize_title( $attr_name ), '');																					
 													update_post_meta($pid, 'attribute_' . sanitize_title( $attr_name ), '');
 												}
 
 											} else {
-												update_post_meta($pid, 'attribute_' . sanitize_title( $attr_name ), $attr_data['value']);																											
-											}
-										}
-										else
-										{										
-											delete_post_meta($pid, 'attribute_' . sanitize_title( $attr_name ));
-										}																			
-									}
-								}
-							}
-							else
-							{
-								$attr_names = array();
-
-								foreach ($serialized_attributes as $anum => $attr_data) {
-
-									$attr_name = $attr_data['names'][$i];
-
-									if (empty($attr_name) or in_array($attr_name, $attr_names)) continue;
-											
-									$attr_names[] = $attr_name;
-
-									// Update only these Attributes, leave the rest alone
-									if ( $import->options['update_all_data'] == "no" and $import->options['is_update_attributes'] and $import->options['update_attributes_logic'] == 'only'){
-										if ( ! empty($import->options['attributes_list']) and is_array($import->options['attributes_list'])){
-											if ( ! in_array( ( (intval($attr_data['in_taxonomy'][$i])) ? wc_attribute_taxonomy_name( $attr_name ) : $attr_name ) , array_filter($import->options['attributes_list'], 'trim'))) continue;
-										}
-										else break;								
-									}	
-
-									// Leave these attributes alone, update all other Attributes
-									if ( $import->options['update_all_data'] == "no" and $import->options['is_update_attributes'] and $import->options['update_attributes_logic'] == 'all_except'){
-										if ( ! empty($import->options['attributes_list']) and is_array($import->options['attributes_list'])) {
-											if ( in_array( ( ($is_taxonomy) ? wc_attribute_taxonomy_name( $attr_name ) : $attr_name ) , array_filter($import->options['attributes_list'], 'trim'))) continue;									
-										}
-									}						
-
-									if ( intval($attr_data['in_taxonomy'][$i]) and ( strpos($attr_name, "pa_") === false or strpos($attr_name, "pa_") !== 0 ) ) $attr_name = "pa_" . $attr_name;	
-
-									$is_variation 	= intval( $attr_data['in_variation'][$i]);													
-
-									if ($is_variation){
-										
-										// Don't use woocommerce_clean as it destroys sanitized characters																								
-										$values = substr((intval($attr_data['in_taxonomy'][$i])) ? $attr_data['value'][$i] : $attr_data['value'][$i], 0, 199);	
-										
-										if (intval($attr_data['in_taxonomy'][$i])){
-											
-											$cname = wc_attribute_taxonomy_name( preg_replace("%^pa_%", "", $attr_name) );
-
-											$term = get_term_by('name', $values, $cname, ARRAY_A);
-
-									 		if ( empty($term) and !is_wp_error($term) ){	
-												$term = term_exists($values, $cname);
-
-												if ( empty($term) and !is_wp_error($term) ){																																
-													$term = term_exists(htmlspecialchars($values), $cname);
-												}
-											}
-
-											if ( ! empty($term) and ! is_wp_error($term) ){	
-												$term = get_term_by('id', $term['term_id'], $cname);									
-												if ( ! empty($term) and ! is_wp_error($term) )
-													update_post_meta($pid, 'attribute_' . sanitize_title( $attr_name ), $term->slug);																					
-											}
-											else{
-												//$this->pushmeta($pid, 'attribute_' . sanitize_title( $attr_name ), '');																					
-												update_post_meta($pid, 'attribute_' . sanitize_title( $attr_name ), '');
-											}
-
-										} else {
-											update_post_meta($pid, 'attribute_' . sanitize_title( $attr_name ), $values);																											
-										}	
-											
-									}						
-									else{
-										delete_post_meta($pid, 'attribute_' . sanitize_title( $attr_name ));
-									}
-								}
-							}													
-						}
-					}									
-
-					$this->pmwi_buf_prices($product_parent_post_id);						
+												update_post_meta($pid, 'attribute_' . sanitize_title( $attr_name ), $values);																											
+											}	
 												
-					if ($product_parent_post_id) wc_delete_product_transients($product_parent_post_id);		
+										}						
+										else{
+											delete_post_meta($pid, 'attribute_' . sanitize_title( $attr_name ));
+										}
+									}
+								}													
+							}
+						}									
 
-					if ($create_new_variation) do_action( 'pmxi_saved_post', $pid, null);
+						$this->pmwi_buf_prices($product_parent_post_id);						
+													
+						if ($product_parent_post_id) wc_delete_product_transients($product_parent_post_id);		
 
-					$create_new_variation = false;
+						if ($create_new_variation) do_action( 'pmxi_saved_post', $pid, null);
 
-				endforeach;
-								
-			}	
-			else
-			{
-				if ($first_is_parent == "no")
+						$create_new_variation = false;
+
+					endforeach;
+									
+				}	
+				else
 				{
-					update_post_meta($product_parent_post_id, '_v_product_manage_stock', $v_product_manage_stock[$i]);
-					update_post_meta($product_parent_post_id, '_v_stock', $v_stock[$i]);
-					update_post_meta($product_parent_post_id, '_v_stock_status', $v_stock_status[$i]);	
-					update_post_meta($product_parent_post_id, '_v_variation_enabled', $product_enabled[$i]);
-					
-					if ( !empty($serialized_attributes) ) 
+					if ($first_is_parent == "no")
 					{
-						$attributes = array();
-						$attribute_position = 0;
-						foreach ($serialized_attributes as $anum => $attr_data) 
-						{	
-							$attr_name = $attr_data['names'][$i];
-							$is_visible 	= intval( $attr_data['is_visible'][$i] );
-							$is_variation 	= intval( $attr_data['in_variation'][$i] );
-							$is_taxonomy 	= intval( $attr_data['in_taxonomy'][$i] );
+						update_post_meta($product_parent_post_id, '_v_product_manage_stock', $v_product_manage_stock[$i]);
+						update_post_meta($product_parent_post_id, '_v_stock', $v_stock[$i]);
+						update_post_meta($product_parent_post_id, '_v_stock_status', $v_stock_status[$i]);	
+						update_post_meta($product_parent_post_id, '_v_variation_enabled', $product_enabled[$i]);
+						
+						if ( !empty($serialized_attributes) ) 
+						{
+							$attributes = array();
+							$attribute_position = 0;
+							foreach ($serialized_attributes as $anum => $attr_data) 
+							{	
+								$attr_name = $attr_data['names'][$i];
+								$is_visible 	= intval( $attr_data['is_visible'][$i] );
+								$is_variation 	= intval( $attr_data['in_variation'][$i] );
+								$is_taxonomy 	= intval( $attr_data['in_taxonomy'][$i] );
 
-							// Custom attribute - Add attribute to array and set the values
-						 	$attributes[ sanitize_title( $attr_name ) ] = array(
-						 		'name' 			=> sanitize_text_field( $attr_name ),
-						 		'value' 		=> empty($attr_data['value'][$i]) ? '' : $attr_data['value'][$i],
-						 		'position' 		=> $attribute_position,
-						 		'is_visible' 	=> $is_visible,
-						 		'is_variation' 	=> $is_variation,
-						 		'is_taxonomy' 	=> $is_taxonomy
-						 	);
-						 	$attribute_position++;
+								// Custom attribute - Add attribute to array and set the values
+							 	$attributes[ sanitize_title( $attr_name ) ] = array(
+							 		'name' 			=> sanitize_text_field( $attr_name ),
+							 		'value' 		=> empty($attr_data['value'][$i]) ? '' : $attr_data['value'][$i],
+							 		'position' 		=> $attribute_position,
+							 		'is_visible' 	=> $is_visible,
+							 		'is_variation' 	=> $is_variation,
+							 		'is_taxonomy' 	=> $is_taxonomy
+							 	);
+							 	$attribute_position++;
+							}
+							update_post_meta($product_parent_post_id, '_first_variation_attributes', $attributes);
 						}
-						update_post_meta($product_parent_post_id, '_first_variation_attributes', $attributes);
-					}
 
-					if ( pmwi_is_update_taxonomy($articleData, $this->options, 'product_shipping_class') ){
-						update_post_meta($product_parent_post_id, '_v_shipping_class', $p_shipping_class);
+						if ( pmwi_is_update_taxonomy($articleData, $this->options, 'product_shipping_class') ){
+							update_post_meta($product_parent_post_id, '_v_shipping_class', $p_shipping_class);
+						}
 					}
 				}
-			}					
+			}									
+								
+			$previousID = get_option('wp_all_import_' . $import->id . '_parent_product');							
 
-			$previousID = get_option('wp_all_import_' . $import->id . '_parent_product');	
-
-			if ("manual" == $this->options['duplicate_matching']){
-				$previousID = $product_parent_post_id;
-			}
-
-			// [execute only for parent products]						
-			if ( ! empty($previousID) and ( empty($product_parent_post_id) or $product_parent_post_id != $previousID or ! isset($product_types[$i + 1]) or "manual" == $this->options['duplicate_matching']) ){
+			// [execute only for parent products]								
+			if ( ! empty($previousID) and ( empty($product_parent_post_id) or $product_parent_post_id != $previousID or ! isset($product_types[$i + 1])) ){
 
 				$parent_product_ids = array($previousID);				
 				
-				if ( ! isset($product_types[$i + 1]) and !empty($product_parent_post_id) and ! in_array($product_parent_post_id, $parent_product_ids)) 
+				if ( ! isset($product_types[$i + 1]) and ! empty($product_parent_post_id) and ! in_array($product_parent_post_id, $parent_product_ids)) 
 				{
 					$parent_product_ids[] = $product_parent_post_id;
-				}					
+				}
 
-				if ( empty($product_parent_post_id) and ! in_array($pid, $parent_product_ids) )
+				if ( ! isset($product_types[$i + 1]) and ! empty($pid) and ! in_array($pid, $parent_product_ids)) 
 				{
 					$parent_product_ids[] = $pid;
-				} 
+				}				
 
-				foreach ($parent_product_ids as $post_parent) {																		
+				foreach ($parent_product_ids as $post_parent) {																							
 
 					$children = get_posts( array(
 						'post_parent' 	=> $post_parent,
@@ -1824,7 +1831,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 						'order'			=> 'ASC',
 						'post_status'	=> array('draft', 'publish', 'trash', 'pending', 'future', 'private')
 					) );			
-					
+
 					if ( count($children) ){						
 
 						$product_type_term = term_exists('variable', 'product_type', 0);	
@@ -1964,7 +1971,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 														$default_attributes[ sanitize_title($attribute['name']) ] = sanitize_title((is_array($values)) ? $values[0] : $values);																																											
 													}													
 													elseif ($first_is_parent == "no" and $child_number)
-													{							
+													{																					
 														if (is_array($values) and isset($values[1]))
 														{
 															$default_attributes[ sanitize_title($attribute['name']) ] = sanitize_title($values[1]);
@@ -1988,7 +1995,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 								}								
 
 								// Update only these Attributes, leave the rest alone
-								if ($import->options['update_all_data'] == "no" and $import->options['is_update_attributes'] and $import->options['update_attributes_logic'] == 'only'){
+								if ( ! $is_new_product and $import->options['update_all_data'] == "no" and $import->options['is_update_attributes'] and $import->options['update_attributes_logic'] == 'only'){
 									if ( ! empty($import->options['attributes_list']) and is_array($import->options['attributes_list'])){
 										if ( ! in_array( $attribute['name'] , array_filter($import->options['attributes_list'], 'trim'))){ 
 											$attribute_position++;		
@@ -2002,7 +2009,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 								}
 
 								// Leave these attributes alone, update all other Attributes
-								if ($import->options['update_all_data'] == "no" and $import->options['is_update_attributes'] and $import->options['update_attributes_logic'] == 'all_except'){
+								if ( ! $is_new_product and $import->options['update_all_data'] == "no" and $import->options['is_update_attributes'] and $import->options['update_attributes_logic'] == 'all_except'){
 									if ( ! empty($import->options['attributes_list']) and is_array($import->options['attributes_list'])) {
 										if ( in_array( $attribute['name'] , array_filter($import->options['attributes_list'], 'trim'))){ 
 											$attribute_position++;
@@ -2010,6 +2017,8 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 										}
 									}
 								}
+
+								$values = array_filter($values);
 
 								if ( $attribute['is_taxonomy'] ){
 									
@@ -2075,7 +2084,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 
 								}
 								else
-								{
+								{									
 									if (!empty($values)){
 										$parent_attributes[ sanitize_title( $attribute['name'] ) ] = array(
 									 		'name' 			=> sanitize_text_field( $attribute['name'] ),
@@ -2085,13 +2094,13 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 									 		'is_variation' 	=> $attribute['is_variation'],
 									 		'is_taxonomy' 	=> 0
 									 	);
-									}
+									}									
 								}
 
 							 	$attribute_position++;		
 							}				
 							
-							if ($import->options['is_default_attributes'] and ($import->options['update_all_data'] == "yes" or $import->options['update_all_data'] == "no" and $import->options['is_update_attributes'])) $this->pushmeta($post_parent, '_default_attributes', $default_attributes);
+							if ($import->options['is_default_attributes'] and (empty($articleData['ID']) or $import->options['update_all_data'] == "yes" or $import->options['update_all_data'] == "no" and $import->options['is_update_attributes'])) $this->pushmeta($post_parent, '_default_attributes', $default_attributes);
 
 							if (empty($articleData['ID']) or $import->options['update_all_data'] == "yes" or $import->options['update_all_data'] == "no" and $import->options['is_update_attributes']){ 
 								
@@ -2099,14 +2108,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 
 								update_post_meta($post_parent, '_product_attributes', (( ! empty($current_product_attributes)) ? array_merge($current_product_attributes, $parent_attributes) : $parent_attributes));
 								
-							}			
-
-							if ( $this->options['make_simple_product']) { // and "manual" != $this->options['duplicate_matching']
-								$product_attributes = get_post_meta($post_parent, '_product_attributes', true);		
-								if ( empty($product_attributes) ){
-									$this->make_simple_product($post_parent);																		
-								}
-							}
+							}										
 
 						}
 
@@ -2114,8 +2116,12 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 							$this->make_simple_product($post_parent);																			
 						}
 
-						if ( ! isset($product_types[$i + 1]) )
-							delete_option('wp_all_import_' . $import->id . '_parent_product');
+						if ( $this->options['make_simple_product']) { // and "manual" != $this->options['duplicate_matching']
+							$product_attributes = get_post_meta($post_parent, '_product_attributes', true);		
+							if ( empty($product_attributes) ){
+								$this->make_simple_product($post_parent);																		
+							}
+						}						
 
 					} 
 					elseif ( $this->options['make_simple_product']) {// and "manual" != $this->options['duplicate_matching']
@@ -2136,7 +2142,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 		} elseif ( in_array( $product_type, array( 'variable' ) ) ){
 
 			// Link All Variations
-			if ( "variable" == $product_type and $this->options['link_all_variations'] and $this->options['update_all_data'] == "yes" or ($this->options['update_all_data'] == "no" and $this->options['is_update_attributes']) or $is_new_product){
+			if ( "variable" == $product_type and $this->options['link_all_variations'] and ($this->options['update_all_data'] == "yes" or ($this->options['update_all_data'] == "no" and $this->options['is_update_attributes']) or $is_new_product)){
 
 				$added_variations = $this->pmwi_link_all_variations($pid, $this->options);
 
@@ -2213,7 +2219,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 				}
 				else{
 					count($variation_sku) and $variation_stock = array_fill(0, count($variation_sku), '');
-				}
+				}				
 
 				// Stock Status
 				if ($import->options['variable_stock_status'] == 'xpath' and "" != $import->options['single_variable_stock_status']){
@@ -2602,7 +2608,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 							if ( in_array($cur_meta_key, array('_thumbnail_id','_product_image_gallery')) ) continue;
 
 							// Update all data
-							if ($import->options['update_all_data'] == 'yes') {
+							if ($import->options['update_all_data'] == 'yes' or $variation_just_created) {
 								delete_post_meta($variation_to_update_id, $cur_meta_key);
 								continue;
 							}
@@ -2867,7 +2873,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 							$attr_name = $a_name;														
 
 							// Update only these Attributes, leave the rest alone
-							if ($import->options['update_all_data'] == 'no' and $import->options['update_attributes_logic'] == 'only'){
+							if ($import->options['update_all_data'] == 'no' and $import->options['update_attributes_logic'] == 'only' and ! $variation_just_created ){
 								if ( ! empty($import->options['attributes_list']) and is_array($import->options['attributes_list'])){
 									if ( ! in_array( ( (intval($attr_data['in_taxonomy'][$j])) ? wc_attribute_taxonomy_name( $attr_name ) : $attr_name ) , array_filter($import->options['attributes_list'], 'trim'))) continue;
 								}
@@ -2875,7 +2881,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 							}	
 
 							// Leave these attributes alone, update all other Attributes
-							if ($import->options['update_all_data'] == 'no' and $import->options['update_attributes_logic'] == 'all_except'){
+							if ($import->options['update_all_data'] == 'no' and $import->options['update_attributes_logic'] == 'all_except' and ! $variation_just_created){
 								if ( ! empty($import->options['attributes_list']) and is_array($import->options['attributes_list'])) {
 									if ( in_array( ( (intval($attr_data['in_taxonomy'][$j])) ? wc_attribute_taxonomy_name( $attr_name ) : $attr_name ) , array_filter($import->options['attributes_list'], 'trim'))) continue;								
 								}
@@ -3328,7 +3334,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 
 						}
 				
-						if ($is_update_attributes) {
+						if ($is_new_product or $is_update_attributes) {
 							
 							$current_product_attributes = get_post_meta($pid, '_product_attributes', true);						
 							
@@ -3380,20 +3386,55 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 						$this->pushmeta($pid, $key, $value);
 					}
 				}
-			}			
-		} 
-		
-		if ($importData['import']->options['create_draft'] == 'yes')
-		{
-			$table = $this->wpdb->posts;
+			}		
 
-			$p = $this->wpdb->get_row($this->wpdb->prepare("SELECT * FROM $table WHERE ID = %d;", $importData['pid']));			
-
-			if ($p and $p->post_type == 'product_variation' and $p->post_status == 'draft')
+			// save thumbnail
+			$post_thumbnail_id = get_post_thumbnail_id( $importData['pid'] );
+			if ($post_thumbnail_id)
 			{
-				$this->wpdb->update( $this->wpdb->posts, array('post_status' => 'publish' ), array('ID' => $importData['pid']));
+				set_post_thumbnail($pid, $post_thumbnail_id);
 			}
-		}			
+
+			if ($importData['import']->options['put_variation_image_to_gallery'] and $post_thumbnail_id)
+			{								
+				do_action('pmxi_gallery_image', $pid, $post_thumbnail_id, false);										
+			}	
+
+			$this->associate_terms($pid, false, 'product_cat');	
+			$this->associate_terms($pid, false, 'product_tag');				
+			
+		} 
+				
+		$table = $this->wpdb->posts;
+
+		$p = $this->wpdb->get_row($this->wpdb->prepare("SELECT * FROM $table WHERE ID = %d;", $importData['pid']));			
+
+		if ($p)
+		{
+			if ($p->post_type == 'product_variation')
+			{
+				if ($importData['import']->options['create_draft'] == 'yes' and $p->post_status == 'draft')
+				{
+					$this->wpdb->update( $this->wpdb->posts, array('post_status' => 'publish' ), array('ID' => $importData['pid']));				
+				}			
+
+				$this->associate_terms($importData['pid'], false, 'product_cat');	
+				$this->associate_terms($importData['pid'], false, 'product_tag');	
+
+				delete_post_meta($importData['pid'], '_v_product_manage_stock');
+				delete_post_meta($importData['pid'], '_v_stock');
+				delete_post_meta($importData['pid'], '_v_stock_status');
+				delete_post_meta($importData['pid'], '_v_variation_enabled');
+				delete_post_meta($importData['pid'], '_first_variation_attributes');
+				delete_post_meta($importData['pid'], '_v_shipping_class');
+			}			
+			else
+			{
+				update_post_meta( $importData['pid'], '_product_version', WC_VERSION );
+				wc_delete_product_transients($importData['pid']);		
+			}			
+		}
+					
 		
 	}
 
@@ -3429,12 +3470,13 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 
 		$table = $this->wpdb->posts;
 
-		$p = $this->wpdb->get_row($this->wpdb->prepare("SELECT * FROM $table WHERE ID = %d;", $pid));		
+		$p = $this->wpdb->get_row($this->wpdb->prepare("SELECT * FROM $table WHERE ID = %d;", (int) $pid));		
 
 		if ($p and $p->post_parent){
 
 			$gallery = explode(",", get_post_meta($p->post_parent, '_product_image_gallery', true));
 			if (is_array($gallery)){
+				$gallery = array_filter($gallery);
 				if ( ! in_array($attid, $gallery) ) $gallery[] = $attid;
 			}
 			else{
@@ -3519,7 +3561,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 
 	}	
 
-	protected function associate_terms($pid, $assign_taxes, $tx_name, $logger = false){			
+	protected function associate_terms($pid, $assign_taxes, $tx_name, $logger = false){					
 
 		$terms = wp_get_object_terms( $pid, $tx_name );
 		$term_ids = array();        
@@ -3532,13 +3574,16 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 					$term_ids[] = $term_info->term_taxonomy_id;
 					$this->wpdb->query(  $this->wpdb->prepare("UPDATE {$this->wpdb->term_taxonomy} SET count = count - 1 WHERE term_taxonomy_id = %d", $term_info->term_taxonomy_id) );
 				}				
-				$in_tt_ids = "'" . implode( "', '", $term_ids ) . "'";
+				$in_tt_ids = "'" . implode( "', '", $term_ids ) . "'";				
 				$this->wpdb->query( $this->wpdb->prepare( "DELETE FROM {$this->wpdb->term_relationships} WHERE object_id = %d AND term_taxonomy_id IN ($in_tt_ids)", $pid ) );
+				delete_transient( 'wc_ln_count_' . md5( sanitize_key( $tx_name ) . sanitize_key( $term_info->term_taxonomy_id ) ) );
+				//wp_update_term_count( $term_ids, $tx_name );
+				clean_term_cache($term_ids, '', false);
 			}
 		}
 
 		if (empty($assign_taxes)){ 
-			//_wc_term_recount($terms, $tx_name, true, false);
+			//_wc_term_recount($terms, $tx_name, true, false);			
 			return;
 		}
 
@@ -3578,12 +3623,12 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 			$sql_query_sel = array();
 			$sql_query = "INSERT INTO $table (post_id, meta_key, meta_value) ";
 			foreach ($post_meta_infos as $meta_info) {
-				//if ($this->is_update_cf($meta_info->meta_key)){									
+				//if ($this->is_update_cf($meta_info->meta_key)){													
 					if (strpos($meta_info->meta_key, '_min') === false and strpos($meta_info->meta_key, '_max') === false and ! in_array($meta_info->meta_key, array('_default_attributes', '_price'))) 
 					{
-						$this->pushmeta($new_id, $meta_info->meta_key, maybe_unserialize($meta_info->meta_value));
+						$this->pushmeta($new_id, $meta_info->meta_key, maybe_unserialize($meta_info->meta_value));						
 					}			
-					if ($meta_info->meta_key == '_price' and $this->is_update_cf('_price'))
+					if ($meta_info->meta_key == '_price' and (empty($this->articleData['ID']) or $this->is_update_cf('_price')))
 					{
 						$sale_price    = get_post_meta($id, '_sale_price', true);
 						$regular_price = get_post_meta($id, '_regular_price', true);
@@ -3600,6 +3645,13 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 			// 	$sql_query.= implode(" UNION ALL ", $sql_query_sel);
 			// 	$this->wpdb->query($sql_query);
 			// }
+		}
+
+		if ($this->options['put_variation_image_to_gallery'])
+		{
+			$post_thumbnail_id = get_post_thumbnail_id( $id );
+
+			do_action('pmxi_gallery_image', $new_id, $post_thumbnail_id, false);			
 		}
 
 	}
@@ -3757,6 +3809,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 				update_post_meta( $child->variation_id, '_stock_status', get_post_meta( $post_id, '_stock_status', true ) );			
 				update_post_meta( $child->variation_id, '_manage_stock', get_post_meta( $post_id, '_manage_stock', true ) );			
 				update_post_meta( $child->variation_id, '_backorders', get_post_meta( $post_id, '_backorders', true ) );	
+				do_action( 'pmxi_product_variation_saved', $child->variation_id );
 	        }
 	    }	  
 
@@ -3802,7 +3855,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 
 			$added++;
 
-			//do_action( 'product_variation_linked', $variation_id );
+			do_action( 'pmxi_product_variation_saved', $variation_id );
 			
 		}		
 

@@ -3,7 +3,7 @@
 Plugin Name: WP All Import Pro
 Plugin URI: http://www.wpallimport.com/
 Description: The most powerful solution for importing XML and CSV files to WordPress. Import to Posts, Pages, and Custom Post Types. Support for imports that run on a schedule, ability to update existing imports, and much more.
-Version: 4.2.6
+Version: 4.2.8
 Author: Soflyy
 */
 
@@ -31,7 +31,7 @@ if ( is_plugin_active('wp-all-import/plugin.php') ){
 }
 else {
 
-	define('PMXI_VERSION', '4.2.6');
+	define('PMXI_VERSION', '4.2.8');
 
 	define('PMXI_EDITION', 'paid');
 
@@ -134,6 +134,8 @@ else {
 		public static $is_csv = false;
 
 		public static $csv_path = false;
+
+		public static $capabilities = 'manage_options';
 
 		/**
 		 * WP All Import logs folder
@@ -319,7 +321,7 @@ else {
 		}
 
 		public function init(){
-			$this->load_plugin_textdomain();
+			$this->load_plugin_textdomain();			
 		}
 
 		function in_plugin_update_message($plugin_data, $r){
@@ -415,29 +417,7 @@ else {
 				}
 				else {
 
-					// migration fixes for vesions
-					switch ($is_migrated) {
-
-						case '4.0.0-beta1':
-						case '4.0.0-beta2':
-						case '4.0.0 RC1':
-						case '4.0.0':
-						case '4.0.1':
-
-							$commit_migration = $this->__fix_db_schema(); // feature to version 4.0.0
-
-							break;
-
-						case '4.0.2':
-						case '4.0.3':
-						case '4.0.4':
-
-							break;
-
-						default:
-							# code...
-							break;
-					}
+					$commit_migration = $this->__fix_db_schema();
 
 					foreach ($imports->setColumns($imports->getTable() . '.*')->getBy(array('id !=' => ''))->convertRecords() as $imp){
 
@@ -609,7 +589,7 @@ else {
 					@ini_set("max_input_time", PMXI_Plugin::getInstance()->getOption('max_input_time'));
 					@ini_set("max_execution_time", PMXI_Plugin::getInstance()->getOption('max_execution_time'));
 
-					if ( ! get_current_user_id() or ! current_user_can('manage_options')) {
+					if ( ! get_current_user_id() or ! current_user_can( self::$capabilities )) {
 					    // This nonce is not valid.
 					    die( 'Security check' );
 
@@ -849,7 +829,34 @@ else {
 				die(sprintf(__('Uploads folder %s must be writable', 'wp_all_import_plugin'), $uploads['basedir'] . DIRECTORY_SEPARATOR . WP_ALL_IMPORT_UPLOADS_BASE_DIRECTORY));
 			}
 
+			// create/update required database tables
+			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+			require self::ROOT_DIR . '/schema.php';
 			global $wpdb;
+
+			if (function_exists('is_multisite') && is_multisite()) {
+		        // check if it is a network activation - if so, run the activation function for each blog id
+		        if (isset($_GET['networkwide']) && ($_GET['networkwide'] == 1)) {
+		            $old_blog = $wpdb->blogid;
+		            // Get all blog ids
+		            $blogids = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
+		            foreach ($blogids as $blog_id) {
+		                switch_to_blog($blog_id);
+		                require self::ROOT_DIR . '/schema.php';
+		                dbDelta($plugin_queries);
+
+						// sync data between plugin tables and wordpress (mostly for the case when plugin is reactivated)
+
+						$post = new PMXI_Post_Record();
+						$wpdb->query('DELETE FROM ' . $post->getTable() . ' WHERE post_id NOT IN (SELECT ID FROM ' . $wpdb->posts . ')');
+		            }
+		            switch_to_blog($old_blog);
+		            return;
+		        }
+		    }
+
+			dbDelta($plugin_queries);
+
 			// do not execute ALTER TABLE queries if sql user doesn't have ALTER privileges
 			$grands = $wpdb->get_results("SELECT * FROM information_schema.user_privileges WHERE grantee LIKE \"'" . DB_USER . "'%\" AND PRIVILEGE_TYPE = 'ALTER' AND IS_GRANTABLE = 'YES';");
 
@@ -942,10 +949,12 @@ else {
 			$table = $this->getTablePrefix() . 'posts';
 			$tablefields = $wpdb->get_results("DESCRIBE {$table};");
 			$iteration = false;
+			$specified = false;
 
 			// Check if field exists
 			foreach ($tablefields as $tablefield) {
 				if ('iteration' == $tablefield->Field) $iteration = true;
+				if ('specified' == $tablefield->Field) $specified = true;
 			}
 
 			if (!$iteration){
@@ -964,6 +973,11 @@ else {
 
 				$wpdb->query("ALTER TABLE {$table} ADD `iteration` BIGINT(20) NOT NULL DEFAULT 0;");
 
+			}
+
+			if (!$specified and !empty($grands))
+			{
+				$wpdb->query("ALTER TABLE {$table} ADD `specified` BOOL NOT NULL DEFAULT 0;");
 			}
 
 			if ( ! empty($wpdb->charset))
@@ -1067,7 +1081,7 @@ else {
 				'is_update_parent' => 1,
 				'is_keep_attachments' => 0,
 				'is_keep_imgs' => 0,
-				'do_not_remove_images' => 0,
+				'do_not_remove_images' => 1,
 
 				'is_update_custom_fields' => 1,
 				'update_custom_fields_logic' => 'full_update',
@@ -1099,6 +1113,7 @@ else {
 				'image_meta_alt_delim' => ',',
 				'image_meta_description' => '',
 				'image_meta_description_delim' => ',',
+				'image_meta_description_delim_logic' => 'separate',
 				'status_xpath' => '',
 				'download_images' => 'yes',
 				'converted_options' => 0,
@@ -1119,6 +1134,8 @@ else {
 				'featured_image' => '',
 				'download_featured_image' => '',
 				'download_featured_delim' => ',',
+				'gallery_featured_image' => '',
+				'gallery_featured_delim' => ',',
 				'is_featured' => 1,
 				'set_image_meta_title' => 0,
 				'set_image_meta_caption' => 0,

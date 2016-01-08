@@ -13,6 +13,7 @@ $config = array(
 	"max_input_time" => -1,
 	"max_execution_time" => -1,
 	"dismiss" => 0,
+	"dismiss_speed_up" => 0,
 	"html_entities" => 0,
 	"utf8_decode" => 0,
 	"cron_job_key" => wp_all_import_url_title(wp_all_import_rand_char(12)),

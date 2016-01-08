@@ -1,4 +1,8 @@
+<?php if ( ! $this->isWizard  or ! empty(PMXI_Plugin::$session->deligate) and PMXI_Plugin::$session->deligate == 'wpallexport' or $this->isWizard and "new" != $post['wizard_type']): ?>
 <h4><?php _e('When WP All Import finds new or changed data...', 'wp_all_import_plugin'); ?></h4>
+<?php else: ?>
+<h4><?php _e('If this import is run again and WP All Import finds new or changed data...', 'wp_all_import_plugin'); ?></h4>
+<?php endif; ?>
 <div class="input">
 	<input type="hidden" name="create_new_records" value="0" />
 	<input type="checkbox" id="create_new_records" name="create_new_records" value="1" <?php echo $post['create_new_records'] ? 'checked="checked"' : '' ?> />
@@ -51,7 +55,9 @@
 	<input type="hidden" id="is_keep_former_posts" name="is_keep_former_posts" value="yes" />				
 	<input type="checkbox" id="is_not_keep_former_posts" name="is_keep_former_posts" value="no" <?php echo "yes" != $post['is_keep_former_posts'] ? 'checked="checked"': '' ?> class="switcher" />
 	<label for="is_not_keep_former_posts"><?php _e('Update existing posts with changed data in your file', 'wp_all_import_plugin') ?></label>
-
+	<?php if ( $this->isWizard and "new" == $post['wizard_type'] and empty(PMXI_Plugin::$session->deligate)): ?>
+	<a href="#help" class="wpallimport-help" style="position: relative; top: -2px;" title="<?php _e('These options will only be used if you run this import again later. All data is imported the first time you run an import.', 'wp_all_import_plugin') ?>">?</a>	
+	<?php endif; ?>
 	<div class="switcher-target-is_not_keep_former_posts" style="padding-left:17px;">
 		<input type="radio" id="update_all_data" class="switcher" name="update_all_data" value="yes" <?php echo 'no' != $post['update_all_data'] ? 'checked="checked"': '' ?>/>
 		<label for="update_all_data"><?php _e('Update all data', 'wp_all_import_plugin' )?></label><br>
@@ -131,14 +137,7 @@
 				<div class="switcher-target-is_update_images" style="padding-left:17px;">
 					<div class="input" style="margin-bottom:3px;">								
 						<input type="radio" id="update_images_logic_full_update" name="update_images_logic" value="full_update" <?php echo ( "full_update" == $post['update_images_logic'] ) ? 'checked="checked"': '' ?> />
-						<label for="update_images_logic_full_update"><?php _e('Update all images', 'wp_all_import_plugin') ?></label>
-						<div class="switcher-target-update_images_logic_full_update" style="padding-left:27px;">
-							<div class="input">
-								<input type="hidden" name="do_not_remove_images" value="0" />
-								<input type="checkbox" id="do_not_remove_images" name="do_not_remove_images" value="1" <?php echo $post['do_not_remove_images'] ? 'checked="checked"': '' ?> />
-								<label for="do_not_remove_images"><?php _e('Do not remove images from media gallery', 'wp_all_import_plugin') ?></label>
-							</div>
-						</div>
+						<label for="update_images_logic_full_update"><?php _e('Update all images', 'wp_all_import_plugin') ?></label>						
 					</div>
 					<?php $is_show_add_new_images = apply_filters('wp_all_import_is_show_add_new_images', true, $post_type); ?>
 					<?php if ($is_show_add_new_images): ?>
