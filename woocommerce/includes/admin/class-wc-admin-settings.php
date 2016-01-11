@@ -148,6 +148,8 @@ class WC_Admin_Settings {
 			self::add_message( stripslashes( $_GET['wc_message'] ) );
 		}
 
+		self::show_messages();
+
 		// Get tabs for the settings page
 		$tabs = apply_filters( 'woocommerce_settings_tabs_array', array() );
 

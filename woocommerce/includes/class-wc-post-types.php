@@ -146,7 +146,7 @@ class WC_Post_types {
 						'add_new_item'      => __( 'Add New Shipping Class', 'woocommerce' ),
 						'new_item_name'     => __( 'New Shipping Class Name', 'woocommerce' )
 					),
-				'show_ui'               => true,
+				'show_ui'               => false,
 				'show_in_nav_menus'     => false,
 				'query_var'             => is_admin(),
 				'capabilities'          => array(
@@ -184,10 +184,7 @@ class WC_Post_types {
 								'add_new_item'      => sprintf( __( 'Add New %s', 'woocommerce' ), $label ),
 								'new_item_name'     => sprintf( __( 'New %s', 'woocommerce' ), $label )
 							),
-						'show_ui'           => true,
-						'show_in_menu'      => false,
-						'show_in_nav_menus' => false,
-						'meta_box_cb'       => false,
+						'show_ui'           => false,
 						'query_var'         => 1 === $tax->attribute_public,
 						'rewrite'           => false,
 						'sort'              => false,
@@ -399,7 +396,7 @@ class WC_Post_types {
 						'parent'             => __( 'Parent Webhook', 'woocommerce' )
 					),
 					'public'              => false,
-					'show_ui'             => true,
+					'show_ui'             => false,
 					'capability_type'     => 'shop_webhook',
 					'map_meta_cap'        => true,
 					'publicly_queryable'  => false,

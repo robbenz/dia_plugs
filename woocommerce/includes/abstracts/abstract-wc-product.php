@@ -1050,15 +1050,13 @@ class WC_Product {
 					AND meta_value > 0
 				", $this->id ) );
 
-				$average_rating = number_format( $ratings / $count, 2, '.', '' );
-			} else {
-				$average_rating = 0;
+				$average_rating = number_format( $ratings / $count, 2 );
 			}
 
 			set_transient( $transient_name, $average_rating, DAY_IN_SECONDS * 30 );
 		}
 
-		return (string) floatval( $average_rating );
+		return $average_rating;
 	}
 
 	/**
