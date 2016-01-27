@@ -61,7 +61,7 @@ $wp_query->comment_count = count($wp_query->comments); //gets the comment count 
 						'product_attributes' => 1, 
 						'short_description' => 1, 
 						'stock_level' => 1, 
-						'reviews' => 1,
+					//	'reviews' => 0,
 						'header_image' => '',
 						'header_text' => '', 
 						'footer_text' => '',
@@ -286,76 +286,6 @@ jQuery(function($)
 
 			</div>
 
-			<?php $attributes = $product->get_attributes(); ?>
-
-			<?php if(count($attributes)): ?>
-
-				<div id="additional-info">
-					<?php
-						$heading = apply_filters( 'woocommerce_product_additional_information_heading', __( 'Additional Information', 'woocommerce' ) );
-					?>
-
-					<?php if ( $heading ): ?>
-						<h2><?php echo $heading; ?></h2>
-					<?php endif; ?>
-
-					<?php $product->list_attributes(); ?>
-
-				</div>
-
-			<?php endif; ?>
-
-			<div id="thumbnails">
-				
-				<?php include("gallery-images.php"); ?>
-
-			</div>
-
-			<div id="productprint-reviews">
-	
-				<h2><?php _e('Reviews', 'woocommerce'); ?></h2>
-
-				<?php /*** star rating and review count ***/
-
-				if ( get_option( 'woocommerce_enable_review_rating' ) === 'yes' ) :
-
-
-					$count   = $product->get_rating_count();
-					$average = $product->get_average_rating();
-
-					if ( $count > 0 ) : ?>
-
-						<div class="woocommerce-product-rating" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
-							<div class="star-rating" title="<?php _e (sprintf( __( 'Rated %s out of 5', 'woocommerce' ), $average ) ); ?>">
-								<span style="width:<?php echo ( ( $average / 5 ) * 100 ); ?>%">
-								<strong itemprop="ratingValue" class="rating"><?php echo esc_html( $average ); ?></strong> <?php _e( 'out of 5', 'woocommerce' ); ?>
-								</span>
-							</div>
-						<?php printf( _n( '%s customer review', '%s customer reviews', $count, 'woocommerce' ), '<span itemprop="ratingCount" class="count">' . $count . '</span>' ); ?>
-						</div>
-
-					<?php endif; ?>
-		
-				<?php endif; ?>
-				
-				<div id="comments">
-
-					<?php if ( have_comments() ) :  ?>
-
-						<ol class="commentlist">
-
-							<?php wp_list_comments( apply_filters( 'woocommerce_product_review_list_args', array( 'callback' => 'woocommerce_comments' ) ) ); ?>
-	
-						</ol>
-
-					<?php else : ?>
-
-						<p class="productprint-noreviews"><?php _e( 'There are no reviews yet.', 'woocommerce' ); ?></p>
-
-					<?php endif; ?>
-
-				</div>
-			</div><!-- end id="productprint-reviews" -->
 
 	</div>
 
