@@ -22,30 +22,33 @@ add_action( 'register_form', 'brady_cool_register_form' );
 function brady_cool_register_form() {
     $first_name = ( ! empty( $_POST['first_name'] ) ) ? trim( $_POST['first_name'] ) : '';
 ?>
+<div id="left-col-first-name">
 <p class="form-row form-row-wide">
     <label for="first_name"><?php _e( 'First Name', 'MedMattress.com' ) ?><span class="required"> *</span><br />
         <input type="text" name="first_name" id="first_name" class="input-text" value="<?php echo esc_attr( wp_unslash( $first_name ) ); ?>"  />
     </label>
 </p>
-
+</div>
 <?php
     $last_name = ( ! empty( $_POST['last_name'] ) ) ? trim( $_POST['last_name'] ) : '';
 ?>
+<div id="left-col-last-name">
 <p class="form-row form-row-wide">
     <label for="last_name"><?php _e( 'Last Name', 'MedMattress.com' ) ?><span class="required"> *</span><br />
         <input type="text" name="last_name" id="last_name" class="input-text" value="<?php echo esc_attr( wp_unslash( $last_name ) ); ?>"  />
     </label>
 </p>
-
+</div>
 <?php
     $facility_name = ( ! empty( $_POST['facility_name'] ) ) ? trim( $_POST['facility_name'] ) : '';
 ?>
+<div id="left-col-facility-name">
 <p class="form-row form-row-wide">
     <label for="last_name"><?php _e( 'Facility Name', 'MedMattress.com' ) ?><span class="required"> *</span><br />
         <input type="text" name="facility_name" id="facility_name" class="input-text" value="<?php echo esc_attr( wp_unslash( $facility_name ) ); ?>"  />
     </label>
 </p>
-
+</div>
 <?php
 }
 

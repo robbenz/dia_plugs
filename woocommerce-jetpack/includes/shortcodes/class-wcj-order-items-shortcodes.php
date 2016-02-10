@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Order Items Shortcodes class.
  *
- * @version 2.2.0
+ * @version 2.4.0
  * @author  Algoritmika Ltd.
  */
 
@@ -14,21 +14,21 @@ if ( ! class_exists( 'WCJ_Order_Items_Shortcodes' ) ) :
 
 class WCJ_Order_Items_Shortcodes extends WCJ_Shortcodes {
 
-    /**
-     * Constructor.
-     */
-    public function __construct() {
+	/**
+	 * Constructor.
+	 */
+	public function __construct() {
 
 		$this->the_shortcodes = array(
 			'wcj_order_items_table',
 		);
 
 		parent::__construct();
-    }
+	}
 
-    /**
-     * add_extra_atts.
-     */
+	/**
+	 * add_extra_atts.
+	 */
 	function add_extra_atts( $atts ) {
 		$modified_atts = array_merge( array(
 			'order_id'           => ( isset( $_GET['order_id'] ) ) ? $_GET['order_id'] : get_the_ID(),
@@ -47,53 +47,53 @@ class WCJ_Order_Items_Shortcodes extends WCJ_Shortcodes {
 		return $modified_atts;
 	}
 
-    /**
-     * init_atts.
-     */
+	/**
+	 * init_atts.
+	 */
 	function init_atts( $atts ) {
 		$this->the_order = ( 'shop_order' === get_post_type( $atts['order_id'] ) ) ? wc_get_order( $atts['order_id'] ) : null;
 		if ( ! $this->the_order ) return false;
 		return $atts;
 	}
 
-    /**
-     * wcj_price_shortcode.
-     */
+	/**
+	 * wcj_price_shortcode.
+	 */
 	private function wcj_price_shortcode( $raw_price, $atts ) {
 		return wcj_price( $atts['price_prefix'] . $raw_price, $this->the_order->get_order_currency(), $atts['hide_currency'] );
 	}
 
-    /**
-     * add_item.
-     */
-    private function add_item( $items, $new_item_args = array() ) {
+	/**
+	 * add_item.
+	 */
+	private function add_item( $items, $new_item_args = array() ) {
 		if ( empty ( $new_item_args ) ) return $items;
 		extract( $new_item_args );
 		// Create item
 		$items[] = array(
-			'is_custom'			=> true,
-			'name'				=> $name,
-			'type' 				=> 'line_item',
-			'qty' 				=> $qty,
-			'line_subtotal' 	=> $line_subtotal,
-			'line_total' 		=> $line_total,
-			'line_tax' 			=> $line_tax,
+			'is_custom'         => true,
+			'name'              => $name,
+			'type'              => 'line_item',
+			'qty'               => $qty,
+			'line_subtotal'     => $line_subtotal,
+			'line_total'        => $line_total,
+			'line_tax'          => $line_tax,
 			'line_subtotal_tax' => $line_subtotal_tax,
-			'item_meta'			=> array(
-				'_qty' 					=> array( $qty ),
-				'_line_subtotal' 		=> array( $line_subtotal ),
-				'_line_total' 			=> array( $line_total ),
-				'_line_tax' 			=> array( $line_tax ),
-				'_line_subtotal_tax' 	=> array( $line_subtotal_tax ),
+			'item_meta'         => array(
+				'_qty'               => array( $qty ),
+				'_line_subtotal'     => array( $line_subtotal ),
+				'_line_total'        => array( $line_total ),
+				'_line_tax'          => array( $line_tax ),
+				'_line_subtotal_tax' => array( $line_subtotal_tax ),
 			),
 		);
 		return $items;
 	}
 
-    /**
-     * wcj_order_get_cart_discount_tax.
-     */
-	function wcj_order_get_cart_discount_tax() {
+	/**
+	 * wcj_order_get_cart_discount_tax.
+	 */
+	/* function wcj_order_get_cart_discount_tax() {
 
 		$the_cart_discount = $this->the_order->get_cart_discount();
 		$is_discount_taxable = ( $the_cart_discount > 0 ) ? true : false;
@@ -101,7 +101,7 @@ class WCJ_Order_Items_Shortcodes extends WCJ_Shortcodes {
 		if ( $is_discount_taxable ) {
 
 			/* $order_total_incl_tax = $this->the_order->get_total();
-			$order_total_tax      = $this->the_order->get_total_tax(); */
+			$order_total_tax      = $this->the_order->get_total_tax(); *//*
 
 			$order_total_incl_tax = 0;
 			$order_total_tax = 0;
@@ -121,12 +121,14 @@ class WCJ_Order_Items_Shortcodes extends WCJ_Shortcodes {
 		}
 
 		return false;
-	}
+	} */
 
-    /**
-     * wcj_order_items_table.
-     */
-    function wcj_order_items_table( $atts, $content = '' ) {
+	/**
+	 * wcj_order_items_table.
+	 *
+	 * @version 2.4.0
+	 */
+	function wcj_order_items_table( $atts, $content = '' ) {
 
 		$html = '';
 		$the_order = $this->the_order;
@@ -158,10 +160,10 @@ class WCJ_Order_Items_Shortcodes extends WCJ_Shortcodes {
 			$total_discount_tax_excl = $the_order->get_total_discount( true );
 			$discount_tax            = $the_order->get_total_discount( false ) - $total_discount_tax_excl;
 
-			if ( false != ( $the_tax = $this->wcj_order_get_cart_discount_tax() ) ) {
+			/* if ( false != ( $the_tax = $this->wcj_order_get_cart_discount_tax() ) ) {
 				$total_discount_tax_excl -= $the_tax;
 				$discount_tax += $the_tax;
-			}
+			} */
 
 			$total_discount_tax_excl *= -1;
 			$discount_tax *= -1;
@@ -197,6 +199,20 @@ class WCJ_Order_Items_Shortcodes extends WCJ_Shortcodes {
 								$the_item_title .= '<div style="font-size:smaller;">' . wc_get_formatted_variation( $the_product->variation_data, true ) . '</div>';
 							}
 							$data[ $item_counter ][] = $the_item_title;
+						}
+						break;
+					case 'item_excerpt':
+					case 'item_description':
+					case 'item_short_description':
+						if ( true === $item['is_custom'] ) {
+							$data[ $item_counter ][] = '';
+						} else {
+							global $post;
+							$post = get_post( $item['product_id'] );
+							setup_postdata( $post );
+							$the_excerpt = get_the_excerpt();
+							wp_reset_postdata();
+							$data[ $item_counter ][] = $the_excerpt;
 						}
 						break;
 					case 'item_variation':

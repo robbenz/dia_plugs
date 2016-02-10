@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Checkout Custom Fields class.
  *
- * @version 2.3.8
+ * @version 2.4.0
  * @author  Algoritmika Ltd.
  */
 
@@ -286,13 +286,13 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 	/**
 	 * add_woocommerce_admin_fields.
 	 *
-	 * @version 2.3.8
+	 * @version 2.4.0
 	 */
 	public function add_woocommerce_admin_fields( $fields, $section ) {
 		for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_checkout_custom_fields_total_number', 1 ) ); $i++ ) {
 			if ( 'yes' === get_option( 'wcj_checkout_custom_field_enabled_' . $i ) ) {
 				$the_type = get_option( 'wcj_checkout_custom_field_type_' . $i );
-				if ( 'datepicker' === $the_type || 'timepicker' === $the_type || 'number' === $the_type ) {
+				if ( 'datepicker' === $the_type || 'weekpicker' === $the_type || 'timepicker' === $the_type || 'number' === $the_type ) {
 					$the_type = 'text';
 				}
 				if ( 'checkbox' === $the_type || 'select' === $the_type || 'radio' === $the_type ) {
@@ -347,7 +347,7 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 	/**
 	 * add_custom_checkout_fields.
 	 *
-	 * @version 2.3.8
+	 * @version 2.4.0
 	 */
 	public function add_custom_checkout_fields( $fields ) {
 
@@ -375,9 +375,20 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 
 				$the_type = get_option( 'wcj_checkout_custom_field_type_' . $i );
 				$custom_attributes = array();
-				if ( 'datepicker' === $the_type || 'timepicker' === $the_type || 'number' === $the_type ) {
-					if ( 'datepicker' === $the_type || 'timepicker' === $the_type ) {
-						$custom_attributes['display'] = ( 'datepicker' === $the_type ) ? 'date' : 'time';
+				if ( 'datepicker' === $the_type ||  'weekpicker' === $the_type || 'timepicker' === $the_type || 'number' === $the_type ) {
+					if ( 'datepicker' === $the_type || 'weekpicker' === $the_type ) {
+						$datepicker_format_option = get_option( 'wcj_checkout_custom_field_datepicker_format_' . $i, '' );
+						$datepicker_format = ( '' == $datepicker_format_option ) ? get_option( 'date_format' ) : $datepicker_format_option;
+						$datepicker_format = wcj_date_format_php_to_js_v2( $datepicker_format );
+						$custom_attributes['dateformat'] = $datepicker_format;
+						$custom_attributes['mindate'] = get_option( 'wcj_checkout_custom_field_datepicker_mindate_' . $i, -365 );
+						$custom_attributes['maxdate'] = get_option( 'wcj_checkout_custom_field_datepicker_maxdate_' . $i,  365 );
+						$custom_attributes['firstday'] = get_option( 'wcj_checkout_custom_field_datepicker_firstday_' . $i, 0 );
+						$custom_attributes['display'] = ( 'datepicker' === $the_type ) ? 'date' : 'week';
+					} elseif ( 'timepicker' === $the_type ) {
+						$custom_attributes['timeformat'] = get_option( 'wcj_checkout_custom_field_timepicker_format_' . $i, 'hh:mm p' );
+						$custom_attributes['interval'] = get_option( 'wcj_checkout_custom_field_timepicker_interval_' . $i, 15 );
+						$custom_attributes['display'] = 'time';
 					} else/* if ( 'number' === $the_type ) */ {
 						$custom_attributes['display'] = $the_type;
 					}
@@ -425,7 +436,7 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 	/**
 	 * get_settings.
 	 *
-	 * @version 2.3.8
+	 * @version 2.4.0
 	 */
 	public function get_settings() {
 
@@ -469,14 +480,13 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 				'default'   => 1,
 				'type'      => 'custom_number',
 				'desc'      => apply_filters( 'get_wc_jetpack_plus_message', '', 'desc' ),
-				'custom_attributes'
-				            => array_merge(
-								is_array( apply_filters( 'get_wc_jetpack_plus_message', '', 'readonly' ) ) ? apply_filters( 'get_wc_jetpack_plus_message', '', 'readonly' ) : array(),
-								array(
-									'step' => '1',
-									'min'  => '1',
-								)
-							),
+				'custom_attributes' => array_merge(
+					is_array( apply_filters( 'get_wc_jetpack_plus_message', '', 'readonly' ) ) ? apply_filters( 'get_wc_jetpack_plus_message', '', 'readonly' ) : array(),
+					array(
+						'step' => '1',
+						'min'  => '1',
+					)
+				),
 				'css'       => 'width:100px;',
 			),
 		);
@@ -513,6 +523,7 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 							'checkbox'   => __( 'Checkbox', 'woocommerce-jetpack' ),
 //							'file'       => __( 'File', 'woocommerce-jetpack' ),
 							'datepicker' => __( 'Datepicker', 'woocommerce-jetpack' ),
+							'weekpicker' => __( 'Weekpicker', 'woocommerce-jetpack' ),
 							'timepicker' => __( 'Timepicker', 'woocommerce-jetpack' ),
 							'select'     => __( 'Select', 'woocommerce-jetpack' ),
 							'radio'      => __( 'Radio', 'woocommerce-jetpack' ),
@@ -562,6 +573,59 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 					),
 					array(
 						'title'     => '',
+						'desc'      => __( 'If datepicker/weekpicker is selected, set date format here. Visit <a href="https://codex.wordpress.org/Formatting_Date_and_Time" target="_blank">documentation on date and time formatting</a> for valid date formats.', 'woocommerce-jetpack' ),
+						'desc_tip'  => __( 'Leave blank to use your current WordPress format', 'woocommerce-jetpack' ) . ': ' . get_option( 'date_format' ),
+						'id'        => 'wcj_checkout_custom_field_datepicker_format_' . $i,
+						'type'      => 'text',
+						'default'   => '',
+					),
+					array(
+						'title'     => '',
+						'desc'      => __( 'If datepicker/weekpicker is selected, set min date (in days) here', 'woocommerce-jetpack' ),
+						'id'        => 'wcj_checkout_custom_field_datepicker_mindate_' . $i,
+						'type'      => 'number',
+						'default'   => -365,
+					),
+					array(
+						'title'     => '',
+						'desc'      => __( 'If datepicker/weekpicker is selected, set max date (in days) here', 'woocommerce-jetpack' ),
+						'id'        => 'wcj_checkout_custom_field_datepicker_maxdate_' . $i,
+						'type'      => 'number',
+						'default'   => 365,
+					),
+					array(
+						'title'     => '',
+						'desc'      => __( 'If datepicker/weekpicker is selected, set first week day here', 'woocommerce-jetpack' ),
+						'id'        => 'wcj_checkout_custom_field_datepicker_firstday_' . $i,
+						'type'      => 'select',
+						'default'   => 0,
+						'options'   => array(
+							__( 'Sunday', 'woocommerce-jetpack' ),
+							__( 'Monday', 'woocommerce-jetpack' ),
+							__( 'Tuesday', 'woocommerce-jetpack' ),
+							__( 'Wednesday', 'woocommerce-jetpack' ),
+							__( 'Thursday', 'woocommerce-jetpack' ),
+							__( 'Friday', 'woocommerce-jetpack' ),
+							__( 'Saturday', 'woocommerce-jetpack' ),
+						),
+					),
+					array(
+						'title'     => '',
+						'desc'      => __( 'If timepicker is selected, set time format here. Visit <a href="http://timepicker.co/options/" target="_blank">timepicker options page</a> for valid time formats.', 'woocommerce-jetpack' ),
+						'id'        => 'wcj_checkout_custom_field_timepicker_format_' . $i,
+						'type'      => 'text',
+						'default'   => 'hh:mm p',
+					),
+
+					array(
+						'title'     => '',
+						'desc'      => __( 'If timepicker is selected, set interval (in minutes) here', 'woocommerce-jetpack' ),
+						'id'        => 'wcj_checkout_custom_field_timepicker_interval_' . $i,
+						'type'      => 'number',
+						'default'   => 15,
+					),
+					array(
+						'title'     => '',
 						'desc'      => __( 'required', 'woocommerce-jetpack' ),
 						'id'        => 'wcj_checkout_custom_field_required_' . $i,
 						'default'   => 'no',
@@ -576,20 +640,6 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 						'type'      => 'textarea',
 						'css'       => 'min-width:300px;width:50%;',
 					),
-					/*array(
-						'title'     => '',
-						'desc'      => __( 'for datepicker: min days', 'woocommerce-jetpack' ),
-						'id'        => 'wcj_checkout_custom_field_datepicker_mindays_' . $i,
-						'default'   => 0,
-						'type'      => 'number',
-					),
-					array(
-						'title'     => '',
-						'desc'      => __( 'for datepicker: max days', 'woocommerce-jetpack' ),
-						'id'        => 'wcj_checkout_custom_field_datepicker_maxdays_' . $i,
-						'default'   => 0,
-						'type'      => 'number',
-					),*/
 					array(
 						'title'     => '',
 						'desc'      => __( 'placeholder', 'woocommerce-jetpack' ),
@@ -598,7 +648,6 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 						'type'      => 'textarea',
 						'css'       => 'min-width:300px;width:50%;',
 					),
-
 					array(
 						'title'        => '',
 						'desc'        => __( 'section', 'woocommerce-jetpack' ),
@@ -613,7 +662,6 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 						),
 						'css'       => 'min-width:300px;width:50%;',
 					),
-
 					array(
 						'title'     => '',
 						'desc'      => __( 'class', 'woocommerce-jetpack' ),
@@ -627,7 +675,6 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 						),
 						'css'       => 'min-width:300px;width:50%;',
 					),
-
 					array(
 						'title'     => '',
 						'desc'      => __( 'clear', 'woocommerce-jetpack' ),
@@ -636,7 +683,6 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 						'type'      => 'checkbox',
 						'css'       => 'min-width:300px;width:50%;',
 					),
-
 					array(
 						'title'     => '',
 						'desc'      => __( 'categories', 'woocommerce-jetpack' ),
@@ -648,14 +694,13 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 						'css'       => 'min-width:300px;width:50%;',
 						'options'   => $product_cats,
 					),
-
 				)
 			);
 		}
 
 		$settings[] = array( 'type'  => 'sectionend', 'id' => 'wcj_checkout_custom_fields_individual_options' );
 
-		return $this->add_enable_module_setting( $settings );
+		return $this->add_standard_settings( $settings );
 	}
 
 }

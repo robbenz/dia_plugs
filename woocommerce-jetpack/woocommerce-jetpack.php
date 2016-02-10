@@ -3,7 +3,7 @@
 Plugin Name: Booster for WooCommerce
 Plugin URI: http://booster.io
 Description: Supercharge your WooCommerce site with these awesome powerful features.
-Version: 2.3.11
+Version: 2.4.0
 Author: Algoritmika Ltd
 Author URI: http://www.algoritmika.com
 Copyright: © 2015 Algoritmika Ltd.
@@ -21,7 +21,7 @@ if ( ! class_exists( 'WC_Jetpack' ) ) :
  * Main WC_Jetpack Class
  *
  * @class   WC_Jetpack
- * @version 2.3.9
+ * @version 2.4.0
  */
 
 final class WC_Jetpack {
@@ -63,7 +63,7 @@ final class WC_Jetpack {
 	/**
 	 * WC_Jetpack Constructor.
 	 *
-	 * @version 2.2.5
+	 * @version 2.4.0
 	 * @access public
 	 */
 	public function __construct() {
@@ -97,7 +97,7 @@ final class WC_Jetpack {
 				'yes' === get_option( 'wcj_pdf_invoicing_enabled' ) ||
 				'yes' === get_option( 'wcj_crowdfunding_enabled' )
 			) {
-				add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+				add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_backend_scripts' ) );
 				//add_action( 'admin_head', array( $this, 'add_datepicker_script' ) );
 			}
 		}
@@ -107,7 +107,6 @@ final class WC_Jetpack {
 			'yes' === get_option( 'wcj_checkout_custom_fields_enabled' )
 		){
 			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_frontend_scripts' ) );
-			add_action( 'init',               array( $this, 'register_frontend_scripts' ) );
 		}
 
 		// Loaded action
@@ -120,39 +119,92 @@ final class WC_Jetpack {
 	/**
 	 * enqueue_frontend_scripts.
 	 *
-	 * @version 2.3.3
+	 * @version 2.4.0
 	 * @since   2.3.0
 	 */
 	function enqueue_frontend_scripts() {
-		wp_enqueue_script( 'jquery-ui-datepicker' );
-		wp_enqueue_script( 'jquery-ui-timepicker' );
-		wp_enqueue_script( 'wcj-datepicker', wcj_plugin_url() . '/includes/js/wcj-datepicker.js',
-			array( 'jquery' ),
-			false,
-			true );
-		wp_enqueue_script( 'wcj-timepicker', wcj_plugin_url() . '/includes/js/wcj-timepicker.js',
-			array( 'jquery' ),
-			false,
-			true );
-
-		wp_enqueue_style( 'jquery-ui-css', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css' );
-		wp_enqueue_style( 'wcj-timepicker-css', wcj_plugin_url() . '/includes/css/jquery.timepicker.min.css' );
+		$this->maybe_enqueue_datepicker_scripts();
+		$this->maybe_enqueue_timepicker_scripts();
+		$this->maybe_enqueue_datepicker_style();
+		$this->maybe_enqueue_timepicker_style();
 	}
 
 	/**
-	 * register_frontend_scripts.
+	 * enqueue_backend_scripts.
 	 *
-	 * @version 2.3.0
-	 * @since   2.3.0
+	 * @version 2.4.0
 	 */
-	public function register_frontend_scripts() {
-		wp_register_script(
-			'jquery-ui-timepicker',
-			wcj_plugin_url() . '/includes/js/jquery.timepicker.min.js',
-			array( 'jquery' ),
-			false,
-			true
-		);
+	public function enqueue_backend_scripts() {
+		$this->maybe_enqueue_datepicker_scripts();
+		$this->maybe_enqueue_datepicker_style();
+	}
+
+	/**
+	 * maybe_enqueue_datepicker_scripts.
+	 *
+	 * @version 2.4.0
+	 * @since   2.4.0
+	 */
+	function maybe_enqueue_datepicker_scripts() {
+		if ( ! wcj_is_module_enabled( 'general' ) || ( wcj_is_module_enabled( 'general' ) && 'no' === get_option( 'wcj_general_advanced_disable_datepicker_js', 'no' ) ) ) {
+			wp_enqueue_script( 'jquery-ui-datepicker' );
+			wp_enqueue_script( 'wcj-datepicker', wcj_plugin_url() . '/includes/js/wcj-datepicker.js',
+				array( 'jquery' ),
+				false,
+				true );
+			wp_enqueue_script( 'wcj-weekpicker', wcj_plugin_url() . '/includes/js/wcj-weekpicker.js',
+				array( 'jquery' ),
+				false,
+				true );
+		}
+	}
+
+	/**
+	 * maybe_enqueue_timepicker_scripts.
+	 *
+	 * @version 2.4.0
+	 * @since   2.4.0
+	 */
+	function maybe_enqueue_timepicker_scripts() {
+		if ( ! wcj_is_module_enabled( 'general' ) || ( wcj_is_module_enabled( 'general' ) && 'no' === get_option( 'wcj_general_advanced_disable_timepicker_js', 'no' ) ) ) {
+			wp_enqueue_script( 'jquery-ui-timepicker',
+				wcj_plugin_url() . '/includes/js/jquery.timepicker.min.js',
+				array( 'jquery' ),
+				false,
+				true );
+			wp_enqueue_script( 'wcj-timepicker', wcj_plugin_url() . '/includes/js/wcj-timepicker.js',
+				array( 'jquery' ),
+				false,
+				true );
+		}
+	}
+
+	/**
+	 * maybe_enqueue_datepicker_style.
+	 *
+	 * @version 2.4.0
+	 * @since   2.4.0
+	 */
+	function maybe_enqueue_datepicker_style() {
+		if ( ! wcj_is_module_enabled( 'general' ) || ( wcj_is_module_enabled( 'general' ) && 'no' === get_option( 'wcj_general_advanced_disable_datepicker_css', 'no' ) ) ) {
+			$datepicker_css_path = '//ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/base/jquery-ui.css';
+			if ( wcj_is_module_enabled( 'general' ) ) {
+				$datepicker_css_path = get_option( 'wcj_general_advanced_datepicker_css', $datepicker_css_path );
+			}
+			wp_enqueue_style( 'jquery-ui-css', $datepicker_css_path );
+		}
+	}
+
+	/**
+	 * maybe_enqueue_timepicker_style.
+	 *
+	 * @version 2.4.0
+	 * @since   2.4.0
+	 */
+	function maybe_enqueue_timepicker_style() {
+		if ( ! wcj_is_module_enabled( 'general' ) || ( wcj_is_module_enabled( 'general' ) && 'no' === get_option( 'wcj_general_advanced_disable_timepicker_css', 'no' ) ) ) {
+			wp_enqueue_style( 'wcj-timepicker-css', wcj_plugin_url() . '/includes/css/jquery.timepicker.min.css' );
+		}
 	}
 
 	/**
@@ -191,17 +243,6 @@ final class WC_Jetpack {
 				echo '<div class="' . $class . '"><p>' . $message . '</p><p>' . $button . '</p></div>';
 			}
 		}
-	}
-
-	/**
-	 * enqueue_scripts.
-	 *
-	 * @version 2.2.5
-	 */
-	public function enqueue_scripts() {
-		wp_enqueue_script( 'jquery-ui-datepicker' );
-		wp_enqueue_script( 'wcj-datepicker', $this->plugin_url() . '/includes/js/wcj-datepicker.js' );
-		wp_enqueue_style( 'jquery-ui-css', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css' );
 	}
 
 	/**
@@ -317,7 +358,6 @@ final class WC_Jetpack {
 	 * include_functions.
 	 */
 	private function include_functions() {
-		// Functions
 		include_once( 'includes/functions/wcj-debug-functions.php' );
 		include_once( 'includes/functions/wcj-functions.php' );
 		include_once( 'includes/functions/wcj-html-functions.php' );
@@ -327,21 +367,25 @@ final class WC_Jetpack {
 
 	/**
 	 * include_shortcodes.
+	 *
+	 * @version 2.4.0
 	 */
 	private function include_shortcodes() {
-		// Shortcodes
-		include_once( 'includes/shortcodes/class-wcj-shortcodes.php' );
-		include_once( 'includes/shortcodes/class-wcj-general-shortcodes.php' );
-		include_once( 'includes/shortcodes/class-wcj-invoices-shortcodes.php' );
-		include_once( 'includes/shortcodes/class-wcj-orders-shortcodes.php' );
-		include_once( 'includes/shortcodes/class-wcj-order-items-shortcodes.php' );
-		include_once( 'includes/shortcodes/class-wcj-products-shortcodes.php' );
+		//if ( 'yes' === get_option( 'wcj_shortcodes_enabled', 'no' ) ) {
+		if ( ! wcj_is_module_enabled( 'general' ) || ( wcj_is_module_enabled( 'general' ) && 'no' === get_option( 'wcj_general_shortcodes_disable_booster_shortcodes', 'no' ) ) ) {
+			include_once( 'includes/shortcodes/class-wcj-shortcodes.php' );
+			include_once( 'includes/shortcodes/class-wcj-general-shortcodes.php' );
+			include_once( 'includes/shortcodes/class-wcj-invoices-shortcodes.php' );
+			include_once( 'includes/shortcodes/class-wcj-orders-shortcodes.php' );
+			include_once( 'includes/shortcodes/class-wcj-order-items-shortcodes.php' );
+			include_once( 'includes/shortcodes/class-wcj-products-shortcodes.php' );
+		}
 	}
 
 	/**
 	 * Include modules and submodules
 	 *
-	 * @version 2.3.9
+	 * @version 2.4.0
 	 */
 	private function include_modules() {
 		$settings = array();
@@ -351,6 +395,7 @@ final class WC_Jetpack {
 
 		$settings[] = include_once( 'includes/class-wcj-product-listings.php' );
 		$settings[] = include_once( 'includes/class-wcj-sorting.php' );
+		$settings[] = include_once( 'includes/class-wcj-product-custom-info.php' );
 		$settings[] = include_once( 'includes/class-wcj-product-info.php' );
 		$settings[] = include_once( 'includes/class-wcj-product-add-to-cart.php' );
 		$settings[] = include_once( 'includes/class-wcj-related-products.php' );
@@ -387,7 +432,7 @@ final class WC_Jetpack {
 		$settings[] = include_once( 'includes/class-wcj-order-numbers.php' );
 		$settings[] = include_once( 'includes/class-wcj-order-custom-statuses.php' );
 
-		$settings[] = include_once( 'includes/class-wcj-pdf-invoices.php' );
+//		$settings[] = include_once( 'includes/class-wcj-pdf-invoices.php' );
 
 		$settings[] = include_once( 'includes/class-wcj-pdf-invoicing.php' );
 		$settings[] = include_once( 'includes/pdf-invoices/settings/class-wcj-pdf-invoicing-numbering.php' );
@@ -398,7 +443,7 @@ final class WC_Jetpack {
 		$settings[] = include_once( 'includes/pdf-invoices/settings/class-wcj-pdf-invoicing-page.php' );
 		$settings[] = include_once( 'includes/pdf-invoices/settings/class-wcj-pdf-invoicing-emails.php' );
 		$settings[] = include_once( 'includes/pdf-invoices/settings/class-wcj-pdf-invoicing-display.php' );
-		//$settings[] = include_once( 'includes/pdf-invoices/settings/class-wcj-pdf-invoicing-general.php' );
+//		$settings[] = include_once( 'includes/pdf-invoices/settings/class-wcj-pdf-invoicing-general.php' );
 
 		$settings[] = include_once( 'includes/class-wcj-emails.php' );
 
@@ -408,6 +453,7 @@ final class WC_Jetpack {
 		$settings[] = include_once( 'includes/class-wcj-currency-exchange-rates.php' );
 
 		$settings[] = include_once( 'includes/class-wcj-general.php' );
+//		$settings[] = include_once( 'includes/class-wcj-shortcodes-module.php' );
 		$settings[] = include_once( 'includes/class-wcj-eu-vat-number.php' );
 		$settings[] = include_once( 'includes/class-wcj-old-slugs.php' );
 		$settings[] = include_once( 'includes/class-wcj-reports.php' );

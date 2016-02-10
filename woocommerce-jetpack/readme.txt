@@ -3,7 +3,7 @@ Contributors: algoritmika,anbinder,solovjov
 Tags: woocommerce,booster for woocommerce,woocommerce jetpack,custom price labels,call for price,currency symbol,remove sorting,remove old product slugs,add to cart text,order number,sequential order numbering,email pdf invoice,pdf invoice,pdf invoices,already in cart,empty cart,redirect to checkout,minimum order amount,customize checkout fields,checkout fields,email,customize product tabs,product tabs,related products number,empty cart,redirect add to cart,redirect to checkout,product already in cart,custom payment gateway,payment gateway icon,auto-complete all orders,custom order statuses,custom order status,remove text from price,custom css,hide categories count,hide subcategories count,hide category count,hide subcategory count,display total sales,custom product tabs,remove product tab,payment gateway fee,vat
 Requires at least: 3.8
 Tested up to: 4.4
-Stable tag: 2.3.11
+Stable tag: 2.4.0
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -115,6 +115,58 @@ To unlock all Booster for WooCommerce features, please install additional <a hre
 1. Plugin admin area.
 
 == Changelog ==
+
+= 2.4.0 - 10/02/2016 =
+* Fix - Custom attribute handling in `output_custom_number()` fixed.
+* Dev - "Reset Module to Default Settings" option added.
+* Dev - Functions - General - `wcj_is_module_enabled()` function added.
+* Dev - Shortcodes - General - `[wcj_country_select_drop_down_list]` - manual sorting when `countries` attribute is used.
+* Fix - Shortcodes - Orders - `[wcj_order_total_tax_percent]` fixed. `precision` attribute added.
+* Fix - Shortcodes - Orders - `get_cart_discount()` (depreciated since WooCommerce 2.3) removed from `[wcj_order_items_table]` shortcode (affected if `discount_as_item` option was used); removed from `[wcj_order_total_discount]` shortcode; `[wcj_order_cart_discount]` shortcode removed.
+* Fix - Shortcodes - Orders - `[wcj_order_total_in_words]` - decimal part rounding bug fixed.
+* Dev - Shortcodes - Orders - `[wcj_order_total_in_words]` - `whole` and `decimal` attributes added.
+* Dev - Shortcodes - Orders - `[wcj_order_items_table]` - `item_short_description` option added.
+* Dev - Shortcodes - Products - `hide_if_zero` attribute added to Products Shortcodes.
+* Fix - Shortcodes - Products - `[wcj_product_you_save]` - checking if product is on sale.
+* Dev - Shortcodes - Products - `[wcj_product_you_save]` - `hide_currency` attribute added.
+* Fix - Shortcodes - Products - `[wcj_product_you_save_percent]` - checking if product is on sale.
+* Dev - Shortcodes - Products - `[wcj_product_you_save_percent]` - `reverse` attribute added.
+* Dev - Shortcodes - Products - New shortcodes added: `[wcj_product_shipping_class]` (returns shipping class *name*, not slug), `[wcj_product_dimensions]`, `[wcj_product_formatted_name]`, `[wcj_product_stock_availability]`, `[wcj_product_tax_class]`, `[wcj_product_average_rating]`, `[wcj_product_categories]`, `[wcj_product_list_attributes]`, `[wcj_product_list_attribute]`, `[wcj_product_stock_quantity]`, `[wcj_product_sale_price]`, `[wcj_product_regular_price]`, `[wcj_product_time_since_last_sale]`, `[wcj_product_price_including_tax]`, `[wcj_product_price_excluding_tax]`, `[wcj_product_available_variations]`;
+* Fix - PRICES & CURRENCIES - Price by Country - Payment Gateway Currency module now changes prices *after* Price by Country module.
+* Fix - PRICES & CURRENCIES - Price by Country - Variable products fix (error appeared with WooCommerce v2.5.0 update).
+* Dev - PRICES & CURRENCIES - Currencies - *Custom Currencies* options added.
+* Dev - PRICES & CURRENCIES - Currencies - Code refactoring.
+* Dev - PRICES & CURRENCIES - Bulk Price Converter - Code refactoring.
+* Dev - PRICES & CURRENCIES - Bulk Price Converter - Option to convert prices by *product category* added.
+* Dev - PRODUCTS - Product Info - Code refactoring.
+* Dev - PRODUCTS - Product Info V2 - Initial module release. Product Info marked as depreciated.
+* Dev - PRODUCTS - Product Input Fields - Code refactoring.
+* Dev - PRODUCTS - Product Input Fields - Required field sign option added.
+* Dev - PRODUCTS - Product Input Fields - "time format", "interval" options for Timepicker added.
+* Dev - PRODUCTS - Product Input Fields - "First week day" option for Datepicker/Weekpicker added.
+* Dev - PRODUCTS - Product Input Fields - "Weekpicker" added.
+* Fix - PRODUCTS - Product Input Fields - `add_product_input_fields_to_order_item_name()` fixed. "Item Name Order Table Format" option added.
+* Dev - PRODUCTS - Product Input Fields - Datepicker - "date format", "min date" and "max date" options added.
+* Dev - PRODUCTS - SKU - "Category Suffix" and "Category Prefix" options added.
+* Dev - PRODUCTS - SKU - Code refactoring (minor). Suffix option unlocked.
+* Dev - CART & CHECKOUT - Checkout Core Fields - "time format", "interval" options for Timepicker added.
+* Dev - CART & CHECKOUT - Checkout Core Fields - "First week day" option for Datepicker/Weekpicker added.
+* Fix - CART & CHECKOUT - Checkout Core Fields - "Class" bug fixed.
+* Dev - CART & CHECKOUT - Checkout Custom Fields - "Weekpicker" added.
+* Dev - CART & CHECKOUT - Checkout Custom Fields - Code refactoring (minor).
+* Dev - CART & CHECKOUT - Checkout Custom Fields - Datepicker - "date format", "min date" and "max date" options added.
+* Dev - PAYMENT GATEWAYS - Gateways Currency - "No changes" option added.
+* Dev - PAYMENT GATEWAYS - Custom Gateways - "Custom Return URL (Thank You Page)" option added.
+* Dev - PDF Invoicing - Code refactoring. Classes: WCJ_PDF_Invoicing_Page, WCJ_PDF_Invoicing_Styling etc.
+* Dev - PDF Invoicing - "Hide Settings for Disabled Document Types" option added.
+* Dev - EMAILS & MISC. - General - "Products Revisions" options section added.
+* Dev - EMAILS & MISC. - General - Advanced Options (for handling datepicker and timepicker CSS and JS) added.
+* Dev - EMAILS & MISC. - General - "Disable Booster's Shortcodes" option added.
+* Dev - EMAILS & MISC. - EU VAT Number - `wcj_get_european_union_countries_with_vat()` Romania VAT rate changed from 24% to 20%.
+* Dev - EMAILS & MISC. - EU VAT Number - "Description" option added.
+* Dev - EMAILS & MISC. - Emails - "Custom Emails" - Triggers added (includes custom order statuses).
+* Dev - EMAILS & MISC. - Emails - "Custom Emails" - `%customer%` as recipient added.
+* Dev - EMAILS & MISC. - PDF Invoices v1 - removed.
 
 = 2.3.11 - 29/12/2015 =
 * Fix - Orders Shortcodes - `[wcj_order_total_tax_percent]` shortcode "rounding bug" fixed.

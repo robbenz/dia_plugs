@@ -4,7 +4,7 @@
  *
  * The WooCommerce Modules Array.
  *
- * @version 2.3.10
+ * @version 2.4.0
  * @since   2.2.0
  * @author  Algoritmika Ltd.
  */
@@ -51,6 +51,7 @@ return array(
 		'all_cat_ids'    => array(
 			'product_listings',
 			'product_tabs',
+			'product_custom_info',
 			'product_info',
 			'related_products',
 			'sorting',
@@ -122,13 +123,14 @@ return array(
 		'default_cat_id' => 'general',
 		'all_cat_ids'    => array(
 			'general',
+//			'shortcodes',
 			'eu_vat_number',
 			'old_slugs',
 			'reports',
 			'admin_tools',
 			'emails',
 			'wpml',
-			'pdf_invoices',
+//			'pdf_invoices',
 		),
 	),
 

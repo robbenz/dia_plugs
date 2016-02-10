@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack General class.
  *
- * @version 2.3.10
+ * @version 2.4.0
  * @author  Algoritmika Ltd.
  */
 
@@ -17,7 +17,7 @@ class WCJ_General extends WCJ_Module {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.3.10
+	 * @version 2.4.0
 	 */
 	public function __construct() {
 
@@ -39,6 +39,10 @@ class WCJ_General extends WCJ_Module {
 
 		if ( $this->is_enabled() ) {
 
+			if ( 'yes' === get_option( 'wcj_product_revisions_enabled', 'no' ) ) {
+				add_filter( 'woocommerce_register_post_type_product', array( $this, 'enable_product_revisions' ) );
+			}
+
 			if ( 'yes' === get_option( 'wcj_general_shortcodes_in_text_widgets_enabled' ) ) {
 				add_filter( 'widget_text', 'do_shortcode' );
 			}
@@ -50,6 +54,17 @@ class WCJ_General extends WCJ_Module {
 				add_action( 'admin_head', array( $this, 'hook_custom_admin_css' ) );
 			}
 		}
+	}
+
+	/**
+	 * enable_product_revisions.
+	 *
+	 * @version 2.4.0
+	 * @since   2.4.0
+	 */
+	function enable_product_revisions( $args ) {
+		$args['supports'][] = 'revisions';
+		return $args;
 	}
 
 	/**
@@ -209,7 +224,8 @@ class WCJ_General extends WCJ_Module {
 	/**
 	 * get_settings.
 	 *
-	 * @version 2.3.9
+	 * @version 2.4.0
+	 * @todo    add link to Booster's shortcodes list
 	 */
 	function get_settings() {
 
@@ -234,75 +250,152 @@ class WCJ_General extends WCJ_Module {
 		$settings = array(
 
 			array(
-				'title'   => __( 'Shortcodes Options', 'woocommerce-jetpack' ),
-				'type'    => 'title',
-				'desc'    => '',
-				'id'      => 'wcj_general_shortcodes_options',
+				'title'    => __( 'Shortcodes Options', 'woocommerce-jetpack' ),
+				'type'     => 'title',
+				'id'       => 'wcj_general_shortcodes_options',
 			),
 
 			array(
-				'title'   => __( 'Enable Shortcodes in WordPress Text Widgets', 'woocommerce-jetpack' ),
-				'desc'    => __( 'Enable', 'woocommerce-jetpack' ),
-				'id'      => 'wcj_general_shortcodes_in_text_widgets_enabled',
-				'default' => 'no',
-				'type'    => 'checkbox',
+				'title'    => __( 'Enable All Shortcodes in WordPress Text Widgets', 'woocommerce-jetpack' ),
+				'desc_tip' => __( 'This will enable all (including non Booster\'s) shortcodes in WordPress text widgets.', 'woocommerce-jetpack' ),
+				'desc'     => __( 'Enable', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_general_shortcodes_in_text_widgets_enabled',
+				'default'  => 'no',
+				'type'     => 'checkbox',
 			),
 
 			array(
-				'type'    => 'sectionend',
-				'id'      => 'wcj_general_shortcodes_options',
+				'title'    => __( 'Disable Booster\'s Shortcodes', 'woocommerce-jetpack' ),
+				'desc_tip' => __( 'Disable all Booster\'s shortcodes (for memory saving).', 'woocommerce-jetpack' ),
+				'desc'     => __( 'Disable', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_general_shortcodes_disable_booster_shortcodes',
+				'default'  => 'no',
+				'type'     => 'checkbox',
 			),
 
 			array(
-				'title'   => __( 'Custom CSS Options', 'woocommerce-jetpack' ),
-				'type'    => 'title',
-				'desc'    => __( 'Another custom CSS, if you need one.', 'woocommerce-jetpack' ),
-				'id'      => 'wcj_general_custom_css_options',
+				'type'     => 'sectionend',
+				'id'       => 'wcj_general_shortcodes_options',
 			),
 
 			array(
-				'title'   => __( 'Custom CSS - Front end (Customers)', 'woocommerce-jetpack' ),
-				'id'      => 'wcj_general_custom_css',
-				'default' => '',
-				'type'    => 'custom_textarea',
-				'css'     => 'width:66%;min-width:300px;min-height:300px;',
+				'title'    => __( 'Custom CSS Options', 'woocommerce-jetpack' ),
+				'type'     => 'title',
+				'desc'     => __( 'Another custom CSS, if you need one.', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_general_custom_css_options',
 			),
 
 			array(
-				'title'   => __( 'Custom CSS - Back end (Admin)', 'woocommerce-jetpack' ),
-				'id'      => 'wcj_general_custom_admin_css',
-				'default' => '',
-				'type'    => 'custom_textarea',
-				'css'     => 'width:66%;min-width:300px;min-height:300px;',
+				'title'    => __( 'Custom CSS - Front end (Customers)', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_general_custom_css',
+				'default'  => '',
+				'type'     => 'custom_textarea',
+				'css'      => 'width:66%;min-width:300px;min-height:300px;',
 			),
 
 			array(
-				'type'    => 'sectionend',
-				'id'      => 'wcj_general_custom_css_options',
+				'title'    => __( 'Custom CSS - Back end (Admin)', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_general_custom_admin_css',
+				'default'  => '',
+				'type'     => 'custom_textarea',
+				'css'      => 'width:66%;min-width:300px;min-height:300px;',
+			),
+
+			array(
+				'type'     => 'sectionend',
+				'id'       => 'wcj_general_custom_css_options',
+			),
+
+			array(
+				'title'    => __( 'Product Revisions', 'woocommerce-jetpack' ),
+				'type'     => 'title',
+				'id'       => 'wcj_product_revisions_options',
+			),
+
+			array(
+				'title'    => __( 'Product Revisions', 'woocommerce-jetpack' ),
+				'desc'     => __( 'Enable', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_product_revisions_enabled',
+				'default'  => 'no',
+				'type'     => 'checkbox',
+			),
+
+			array(
+				'type'     => 'sectionend',
+				'id'       => 'wcj_product_revisions_options',
+			),
+
+			array(
+				'title'    => __( 'Advanced Options', 'woocommerce-jetpack' ),
+				'type'     => 'title',
+				'id'       => 'wcj_general_advanced_options',
+			),
+
+			array(
+				'title'    => __( 'Disable Loading Datepicker/Weekpicker CSS', 'woocommerce-jetpack' ),
+				'desc'     => __( 'Disable', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_general_advanced_disable_datepicker_css',
+				'default'  => 'no',
+				'type'     => 'checkbox',
+			),
+
+			array(
+				'title'    => __( 'Datepicker/Weekpicker CSS', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_general_advanced_datepicker_css',
+				'default'  => '//ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/base/jquery-ui.css',
+				'type'     => 'text',
+				'css'      => 'width:66%;min-width:300px;',
+			),
+
+			array(
+				'title'    => __( 'Disable Loading Datepicker/Weekpicker JavaScript', 'woocommerce-jetpack' ),
+				'desc'     => __( 'Disable', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_general_advanced_disable_datepicker_js',
+				'default'  => 'no',
+				'type'     => 'checkbox',
+			),
+
+			array(
+				'title'    => __( 'Disable Loading Timepicker CSS', 'woocommerce-jetpack' ),
+				'desc'     => __( 'Disable', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_general_advanced_disable_timepicker_css',
+				'default'  => 'no',
+				'type'     => 'checkbox',
+			),
+
+			array(
+				'title'    => __( 'Disable Loading Timepicker JavaScript', 'woocommerce-jetpack' ),
+				'desc'     => __( 'Disable', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_general_advanced_disable_timepicker_js',
+				'default'  => 'no',
+				'type'     => 'checkbox',
+			),
+
+			array(
+				'type'     => 'sectionend',
+				'id'       => 'wcj_general_advanced_options',
 			),
 
 			/* array(
-				'title'   => __( 'WooCommerce Templates Editor Links', 'woocommerce-jetpack' ),
-				'type'    => 'title',
-				'id'      => 'wcj_general_wc_templates_editor_links_options',
+				'title'    => __( 'WooCommerce Templates Editor Links', 'woocommerce-jetpack' ),
+				'type'     => 'title',
+				'id'       => 'wcj_general_wc_templates_editor_links_options',
 			),
 
 			array(
-				'title'   => __( 'Templates', 'woocommerce-jetpack' ),
-				'id'      => 'wcj_general_wc_templates_editor_links',
-				'type'    => 'custom_link',
-				'link'    => '<pre>' . $links_html . '</pre>',
+				'title'    => __( 'Templates', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_general_wc_templates_editor_links',
+				'type'     => 'custom_link',
+				'link'     => '<pre>' . $links_html . '</pre>',
 			),
 
 			array(
-				'type'    => 'sectionend',
-				'id'      => 'wcj_general_wc_templates_editor_links_options',
+				'type'     => 'sectionend',
+				'id'       => 'wcj_general_wc_templates_editor_links_options',
 			), */
 		);
 
-		$settings = $this->add_tools_list( $settings );
-
-		return $this->add_enable_module_setting( $settings );
+		return $this->add_standard_settings( $settings );
 	}
 }
 

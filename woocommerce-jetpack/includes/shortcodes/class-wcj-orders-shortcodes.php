@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Orders Shortcodes class.
  *
- * @version 2.3.11
+ * @version 2.4.0
  * @author  Algoritmika Ltd.
  */
 
@@ -17,7 +17,7 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.3.0
+	 * @version 2.4.0
 	 */
 	public function __construct() {
 
@@ -40,7 +40,7 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 			'wcj_order_subtotal',
 			'wcj_order_subtotal_plus_shipping',
 			'wcj_order_total_discount',
-			'wcj_order_cart_discount',
+//			'wcj_order_cart_discount',
 			'wcj_order_shipping_tax',
 			'wcj_order_total_tax',
 			'wcj_order_total_tax_percent',
@@ -67,6 +67,8 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 
 	/**
 	 * add_extra_atts.
+	 *
+	 * @version 2.4.0
 	 */
 	function add_extra_atts( $atts ) {
 		$modified_atts = array_merge( array(
@@ -79,6 +81,9 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 			'field_id'      => '',
 			'name'          => '',
 			'round_by_line' => 'no',
+			'whole'         => __( 'Dollars', 'woocommerce-jetpack' ),
+			'decimal'       => __( 'Cents', 'woocommerce-jetpack' ),
+			'precision'     => get_option( 'woocommerce_price_num_decimals', 2 ),
 		), $atts );
 
 		return $modified_atts;
@@ -298,7 +303,7 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 	/**
 	 * wcj_order_get_cart_discount_tax.
 	 */
-	function wcj_order_get_cart_discount_tax() {
+	/* function wcj_order_get_cart_discount_tax() {
 
 		$the_cart_discount = $this->the_order->get_cart_discount();
 		$is_discount_taxable = ( $the_cart_discount > 0 ) ? true : false;
@@ -306,7 +311,7 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 		if ( $is_discount_taxable ) {
 
 			/* $order_total_incl_tax = $this->the_order->get_total();
-			$order_total_tax      = $this->the_order->get_total_tax(); */
+			$order_total_tax      = $this->the_order->get_total_tax(); *//*
 
 			$order_total_incl_tax = 0;
 			$order_total_tax = 0;
@@ -326,20 +331,22 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 		}
 
 		return false;
-	}
+	} */
 
 	/**
 	 * wcj_order_total_discount.
+	 *
+	 * @version 2.4.0
 	 */
 	function wcj_order_total_discount( $atts ) {
 
 		$the_discount = $this->the_order->get_total_discount( $atts['excl_tax'] );
 
-		if ( true === $atts['excl_tax'] ) {
+		/* if ( true === $atts['excl_tax'] ) {
 			if ( false != ( $the_tax = $this->wcj_order_get_cart_discount_tax() ) ) {
 				$the_discount -= $the_tax;
 			}
-		}
+		} */
 
 		return $this->wcj_price_shortcode( $the_discount, $atts );
 	}
@@ -347,9 +354,9 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 	/**
 	 * wcj_order_cart_discount.
 	 */
-	function wcj_order_cart_discount( $atts ) {
+	/* function wcj_order_cart_discount( $atts ) {
 		return $this->wcj_price_shortcode( $this->the_order->get_cart_discount() , $atts );
-	}
+	} */
 
 	/**
 	 * wcj_order_shipping_tax.
@@ -361,13 +368,15 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 	/**
 	 * wcj_order_total_tax_percent.
 	 *
-	 * @version 2.3.11
+	 * @version 2.4.0
 	 */
 	function wcj_order_total_tax_percent( $atts ) {
-		$order_total_excl_tax        = $this->the_order->get_total() - $this->the_order->get_total_tax();
 		$order_total_tax_not_rounded = $this->the_order->get_cart_tax() + $this->the_order->get_shipping_tax();
-		$order_total_tax_percent     = ( 0 == $order_total_excl_tax ) ? 0 : $order_total_tax_not_rounded / $order_total_excl_tax * 100;
-		return apply_filters( 'wcj_order_total_tax_percent', $order_total_tax_percent, $this->the_order );
+		$order_total_excl_tax        = $this->the_order->get_total() - $order_total_tax_not_rounded;
+		$order_total_tax_percent = ( 0 == $order_total_excl_tax ) ? 0 : $order_total_tax_not_rounded / $order_total_excl_tax * 100;
+		$order_total_tax_percent = round( $order_total_tax_percent, $atts['precision'] );
+		apply_filters( 'wcj_order_total_tax_percent', $order_total_tax_percent, $this->the_order );
+		return number_format( $order_total_tax_percent, $atts['precision'] );
 	}
 
 	/**
@@ -399,7 +408,7 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 				$the_subtotal += $this->the_order->get_line_subtotal( $item, false, true );
 			}
 		} else {
-			$the_subtotal =  $this->the_order->get_subtotal();
+			$the_subtotal = $this->the_order->get_subtotal();
 		}
 
 		return $this->wcj_price_shortcode( $the_subtotal, $atts );
@@ -433,21 +442,25 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 
 	/**
 	 * wcj_order_total_in_words.
+	 *
+	 * @version 2.4.0
 	 */
 	function wcj_order_total_in_words( $atts ) {
+
 		$order_total = ( true === $atts['excl_tax'] ) ? $this->the_order->get_total() - $this->the_order->get_total_tax() : $this->the_order->get_total();
-		$order_total_dollars = intval( $order_total );
-		$order_total_cents = ( $order_total - intval( $order_total ) ) * 100;
+		$order_total_whole   = intval( $order_total );
+		$order_total_decimal = round( ( $order_total - $order_total_whole ) * 100 );
 
 		$the_number_in_words = '%s %s';
-		if ( 0 != $order_total_cents ) $the_number_in_words .= ', %s %s.';
-		else $the_number_in_words .= '.';
-		$dollars = 'Dollars';//$this->the_order->get_order_currency();
-		$cents = 'Cents';
+		$the_number_in_words .= ( 0 != $order_total_decimal ) ? ', %s %s.' : '.';
+
+		$dollars = $atts['whole'];
+		$cents = $atts['decimal'];
+
 		return sprintf( $the_number_in_words,
-			ucfirst( convert_number_to_words( $order_total_dollars ) ),
+			ucfirst( convert_number_to_words( $order_total_whole ) ),
 			$dollars,
-			ucfirst( convert_number_to_words( $order_total_cents ) ),
+			ucfirst( convert_number_to_words( $order_total_decimal ) ),
 			$cents );
 	}
 }
