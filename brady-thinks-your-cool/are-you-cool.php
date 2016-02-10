@@ -120,6 +120,7 @@ function brady_extra_user_profile_fields( $user ) {
 <?php
 }
 
+/*
 //  --  Add Custom Purchase Order Role
 add_role('purchase_order', 'Purchase Order', array(
     'read'         => true, 
