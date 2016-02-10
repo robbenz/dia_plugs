@@ -309,6 +309,8 @@ function wppb_add_meta_to_user_on_activation( $user_id, $password, $meta ){
 			}
 		}
 	}
+
+    do_action( 'wppb_add_other_meta_on_user_activation', $user_id, $meta );
 }
 
 
@@ -324,11 +326,20 @@ function wppb_signup_user( $username, $user_email, $meta = '' ) {
 	$user_email = sanitize_email( $user_email );
 	$activation_key = substr( md5( time() . rand() . $user_email ), 0, 16 );
 	$meta = serialize( $meta );
-	
+
+	// change User Registered date and time according to timezone selected in WordPress settings
+	$wppb_get_date = wppb_get_date_by_timezone();
+
+	if( isset( $wppb_get_date ) ) {
+		$wppb_user_registered = $wppb_get_date;
+	} else {
+		$wppb_user_registered = current_time( 'mysql', true );
+	}
+
 	if ( is_multisite() ) 
-		$wpdb->insert( $wpdb->signups, array('domain' => '', 'path' => '', 'title' => '', 'user_login' => $user, 'user_email' => $user_email, 'registered' => current_time('mysql', true), 'activation_key' => $activation_key, 'meta' => $meta ) );
+		$wpdb->insert( $wpdb->signups, array('domain' => '', 'path' => '', 'title' => '', 'user_login' => $user, 'user_email' => $user_email, 'registered' => $wppb_user_registered, 'activation_key' => $activation_key, 'meta' => $meta ) );
 	else
-		$wpdb->insert( $wpdb->prefix.'signups', array('domain' => '', 'path' => '', 'title' => '', 'user_login' => $user, 'user_email' => $user_email, 'registered' => current_time('mysql', true), 'activation_key' => $activation_key, 'meta' => $meta ) );
+		$wpdb->insert( $wpdb->prefix.'signups', array('domain' => '', 'path' => '', 'title' => '', 'user_login' => $user, 'user_email' => $user_email, 'registered' => $wppb_user_registered, 'activation_key' => $activation_key, 'meta' => $meta ) );
 	
 	do_action ( 'wppb_signup_user', $username, $user_email, $activation_key, $meta );
 	

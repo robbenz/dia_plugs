@@ -1159,9 +1159,9 @@ class Wordpress_Creation_Kit_PB{
 	 * if any of the custom fields has the 'wckwpml' prefix.
 	 */
 	function wck_add_sync_translation_metabox(){
-		global $post;	
-			
-		if( isset( $_GET['lang'] ) ){
+		global $post;
+
+		if( isset( $_GET['lang'] ) && !empty( $post ) ){
 			
 			$has_wck_with_unserialize_fields = false;
 			$custom_field_keys = get_post_custom_keys( $post->ID );

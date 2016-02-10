@@ -21,11 +21,12 @@ function wppb_update_patch(){
 	
 	if ( version_compare( PROFILE_BUILDER_VERSION, $wppb_version, '>' ) ) {
 		if ( ( PROFILE_BUILDER == 'Profile Builder Pro' ) || ( PROFILE_BUILDER == 'Profile Builder Hobbyist' ) ){
-			$upload_dir = wp_upload_dir(); 
-			
+
+			/* stopped creating them on 01.02.2016 */
+			/*$upload_dir = wp_upload_dir();
 			wp_mkdir_p( $upload_dir['basedir'].'/profile_builder' );
 			wp_mkdir_p( $upload_dir['basedir'].'/profile_builder/attachments/' );
-			wp_mkdir_p( $upload_dir['basedir'].'/profile_builder/avatars/' );
+			wp_mkdir_p( $upload_dir['basedir'].'/profile_builder/avatars/' );*/
 			
 			// Flush the rewrite rules and add them, if need be, the proper way.
 			if ( function_exists( 'wppb_flush_rewrite_rules' ) )

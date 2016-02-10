@@ -98,18 +98,18 @@ class RM_JSModel extends RM_BaseModel {
         | Slide Push Animation
         |--------------------------------------------------------------------------
         |
-        | This is where we deal with the JavaScript needed to change the main lines
-        | to an X if this option has been set
+        | This is where we deal with the JavaScript needed for the push animations
         |
         */
 
-        $slideOver = null;
+        $slideOver = " var MenuWidth = \$RMjQuery('#responsive-menu').width(); ";
 
+        /* Only for the push animation */
         if( $options['RMAnim'] == 'push' ) :
 
             if( $options['RMSide'] == 'top' || $options['RMSide'] == 'bottom' ) :
 
-                $slideOver = "
+                $slideOver .= "
 
                     var MenuHeight = \$RMjQuery( '#responsive-menu' ).css( 'height' );
 
@@ -122,7 +122,7 @@ class RM_JSModel extends RM_BaseModel {
 
                     $slideOver .= "
 
-                        \$RMjQuery( '#click-menu' ).animate( { $pushBtnSide: '{$width}%' }, {$speed}, 'linear' );
+                        \$RMjQuery( '#click-menu' ).animate( { $pushBtnSide: \"{$pos}\" + MenuHeight }, {$speed}, 'linear' );
                         \$RMjQuery( '#click-menu' ).css( '$location', 'auto' );
 
                         ";
@@ -131,18 +131,18 @@ class RM_JSModel extends RM_BaseModel {
 
             else :
 
-                $slideOver = "
+                $slideOver .= "
 
-                    \$RMjQuery( '$RMPushCSS' ).animate( { $pushSide: \"{$pos}{$width}%\" }, {$speed}, 'linear' );
+                    \$RMjQuery( '$RMPushCSS' ).animate( { $pushSide: {$pos}MenuWidth }, {$speed}, 'linear' );
 
 
                 ";
 
-                if( $options['RMPushBtn'] ) :
+                if( $options['RMPushBtn'] && ( $pushBtnSide == $location ) ) :
 
                     $slideOver .= "
 
-                        \$RMjQuery( '#click-menu' ).animate( { $pushBtnSide: '{$width}%' }, {$speed}, 'linear' );
+                        \$RMjQuery( '#click-menu' ).animate( { $location: MenuWidth + 20 }, {$speed}, 'linear' );
                         \$RMjQuery( '#click-menu' ).css( '{$location}', 'auto' );
 
                     ";
@@ -158,7 +158,7 @@ class RM_JSModel extends RM_BaseModel {
 
         $slideBack = $options['RMAnim'] == 'push' && !empty($options['RMPushCSS']) ? " \$RMjQuery( '$RMPushCSS' ).animate( { $pushSide: \"0\" }, {$speed}, 'linear' ); " : '';
 
-        if( $options['RMPushBtn'] && $options['RMAnim'] == 'push' ) :
+        if( $options['RMPushBtn'] && $options['RMAnim'] == 'push' && ( $pushBtnSide == $location ) ) :
 
             $slideBack .= "
 

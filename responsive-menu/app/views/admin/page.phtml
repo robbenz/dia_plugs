@@ -185,6 +185,12 @@
         width: 98%;
     }
 
+    .nav-tabs .tab.pro
+    {
+        background: #55B05A;
+        border-color: #55B05A;
+    }
+
    table.pro-option-table .pro-option-overlay,
     table td.pro-option .pro-option-overlay
     {
@@ -276,7 +282,7 @@
         style="display: none;"
         />
         
-        <h2><?php _e('Responsive Menu Options', 'responsive-menu'); ?> <a target="_blank" class="button" href="http://responsive.menu/pricing"><?php _e( 'Go Pro - Upgrade now' ); ?></a></h2>
+        <h2><?php _e('Responsive Menu Options', 'responsive-menu'); ?></h2>
 
         <?php
         if ($status = RM_Status::get())
@@ -289,10 +295,13 @@
                 <li class="tab" data-show-tab=".look-and-feel">Look & Feel</li>
                 <li class="tab" data-show-tab=".advanced-setting">Advanced Setting</li>
                 <li class="tab" data-show-tab=".import-export">Import/Export</li>		
-                <li class="tab" data-show-tab=".single-menu">Single Menu</li>	
-                <li class="tab" data-show-tab=".themes">Header Bar & Themes</li>		
+                <li class="tab pro" data-show-tab=".single-menu">Single Menu [PRO]</li>	
+                <li class="tab pro" data-show-tab=".themes">Header Bar & Themes [PRO]</li>	
+                <li class="tab pro" data-show-tab=".custom-css">Custom CSS/HTML [PRO]</li>	
             </ul>	
         </nav>	
+
+<a target="_blank" class="button" style="background: #55B05A; color: white;" href="http://responsive.menu/pricing"><?php _e( 'Go Pro - Upgrade now for just £4.99' ); ?></a>
 
         <div class="setting">
             <h3><?php _e('Meta Tag Check', 'responsive-menu'); ?></h3>
@@ -2154,7 +2163,23 @@
                 </td>
                 
             </tr>
-            
+
+            <tr>
+                <td>
+
+                    <h4><?php _e('Header Bar Logo Link', 'responsive-menu'); ?></h4> 
+
+                    <h5><?php _e('This is the header bar logo link', 'responsive-menu'); ?></h5>
+
+                    <input 
+                        type="text"
+                        />
+
+                </td>
+                <td>
+                </td>
+            </tr>
+
             <tr>
                 <td><h4><?php _e( 'Size & Colour Settings' ); ?></h4></td>
             </tr>
@@ -2220,6 +2245,28 @@
 		
 	</div>
 
+    <div class="custom-css">
+    
+        <h3><?php _e( 'Custom CSS/HTML', 'responsive-menu' ); ?></h3>
+    
+        <table class="pro-option-table">
+       
+            <tr>
+                
+                <td>
+                    <h4><?php _e('Custom CSS', 'responsive-menu'); ?></h4> 
+
+                    <h5><?php _e('These will be the final CSS rules applied to the Responsive Menu and are upgrade proof', 'responsive-menu'); ?></h5>
+
+                    <textarea rows="15"></textarea>
+
+                </td>
+                
+            </tr>
+                
+        </table>    
+                
+    </div>
 
     <br /><br />
 
@@ -2229,7 +2276,8 @@
         name="RMSubmit" 
         value="<?php _e('Update Responsive Menu Options', 'responsive-menu'); ?>"
         />
-
+    
+    <a target="_blank" class="button" style="background: #55B05A; color: white;" href="http://responsive.menu/pricing"><?php _e( 'Go Pro - Upgrade now for just £4.99' ); ?></a>
 
 
 </form>

@@ -441,36 +441,12 @@ class Profile_Builder_Form_Creator{
         $wppb_general_settings = get_option( 'wppb_general_settings' );
  
 		if( $this->args['form_type'] == 'register' ){
-            if( isset( $wppb_general_settings['loginWith'] ) && ( $wppb_general_settings['loginWith'] == 'email' ) ){
-                $userdata['user_login'] = apply_filters( 'wppb_generated_random_username', Wordpress_Creation_Kit_PB::wck_generate_slug( trim( $userdata['user_email'] ) ), $userdata['user_email'] );
-            }
 
-            if ( isset( $wppb_general_settings['emailConfirmation'] ) && ( $wppb_general_settings['emailConfirmation'] == 'yes' ) ){
-                $new_user_signup = true;
-                $multisite_message = true;
-                $userdata = $this->wppb_add_custom_field_values( $global_request, $userdata, $this->args['form_fields'] );
+            $result = $this->wppb_register_user( $global_request, $userdata );
+            $user_id = $result['user_id'];
+            $userdata = $result['userdata'];
+            $new_user_signup = $result['new_user_signup'];
 
-                if( !isset( $userdata['role'] ) )
-                    $userdata['role'] = $this->args['role'];
-
-                $userdata['user_pass'] = wp_hash_password( $userdata['user_pass'] );
-
-                if( is_multisite() ){
-                    /* since version 2.0.7 add this meta so we know on what blog the user registered */
-                    $userdata['registered_for_blog_id'] = get_current_blog_id();
-                    $userdata = wp_unslash( $userdata );
-                }
-
-                wppb_signup_user( $userdata['user_login'], $userdata['user_email'], $userdata );
-
-            }else{
-                if( !isset( $userdata['role'] ) )
-                    $userdata['role'] = $this->args['role'];
-
-                $userdata = wp_unslash( $userdata );
-                $user_id = wp_insert_user( $userdata );
-            }
-		
 		}elseif( $this->args['form_type'] == 'edit_profile' ){
 			if( isset( $wppb_general_settings['loginWith'] ) && ( $wppb_general_settings['loginWith'] == 'email' ) ){
                 $user_info = get_userdata( $user_id );
@@ -506,6 +482,54 @@ class Profile_Builder_Form_Creator{
 		}
 		return $user_id;
 	}
+
+    function wppb_register_user( $global_request, $userdata ){
+
+        $wppb_general_settings = get_option( 'wppb_general_settings' );
+        $user_id = null;
+        $new_user_signup = false;
+
+        if( isset( $wppb_general_settings['loginWith'] ) && ( $wppb_general_settings['loginWith'] == 'email' ) ){
+            $userdata['user_login'] = apply_filters( 'wppb_generated_random_username', Wordpress_Creation_Kit_PB::wck_generate_slug( trim( $userdata['user_email'] ) ), $userdata['user_email'] );
+        }
+
+        if ( isset( $wppb_general_settings['emailConfirmation'] ) && ( $wppb_general_settings['emailConfirmation'] == 'yes' ) ){
+            $new_user_signup = true;
+
+            $userdata = $this->wppb_add_custom_field_values( $global_request, $userdata, $this->args['form_fields'] );
+
+            if( !isset( $userdata['role'] ) )
+                $userdata['role'] = $this->args['role'];
+
+            $userdata['user_pass'] = wp_hash_password( $userdata['user_pass'] );
+
+            if( is_multisite() ){
+                /* since version 2.0.7 add this meta so we know on what blog the user registered */
+                $userdata['registered_for_blog_id'] = get_current_blog_id();
+                $userdata = wp_unslash( $userdata );
+            }
+
+            wppb_signup_user( $userdata['user_login'], $userdata['user_email'], $userdata );
+
+        }else{
+            if( !isset( $userdata['role'] ) )
+                $userdata['role'] = $this->args['role'];
+
+            $userdata = wp_unslash( $userdata );
+
+            // change User Registered date and time according to timezone selected in WordPress settings
+            $wppb_get_date = wppb_get_date_by_timezone();
+
+            if( isset( $wppb_get_date ) ) {
+                $userdata['user_registered'] = $wppb_get_date;
+            }
+
+            // insert user to database
+            $user_id = wp_insert_user( $userdata );
+        }
+
+        return array( 'userdata' => $userdata, 'user_id' => $user_id, 'new_user_signup' => $new_user_signup );
+    }
 	
 	function wppb_add_custom_field_values( $global_request, $meta, $form_properties ){	
 		if( !empty( $this->args['form_fields'] ) ){

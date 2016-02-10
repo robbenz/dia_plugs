@@ -3,8 +3,8 @@ Contributors: ResponsiveMenu
 Donate link: http://responsive.menu/donate/
 Tags: responsive, menu, responsive menu, mobile menu, wordpress responsive menu, wp responsive menu, tablet menu, mobile, tablet, 3 lines, 3 line, three line, three lines
 Requires at least: 3.5.0
-Tested up to: 4.3
-Stable tag: 2.8.5
+Tested up to: 4.4.1
+Stable tag: 2.8.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -131,6 +131,10 @@ Alternatively:
 3. Example Front End Expanded Menu
 
 == Changelog ==
+
+= 2.8.6 (28th January 2016) =
+* Added Menu Title Link to WPML
+* Fixed issue with fixed menu widths and push animation
 
 = 2.8.5 (11th Sept 2015) =
 * Fixed menu not opening on first click bug

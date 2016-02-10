@@ -137,7 +137,7 @@ function wppb_login_redirect( $redirect_to, $redirect_url, $user ){
 					}
 				}
 			}
-			apply_filters( 'wppb_after_login_redirect_url', $redirect_to );
+            $redirect_to = apply_filters( 'wppb_after_login_redirect_url', $redirect_to );
 		}
 	}
 
@@ -212,6 +212,8 @@ function wppb_front_end_login( $atts ){
                 }
                 $login_form .= '</p>';
         }
+
+        $login_form .= apply_filters( 'wppb_login_form_bottom', '', $form_args );
 
         $login_form .= '</div>';
 		return $login_form;

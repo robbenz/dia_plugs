@@ -4,6 +4,7 @@
             <key name="RM" />
             <key name="RMClickTitle" />
             <key name="RMTitle" />
+            <key name="RMTitleLink" />
             <key name="RMImage" />
             <key name="RMClickImage" />
             <key name="RMHtml" />

@@ -698,3 +698,20 @@ function wppb_handle_meta_name( $meta_name ){
     $meta_name = str_replace( ' ', '_', $meta_name );
     return $meta_name;
 }
+
+
+// change User Registered date and time according to timezone selected in WordPress settings
+function wppb_get_date_by_timezone() {
+	$wppb_wp_timezone = get_option( 'timezone_string' );
+
+	if( ! empty( $wppb_wp_timezone ) ) {
+		date_default_timezone_set( $wppb_wp_timezone );
+		$wppb_get_date = date( "Y-m-d G:i:s" );
+	} else {
+		$wppb_wp_gmt_offset = get_option( 'gmt_offset' );
+		$wppb_gmt_offset = $wppb_wp_gmt_offset * 60 * 60;
+		$wppb_get_date = gmdate( "Y-m-d G:i:s", time() + $wppb_gmt_offset );
+	}
+
+	return $wppb_get_date;
+}

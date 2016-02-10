@@ -22,7 +22,7 @@ function wppb_email_handler( $output, $form_location, $field, $user_id, $field_c
 
         $output = '
 			<label for="email">'.$item_title.$error_mark.'</label>
-			<input class="text-input default_field_email" name="email" maxlength="'. apply_filters( 'wppb_maximum_character_length', 70 ) .'" type="text" id="email" value="'. esc_attr( $input_value ) .'" '. $extra_attr .' />';
+			<input class="text-input default_field_email" name="email" maxlength="'. apply_filters( 'wppb_maximum_character_length', 70 ) .'" type="email" id="email" value="'. esc_attr( $input_value ) .'" '. $extra_attr .' />';
         if( !empty( $item_description ) )
             $output .= '<span class="wppb-description-delimiter">'. $item_description .'</span>';
 

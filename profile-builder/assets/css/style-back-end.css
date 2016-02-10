@@ -437,6 +437,10 @@
     clear: both;
 }
 
+.wppb-add-on .spinner {
+    visibility: visible;
+}
+
 .wppb-add-on a:focus {
     box-shadow: none;
 }
