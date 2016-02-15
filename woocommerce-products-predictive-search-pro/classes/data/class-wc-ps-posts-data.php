@@ -66,6 +66,13 @@ class WC_PS_Posts_Data
 			global $woocommerce_search_page_id;
 			$items_excluded = array_merge( array( (int) $woocommerce_search_page_id ), $items_excluded );
 		}
+
+		$woocommerce_search_exclude_out_stock = get_option('woocommerce_search_exclude_out_stock');
+		if ( 'yes' == $woocommerce_search_exclude_out_stock && in_array( $post_type, array( 'product', 'product_variation' ) ) ) {
+			global $wc_ps_postmeta_data;
+			$items_out_of_stock = $wc_ps_postmeta_data->get_array_products_out_of_stock();
+			$items_excluded = array_merge( $items_out_of_stock, $items_excluded );
+		}
 		$id_excluded    = implode( ',', $items_excluded );
 
 		$sql['select']   = array();
@@ -87,13 +94,13 @@ class WC_PS_Posts_Data
 		}
 
 		$where_title = ' ( ';
-		$where_title .= $wpdb->prepare( WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'pp.post_title' ) . " LIKE '%s' OR " . WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'pp.post_title' ) . " LIKE '%s' ", $search_keyword.'%', '% '.$search_keyword.'%' );
+		$where_title .= WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'pp.post_title', $search_keyword );
 		if ( '' != $search_keyword_nospecial ) {
-			$where_title .= " OR ". $wpdb->prepare( WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'pp.post_title' ) . " LIKE '%s' OR " . WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'pp.post_title' ) . " LIKE '%s' ", $search_keyword_nospecial.'%', '% '.$search_keyword_nospecial.'%' );
+			$where_title .= " OR ". WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'pp.post_title', $search_keyword_nospecial );
 		}
 		$search_keyword_no_s_letter = WC_Predictive_Search_Functions::remove_s_letter_at_end_word( $search_keyword );
 		if ( $search_keyword_no_s_letter != false ) {
-			$where_title .= " OR ". $wpdb->prepare( WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'pp.post_title' ) . " LIKE '%s' OR " . WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'pp.post_title' ) . " LIKE '%s' ", $search_keyword_no_s_letter.'%', '% '.$search_keyword_no_s_letter.'%' );
+			$where_title .= " OR ". WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'pp.post_title', $search_keyword_no_s_letter );
 		}
 		$where_title .= ' ) ';
 

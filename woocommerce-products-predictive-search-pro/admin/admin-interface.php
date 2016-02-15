@@ -34,19 +34,23 @@ TABLE OF CONTENTS
 
 class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 {
-	
+
 	/*-----------------------------------------------------------------------------------*/
 	/* Admin Interface Constructor */
 	/*-----------------------------------------------------------------------------------*/
 	public function __construct() {
-		
+
 		$this->admin_includes();
-		
+
 		add_action( 'init', array( $this, 'init_scripts' ) );
 		add_action( 'init', array( $this, 'init_styles' ) );
-		
+
+		// AJAX hide yellow message dontshow
+		add_action( 'wp_ajax_'.$this->plugin_name.'_a3_admin_ui_event', array( $this, 'a3_admin_ui_event' ) );
+		add_action( 'wp_ajax_nopriv_'.$this->plugin_name.'_a3_admin_ui_event', array( $this, 'a3_admin_ui_event' ) );
+
 	}
-	
+
 	/*-----------------------------------------------------------------------------------*/
 	/* Init scripts */
 	/*-----------------------------------------------------------------------------------*/
@@ -56,6 +60,9 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 		if ( is_admin() && isset( $_REQUEST['page'] ) && in_array( $_REQUEST['page'], $admin_pages ) ) {
 			add_action( 'admin_enqueue_scripts', array( $this, 'admin_script_load' ) );
 			do_action( $this->plugin_name . '_init_scripts' );
+
+			add_action( 'admin_print_scripts', array( $this, 'admin_localize_printed_scripts' ), 5 );
+			add_action( 'admin_print_footer_scripts', array( $this, 'admin_localize_printed_scripts' ), 5 );
 		}
 	}
 	
@@ -78,19 +85,26 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 	public function admin_script_load() {
 		
 		$suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
+		$rtl = is_rtl() ? '.rtl' : '';
 		
 		wp_register_script( 'chosen', $this->admin_plugin_url() . '/assets/js/chosen/chosen.jquery' . $suffix . '.js', array( 'jquery' ), true, false );
 		wp_register_script( 'a3rev-chosen-new', $this->admin_plugin_url() . '/assets/js/chosen/chosen.jquery' . $suffix . '.js', array( 'jquery' ), true, false );
-		wp_register_script( 'a3rev-style-checkboxes', $this->admin_plugin_url() . '/assets/js/iphone-style-checkboxes.js', array('jquery'), true, false );
+		wp_register_script( 'a3rev-style-checkboxes', $this->admin_plugin_url() . '/assets/js/iphone-style-checkboxes' . $rtl . '.js', array('jquery'), true, false );
+		wp_register_script( 'jquery-ui-slider-rtl', $this->admin_plugin_url() . '/assets/js/ui-slider/jquery.ui.slider.rtl' . $suffix . '.js', array('jquery'), true, true );
 		
 		wp_register_script( 'a3rev-admin-ui-script', $this->admin_plugin_url() . '/assets/js/admin-ui-script.js', array('jquery'), true, true );
 		wp_register_script( 'a3rev-typography-preview', $this->admin_plugin_url() . '/assets/js/a3rev-typography-preview.js',  array('jquery'), false, true );
 		wp_register_script( 'a3rev-settings-preview', $this->admin_plugin_url() . '/assets/js/a3rev-settings-preview.js',  array('jquery'), false, true );
 		wp_register_script( 'jquery-tiptip', $this->admin_plugin_url() . '/assets/js/tipTip/jquery.tipTip' . $suffix . '.js', array( 'jquery' ), true, true );
+		wp_register_script( 'a3rev-metabox-ui', $this->admin_plugin_url() . '/assets/js/data-meta-boxes.js', array( 'jquery' ), true, true );
 		
 		wp_enqueue_script( 'jquery' );
 		wp_enqueue_script( 'wp-color-picker' );
-		wp_enqueue_script( 'jquery-ui-slider' );
+		if ( is_rtl() ) {
+			wp_enqueue_script( 'jquery-ui-slider-rtl' );
+		} else {
+			wp_enqueue_script( 'jquery-ui-slider' );
+		}
 		wp_enqueue_script( 'chosen' );
 		wp_enqueue_script( 'a3rev-chosen-new' );
 		wp_enqueue_script( 'a3rev-style-checkboxes' );
@@ -98,10 +112,97 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 		wp_enqueue_script( 'a3rev-typography-preview' );
 		wp_enqueue_script( 'a3rev-settings-preview' );
 		wp_enqueue_script( 'jquery-tiptip' );
+		wp_enqueue_script( 'a3rev-metabox-ui' );
 
 	} // End admin_script_load()
-	
-	
+
+	/*-----------------------------------------------------------------------------------*/
+	/* admin_localize_printed_scripts: Localize scripts only when enqueued */
+	/*-----------------------------------------------------------------------------------*/
+
+	public function admin_localize_printed_scripts() {
+		$rtl	= is_rtl() ? 1 : 0;
+
+		if ( wp_script_is( 'a3rev-admin-ui-script' ) ) {
+			wp_localize_script( 'a3rev-admin-ui-script', 'a3_admin_ui_script_params', apply_filters( 'a3_admin_ui_script_params', array(
+				'ajax_url' => admin_url( 'admin-ajax.php' ),
+				'plugin'   => $this->plugin_name,
+				'security' => wp_create_nonce( $this->plugin_name . '_a3_admin_ui_event' ),
+				'rtl'      => $rtl,
+			) ) );
+		}
+
+	} // End admin_localize_printed_scripts()
+
+	public function a3_admin_ui_event() {
+		check_ajax_referer( $this->plugin_name. '_a3_admin_ui_event', 'security' );
+		if ( isset( $_REQUEST['type'] ) ) {
+			switch ( trim( $_REQUEST['type'] ) ) {
+				case 'open_close_panel_box':
+					$form_key = $_REQUEST['form_key'];
+					$box_id   = $_REQUEST['box_id'];
+					$is_open  = $_REQUEST['is_open'];
+
+					$user_id = get_current_user_id();
+					$opened_box = get_user_meta( $user_id, $this->plugin_name . '-' . trim( $form_key ), true );
+					if ( empty( $opened_box ) || ! is_array( $opened_box ) ) {
+						$opened_box = array();
+					}
+					if ( 1 == $is_open && ! in_array( $box_id, $opened_box ) ) {
+						$opened_box[] = $box_id;
+					} elseif ( 0 == $is_open && in_array( $box_id, $opened_box ) ) {
+						$opened_box = array_diff( $opened_box, array( $box_id ) );
+					}
+					update_user_meta( $user_id, $this->plugin_name . '-' . trim( $form_key ), $opened_box );
+					break;
+
+				case 'check_new_version':
+					$transient_name = $_REQUEST['transient_name'];
+					delete_transient( $transient_name );
+
+					$new_version = '';
+					if ( class_exists( 'WC_Predictive_Search_Upgrade' ) ) {
+						$new_version = WC_Predictive_Search_Upgrade::get_version_info();
+					}
+
+					$version_message = $this->get_version_message();
+					$has_new_version = 1;
+					if ( '' == trim( $version_message ) ) {
+						$version_message = __( 'Great! You have the latest version installed.', 'woops' );
+						$has_new_version = 0;
+					} else {
+						delete_option('woocommerce_search_clean_on_deletion');
+						if ( is_array( $new_version ) && 'valid' == $new_version['is_valid_key'] ) {
+							$current_update_plugins = get_site_transient( 'update_plugins' );
+							if ( isset( $current_update_plugins->response ) ) {
+								$plugin_name = WOOPS_NAME;
+								if ( empty( $current_update_plugins->response[$plugin_name] ) ) {
+									$current_update_plugins->response[$plugin_name] = new stdClass();
+								}
+								$current_update_plugins->response[$plugin_name]->url = "http://www.a3rev.com";
+								$current_update_plugins->response[$plugin_name]->slug = get_option( $this->plugin_option_key );
+								$current_update_plugins->response[$plugin_name]->package = $new_version["url"];
+								$current_update_plugins->response[$plugin_name]->new_version = $new_version['version'];
+								$current_update_plugins->response[$plugin_name]->upgrade_notice = $new_version['upgrade_notice'];
+								$current_update_plugins->response[$plugin_name]->id = "0";
+								set_site_transient( 'update_plugins', $current_update_plugins );
+							}
+						}
+					}
+
+					$response_data = array(
+						'has_new_version' => $has_new_version,
+						'version_message' => $version_message,
+					);
+					echo json_encode( $response_data );
+					break;
+			}
+
+		}
+		die();
+	}
+
+
 	/*-----------------------------------------------------------------------------------*/
 	/* admin_css_load */
 	/*-----------------------------------------------------------------------------------*/
@@ -119,6 +220,12 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_style( 'a3rev-chosen-new-style', $this->admin_plugin_url() . '/assets/js/chosen/chosen' . $suffix . '.css' );
 		wp_enqueue_style( 'a3rev-tiptip-style', $this->admin_plugin_url() . '/assets/js/tipTip/tipTip.css' );
+		wp_enqueue_style( 'a3rev-metabox-ui-style', $this->admin_plugin_url() . '/assets/css/a3_admin_metabox.css' );
+
+		if ( is_rtl() ) {
+			wp_enqueue_style( 'a3rev-admin-ui-style-rtl', $this->admin_plugin_url() . '/assets/css/admin-ui-style.rtl' . $suffix . '.css' );
+			wp_enqueue_style( 'a3rev-metabox-ui-style-rtl', $this->admin_plugin_url() . '/assets/css/a3_admin_metabox.rtl' . $suffix . '.css' );
+		}
 		
 	} // End admin_css_load()
 	
@@ -419,6 +526,25 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 		foreach ( $options as $value ) {
 			if ( ! isset( $value['type'] ) ) continue;
 			if ( in_array( $value['type'], array( 'heading' ) ) ) continue;
+
+			// Save for global settings of plugin framework
+			switch ( $value['type'] ) {
+
+				// Toggle Box Open
+				case 'onoff_toggle_box' :
+
+					if ( isset( $_POST[ $this->toggle_box_open_option ] ) ) {
+						$option_value = 1;
+					} else {
+						$option_value = 0;
+					}
+
+					update_option( $this->toggle_box_open_option, $option_value );
+
+				break;
+
+			}
+
 			if ( ! isset( $value['id'] ) || trim( $value['id'] ) == '' ) continue;
 			if ( ! isset( $value['default'] ) ) $value['default'] = '';
 			
@@ -598,7 +724,55 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 							}
 						}
 					}
-	
+
+					// Just for Color type
+					if ( 'color' == $value['type'] && '' == trim( $option_value ) ) {
+						$option_value = 'transparent';
+					}
+					// Just for Background Color type
+					elseif ( 'bg_color' == $value['type'] && '' == trim( $option_value['color'] ) ) {
+						$option_value['color'] = 'transparent';
+					} elseif ( 'upload' == $value['type'] ) {
+						// Uploader: Set key and value for attachment id of upload type
+						if ( strstr( $value['id'], '[' ) ) {
+							$key = key( $option_array[ $id_attribute ] );
+
+							if ( trim( $option_name ) != '' && $value['separate_option'] != false ) {
+								if ( isset( $_POST[ $id_attribute ][ $key . '_attachment_id' ] ) ) {
+									$attachment_id = $_POST[ $id_attribute ][ $key . '_attachment_id' ];
+								} else {
+									$attachment_id = 0;
+								}
+
+								$update_separate_options[ $id_attribute ][ $key . '_attachment_id' ] = $attachment_id;
+							} else {
+								if ( isset( $_POST[ $option_name ][ $id_attribute ][ $key . '_attachment_id' ] ) ) {
+									$attachment_id = $_POST[ $option_name ][ $id_attribute ][ $key . '_attachment_id' ];
+								} else {
+									$attachment_id = 0;
+								}
+
+								$update_options[ $id_attribute ][ $key . '_attachment_id' ] = $attachment_id;
+							}
+						} else {
+							if ( trim( $option_name ) != '' && $value['separate_option'] != false ) {
+								if ( isset( $_POST[ $id_attribute . '_attachment_id' ] ) ) {
+									$attachment_id = $_POST[ $id_attribute . '_attachment_id' ];
+								} else {
+									$attachment_id = 0;
+								}
+								$update_separate_options[ $id_attribute . '_attachment_id' ] = $attachment_id;
+							} else {
+								if ( isset( $_POST[ $option_name ][ $id_attribute . '_attachment_id' ] ) ) {
+									$attachment_id = $_POST[ $option_name ][ $id_attribute . '_attachment_id' ];
+								} else {
+									$attachment_id = 0;
+								}
+								$update_options[ $id_attribute . '_attachment_id' ] = $attachment_id;
+							}
+						}
+					}
+
 				break;
 	
 			}
@@ -607,18 +781,19 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 				if ( strstr( $value['id'], '[' ) ) {
 					// Set keys and value
 					$key = key( $option_array[ $id_attribute ] );
-	
-					$update_options[ $id_attribute ][ $key ] = $option_value;
 					
 					if ( trim( $option_name ) != '' && $value['separate_option'] != false ) {
 						$update_separate_options[ $id_attribute ][ $key ] = $option_value;
+					} else {
+						$update_options[ $id_attribute ][ $key ] = $option_value;
 					}
 					
 				} else {
-					$update_options[ $id_attribute ] = $option_value;
 					
 					if ( trim( $option_name ) != '' && $value['separate_option'] != false ) {
 						$update_separate_options[ $id_attribute ] = $option_value;
+					} else {
+						$update_options[ $id_attribute ] = $option_value;
 					}
 				}
 			}
@@ -740,6 +915,7 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 						}
 						
 						// Remove [, ] characters from id argument
+						$key = false;
 						if ( strstr( $text_field['id'], '[' ) ) {
 							parse_str( esc_attr( $text_field['id'] ), $option_array );
 				
@@ -748,17 +924,48 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 							$first_key = current( $option_keys );
 								
 							$id_attribute		= $first_key;
+
+							$key = key( $option_array[ $id_attribute ] );
 						} else {
 							$id_attribute		= esc_attr( $text_field['id'] );
 						}
 						
 						if ( trim( $option_name ) == '' || $value['separate_option'] != false ) {
 							if ( $reset && $text_field['free_version'] && !$free_version ) {
-								update_option( $id_attribute,  $text_field['default'] );
+								if ( $key != false ) {
+									$current_settings = get_option( $id_attribute, array() );
+									if ( ! is_array( $current_settings) ) {
+										$current_settings = array();
+									}
+									$current_settings[$key] = $text_field['default'];
+									update_option( $id_attribute,  $current_settings );
+								} else {
+									update_option( $id_attribute,  $text_field['default'] );
+								}
 							} elseif ( $reset && !$text_field['free_version'] ) {
-								update_option( $id_attribute,  $text_field['default'] );
+								if ( $key != false ) {
+									$current_settings = get_option( $id_attribute, array() );
+									if ( ! is_array( $current_settings) ) {
+										$current_settings = array();
+									}
+									$current_settings[$key] = $text_field['default'];
+									update_option( $id_attribute,  $current_settings );
+								} else {
+									update_option( $id_attribute,  $text_field['default'] );
+								}
 							} else {
-								add_option( $id_attribute,  $text_field['default'] );
+								if ( $key != false ) {
+								$current_settings = get_option( $id_attribute, array() );
+								if ( ! is_array( $current_settings) ) {
+									$current_settings = array();
+								}
+								if ( ! isset( $current_settings[$key] ) ) {
+									$current_settings[$key] = $text_field['default'];
+									update_option( $id_attribute,  $current_settings );
+								}
+								} else {
+									add_option( $id_attribute,  $text_field['default'] );
+								}
 							}
 						}
 					}
@@ -767,6 +974,7 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 							
 				default :
 					// Remove [, ] characters from id argument
+					$key = false;
 					if ( strstr( $value['id'], '[' ) ) {
 						parse_str( esc_attr( $value['id'] ), $option_array );
 			
@@ -775,17 +983,48 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 						$first_key = current( $option_keys );
 							
 						$id_attribute		= $first_key;
+
+						$key = key( $option_array[ $id_attribute ] );
 					} else {
 						$id_attribute		= esc_attr( $value['id'] );
 					}
 					
 					if ( trim( $option_name ) == '' || $value['separate_option'] != false ) {
 						if ( $reset && $value['free_version'] && !$free_version ) {
-							update_option( $id_attribute,  $value['default'] );
+							if ( $key != false ) {
+								$current_settings = get_option( $id_attribute, array() );
+								if ( ! is_array( $current_settings) ) {
+									$current_settings = array();
+								}
+								$current_settings[$key] = $value['default'];
+								update_option( $id_attribute,  $current_settings );
+							} else {
+								update_option( $id_attribute,  $value['default'] );
+							}
 						} elseif ( $reset && !$value['free_version'] ) {
-							update_option( $id_attribute,  $value['default'] );
+							if ( $key != false ) {
+								$current_settings = get_option( $id_attribute, array() );
+								if ( ! is_array( $current_settings) ) {
+									$current_settings = array();
+								}
+								$current_settings[$key] = $value['default'];
+								update_option( $id_attribute,  $current_settings );
+							} else {
+								update_option( $id_attribute,  $value['default'] );
+							}
 						} else {
-							add_option( $id_attribute,  $value['default'] );
+							if ( $key != false ) {
+								$current_settings = get_option( $id_attribute, array() );
+								if ( ! is_array( $current_settings) ) {
+									$current_settings = array();
+								}
+								if ( ! isset( $current_settings[$key] ) ) {
+									$current_settings[$key] = $value['default'];
+									update_option( $id_attribute,  $current_settings );
+								}
+							} else {
+								add_option( $id_attribute,  $value['default'] );
+							}
 						}
 					}
 							
@@ -846,7 +1085,7 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 	 * @return void
 	 * ========================================================================
 	 * Option Array Structure :
-	 * type					=> heading | text | email | number | password | color | textarea | select | multiselect | radio | onoff_radio | checkbox | onoff_checkbox 
+	 * type					=> heading | google_api_key | onoff_toggle_box | text | email | number | password | color | bg_color | textarea | select | multiselect | radio | onoff_radio | checkbox | onoff_checkbox 
 	 *						   | switcher_checkbox | image_size | single_select_page | typography | border | border_styles | border_corner | box_shadow 
 	 *						   | slider | upload | wp_editor | array_textfields | 
 	 *
@@ -856,6 +1095,7 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 	 * class				=> text
 	 * css					=> text
 	 * default				=> text : apply for other types
+	 * 						   array( 'enable' => 1, 'color' => '#515151' ) : apply bg_color only
 	 *						   array( 'width' => '125', 'height' => '125', 'crop' => 1 ) : apply image_size only
 	 *						   array( 'size' => '9px', 'face' => 'Arial', 'style' => 'normal', 'color' => '#515151' ) : apply for typography only 
 	 *						   array( 'width' => '1px', 'style' => 'normal', 'color' => '#515151', 'corner' => 'rounded' | 'square' , 'top_left_corner' => 3, 
@@ -919,6 +1159,8 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 	 *							)
 	 *							---------------------------------------------
 	 *
+	 * strip_methods		=> true | false : apply for upload type only
+	 *
 	 */
 	 
 	public function admin_forms( $options, $form_key, $option_name = '', $form_messages = array() ) {
@@ -947,6 +1189,7 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 			do_action( $this->plugin_name . '_after_settings_save_reset' );
 		}
 		do_action( $this->plugin_name . '-' . trim( $form_key ) . '_settings_init' );
+		do_action( $this->plugin_name . '_settings_init' );
 		
 		$option_values = array();
 		if ( trim( $option_name ) != '' ) {
@@ -972,6 +1215,18 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 		$count_heading = 0;
 		$end_heading_id = false;
 		$header_box_opening = false;
+		$header_sub_box_opening = false;
+
+		$user_id = get_current_user_id();
+		$opened_box = get_user_meta( $user_id, $this->plugin_name . '-' . trim( $form_key ), true );
+		if ( empty( $opened_box ) || ! is_array( $opened_box ) ) {
+			$opened_box = array();
+		}
+
+		$toggle_box_open = $this->settings_get_option( $this->toggle_box_open_option, 0 );
+		if ( ! isset( $_POST['bt_save_settings'] ) && 0 == $toggle_box_open ) {
+			delete_user_meta( $user_id, $this->plugin_name . '-' . trim( $form_key ) );
+		}
 
 		foreach ( $options as $value ) {
 			if ( ! isset( $value['type'] ) ) continue;
@@ -1008,10 +1263,10 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 				$description = $tip = '';
 			}
 	
-			if ( $description && in_array( $value['type'], array( 'textarea', 'radio', 'onoff_radio', 'typography', 'border', 'border_styles', 'border_corner', 'box_shadow', 'array_textfields', 'wp_editor', 'upload' ) ) ) {
-				$description = '<div class="desc" style="margin-bottom:5px;">' . wp_kses_post( $description ) . '</div>';
+			if ( $description && in_array( $value['type'], array( 'manual_check_version', 'textarea', 'radio', 'onoff_radio', 'typography', 'border', 'border_styles', 'border_corner', 'box_shadow', 'array_textfields', 'wp_editor', 'upload' ) ) ) {
+				$description = '<div class="desc" style="margin-bottom:5px;">' . $description . '</div>';
 			} elseif ( $description ) {
-				$description = '<span class="description" style="margin-left:5px;">' . wp_kses_post( $description ) . '</span>';
+				$description = '<span class="description" style="margin-left:5px;">' . $description . '</span>';
 			}
 			
 			/**
@@ -1090,6 +1345,12 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 				$description = str_replace( '[default_value_blur]', $value['default']['blur'], $description );
 				$description = str_replace( '[default_value_spread]', $value['default']['spread'], $description );
 				
+			} elseif ( $value['type'] == 'bg_color' ) {
+				if ( ! is_array( $value['default'] ) ) $value['default'] = array();
+				if ( ! isset( $value['default']['enable'] ) || trim( $value['default']['enable'] ) == '' ) $value['default']['enable'] = 0;
+				if ( ! isset( $value['default']['color'] ) || trim( $value['default']['color'] ) == '' ) $value['default']['color'] = '#515151';
+
+				$description = str_replace( '[default_value_color]', $value['default']['color'], $description );
 			} elseif ( $value['type'] != 'multiselect' ) {
 				$description = str_replace( '[default_value]', $value['default'], $description );
 			}
@@ -1105,7 +1366,7 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 			}
 			
 			// Remove [, ] characters from id argument
-			$key = false;
+			$child_key = false;
 			if ( strstr( $value['id'], '[' ) ) {
 				parse_str( esc_attr( $value['id'] ), $option_array );
 	
@@ -1115,7 +1376,7 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 					
 				$id_attribute		= $first_key;
 				
-				$key = key( $option_array[ $id_attribute ] );
+				$child_key = key( $option_array[ $id_attribute ] );
 			} else {
 				$id_attribute		= esc_attr( $value['id'] );
 			}
@@ -1126,8 +1387,8 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 			}
 			// Get option value when it's an element from option array 
 			else {
-				if ( $key != false ) {
-					$option_value 		= ( isset( $option_values[ $id_attribute ][ $key ] ) ) ? $option_values[ $id_attribute ][ $key ] : $value['default'];
+				if ( $child_key != false ) {
+					$option_value 		= ( isset( $option_values[ $id_attribute ][ $child_key ] ) ) ? $option_values[ $id_attribute ][ $child_key ] : $value['default'];
 				} else {
 					$option_value 		= ( isset( $option_values[ $id_attribute ] ) ) ? $option_values[ $id_attribute ] : $value['default'];
 				}
@@ -1155,9 +1416,14 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 				// Heading
 				case 'heading':
 
-					$is_box = true;
-					if ( isset( $value['is_box'] ) && 0 == $value['is_box'] ) {
-						$is_box = false;
+					$is_box = false;
+					if ( isset( $value['is_box'] ) && true == $value['is_box'] ) {
+						$is_box = true;
+					}
+
+					$is_sub = false;
+					if ( isset( $value['is_sub'] ) && true == $value['is_sub'] ) {
+						$is_sub = true;
 					}
 
 					$count_heading++;
@@ -1172,50 +1438,225 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 					else
 						$end_heading_id = '';
 
-					if ( $is_box && $header_box_opening ) {
+					if ( $header_sub_box_opening ) {
+						$header_sub_box_opening = false;
+
+						// close box inside
+						echo '</div>' . "\n\n";
+
+						// close panel box
+						echo '</div>' . "\n\n";
+					}
+
+					if ( $is_box && $header_box_opening && ! $is_sub ) {
 						$header_box_opening = false;
-						echo '</div>' . "\n\n"; // close box inside
-						echo '</div>' . "\n\n"; // close panel box
+
+						// close box inside
+						echo '</div>' . "\n\n";
+
+						// close panel box
+						echo '</div>' . "\n\n";
 					}
 
 					$view_doc = ( isset( $value['view_doc'] ) ) ? $value['view_doc'] : '';
 
 					if ( ! empty( $value['id'] ) ) do_action( $this->plugin_name . '_settings_' . sanitize_title( $value['id'] ) . '_before' );
 
-					echo '<div id="'. esc_attr( $value['id'] ) . '" class="a3rev_panel_inner '. esc_attr( $value['class'] ) .'" style="'. esc_attr( $value['css'] ) .'">' . "\n\n";
+					if ( $is_box ) {
+						$heading_box_id = $count_heading;
+						if ( ! empty( $value['id'] ) ) {
+							$heading_box_id = $value['id'];
+						}
 
-					if ( ! $is_box ) {
+						$toggle_box_class = 'enable_toggle_box_save';
+
+						$opened_class = '';
+						if ( in_array( $heading_box_id, $opened_box ) && 1 == $toggle_box_open ) {
+							$opened_class = 'box_open';
+						}
+
+						if ( isset( $_POST['bt_save_settings']) && in_array( $heading_box_id, $opened_box ) ) {
+							$opened_class = 'box_open';
+						}
+
+						// Change to open box for the heading set alway_open = true
+						if ( isset( $value['alway_open'] ) && true == $value['alway_open'] ) {
+							$opened_class = 'box_open';
+						}
+
+						// Change to close box for the heading set alway_close = true
+						if ( isset( $value['alway_close'] ) && true == $value['alway_close'] ) {
+							$opened_class = '';
+						}
+
+						// Make the box open on first load with this argument first_open = true
+						if ( isset( $value['first_open'] ) && true == $value['first_open'] ) {
+							$this_box_is_opened = get_user_meta( $user_id, $this->plugin_name . '-' . trim( $heading_box_id ) . '-' . 'opened', true );
+							if ( empty( $this_box_is_opened ) ) {
+								$opened_class = 'box_open';
+								add_user_meta( $user_id, $this->plugin_name . '-' . trim( $heading_box_id ) . '-' . 'opened', 1 );
+							}
+						}
+
+						// open panel box
+						echo '<div id="'. esc_attr( $value['id'] ) . '" class="a3rev_panel_box '. esc_attr( $value['class'] ) .'" style="'. esc_attr( $value['css'] ) .'">' . "\n\n";
+
+						// open box handle
+						echo '<div data-form-key="'. esc_attr( trim( $form_key ) ) .'" data-box-id="'. esc_attr( $heading_box_id ) .'" class="a3rev_panel_box_handle" >' . "\n\n";
+
+						echo ( ! empty( $value['name'] ) ) ? '<h3 class="a3-plugin-ui-panel-box '. $toggle_box_class . ' ' . $opened_class . '">'. esc_html( $value['name'] ) .' '. $view_doc .'</h3>' : '';
+
 						if ( stristr( $value['class'], 'pro_feature_fields' ) !== false && ! empty( $value['id'] ) ) $this->upgrade_top_message( true, sanitize_title( $value['id'] ) );
 						elseif ( stristr( $value['class'], 'pro_feature_fields' ) !== false ) $this->upgrade_top_message( true );
-					}
 
-					if ( $is_box ) {
-						echo '<div class="a3rev_panel_box_handle" >' . "\n\n";
-					}
+						// close box handle
+						echo '</div>' . "\n\n";
 
-					echo ( ! empty( $value['name'] ) ) ? '<h3>'. esc_html( $value['name'] ) .' '. $view_doc .'</h3>' : '';
-					if ( ! empty( $value['desc'] ) ) echo wpautop( wptexturize( wp_kses_post( $value['desc'] ) ) );
+						// open box inside
+						echo '<div id="'. esc_attr( $value['id'] ) . '_box_inside" class="a3rev_panel_box_inside '.$opened_class.'" >' . "\n\n";
 
-					if ( $is_box ) {
+						echo '<div class="a3rev_panel_inner">' . "\n\n";
+
+						if ( $is_sub ) {
+							// Mark this heading as a sub box is openning to check for close it on next header box
+							$header_sub_box_opening = true;
+						} else {
+							// Mark this heading as a box is openning to check for close it on next header box
+							$header_box_opening = true;
+						}
+
+					} else {
+						echo '<div id="'. esc_attr( $value['id'] ) . '" class="a3rev_panel_inner '. esc_attr( $value['class'] ) .'" style="'. esc_attr( $value['css'] ) .'">' . "\n\n";
 						if ( stristr( $value['class'], 'pro_feature_fields' ) !== false && ! empty( $value['id'] ) ) $this->upgrade_top_message( true, sanitize_title( $value['id'] ) );
 						elseif ( stristr( $value['class'], 'pro_feature_fields' ) !== false ) $this->upgrade_top_message( true );
+
+						echo ( ! empty( $value['name'] ) ) ? '<h3>'. esc_html( $value['name'] ) .' '. $view_doc .'</h3>' : '';
 					}
 
-					if ( $is_box ) {
-						echo '</div>' . "\n\n"; // close box handle
-					}
-
-					if ( $is_box ) {
-						echo '<div id="'. esc_attr( $value['id'] ) . '_box_inside" class="a3rev_panel_box_inside" >' . "\n\n";
-						echo '<div class="a3rev_panel_box_main" >' . "\n\n";
-
-						// Mark this heading as a box is openning to check for close it on next header box
-						$header_box_opening = true;
+					if ( ! empty( $value['desc'] ) ) {
+						echo '<div class="a3rev_panel_box_description" >' . "\n\n";
+						echo wpautop( wptexturize( $value['desc'] ) );
+						echo '</div>' . "\n\n";
 					}
 
 					echo '<table class="form-table">' . "\n\n";
 
 					if ( ! empty( $value['id'] ) ) do_action( $this->plugin_name . '_settings_' . sanitize_title( $value['id'] ) . '_start' );
+				break;
+
+				// Google API Key input
+				case 'google_api_key':
+
+					$google_api_key        = $this->settings_get_option( $this->google_api_key_option );
+					$google_api_key_enable = $this->settings_get_option( $this->google_api_key_option . '_enable', 0 );
+					if ( ! isset( $value['checked_label'] ) ) $value['checked_label'] = __( 'ON', 'woops' );
+					if ( ! isset( $value['unchecked_label'] ) ) $value['unchecked_label'] = __( 'OFF', 'woops' );
+
+					?><tr valign="top">
+						<th scope="row" class="titledesc">
+                        	<?php echo $tip; ?>
+							<label for="<?php echo $this->google_api_key_option; ?>"><?php echo __( 'Google Fonts API', 'woops' ); ?></label>
+						</th>
+						<td class="forminp forminp-onoff_checkbox forminp-<?php echo sanitize_title( $value['type'] ) ?>">
+							<input
+								name="<?php echo $this->google_api_key_option; ?>_enable"
+                                id="<?php echo $this->google_api_key_option; ?>_enable"
+								class="a3rev-ui-onoff_checkbox a3rev-ui-onoff_google_api_key_enable"
+                                checked_label="<?php echo esc_html( $value['checked_label'] ); ?>"
+                                unchecked_label="<?php echo esc_html( $value['unchecked_label'] ); ?>"
+                                type="checkbox"
+								value="1"
+								<?php checked( $google_api_key_enable, 1 ); ?>
+								/> <span class="description" style="margin-left:5px;"><?php echo __( 'ON to connect to Google Fonts API and have auto font updates direct from Google.', 'woops' ); ?></span>
+
+							<div>&nbsp;</div>
+							<div class="a3rev-ui-google-api-key-container" style="<?php if( 1 != $google_api_key_enable ) { echo 'display: none;'; } ?>">
+								<div class="a3rev-ui-google-api-key-description"><?php echo sprintf( __( "Enter your existing Google Fonts API Key below. Don't have a key? Visit <a href='%s' target='_blank'>Google Developer API</a> to create a key", 'woops' ), 'https://developers.google.com/fonts/docs/developer_api#APIKey' ); ?></div>
+								<div class="a3rev-ui-google-api-key-inside 
+									<?php
+									if ( $wc_predictive_search_fonts_face->is_valid_google_api_key() ) {
+										echo 'a3rev-ui-google-valid-key';
+									} elseif ( '' != $google_api_key ) {
+										echo 'a3rev-ui-google-unvalid-key';
+									}
+									?>
+									">
+									<input
+										name="<?php echo $this->google_api_key_option; ?>"
+										id="<?php echo $this->google_api_key_option; ?>"
+										type="text"
+										style="<?php echo esc_attr( $value['css'] ); ?>"
+										value="<?php echo esc_attr( $google_api_key ); ?>"
+										class="a3rev-ui-text a3rev-ui-<?php echo sanitize_title( $value['type'] ) ?> <?php echo esc_attr( $value['class'] ); ?>"
+		                                placeholder="<?php echo __( 'Google Fonts API Key', 'woops' ); ?>"
+										<?php echo implode( ' ', $custom_attributes ); ?>
+										/>
+									<p class="a3rev-ui-google-valid-key-message"><?php echo __( 'Your Google API Key is valid and automatic font updates are enabled.', 'woops' ); ?></p>
+									<p class="a3rev-ui-google-unvalid-key-message"><?php echo __( 'Please enter a valid Google API Key.', 'woops' ); ?></p>
+								</div>
+							</div>
+						</td>
+					</tr><?php
+
+				break;
+
+				// Manual Check New Version when click on the button instead of wait for daily
+				case 'manual_check_version':
+					$version_message = $this->get_version_message();
+					$new_version_class = '';
+					if ( '' != trim( $version_message ) ) {
+						$new_version_class = 'a3rev-ui-new-version-message';
+					}
+
+					?><tr valign="top">
+						<th scope="row" class="titledesc">
+                        	<?php echo $tip; ?>
+							<label><?php echo __( 'Check New Version', 'woops' ); ?></label>
+						</th>
+						<td class="forminp forminp-manual_check_version">
+							<?php echo $description; ?>
+
+							<input
+								data-transient-name="<?php echo $this->version_transient; ?>"
+								name="<?php echo $this->plugin_name . '-check-version'; ?>"
+                                id="<?php echo $this->plugin_name . '-check-version'; ?>"
+								class="button button-primary a3rev-ui-manual_check_version"
+                                type="button"
+								value="<?php echo __( 'Check Now', 'woops' ); ?>"
+								/> <span class="a3rev-ui-version-checking"> </span>
+								<p class="a3rev-ui-check-version-message <?php echo $new_version_class; ?>"><?php echo $version_message; ?></p>
+
+						</td>
+					</tr><?php
+
+				break;
+
+				// Toggle Box Open type
+				case 'onoff_toggle_box' :
+
+					$option_value = $this->settings_get_option( $this->toggle_box_open_option, 0 );
+					if ( ! isset( $value['checked_label'] ) ) $value['checked_label'] = __( 'ON', 'woops' );
+					if ( ! isset( $value['unchecked_label'] ) ) $value['unchecked_label'] = __( 'OFF', 'woops' );
+
+					?><tr valign="top">
+						<th scope="row" class="titledesc">
+                        	<?php echo $tip; ?>
+							<label for="<?php echo $this->toggle_box_open_option; ?>"><?php echo __( 'Open Box Display', 'woops' ); ?></label>
+						</th>
+						<td class="forminp forminp-onoff_checkbox forminp-<?php echo sanitize_title( $value['type'] ) ?>">
+							<input
+								name="<?php echo $this->toggle_box_open_option; ?>"
+                                id="<?php echo $this->toggle_box_open_option; ?>"
+								class="a3rev-ui-onoff_checkbox a3rev-ui-onoff_toggle_box <?php echo esc_attr( $value['class'] ); ?>"
+                                checked_label="<?php echo esc_html( $value['checked_label'] ); ?>"
+                                unchecked_label="<?php echo esc_html( $value['unchecked_label'] ); ?>"
+                                type="checkbox"
+								value="1"
+								<?php checked( $option_value, 1 ); ?>
+								<?php echo implode( ' ', $custom_attributes ); ?>
+								/> <span class="description" style="margin-left:5px;"><?php echo __( 'ON and each admin panel setting box OPEN | CLOSED position are saved each time changes are SAVED.', 'woops' ); ?></span>
+                        </td>
+					</tr><?php
 				break;
 
 				// Standard text inputs and subtypes like 'number'
@@ -1251,7 +1692,8 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 					
 					if ( trim( $value['default'] ) == '' ) $value['default'] = '#515151';
 					$default_color = ' data-default-color="' . esc_attr( $value['default'] ) . '"';
-					
+					if ( '' == trim( $option_value ) ) $option_value = 'transparent';
+
 					?><tr valign="top">
 						<th scope="row" class="titledesc">
                         	<?php echo $tip; ?>
@@ -1268,12 +1710,57 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 								/> <?php echo $description; ?>
 						</td>
 					</tr><?php
-					
+
 				break;
-	
+
+				// Background Color
+				case 'bg_color' :
+
+					if ( ! isset( $option_value['enable'] ) ) $option_value['enable'] = 0;
+					$enable		= $option_value['enable'];
+
+					if ( trim( $value['default']['color'] ) == '' ) $value['default']['color'] = '#515151';
+					$default_color = ' data-default-color="' . esc_attr( $value['default']['color'] ) . '"';
+
+					$color = $option_value['color'];
+					if ( '' == trim( $color ) ) $color = 'transparent';
+
+					?><tr valign="top">
+						<th scope="row" class="titledesc">
+							<?php echo $tip; ?>
+							<label for="<?php echo $id_attribute; ?>"><?php echo esc_html( $value['name'] ); ?></label>
+						</th>
+						<td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
+							<input
+									name="<?php echo $name_attribute; ?>[enable]"
+									id="<?php echo $id_attribute; ?>"
+									class="a3rev-ui-bg_color-enable a3rev-ui-onoff_checkbox <?php echo esc_attr( $value['class'] ); ?>"
+									checked_label="<?php _e( 'ON', 'woops' ); ?>"
+									unchecked_label="<?php _e( 'OFF', 'woops' ); ?>"
+									type="checkbox"
+									value="1"
+									<?php checked( 1, $enable ); ?>
+									<?php echo implode( ' ', $custom_attributes ); ?>
+								/> <?php echo $description; ?>
+							<div style="clear:both;"></div>
+							<div class="a3rev-ui-bg_color-enable-container">
+							<input
+								name="<?php echo $name_attribute; ?>[color]"
+								id="<?php echo $id_attribute; ?>-color"
+								type="text"
+								value="<?php echo esc_attr( $color ); ?>"
+								class="a3rev-color-picker"
+								<?php echo $default_color; ?>
+								/>
+							</div>
+						</td>
+					</tr><?php
+
+				break;
+
 				// Textarea
 				case 'textarea':
-	
+
 					?><tr valign="top">
 						<th scope="row" class="titledesc">
                         	<?php echo $tip; ?>
@@ -1299,6 +1786,9 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 				case 'multiselect' :
 				
 					if ( trim( $value['class'] ) == '' ) $value['class'] = 'chzn-select';
+					if ( is_rtl() ) {
+						$value['class'] .= ' chzn-rtl';
+					}
 					if ( ! isset( $value['options'] ) ) $value['options'] = array();
 		
 					?><tr valign="top">
@@ -1540,15 +2030,9 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 				// Image size settings
 				case 'image_size' :
 	
-					if ( trim( $option_name ) == '' || $value['separate_option'] != false ) {
-						$width 	= $this->settings_get_option( $value['id'] . '[width]', $value['default']['width'] );
-						$height = $this->settings_get_option( $value['id'] . '[height]', $value['default']['height'] );
-						$crop 	= checked( 1, $this->settings_get_option( $value['id'] . '[crop]', $value['default']['crop'] ), false );
-					} else {
-						$width 	= $option_value['width'];
-						$height = $option_value['height'];
-						$crop 	= checked( 1, $option_value['crop'], false );
-					}
+					$width 	= $option_value['width'];
+					$height = $option_value['height'];
+					$crop 	= checked( 1, $option_value['crop'], false );
 	
 					?><tr valign="top">
 						<th scope="row" class="titledesc"><?php echo $tip; ?><?php echo esc_html( $value['name'] ) ?></th>
@@ -1568,6 +2052,9 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 				case 'single_select_page' :
 	
 					if ( trim( $value['class'] ) == '' ) $value['class'] = 'chzn-select-deselect';
+					if ( is_rtl() ) {
+						$value['class'] .= ' chzn-rtl';
+					}
 					
 					$args = array( 'name'				=> $name_attribute,
 								   'id'					=> $id_attribute,
@@ -1595,17 +2082,10 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 				
 					$default_color = ' data-default-color="' . esc_attr( $value['default']['color'] ) . '"';
 					
-					if ( trim( $option_name ) == '' || $value['separate_option'] != false ) {
-						$size	= $this->settings_get_option( $value['id'] . '[size]', $value['default']['size'] );
-						$face	= $this->settings_get_option( $value['id'] . '[face]', $value['default']['face'] );
-						$style	= $this->settings_get_option( $value['id'] . '[style]', $value['default']['style'] );
-						$color	= $this->settings_get_option( $value['id'] . '[color]', $value['default']['color'] );
-					} else {
-						$size	= $option_value['size'];
-						$face	= $option_value['face'];
-						$style	= $option_value['style'];
-						$color	= $option_value['color'];
-					}
+					$size	= $option_value['size'];
+					$face	= $option_value['face'];
+					$style	= $option_value['style'];
+					$color	= $option_value['color'];
 				
 					?><tr valign="top">
 						<th scope="row" class="titledesc"><?php echo $tip; ?><?php echo esc_html( $value['name'] ) ?></th>
@@ -1616,7 +2096,7 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 							<select
 								name="<?php echo $name_attribute; ?>[size]"
                                 id="<?php echo $id_attribute; ?>-size"
-								class="a3rev-ui-<?php echo sanitize_title( $value['type'] ) ?>-size chzn-select"
+								class="a3rev-ui-<?php echo sanitize_title( $value['type'] ) ?>-size chzn-select <?php if ( is_rtl() ) { echo 'chzn-rtl'; } ?>"
 								>
 								<?php
 									for ( $i = 6; $i <= 70; $i++ ) {
@@ -1633,7 +2113,7 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 							<select
 								name="<?php echo $name_attribute; ?>[face]"
                                 id="<?php echo $id_attribute; ?>-face"
-								class="a3rev-ui-<?php echo sanitize_title( $value['type'] ) ?>-face chzn-select"
+								class="a3rev-ui-<?php echo sanitize_title( $value['type'] ) ?>-face chzn-select <?php if ( is_rtl() ) { echo 'chzn-rtl'; } ?>"
 								>
 								<optgroup label="<?php _e( '-- Default Fonts --', 'woops' ); ?>">
                                 <?php
@@ -1663,7 +2143,7 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
                            <select
 								name="<?php echo $name_attribute; ?>[style]"
                                 id="<?php echo $id_attribute; ?>-style"
-								class="a3rev-ui-<?php echo sanitize_title( $value['type'] ) ?>-style chzn-select"
+								class="a3rev-ui-<?php echo sanitize_title( $value['type'] ) ?>-style chzn-select <?php if ( is_rtl() ) { echo 'chzn-rtl'; } ?>"
 								>
 								<?php
 									foreach ( $this->get_font_weights() as $val => $text ) {
@@ -1704,57 +2184,32 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 					// For Border Styles
 					$default_color = ' data-default-color="' . esc_attr( $value['default']['color'] ) . '"';
 					
-					if ( trim( $option_name ) == '' || $value['separate_option'] != false ) {
-						$width	= $this->settings_get_option( $value['id'] . '[width]', $value['default']['width'] );
-						$style	= $this->settings_get_option( $value['id'] . '[style]', $value['default']['style'] );
-						$color	= $this->settings_get_option( $value['id'] . '[color]', $value['default']['color'] );
-					} else {
-						$width	= $option_value['width'];
-						$style	= $option_value['style'];
-						$color	= $option_value['color'];
-					}
+					$width	= $option_value['width'];
+					$style	= $option_value['style'];
+					$color	= $option_value['color'];
 					
 					// For Border Corner
 					if ( ! isset( $value['min'] ) ) $value['min'] = 0;
 					if ( ! isset( $value['max'] ) ) $value['max'] = 100;
 					if ( ! isset( $value['increment'] ) ) $value['increment'] = 1;
 					
-					if ( trim( $option_name ) != '' && $value['separate_option'] != false ) {
-						$corner					= $this->settings_get_option( $value['id'] . '[corner]', $value['default']['corner'] );
-						
-						if ( ! isset( $value['default']['rounded_value'] ) ) $value['default']['rounded_value'] = 3;
-						$rounded_value			= $this->settings_get_option( $value['id'] . '[rounded_value]', $value['default']['rounded_value'] );
-						
-						if ( ! isset( $value['default']['top_left_corner'] ) ) $value['default']['top_left_corner'] = 3;
-						$top_left_corner		= $this->settings_get_option( $value['id'] . '[top_left_corner]', $value['default']['top_left_corner'] );
-						
-						if ( ! isset( $value['default']['top_right_corner'] ) ) $value['default']['top_right_corner'] = 3;
-						$top_right_corner		= $this->settings_get_option( $value['id'] . '[top_right_corner]', $value['default']['top_right_corner'] );
-						
-						if ( ! isset( $value['default']['bottom_left_corner'] ) ) $value['default']['bottom_left_corner'] = 3;
-						$bottom_left_corner		= $this->settings_get_option( $value['id'] . '[bottom_left_corner]', $value['default']['bottom_left_corner'] );
-						
-						if ( ! isset( $value['default']['bottom_right_corner'] ) ) $value['default']['bottom_right_corner'] = 3;
-						$bottom_right_corner	= $this->settings_get_option( $value['id'] . '[bottom_right_corner]', $value['default']['bottom_right_corner'] );
-					} else {
-						if ( ! isset( $option_value['corner'] ) ) $option_value['corner'] = '';
-						$corner					= $option_value['corner'];
-						
-						if ( ! isset( $option_value['rounded_value'] ) ) $option_value['rounded_value'] = 3;
-						$rounded_value			= $option_value['rounded_value'];
-						
-						if ( ! isset( $option_value['top_left_corner'] ) ) $option_value['top_left_corner'] = 3;
-						$top_left_corner		= $option_value['top_left_corner'];
-						
-						if ( ! isset( $option_value['top_right_corner'] ) ) $option_value['top_right_corner'] = 3;
-						$top_right_corner		= $option_value['top_right_corner'];
-						
-						if ( ! isset( $option_value['bottom_left_corner'] ) ) $option_value['bottom_left_corner'] = 3;
-						$bottom_left_corner		= $option_value['bottom_left_corner'];
-						
-						if ( ! isset( $option_value['bottom_right_corner'] ) ) $option_value['bottom_right_corner'] = 3;
-						$bottom_right_corner	= $option_value['bottom_right_corner'];
-					}
+					if ( ! isset( $option_value['corner'] ) ) $option_value['corner'] = '';
+					$corner					= $option_value['corner'];
+					
+					if ( ! isset( $option_value['rounded_value'] ) ) $option_value['rounded_value'] = 3;
+					$rounded_value			= $option_value['rounded_value'];
+					
+					if ( ! isset( $option_value['top_left_corner'] ) ) $option_value['top_left_corner'] = 3;
+					$top_left_corner		= $option_value['top_left_corner'];
+					
+					if ( ! isset( $option_value['top_right_corner'] ) ) $option_value['top_right_corner'] = 3;
+					$top_right_corner		= $option_value['top_right_corner'];
+					
+					if ( ! isset( $option_value['bottom_left_corner'] ) ) $option_value['bottom_left_corner'] = 3;
+					$bottom_left_corner		= $option_value['bottom_left_corner'];
+					
+					if ( ! isset( $option_value['bottom_right_corner'] ) ) $option_value['bottom_right_corner'] = 3;
+					$bottom_right_corner	= $option_value['bottom_right_corner'];
 					
 					if ( trim( $rounded_value ) == '' || trim( $rounded_value ) <= 0  ) $rounded_value = $value['min'];
 					$rounded_value = intval( $rounded_value );
@@ -1780,7 +2235,7 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 							<select
 								name="<?php echo $name_attribute; ?>[width]"
                                 id="<?php echo $id_attribute; ?>-width"
-								class="a3rev-ui-border_styles-width chzn-select"
+								class="a3rev-ui-border_styles-width chzn-select <?php if ( is_rtl() ) { echo 'chzn-rtl'; } ?>"
 								>
 								<?php
 									for ( $i = 0; $i <= 20; $i++ ) {
@@ -1797,7 +2252,7 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
                            <select
 								name="<?php echo $name_attribute; ?>[style]"
                                 id="<?php echo $id_attribute; ?>-style"
-								class="a3rev-ui-border_styles-style chzn-select"
+								class="a3rev-ui-border_styles-style chzn-select <?php if ( is_rtl() ) { echo 'chzn-rtl'; } ?>"
 								>
 								<?php
 									foreach ( $this->get_border_styles() as $val => $text ) {
@@ -1934,15 +2389,9 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 				
 					$default_color = ' data-default-color="' . esc_attr( $value['default']['color'] ) . '"';
 					
-					if ( trim( $option_name ) == '' || $value['separate_option'] != false ) {
-						$width	= $this->settings_get_option( $value['id'] . '[width]', $value['default']['width'] );
-						$style	= $this->settings_get_option( $value['id'] . '[style]', $value['default']['style'] );
-						$color	= $this->settings_get_option( $value['id'] . '[color]', $value['default']['color'] );
-					} else {
-						$width	= $option_value['width'];
-						$style	= $option_value['style'];
-						$color	= $option_value['color'];
-					}
+					$width	= $option_value['width'];
+					$style	= $option_value['style'];
+					$color	= $option_value['color'];
 				
 					?><tr valign="top">
 						<th scope="row" class="titledesc"><?php echo $tip; ?><?php echo esc_html( $value['name'] ) ?></th>
@@ -1953,7 +2402,7 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 							<select
 								name="<?php echo $name_attribute; ?>[width]"
                                 id="<?php echo $id_attribute; ?>-width"
-								class="a3rev-ui-border_styles-width chzn-select"
+								class="a3rev-ui-border_styles-width chzn-select <?php if ( is_rtl() ) { echo 'chzn-rtl'; } ?>"
 								>
 								<?php
 									for ( $i = 0; $i <= 20; $i++ ) {
@@ -1970,7 +2419,7 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
                            <select
 								name="<?php echo $name_attribute; ?>[style]"
                                 id="<?php echo $id_attribute; ?>-style"
-								class="a3rev-ui-border_styles-style chzn-select"
+								class="a3rev-ui-border_styles-style chzn-select <?php if ( is_rtl() ) { echo 'chzn-rtl'; } ?>"
 								>
 								<?php
 									foreach ( $this->get_border_styles() as $val => $text ) {
@@ -2009,42 +2458,23 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 					if ( ! isset( $value['max'] ) ) $value['max'] = 100;
 					if ( ! isset( $value['increment'] ) ) $value['increment'] = 1;
 					
-					if ( trim( $option_name ) != '' && $value['separate_option'] != false ) {
-						$corner					= $this->settings_get_option( $value['id'] . '[corner]', $value['default']['corner'] );
-						
-						if ( ! isset( $value['default']['rounded_value'] ) ) $value['default']['rounded_value'] = 3;
-						$rounded_value			= $this->settings_get_option( $value['id'] . '[rounded_value]', $value['default']['rounded_value'] );
-						
-						if ( ! isset( $value['default']['top_left_corner'] ) ) $value['default']['top_left_corner'] = 3;
-						$top_left_corner		= $this->settings_get_option( $value['id'] . '[top_left_corner]', $value['default']['top_left_corner'] );
-						
-						if ( ! isset( $value['default']['top_right_corner'] ) ) $value['default']['top_right_corner'] = 3;
-						$top_right_corner		= $this->settings_get_option( $value['id'] . '[top_right_corner]', $value['default']['top_right_corner'] );
-						
-						if ( ! isset( $value['default']['bottom_left_corner'] ) ) $value['default']['bottom_left_corner'] = 3;
-						$bottom_left_corner		= $this->settings_get_option( $value['id'] . '[bottom_left_corner]', $value['default']['bottom_left_corner'] );
-						
-						if ( ! isset( $value['default']['bottom_right_corner'] ) ) $value['default']['bottom_right_corner'] = 3;
-						$bottom_right_corner	= $this->settings_get_option( $value['id'] . '[bottom_right_corner]', $value['default']['bottom_right_corner'] );
-					} else {
-						if ( ! isset( $option_value['corner'] ) ) $option_value['corner'] = '';
-						$corner					= $option_value['corner'];
-						
-						if ( ! isset( $option_value['rounded_value'] ) ) $option_value['rounded_value'] = 3;
-						$rounded_value			= $option_value['rounded_value'];
-						
-						if ( ! isset( $option_value['top_left_corner'] ) ) $option_value['top_left_corner'] = 3;
-						$top_left_corner		= $option_value['top_left_corner'];
-						
-						if ( ! isset( $option_value['top_right_corner'] ) ) $option_value['top_right_corner'] = 3;
-						$top_right_corner		= $option_value['top_right_corner'];
-						
-						if ( ! isset( $option_value['bottom_left_corner'] ) ) $option_value['bottom_left_corner'] = 3;
-						$bottom_left_corner		= $option_value['bottom_left_corner'];
-						
-						if ( ! isset( $option_value['bottom_right_corner'] ) ) $option_value['bottom_right_corner'] = 3;
-						$bottom_right_corner	= $option_value['bottom_right_corner'];
-					}
+					if ( ! isset( $option_value['corner'] ) ) $option_value['corner'] = '';
+					$corner					= $option_value['corner'];
+					
+					if ( ! isset( $option_value['rounded_value'] ) ) $option_value['rounded_value'] = 3;
+					$rounded_value			= $option_value['rounded_value'];
+					
+					if ( ! isset( $option_value['top_left_corner'] ) ) $option_value['top_left_corner'] = 3;
+					$top_left_corner		= $option_value['top_left_corner'];
+					
+					if ( ! isset( $option_value['top_right_corner'] ) ) $option_value['top_right_corner'] = 3;
+					$top_right_corner		= $option_value['top_right_corner'];
+					
+					if ( ! isset( $option_value['bottom_left_corner'] ) ) $option_value['bottom_left_corner'] = 3;
+					$bottom_left_corner		= $option_value['bottom_left_corner'];
+					
+					if ( ! isset( $option_value['bottom_right_corner'] ) ) $option_value['bottom_right_corner'] = 3;
+					$bottom_right_corner	= $option_value['bottom_right_corner'];
 					
 					if ( trim( $rounded_value ) == '' || trim( $rounded_value ) <= 0  ) $rounded_value = $value['min'];
 					$rounded_value = intval( $rounded_value );
@@ -2178,25 +2608,15 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 				
 					$default_color = ' data-default-color="' . esc_attr( $value['default']['color'] ) . '"';
 					
-					if ( trim( $option_name ) == '' || $value['separate_option'] != false ) {
-						$enable		= $this->settings_get_option( $value['id'] . '[enable]', $value['default']['enable'] );
-						$h_shadow	= $this->settings_get_option( $value['id'] . '[h_shadow]', $value['default']['h_shadow'] );
-						$v_shadow	= $this->settings_get_option( $value['id'] . '[v_shadow]', $value['default']['v_shadow'] );
-						$blur		= $this->settings_get_option( $value['id'] . '[blur]', $value['default']['blur'] );
-						$spread		= $this->settings_get_option( $value['id'] . '[spread]', $value['default']['spread'] );
-						$color		= $this->settings_get_option( $value['id'] . '[color]', $value['default']['color'] );
-						$inset		= $this->settings_get_option( $value['id'] . '[inset]', $value['default']['inset'] );
-					} else {
-						if ( ! isset( $option_value['enable'] ) ) $option_value['enable'] = 0;
-						$enable		= $option_value['enable'];
-						if ( ! isset( $option_value['inset'] ) ) $option_value['inset'] = '';
-						$h_shadow	= $option_value['h_shadow'];
-						$v_shadow	= $option_value['v_shadow'];
-						$blur		= $option_value['blur'];
-						$spread		= $option_value['spread'];
-						$color		= $option_value['color'];
-						$inset		= $option_value['inset'];
-					}
+					if ( ! isset( $option_value['enable'] ) ) $option_value['enable'] = 0;
+					$enable		= $option_value['enable'];
+					if ( ! isset( $option_value['inset'] ) ) $option_value['inset'] = '';
+					$h_shadow	= $option_value['h_shadow'];
+					$v_shadow	= $option_value['v_shadow'];
+					$blur		= $option_value['blur'];
+					$spread		= $option_value['spread'];
+					$color		= $option_value['color'];
+					$inset		= $option_value['inset'];
 				
 					?><tr valign="top">
 						<th scope="row" class="titledesc"><?php echo $tip; ?><?php echo esc_html( $value['name'] ) ?></th>
@@ -2220,7 +2640,7 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 							<select
 								name="<?php echo $name_attribute; ?>[h_shadow]"
                                 id="<?php echo $id_attribute; ?>-h_shadow"
-								class="a3rev-ui-box_shadow-h_shadow chzn-select"
+								class="a3rev-ui-box_shadow-h_shadow chzn-select <?php if ( is_rtl() ) { echo 'chzn-rtl'; } ?>"
                                 data-placeholder="<?php _e( 'Horizontal Shadow', 'woops' ); ?>"
 								>
 								<?php
@@ -2238,7 +2658,7 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 							<select
 								name="<?php echo $name_attribute; ?>[v_shadow]"
                                 id="<?php echo $id_attribute; ?>-v_shadow"
-								class="a3rev-ui-box_shadow-v_shadow chzn-select"
+								class="a3rev-ui-box_shadow-v_shadow chzn-select <?php if ( is_rtl() ) { echo 'chzn-rtl'; } ?>"
                                 data-placeholder="<?php _e( 'Vertical Shadow', 'woops' ); ?>"
 								>
 								<?php
@@ -2256,7 +2676,7 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 							<select
 								name="<?php echo $name_attribute; ?>[blur]"
                                 id="<?php echo $id_attribute; ?>-blur"
-								class="a3rev-ui-box_shadow-blur chzn-select"
+								class="a3rev-ui-box_shadow-blur chzn-select <?php if ( is_rtl() ) { echo 'chzn-rtl'; } ?>"
                                 data-placeholder="<?php _e( 'Blur Distance', 'woops' ); ?>"
 								>
 								<?php
@@ -2274,7 +2694,7 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 							<select
 								name="<?php echo $name_attribute; ?>[spread]"
                                 id="<?php echo $id_attribute; ?>-spread"
-								class="a3rev-ui-box_shadow-spread chzn-select"
+								class="a3rev-ui-box_shadow-spread chzn-select <?php if ( is_rtl() ) { echo 'chzn-rtl'; } ?>"
                                 data-placeholder="<?php _e( 'Spread Size', 'woops' ); ?>"
 								>
 								<?php
@@ -2361,6 +2781,18 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 				case 'upload':
 				
 					$class = 'a3rev-ui-' . sanitize_title( $value['type'] ) . ' ' . esc_attr( $value['class'] );
+
+					$strip_methods = true;
+					if ( isset( $value['strip_methods'] ) ) {
+						$strip_methods = $value['strip_methods'];
+					}
+
+					if ( strstr( $name_attribute, ']' ) ) {
+						$attachment_id_name_attribute = substr_replace( $name_attribute, '_attachment_id', -1, 0 );
+					} else {
+						$attachment_id_name_attribute = $name_attribute.'_attachment_id';
+					}
+					$attachment_id = $this->settings_get_option( $attachment_id_name_attribute, 0 );
 				
 					?><tr valign="top">
 						<th scope="row" class="titledesc">
@@ -2369,7 +2801,7 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 						</th>
 						<td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
                         	<?php echo $description; ?>
-                        	<?php echo $wc_predictive_search_uploader->upload_input( $name_attribute, $id_attribute, $option_value, $value['default'], esc_html( $value['name'] ), $class, esc_attr( $value['css'] ) , '' );?>
+                        	<?php echo $wc_predictive_search_uploader->upload_input( $name_attribute, $id_attribute, $option_value, $attachment_id, $value['default'], esc_html( $value['name'] ), $class, esc_attr( $value['css'] ) , '', $strip_methods );?>
 						</td>
 					</tr><?php
 									
@@ -2545,12 +2977,26 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 			if ( trim( $end_heading_id ) != '' ) do_action( $this->plugin_name . '_settings_' . sanitize_title( $end_heading_id ) . '_after' );	
 		}
 
+		if ( $header_sub_box_opening ) {
+			$header_sub_box_opening = false;
+
+			// close box inside
+			echo '</div>' . "\n\n";
+
+			// close panel box
+			echo '</div>' . "\n\n";
+		}
+
 		if ( $header_box_opening ) {
 			$header_box_opening = false;
-			echo '</div>' . "\n\n"; // close box inside
-			echo '</div>' . "\n\n"; // close panel box
+
+			// close box inside
+			echo '</div>' . "\n\n";
+
+			// close panel box
+			echo '</div>' . "\n\n";
 		}
-		
+
 		?>
 		<?php do_action( $this->plugin_name . '-' . trim( $form_key ) . '_settings_end' ); ?>
             <p class="submit">
@@ -2567,6 +3013,123 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 	}
 	
 	/*-----------------------------------------------------------------------------------*/
+	/* Custom panel box for use on another page - panel_box() */
+	/*-----------------------------------------------------------------------------------*/
+	public function panel_box( $settings_html = '', $options = array() ) {
+		if ( ! isset( $options['id'] ) ) $options['id'] = '';
+		if ( ! isset( $options['name'] ) ) $options['name'] = '';
+		if ( ! isset( $options['class'] ) ) $options['class'] = '';
+		if ( ! isset( $options['css'] ) ) $options['css'] = '';
+		if ( ! isset( $options['desc'] ) ) $options['desc'] = '';
+		if ( ! isset( $options['desc_tip'] ) ) $options['desc_tip'] = false;
+
+		$is_box = false;
+		if ( isset( $options['is_box'] ) && true == $options['is_box'] ) {
+			$is_box = true;
+		}
+
+		$view_doc = ( isset( $options['view_doc'] ) ) ? $options['view_doc'] : '';
+
+		if ( $is_box ) {
+
+			$heading_box_id = '';
+			if ( ! empty( $options['id'] ) ) {
+				$heading_box_id = $options['id'];
+			}
+
+			if ( '' != trim( $heading_box_id ) ) {
+
+				$user_id = get_current_user_id();
+				$opened_box = get_user_meta( $user_id, $this->plugin_name . '-custom-boxes' , true );
+				if ( empty( $opened_box ) || ! is_array( $opened_box ) ) {
+					$opened_box = array();
+				}
+
+				$toggle_box_open = $this->settings_get_option( $this->toggle_box_open_option, 0 );
+
+				$toggle_box_class = '';
+				if ( 1 == $toggle_box_open ) {
+					$toggle_box_class = 'enable_toggle_box_save';
+				}
+
+				$opened_class = '';
+				if ( in_array( $heading_box_id, $opened_box ) && 1 == $toggle_box_open ) {
+					$opened_class = 'box_open';
+				}
+
+				// Change to open box for the heading set alway_open = true
+				if ( isset( $options['alway_open'] ) && true == $options['alway_open'] ) {
+					$opened_class = 'box_open';
+				}
+
+				// Change to close box for the heading set alway_close = true
+				if ( isset( $options['alway_close'] ) && true == $options['alway_close'] ) {
+					$opened_class = '';
+				}
+
+				// Make the box open on first load with this argument first_open = true
+				if ( isset( $options['first_open'] ) && true == $options['first_open'] ) {
+					$this_box_is_opened = get_user_meta( $user_id, $this->plugin_name . '-' . trim( $heading_box_id ) . '-' . 'opened', true );
+					if ( empty( $this_box_is_opened ) ) {
+						$opened_class = 'box_open';
+						add_user_meta( $user_id, $this->plugin_name . '-' . trim( $heading_box_id ) . '-' . 'opened', 1 );
+					}
+				}
+
+			} else {
+
+				$toggle_box_class = '';
+				$opened_class = '';
+
+			}
+
+			// open panel box
+			echo '<div id="'. esc_attr( $options['id'] ) . '" class="a3rev_panel_box '. esc_attr( $options['class'] ) .'" style="'. esc_attr( $options['css'] ) .'">' . "\n\n";
+
+			// open box handle
+			echo '<div data-form-key="custom-boxes" data-box-id="'. esc_attr( $heading_box_id ) .'" class="a3rev_panel_box_handle" >' . "\n\n";
+
+			echo ( ! empty( $options['name'] ) ) ? '<h3 class="a3-plugin-ui-panel-box '. $toggle_box_class . ' ' . $opened_class . '">'. esc_html( $options['name'] ) .' '. $view_doc .'</h3>' : '';
+
+			if ( stristr( $options['class'], 'pro_feature_fields' ) !== false && ! empty( $options['id'] ) ) $this->upgrade_top_message( true, sanitize_title( $options['id'] ) );
+			elseif ( stristr( $options['class'], 'pro_feature_fields' ) !== false ) $this->upgrade_top_message( true );
+
+			// close box handle
+			echo '</div>' . "\n\n";
+
+			// open box inside
+			echo '<div id="'. esc_attr( $options['id'] ) . '_box_inside" class="a3rev_panel_box_inside '.$opened_class.'" style="padding-top: 10px;" >' . "\n\n";
+
+			echo '<div class="a3rev_panel_inner">' . "\n\n";
+
+		} else {
+			echo '<div id="'. esc_attr( $options['id'] ) . '" class="a3rev_panel_inner '. esc_attr( $options['class'] ) .'" style="'. esc_attr( $options['css'] ) .'">' . "\n\n";
+			if ( stristr( $options['class'], 'pro_feature_fields' ) !== false && ! empty( $options['id'] ) ) $this->upgrade_top_message( true, sanitize_title( $options['id'] ) );
+			elseif ( stristr( $options['class'], 'pro_feature_fields' ) !== false ) $this->upgrade_top_message( true );
+
+			echo ( ! empty( $options['name'] ) ) ? '<h3>'. esc_html( $options['name'] ) .' '. $view_doc .'</h3>' : '';
+		}
+
+		if ( ! empty( $options['desc'] ) ) {
+			echo '<div class="a3rev_panel_box_description" >' . "\n\n";
+			echo wpautop( wptexturize( $options['desc'] ) );
+			echo '</div>' . "\n\n";
+		}
+
+		echo $settings_html;
+
+		echo '</div>';
+
+		if ( $is_box ) {
+			// close box inside
+			echo '</div>' . "\n\n";
+
+			// close panel box
+			echo '</div>' . "\n\n";
+		}
+	}
+
+	/*-----------------------------------------------------------------------------------*/
 	/* Custom Stripslashed for array in array - admin_stripslashes() */
 	/*-----------------------------------------------------------------------------------*/
 	public function admin_stripslashes( $values ) {
@@ -2578,7 +3141,40 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 		
 		return $values;
 	}
-	
+
+	/*-----------------------------------------------------------------------------------*/
+	/* hextorgb() */
+	/* Convert Hex to RGB for color */
+	/*-----------------------------------------------------------------------------------*/
+	public function hextorgb( $color = '', $text = true ) {
+		$color = trim( $color );
+		if ( '' == $color || 'transparent' == $color ) {
+			return false;
+		}
+
+		if ( '#' == $color[0] ) {
+			$color = substr( $color, 1 );
+		}
+
+		if ( 6 == strlen( $color ) ) {
+			list( $r, $g, $b ) = array( $color[0].$color[1], $color[2].$color[3], $color[4].$color[5] );
+		} elseif ( 3 == strlen( $color ) ) {
+			list( $r, $g, $b ) = array( $color[0].$color[0], $color[1].$color[1], $color[2].$color[2] );
+		} else {
+			return false;
+		}
+
+		$r = hexdec($r);
+		$g = hexdec($g);
+		$b = hexdec($b);
+
+		if ( $text ) {
+			return $r.','.$g.','.$b;
+		} else {
+			return array( $r, $g, $b );
+		}
+	}
+
 	/*-----------------------------------------------------------------------------------*/
 	/* generate_border_css() */
 	/* Generate Border CSS on frontend */
@@ -2672,6 +3268,36 @@ class WC_Predictive_Search_Admin_Interface extends WC_Predictive_Search_Admin_UI
 		
 		return $shadow_css;
 		
+	}
+
+	/*-----------------------------------------------------------------------------------*/
+	/* generate_background_css() */
+	/* Generate Background Color CSS on frontend */
+	/*-----------------------------------------------------------------------------------*/
+	public function generate_background_color_css( $option, $transparency = 100 ) {
+
+		$return_css = '';
+
+		if ( isset( $option['enable'] ) && $option['enable'] == 1 ) {
+			$color = $option['color'];
+			if ( 100 != $transparency ) {
+				$color = $this->hextorgb( $color );
+				$transparency = (int) $transparency / 100;
+
+				if ( $color !== false ) {
+					$return_css .= 'background-color: rgba( ' . $color . ', ' . $transparency . ' ) !important;';
+				} else {
+					$return_css .= 'background-color: transparent !important ;';
+				}
+			} else {
+				$return_css .= 'background-color: ' . $color . ' !important ;';
+			}
+		} else {
+			$return_css .= 'background-color: transparent !important ;';
+		}
+
+		return $return_css;
+
 	}
 
 }

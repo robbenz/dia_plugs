@@ -295,14 +295,26 @@ class WC_PS_Exclude_Content_Settings extends WC_Predictive_Search_Admin_UI
 			}
 
 		}
-		
+
   		// Define settings			
      	$this->form_fields = apply_filters( $this->option_name . '_settings_fields', array(
-		
+
 			array(
             	'name' 		=> __( 'Exclude From Predictive Search', 'woops' ),
                 'type' 		=> 'heading',
            	),
+           	array(
+				'name'      => __( 'Exclude Out Of Stock', 'woops' ),
+				'desc'		=> __( 'ON to exclude out of stock products from search results', 'woops' ),
+				'class'		=> 'woocommerce_search_exclude_out_stock',
+				'id' 		=> 'woocommerce_search_exclude_out_stock',
+				'type' 		=> 'onoff_checkbox',
+				'default'	=> 'yes',
+				'checked_value'		=> 'yes',
+				'unchecked_value'	=> 'no',
+				'checked_label'		=> __( 'ON', 'woops' ),
+				'unchecked_label' 	=> __( 'OFF', 'woops' ),
+			),
 			array(  
 				'name' 		=> __( 'Exclude Products', 'woops' ),
 				'id' 		=> 'woocommerce_search_exclude_products',

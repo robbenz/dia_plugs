@@ -15,6 +15,9 @@
 class WC_Predictive_Search_Shortcodes 
 {
 	public static function parse_shortcode_search_widget($attributes) {
+		// Don't show content for shortcode on Dashboard, still support for admin ajax
+		if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) return;
+
 		$items_search_default = WC_Predictive_Search_Widgets::get_items_search();
 		$items_array = array();
 		
@@ -179,6 +182,9 @@ class WC_Predictive_Search_Shortcodes
 	}
 	
 	public static function parse_shortcode_search_result($attributes) {
+		// Don't show content for shortcode on Dashboard, still support for admin ajax
+		if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) return;
+
 		$search_results = '';
 		global $woocommerce_search_page_id;
 		global $wp_query;

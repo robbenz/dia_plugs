@@ -73,9 +73,9 @@ class WC_PS_PostMeta_Data
 		$where_seo_keyword .= $wpdb->prepare( "ppm.meta_key = %s", $meta_key_name );
 		$where_seo_keyword .= ' AND ';
 		$where_seo_keyword .= ' ( ';
-		$where_seo_keyword .= $wpdb->prepare( WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'CAST(ppm.meta_value AS CHAR)' ) . " LIKE '%s' OR " . WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'CAST(ppm.meta_value AS CHAR)' ) . " LIKE '%s' ", $search_keyword.'%', '% '.$search_keyword.'%' );
+		$where_seo_keyword .= WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'CAST(ppm.meta_value AS CHAR)', $search_keyword );
 		if ( '' != $search_keyword_nospecial ) {
-			$where_seo_keyword .= " OR ". $wpdb->prepare( WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'CAST(ppm.meta_value AS CHAR)' ) . " LIKE '%s' OR " . WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'CAST(ppm.meta_value AS CHAR)' ) . " LIKE '%s' ", $search_keyword_nospecial.'%', '% '.$search_keyword_nospecial.'%' );
+			$where_seo_keyword .= " OR ". WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'CAST(ppm.meta_value AS CHAR)', $search_keyword_nospecial );
 		}
 		$where_seo_keyword .= ' ) ';
 		$where_seo_keyword .= ' ) ';
@@ -85,6 +85,14 @@ class WC_PS_PostMeta_Data
 		$sql['where']['search'] = $where;
 
 		return $sql;
+	}
+
+	/**
+	 * Get Predictive Search Array Items Exclude by Out of Stock
+	 */
+	public function get_array_products_out_of_stock() {
+		global $wpdb;
+		return $wpdb->get_col( $wpdb->prepare( "SELECT ps_post_id FROM {$wpdb->ps_postmeta} AS ppm WHERE ppm.meta_key= %s AND ppm.meta_value = %s ", '_stock_status', 'outofstock' ) );
 	}
 
 	/**

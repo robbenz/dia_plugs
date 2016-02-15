@@ -7,7 +7,6 @@
  * Table Of Contents
  *
  * plugins_loaded()
- * add_frontend_style()
  * a3_wp_admin()
  * yellow_message_dontshow()
  * yellow_message_dismiss()
@@ -20,10 +19,6 @@ class WC_Predictive_Search_Hook_Filter
 		global $woocommerce_search_page_id;
 
 		$woocommerce_search_page_id = WC_Predictive_Search_Functions::get_page_id_from_shortcode( 'woocommerce_search', 'woocommerce_search_page_id');
-	}
-
-	public static function add_frontend_style() {
-		wp_enqueue_style( 'ajax-woo-autocomplete-style', WOOPS_JS_URL . '/ajax-autocomplete/jquery.autocomplete.css' );
 	}
 
 	public static function a3_wp_admin() {

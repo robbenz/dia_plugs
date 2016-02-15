@@ -13,18 +13,22 @@ class WC_Predictive_Search_Hook_Backbone
 		
 		// Add script into footer to hanlde the event from widget, popup
 		//add_action( 'wp_footer', array( $this, 'register_plugin_scripts' ) );
-		add_action( 'wp_head', array( $this, 'register_plugin_scripts' ) );
-		add_action( 'wp_head', array( $this, 'include_result_shortcode_script' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'register_plugin_scripts' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'include_result_shortcode_script' ), 11 );
 	}
 	
 	public function register_plugin_scripts() {
 		global $woocommerce_search_page_id;
-		
-		$suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
+
+		$suffix      = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
+		$ps_suffix   = '.min';
+		$ps_is_debug = get_option( 'woocommerce_search_is_debug', 'yes' );
+		if ( 'yes' == $ps_is_debug ) {
+			$ps_suffix = '';
+		}
 	?>
     <!-- Predictive Search Widget Template -->
-    <script type="text/template" id="wc_psearch_itemTpl">
-		<div class="ajax_search_content">
+    <script type="text/template" id="wc_psearch_itemTpl"><div class="ajax_search_content">
 			<div class="result_row">
 				<a href="{{= url }}">
 					<span class="rs_rs_avatar"><a href="{{= url }}"><img src="{{= image_url }}" /></a></span>
@@ -48,21 +52,34 @@ class WC_Predictive_Search_Hook_Backbone
     
     
     <?php
-		wp_register_script( 'ajax-woo-autocomplete-script', WOOPS_JS_URL . '/ajax-autocomplete/jquery.autocomplete.js', array(), '3.0.3', true );
-		wp_register_script( 'backbone.localStorage', WOOPS_JS_URL . '/backbone.localStorage.js', array() , '1.1.9', true );
-		wp_register_script( 'wc-predictive-search-backbone', WOOPS_JS_URL . '/predictive-search.backbone.js', array(), '1.0.0', true );
-		wp_enqueue_script( 'jquery' );
-		wp_enqueue_script( 'underscore' );
-		wp_enqueue_script( 'backbone' );
-		wp_enqueue_script( 'backbone.localStorage' );
-		wp_enqueue_script( 'wc-predictive-search-popup-backbone', WOOPS_JS_URL . '/predictive-search-popup.backbone.min.js', array( 'ajax-woo-autocomplete-script', 'wc-predictive-search-backbone' ), '3.0.0', true );
-		
+    	wp_register_style( 'wc-predictive-search-autocomplete-style', WOOPS_JS_URL . '/ajax-autocomplete/jquery.autocomplete.css', array(), WOOPS_VERSION, 'all' );
+
+		wp_register_script( 'backbone.localStorage', WOOPS_JS_URL . '/backbone.localStorage.js', array( 'jquery', 'underscore', 'backbone' ) , '1.1.9', true );
+		wp_register_script( 'wc-predictive-search-autocomplete-script', WOOPS_JS_URL . '/ajax-autocomplete/jquery.autocomplete.js', array( 'jquery', 'underscore', 'backbone', 'backbone.localStorage' ), WOOPS_VERSION, true );
+		wp_register_script( 'wc-predictive-search-backbone', WOOPS_JS_URL . '/predictive-search.backbone.js', array( 'jquery', 'underscore', 'backbone' ), WOOPS_VERSION, true );
+		wp_register_script( 'wc-predictive-search-popup-backbone', WOOPS_JS_URL . '/predictive-search-popup.backbone'.$ps_suffix.'.js', array( 'jquery', 'underscore', 'backbone', 'wc-predictive-search-autocomplete-script', 'wc-predictive-search-backbone' ), WOOPS_VERSION, true );
+
+		wp_enqueue_style( 'wc-predictive-search-autocomplete-style' );
+		wp_enqueue_script( 'wc-predictive-search-popup-backbone' );
+
 		global $wc_ps_legacy_api;
 		$legacy_api_url = $wc_ps_legacy_api->get_legacy_api_url();
 		$legacy_api_url = add_query_arg( 'action', 'get_result_popup', $legacy_api_url );
 		$min_characters = get_option( 'woocommerce_search_min_characters', 1 );
-		$delay_time = get_option( 'woocommerce_search_delay_time', 600 );
-		wp_localize_script( 'wc-predictive-search-popup-backbone', 'wc_ps_vars', apply_filters( 'wc_ps_vars', array( 'minChars' => $min_characters, 'delay' => $delay_time, 'legacy_api_url' => $legacy_api_url, 'search_page_url' => get_permalink( $woocommerce_search_page_id ), 'permalink_structure' => get_option('permalink_structure' ) ) ) );
+		$delay_time     = get_option( 'woocommerce_search_delay_time', 600 );
+		$cache_timeout  = get_option( 'woocommerce_search_cache_timeout', 24 );
+		wp_localize_script( 'wc-predictive-search-popup-backbone',
+			'wc_ps_vars',
+			apply_filters( 'wc_ps_vars', array(
+				'minChars'            => $min_characters,
+				'delay'               => $delay_time,
+				'cache_timeout'       => $cache_timeout,
+				'is_debug'            => $ps_is_debug,
+				'legacy_api_url'      => $legacy_api_url,
+				'search_page_url'     => get_permalink( $woocommerce_search_page_id ),
+				'permalink_structure' => get_option('permalink_structure' )
+			) )
+		);
 	}
 	
 	public function include_result_shortcode_script() {
@@ -98,20 +115,22 @@ class WC_Predictive_Search_Hook_Backbone
 
 		if ( $search_keyword == '' || $search_in == '' ) return;
 
-		$suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
+		$suffix      = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
+		$ps_suffix   = '.min';
+		$ps_is_debug = get_option( 'woocommerce_search_is_debug', 'yes' );
+		if ( 'yes' == $ps_is_debug ) {
+			$ps_suffix = '';
+		}
 	?>
-      <!-- Predictive Search Results Template -->
-    <script type="text/template" id="wc_psearch_result_itemTpl">
-		<span class="rs_rs_avatar"><img src="{{= image_url }}" /></span>
-        
+    <!-- Predictive Search Results Template -->
+    <script type="text/template" id="wc_psearch_result_itemTpl"><span class="rs_rs_avatar"><a href="{{= url }}"><img src="{{= image_url }}" /></a></span>
 		<div class="rs_content">
-        
 			<div id="rs_rs_rs_name_wrap"><a href="{{= url }}"><span class="rs_rs_name">{{ if ( type == 'p_sku' ) {  }}{{= keyword }}, {{ } }}{{= title }}</span></a></div>
-            
 			{{ if ( sku != null && sku != '' ) { }}<div class="rs_rs_sku"><?php wc_ps_ict_t_e( 'SKU', __('SKU', 'woops') ); ?>: {{= sku }}</div>{{ } }}
-            
+			{{ if ( price != null && price != '' ) { }}<div class="rs_rs_price"><?php wc_ps_ict_t_e( 'Price', __('Price', 'woops') ); ?>: {{= price }}</div>{{ } }}
+			{{ if ( addtocart != null && addtocart != '' ) { }}<div class="rs_rs_addtocart">{{= addtocart }}</div>{{ } }}
+			{{ if ( description != null && description != '' ) { }}<div class="rs_rs_description">{{= description }}</div>{{ } }}
 			{{ if ( categories.length > 0 ) { }}
-            
 				<div class="rs_rs_cat posted_in">
 					<?php wc_ps_ict_t_e( 'Mft', __('Mft', 'woops') ); ?>: 
 					{{ var number_cat = 0; }}
@@ -119,11 +138,8 @@ class WC_Predictive_Search_Hook_Backbone
 						{{ if ( number_cat > 1 ) { }}, {{ } }}<a href="{{= cat_data.url }}">{{= cat_data.name }}</a>
 					{{ }); }}
 				</div>
-                
 			{{ } }}
-            
 			{{ if ( tags.length > 0 ) { }}
-            
 				<div class="rs_rs_tag tagged_as">
 					<?php wc_ps_ict_t_e( 'List Price', __('List Price', 'woops') ); ?>: 
 					{{ var number_tag = 0; }}
@@ -132,21 +148,10 @@ class WC_Predictive_Search_Hook_Backbone
 					{{ }); }}
 				</div>
 			{{ } }}
-            
-            
-            {{ if ( price != null && price != '' ) { }}<div class="rs_rs_price"><?php wc_ps_ict_t_e( 'Price', __('Price', 'woops') ); ?>: {{= price }}</div>{{ } }}
-            
-            {{ if ( description != null && description != '' ) { }}<div class="rs_rs_description">{{= description }}</div>{{ } }}
-            
-            {{ if ( addtocart != null && addtocart != '' ) { }}<div class="rs_rs_addtocart">{{= addtocart }}</div>{{ } }}
-            <div id="viewprice-detail-search"><a class="eModal-1" href="#" style="cursor: pointer;">View Price</a></div> 
-           <div id="parts-search-qty"><?php woocommerce_quantity_input(); ?></div>
 		</div>
-        
 	</script>
     
-    <script type="text/template" id="wc_psearch_result_footerTpl">
-		<div style="clear:both"></div>
+    <script type="text/template" id="wc_psearch_result_footerTpl"><div style="clear:both"></div>
 		{{ if ( next_page_number > 1 ) { }}
 		<div id="ps_more_check"></div>
 		{{ } else if ( total_items == 0 && first_load ) { }}
@@ -156,11 +161,9 @@ class WC_Predictive_Search_Hook_Backbone
     
     
     <?php
-		wp_enqueue_script( 'jquery' );
-		wp_enqueue_script( 'underscore' );
-		wp_enqueue_script( 'backbone' );
-		wp_enqueue_script( 'wc-predictive-search-results-backbone', WOOPS_JS_URL . '/predictive-search-results.backbone.min.js', array( 'wc-predictive-search-backbone' ), '3.0.3', true );
-		
+		wp_register_script( 'wc-predictive-search-results-backbone', WOOPS_JS_URL . '/predictive-search-results.backbone'.$ps_suffix.'.js', array( 'jquery', 'underscore', 'backbone', 'wc-predictive-search-backbone' ), WOOPS_VERSION, true );
+		wp_enqueue_script( 'wc-predictive-search-results-backbone' );
+
 		global $wc_ps_legacy_api;
 		$legacy_api_url = $wc_ps_legacy_api->get_legacy_api_url();
 		$legacy_api_url = add_query_arg( 'action', 'get_results', $legacy_api_url );

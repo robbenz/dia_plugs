@@ -1,0 +1,12 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+@set_time_limit(86400);
+@ini_set("memory_limit","1000M");
+
+add_option( 'woocommerce_search_exclude_out_stock', 'yes' );
+add_option( 'woocommerce_search_cache_timeout', 24 );
+add_option( 'woocommerce_search_is_debug', 'no' );
+
+global $wc_ps_synch;
+$wc_ps_synch->migrate_products_out_of_stock();

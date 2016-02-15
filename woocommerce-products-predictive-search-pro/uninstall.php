@@ -48,7 +48,11 @@ if ( get_option('woocommerce_search_clean_on_deletion') == 'yes' ) {
 	delete_option('woocommerce_search_google_analytic_id');
 	delete_option('woocommerce_search_google_analytic_query_parameter');
 
+	delete_option('woocommerce_search_is_debug');
+	delete_option('woocommerce_search_exclude_out_stock');
+
 	delete_option('woocommerce_search_remove_special_character');
+	delete_option('woocommerce_search_replace_special_character');
 	delete_option('woocommerce_search_special_characters');
 	delete_option('wc_predictive_search_synched_data');
 

@@ -34,7 +34,7 @@ class WC_Predictive_Search_Synch
 	}
 
 	public function sync_process_post() {
-		add_action( 'save_post', array( $this, 'synch_save_post' ), 102, 2 );
+		add_action( 'save_post', array( $this, 'synch_save_post' ), 10, 2 );
 		add_action( 'delete_post', array( $this, 'synch_delete_post' ) );
 	}
 
@@ -102,7 +102,7 @@ class WC_Predictive_Search_Synch
 					}
 				}
 
-				if ( 'product' == $item->post_type ) {
+				if ( in_array( $item->post_type, array( 'product', 'product_variation' ) ) ) {
 					$sku = get_post_meta( $post_id, '_sku', true );
 					if ( ! empty( $sku ) && '' != trim( $sku ) ) {
 						$item_existed = $wc_ps_product_sku_data->get_item( $post_id );
@@ -110,11 +110,37 @@ class WC_Predictive_Search_Synch
 							$wc_ps_product_sku_data->insert_item( $post_id, $sku );
 						}
 					}
+
+					// Migrate Product Out of Stock
+					$outofstock = get_post_meta( $post_id, '_stock_status', true );
+					if ( ! empty( $outofstock ) && 'outofstock' == trim( $outofstock ) ) {
+						$wc_ps_postmeta_data->update_item_meta( $post_id, '_stock_status', 'outofstock' );
+					} else {
+						$wc_ps_postmeta_data->delete_item_meta( $post_id, '_stock_status' );
+					}
+
 				}
 			}
 		}
 
 		update_option( 'wc_predictive_search_synched_data', 1 );
+	}
+
+	public function migrate_products_out_of_stock() {
+		global $wpdb;
+		global $wc_ps_postmeta_data;
+
+		$all_out_of_stock = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value = %s" ,'_stock_status', 'outofstock'
+			)
+		);
+
+		if ( $all_out_of_stock ) {
+			foreach ( $all_out_of_stock as $item ) {
+				$wc_ps_postmeta_data->update_item_meta( $item->post_id, '_stock_status', 'outofstock' );
+			}
+		}
 	}
 
 	public function migrate_product_categories() {
@@ -206,6 +232,10 @@ class WC_Predictive_Search_Synch
 
 		if ( 'publish' == $post->post_status ) {
 			$yoast_keyword = get_post_meta( $post_id, '_yoast_wpseo_focuskw', true );
+			// For Yoast SEO need to check if $_POST['yoast_wpseo_focuskw_text_input'] is existed then use it instead of use post meta
+			if ( isset( $_POST['yoast_wpseo_focuskw_text_input'] ) ) {
+				$yoast_keyword = trim( $_POST['yoast_wpseo_focuskw_text_input'] );
+			}
 			$wpseo_keyword = get_post_meta( $post_id, '_aioseop_keywords', true );
 
 			$wc_ps_posts_data->update_item( $post_id, $post->post_title, $post->post_type );
@@ -237,6 +267,14 @@ class WC_Predictive_Search_Synch
 					foreach ( $all_relationships as $item ) {
 						$wc_ps_term_relationships_data->insert_item( $post_id, $item->term_id );
 					}
+				}
+
+				// Migrate Product Out of Stock
+				$outofstock = get_post_meta( $post_id, '_stock_status', true );
+				if ( ! empty( $outofstock ) && 'outofstock' == trim( $outofstock ) ) {
+					$wc_ps_postmeta_data->update_item_meta( $post_id, '_stock_status', 'outofstock' );
+				} else {
+					$wc_ps_postmeta_data->delete_item_meta( $post_id, '_stock_status' );
 				}
 			}
 
@@ -342,6 +380,14 @@ class WC_Predictive_Search_Synch
 					if ( NULL == $item_existed ) {
 						$wc_ps_product_sku_data->insert_item( $post_id, $sku );
 					}
+				}
+
+				// Migrate Product Out of Stock
+				$outofstock = get_post_meta( $post_id, '_stock_status', true );
+				if ( ! empty( $outofstock ) && 'outofstock' == trim( $outofstock ) ) {
+					$wc_ps_postmeta_data->update_item_meta( $post_id, '_stock_status', 'outofstock' );
+				} else {
+					$wc_ps_postmeta_data->delete_item_meta( $post_id, '_stock_status' );
 				}
 			}
 		}

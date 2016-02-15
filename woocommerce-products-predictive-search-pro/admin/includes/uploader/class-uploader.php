@@ -1,5 +1,5 @@
 <?php
-/* "Copyright 2012 A3 Revolution Web Design" This software is distributed under the terms of GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007 */
+/* "Copyright 2012 a3 Revolution Web Design" This software is distributed under the terms of GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007 */
 // File Security Check
 if ( ! defined( 'ABSPATH' ) ) exit;
 ?>
@@ -24,40 +24,27 @@ TABLE OF CONTENTS
 -----------------------------------------------------------------------------------*/
 class WC_Predictive_Search_Uploader extends WC_Predictive_Search_Admin_UI
 {
-	
+
 	/**
 	 * @var string
 	 */
 	private $admin_uploader_url;
-	
-	/**
-	 * @var string
-	 */
-	private $custom_post_type_image = 'wp_email_images';
-	
-	/**
-	 * @var string
-	 */
-	private $custom_post_type_name = 'Custom Image Type For Uploader';
-	
+
 	/*-----------------------------------------------------------------------------------*/
 	/* Admin Uploader Constructor */
 	/*-----------------------------------------------------------------------------------*/
 	public function __construct() {
 		if ( is_admin() ) {
-			add_action( 'init', array( $this, 'uploader_init' ) );
-			add_action( 'admin_print_scripts', array( $this, 'inside_popup' ) );
-			add_filter( 'gettext', array( $this, 'change_button_text' ), null, 3 );
-			
+
 			// include scripts to Admin UI Interface
 			add_action( $this->plugin_name . '_init_scripts', array( $this, 'uploader_js' ) );
-			
+
 			// include styles to Admin UI Interface
 			add_action( $this->plugin_name . '_init_styles', array( $this, 'uploader_style' ) );
 		}
-		
+
 	}
-	
+
 	/*-----------------------------------------------------------------------------------*/
 	/* admin_uploader_url */
 	/*-----------------------------------------------------------------------------------*/
@@ -65,88 +52,53 @@ class WC_Predictive_Search_Uploader extends WC_Predictive_Search_Admin_UI
 		if ( $this->admin_uploader_url ) return $this->admin_uploader_url;
 		return $this->admin_uploader_url = untrailingslashit( plugins_url( '/', __FILE__ ) );
 	}
-	
+
 	/*-----------------------------------------------------------------------------------*/
 	/* Include Uploader Script */
 	/*-----------------------------------------------------------------------------------*/
 	public function uploader_js () {
-		wp_enqueue_script( 'jquery' );
-		wp_enqueue_script( 'thickbox' );
-		wp_enqueue_script( 'a3-uploader-script', $this->admin_uploader_url() . '/uploader-script.js' );
-		wp_enqueue_script( 'media-upload' );
+		wp_enqueue_script( 'a3-uploader-script', $this->admin_uploader_url() . '/uploader-script.js', array( 'jquery', 'thickbox' ) );
+		if ( function_exists( 'wp_enqueue_media' ) ) {
+		    wp_enqueue_media();
+		} else {
+		    wp_enqueue_script('media-upload');
+		}
 	}
-	
+
 	/*-----------------------------------------------------------------------------------*/
 	/* Include Uploader Style */
 	/*-----------------------------------------------------------------------------------*/
 	public function uploader_style () {
 		wp_enqueue_style( 'thickbox' );
 		wp_enqueue_style( 'a3-uploader-style', $this->admin_uploader_url() . '/uploader.css' );
-	}
-	
-	/*-----------------------------------------------------------------------------------*/
-	/* Uploader Init : Create Custom Post for Image */
-	/*-----------------------------------------------------------------------------------*/
-	public function uploader_init () {
-		register_post_type( $this->custom_post_type_image, array(
-			'labels' => array(
-				'name' => $this->custom_post_type_name,
-			),
-			'public' => true,
-			'show_ui' => false,
-			'capability_type' => 'post',
-			'hierarchical' => false,
-			'rewrite' => false,
-			'supports' => array( 'title', 'editor' ),
-			'query_var' => false,
-			'can_export' => true,
-			'show_in_nav_menus' => false
-		) );
-	}
-	
-	/*-----------------------------------------------------------------------------------*/
-	/* Get Post Id of Custom Post for Image */
-	/*-----------------------------------------------------------------------------------*/
-	public function get_silentpost ( $option_key = '' ) {
-		global $wpdb;
-		$post_id = 1;
-		if ( $option_key != '' ) {
-			$args = array( 
-				'post_parent' => '0', 
-				'post_type' => $this->custom_post_type_image, 
-				'post_name' => $option_key, 
-				'post_status' => 'draft', 
-				'comment_status' => 'closed', 
-				'ping_status' => 'closed'
-			);
-			$my_posts = get_posts( $args );
-			if ( $my_posts ) {
-				foreach ($my_posts as $my_post) {
-					$post_id = $my_post->ID;
-					break;
-				}
-			} else {
-				$args['post_title'] = str_replace('_', ' ', $option_key);
-				$post_id = wp_insert_post( $args );
-			}
+		if ( is_rtl() ) {
+			wp_enqueue_style( 'a3-uploader-style-rtl', $this->admin_uploader_url() . '/uploader.rtl.css' );
 		}
-		return $post_id;
 	}
-	
+
 	/*-----------------------------------------------------------------------------------*/
 	/* Get Upload Input Field */
 	/*-----------------------------------------------------------------------------------*/
-	public function upload_input ( $name_attribute, $id_attribute = '', $value = '', $default_value = '', $field_name = '', $class = '', $css = '', $description = '', $post_id = 0 ) {
+	public function upload_input ( $name_attribute, $id_attribute = '', $value = '', $attachment_id = 0, $default_value = '', $field_name = '', $class = '', $css = '', $description = '', $strip_methods = true ) {
 		$output = '';
-		
-		if ( $post_id == 0 ) {
-			$post_id = $this->get_silentpost( $id_attribute );
-		}
-		
+
 		if ( trim( $value ) == '' ) $value = trim( $default_value );
-		
-		$output .= '<input type="text" name="'.$name_attribute.'" id="'.$id_attribute.'" value="'.esc_attr( $value ).'" class="'.$id_attribute. ' ' .$class.' a3_upload" style="'.$css.'" rel="'.$field_name.'" /> ';
-		$output .= '<input id="upload_'.$id_attribute.'" class="a3rev-ui-upload-button a3_upload_button button" type="button" value="'.__( 'Upload', 'woops' ).'" rel="'.$post_id.'" /> '.$description;
+
+		if ( strstr( $name_attribute, ']' ) ) {
+			$attachment_id_name_attribute = substr_replace( $name_attribute, '_attachment_id', -1, 0 );
+		} else {
+			$attachment_id_name_attribute = $name_attribute.'_attachment_id';
+		}
+
+		if ( $strip_methods === false ) {
+			$strip_methods = 0;
+		} else {
+			$strip_methods = 1;
+		}
+
+		$output .= '<input type="hidden" name="'.$attachment_id_name_attribute.'" id="'.$id_attribute.'_attachment_id" value="'.$attachment_id.'" class=" a3_upload_attachment_id" />';
+		$output .= '<input data-strip-methods="'.$strip_methods.'" type="text" name="'.$name_attribute.'" id="'.$id_attribute.'" value="'.esc_attr( $value ).'" class="'.$id_attribute. ' ' .$class.' a3_upload" style="'.$css.'" rel="'.$field_name.'" /> ';
+		$output .= '<input id="upload_'.$id_attribute.'" class="a3rev-ui-upload-button a3_upload_button button" type="button" value="'.__( 'Upload', 'woops' ).'" /> '.$description;
 		
 		$output .= '<div style="clear:both;"></div><div class="a3_screenshot" id="'.$id_attribute.'_image" style="'.( ( $value == '' ) ? 'display:none;' : 'display:block;' ).'">';
 
@@ -177,38 +129,6 @@ class WC_Predictive_Search_Uploader extends WC_Predictive_Search_Admin_UI
 
 		return $output;
 	}
-	
-	/*-----------------------------------------------------------------------------------*/
-	/* Change the Button text on image popup */
-	/*-----------------------------------------------------------------------------------*/
-	public function change_button_text( $translation, $original, $domain ) {
-	    if ( isset( $_REQUEST['type'] ) ) { return $translation; }
-	    
-	    if ( is_admin() && $original === 'Insert into Post' ) {
-	    	$translation = __( 'Use this Image', 'woops' );
-			if ( isset( $_REQUEST['title'] ) && $_REQUEST['title'] != '' ) { $translation =__( 'Use as', 'woops' ).' '.esc_attr( $_REQUEST['title'] ); }
-	    }
-	
-	    return $translation;
-	}
-	
-	/*-----------------------------------------------------------------------------------*/
-	/* modify_tabs */
-	/*-----------------------------------------------------------------------------------*/
-	public function modify_tabs ( $tabs ) {
-		if ( isset( $tabs['gallery'] ) ) { $tabs['gallery'] = str_replace( 'Gallery', __( 'Previously Uploaded', 'woops' ), $tabs['gallery'] ); }
-		return $tabs;
-	}
-	
-	/*-----------------------------------------------------------------------------------*/
-	/* inside_popup */
-	/*-----------------------------------------------------------------------------------*/
-	public function inside_popup () {
-		if ( isset( $_REQUEST['a3_uploader'] ) && $_REQUEST['a3_uploader'] == 'yes' ) {
-			add_filter( 'media_upload_tabs', array( $this, 'modify_tabs' ) );
-		}
-	}
-	
 }
 
 global $wc_predictive_search_uploader;
