@@ -12,7 +12,7 @@
  *
  * Text Domain: woo_quote
  * Domain Path: /languages
- *
+ * 
  * @package WooCommerce_Quote
  * @category Core
  * @author RightPress
@@ -32,7 +32,7 @@ if (!class_exists('WooCommerce_Quote')) {
 
     /**
      * Main plugin class
-     *
+     * 
      * @class WooCommerce_Quote
      * @package WooCommerce_Quote
      * @author RightPress
@@ -42,7 +42,7 @@ if (!class_exists('WooCommerce_Quote')) {
 
         /**
          * Class constructor
-         *
+         * 
          * @access public
          * @return void
          */
@@ -100,7 +100,7 @@ if (!class_exists('WooCommerce_Quote')) {
 
         /**
          * Function hooked to init
-         *
+         * 
          * @access public
          * @return void
          */
@@ -150,7 +150,7 @@ if (!class_exists('WooCommerce_Quote')) {
 
         /**
          * Loads/sets configuration values from structure file and database
-         *
+         * 
          * @access public
          * @return void
          */
@@ -169,7 +169,7 @@ if (!class_exists('WooCommerce_Quote')) {
 
         /**
          * Get settings options: default, hint, validation, values
-         *
+         * 
          * @access public
          * @param string $name
          * @param bool $split_by_page
@@ -210,7 +210,7 @@ if (!class_exists('WooCommerce_Quote')) {
 
         /**
          * Get array of section info strings
-         *
+         * 
          * @access public
          * @return array
          */
@@ -232,7 +232,7 @@ if (!class_exists('WooCommerce_Quote')) {
 
         /*
          * Get plugin options set by user
-         *
+         * 
          * @access public
          * @return array
          */
@@ -250,7 +250,7 @@ if (!class_exists('WooCommerce_Quote')) {
 
         /*
          * Update options
-         *
+         * 
          * @access public
          * @return bool
          */
@@ -261,12 +261,12 @@ if (!class_exists('WooCommerce_Quote')) {
 
         /**
          * Add link to admin page under Woocommerce menu
-         *
+         * 
          * @access public
          * @return void
          */
         public function add_admin_menu()
-        {
+        {            
             global $current_user;
 
             get_currentuserinfo();
@@ -293,7 +293,7 @@ if (!class_exists('WooCommerce_Quote')) {
 
         /*
          * Set up admin page
-         *
+         * 
          * @access public
          * @return void
          */
@@ -324,7 +324,7 @@ if (!class_exists('WooCommerce_Quote')) {
 
         /**
          * Admin interface constructor
-         *
+         * 
          * @access public
          * @return void
          */
@@ -381,7 +381,7 @@ if (!class_exists('WooCommerce_Quote')) {
 
         /**
          * Render admin page navigation tabs
-         *
+         * 
          * @access public
          * @param string $current_tab
          * @return void
@@ -403,7 +403,7 @@ if (!class_exists('WooCommerce_Quote')) {
 
         /**
          * Render settings page
-         *
+         * 
          * @access public
          * @param string $page
          * @return void
@@ -450,7 +450,7 @@ if (!class_exists('WooCommerce_Quote')) {
 
         /**
          * Render section info
-         *
+         * 
          * @access public
          * @param array $section
          * @return void
@@ -464,7 +464,7 @@ if (!class_exists('WooCommerce_Quote')) {
 
         /*
          * Render a text field
-         *
+         * 
          * @access public
          * @param array $args
          * @return void
@@ -481,7 +481,7 @@ if (!class_exists('WooCommerce_Quote')) {
 
         /*
          * Render a text area
-         *
+         * 
          * @access public
          * @param array $args
          * @return void
@@ -498,7 +498,7 @@ if (!class_exists('WooCommerce_Quote')) {
 
         /*
          * Render a checkbox
-         *
+         * 
          * @access public
          * @param array $args
          * @return void
@@ -515,7 +515,7 @@ if (!class_exists('WooCommerce_Quote')) {
 
         /*
          * Render a dropdown
-         *
+         * 
          * @access public
          * @param array $args
          * @return void
@@ -540,7 +540,7 @@ if (!class_exists('WooCommerce_Quote')) {
 
         /**
          * Render select from media library field
-         *
+         * 
          * @access public
          * @param array $args
          * @return void
@@ -555,7 +555,7 @@ if (!class_exists('WooCommerce_Quote')) {
                 $args['options'][$args['name']]
             );
 
-            // Render "Open Library" button
+            // Render "Open Library" button 
             printf(
                 '<input id="%s_upload_button" type="button" value="%s" />',
                 $args['name'],
@@ -565,7 +565,7 @@ if (!class_exists('WooCommerce_Quote')) {
 
         /**
          * Validate admin form input
-         *
+         * 
          * @access public
          * @param array $input
          * @return array
@@ -692,7 +692,7 @@ if (!class_exists('WooCommerce_Quote')) {
 
         /**
          * Get next quote number
-         *
+         * 
          * @access public
          * @return int
          */
@@ -709,7 +709,7 @@ if (!class_exists('WooCommerce_Quote')) {
 
         /**
          * Generates and pushes quote to the browser
-         *
+         * 
          * @access public
          * @return void
          */
@@ -748,7 +748,7 @@ if (!class_exists('WooCommerce_Quote')) {
 
         /**
          * Load scripts required for admin
-         *
+         * 
          * @access public
          * @return void
          */
@@ -776,7 +776,7 @@ if (!class_exists('WooCommerce_Quote')) {
 
         /**
          * Check if PHP image processing extension is installed
-         *
+         * 
          * @access public
          * @return bool
          */
@@ -791,7 +791,7 @@ if (!class_exists('WooCommerce_Quote')) {
 
         /**
          * Add settings link on plugins page
-         *
+         * 
          * @access public
          * @return void
          */
@@ -801,12 +801,12 @@ if (!class_exists('WooCommerce_Quote')) {
             array_unshift($links, $settings_link);
             $settings_link = '<a href="admin.php?page=woocommerce_quotes">'.__('Settings', 'woo_quote').'</a>';
             array_unshift($links, $settings_link);
-            return $links;
+            return $links; 
         }
 
         /**
          * Render quote download button
-         *
+         * 
          * @access public
          * @return void
          */
@@ -814,7 +814,7 @@ if (!class_exists('WooCommerce_Quote')) {
         {
             echo apply_filters(
                     'woo_quote_button',
-                    '<a  href="' . home_url('/?get_woo_quote=1') . '"><button type="button" id="quote-button-id" class="rob ' .
+                    '<a  href="' . home_url('/?get_woo_quote=1') . '"><button type="button" id="quote-button-id" class="' .
                     join(' ', apply_filters('woocommerce_quote_button_classes', array('button', 'alt', 'woo_quote_button')))
                     . '">' .  $this->opt['woo_quote_title_download_quote'] . '</button></a>',
                     $this->opt['woo_quote_title_download_quote'],
@@ -824,7 +824,7 @@ if (!class_exists('WooCommerce_Quote')) {
 
         /**
          * Check WooCommerce version
-         *
+         * 
          * @access public
          * @param string $version
          * @return bool
@@ -851,7 +851,7 @@ if (!class_exists('WooCommerce_Quote')) {
 
         /**
          * Change Add To Cart button label
-         *
+         * 
          * @access public
          * @return string
          */
@@ -862,7 +862,7 @@ if (!class_exists('WooCommerce_Quote')) {
 
         /**
          * Mask price
-         *
+         * 
          * @access public
          * @return string
          */
@@ -873,7 +873,7 @@ if (!class_exists('WooCommerce_Quote')) {
 
         /**
          * Hide checkout objects using CSS
-         *
+         * 
          * @access public
          * @return string
          */
@@ -894,7 +894,7 @@ if (!class_exists('WooCommerce_Quote')) {
 
         /**
          * Hide cart objects using CSS
-         *
+         * 
          * @access public
          * @return string
          */
