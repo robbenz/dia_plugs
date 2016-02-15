@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class WC_Widget_Products extends WC_Widget {
 
 	/**
-	 * Constructor.
+	 * Constructor
 	 */
 	public function __construct() {
 		$this->widget_cssclass    = 'woocommerce widget_products';
@@ -83,7 +83,7 @@ class WC_Widget_Products extends WC_Widget {
 	}
 
 	/**
-	 * Query the products and return them.
+	 * Query the products and return them
 	 * @param  array $args
 	 * @param  array $instance
 	 * @return WP_Query
@@ -154,7 +154,7 @@ class WC_Widget_Products extends WC_Widget {
 	}
 
 	/**
-	 * Output widget.
+	 * widget function.
 	 *
 	 * @see WP_Widget
 	 *

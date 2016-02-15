@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WooCommerce Shipping Method Class.
+ * WooCommerce Shipping Method Class
  *
  * Extended by shipping methods to handle shipping calculations etc.
  *
@@ -57,7 +57,7 @@ abstract class WC_Shipping_Method extends WC_Settings_API {
 	public $rates        = array();
 
 	/**
-	 * Whether or not we need to calculate tax on top of the shipping rate.
+	 * Whether or not we need to calculate tax on top of the shipping rate
 	 *
 	 * @return boolean
 	 */
@@ -66,7 +66,7 @@ abstract class WC_Shipping_Method extends WC_Settings_API {
 	}
 
 	/**
-	 * Add a rate.
+	 * Add a rate
 	 *
 	 * Add a shipping rate. If taxes are not set they will be calculated based on cost.
 	 *
@@ -86,8 +86,8 @@ abstract class WC_Shipping_Method extends WC_Settings_API {
 			return;
 		}
 
-		// Total up the cost
-		$total_cost = wc_format_decimal( is_array( $args['cost'] ) ? array_sum( $args['cost'] ) : $args['cost'], wc_get_price_decimals() );
+		// Handle cost
+		$total_cost = is_array( $args['cost'] ) ? array_sum( $args['cost'] ) : $args['cost'];
 		$taxes      = $args['taxes'];
 
 		// Taxes - if not an array and not set to false, calc tax based on cost and passed calc_tax variable
@@ -136,7 +136,7 @@ abstract class WC_Shipping_Method extends WC_Settings_API {
 	}
 
 	/**
-	 * Check if the shipping method has settings or not.
+	 * has_settings function.
 	 *
 	 * @return bool
 	 */
@@ -145,7 +145,7 @@ abstract class WC_Shipping_Method extends WC_Settings_API {
 	}
 
 	/**
-	 * Check if shipping method is available or not.
+	 * is_available function.
 	 *
 	 * @param array $package
 	 * @return bool
@@ -181,7 +181,7 @@ abstract class WC_Shipping_Method extends WC_Settings_API {
 	}
 
 	/**
-	 * Return the shipping method title.
+	 * Return the shipping method title
 	 *
 	 * @return string
 	 */
@@ -190,7 +190,7 @@ abstract class WC_Shipping_Method extends WC_Settings_API {
 	}
 
 	/**
-	 * Get fee for the shipping method.
+	 * get_fee function.
 	 *
 	 * @param mixed $fee
 	 * @param mixed $total

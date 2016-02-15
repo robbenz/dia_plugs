@@ -83,13 +83,13 @@ class WC_PS_Product_Tags_Data
 		}
 
 		$where_title = ' ( ';
-		$where_title .= WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'ppt.name', $search_keyword );
+		$where_title .= $wpdb->prepare( WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'ppt.name' ) . " LIKE '%s' OR " . WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'ppt.name' ) . " LIKE '%s' ", $search_keyword.'%', '% '.$search_keyword.'%' );
 		if ( '' != $search_keyword_nospecial ) {
-			$where_title .= " OR ". WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'ppt.name', $search_keyword_nospecial );
+			$where_title .= " OR ". $wpdb->prepare( WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'ppt.name' ) . " LIKE '%s' OR " . WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'ppt.name' ) . " LIKE '%s' ", $search_keyword_nospecial.'%', '% '.$search_keyword_nospecial.'%' );
 		}
 		$search_keyword_no_s_letter = WC_Predictive_Search_Functions::remove_s_letter_at_end_word( $search_keyword );
 		if ( $search_keyword_no_s_letter != false ) {
-			$where_title .= " OR ". WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'ppt.name', $search_keyword_no_s_letter );
+			$where_title .= " OR ". $wpdb->prepare( WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'ppt.name' ) . " LIKE '%s' OR " . WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'ppt.name' ) . " LIKE '%s' ", $search_keyword_no_s_letter.'%', '% '.$search_keyword_no_s_letter.'%' );
 		}
 		$where_title .= ' ) ';
 

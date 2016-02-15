@@ -5,9 +5,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Free Shipping Method.
+ * Free Shipping Method
  *
- * A simple shipping method for free shipping.
+ * A simple shipping method for free shipping
  *
  * @class   WC_Shipping_Free_Shipping
  * @version 2.4.0
@@ -16,22 +16,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class WC_Shipping_Free_Shipping extends WC_Shipping_Method {
 
-	/**
-	 * Min amount to be valid.
-	 *
-	 * @var float
-	 */
+	/** @var float Min amount to be valid */
 	public $min_amount;
 
-	/**
-	 * Requires option.
-	 *
-	 * @var string
-	 */
+	/** @var string Requires option */
 	public $requires;
 
 	/**
-	 * Constructor.
+	 * Constructor
 	 */
 	public function __construct() {
 		$this->id 			= 'free_shipping';
@@ -40,7 +32,7 @@ class WC_Shipping_Free_Shipping extends WC_Shipping_Method {
 	}
 
 	/**
-	 * Initialize free shipping.
+	 * init function.
 	 */
 	public function init() {
 
@@ -61,7 +53,7 @@ class WC_Shipping_Free_Shipping extends WC_Shipping_Method {
 	}
 
 	/**
-	 * Initialize Gateway Settings Form Fields.
+	 * Initialise Gateway Settings Form Fields
 	 */
 	public function init_form_fields() {
 		$this->form_fields = array(
@@ -124,8 +116,7 @@ class WC_Shipping_Free_Shipping extends WC_Shipping_Method {
 	}
 
 	/**
-	 * Check if free shipping is available.
-	 *
+	 * is_available function.
 	 * @param array $package
 	 * @return bool
 	 */
@@ -202,8 +193,7 @@ class WC_Shipping_Free_Shipping extends WC_Shipping_Method {
 	}
 
 	/**
-	 * Calculate free shipping.
-	 *
+	 * calculate_shipping function.
 	 * @return array
 	 */
 	public function calculate_shipping() {

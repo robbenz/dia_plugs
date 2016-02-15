@@ -82,9 +82,9 @@ class WC_PS_Product_SKU_Data
 		}
 
 		$where_title = ' ( ';
-		$where_title .= WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'pp.sku', $search_keyword );
+		$where_title .= $wpdb->prepare( WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'pp.sku' ) . " LIKE '%s' OR " . WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'pp.sku' ) . " LIKE '%s' ", $search_keyword.'%', '% '.$search_keyword.'%' );
 		if ( '' != $search_keyword_nospecial ) {
-			$where_title .= " OR ". WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'pp.sku', $search_keyword_nospecial );
+			$where_title .= " OR ". $wpdb->prepare( WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'pp.sku' ) . " LIKE '%s' OR " . WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'pp.sku' ) . " LIKE '%s' ", $search_keyword_nospecial.'%', '% '.$search_keyword_nospecial.'%' );
 		}
 		$where_title .= ' ) ';
 

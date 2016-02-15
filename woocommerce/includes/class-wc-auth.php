@@ -2,7 +2,7 @@
 /**
  * WooCommerce Auth
  *
- * Handles wc-auth endpoint requests.
+ * Handles wc-auth endpoint requests
  *
  * @author   WooThemes
  * @category API
@@ -19,14 +19,12 @@ if ( ! class_exists( 'WC_Auth' ) ) :
 class WC_Auth {
 
 	/**
-	 * Version.
-	 *
-	 * @var int
+	 * Version
 	 */
 	const VERSION = 1;
 
 	/**
-	 * Setup class.
+	 * Setup class
 	 *
 	 * @since 2.4.0
 	 */
@@ -42,11 +40,11 @@ class WC_Auth {
 	}
 
 	/**
-	 * Add query vars.
+	 * Add query vars
 	 *
 	 * @since  2.4.0
 	 *
-	 * @param  array $vars
+	 * @param  $vars
 	 *
 	 * @return string[]
 	 */
@@ -57,7 +55,7 @@ class WC_Auth {
 	}
 
 	/**
-	 * Add auth endpoint.
+	 * Add auth endpoint
 	 *
 	 * @since 2.4.0
 	 */
@@ -85,7 +83,7 @@ class WC_Auth {
 	}
 
 	/**
-	 * Return a list of permissions a scope allows.
+	 * Return a list of permissions a scope allows
 	 *
 	 * @since  2.4.0
 	 *
@@ -121,7 +119,7 @@ class WC_Auth {
 	}
 
 	/**
-	 * Build auth urls.
+	 * Build auth urls
 	 *
 	 * @since  2.4.0
 	 *
@@ -131,7 +129,7 @@ class WC_Auth {
 	 * @return string
 	 */
 	protected function build_url( $data, $endpoint ) {
-		$url = wc_get_endpoint_url( 'wc-auth/v' . self::VERSION, $endpoint, home_url( '/' ) );
+		$url = wc_get_endpoint_url( 'wc-auth/v' . self::VERSION, $endpoint, get_home_url( '/' ) );
 
 		return add_query_arg( array(
 			'app_name'     => wc_clean( $data['app_name'] ),
@@ -143,7 +141,7 @@ class WC_Auth {
 	}
 
 	/**
-	 * Make validation.
+	 * Make validation
 	 *
 	 * @since  2.4.0
 	 */
@@ -237,7 +235,6 @@ class WC_Auth {
 	 * @param  string $url
 	 *
 	 * @return bool
-	 * @throws Exception
 	 */
 	protected function post_consumer_data( $consumer_data, $url ) {
 		$params = array(
@@ -260,7 +257,7 @@ class WC_Auth {
 	}
 
 	/**
-	 * Handle auth requests.
+	 * Handle auth requests
 	 *
 	 * @since 2.4.0
 	 */
@@ -282,7 +279,7 @@ class WC_Auth {
 	}
 
 	/**
-	 * Auth endpoint.
+	 * Auth endpoint
 	 *
 	 * @since 2.4.0
 	 *
@@ -358,7 +355,7 @@ class WC_Auth {
 	}
 
 	/**
-	 * Maybe delete key.
+	 * Maybe delete key
 	 *
 	 * @since 2.4.0
 	 *

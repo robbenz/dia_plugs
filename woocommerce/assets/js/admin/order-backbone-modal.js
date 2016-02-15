@@ -25,8 +25,7 @@
 
 		if ( settings.template ) {
 			new $.WCBackboneModal.View({
-				target: settings.template,
-				string: settings.variable
+				target: settings.template
 			});
 		}
 	};
@@ -37,8 +36,7 @@
 	 * @type {object}
 	 */
 	$.WCBackboneModal.defaultOptions = {
-		template: '',
-		variable: {}
+		template: ''
 	};
 
 	/**
@@ -50,25 +48,18 @@
 		tagName: 'div',
 		id: 'wc-backbone-modal-dialog',
 		_target: undefined,
-		_string: undefined,
 		events: {
 			'click .modal-close': 'closeButton',
 			'click #btn-ok':      'addButton',
-			'touchstart #btn-ok': 'addButton',
 			'keydown':            'keyboardActions'
 		},
 		initialize: function( data ) {
 			this._target = data.target;
-			this._string = data.string;
 			_.bindAll( this, 'render' );
 			this.render();
 		},
 		render: function() {
-			var template = wp.template( this._target );
-
-			this.$el.attr( 'tabindex' , '0' ).append(
-				template( this._string )
-			);
+			this.$el.attr( 'tabindex' , '0' ).append( $( this._target ).html() );
 
 			$( document.body ).css({
 				'overflow': 'hidden'

@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Flat Rate Shipping Method.
+ * Flat Rate Shipping Method
  *
  * @class 		WC_Shipping_Flat_Rate
  * @version		2.4.0
@@ -13,15 +13,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class WC_Shipping_Flat_Rate extends WC_Shipping_Method {
 
-	/**
-	 * Cost passed to [fee] shortcode.
-	 *
-	 * @var string
-	 */
+	/** @var string cost passed to [fee] shortcode */
 	protected $fee_cost = '';
 
 	/**
-	 * Constructor.
+	 * Constructor
 	 */
 	public function __construct() {
 		$this->id                 = 'flat_rate';
@@ -34,7 +30,7 @@ class WC_Shipping_Flat_Rate extends WC_Shipping_Method {
 	}
 
 	/**
-	 * Initialize flat rate shipping.
+	 * init function.
 	 */
 	public function init() {
 		// Load the settings.
@@ -52,14 +48,14 @@ class WC_Shipping_Flat_Rate extends WC_Shipping_Method {
 	}
 
 	/**
-	 * Initialize Settings Form Fields.
+	 * Initialise Settings Form Fields
 	 */
 	public function init_form_fields() {
 		$this->form_fields = include( 'includes/settings-flat-rate.php' );
 	}
 
 	/**
-	 * Evaluate a cost from a sum/string.
+	 * Evaluate a cost from a sum/string
 	 * @param  string $sum
 	 * @param  array  $args
 	 * @return string
@@ -67,10 +63,9 @@ class WC_Shipping_Flat_Rate extends WC_Shipping_Method {
 	protected function evaluate_cost( $sum, $args = array() ) {
 		include_once( 'includes/class-wc-eval-math.php' );
 
-		// Allow 3rd parties to process shipping cost arguments
-		$args           = apply_filters( 'woocommerce_evaluate_shipping_cost_args', $args, $sum, $this );
-		$locale         = localeconv();
-		$decimals       = array( wc_get_price_decimal_separator(), $locale['decimal_point'], $locale['mon_decimal_point'] );
+		$locale   = localeconv();
+		$decimals = array( wc_get_price_decimal_separator(), $locale['decimal_point'], $locale['mon_decimal_point'] );
+
 		$this->fee_cost = $args['cost'];
 
 		// Expand shortcodes
@@ -104,7 +99,7 @@ class WC_Shipping_Flat_Rate extends WC_Shipping_Method {
 	}
 
 	/**
-	 * Work out fee (shortcode).
+	 * Work out fee (shortcode)
 	 * @param  array $atts
 	 * @return string
 	 */
@@ -156,9 +151,7 @@ class WC_Shipping_Flat_Rate extends WC_Shipping_Method {
 		$highest_class_cost     = 0;
 
 		foreach ( $found_shipping_classes as $shipping_class => $products ) {
-			// Also handles BW compatibility when slugs were used instead of ids
-			$shipping_class_term = get_term_by( 'slug', $shipping_class, 'product_shipping_class' );
-			$class_cost_string   = $shipping_class_term && $shipping_class_term->term_id ? $this->get_option( 'class_cost_' . $shipping_class_term->term_id, $this->get_option( 'class_cost_' . $shipping_class, '' ) ) : $this->get_option( 'no_class_cost', '' );
+			$class_cost_string = $shipping_class ? $this->get_option( 'class_cost_' . $shipping_class, '' ) : $this->get_option( 'no_class_cost', '' );
 
 			if ( $class_cost_string === '' ) {
 				continue;
@@ -187,9 +180,9 @@ class WC_Shipping_Flat_Rate extends WC_Shipping_Method {
 		}
 
 		/**
-		 * Developers can add additional flat rates based on this one via this action since @version 2.4.
+		 * Developers can add additional flat rates based on this one via this action since @version 2.4
 		 *
-		 * Previously there were (overly complex) options to add additional rates however this was not user.
+		 * Previously there were (overly complex) options to add additional rates however this was not user
 		 * friendly and goes against what Flat Rate Shipping was originally intended for.
 		 *
 		 * This example shows how you can add an extra rate based on this flat rate via custom function:
@@ -198,19 +191,19 @@ class WC_Shipping_Flat_Rate extends WC_Shipping_Method {
 		 *
 		 * 		function add_another_custom_flat_rate( $method, $rate ) {
 		 * 			$new_rate          = $rate;
-		 * 			$new_rate['id']    .= ':' . 'custom_rate_name'; // Append a custom ID.
-		 * 			$new_rate['label'] = 'Rushed Shipping'; // Rename to 'Rushed Shipping'.
-		 * 			$new_rate['cost']  += 2; // Add $2 to the cost.
+		 * 			$new_rate['id']    .= ':' . 'custom_rate_name'; // Append a custom ID
+		 * 			$new_rate['label'] = 'Rushed Shipping'; // Rename to 'Rushed Shipping'
+		 * 			$new_rate['cost']  += 2; // Add $2 to the cost
 		 *
-		 * 			// Add it to WC.
+		 * 			// Add it to WC
 		 * 			$method->add_rate( $new_rate );
-		 * 		}.
+		 * 		}
 		 */
 		do_action( 'woocommerce_' . $this->id . '_shipping_add_rate', $this, $rate, $package );
 	}
 
 	/**
-	 * Get items in package.
+	 * Get items in package
 	 * @param  array $package
 	 * @return int
 	 */
@@ -248,12 +241,12 @@ class WC_Shipping_Flat_Rate extends WC_Shipping_Method {
 	}
 
 	/**
-	 * Adds extra calculated flat rates.
+	 * Adds extra calculated flat rates
 	 *
 	 * @deprecated 2.4.0
 	 *
 	 * Additonal rates defined like this:
-	 * 	Option Name | Additional Cost [+- Percents%] | Per Cost Type (order, class, or item).
+	 * 	Option Name | Additional Cost [+- Percents%] | Per Cost Type (order, class, or item)
 	 */
 	public function calculate_extra_shipping( $method, $rate, $package ) {
 		if ( $this->options ) {
@@ -298,7 +291,7 @@ class WC_Shipping_Flat_Rate extends WC_Shipping_Method {
 	}
 
 	/**
-	 * Get extra cost.
+	 * Get extra cost
 	 *
 	 * @deprecated 2.4.0
 	 * @param  string $cost_string

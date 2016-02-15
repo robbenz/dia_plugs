@@ -391,7 +391,7 @@ $.Autocompleter = function(input, options, wc_psearch_popup ) {
 				
 		if (data && data.value.length) {
 			// clear cached if this data is older
-			if ( options.isDebug || now.getTime().toString() > data.timestamp  ) {
+			if ( now.getTime().toString() > data.timestamp  ) {
 				localStorage.destroy({ id: store_id });
 				data = false;
 			}
@@ -422,11 +422,9 @@ $.Autocompleter = function(input, options, wc_psearch_popup ) {
 					limit: options.max
 				}, extraParams),
 				success: function(data) {
-					if ( options.isDebug === false ) {
-						tomorrow = new Date(now.getTime() + (options.cacheTimeout * 60 * 60 * 1000));
-						tomorrow_str = tomorrow.getTime().toString();
-						localStorage.create( { id: store_id, value: data, timestamp: tomorrow_str } );
-					}
+					tomorrow = new Date(now.getTime() + (24 * 60 * 60 * 1000));
+					tomorrow_str = tomorrow.getTime().toString();
+					localStorage.create( { id: store_id, value: data, timestamp: tomorrow_str } );
 					success(term, data);
 				}
 			});
@@ -449,8 +447,6 @@ $.Autocompleter.defaults = {
 	loadingClass: "predictive_loading",
 	minChars: 1,
 	delay: 400,
-	cacheTimeout: 24,
-	isDebug: true,
 	matchCase: false,
 	matchSubset: false,
 	matchContains: false,

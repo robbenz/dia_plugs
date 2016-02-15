@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'WC_Email_Customer_Completed_Order' ) ) :
 
 /**
- * Customer Completed Order Email.
+ * Customer Completed Order Email
  *
  * Order complete emails are sent to the customer when the order is marked complete and usual indicates that the order has been shipped.
  *
@@ -20,12 +20,11 @@ if ( ! class_exists( 'WC_Email_Customer_Completed_Order' ) ) :
 class WC_Email_Customer_Completed_Order extends WC_Email {
 
 	/**
-	 * Constructor.
+	 * Constructor
 	 */
 	function __construct() {
 
 		$this->id             = 'customer_completed_order';
-		$this->customer_email = true;
 		$this->title          = __( 'Completed order', 'woocommerce' );
 		$this->description    = __( 'Order complete emails are sent to customers when their orders are marked completed and usually indicate that their orders have been shipped.', 'woocommerce' );
 
@@ -48,8 +47,6 @@ class WC_Email_Customer_Completed_Order extends WC_Email {
 
 	/**
 	 * Trigger.
-	 *
-	 * @param int $order_id
 	 */
 	function trigger( $order_id ) {
 
@@ -72,7 +69,7 @@ class WC_Email_Customer_Completed_Order extends WC_Email {
 	}
 
 	/**
-	 * Get email subject.
+	 * get_subject function.
 	 *
 	 * @access public
 	 * @return string
@@ -86,7 +83,7 @@ class WC_Email_Customer_Completed_Order extends WC_Email {
 	}
 
 	/**
-	 * Get email heading.
+	 * get_heading function.
 	 *
 	 * @access public
 	 * @return string
@@ -100,19 +97,20 @@ class WC_Email_Customer_Completed_Order extends WC_Email {
 	}
 
 	/**
-	 * Get content html.
+	 * get_content_html function.
 	 *
 	 * @access public
 	 * @return string
 	 */
 	function get_content_html() {
-		return wc_get_template_html( $this->template_html, array(
+		ob_start();
+		wc_get_template( $this->template_html, array(
 			'order'         => $this->object,
 			'email_heading' => $this->get_heading(),
 			'sent_to_admin' => false,
-			'plain_text'    => false,
-			'email'			=> $this
+			'plain_text'    => false
 		) );
+		return ob_get_clean();
 	}
 
 	/**
@@ -121,13 +119,14 @@ class WC_Email_Customer_Completed_Order extends WC_Email {
 	 * @return string
 	 */
 	function get_content_plain() {
-		return wc_get_template_html( $this->template_plain, array(
+		ob_start();
+		wc_get_template( $this->template_plain, array(
 			'order'         => $this->object,
 			'email_heading' => $this->get_heading(),
 			'sent_to_admin' => false,
-			'plain_text'    => true,
-			'email'			=> $this
+			'plain_text'    => true
 		) );
+		return ob_get_clean();
 	}
 
 	/**
@@ -146,32 +145,28 @@ class WC_Email_Customer_Completed_Order extends WC_Email {
 				'type'          => 'text',
 				'description'   => sprintf( __( 'Defaults to <code>%s</code>', 'woocommerce' ), $this->subject ),
 				'placeholder'   => '',
-				'default'       => '',
-				'desc_tip'      => true
+				'default'       => ''
 			),
 			'heading' => array(
 				'title'         => __( 'Email Heading', 'woocommerce' ),
 				'type'          => 'text',
 				'description'   => sprintf( __( 'Defaults to <code>%s</code>', 'woocommerce' ), $this->heading ),
 				'placeholder'   => '',
-				'default'       => '',
-				'desc_tip'      => true
+				'default'       => ''
 			),
 			'subject_downloadable' => array(
 				'title'         => __( 'Subject (downloadable)', 'woocommerce' ),
 				'type'          => 'text',
 				'description'   => sprintf( __( 'Defaults to <code>%s</code>', 'woocommerce' ), $this->subject_downloadable ),
 				'placeholder'   => '',
-				'default'       => '',
-				'desc_tip'      => true
+				'default'       => ''
 			),
 			'heading_downloadable' => array(
 				'title'         => __( 'Email Heading (downloadable)', 'woocommerce' ),
 				'type'          => 'text',
 				'description'   => sprintf( __( 'Defaults to <code>%s</code>', 'woocommerce' ), $this->heading_downloadable ),
 				'placeholder'   => '',
-				'default'       => '',
-				'desc_tip'      => true
+				'default'       => ''
 			),
 			'email_type' => array(
 				'title'         => __( 'Email type', 'woocommerce' ),
@@ -179,8 +174,7 @@ class WC_Email_Customer_Completed_Order extends WC_Email {
 				'description'   => __( 'Choose which format of email to send.', 'woocommerce' ),
 				'default'       => 'html',
 				'class'         => 'email_type wc-enhanced-select',
-				'options'       => $this->get_email_type_options(),
-				'desc_tip'      => true
+				'options'       => $this->get_email_type_options()
 			)
 		);
 	}

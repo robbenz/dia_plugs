@@ -62,6 +62,7 @@ jQuery( function( $ ) {
 		var wc_country_select_select2 = function() {
 			$( 'select.country_select:visible, select.state_select:visible' ).each( function() {
 				var select2_args = $.extend({
+					placeholder: $( this ).attr( 'placeholder' ),
 					placeholderOption: 'first',
 					width: '100%'
 				}, getEnhancedSelectFormatString() );
@@ -90,7 +91,7 @@ jQuery( function( $ ) {
 			input_name  = $statebox.attr( 'name' ),
 			input_id    = $statebox.attr( 'id' ),
 			value       = $statebox.val(),
-			placeholder = $statebox.attr( 'placeholder' ) || $statebox.attr( 'data-placeholder' ) || '';
+			placeholder = $statebox.attr( 'placeholder' );
 
 		if ( states[ country ] ) {
 			if ( $.isEmptyObject( states[ country ] ) ) {
@@ -115,7 +116,7 @@ jQuery( function( $ ) {
 
 				if ( $statebox.is( 'input' ) ) {
 					// Change for select
-					$statebox.replaceWith( '<select name="' + input_name + '" id="' + input_id + '" class="state_select" data-placeholder="' + placeholder + '"></select>' );
+					$statebox.replaceWith( '<select name="' + input_name + '" id="' + input_id + '" class="state_select" placeholder="' + placeholder + '"></select>' );
 					$statebox = $wrapper.find( '#billing_state, #shipping_state, #calc_shipping_state' );
 				}
 

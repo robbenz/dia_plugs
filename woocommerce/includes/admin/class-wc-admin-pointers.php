@@ -1,6 +1,6 @@
 <?php
 /**
- * Adds and controls pointers for contextual help/tutorials
+ * Adds and controls pointers for contextual help/tutorials.
  *
  * @author   WooThemes
  * @category Admin
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WC_Admin_Pointers Class.
+ * WC_Admin_Pointers Class
  */
 class WC_Admin_Pointers {
 
@@ -64,9 +64,12 @@ class WC_Admin_Pointers {
 					)
 				),
 				'content' => array(
-					'target'       => "#wp-content-editor-container",
+					'target'       => "#content",
 					'next'         => 'product-type',
-					'next_trigger' => array(),
+					'next_trigger' => array(
+						'target' => '#content',
+						'event'  => 'click change input'
+					),
 					'options'      => array(
 						'content'  => 	'<h3>' . esc_html__( 'Product Description', 'woocommerce' ) . '</h3>' .
 										'<p>' . esc_html__( 'This is your products main body of content. Here you should describe your product in detail.', 'woocommerce' ) . '</p>',

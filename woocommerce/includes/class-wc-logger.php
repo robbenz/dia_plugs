@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Allows log files to be written to for debugging purposes
+ * Allows log files to be written to for debugging purposes.
  *
  * @class 		WC_Logger
  * @version		1.6.4
@@ -16,9 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class WC_Logger {
 
 	/**
-	 * Stores open file _handles.
-	 *
-	 * @var array
+	 * @var array Stores open file _handles.
 	 * @access private
 	 */
 	private $_handles;

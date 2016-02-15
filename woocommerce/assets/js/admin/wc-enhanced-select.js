@@ -95,9 +95,7 @@ jQuery( function( $ ) {
 								term:     term,
 								action:   $( this ).data( 'action' ) || 'woocommerce_json_search_products_and_variations',
 								security: wc_enhanced_select_params.search_products_nonce,
-								exclude:  $( this ).data( 'exclude' ),
-								include:  $( this ).data( 'include' ),
-								limit:    $( this ).data( 'limit' )
+								exclude:  $( this ).data( 'exclude' )
 				            };
 				        },
 				        results: function( data ) {

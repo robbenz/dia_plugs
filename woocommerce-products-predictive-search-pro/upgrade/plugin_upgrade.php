@@ -15,12 +15,13 @@ add_filter( 'http_request_args', array('WC_Predictive_Search_Upgrade', 'disable_
 // Defined this plugin as external so that WordPress don't call to the WordPress.org Plugin Install API
 add_filter( 'plugins_api', array('WC_Predictive_Search_Upgrade', 'is_external'), 11, 3 );
 
+add_action( 'admin_menu', array( 'WC_Predictive_Search_Upgrade', 'auto_check_get_version_info' ) );
+
 class WC_Predictive_Search_Upgrade
 {
 
 	//Displays message on Plugin's page
     public static function plugin_row_alert_new_version($plugin_name){
-    	if ( function_exists( 'responsi_premium_pack_check_pin' ) && responsi_premium_pack_check_pin() ) return;
 
         $new_version = self::get_version_info();
 
@@ -34,11 +35,13 @@ class WC_Predictive_Search_Upgrade
         }
     }
 
-	public static function get_version_info($cache=true){
-		global $wc_predictive_search_admin_init;
+    public static function auto_check_get_version_info() {
+    	self::get_version_info();
+    }
 
+	public static function get_version_info($cache=true){
 		//Getting version number
-		$respone_api = get_transient( $wc_predictive_search_admin_init->version_transient );
+		$respone_api = get_transient("woo_predictive_search_update_info");
 
 		if ( ! $cache ) {
             $respone_api = false;
@@ -46,7 +49,7 @@ class WC_Predictive_Search_Upgrade
 
         // Fixed for work compatibility WP 4.3 when transient_timeout is deleted
         if ( false !== $respone_api ) {
-			$transient_timeout = '_transient_timeout_' . $wc_predictive_search_admin_init->version_transient;
+			$transient_timeout = '_transient_timeout_' . 'woo_predictive_search_update_info';
 			$timeout = get_option( $transient_timeout, false );
 			if ( false === $timeout ) {
 				$respone_api = false;
@@ -56,7 +59,7 @@ class WC_Predictive_Search_Upgrade
 		if ( ! $respone_api ) {
 
 				// set caching first before call to server to solve server timeout issue and make cron run again everytime
-				set_transient( $wc_predictive_search_admin_init->version_transient, 'cannot_connect_api', 86400); //caching for 24 hours
+				set_transient("woo_predictive_search_update_info", 'cannot_connect_api', 86400); //caching for 24 hours
 
 				$options = array(
 					'method' 	=> 'POST',
@@ -79,7 +82,7 @@ class WC_Predictive_Search_Upgrade
 				}
 
 			//caching responses.
-            set_transient( $wc_predictive_search_admin_init->version_transient, $respone_api, 86400); //caching for 24 hours
+            set_transient("woo_predictive_search_update_info", $respone_api, 86400); //caching for 24 hours
 
             $version_info = explode('||', $respone_api);
 			if ( FALSE !== stristr( $respone_api, '||' ) && is_array( $version_info ) ) {
@@ -93,7 +96,7 @@ class WC_Predictive_Search_Upgrade
 					} else {
 						$number_failures = (int) $number_failures + 1;
 						update_option( 'woo_predictive_search_number_failures', $number_failures );
-						set_transient( $wc_predictive_search_admin_init->version_transient, $respone_api, 7200); //change caching for 2 hours
+						set_transient("woo_predictive_search_update_info", $respone_api, 7200); //change caching for 2 hours
 					}
 				} else {
 					delete_option( 'woo_predictive_search_number_failures' );
@@ -126,17 +129,7 @@ class WC_Predictive_Search_Upgrade
     }
 	
 	public static function check_update($update_plugins_option){
-        global $responsi_premium_addons;
-
-        $new_version = false;
-		if ( function_exists( 'responsi_premium_pack_check_pin' ) && responsi_premium_pack_check_pin() && $responsi_premium_addons && method_exists( $responsi_premium_addons, 'get_plugin_data' ) ) {
-			$new_version = $responsi_premium_addons->get_plugin_data( get_option('wc_predictive_search_plugin'), 'woocommerce' );
-		}
-
-		if ( ! $new_version || ( is_array( $new_version ) && isset( $new_version['is_valid_key'] ) && $new_version['is_valid_key'] != 'valid' ) ) {
-			$new_version = self::get_version_info();
-		}
-
+        $new_version = self::get_version_info();
         if (!is_array($new_version))
             return $update_plugins_option;
 

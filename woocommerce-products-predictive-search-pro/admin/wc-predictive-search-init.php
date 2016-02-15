@@ -17,17 +17,18 @@ function wc_predictive_install(){
 
 	delete_option('woocommerce_search_lite_clean_on_deletion');
 
-	update_option('wc_predictive_search_version', '3.3.0');
+	update_option('wc_predictive_search_version', '3.0.3');
 	update_option('wc_predictive_search_plugin', 'woo_predictive_search');
-	delete_transient( $wc_predictive_search_admin_init->version_transient );
+	delete_transient("woo_predictive_search_update_info");
 	flush_rewrite_rules();
 
 	update_option('wc_predictive_search_just_installed', true);
 }
 
+
 function wc_predictive_deactivate(){
-	global $wc_predictive_search_admin_init;
-	delete_transient( $wc_predictive_search_admin_init->version_transient );
+
+	delete_transient("woo_predictive_search_update_info");
 
 	$respone_api = __('Connection Error! Could not reach the a3API on Amazon Cloud, the network may be busy. Please try again in a few minutes.', 'woops');
 	$options = array(
@@ -56,14 +57,13 @@ function wc_predictive_deactivate(){
 
 function woops_init() {
 	if ( get_option('wc_predictive_search_just_installed') ) {
-		delete_option('wc_predictive_search_just_installed');
-
 		@set_time_limit(86400);
 		@ini_set("memory_limit","1000M");
 
 		global $wc_ps_synch;
 		$wc_ps_synch->synch_full_database();
 
+		delete_option('wc_predictive_search_just_installed');
 		wp_redirect( admin_url( 'admin.php?page=woo-predictive-search', 'relative' ) );
 		exit;
 	}
@@ -85,6 +85,10 @@ function register_widget_woops_predictive_search() {
 	register_widget('WC_Predictive_Search_Widgets');
 }
 
+if(isset($_POST['wc_predictive_pin_submit'])){
+	wc_predictive_confirm_pin();
+}
+
 $check_encryp_file = false;
 $str = "THlvTkNsQnNkV2RwYmlCT1lXMWxPaUJYVUMxQ2JHOW5VM1J2Y21VZ1ptOXlJRmR2Y21Sd2NtVnpjdzBLVUd4MVoybHVJRlZTU1RvZ2FIUjBjRG92TDNkM2R5NWlkV2xzWkdGaWJHOW5jM1J2Y21VdVkyOXRMdzBLUkdWelkzSnBjSFJwYjI0NklFRjFkRzl0WVhScFkyRnNiSGtnWjJWdVpYSmhkR1VnWlVKaGVTQmhabVpwYkdsaGRHVWdZbXh2WjNNZ2QybDBhQ0IxYm1seGRXVWdkR2wwYkdWekxDQjBaWGgwTENCbFFtRjVJR0YxWTNScGIyNXpMZzBLVm1WeWMybHZiam9nTXk0d0RRcEVZWFJsT2lCTllYSmphQ0F4TENBeU1EQTVEUXBCZFhSb2IzSTZJRUoxYVd4a1FVSnNiMmRUZEc5eVpRMEtRWFYwYUc5eUlGVlNTVG9nYUhSMGNEb3ZMM2QzZHk1aWRXbHNaR0ZpYkc5bmMzUnZjbVV1WTI5dEx3MEtLaThnRFFvTkNnMEtJeU1qSXlNakl5TWpJeU1qSXlNakl5TWpJeU1qSXlNakl5TWpJeU1qSXlNakl5TWpJeU1qSXlNakl5TWpJeU1qSXlNakl5TWpJeU1qSXlNakl5TWpJeU1qSXlNakl5TWpJdzBLSXlBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSXcwS0l5QWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJRmRRTFVKc2IyZFRkRzl5WlNCWGIzSmtjSEpsYzNNZ1VHeDFaMmx1SUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0l3MEtJeUFnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJdzBLSXlBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSXcwS0l5QWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0l3MEtJeU1qSXlNakl5TWpJeU1qSXlNakl5TWpJeU1qSXlNakl5TWpJeU1qSXlNakl5TWpJeU1qSXlNakl5TWpJeU1qSXlNakl5TWpJeU1qSXlNakl5TWpJeU1qSXlNakl5TWpJdzBLRFFvTkNpTWpJeU1qSXlNakl5TWpJeU1qSXlNakl5TWpJeU1qSXlNakl5TWpJeU1qSXlNakl5TWpJeU1qSXlNakl5TWpJeU09";
 if(file_exists(WOOPS_FILE_PATH."/encryp.inc")){
@@ -93,35 +97,6 @@ if(file_exists(WOOPS_FILE_PATH."/encryp.inc")){
 		$check_encryp_file = true;
 	}
 }
-
-if ( ! function_exists( 'responsi_premium_pack_special_check_pin' ) ) {
-function responsi_premium_pack_special_check_pin() {
-    $domain_name = get_option('siteurl');
-    $a3rev_auth_key = get_option('a3rev_auth_responsi_premium_pack');
-    $a3rev_pin_key = get_option('a3rev_pin_responsi_premium_pack');
-    if (function_exists('is_multisite')){
-        if (is_multisite()) {
-            global $wpdb;
-            $domain_name = $wpdb->get_var("SELECT option_value FROM ".$wpdb->options." WHERE option_name = 'siteurl'");
-            if ( substr($domain_name, -1) == '/') {
-                $domain_name = substr( $domain_name, 0 , -1 );
-            }
-        }
-    }
-    $nonwww_domain_name = str_replace( 'www.', '', $domain_name );
-    $nonhttp_domain_name = str_replace( array( 'http://', 'https://' ), '', $nonwww_domain_name );
-    $www_domain_name = str_replace( 'https://', 'https://www.', str_replace( 'http://', 'http://www.', $nonwww_domain_name ) );
-    if ( $a3rev_auth_key != '' && $a3rev_pin_key == sha1(md5('a3rev.com_'.$nonwww_domain_name.'_responsi_premium_pack'))) return true;
-    elseif ( $a3rev_auth_key != '' && $a3rev_pin_key == sha1(md5('a3rev.com_'.$nonhttp_domain_name.'_responsi_premium_pack'))) return true;
-    elseif ( $a3rev_auth_key != '' && $a3rev_pin_key == sha1(md5('a3rev.com_'.$www_domain_name.'_responsi_premium_pack'))) return true;
-    else return false;
-}
-}
-
-if(isset($_POST['wc_predictive_pin_submit'])){
-	wc_predictive_confirm_pin();
-}
-
 if($check_encryp_file == true && woo_predictive_search_check_pin() ){
 
 // Need to call Admin Init to show Admin UI
@@ -154,7 +129,7 @@ add_action( 'add_meta_boxes', array('WC_Predictive_Search_Meta','create_custombo
 
 // Save Predictive Search Meta Box to all post type
 if(in_array(basename($_SERVER['PHP_SELF']), array('post.php', 'page.php', 'page-new.php', 'post-new.php'))){
-	add_action( 'save_post', array('WC_Predictive_Search_Meta','save_custombox' ), 10 );
+	add_action( 'save_post', array('WC_Predictive_Search_Meta','save_custombox' ), 103 );
 }
 
 // Add search widget icon to Page Editor
@@ -162,6 +137,9 @@ if (in_array (basename($_SERVER['PHP_SELF']), array('post.php', 'page.php', 'pag
 	add_action('media_buttons_context', array('WC_Predictive_Search_Shortcodes', 'add_search_widget_icon') );
 	add_action('admin_footer', array('WC_Predictive_Search_Shortcodes', 'add_search_widget_mce_popup'));
 }
+
+if ( ! is_admin() )
+	add_action('init',array('WC_Predictive_Search_Hook_Filter','add_frontend_style'));
 
 function woo_predictive_search_widget($ps_echo = true, $product_items = 0, $p_sku_items = 0, $p_cat_items = 0, $p_tag_items = 0, $post_items = 0, $page_items = 0, $character_max = 100, $style='', $global_search = true, $show_price = true) {
 
@@ -227,21 +205,14 @@ function woo_predictive_search_pro_upgrade_plugin () {
 		include( WOOPS_DIR. '/includes/updates/update-2.0.php' );
 	}
 
-	// Upgrade to 3.0
+	// Upgrade to 2.0
 	if(version_compare(get_option('wc_predictive_search_version'), '3.0.0') === -1){
 		update_option('wc_predictive_search_version', '3.0.0');
 
 		include( WOOPS_DIR. '/includes/updates/update-3.0.php' );
 	}
 
-	// Upgrade to 3.2.0
-	if(version_compare(get_option('wc_predictive_search_version'), '3.2.0') === -1){
-		update_option('wc_predictive_search_version', '3.2.0');
-
-		include( WOOPS_DIR. '/includes/updates/update-3.2.0.php' );
-	}
-
-	update_option('wc_predictive_search_version', '3.3.0');
+	update_option('wc_predictive_search_version', '3.0.3');
 }
 
 }else{
@@ -292,15 +263,13 @@ function wc_predictive_confirm_pin() {
 			update_option('woo_predictive_search_message', $respone_api );
 		}
 		if( woo_predictive_search_check_pin() ){
-			global $wc_predictive_search_admin_init;
-			delete_transient( $wc_predictive_search_admin_init->version_transient );
+			delete_transient("woo_predictive_search_update_info");
 			update_option('a3rev_woo_predictivesearch_just_confirm', 1);
 		}
 	}
 }
 
 function woo_predictive_search_check_pin() {
-	if ( function_exists( 'responsi_premium_pack_special_check_pin' ) && responsi_premium_pack_special_check_pin() ) return true;
 	$domain_name = get_option('siteurl');
 	$a3rev_auth_key = get_option('a3rev_auth_woo_predictive_search');
 	$a3rev_pin_key = get_option('a3rev_pin_woo_predictive_search');

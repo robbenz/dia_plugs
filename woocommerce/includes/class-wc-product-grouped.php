@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Grouped Product Class.
+ * Grouped Product Class
  *
  * Grouped products cannot be purchased - they are wrappers for other products.
  *
@@ -20,8 +20,11 @@ class WC_Product_Grouped extends WC_Product {
 	/** @public array Array of child products/posts/variations. */
 	public $children;
 
+	/** @public string The product's total stock, including that of its children. */
+	public $total_stock;
+
 	/**
-	 * Constructor.
+	 * __construct function.
 	 *
 	 * @access public
 	 * @param mixed $product
@@ -32,7 +35,7 @@ class WC_Product_Grouped extends WC_Product {
 	}
 
 	/**
-	 * Get the add to cart button text.
+	 * Get the add to cart button text
 	 *
 	 * @access public
 	 * @return string
@@ -40,6 +43,40 @@ class WC_Product_Grouped extends WC_Product {
 	public function add_to_cart_text() {
 		return apply_filters( 'woocommerce_product_add_to_cart_text', __( 'View products', 'woocommerce' ), $this );
 	}
+
+    /**
+     * Get total stock.
+     *
+     * This is the stock of parent and children combined.
+     *
+     * @access public
+     * @return int
+     */
+    public function get_total_stock() {
+
+        if ( empty( $this->total_stock ) ) {
+
+        	$transient_name = 'wc_product_total_stock_' . $this->id . WC_Cache_Helper::get_transient_version( 'product' );
+
+        	if ( false === ( $this->total_stock = get_transient( $transient_name ) ) ) {
+		        $this->total_stock = $this->stock;
+
+				if ( sizeof( $this->get_children() ) > 0 ) {
+					foreach ( $this->get_children() as $child_id ) {
+						$stock = get_post_meta( $child_id, '_stock', true );
+
+						if ( $stock != '' ) {
+							$this->total_stock += wc_stock_amount( $stock );
+						}
+					}
+				}
+
+				set_transient( $transient_name, $this->total_stock, DAY_IN_SECONDS * 30 );
+			}
+		}
+
+		return wc_stock_amount( $this->total_stock );
+    }
 
 	/**
 	 * Return the products children posts.

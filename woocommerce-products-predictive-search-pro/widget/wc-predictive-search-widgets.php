@@ -118,7 +118,7 @@ class WC_Predictive_Search_Widgets extends WP_Widget
 			<?php } ?>
             <?php } ?>
    			<div class="ctr_search">
-			<input type="text" tabindex="13 id="pp_course_<?php echo $id; ?>" onblur="if (this.value == '') {this.value = '<?php echo esc_js( $search_box_text ); ?>';}" onfocus="if (this.value == '<?php echo esc_js( $search_box_text ); ?>') {this.value = '';}" value="<?php echo esc_attr( $search_box_text ); ?>" name="rs" class="txt_livesearch predictive_search_input" 
+	<input type="text" tabindex="13" id="pp_course_<?php echo $id; ?>" onblur="if (this.value == '') {this.value = '<?php echo esc_js( $search_box_text ); ?>';}" onfocus="if (this.value == '<?php echo esc_js( $search_box_text ); ?>') {this.value = '';}" value="<?php echo esc_attr( $search_box_text ); ?>" name="rs" class="txt_livesearch predictive_search_input"
             data-ps-id="<?php echo $id; ?>"
             data-ps-default_text="<?php echo esc_attr( $search_box_text ); ?>" 
             data-ps-row="<?php echo esc_attr( $row ); ?>" 
@@ -136,7 +136,7 @@ class WC_Predictive_Search_Widgets extends WP_Widget
             </div>
             <input type="hidden" name="search_in" value="<?php echo $search_list[0]; ?>"  />
             <input type="hidden" name="cat_in" value="<?php echo esc_attr( $cat_in ); ?>"  />
-            <input type="hidden" name="search_other" value="<?php echo implode(",", $search_list); ?>"  />
+            <input type="hidden" name="search_other" value="<?php echo implode(",", $search_list); ?>"  />          
             <!-- begin BENZ hack -->
             <span data-ps-id="<?php echo $id;?>" class="bt_search predictive_search_bt" id="bt_pp_search_100"></span>
             <!-- end BENZ hack -->
@@ -162,10 +162,10 @@ class WC_Predictive_Search_Widgets extends WP_Widget
 	}
 
 	function form( $instance ) {
-		wp_enqueue_script( 'jquery-ui-core' );
-		wp_enqueue_script( 'jquery-ui-sortable' );
-		wp_enqueue_script( 'jquery-ui-draggable' );
-
+		wp_enqueue_script('jquery-ui-core');
+		wp_enqueue_script("jquery-ui-sortable");
+		wp_enqueue_script("jquery-ui-draggable");
+		
 		$global_search_box_text = get_option('woocommerce_search_box_text');
 		$items_search_default = WC_Predictive_Search_Widgets::get_items_search();
 		$number_items_default = array();

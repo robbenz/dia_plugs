@@ -9,7 +9,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 }
 
 /**
- * WC_Report_Stock.
+ * WC_Report_Stock
  *
  * @author      WooThemes
  * @category    Admin
@@ -18,15 +18,10 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  */
 class WC_Report_Stock extends WP_List_Table {
 
-	/**
-	 * Max items.
-	 *
-	 * @var int
-	 */
 	protected $max_items;
 
 	/**
-	 * Constructor.
+	 * __construct function.
 	 */
 	public function __construct() {
 
@@ -38,16 +33,14 @@ class WC_Report_Stock extends WP_List_Table {
 	}
 
 	/**
-	 * No items found text.
+	 * No items found text
 	 */
 	public function no_items() {
 		_e( 'No products found.', 'woocommerce' );
 	}
 
 	/**
-	 * Don't need this.
-	 *
-	 * @param string $position
+	 * Don't need this
 	 */
 	public function display_tablenav( $position ) {
 
@@ -57,7 +50,7 @@ class WC_Report_Stock extends WP_List_Table {
 	}
 
 	/**
-	 * Output the report.
+	 * Output the report
 	 */
 	public function output_report() {
 
@@ -68,10 +61,10 @@ class WC_Report_Stock extends WP_List_Table {
 	}
 
 	/**
-	 * Get column value.
+	 * column_default function.
 	 *
 	 * @param mixed $item
-	 * @param string $column_name
+	 * @param mixed $column_name
 	 */
 	public function column_default( $item, $column_name ) {
 		global $product;
@@ -154,9 +147,7 @@ class WC_Report_Stock extends WP_List_Table {
 	}
 
 	/**
-	 * Get columns.
-	 *
-	 * @return array
+	 * get_columns function.
 	 */
 	public function get_columns() {
 
@@ -172,7 +163,7 @@ class WC_Report_Stock extends WP_List_Table {
 	}
 
 	/**
-	 * Prepare customer list items.
+	 * prepare_items function.
 	 */
 	public function prepare_items() {
 
@@ -183,7 +174,7 @@ class WC_Report_Stock extends WP_List_Table {
 		$this->get_items( $current_page, $per_page );
 
 		/**
-		 * Pagination.
+		 * Pagination
 		 */
 		$this->set_pagination_args( array(
 			'total_items' => $this->max_items,

@@ -13,14 +13,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WC_Meta_Box_Order_Downloads Class.
+ * WC_Meta_Box_Order_Downloads Class
  */
 class WC_Meta_Box_Order_Downloads {
 
 	/**
-	 * Output the metabox.
-	 *
-	 * @param WP_Post $post
+	 * Output the metabox
 	 */
 	public static function output( $post ) {
 		global $post, $wpdb;
@@ -78,10 +76,7 @@ class WC_Meta_Box_Order_Downloads {
 	}
 
 	/**
-	 * Save meta box data.
-	 *
-	 * @param int $post_id
-	 * @param WP_Post $post
+	 * Save meta box data
 	 */
 	public static function save( $post_id, $post ) {
 		global $wpdb;
@@ -95,6 +90,7 @@ class WC_Meta_Box_Order_Downloads {
 			$access_expires         = $_POST['access_expires'];
 
 			// Order data
+			$order_key       = get_post_meta( $post->ID, '_order_key', true );
 			$customer_email  = get_post_meta( $post->ID, '_billing_email', true );
 			$customer_user   = get_post_meta( $post->ID, '_customer_user', true );
 			$product_ids_max = max( array_keys( $product_ids ) );

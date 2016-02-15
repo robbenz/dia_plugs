@@ -1,52 +1,5 @@
 *** WooCommerce Predictive Search Changelog ***
 
-= 3.3.0 - 2016/02/15 =
-* Feature - Add new 'Character Syntax' feature with 3 options IGNORE | REMOVE | BOTH to process the special characters from Product, Posts, Pages, Category, Tag Titles and SKU.
-* Feature - New special character REMOVE see the special character as a space.
-* Tweak - Added - character to Special Character List
-* Tweak - Process the search term that contain special character before parse to mysql query
-* Tweak - Update mysql query for support multiple special characters from Product, Posts, Pages, Category, Tag Titles and SKU
-* Tweak - Tested for full compatibility with Yoast SEO plugin version 3.0.7
-* Tweak - tested for full compatibility with WPML version 3.3.6
-* Fix - Update auto sync data for compatibility with WPML v3.3.6 plugin
-* Fix - Update auto sync data for compatibility with Yoast SEO v3.0.7
-
-= 3.2.0 - 2016/02/04 =
-* Feature - Define new 'strip_methods' argument for Uploader type, allow strip http/https or no
-* Feature - Performance : Add new 'Cache Timeout' feature that allow admin set hour for dropdown results cached instead of have hard code into plugin is 24 hours, support for big site usually have new products daily
-* Feature - Exclude Products: Add new feature for admin can turn ON or OFF for exclude Products are out of stock, default is ON
-* Feature - Add Search Results No-Cache option. Admin can turn search box dropdown results caching OFF while testing or debugging 
-* Tweak - Update Predictive Search backbone script and Predictive Search Autcomplete for support 2 new features 'Predictive Search Results No-Cache' and 'Cache Timeout'
-* Tweak - Automatic Sync Products that are Out of Stock to Predictive Search database when admin click on Sync button or when edit Product
-* Tweak - Make upgrade function for automatic sync Product are Out of Stock when upgrade to this version
-* Tweak - Tested for full compatibility with WooCommerce version 2.5.2
-* Tweak - Tested for full compatibility with WordPress version 4.4.2
-* Fix - Compatibility with w3 total cache inline minification.
-* Localisation - Added DE German translation thanks to Michael Busch http://www.michaelbusch-it-consulting.com
-
-= 3.1.0 - 2016/01/30 =
-* Feature - Predictive Search Meta box - Make condition logic script for show or hide the  "Focus Keywords" when check or uncheck "Hide from Predictive Search results" checkbox
-* Feature - Define new 'Background Color' type on plugin framework with ON | OFF switch to disable background or enable it
-* Feature - Define new function - hextorgb() - for convert hex color to rgb color on plugin framework
-* Feature - Define new function - generate_background_color_css() - for export background style code on plugin framework that is used to make custom style
-* Tweak - Put plugin version parameter for all scripts and styles on frontend
-* Tweak - Tested for full compatibility with WooCommerce version 2.5.1
-* Tweak - Tested for full compatibility with WordPress version 4.4.1
-* Fix - Move "Hide from Predictive Search results" checkboxes into inside the "Predictive Search Meta" box instead of put on Box Title for work compatibility on WordPress 4.4 so that it can save correct value when check or unchecked
-* Credit - Thanks to Rodney Washington for reporting the Hide from Predictive Search checkbox bug https://a3rev.com/forums/topic/hide-from-predictive-search-box-not-staying-unchecked/
-
-= 3.0.4 - 2015/12/16 =
-* Tweak - Tested for full compatibility with WordPress major version 4.4
-* Tweak - Tested for full compatibility with WooCommerce version 2.4.12
-* Tweak - Update plugin activation and auto Upgrade script for integration with new Responsi Premium Pack plugin
-* Tweak - Change old Uploader to New UI of Uploader with Backbone and Underscore from WordPress
-* Tweak - Update the uploader script to save the Attachment ID and work with New Uploader
-* Tweak - Change call action from 'wp_head' to 'wp_enqueue_scripts' to load predictive search scripts
-* Tweak - Move the action for load style from 'init' to registry script for loading and easier management
-* Fix - Add 'underscore', 'backbone', 'backbone.localStorage' as Predictive Search script dependencies. Those scripts now always load before Predictive Search script instead of enqueued as separate to fix missed variable error preventing Search script working
-* Fix - Don't call the Parsing Shortcode event from Dashboard, just call it on Front-end to resolve PHP warning when is adding shortcode to page
-* Fix - Define and set total_post variable has default value is 0 for fix "PHP Notice:  Undefined variable: total_post"
-
 = 3.0.3 - 2015/11/03 =
 * Tweak - Show total items synced on Plugin Settings below Sync Now button. Allows admin to see current synch status and continue manual click on Sync Now button until all products and posts are synched
 * Tweak - Added 'ps_lang' parameter to backbone script to know the current language of site for compatibility with WPML version 3.2.7 or higher

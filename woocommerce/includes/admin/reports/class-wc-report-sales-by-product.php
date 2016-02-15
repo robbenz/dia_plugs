@@ -1,9 +1,4 @@
 <?php
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
-}
-
 /**
  * WC_Report_Sales_By_Product
  *
@@ -14,29 +9,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class WC_Report_Sales_By_Product extends WC_Admin_Report {
 
-	/**
-	 * Chart colours.
-	 *
-	 * @var array
-	 */
 	public $chart_colours      = array();
-
-	/**
-	 * Product ids.
-	 *
-	 * @var array
-	 */
 	public $product_ids        = array();
-
-	/**
-	 * Product ids with titles.
-	 *
-	 * @var array
-	 */
 	public $product_ids_titles = array();
 
 	/**
-	 * Constructor.
+	 * Constructor
 	 */
 	public function __construct() {
 		if ( isset( $_GET['product_ids'] ) && is_array( $_GET['product_ids'] ) ) {
@@ -47,7 +25,7 @@ class WC_Report_Sales_By_Product extends WC_Admin_Report {
 	}
 
 	/**
-	 * Get the legend for the main chart sidebar.
+	 * Get the legend for the main chart sidebar
 	 * @return array
 	 */
 	public function get_chart_legend() {
@@ -119,7 +97,7 @@ class WC_Report_Sales_By_Product extends WC_Admin_Report {
 	}
 
 	/**
-	 * Output the report.
+	 * Output the report
 	 */
 	public function output_report() {
 
@@ -146,7 +124,7 @@ class WC_Report_Sales_By_Product extends WC_Admin_Report {
 	}
 
 	/**
-	 * Get chart widgets.
+	 * [get_chart_widgets description]
 	 *
 	 * @return array
 	 */
@@ -170,7 +148,7 @@ class WC_Report_Sales_By_Product extends WC_Admin_Report {
 	}
 
 	/**
-	 * Output current filters.
+	 * Show current filters
 	 */
 	public function current_filters() {
 
@@ -192,7 +170,7 @@ class WC_Report_Sales_By_Product extends WC_Admin_Report {
 	}
 
 	/**
-	 * Output products widget.
+	 * Product selection
 	 */
 	public function products_widget() {
 		?>
@@ -373,7 +351,7 @@ class WC_Report_Sales_By_Product extends WC_Admin_Report {
 	}
 
 	/**
-	 * Output an export link.
+	 * Output an export link
 	 */
 	public function get_export_button() {
 
@@ -393,7 +371,7 @@ class WC_Report_Sales_By_Product extends WC_Admin_Report {
 	}
 
 	/**
-	 * Get the main chart.
+	 * Get the main chart
 	 *
 	 * @return string
 	 */

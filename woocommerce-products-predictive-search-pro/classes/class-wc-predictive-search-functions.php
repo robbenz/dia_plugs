@@ -31,7 +31,6 @@ class WC_Predictive_Search_Functions
 			"“" => "&ldquo;",
 			"”" => "&rdquo;",
 			"‐" => "&dash;",
-			"-" => "-",
 			"–" => "&ndash;",
 			"—" => "&mdash;",
 			"←" => "&larr;",
@@ -71,69 +70,24 @@ class WC_Predictive_Search_Functions
 		return apply_filters( 'wc_ps_special_characters', $special_characters );
 	}
 
-	public static function is_enable_special_characters () {
-		$enable_special_characters = true;
+	public static function remove_special_characters_in_mysql( $field_name ) {
+		if ( trim( $field_name ) == '' ) return '';
 
 		$woocommerce_search_remove_special_character = get_option( 'woocommerce_search_remove_special_character', 'no' );
 		if ( 'no' == $woocommerce_search_remove_special_character ) {
-			$enable_special_characters = false;
+			return $field_name;
 		}
 
 		$woocommerce_search_special_characters = get_option( 'woocommerce_search_special_characters', array() );
 		if ( !is_array( $woocommerce_search_special_characters ) || count( $woocommerce_search_special_characters ) < 1 ) {
-			$enable_special_characters = false;
+			return $field_name;
 		}
 
-		return $enable_special_characters;
-	}
-
-	public static function replace_mysql_command( $field_name, $special_symbol, $replace_special_character = 'ignore' ) {
-		if ( 'ignore' == $replace_special_character ) {
-			$field_name = 'REPLACE( '.$field_name.', " '.$special_symbol.' ", "")';
-			$field_name = 'REPLACE( '.$field_name.', " '.$special_symbol.'", "")';
-			$field_name = 'REPLACE( '.$field_name.', "'.$special_symbol.' ", "")';
+		foreach ( $woocommerce_search_special_characters as $special_symbol ) {
 			$field_name = 'REPLACE( '.$field_name.', "'.$special_symbol.'", "")';
-		} else {
-			$field_name = 'REPLACE( '.$field_name.', " '.$special_symbol.' ", " ")';
-			$field_name = 'REPLACE( '.$field_name.', " '.$special_symbol.'", " ")';
-			$field_name = 'REPLACE( '.$field_name.', "'.$special_symbol.' ", " ")';
-			$field_name = 'REPLACE( '.$field_name.', "'.$special_symbol.'", " ")';
 		}
 
 		return $field_name;
-	}
-
-	public static function remove_special_characters_in_mysql( $field_name, $search_keyword = '' ) {
-		global $wpdb;
-
-		$sql_after = '';
-
-		if ( '' == trim( $field_name ) || '' == trim( $search_keyword ) ) {
-			return $sql_after;
-		}
-
-		// This is original query
-		$sql_after = $wpdb->prepare( $field_name . " LIKE %s OR " . $field_name . " LIKE %s ", $search_keyword.'%', '% '.$search_keyword.'%' );
-
-		if ( ! self::is_enable_special_characters() ) {
-			return $sql_after;
-		}
-
-		$replace_special_character             = get_option( 'woocommerce_search_replace_special_character', 'remove' );
-		$woocommerce_search_special_characters = get_option( 'woocommerce_search_special_characters', array() );
-
-		foreach ( $woocommerce_search_special_characters as $special_symbol ) {
-
-			if ( 'both' == $replace_special_character ) {
-				$sql_after .= " OR ". $wpdb->prepare( self::replace_mysql_command( $field_name, $special_symbol, 'ignore' ) . " LIKE %s OR " . self::replace_mysql_command( $field_name, $special_symbol, 'ignore' ) . " LIKE %s ", $search_keyword.'%', '% '.$search_keyword.'%' );
-				$sql_after .= " OR ". $wpdb->prepare( self::replace_mysql_command( $field_name, $special_symbol, 'remove' ) . " LIKE %s OR " . self::replace_mysql_command( $field_name, $special_symbol, 'remove' ) . " LIKE %s ", $search_keyword.'%', '% '.$search_keyword.'%' );
-			} else {
-				$sql_after .= " OR ". $wpdb->prepare( self::replace_mysql_command( $field_name, $special_symbol, $replace_special_character ) . " LIKE %s OR " . self::replace_mysql_command( $field_name, $special_symbol, $replace_special_character ) . " LIKE %s ", $search_keyword.'%', '% '.$search_keyword.'%' );
-			}
-
-		}
-
-		return $sql_after;
 	}
 
 	public static function remove_s_letter_at_end_word( $search_keyword ) {

@@ -10,25 +10,11 @@ jQuery( function( $ ) {
 	var $supports_html5_storage;
 	try {
 		$supports_html5_storage = ( 'sessionStorage' in window && window.sessionStorage !== null );
+
 		window.sessionStorage.setItem( 'wc', 'test' );
 		window.sessionStorage.removeItem( 'wc' );
 	} catch( err ) {
 		$supports_html5_storage = false;
-	}
-
-	/* Cart session creation time to base expiration on */
-	function set_cart_creation_timestamp() {
-		if ( $supports_html5_storage ) {
-			sessionStorage.setItem( 'wc_cart_created', ( new Date() ).getTime() );
-		}
-	}
-
-	/** Set the cart hash in both session and local storage */
-	function set_cart_hash( cart_hash ) {
-		if ( $supports_html5_storage ) {
-			localStorage.setItem( 'wc_cart_hash', cart_hash );
-			sessionStorage.setItem( 'wc_cart_hash', cart_hash );
-		}
 	}
 
 	var $fragment_refresh = {
@@ -43,11 +29,7 @@ jQuery( function( $ ) {
 
 				if ( $supports_html5_storage ) {
 					sessionStorage.setItem( wc_cart_fragments_params.fragment_name, JSON.stringify( data.fragments ) );
-					set_cart_hash( data.cart_hash );
-
-					if ( data.cart_hash ) {
-						set_cart_creation_timestamp();
-					}
+					sessionStorage.setItem( 'wc_cart_hash', data.cart_hash );
 				}
 
 				$( document.body ).trigger( 'wc_fragments_refreshed' );
@@ -55,45 +37,18 @@ jQuery( function( $ ) {
 		}
 	};
 
-	/* Named callback for refreshing cart fragment */
-	function refresh_cart_fragment() {
-		$.ajax( $fragment_refresh );
-	}
-
 	/* Cart Handling */
 	if ( $supports_html5_storage ) {
 
-		var cart_timeout = null,
-			day_in_ms    = ( 24 * 60 * 60 * 1000 );
-
 		$( document.body ).bind( 'added_to_cart', function( event, fragments, cart_hash ) {
-			var prev_cart_hash = sessionStorage.getItem( 'wc_cart_hash' );
-
-			if ( prev_cart_hash === null || prev_cart_hash === undefined || prev_cart_hash === '' ) {
-				set_cart_creation_timestamp();
-			}
-
 			sessionStorage.setItem( wc_cart_fragments_params.fragment_name, JSON.stringify( fragments ) );
-			set_cart_hash( cart_hash );
-		});
-
-		$( document.body ).bind( 'wc_fragments_refreshed', function() {
-			clearTimeout( cart_timeout );
-			cart_timeout = setTimeout( refresh_cart_fragment, day_in_ms );
-		} );
-
-		// Refresh when storage changes in another tab
-		$( window ).on( 'storage onstorage', function ( e ) {
-			if ( 'wc_cart_hash' === e.originalEvent.key && localStorage.getItem( 'wc_cart_hash' ) !== sessionStorage.getItem( 'wc_cart_hash' ) ) {
-				$.ajax( $fragment_refresh );
-			}
+			sessionStorage.setItem( 'wc_cart_hash', cart_hash );
 		});
 
 		try {
 			var wc_fragments = $.parseJSON( sessionStorage.getItem( wc_cart_fragments_params.fragment_name ) ),
 				cart_hash    = sessionStorage.getItem( 'wc_cart_hash' ),
-				cookie_hash  = $.cookie( 'woocommerce_cart_hash'),
-				cart_created = sessionStorage.getItem( 'wc_cart_created' );
+				cookie_hash  = $.cookie( 'woocommerce_cart_hash' );
 
 			if ( cart_hash === null || cart_hash === undefined || cart_hash === '' ) {
 				cart_hash = '';
@@ -101,19 +56,6 @@ jQuery( function( $ ) {
 
 			if ( cookie_hash === null || cookie_hash === undefined || cookie_hash === '' ) {
 				cookie_hash = '';
-			}
-
-			if ( cart_hash && ( cart_created === null || cart_created === undefined || cart_created === '' ) ) {
-				throw 'No cart_created';
-			}
-
-			if ( cart_created ) {
-				var cart_expiration = ( ( 1 * cart_created ) + day_in_ms ),
-					timestamp_now   = ( new Date() ).getTime();
-				if ( cart_expiration < timestamp_now ) {
-					throw 'Fragment expired';
-				}
-				cart_timeout = setTimeout( refresh_cart_fragment, ( cart_expiration - timestamp_now ) );
 			}
 
 			if ( wc_fragments && wc_fragments['div.widget_shopping_cart_content'] && cart_hash === cookie_hash ) {
@@ -128,11 +70,11 @@ jQuery( function( $ ) {
 			}
 
 		} catch( err ) {
-			refresh_cart_fragment();
+			$.ajax( $fragment_refresh );
 		}
 
 	} else {
-		refresh_cart_fragment();
+		$.ajax( $fragment_refresh );
 	}
 
 	/* Cart Hiding */

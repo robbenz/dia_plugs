@@ -70,7 +70,7 @@ class WC_Predictive_Search_Performance_Settings extends WC_Predictive_Search_Adm
 	public $form_messages = array();
 	
 	public function custom_types() {
-		$custom_type = array( 'min_characters_yellow_message', 'time_delay_yellow_message', 'cache_timeout_yellow_message' );
+		$custom_type = array( 'min_characters_yellow_message', 'time_delay_yellow_message' );
 		
 		return $custom_type;
 	}
@@ -231,28 +231,6 @@ class WC_Predictive_Search_Performance_Settings extends WC_Predictive_Search_Adm
 			array(
                 'type' 		=> 'time_delay_yellow_message',
            	),
-
-           	array(
-                'type' 		=> 'heading',
-           	),
-			array(  
-				'name' 		=> __( 'Cache Timeout', 'woops' ),
-				'desc' 		=> __( 'hours', 'woops'),
-				'id' 		=> 'woocommerce_search_cache_timeout',
-				'type' 		=> 'slider',
-				'default'	=> 24,
-				'min'		=> 1,
-				'max'		=> 72,
-				'increment'	=> 1
-			),
-
-			array(
-                'type' 		=> 'heading',
-				'class'		=> 'yellow_message_container cache_timeout_yellow_message_container',
-           	),
-			array(
-                'type' 		=> 'cache_timeout_yellow_message',
-           	),
 		
         ));
 	}
@@ -350,59 +328,6 @@ $(document).ready(function() {
 		var data = {
 				action: 		"wc_ps_yellow_message_dismiss",
 				session_name: 	"wc_ps_time_delay_message_dismiss",
-				security: 		"<?php echo wp_create_nonce("wc_ps_yellow_message_dismiss"); ?>"
-			};
-		$.post( "<?php echo admin_url( 'admin-ajax.php', 'relative' ); ?>", data);
-	});
-});
-})(jQuery);
-</script>
-			</td>
-		</tr>
-    <?php
-	
-	}
-
-	public function cache_timeout_yellow_message( $value ) {
-	?>
-    	<tr valign="top" class="cache_timeout_yellow_message_tr" style=" ">
-			<th scope="row" class="titledesc">&nbsp;</th>
-			<td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
-            <?php 
-				$cache_timeout_yellow_message = '<div>'. __( 'How long should cached popup result remain fresh? Use low value if your site have add or update many products daily. A good starting point is 24 hours.' , 'woops' ) .'</div><div>&nbsp;</div>
-				<div style="clear:both"></div>
-                <a class="cache_timeout_yellow_message_dontshow" style="float:left;" href="javascript:void(0);">'.__( "Don't show again", 'woops' ).'</a>
-                <a class="cache_timeout_yellow_message_dismiss" style="float:right;" href="javascript:void(0);">'.__( "Dismiss", 'woops' ).'</a>
-                <div style="clear:both"></div>';
-            	echo $this->blue_message_box( $cache_timeout_yellow_message, '600px' ); 
-			?>
-<style>
-.a3rev_panel_container .cache_timeout_yellow_message_container {
-<?php if ( get_option( 'wc_ps_cache_timeout_message_dontshow', 0 ) == 1 ) echo 'display: none !important;'; ?>
-<?php if ( !isset($_SESSION) ) { @session_start(); } if ( isset( $_SESSION['wc_ps_cache_timeout_message_dismiss'] ) ) echo 'display: none !important;'; ?>
-}
-</style>
-<script>
-(function($) {
-$(document).ready(function() {
-	
-	$(document).on( "click", ".cache_timeout_yellow_message_dontshow", function(){
-		$(".cache_timeout_yellow_message_tr").slideUp();
-		$(".cache_timeout_yellow_message_container").slideUp();
-		var data = {
-				action: 		"wc_ps_yellow_message_dontshow",
-				option_name: 	"wc_ps_cache_timeout_message_dontshow",
-				security: 		"<?php echo wp_create_nonce("wc_ps_yellow_message_dontshow"); ?>"
-			};
-		$.post( "<?php echo admin_url( 'admin-ajax.php', 'relative' ); ?>", data);
-	});
-	
-	$(document).on( "click", ".cache_timeout_yellow_message_dismiss", function(){
-		$(".cache_timeout_yellow_message_tr").slideUp();
-		$(".cache_timeout_yellow_message_container").slideUp();
-		var data = {
-				action: 		"wc_ps_yellow_message_dismiss",
-				session_name: 	"wc_ps_cache_timeout_message_dismiss",
 				security: 		"<?php echo wp_create_nonce("wc_ps_yellow_message_dismiss"); ?>"
 			};
 		$.post( "<?php echo admin_url( 'admin-ajax.php', 'relative' ); ?>", data);

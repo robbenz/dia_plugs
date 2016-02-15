@@ -15,15 +15,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'WC_Settings_Tax' ) ) :
 
 /**
- * WC_Settings_Tax.
+ * WC_Settings_Tax
  */
 class WC_Settings_Tax extends WC_Settings_Page {
 
-	/**
-	 * Setting page id.
-	 *
-	 * @var string
-	 */
 	protected $id = 'tax';
 
 	/**
@@ -35,7 +30,7 @@ class WC_Settings_Tax extends WC_Settings_Page {
 	}
 
 	/**
-	 * Get sections.
+	 * Get sections
 	 *
 	 * @return array
 	 */
@@ -56,7 +51,7 @@ class WC_Settings_Tax extends WC_Settings_Page {
 	}
 
 	/**
-	 * Get settings array.
+	 * Get settings array
 	 *
 	 * @return array
 	 */
@@ -72,7 +67,7 @@ class WC_Settings_Tax extends WC_Settings_Page {
 	}
 
 	/**
-	 * Output the settings.
+	 * Output the settings
 	 */
 	public function output() {
 		global $current_section;
@@ -89,7 +84,7 @@ class WC_Settings_Tax extends WC_Settings_Page {
 	}
 
 	/**
-	 * Save settings.
+	 * Save settings
 	 */
 	public function save() {
 		global $current_section, $wpdb;
@@ -102,90 +97,27 @@ class WC_Settings_Tax extends WC_Settings_Page {
 			$this->save_tax_rates();
 		}
 
-		WC_Cache_Helper::incr_cache_prefix( 'taxes' );
+		$wpdb->query( "DELETE FROM `$wpdb->options` WHERE `option_name` LIKE ('_transient_wc_tax_rates_%') OR `option_name` LIKE ('_transient_timeout_wc_tax_rates_%')" );
 	}
 
 	/**
-	 * Output tax rate tables.
+	 * Output tax rate tables
 	 */
 	public function output_tax_rates() {
-		global $wpdb, $current_section;
+		global $wpdb;
 
+		$page          = ! empty( $_GET['p'] ) ? absint( $_GET['p'] ) : 1;
+		$limit         = 100;
 		$current_class = $this->get_current_tax_class();
-
-		$countries = array();
-		foreach ( WC()->countries->get_allowed_countries() as $value => $label ) {
-			$countries[] = array(
-				'value' => $value,
-				'label' => esc_js( html_entity_decode( $label ) ),
-			);
-		}
-
-		$states = array();
-		foreach ( WC()->countries->get_allowed_country_states() as $label ) {
-			foreach ( $label as $code => $state ) {
-				$states[] = array(
-					'value' => $code,
-					'label' => esc_js( html_entity_decode( $state ) ),
-				);
-			}
-		}
-
-		$base_url = admin_url( add_query_arg( array(
-			'page'    => 'wc-settings',
-			'tab'     => 'tax',
-			'section' => $current_section,
-		), 'admin.php' ) );
-
-		// Localize and enqueue our js.
-		wp_localize_script( 'wc-settings-tax', 'htmlSettingsTaxLocalizeScript', array(
-			'current_class' => $current_class,
-			'wc_tax_nonce'  => wp_create_nonce( 'wc_tax_nonce-class:' . $current_class ),
-			'base_url'      => $base_url,
-			'rates'         => array_values( WC_Tax::get_rates_for_tax_class( $current_class ) ),
-			'page'          => ! empty( $_GET['p'] ) ? absint( $_GET['p'] ) : 1,
-			'limit'         => 100,
-			'countries'     => $countries,
-			'states'        => $states,
-			'default_rate'  => array(
-				'tax_rate_id'       => 0,
-				'tax_rate_country'  => '',
-				'tax_rate_state'    => '',
-				'tax_rate'          => '',
-				'tax_rate_name'     => '',
-				'tax_rate_priority' => 1,
-				'tax_rate_compound' => 0,
-				'tax_rate_shipping' => 1,
-				'tax_rate_order'    => null,
-				'tax_rate_class'    => $current_class,
-			),
-			'strings'       => array(
-				'no_rows_selected' => __( 'No row(s) selected', 'woocommerce' ),
-				'unload_confirmation_msg' => __( 'Your changed data will be lost if you leave this page without saving.', 'woocommerce' ),
-				'csv_data_cols' => array(
-					__( 'Country Code', 'woocommerce' ),
-					__( 'State Code', 'woocommerce' ),
-					__( 'ZIP/Postcode', 'woocommerce' ),
-					__( 'City', 'woocommerce' ),
-					__( 'Rate %', 'woocommerce' ),
-					__( 'Tax Name', 'woocommerce' ),
-					__( 'Priority', 'woocommerce' ),
-					__( 'Compound', 'woocommerce' ),
-					__( 'Shipping', 'woocommerce' ),
-					__( 'Tax Class', 'woocommerce' ),
-				),
-			),
-		) );
-		wp_enqueue_script( 'wc-settings-tax' );
 
 		include( 'views/html-settings-tax.php' );
 	}
 
 	/**
-	 * Get tax class being edited.
+	 * Get tax class being edited
 	 * @return string
 	 */
-	private static function get_current_tax_class() {
+	private function get_current_tax_class() {
 		global $current_section;
 
 		$tax_classes   = WC_Tax::get_tax_classes();
@@ -201,7 +133,7 @@ class WC_Settings_Tax extends WC_Settings_Page {
 	}
 
 	/**
-	 * Get a posted tax rate.
+	 * Get a posted tax rate
 	 * @param  string $key   Key of tax rate in the post data array
 	 * @param  int $order Position/order of rate
 	 * @param  string $class Tax class for rate
@@ -232,7 +164,7 @@ class WC_Settings_Tax extends WC_Settings_Page {
 	}
 
 	/**
-	 * Save tax rates.
+	 * Save tax rates
 	 */
 	public function save_tax_rates() {
 		global $wpdb;

@@ -17,36 +17,13 @@ if ( ! class_exists( 'WP_Importer' ) ) {
  */
 class WC_Tax_Rate_Importer extends WP_Importer {
 
-	/**
-	 * The current file id.
-	 *
-	 * @var int
-	 */
 	public $id;
-
-	/**
-	 * The current file url.
-	 *
-	 * @var string
-	 */
 	public $file_url;
-
-	/**
-	 * The current import page.
-	 *
-	 * @var string
-	 */
 	public $import_page;
-
-	/**
-	 * The current delimiter.
-	 *
-	 * @var string
-	 */
 	public $delimiter;
 
 	/**
-	 * Constructor.
+	 * Constructor
 	 */
 	public function __construct() {
 		$this->import_page = 'woocommerce_tax_rate_csv';
@@ -54,9 +31,9 @@ class WC_Tax_Rate_Importer extends WP_Importer {
 	}
 
 	/**
-	 * Registered callback function for the WordPress Importer.
+	 * Registered callback function for the WordPress Importer
 	 *
-	 * Manages the three separate stages of the CSV import process.
+	 * Manages the three separate stages of the CSV import process
 	 */
 	public function dispatch() {
 
@@ -92,7 +69,7 @@ class WC_Tax_Rate_Importer extends WP_Importer {
 	}
 
 	/**
-	 * Import is starting.
+	 * Import is starting
 	 */
 	private function import_start() {
 		if ( function_exists( 'gc_enable' ) ) {
@@ -107,7 +84,7 @@ class WC_Tax_Rate_Importer extends WP_Importer {
 	}
 
 	/**
-	 * UTF-8 encode the data if `$enc` value isn't UTF-8.
+	 * format_data_from_csv function.
 	 *
 	 * @param mixed $data
 	 * @param string $enc
@@ -118,7 +95,7 @@ class WC_Tax_Rate_Importer extends WP_Importer {
 	}
 
 	/**
-	 * Import the file if it exists and is valid.
+	 * import function.
 	 *
 	 * @param mixed $file
 	 */
@@ -174,7 +151,7 @@ class WC_Tax_Rate_Importer extends WP_Importer {
 	}
 
 	/**
-	 * Performs post-import cleanup of files and the cache.
+	 * Performs post-import cleanup of files and the cache
 	 */
 	public function import_end() {
 		echo '<p>' . __( 'All done!', 'woocommerce' ) . ' <a href="' . admin_url('admin.php?page=wc-settings&tab=tax') . '">' . __( 'View Tax Rates', 'woocommerce' ) . '</a>' . '</p>';
@@ -183,8 +160,8 @@ class WC_Tax_Rate_Importer extends WP_Importer {
 	}
 
 	/**
-	 * Handles the CSV upload and initial parsing of the file to prepare for.
-	 * displaying author import options.
+	 * Handles the CSV upload and initial parsing of the file to prepare for
+	 * displaying author import options
 	 *
 	 * @return bool False if error uploading or invalid file, true otherwise
 	 */
@@ -209,22 +186,22 @@ class WC_Tax_Rate_Importer extends WP_Importer {
 	}
 
 	/**
-	 * Output header html.
+	 * header function.
 	 */
 	public function header() {
 		echo '<div class="wrap"><div class="icon32 icon32-woocommerce-importer" id="icon-woocommerce"><br></div>';
-		echo '<h1>' . __( 'Import Tax Rates', 'woocommerce' ) . '</h1>';
+		echo '<h2>' . __( 'Import Tax Rates', 'woocommerce' ) . '</h2>';
 	}
 
 	/**
-	 * Output footer html.
+	 * footer function.
 	 */
 	public function footer() {
 		echo '</div>';
 	}
 
 	/**
-	 * Output information about the uploading process.
+	 * greet function.
 	 */
 	public function greet() {
 
@@ -282,7 +259,7 @@ class WC_Tax_Rate_Importer extends WP_Importer {
 	}
 
 	/**
-	 * Show import error and quit.
+	 * Show import error and quit
 	 * @param  string $message
 	 */
 	private function import_error( $message = '' ) {
@@ -296,7 +273,7 @@ class WC_Tax_Rate_Importer extends WP_Importer {
 	}
 
 	/**
-	 * Added to http_request_timeout filter to force timeout at 60 seconds during import.
+	 * Added to http_request_timeout filter to force timeout at 60 seconds during import
 	 *
 	 * @param  int $val
 	 * @return int 60

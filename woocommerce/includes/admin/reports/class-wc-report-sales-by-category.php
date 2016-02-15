@@ -1,9 +1,4 @@
 <?php
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
-}
-
 /**
  * WC_Report_Sales_By_Category
  *
@@ -14,36 +9,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class WC_Report_Sales_By_Category extends WC_Admin_Report {
 
-	/**
-	 * Chart colours.
-	 *
-	 * @var array
-	 */
 	public $chart_colours         = array();
-
-	/**
-	 * Categories ids.
-	 *
-	 * @var array
-	 */
 	public $show_categories       = array();
-
-	/**
-	 * Item sales.
-	 *
-	 * @var array
-	 */
 	private $item_sales           = array();
-
-	/**
-	 * Item sales and times.
-	 *
-	 * @var array
-	 */
 	private $item_sales_and_times = array();
 
 	/**
-	 * Constructor.
+	 * Constructor
 	 */
 	public function __construct() {
 		if ( isset( $_GET['show_categories'] ) ) {
@@ -52,7 +24,7 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 	}
 
 	/**
-	 * Get all product ids in a category (and its children).
+	 * Get all product ids in a category (and its children)
 	 *
 	 * @param  int $category_id
 	 * @return array
@@ -66,7 +38,7 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 	}
 
 	/**
-	 * Get the legend for the main chart sidebar.
+	 * Get the legend for the main chart sidebar
 	 *
 	 * @return array
 	 */
@@ -105,7 +77,7 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 	}
 
 	/**
-	 * Output the report.
+	 * Output the report
 	 */
 	public function output_report() {
 
@@ -181,7 +153,7 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 	}
 
 	/**
-	 * Get chart widgets.
+	 * [get_chart_widgets description]
 	 *
 	 * @return array
 	 */
@@ -196,7 +168,7 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 	}
 
 	/**
-	 * Output category widget.
+	 * Category selection
 	 */
 	public function category_widget() {
 
@@ -232,13 +204,13 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 				jQuery(function(){
 					// Select all/none
 					jQuery( '.chart-widget' ).on( 'click', '.select_all', function() {
-						jQuery(this).closest( 'div' ).find( 'select option' ).attr( 'selected', 'selected' );
+						jQuery(this).closest( 'div' ).find( 'select option' ).attr( "selected", "selected" );
 						jQuery(this).closest( 'div' ).find('select').change();
 						return false;
 					});
 
 					jQuery( '.chart-widget').on( 'click', '.select_none', function() {
-						jQuery(this).closest( 'div' ).find( 'select option' ).removeAttr( 'selected' );
+						jQuery(this).closest( 'div' ).find( 'select option' ).removeAttr( "selected" );
 						jQuery(this).closest( 'div' ).find('select').change();
 						return false;
 					});
@@ -249,7 +221,7 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 	}
 
 	/**
-	 * Output an export link.
+	 * Output an export link
 	 */
 	public function get_export_button() {
 
@@ -269,7 +241,7 @@ class WC_Report_Sales_By_Category extends WC_Admin_Report {
 	}
 
 	/**
-	 * Get the main chart.
+	 * Get the main chart
 	 *
 	 * @return string
 	 */

@@ -164,14 +164,11 @@ class WC_Predictive_Search
 
 		$row += 1;
 
-		$search_keyword_nospecial = preg_replace( "/[^a-zA-Z0-9_.\s]/", " ", $search_keyword );
+		$search_keyword           = esc_sql( $wpdb->esc_like( trim( $search_keyword ) ) );
+		$search_keyword_nospecial = preg_replace( "/[^a-zA-Z0-9_.\s]/", "", $search_keyword );
 		if ( $search_keyword == $search_keyword_nospecial ) {
 			$search_keyword_nospecial = '';
-		} else {
-			$search_keyword_nospecial = $wpdb->esc_like( trim( $search_keyword_nospecial ) );
 		}
-
-		$search_keyword	= $wpdb->esc_like( trim( $search_keyword ) );
 
 		$main_sql               = array();
 		$term_relationships_sql = array();
@@ -304,14 +301,11 @@ class WC_Predictive_Search
 
 		$row += 1;
 
-		$search_keyword_nospecial = preg_replace( "/[^a-zA-Z0-9_.\s]/", " ", $search_keyword );
+		$search_keyword           = esc_sql( $wpdb->esc_like( trim( $search_keyword ) ) );
+		$search_keyword_nospecial = preg_replace( "/[^a-zA-Z0-9_.\s]/", "", $search_keyword );
 		if ( $search_keyword == $search_keyword_nospecial ) {
 			$search_keyword_nospecial = '';
-		} else {
-			$search_keyword_nospecial = $wpdb->esc_like( trim( $search_keyword_nospecial ) );
 		}
-
-		$search_keyword	= $wpdb->esc_like( trim( $search_keyword ) );
 
 		$main_sql               = array();
 		$term_relationships_sql = array();
@@ -421,7 +415,6 @@ class WC_Predictive_Search
 	public function get_post_results( $search_keyword, $row, $start = 0, $woocommerce_search_focus_enable, $woocommerce_search_focus_plugin, $post_term_id = 0, $text_lenght = 100, $current_lang = '', $post_type = 'post', $include_header = true , $show_categories = false, $show_tags = false ) {
 		global $wpdb;
 
-		$total_post = 0;
 		$have_post = $this->check_product_exsited( $search_keyword, $woocommerce_search_focus_enable, $woocommerce_search_focus_plugin, $post_type, $post_term_id, $current_lang );
 		if ( ! $have_post ) {
 			$item_list = array( 'total' => $total_post, 'search_in_name' => ( $post_type == 'post' ) ? wc_ps_ict_t__( 'Posts', __('Posts', 'woops') ) : wc_ps_ict_t__( 'Pages', __('Pages', 'woops') ) );
@@ -478,14 +471,11 @@ class WC_Predictive_Search
 
 		$row += 1;
 
-		$search_keyword_nospecial = preg_replace( "/[^a-zA-Z0-9_.\s]/", " ", $search_keyword );
+		$search_keyword           = esc_sql( $wpdb->esc_like( trim( $search_keyword ) ) );
+		$search_keyword_nospecial = preg_replace( "/[^a-zA-Z0-9_.\s]/", "", $search_keyword );
 		if ( $search_keyword == $search_keyword_nospecial ) {
 			$search_keyword_nospecial = '';
-		} else {
-			$search_keyword_nospecial = $wpdb->esc_like( trim( $search_keyword_nospecial ) );
 		}
-
-		$search_keyword	= $wpdb->esc_like( trim( $search_keyword ) );
 
 		$main_sql               = array();
 		$wpml_sql               = array();

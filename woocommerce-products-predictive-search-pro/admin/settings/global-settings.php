@@ -214,22 +214,6 @@ class WC_Predictive_Search_Global_Settings extends WC_Predictive_Search_Admin_UI
   		// Define settings
      	$this->form_fields = apply_filters( $this->option_name . '_settings_fields', array(
 
-     		array(
-            	'name' 		=> __( 'Search Results No-Cache', 'woops' ),
-            	'desc'		=> __( 'While testing different setting and the results in search box dropdown you need to switch ON Results No-Cache On. Search box dropdown results are cached in local store for frontend users for faster delivery on repeat searches. Be sure to turn this OFF when you are finished testing.', 'woops' ),
-                'type' 		=> 'heading',
-           	),
-			array(
-				'name' 		=> __( 'Results No-Cache', 'woops' ),
-				'id' 		=> 'woocommerce_search_is_debug',
-				'type' 		=> 'onoff_checkbox',
-				'default'	=> 'yes',
-				'checked_value'		=> 'yes',
-				'unchecked_value'	=> 'no',
-				'checked_label'		=> __( 'ON', 'woops' ),
-				'unchecked_label' 	=> __( 'OFF', 'woops' ),
-			),
-
 			array(
             	'name' 		=> __( 'Global Search Box Text', 'woops' ),
                 'type' 		=> 'heading',
@@ -303,33 +287,6 @@ class WC_Predictive_Search_Global_Settings extends WC_Predictive_Search_Admin_UI
                 'type' 		=> 'heading',
 				'class'		=> 'woocommerce_search_remove_special_character_container',
            	),
-           	array(
-				'name' 		=> __( 'Character Syntax', 'woops' ),
-				'id' 		=> 'woocommerce_search_replace_special_character',
-				'type' 		=> 'onoff_radio',
-				'default'	=> 'remove',
-				'onoff_options' => array(
-					array(
-						'val' 				=> 'ignore',
-						'text' 				=> __( 'IGNORE. ON to ignore or skip over special characters in the string.', 'woops' ),
-						'checked_label'		=> __( 'ON', 'woops' ),
-						'unchecked_label' 	=> __( 'OFF', 'woops' ),
-					),
-					array(
-						'val' 				=> 'remove',
-						'text' 				=> __( 'REMOVE. ON to remove or see special characters as a space.', 'woops' ).' <span class="description">('.__( 'recommended', 'woops' ).')</span>' ,
-						'checked_label'		=> __( 'ON', 'woops' ),
-						'unchecked_label' 	=> __( 'OFF', 'woops' ),
-					),
-					array(
-						'val' 				=> 'both',
-						'text' 				=> __( 'BOTH. On to use ignore and remove for special characters.', 'woops' ),
-						'checked_label'		=> __( 'ON', 'woops' ),
-						'unchecked_label' 	=> __( 'OFF', 'woops' ),
-					),
-				),
-			),
-
 			array(
 				'name' 		=> __( "Select Characters", 'woops' ),
 				'id' 		=> 'woocommerce_search_special_characters',

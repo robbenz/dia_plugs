@@ -1,9 +1,4 @@
 <?php
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
-}
-
 /**
  * WC_Report_Coupon_Usage
  *
@@ -15,21 +10,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 class WC_Report_Coupon_Usage extends WC_Admin_Report {
 
 	/**
-	 * Chart colours.
-	 *
 	 * @var array
 	 */
 	public $chart_colours = array();
 
 	/**
-	 * Coupon codes.
-	 *
 	 * @var array
 	 */
 	public $coupon_codes = array();
 
 	/**
-	 * Constructor.
+	 * Constructor
 	 */
 	public function __construct() {
 		if ( isset( $_GET['coupon_codes'] ) && is_array( $_GET['coupon_codes'] ) ) {
@@ -40,7 +31,7 @@ class WC_Report_Coupon_Usage extends WC_Admin_Report {
 	}
 
 	/**
-	 * Get the legend for the main chart sidebar.
+	 * Get the legend for the main chart sidebar
 	 *
 	 * @return array
 	 */
@@ -120,7 +111,7 @@ class WC_Report_Coupon_Usage extends WC_Admin_Report {
 	}
 
 	/**
-	 * Output the report.
+	 * Output the report
 	 */
 	public function output_report() {
 
@@ -148,7 +139,7 @@ class WC_Report_Coupon_Usage extends WC_Admin_Report {
 	}
 
 	/**
-	 * Get chart widgets.
+	 * [get_chart_widgets description]
 	 *
 	 * @return array
 	 */
@@ -164,7 +155,7 @@ class WC_Report_Coupon_Usage extends WC_Admin_Report {
 	}
 
 	/**
-	 * Output coupons widget.
+	 * Product selection
 	 */
 	public function coupons_widget() {
 		?>
@@ -337,7 +328,7 @@ class WC_Report_Coupon_Usage extends WC_Admin_Report {
 	}
 
 	/**
-	 * Output an export link.
+	 * Output an export link
 	 */
 	public function get_export_button() {
 		$current_range = ! empty( $_GET['range'] ) ? sanitize_text_field( $_GET['range'] ) : '7day';
@@ -356,7 +347,7 @@ class WC_Report_Coupon_Usage extends WC_Admin_Report {
 	}
 
 	/**
-	 * Get the main chart.
+	 * Get the main chart
 	 *
 	 * @return string
 	 */

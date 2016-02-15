@@ -71,9 +71,7 @@ jQuery( function ( $ ) {
 				$state.replaceWith( '<input type="text" class="js_field-state" name="' + input_name + '" id="' + input_id + '" value="' + value + '" placeholder="' + placeholder + '" />' );
 			}
 
-			// This event has a typo - deprecated in 2.5.0
 			$( document.body ).trigger( 'contry-change.woocommerce', [country, $( this ).closest( 'div' )] );
-			$( document.body ).trigger( 'country-change.woocommerce', [country, $( this ).closest( 'div' )] );
 		},
 
 		change_state: function() {
@@ -144,11 +142,22 @@ jQuery( function ( $ ) {
 					data: data,
 					type: 'POST',
 					success: function( response ) {
-						if ( response ) {
-							$.each( response, function( key, data ) {
-							    $( ':input#_' + key ).val( data ).change();
-							});
+						var info = response;
+
+						if ( info ) {
+							$( 'input#_billing_first_name' ).val( info.billing_first_name ).change();
+							$( 'input#_billing_last_name' ).val( info.billing_last_name ).change();
+							$( 'input#_billing_company' ).val( info.billing_company ).change();
+							$( 'input#_billing_address_1' ).val( info.billing_address_1 ).change();
+							$( 'input#_billing_address_2' ).val( info.billing_address_2 ).change();
+							$( 'input#_billing_city' ).val( info.billing_city ).change();
+							$( 'input#_billing_postcode' ).val( info.billing_postcode ).change();
+							$( '#_billing_country' ).val( info.billing_country ).change();
+							$( '#_billing_state' ).val( info.billing_state ).change();
+							$( 'input#_billing_email' ).val( info.billing_email ).change();
+							$( 'input#_billing_phone' ).val( info.billing_phone ).change();
 						}
+
 						$( 'div.edit_address' ).unblock();
 					}
 				});
@@ -187,11 +196,20 @@ jQuery( function ( $ ) {
 					data: data,
 					type: 'POST',
 					success: function( response ) {
-						if ( response ) {
-							$.each( response, function( key, data ) {
-							    $( ':input#_' + key ).val( data ).change();
-							});
+						var info = response;
+
+						if ( info ) {
+							$( 'input#_shipping_first_name' ).val( info.shipping_first_name ).change();
+							$( 'input#_shipping_last_name' ).val( info.shipping_last_name ).change();
+							$( 'input#_shipping_company' ).val( info.shipping_company ).change();
+							$( 'input#_shipping_address_1' ).val( info.shipping_address_1 ).change();
+							$( 'input#_shipping_address_2' ).val( info.shipping_address_2 ).change();
+							$( 'input#_shipping_city' ).val( info.shipping_city ).change();
+							$( 'input#_shipping_postcode' ).val( info.shipping_postcode ).change();
+							$( '#_shipping_country' ).val( info.shipping_country ).change();
+							$( '#_shipping_state' ).val( info.shipping_state ).change();
 						}
+
 						$( 'div.edit_address' ).unblock();
 					}
 				});
@@ -201,11 +219,15 @@ jQuery( function ( $ ) {
 
 		copy_billing_to_shipping: function() {
 			if ( window.confirm( woocommerce_admin_meta_boxes.copy_billing ) ) {
-				$('.order_data_column :input[name^="_billing_"]').each( function() {
-					var input_name = $(this).attr('name');
-					input_name     = input_name.replace( '_billing_', '_shipping_' );
-					$( ':input#' + input_name ).val( $(this).val() ).change();
-				});
+				$( 'input#_shipping_first_name' ).val( $( 'input#_billing_first_name' ).val() ).change();
+				$( 'input#_shipping_last_name' ).val( $( 'input#_billing_last_name' ).val() ).change();
+				$( 'input#_shipping_company' ).val( $( 'input#_billing_company' ).val() ).change();
+				$( 'input#_shipping_address_1' ).val( $( 'input#_billing_address_1' ).val() ).change();
+				$( 'input#_shipping_address_2' ).val( $( 'input#_billing_address_2' ).val() ).change();
+				$( 'input#_shipping_city' ).val( $( 'input#_billing_city' ).val() ).change();
+				$( 'input#_shipping_postcode' ).val( $( 'input#_billing_postcode' ).val() ).change();
+				$( '#_shipping_country' ).val( $( '#_billing_country' ).val() ).change();
+				$( '#_shipping_state' ).val( $( '#_billing_state' ).val() ).change();
 			}
 			return false;
 		}
@@ -384,7 +406,7 @@ jQuery( function ( $ ) {
 
 		add_item: function() {
 			$( this ).WCBackboneModal({
-				template: 'wc-modal-add-products'
+				template: '#wc-modal-add-products'
 			});
 
 			return false;
@@ -426,7 +448,7 @@ jQuery( function ( $ ) {
 
 		add_tax: function() {
 			$( this ).WCBackboneModal({
-				template: 'wc-modal-add-tax'
+				template: '#wc-modal-add-tax'
 			});
 			return false;
 		},
@@ -499,20 +521,20 @@ jQuery( function ( $ ) {
 			if ( window.confirm( woocommerce_admin_meta_boxes.calc_line_taxes ) ) {
 				wc_meta_boxes_order_items.block();
 
-				var country          = '';
+				var shipping_country = $( '#_shipping_country' ).val();
+				var billing_country  = $( '#_billing_country' ).val();
+				var country          = woocommerce_admin_meta_boxes.base_country;
 				var state            = '';
 				var postcode         = '';
 				var city             = '';
 
-				if ( 'shipping' === woocommerce_admin_meta_boxes.tax_based_on ) {
-					country  = $( '#_shipping_country' ).val();
+				if ( shipping_country ) {
+					country  = shipping_country;
 					state    = $( '#_shipping_state' ).val();
 					postcode = $( '#_shipping_postcode' ).val();
 					city     = $( '#_shipping_city' ).val();
-				}
-
-				if ( 'billing' === woocommerce_admin_meta_boxes.tax_based_on || ! country ) {
-					country  = $( '#_billing_country' ).val();
+				} else if ( billing_country ) {
+					country  = billing_country;
 					state    = $( '#_billing_state' ).val();
 					postcode = $( '#_billing_postcode' ).val();
 					city     = $( '#_billing_city' ).val();
@@ -979,13 +1001,13 @@ jQuery( function ( $ ) {
 		backbone: {
 
 			init: function( e, target ) {
-				if ( 'wc-modal-add-products' === target ) {
+				if ( '#wc-modal-add-products' === target ) {
 					$( document.body ).trigger( 'wc-enhanced-select-init' );
 				}
 			},
 
 			response: function( e, target, data ) {
-				if ( 'wc-modal-add-tax' === target ) {
+				if ( '#wc-modal-add-tax' === target ) {
 					var rate_id = data.add_order_tax;
 					var manual_rate_id = '';
 
@@ -995,7 +1017,7 @@ jQuery( function ( $ ) {
 
 					wc_meta_boxes_order_items.backbone.add_tax( rate_id, manual_rate_id );
 				}
-				if ( 'wc-modal-add-products' === target ) {
+				if ( '#wc-modal-add-products' === target ) {
 					wc_meta_boxes_order_items.backbone.add_item( data.add_order_items );
 				}
 			},

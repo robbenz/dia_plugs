@@ -9,7 +9,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 }
 
 /**
- * WC_Report_Customer_List.
+ * WC_Report_Customer_List
  *
  * @author      WooThemes
  * @category    Admin
@@ -19,7 +19,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 class WC_Report_Customer_List extends WP_List_Table {
 
 	/**
-	 * Constructor.
+	 * __construct function.
 	 */
 	public function __construct() {
 
@@ -31,14 +31,14 @@ class WC_Report_Customer_List extends WP_List_Table {
 	}
 
 	/**
-	 * No items found text.
+	 * No items found text
 	 */
 	public function no_items() {
 		_e( 'No customers found.', 'woocommerce' );
 	}
 
 	/**
-	 * Output the report.
+	 * Output the report
 	 */
 	public function output_report() {
 		$this->prepare_items();
@@ -71,13 +71,13 @@ class WC_Report_Customer_List extends WP_List_Table {
 	}
 
 	/**
-	 * Get column value.
+	 * column_default function.
 	 *
 	 * @param WP_User $user
 	 * @param string $column_name
 	 * @return string
 	 */
-	public function column_default( $user, $column_name ) {
+	function column_default( $user, $column_name ) {
 		global $wpdb;
 
 		switch ( $column_name ) {
@@ -221,11 +221,9 @@ class WC_Report_Customer_List extends WP_List_Table {
 	}
 
 	/**
-	 * Get columns.
-	 *
-	 * @return array
+	 * get_columns function.
 	 */
-	public function get_columns() {
+	public function get_columns(){
 		$columns = array(
 			'customer_name'   => __( 'Name (Last, First)', 'woocommerce' ),
 			'username'        => __( 'Username', 'woocommerce' ),
@@ -241,9 +239,7 @@ class WC_Report_Customer_List extends WP_List_Table {
 	}
 
 	/**
-	 * Order users by name.
-	 *
-	 * @param WP_User_Query $query
+	 * Order users by name
 	 */
 	public function order_by_last_name( $query ) {
 		global $wpdb;
@@ -264,7 +260,7 @@ class WC_Report_Customer_List extends WP_List_Table {
 	}
 
 	/**
-	 * Prepare customer list items.
+	 * prepare_items function.
 	 */
 	public function prepare_items() {
 		global $wpdb;
@@ -273,14 +269,14 @@ class WC_Report_Customer_List extends WP_List_Table {
 		$per_page     = 20;
 
 		/**
-		 * Init column headers.
+		 * Init column headers
 		 */
 		$this->_column_headers = array( $this->get_columns(), array(), $this->get_sortable_columns() );
 
 		add_action( 'pre_user_query', array( $this, 'order_by_last_name' ) );
 
 		/**
-		 * Get users.
+		 * Get users
 		 */
 		$admin_users = new WP_User_Query(
 			array(
@@ -307,7 +303,7 @@ class WC_Report_Customer_List extends WP_List_Table {
 		remove_action( 'pre_user_query', array( $this, 'order_by_last_name' ) );
 
 		/**
-		 * Pagination.
+		 * Pagination
 		 */
 		$this->set_pagination_args( array(
 			'total_items' => $query->total_users,
