@@ -44,7 +44,7 @@ body  a#festi-cart.festi-cart.festi-cart-customize.festi-cart-active div.festi-c
 body  a#festi-cart.festi-cart.festi-cart-customize.festi-cart-active div.festi-cart-content span.festi-cart-text-after-total,
 body  a#festi-cart.festi-cart.festi-cart-customize.festi-cart-active div.festi-cart-content span.festi-cart-dropdown-arrow
 {
-    color: #ffae00; 
+    color: #000000; 
 }
 
 body  a#festi-cart.festi-cart.festi-cart-customize div.festi-cart-content span.festi-cart-text-before-quantity,
@@ -55,6 +55,6 @@ body  a#festi-cart.festi-cart.festi-cart-customize div.festi-cart-content span.f
 body  a#festi-cart.festi-cart.festi-cart-customize div.festi-cart-content span.festi-cart-text-after-total,
 body  a#festi-cart.festi-cart.festi-cart-customize div.festi-cart-content span.festi-cart-dropdown-arrow
 {
-    font-size:  14px ;
-    color: #ffffff;    
+    font-size:  15px ;
+    color: #000000;    
 }

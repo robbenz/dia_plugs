@@ -1,14 +1,14 @@
 
 body div.festi-cart-widget-content div.festi-cart-widget-products-content
 {
-    border: 2px solid;
+    border: 1px solid;
     padding: 10px;
-    border-color: #00416a;
+    border-color: #cccccc;
     border-radius:
-        2px
-        2px
-        2px
-        2px
+        0px
+        0px
+        0px
+        0px
     ;
     background-color: rgba(
         255,
@@ -19,19 +19,19 @@ body div.festi-cart-widget-content div.festi-cart-widget-products-content
 body div.festi-cart-widget-products-content > table.festi-cart-list  tr.festi-cart-item > td.festi-cart-product-title a.festi-cart-title,
 body div.festi-cart-widget-products-content > table.festi-cart-list  tr.festi-cart-item > td.festi-cart-product-title span.festi-cart-title
 {
-    color: #00497d;
-    font-size: 13px;
+    color: #004ea8;
+    font-size: 15px;
 }
 body div.festi-cart-widget-products-content > table.festi-cart-list  tr.festi-cart-item > td.festi-cart-product-title a.festi-cart-title:hover
 {
-    color: #ffae00;
+    color: #77be20;
 }
 body div.festi-cart-widget-products-content > table.festi-cart-list  tr.festi-cart-item > td.festi-cart-product-title span.festi-cart-product-count,
 body div.festi-cart-widget-products-content > table.festi-cart-list  tr.festi-cart-item > td.festi-cart-product-title span.festi-cart-product-price,
 body div.festi-cart-widget-products-content > table.festi-cart-list  tr.festi-cart-item > td.festi-cart-product-title span.festi-cart-product-price span.amount
 {
     color: #1f1e1e;
-    font-size: 13px;
+    font-size: 15px;
 }
 body div.festi-cart-widget-products-content > div.festi-cart-total
 {
@@ -40,48 +40,50 @@ body div.festi-cart-widget-products-content > div.festi-cart-total
     border-radius: 7px;
     background-color: #ffffff;
     color: #000000;
-    font-size: 13px;
+    font-size: 15px;
     text-align: right;
 }
 
 
 body div.festi-cart-widget-products-content > p.festi-cart-buttons a.festi-cart-view-cart
 {
-        
+                width: 210px;
+            
      border: 1px solid;
      border-color: #ffffff;
-     border-radius: 1px;
-     background-color: #00416a;
+     border-radius: 0px;
+     background-color: #77be20;
      color: #ffffff;
-     font-size: 13px;
-      padding-top: 5px;
-     padding-bottom: 5px;
+     font-size: 15px;
+      padding-top: 9px;
+     padding-bottom: 9px;
 }
 body div.festi-cart-widget-products-content > p.festi-cart-buttons a.festi-cart-view-cart:hover
 {
      background-color: #ffffff;
-     border-color: #00416a;
-     color: #00416a;
+     border-color: #77be20;
+     color: #77be20;
 }
 
 body div.festi-cart-widget-products-content > p.festi-cart-buttons a.festi-cart-checkout
 {
-         
+                 width: 210px;
+            
      border: 1px solid;
      border-color: #ffffff;
-     border-radius: 1px;
-     background-color: #00416a;
+     border-radius: 0px;
+     background-color: #004ea8;
      color: #ffffff;
-     font-size: 13px;
-     padding-top: 5px;
-     padding-bottom: 5px;
+     font-size: 15px;
+     padding-top: 9px;
+     padding-bottom: 9px;
 }
 
 body div.festi-cart-widget-products-content > p.festi-cart-buttons a.festi-cart-checkout:hover
 {
      background-color: #ffffff;
-     border-color: #00416a;
-     color: #00416a;
+     border-color: #004ea8;
+     color: #004ea8;
 }
 
 body div.festi-cart-widget-products-content > table.festi-cart-list  tr.festi-cart-item > td.festi-cart-product-delete
@@ -128,6 +130,6 @@ body div.festi-cart-widget-products-content > table.festi-cart-list  tr.festi-ca
 
 body div.festi-cart-widget-products-content > table.festi-cart-list  tr.festi-cart-item > td.festi-cart-product-title span.festi-cart-product-variation-attribut
 {
-    font-size: 12px;
+    font-size: 14px;
     display: block;
 }
