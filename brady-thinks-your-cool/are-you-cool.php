@@ -140,7 +140,7 @@ function brady_disable_po( $available_gateways ) {
 add_filter('woocommerce_available_payment_gateways', 'brady_disable_po', 99, 1);
 
 
-
+ */
 
 
 
