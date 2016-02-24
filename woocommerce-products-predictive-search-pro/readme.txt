@@ -1,9 +1,9 @@
 === WooCommerce Predictive Search  ===
 Contributors: a3rev, A3 Revolution Software Development team
 Tags: WooCommerce Predictive Search, WooCommerce, Predictive Search, Live Search, e-commerce,  wordpress ecommerce
-Requires at least: 3.7
-Tested up to: 4.3.1
-Stable tag: 3.0.3
+Requires at least: 4.1
+Tested up to: 4.4.2
+Stable tag: 3.3.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 

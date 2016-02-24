@@ -62,9 +62,9 @@ class WC_PS_Keyword_Data
 		$sql['join'] = $join;
 
 		$where_ps_keyword = ' ( ';
-		$where_ps_keyword .= $wpdb->prepare( WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'pk.keyword' ) . " LIKE '%s' OR " . WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'pk.keyword' ) . " LIKE '%s' ", $search_keyword.'%', '% '.$search_keyword.'%' );
+		$where_ps_keyword .= WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'pk.keyword', $search_keyword );
 		if ( '' != $search_keyword_nospecial ) {
-			$where_ps_keyword .= " OR ". $wpdb->prepare( WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'pk.keyword' ) . " LIKE '%s' OR " . WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'pk.keyword' ) . " LIKE '%s' ", $search_keyword_nospecial.'%', '% '.$search_keyword_nospecial.'%' );
+			$where_ps_keyword .= " OR ". WC_Predictive_Search_Functions::remove_special_characters_in_mysql( 'pk.keyword', $search_keyword_nospecial );
 		}
 		$where_ps_keyword .= ' ) ';
 		$where[]                = " OR ( " . $where_ps_keyword . " )";

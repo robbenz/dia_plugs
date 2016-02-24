@@ -714,9 +714,11 @@ function wppb_check_field_on_edit_add( $message, $fields, $required_fields, $met
 						}
 					
 					if ( $found_in_custom_fields === false ){
-						$found_meta_name = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->usermeta WHERE meta_key = %s", $posted_values['meta-name'] ) );
-						if ( $found_meta_name != null )
-							$message .= __( "That meta-name is already in use\n", 'profile-builder' );
+                        if( $posted_values['meta-name'] != '' ) {
+                            $found_meta_name = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpdb->usermeta WHERE meta_key = %s", $posted_values['meta-name']));
+                            if ($found_meta_name != null)
+                                $message .= __("That meta-name is already in use\n", 'profile-builder');
+                        }
 					}
 				}
 			}

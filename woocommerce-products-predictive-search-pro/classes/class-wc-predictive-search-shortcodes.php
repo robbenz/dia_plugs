@@ -15,6 +15,9 @@
 class WC_Predictive_Search_Shortcodes 
 {
 	public static function parse_shortcode_search_widget($attributes) {
+		// Don't show content for shortcode on Dashboard, still support for admin ajax
+		if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) return;
+
 		$items_search_default = WC_Predictive_Search_Widgets::get_items_search();
 		$items_array = array();
 		
@@ -179,6 +182,9 @@ class WC_Predictive_Search_Shortcodes
 	}
 	
 	public static function parse_shortcode_search_result($attributes) {
+		// Don't show content for shortcode on Dashboard, still support for admin ajax
+		if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) return;
+
 		$search_results = '';
 		global $woocommerce_search_page_id;
 		global $wp_query;
@@ -255,13 +261,12 @@ class WC_Predictive_Search_Shortcodes
 				.ajax-wait img{margin-top:14px;}
 				.p_data,.r_data,.q_data{display:none;}
 				.rs_date{color:#777;font-size:small;}
-				.rs_result_row {background-color: #00426a;}
-                .rs_result_row:hover{opacity:1;}
-                .rs_rs_description{text-transform: uppercase;}  
-                .rs_rs_avatar{margin-right:10px;overflow: hidden;float:left; text-align:center;}
+				.rs_result_row{width:100%;float:left;margin:0px 0 10px;padding :0px 0 10px; 6px;border-bottom:1px solid #c2c2c2;}
+				.rs_result_row:hover{opacity:1;}
+				.rs_rs_avatar{width:64px;margin-right:10px;overflow: hidden;float:left; text-align:center;}
 				.rs_rs_avatar img{width:100%;height:auto; padding:0 !important; margin:0 !important; border: none !important;}
 				.rs_rs_name{margin-left:0px;}
-				.rs_content{margin-left:20px;}
+				.rs_content{margin-left:74px;}
 				.ps_more_result{display:none;width:240px;text-align:center;position:fixed;bottom:50%;left:50%;margin-left:-125px;background-color: black;opacity: .75;color: white;padding: 10px;border-radius:10px;-webkit-border-radius: 10px;-moz-border-radius: 10px}
 				.rs_rs_price .oldprice{text-decoration:line-through; font-size:80%;}
 				.rs_result_others { margin-bottom:20px; }
@@ -316,7 +321,6 @@ class WC_Predictive_Search_Shortcodes
             </div>
             <div class="ps_more_result" id="ps_no_result_popup"><em><?php wc_ps_ict_t_e( 'No Fetching Result Text', __('No Results to Show', 'woops') ); ?></em></div>
             <div id="ps_footer_container">
-              <p style="float:left;margin:0;">Searching For Your Part!</p>
             </div>
 		</div>
         <script type="text/javascript">

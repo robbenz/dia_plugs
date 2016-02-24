@@ -44,14 +44,14 @@ function wppb_check_username_value( $message, $field, $request_data, $form_locat
     }
 
     if( !empty( $request_data['username'] ) ){
-        if( $form_location == 'register' )
-            $search_by_user_login = get_users( 'search='.$request_data['username'] );
-        if( !empty( $search_by_user_login ) ){
-            return __( 'This username already exists.', 'profile-builder' ) .'<br/>'. __( 'Please try a different one!', 'profile-builder' );
+        if( $form_location == 'register' ) {
+            if( username_exists($request_data['username'] ) ){
+                return __('This username already exists.', 'profile-builder') . '<br/>' . __('Please try a different one!', 'profile-builder');
+            }
+            if (!validate_username($request_data['username'])) {
+                return __('This username is invalid because it uses illegal characters.', 'profile-builder') . '<br/>' . __('Please enter a valid username.', 'profile-builder');
+            }
         }
-		if( ! validate_username( $request_data['username'] ) ) {
-			return __( 'This username is invalid because it uses illegal characters.', 'profile-builder' ) .'<br/>'. __( 'Please enter a valid username.', 'profile-builder' );
-		}
 
         $wppb_generalSettings = get_option('wppb_general_settings');
         if ( $wppb_generalSettings['emailConfirmation'] == 'yes'  ){

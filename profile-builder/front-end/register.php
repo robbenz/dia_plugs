@@ -2,11 +2,11 @@
 /**
  * Function that changes the auto generated password with the one selected by the user.
  */
-function signup_password_random_password_filter( $password ) {
+function wppb_signup_password_random_password_filter( $password ) {
 	global $wpdb;
 
 	$key = ( !empty( $_GET['key'] ) ? $_GET['key'] : null );
-	$key = ( !empty( $_POST['key'] ) ? $_POST['key'] : null );
+	$key = ( !empty( $_POST['key'] ) ? $_POST['key'] : $key );
 
 	if ( !empty( $_POST['user_pass'] ) )
 		$password = $_POST['user_pass'];
@@ -26,7 +26,7 @@ function signup_password_random_password_filter( $password ) {
 	
 	return apply_filters( 'wppb_generated_random_password', $password, $key );
 }
-add_filter( 'random_password', 'signup_password_random_password_filter' );
+add_filter( 'random_password', 'wppb_signup_password_random_password_filter' );
 
 /**
  * Activate a signup.

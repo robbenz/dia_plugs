@@ -5,7 +5,7 @@ Tags: registration, user profile, user registration, custom field registration, 
 
 Requires at least: 3.1
 Tested up to: 4.4.2
-Stable tag: 2.3.0
+Stable tag: 2.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -115,6 +115,11 @@ This plugin adds/removes user fields in the front-end. Both default and extra pr
 10. Profile Builder Login Widget
 
 == Changelog ==
+= 2.3.1 =
+* Refactored username exists check to search only in username
+* Fixed issue when there was a meta in the db with no meta key and we couldn't add our fields that had no meta key because it would generate meta name already in use
+* Fixed conflict with WPMUDEV Set Password plugin with which we had a function with the same name
+
 = 2.3.0 =
 * Added filter in login form so we can display html at the bottom
 * Fixed a filter in login redirect link that was broken

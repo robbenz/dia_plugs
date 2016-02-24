@@ -329,7 +329,7 @@ class Profile_Builder_Form_Creator{
 			echo $message;
 		
 		// use this action hook to add extra content before the register form
-		do_action( 'wppb_before_'.$this->args['form_type'].'_fields' );
+		do_action( 'wppb_before_'.$this->args['form_type'].'_fields', $this->args['form_name'], $this->args['ID'], $this->args['form_type'] );
         ?>
         <form enctype="multipart/form-data" method="post" id="<?php if( $this->args['form_type'] == 'register' ) echo 'wppb-register-user';  else if( $this->args['form_type'] == 'edit_profile' ) echo 'wppb-edit-user'; if( isset($this->args['form_name']) && $this->args['form_name'] != "unspecified" ) echo '-' . $this->args['form_name']; ?>" class="wppb-user-forms<?php if( $this->args['form_type'] == 'register' ) echo ' wppb-register-user';  else if( $this->args['form_type'] == 'edit_profile' ) echo ' wppb-edit-user';?>" action="<?php echo apply_filters( 'wppb_form_action', '' ); ?>">
 			<?php
@@ -365,7 +365,7 @@ class Profile_Builder_Form_Creator{
 		</form>
 		<?php
 		// use this action hook to add extra content after the register form
-		do_action( 'wppb_after_'. $this->args['form_type'] .'_fields' );
+		do_action( 'wppb_after_'. $this->args['form_type'] .'_fields', $this->args['form_name'], $this->args['ID'], $this->args['form_type'] );
 		
 	}
 	
