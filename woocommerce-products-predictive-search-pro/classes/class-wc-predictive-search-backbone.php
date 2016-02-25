@@ -10,13 +10,13 @@
 class WC_Predictive_Search_Hook_Backbone
 {
 	public function __construct() {
-		
+
 		// Add script into footer to hanlde the event from widget, popup
 		//add_action( 'wp_footer', array( $this, 'register_plugin_scripts' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_plugin_scripts' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'include_result_shortcode_script' ), 11 );
 	}
-	
+
 	public function register_plugin_scripts() {
 		global $woocommerce_search_page_id;
 
@@ -42,15 +42,15 @@ class WC_Predictive_Search_Hook_Backbone
 			</div>
 		</div>
 	</script>
-    
+
     <script type="text/template" id="wc_psearch_footerTpl">
 		<div rel="more_result" class="more_result">
 			<span><?php wc_ps_ict_t_e( 'More result Text', __('See more search results for', 'woops') ); ?> '{{= title }}' <?php wc_ps_ict_t_e( 'in', __('in', 'woops') ); ?>:</span>
 			{{ if ( description != null && description != '' ) { }}{{= description }}{{ } }}
 		</div>
 	</script>
-    
-    
+
+
     <?php
     	wp_register_style( 'wc-predictive-search-autocomplete-style', WOOPS_JS_URL . '/ajax-autocomplete/jquery.autocomplete.css', array(), WOOPS_VERSION, 'all' );
 
@@ -81,36 +81,36 @@ class WC_Predictive_Search_Hook_Backbone
 			) )
 		);
 	}
-	
+
 	public function include_result_shortcode_script() {
 		global $wp_query;
 		global $post;
 		global $woocommerce_search_page_id;
-		
+
 		if ( $post && $post->ID != $woocommerce_search_page_id ) return '';
 
 		$current_lang = '';
 		if ( class_exists('SitePress') ) {
 			$current_lang = ICL_LANGUAGE_CODE;
 		}
-		
+
 		$search_keyword = '';
 		$search_in = 'product';
 		$search_other = '';
 		$cat_in = 'all';
-		
+
 		if ( isset( $wp_query->query_vars['keyword'] ) ) $search_keyword = stripslashes( strip_tags( urldecode( $wp_query->query_vars['keyword'] ) ) );
 		elseif ( isset( $_REQUEST['rs'] ) && trim( $_REQUEST['rs'] ) != '' ) $search_keyword = stripslashes( strip_tags( $_REQUEST['rs'] ) );
 
 		if ( isset( $wp_query->query_vars['search-in'] ) ) $search_in = stripslashes( strip_tags( urldecode( $wp_query->query_vars['search-in'] ) ) );
 		elseif ( isset( $_REQUEST['search_in'] ) && trim( $_REQUEST['search_in'] ) != '' ) $search_in = stripslashes( strip_tags( $_REQUEST['search_in'] ) );
-		
+
 		if ( isset( $wp_query->query_vars['search-other'] ) ) $search_other = stripslashes( strip_tags( urldecode( $wp_query->query_vars['search-other'] ) ) );
 		elseif ( isset( $_REQUEST['search_other'] ) && trim( $_REQUEST['search_other'] ) != '' ) $search_other = stripslashes( strip_tags( $_REQUEST['search_other'] ) );
 
 		if ( isset( $wp_query->query_vars['cat-in'] ) ) $cat_in = stripslashes( strip_tags( urldecode( $wp_query->query_vars['cat-in'] ) ) );
 		elseif ( isset( $_REQUEST['cat_in'] ) && trim( $_REQUEST['cat_in'] ) != '' ) $cat_in = stripslashes( strip_tags( $_REQUEST['cat_in'] ) );
-		
+
 		$permalink_structure = get_option( 'permalink_structure' );
 
 		if ( $search_keyword == '' || $search_in == '' ) return;
@@ -127,12 +127,16 @@ class WC_Predictive_Search_Hook_Backbone
 		<div class="rs_content">
 			<a href="{{= url }}"><span class="rs_rs_name">{{ if ( type == 'p_sku' ) {  }}{{= keyword }}, {{ } }}{{= title }}</span></a>
 			{{ if ( sku != null && sku != '' ) { }}<div class="rs_rs_sku"><?php wc_ps_ict_t_e( 'SKU', __('SKU', 'woops') ); ?>: {{= sku }}</div>{{ } }}
+			<?php if (is_user_logged_in() ): ?>
 			{{ if ( price != null && price != '' ) { }}<div class="rs_rs_price"><?php wc_ps_ict_t_e( 'Price', __('Price', 'woops') ); ?>: {{= price }}</div>{{ } }}
 			{{ if ( addtocart != null && addtocart != '' ) { }}<div class="rs_rs_addtocart">{{= addtocart }}</div>{{ } }}
+		<?php else: ?>
+			<div id="viewprice-detail-search"><a href="#" class="eModal-1">View Price</a></div>
+		<?php endif; ?>
 			{{ if ( description != null && description != '' ) { }}<div class="rs_rs_description">{{= description }}</div>{{ } }}
 			{{ if ( categories.length > 0 ) { }}
 				<div class="rs_rs_cat posted_in">
-					<?php wc_ps_ict_t_e( 'Category', __('Category', 'woops') ); ?>: 
+					<?php wc_ps_ict_t_e( 'Category', __('Category', 'woops') ); ?>:
 					{{ var number_cat = 0; }}
 					{{ _.each( categories, function( cat_data ) { number_cat++; }}
 						{{ if ( number_cat > 1 ) { }}, {{ } }}<a href="{{= cat_data.url }}">{{= cat_data.name }}</a>
@@ -141,7 +145,7 @@ class WC_Predictive_Search_Hook_Backbone
 			{{ } }}
 			{{ if ( tags.length > 0 ) { }}
 				<div class="rs_rs_tag tagged_as">
-					<?php wc_ps_ict_t_e( 'Tags', __('Tags', 'woops') ); ?>: 
+					<?php wc_ps_ict_t_e( 'Tags', __('List Price', 'woops') ); ?>:
 					{{ var number_tag = 0; }}
 					{{ _.each( tags, function( tag_data ) { number_tag++; }}
 						{{ if ( number_tag > 1 ) { }}, {{ } }}<a href="{{= tag_data.url }}">{{= tag_data.name }}</a>
@@ -150,16 +154,16 @@ class WC_Predictive_Search_Hook_Backbone
 			{{ } }}
 		</div>
 	</script>
-    
+
     <script type="text/template" id="wc_psearch_result_footerTpl"><div style="clear:both"></div>
 		{{ if ( next_page_number > 1 ) { }}
 		<div id="ps_more_check"></div>
 		{{ } else if ( total_items == 0 && first_load ) { }}
-		<p style="text-align:center"><?php wc_ps_ict_t_e( 'No Result Text', __('Nothing Found! Please refine your search and try again.', 'woops') ); ?></p>
+		<p style="text-align:center"><?php wc_ps_ict_t_e( 'No Result Text', __('<span class="sorry-you-cant-find">Sorry, we don\'t have that part yet.</span><br /><br /><a href="#" class="eModal-2 click-here-parts-link">Click Here To Request A Quote</a>', 'woops') ); ?></p>
 		{{ } }}
 	</script>
-    
-    
+
+
     <?php
 		wp_register_script( 'wc-predictive-search-results-backbone', WOOPS_JS_URL . '/predictive-search-results.backbone'.$ps_suffix.'.js', array( 'jquery', 'underscore', 'backbone', 'wc-predictive-search-backbone' ), WOOPS_VERSION, true );
 		wp_enqueue_script( 'wc-predictive-search-results-backbone' );
