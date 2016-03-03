@@ -4,7 +4,7 @@ Donate link:
 Tags:
 Requires at least: 3.9.0
 Tested up to: 4.1.0
-Stable tag: 1.1.0
+Stable tag: 1.1.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 

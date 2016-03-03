@@ -37,7 +37,7 @@ final class Woocommerce_Gateway_Purchase_Order extends WC_Payment_Gateway {
 		$this->token 			= 'woocommerce-gateway-purchase-order';
 		$this->plugin_url 		= plugin_dir_url( __FILE__ );
 		$this->plugin_path 		= plugin_dir_path( __FILE__ );
-		$this->version 			= '1.1.2';
+		$this->version 			= '1.1.3';
 
 		register_activation_hook( __FILE__, array( $this, 'install' ) );
 
@@ -56,7 +56,6 @@ final class Woocommerce_Gateway_Purchase_Order extends WC_Payment_Gateway {
 
 
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
-		add_action( 'woocommerce_order_details_after_order_table', array( $this, 'my_custom_checkout_field_order_details' ), 10, 2 );
 		add_action( 'woocommerce_thankyou_' . $this->id, array( $this, 'thank_you' ) );
 	} // End __construct()
 
@@ -169,20 +168,6 @@ final class Woocommerce_Gateway_Purchase_Order extends WC_Payment_Gateway {
 	public function thank_you () {
         echo $this->instructions != '' ? wpautop( $this->instructions ) : '';
     } // End thankyou()
-
-    /**
-	 * Add the purchase order field to the checkout.
-	 * @access public
-	 * @since  1.0.0
-	 * @return void
-	 */
-	public function my_custom_checkout_field_order_details ( $order ) {
-		if ( $order->payment_method !== $this->id ) return;
-		$po_number = get_post_meta( $order->id, '_po_number', true ) ;
-		if ( '' != $po_number ) {
-			echo '<p><strong>' . __( 'Purchase Order Number:', 'woocommerce-gateway-purchase-order' ) . '</strong> ' . $po_number . '</p>';
-		}
-	} // End my_custom_checkout_field_order_details()
 
 	/**
 	 * Retrieve a posted value, if it exists.
