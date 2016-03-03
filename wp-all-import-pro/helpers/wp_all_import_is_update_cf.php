@@ -1,6 +1,6 @@
 <?php
 
-function wp_all_import_is_update_cf( $met_key, $options ){
+function wp_all_import_is_update_cf( $meta_key, $options ){
 	
 	if ( $options['update_all_data'] == 'yes') return true;
 

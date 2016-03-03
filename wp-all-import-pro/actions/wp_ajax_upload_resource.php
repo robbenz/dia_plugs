@@ -95,7 +95,7 @@ function pmxi_wp_ajax_upload_resource(){
 						$xpath = new DOMXPath($dom);									
 						if (($elements = $xpath->query($defaultXpath)) and $elements->length){
 							break;
-						}												
+						}																		
 				    }
 				    /*else {
 				    	$is_valid = false;

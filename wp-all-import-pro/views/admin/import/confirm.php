@@ -19,7 +19,8 @@
 	</div>
 	<?php
 	$is_valid_root_element = true;	
-	if ($this->errors->get_error_codes('root-element-validation'))
+	$error_codes = $this->errors->get_error_codes();		
+	if ( ! empty($error_codes) and is_array($error_codes) and in_array('root-element-validation', $error_codes))
 	{
 		$is_valid_root_element = false;
 	}
@@ -40,7 +41,7 @@
 	<div class="rad4 first-step-errors error-no-root-element" <?php if ($is_valid_root_element === false):?>style="display:block;"<?php endif; ?>>
 		<div class="wpallimport-notify-wrapper">
 			<div class="error-headers exclamation">
-				<?php if ($is_404 and $import->type == 'url'): ?>
+				<?php if ($import->type == 'url'): ?>
 				<h3><?php _e('This URL no longer returns an import file', 'wp_all_import_plugin');?></h3>
 				<h4><?php _e("You must provide a URL that returns a valid import file.", "wp_all_import_plugin"); ?></h4>
 				<?php else: ?>

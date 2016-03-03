@@ -200,7 +200,7 @@
 
 		function parse_element(failures){			
 			
-			$.post('admin.php?page=pmxi-admin-import&action=process&id=' + import_id + '&failures=' + failures + '&_wpnonce=' + wp_all_import_security, {}, function (data) {								
+			$.get('admin.php?page=pmxi-admin-import&action=process&id=' + import_id + '&failures=' + failures + '&_wpnonce=' + wp_all_import_security, {}, function (data) {								
 
 				// responce with error
 				if (data != null && typeof data.created != "undefined"){

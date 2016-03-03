@@ -1841,10 +1841,11 @@
 			file_data_name : 'async-upload',
 			flash_swf_url : plugin_url + '/static/js/plupload/plupload.flash.swf',
 			silverlight_xap_url : plugin_url + '/static/js/plupload/plupload.silverlight.xap',		
-			multipart: false,
+			multipart: true,
 			max_file_size: '1000mb',
 			chunk_size: '1mb',			
-			drop_element: 'plupload-ui'				
+			drop_element: 'plupload-ui',
+			multipart_params : {}				
 		});
 	}	
 

@@ -117,7 +117,7 @@ class PMXI_Chunk {
       while ( @$reader->read() ) {
          switch ($reader->nodeType) {
            case (XMLREADER::ELEMENT):                    
-              $localName = str_replace("_____", ":", $reader->localName);     
+              $localName = str_replace("_colon_", ":", $reader->localName);     
               if (array_key_exists(str_replace(":", "_", $localName), $this->cloud))
                 $this->cloud[str_replace(":", "_", $localName)]++;
               else
@@ -199,7 +199,7 @@ class PMXI_Chunk {
           switch ($this->reader->nodeType) {
            case (XMLREADER::ELEMENT):            
             
-              $localName = str_replace("_____", ":", $this->reader->localName);     
+              $localName = str_replace("_colon_", ":", $this->reader->localName);     
 
               if ( strtolower(str_replace(":", "_", $localName)) == strtolower($element) ) {
 
@@ -228,7 +228,7 @@ class PMXI_Chunk {
 
   public static function removeColonsFromRSS($feed) {
         
-        $feed = str_replace("_____", ":", $feed);
+        $feed = str_replace("_colon_", ":", $feed);
         
         // pull out colons from start tags
         // (<\w+):(\w+>)
@@ -276,7 +276,7 @@ class preprocessXml_filter extends php_user_filter {
           // the & symbol is not valid in XML, so replace it with temporary word _ampersand_
           $bucket->data = str_replace("&", "_ampersand_", $bucket->data);
         }        
-        $bucket->data = $this->replace_colons($bucket->data);
+        $bucket->data = $this->replace_colons($bucket->data);        
         $consumed += $bucket->datalen;        
         stream_bucket_append($out, $bucket);
       }      
@@ -285,7 +285,7 @@ class preprocessXml_filter extends php_user_filter {
 
     function replace_colons($data)
     {
-      return str_replace(":", "_____", $data);
+      return str_replace(":", "_colon_", $data);
     }
 
 }

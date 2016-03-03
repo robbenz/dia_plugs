@@ -504,13 +504,13 @@ class PMXI_Admin_Settings extends PMXI_Controller_Admin {
 			$contentType = $_SERVER["CONTENT_TYPE"];
 
 		// Handle non multipart uploads older WebKit versions didn't support multipart in HTML5
-		if (strpos($contentType, "multipart") !== false) {
-			if (isset($_FILES['file']['tmp_name']) && is_uploaded_file($_FILES['file']['tmp_name'])) {
+		if (strpos($contentType, "multipart") !== false) {			
+			if (isset($_FILES['async-upload']['tmp_name']) && is_uploaded_file($_FILES['async-upload']['tmp_name'])) {
 				// Open temp file
 				$out = fopen("{$filePath}.part", $chunk == 0 ? "wb" : "ab");
 				if ($out) {
 					// Read binary input stream and append it to temp file
-					$in = fopen($_FILES['file']['tmp_name'], "rb");
+					$in = fopen($_FILES['async-upload']['tmp_name'], "rb");
 
 					if ($in) {
 						while ($buff = fread($in, 4096))
@@ -521,7 +521,7 @@ class PMXI_Admin_Settings extends PMXI_Controller_Admin {
 					}
 					fclose($in);
 					fclose($out);
-					@unlink($_FILES['file']['tmp_name']);
+					@unlink($_FILES['async-upload']['tmp_name']);
 				} else{
 					delete_transient( self::$upload_transient );					
 					exit(json_encode(array("jsonrpc" => "2.0", "error" => array("code" => 102, "message" => __("Failed to open output stream.", "wp_all_import_plugin")), "id" => "id")));

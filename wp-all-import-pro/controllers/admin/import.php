@@ -2658,22 +2658,11 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 
 		// delete missing records
 		if ( ( PMXI_Plugin::is_ajax() and empty(PMXI_Plugin::$session->local_paths) ) or ! $ajax_processing )
-		{
+		{			
 
-			$import->delete_source( $logger );
-			$import->set(array(
-				'processing' => 0, // unlock cron requests	
-				'triggered' => 0,
-				'queue_chunk_number' => 0,				
-				'registered_on' => date('Y-m-d H:i:s'),
-				'iteration' => ++$import->iteration
-			))->update();			
+			ob_start();			
 
-			ob_start();
-
-			$logger and call_user_func($logger, 'Done');
-
-			$is_all_records_deleted = $import->delete_missing_records($logger, $import->iteration - 1);
+			$is_all_records_deleted = $import->delete_missing_records($logger, $import->iteration);
 
 			$log_data = ob_get_clean();
 
@@ -2704,6 +2693,15 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 		
 		if ( ( PMXI_Plugin::is_ajax() and empty(PMXI_Plugin::$session->local_paths) ) or ! $ajax_processing or ! empty($import->canceled) ) {
 			
+			$import->delete_source( $logger );
+			$import->set(array(
+				'processing' => 0, // unlock cron requests	
+				'triggered' => 0,
+				'queue_chunk_number' => 0,				
+				'registered_on' => date('Y-m-d H:i:s'),
+				'iteration' => ++$import->iteration
+			))->update();						
+
 			if ("ajax" != $import->options['import_processing'] and $log_storage ){
 				$log_file = wp_all_import_secure_file( $wp_uploads['basedir'] . DIRECTORY_SEPARATOR . PMXI_Plugin::LOGS_DIRECTORY, $history_log->id ) . DIRECTORY_SEPARATOR . $history_log->id . '.html';
 				if (PMXI_Plugin::$session->action != 'continue'){
