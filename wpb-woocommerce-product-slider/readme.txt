@@ -114,6 +114,9 @@ Yes you can. I have created two different widget for this plugin, one for latest
 
 == Changelog ==
 
+= version 1.0.4 =
+* Feature products slider widget's bug  fixed.
+
 = version 1.0.3 =
 * More lighter then before.
 * Some small bug fixed.
