@@ -3,10 +3,10 @@
 Plugin Name: Booster for WooCommerce
 Plugin URI: http://booster.io
 Description: Supercharge your WooCommerce site with these awesome powerful features.
-Version: 2.4.0
+Version: 2.4.1
 Author: Algoritmika Ltd
 Author URI: http://www.algoritmika.com
-Copyright: © 2015 Algoritmika Ltd.
+Copyright: © 2016 Algoritmika Ltd.
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 */
@@ -21,7 +21,7 @@ if ( ! class_exists( 'WC_Jetpack' ) ) :
  * Main WC_Jetpack Class
  *
  * @class   WC_Jetpack
- * @version 2.4.0
+ * @version 2.4.1
  */
 
 final class WC_Jetpack {
@@ -385,7 +385,7 @@ final class WC_Jetpack {
 	/**
 	 * Include modules and submodules
 	 *
-	 * @version 2.4.0
+	 * @version 2.4.1
 	 */
 	private function include_modules() {
 		$settings = array();
@@ -422,6 +422,8 @@ final class WC_Jetpack {
 		$settings[] = include_once( 'includes/class-wcj-payment-gateways-fees.php' );
 		$settings[] = include_once( 'includes/class-wcj-payment-gateways-per-category.php' );
 		$settings[] = include_once( 'includes/class-wcj-payment-gateways-currency.php' );
+		$settings[] = include_once( 'includes/class-wcj-payment-gateways-min-max.php' );
+		$settings[] = include_once( 'includes/class-wcj-payment-gateways-by-country.php' );
 
 		$settings[] = include_once( 'includes/class-wcj-shipping.php' );
 		$settings[] = include_once( 'includes/class-wcj-shipping-calculator.php' );

@@ -3,7 +3,7 @@ Contributors: algoritmika,anbinder,solovjov
 Tags: woocommerce,booster for woocommerce,woocommerce jetpack,custom price labels,call for price,currency symbol,remove sorting,remove old product slugs,add to cart text,order number,sequential order numbering,email pdf invoice,pdf invoice,pdf invoices,already in cart,empty cart,redirect to checkout,minimum order amount,customize checkout fields,checkout fields,email,customize product tabs,product tabs,related products number,empty cart,redirect add to cart,redirect to checkout,product already in cart,custom payment gateway,payment gateway icon,auto-complete all orders,custom order statuses,custom order status,remove text from price,custom css,hide categories count,hide subcategories count,hide category count,hide subcategory count,display total sales,custom product tabs,remove product tab,payment gateway fee,vat
 Requires at least: 3.8
 Tested up to: 4.4
-Stable tag: 2.4.0
+Stable tag: 2.4.1
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -60,6 +60,8 @@ Booster for WooCommerce is a WordPress plugin that supercharges your site with a
 * *Gateways Currency* - Currency per WooCommerce payment gateway.
 * *Gateways Fees* - Enable extra fees for WooCommerce payment gateways.
 * *Gateways Icons* - Change or completely remove icons (images) for any (default or custom) WooCommerce payment gateway.
+* *Gateways Min/Max* - Add min/max amounts for WooCommerce payment gateways to show up.
+* *Gateways by Country* - Set countries to include/exclude for WooCommerce payment gateways to show up.
 * *Gateways per Category* - Show payment gateway only if there is product of selected category in WooCommerce cart.
 
 **Shipping & Orders**
@@ -108,13 +110,21 @@ Booster for WooCommerce is a WordPress plugin that supercharges your site with a
 
 = How to unlock those some features settings that are locked? =
 
-To unlock all Booster for WooCommerce features, please install additional <a href="http://booster.io/plus/">Booster for WooCommerce Plus</a> plugin.
+To unlock all Booster for WooCommerce features, please install additional [Booster for WooCommerce Plus](http://booster.io/plus/) plugin.
 
 == Screenshots ==
 
 1. Plugin admin area.
 
 == Changelog ==
+
+= 2.4.1 - 04/03/2016 =
+* Fix - PRICES & CURRENCIES - Wholesale Price - Discount info on cart page bug fixed.
+* Fix - PRICES & CURRENCIES - Price by Country - Wrong currency in emails bug fixed.
+* Dev - PAYMENT GATEWAYS - Gateways by Country - Initial module release.
+* Dev - PAYMENT GATEWAYS - Gateways Min/Max - Initial module release.
+* Fix - EMAILS & MISC. - Emails - "Illegal offset type in isset or empty in ..." warning fixed.
+* Dev - EMAILS & MISC. - WPML - Code refactoring.
 
 = 2.4.0 - 10/02/2016 =
 * Fix - Custom attribute handling in `output_custom_number()` fixed.
