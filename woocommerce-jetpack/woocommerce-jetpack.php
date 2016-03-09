@@ -3,7 +3,7 @@
 Plugin Name: Booster for WooCommerce
 Plugin URI: http://booster.io
 Description: Supercharge your WooCommerce site with these awesome powerful features.
-Version: 2.4.1
+Version: 2.4.3
 Author: Algoritmika Ltd
 Author URI: http://www.algoritmika.com
 Copyright: © 2016 Algoritmika Ltd.
@@ -21,7 +21,7 @@ if ( ! class_exists( 'WC_Jetpack' ) ) :
  * Main WC_Jetpack Class
  *
  * @class   WC_Jetpack
- * @version 2.4.1
+ * @version 2.4.3
  */
 
 final class WC_Jetpack {
@@ -329,6 +329,9 @@ final class WC_Jetpack {
 
 	/**
 	 * Include required core files used in admin and on the frontend.
+	 *
+	 * @version 2.4.3
+	 * @since   2.4.3
 	 */
 	private function includes() {
 
@@ -346,6 +349,9 @@ final class WC_Jetpack {
 
 		// Shortcodes
 		$this->include_shortcodes();
+
+		// Widgets
+		include_once( 'includes/widgets/class-wcj-widget-multicurrency.php' );
 
 		// Abstracts
 		//include_once( 'includes/abstracts/class-wcj-product-input-fields.php' );
@@ -385,14 +391,12 @@ final class WC_Jetpack {
 	/**
 	 * Include modules and submodules
 	 *
-	 * @version 2.4.1
+	 * @version 2.4.3
 	 */
 	private function include_modules() {
 		$settings = array();
-
 		$settings[] = include_once( 'includes/class-wcj-price-labels.php' );
 		$settings[] = include_once( 'includes/class-wcj-call-for-price.php' );
-
 		$settings[] = include_once( 'includes/class-wcj-product-listings.php' );
 		$settings[] = include_once( 'includes/class-wcj-sorting.php' );
 		$settings[] = include_once( 'includes/class-wcj-product-custom-info.php' );
@@ -407,10 +411,8 @@ final class WC_Jetpack {
 		$settings[] = include_once( 'includes/class-wcj-crowdfunding.php' );
 		$settings[] = include_once( 'includes/class-wcj-wholesale-price.php' );
 		$settings[] = include_once( 'includes/class-wcj-product-images.php' );
-
 		$settings[] = include_once( 'includes/class-wcj-add-to-cart.php' );
 		$settings[] = include_once( 'includes/class-wcj-more-button-labels.php' );
-
 		$settings[] = include_once( 'includes/class-wcj-cart.php' );
 		$settings[] = include_once( 'includes/class-wcj-empty-cart-button.php' );
 		$settings[] = include_once( 'includes/class-wcj-mini-cart.php' );
@@ -424,19 +426,27 @@ final class WC_Jetpack {
 		$settings[] = include_once( 'includes/class-wcj-payment-gateways-currency.php' );
 		$settings[] = include_once( 'includes/class-wcj-payment-gateways-min-max.php' );
 		$settings[] = include_once( 'includes/class-wcj-payment-gateways-by-country.php' );
-
 		$settings[] = include_once( 'includes/class-wcj-shipping.php' );
 		$settings[] = include_once( 'includes/class-wcj-shipping-calculator.php' );
-
 		$settings[] = include_once( 'includes/class-wcj-address-formats.php' );
-
 		$settings[] = include_once( 'includes/class-wcj-orders.php' );
 		$settings[] = include_once( 'includes/class-wcj-order-numbers.php' );
 		$settings[] = include_once( 'includes/class-wcj-order-custom-statuses.php' );
-
 //		$settings[] = include_once( 'includes/class-wcj-pdf-invoices.php' );
-
 		$settings[] = include_once( 'includes/class-wcj-pdf-invoicing.php' );
+		$settings[] = include_once( 'includes/class-wcj-emails.php' );
+		$settings[] = include_once( 'includes/class-wcj-currencies.php' );
+		$settings[] = include_once( 'includes/class-wcj-multicurrency.php' );
+		$settings[] = include_once( 'includes/class-wcj-currency-external-products.php' );
+		$settings[] = include_once( 'includes/class-wcj-price-by-country.php' );
+		$settings[] = include_once( 'includes/class-wcj-currency-exchange-rates.php' );
+		$settings[] = include_once( 'includes/class-wcj-general.php' );
+//		$settings[] = include_once( 'includes/class-wcj-shortcodes-module.php' );
+		$settings[] = include_once( 'includes/class-wcj-eu-vat-number.php' );
+		$settings[] = include_once( 'includes/class-wcj-old-slugs.php' );
+		$settings[] = include_once( 'includes/class-wcj-reports.php' );
+		$settings[] = include_once( 'includes/class-wcj-admin-tools.php' );
+		$settings[] = include_once( 'includes/class-wcj-wpml.php' );
 		$settings[] = include_once( 'includes/pdf-invoices/settings/class-wcj-pdf-invoicing-numbering.php' );
 		$settings[] = include_once( 'includes/pdf-invoices/settings/class-wcj-pdf-invoicing-templates.php' );
 		$settings[] = include_once( 'includes/pdf-invoices/settings/class-wcj-pdf-invoicing-styling.php' );
@@ -446,21 +456,6 @@ final class WC_Jetpack {
 		$settings[] = include_once( 'includes/pdf-invoices/settings/class-wcj-pdf-invoicing-emails.php' );
 		$settings[] = include_once( 'includes/pdf-invoices/settings/class-wcj-pdf-invoicing-display.php' );
 //		$settings[] = include_once( 'includes/pdf-invoices/settings/class-wcj-pdf-invoicing-general.php' );
-
-		$settings[] = include_once( 'includes/class-wcj-emails.php' );
-
-		$settings[] = include_once( 'includes/class-wcj-currencies.php' );
-		$settings[] = include_once( 'includes/class-wcj-currency-external-products.php' );
-		$settings[] = include_once( 'includes/class-wcj-price-by-country.php' );
-		$settings[] = include_once( 'includes/class-wcj-currency-exchange-rates.php' );
-
-		$settings[] = include_once( 'includes/class-wcj-general.php' );
-//		$settings[] = include_once( 'includes/class-wcj-shortcodes-module.php' );
-		$settings[] = include_once( 'includes/class-wcj-eu-vat-number.php' );
-		$settings[] = include_once( 'includes/class-wcj-old-slugs.php' );
-		$settings[] = include_once( 'includes/class-wcj-reports.php' );
-		$settings[] = include_once( 'includes/class-wcj-admin-tools.php' );
-		$settings[] = include_once( 'includes/class-wcj-wpml.php' );
 
 //		do_action( 'woojetpack_modules', $settings );
 

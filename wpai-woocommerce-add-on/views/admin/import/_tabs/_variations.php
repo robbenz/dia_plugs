@@ -127,11 +127,12 @@
 						</p>						
 						<p class="form-field">
 							<label style="width:150px;"><?php _e('Image','wpai_woocommerce_addon_plugin');?></label>
-							<input type="text" value="<?php echo esc_attr($post['variable_image']) ?>" style="" name="variable_image" class="short">
+							<input type="text" value="<?php echo esc_attr($post['variable_image']) ?>" style="" name="variable_image" class="short">							
 							<span class="use_parent">
-								<input type="hidden" name="variable_image_use_parent" value="0"/>
+								<input type="hidden" name="variable_image_use_parent" value="0"/>								
 								<input type="checkbox" name="variable_image_use_parent" id="variable_image_use_parent" style="position:relative; top:1px; margin-left:5px; margin-right:5px;" <?php echo ($post['variable_image_use_parent']) ? 'checked="checked"' : ''; ?>>
 								<label for="variable_image_use_parent" style="top:0px;"><?php _e("XPath Is From Parent","wpai_woocommerce_addon_plugin"); ?></label>
+								<a href="#help" class="wpallimport-help" title="<?php _e('Images are imported according to the options set in the Images section below. There you can import images to the parent products, and here you can import images to the product variations.', 'wpai_woocommerce_addon_plugin') ?>" style="position:relative; top:2px; right: 30px;">?</a>
 							</span>
 						</p>
 						<p class="form-field">

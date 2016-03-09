@@ -498,8 +498,11 @@ class Profile_Builder_Form_Creator{
 
             $userdata = $this->wppb_add_custom_field_values( $global_request, $userdata, $this->args['form_fields'] );
 
-            if( !isset( $userdata['role'] ) )
-                $userdata['role'] = $this->args['role'];
+			if( ! isset( $userdata['role'] ) ) {
+				$userdata['role'] = $this->args['role'];
+			} else {
+				$this->args['redirect_url'] = wppb_custom_redirect_url( 'after_registration', $this->args['redirect_url'], $userdata["user_login"], $userdata['role'] );
+			}
 
             $userdata['user_pass'] = wp_hash_password( $userdata['user_pass'] );
 
@@ -512,8 +515,11 @@ class Profile_Builder_Form_Creator{
             wppb_signup_user( $userdata['user_login'], $userdata['user_email'], $userdata );
 
         }else{
-            if( !isset( $userdata['role'] ) )
-                $userdata['role'] = $this->args['role'];
+			if( ! isset( $userdata['role'] ) ) {
+				$userdata['role'] = $this->args['role'];
+			} else {
+				$this->args['redirect_url'] = wppb_custom_redirect_url( 'after_registration', $this->args['redirect_url'], $userdata["user_login"], $userdata['role'] );
+			}
 
             $userdata = wp_unslash( $userdata );
 

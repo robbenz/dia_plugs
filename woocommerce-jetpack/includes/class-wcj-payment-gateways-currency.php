@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Payment Gateways Currency class.
  *
- * @version 2.3.5
+ * @version 2.4.3
  * @since   2.3.0
  * @author  Algoritmika Ltd.
  */
@@ -148,11 +148,12 @@ class WCJ_Payment_Gateways_Currency extends WCJ_Module {
 
 	/**
 	 * get_settings.
+	 *
+	 * @version 2.4.3
 	 */
 	function get_settings() {
-		$settings = array();
-		$settings = apply_filters( 'wcj_payment_gateways_currency_settings', $settings );
-		return $this->add_enable_module_setting( $settings );
+		$settings = apply_filters( 'wcj_payment_gateways_currency_settings', array() );
+		return $this->add_standard_settings( $settings );
 	}
 
 	/**
@@ -183,7 +184,7 @@ class WCJ_Payment_Gateways_Currency extends WCJ_Module {
 	/**
 	 * add_currency_settings.
 	 *
-	 * @version 2.4.0
+	 * @version 2.4.2
 	 */
 	function add_currency_settings( $settings ) {
 
@@ -191,7 +192,7 @@ class WCJ_Payment_Gateways_Currency extends WCJ_Module {
 			'title' => __( 'Payment Gateways Currency Options', 'woocommerce-jetpack' ),
 			'type'  => 'title',
 			'desc'  => __( 'This section lets you set different currency for each payment gateway.', 'woocommerce-jetpack' ),
-			'id'    => 'wcj_payment_gateways_currency_options'
+			'id'    => 'wcj_payment_gateways_currency_options',
 		);
 
 		$currency_from = get_woocommerce_currency();
@@ -260,7 +261,7 @@ class WCJ_Payment_Gateways_Currency extends WCJ_Module {
 
 		$settings[] = array(
 			'type'  => 'sectionend',
-			'id'    => 'wcj_payment_gateways_currency_options'
+			'id'    => 'wcj_payment_gateways_currency_options',
 		);
 
 		return $settings;

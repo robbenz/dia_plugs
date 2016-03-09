@@ -85,7 +85,7 @@ if(!function_exists('wppb_curpageurl')){
 		else
 			$pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
 		
-		if ( function_exists('apply_filters') ) apply_filters('wppb_curpageurl', $pageURL);
+		if ( function_exists('apply_filters') ) $pageURL = apply_filters('wppb_curpageurl', $pageURL);
 
         return $pageURL;
 	}
@@ -167,11 +167,13 @@ function wppb_mail( $to, $subject, $message, $message_from, $context = null ) {
 		add_filter( 'wp_mail_content_type', create_function( '', 'return "text/html"; ' ) );
 
 		$sent = wp_mail( $to , $subject, $message );
+
+		do_action( 'wppb_after_sending_email', $sent, $to, $subject, $message, $send_email );
+
+		return $sent;
 	}
-	
-	do_action( 'wppb_after_sending_email', $sent, $to, $subject, $message, $send_email );
-	
-	return $sent;
+
+	return '';
 }
 
 function wppb_activate_account_check(){

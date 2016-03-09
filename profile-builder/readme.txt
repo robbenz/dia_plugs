@@ -5,7 +5,7 @@ Tags: registration, user profile, user registration, custom field registration, 
 
 Requires at least: 3.1
 Tested up to: 4.4.2
-Stable tag: 2.3.1
+Stable tag: 2.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -45,11 +45,11 @@ Users with administrator rights have access to the following features:
 * add a custom stylesheet/inherit values from the current theme or use the default one built into this plugin.
 * chose which user roles view the admin bar in the front-end of the website (Admin Bar Settings page).
 * select which profile fields users can see/modify.
-* extended functionality available via [Add-ons](http://www.cozmoslabs.com/profile-builder-add-ons/?utm_source=wp.org&utm_medium=plugin-description-page&utm_campaign=PBFree)
+* extended functionality available via [Add-ons](http://www.cozmoslabs.com/profile-builder-add-ons/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=PBFree)
 
 **PROFILE BUILDER PRO**
 
-The [Pro version](http://www.cozmoslabs.com/wordpress-profile-builder/?utm_source=wp.org&utm_medium=plugin-description-page&utm_campaign=PBFree) has the following extra features:
+The [Pro version](http://www.cozmoslabs.com/wordpress-profile-builder/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=PBFree) has the following extra features:
 
 * Create Extra User Fields (Heading, Input, Hidden-Input, Checkbox, Agree to Terms Checkbox, Radio Buttons, DatePicker, Textareas, WYSIWYG, reCAPTCHA, Upload fields, Selects, User Role Select, Country Selects, Timezone selects, Avatar Upload)
 * Add Avatar Upload for users
@@ -65,12 +65,42 @@ The [Pro version](http://www.cozmoslabs.com/wordpress-profile-builder/?utm_sourc
 * Access to support forums and documentation
 * 1 Year of Updates / Priority Support
 
-[Find out more about Profile Builder PRO](http://www.cozmoslabs.com/wordpress-profile-builder/?utm_source=wp.org&utm_medium=plugin-description-page&utm_campaign=PBFree)
+[Find out more about Profile Builder PRO](http://www.cozmoslabs.com/wordpress-profile-builder/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=PBFree)
 
 
-**Profile Builder Add-ons**
+= Add-ons =
 
-For more functionality check out Profile Builder [Add-ons page](http://www.cozmoslabs.com/profile-builder-add-ons/?utm_source=wp.org&utm_medium=plugin-description-page&utm_campaign=PBFree)
+For more functionality check out [Profile Builder Add-ons page](http://www.cozmoslabs.com/profile-builder-add-ons/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=PBFree)
+
+**Free Add-ons**
+
+* [Email Confirmation Field](http://www.cozmoslabs.com/add-ons/email-confirmation-field/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=PBFree) - check if the email address entered matches the first one, making sure a user submits a valid and correct email address
+* [Multiple Admin E-mails](http://www.cozmoslabs.com/add-ons/multiple-admin-e-mails/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=PBFree) - send user notification emails to multiple email addresses
+* [Custom CSS Classes on Fields](http://www.cozmoslabs.com/add-ons/custom-css-classes-fields/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=PBFree) - add custom CSS classes for fields
+* [Numbers and Phone Validation](http://www.cozmoslabs.com/add-ons/numbers-phone-validation/?utm_source=wp.org&utm_medium=pms-description-page&utm_campaign=PMSFree) - zip codes, phone numbers, ID's require the custom input field to contain numbers only
+* [Import and Export](http://www.cozmoslabs.com/add-ons/import-export/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=PBFree) - allows you to import and export all Profile Builder Settings data
+* [Passwordless Login](http://www.cozmoslabs.com/add-ons/passwordless-login/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=PBFree) - allow your users to login without a password
+* [Maximum Character Length](http://www.cozmoslabs.com/add-ons/maximum-character-length/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=PBFree) - set a maximum character length for custom input or textarea fields
+* [Labels Edit](http://www.cozmoslabs.com/add-ons/labels-edit/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=PBFree) - easily edit all Profile Builder labels
+* [Placeholder Labels](http://www.cozmoslabs.com/add-ons/placeholder-labels/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=PBFree) - replace labels with placeholders in Profile Builder form
+* [Select2](http://www.cozmoslabs.com/add-ons/select2/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=PBFree) - create select fields with search and filter functionality
+
+**Premium Add-ons**
+
+* [Social Connect](http://www.cozmoslabs.com/add-ons/social-connect/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=PBFree) - enable social login on your website, users can login with Facebook, Google+ or Twitter
+* [WooCommerce Sync](http://www.cozmoslabs.com/add-ons/woocommerce-sync/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=PBFree) - integrates Profile Builder with WooCommerce, allowing you to manage Shipping and Billing fields from WooCommerce with PB and more
+* [MailChimp](http://www.cozmoslabs.com/add-ons/profile-builder-mailchimp/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=PBFree) - allow users to subscribe to your Mailchimp lists directly from the Register or Edit Profile forms
+* [Campaign Monitor](http://www.cozmoslabs.com/add-ons/profile-builder-campaign-monitor/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=PBFree) - allow users to subscribe to your Campaign Monitor lists directly from the Register or Edit Profile forms
+* [Field Visibility](http://www.cozmoslabs.com/add-ons/field-visibility/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=PBFree) - allows you to change the visibility options for the extra fields
+
+
+= Documentation =
+
+http://www.cozmoslabs.com/docs/profile-builder-2/
+
+= Website =
+
+http://www.cozmoslabs.com/wordpress-profile-builder/
 
 = Profile Builder in your Language =
 We're focusing on translating Profile Builder in as many languages as we can. So far, the translations for 10 languages are almost complete, but we still need help on a lot of other languages, so please join us at [translate.cozmoslabs.com.](http://translate.cozmoslabs.com/projects/profilebuilder)
@@ -115,6 +145,11 @@ This plugin adds/removes user fields in the front-end. Both default and extra pr
 10. Profile Builder Login Widget
 
 == Changelog ==
+= 2.3.2 =
+* When upgrading from an older version than 2.2.6 on a Multisite install Email Confirmation is set to yes automatically now
+* Fixed notice undefined variable from wppb_mail when using filter to not send email
+* Fixed filter wppb_curpageurl not being applied
+
 = 2.3.1 =
 * Refactored username exists check to search only in username
 * Fixed issue when there was a meta in the db with no meta key and we couldn't add our fields that had no meta key because it would generate meta name already in use

@@ -60,6 +60,15 @@ function wppb_update_patch(){
 			wppb_new_custom_redirects_compatibility();
 		}
 	}
+
+    if ( version_compare( $wppb_version, '2.2.5', '<=' ) ) {
+        if( is_multisite() ){
+            $wppb_general_settings = get_option( 'wppb_general_settings' );
+            $wppb_general_settings['emailConfirmation'] = 'yes';
+            update_option( 'wppb_general_settings', $wppb_general_settings );
+        }
+
+    }
 	
 	do_action ( 'wppb_after_default_changes', PROFILE_BUILDER_VERSION, $wppb_version );	
 }

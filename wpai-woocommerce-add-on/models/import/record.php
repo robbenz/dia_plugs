@@ -274,8 +274,8 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 			$count and $this->data['product_sold_individually'] = array_fill(0, $count, $import->options['product_sold_individually']);
 		}
 
-		if ("" != $import->options['single_product_weight']){
-			$this->data['product_weight'] = XmlImportParser::factory($xml, $cxpath, $import->options['single_product_weight'], $file)->parse($records); $tmp_files[] = $file;
+		if ("" != $import->options['single_product_weight']){						
+			$this->data['product_weight'] = XmlImportParser::factory($xml, $cxpath, $import->options['single_product_weight'], $file)->parse($records); $tmp_files[] = $file;						
 		}
 		else{
 			$count and $this->data['product_weight'] = array_fill(0, $count, "");
@@ -658,7 +658,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 
 		// Product type + Downloadable/Virtual
 		if ($is_new_product or $this->options['update_all_data'] == 'yes' or ($this->options['update_all_data'] == 'no' and $this->options['is_update_product_type'])) { 						
-			$product_type_term = term_exists($product_type, 'product_type', 0);	
+			$product_type_term = is_exists_term($product_type, 'product_type', 0);	
 			if ( ! empty($product_type_term) and ! is_wp_error($product_type_term) ){					
 				$this->associate_terms( $pid, array( (int) $product_type_term['term_taxonomy_id'] ), 'product_type' );	
 			}			
@@ -681,9 +681,9 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 		$this->pushmeta($pid, '_purchase_note', stripslashes( $product_purchase_note[$i] ) );
 		$this->pushmeta($pid, '_featured', ($is_featured == "yes") ? 'yes' : 'no' );
 
-		// Dimensions
-		if ( $is_virtual == 'no' ) {
-			$this->pushmeta($pid, '_weight', stripslashes( $product_weight[$i] ) );
+		// Dimensions		
+		if ( $is_virtual == 'no' ) {			
+			$this->pushmeta($pid, '_weight', stripslashes( $product_weight[$i] ) );			
 			$this->pushmeta($pid, '_length', stripslashes( $product_length[$i] ) );
 			$this->pushmeta($pid, '_width', stripslashes( $product_width[$i] ) );
 			$this->pushmeta($pid, '_height', stripslashes( $product_height[$i] ) );			
@@ -712,7 +712,9 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 
 					if ( (int) $product_shipping_class[$i] > 0){
 
-						$t_shipping_class = get_term_by('slug', $p_shipping_class, 'product_shipping_class');									
+						$t_shipping_class = get_term_by('slug', $p_shipping_class, 'product_shipping_class');		
+						// For compatibility with WPML plugin
+						$t_shipping_class = apply_filters('wp_all_import_term_exists', $t_shipping_class, 'product_shipping_class', $p_shipping_class, null);							
 
 						if ( ! empty($t_shipping_class) and ! is_wp_error($t_shipping_class) ) 
 						{
@@ -720,7 +722,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 						}
 						else
 						{						
-							$t_shipping_class = term_exists( (int) $p_shipping_class, 'product_shipping_class', 0);	
+							$t_shipping_class = is_exists_term( (int) $p_shipping_class, 'product_shipping_class', 0);	
 												
 							if ( ! empty($t_shipping_class) and ! is_wp_error($t_shipping_class) )
 							{												
@@ -747,7 +749,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 				}
 				else{
 					
-					$t_shipping_class = term_exists($product_shipping_class[$i], 'product_shipping_class', 0);	
+					$t_shipping_class = is_exists_term($product_shipping_class[$i], 'product_shipping_class', 0);	
 					
 					if ( ! empty($t_shipping_class) and ! is_wp_error($t_shipping_class) )
 					{
@@ -755,7 +757,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 					}
 					else
 					{
-						$t_shipping_class = term_exists(htmlspecialchars(strtolower($product_shipping_class[$i])), 'product_shipping_class', 0);	
+						$t_shipping_class = is_exists_term(htmlspecialchars(strtolower($product_shipping_class[$i])), 'product_shipping_class', 0);	
 						
 						if ( ! empty($t_shipping_class) and ! is_wp_error($t_shipping_class) )
 						{
@@ -898,13 +900,16 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 						 			$value = substr($val, 0, 199);
 
 						 			$term = get_term_by('name', $value, wc_attribute_taxonomy_name( $attr_name ), ARRAY_A);
+						 			
+						 			// For compatibility with WPML plugin
+						 			$term = apply_filters('wp_all_import_term_exists', $term, wc_attribute_taxonomy_name( $attr_name ), $value, null);
 
 						 			if ( empty($term) and !is_wp_error($term) ){		
 
-							 			$term = term_exists($value, wc_attribute_taxonomy_name( $attr_name ));							 			
+							 			$term = is_exists_term($value, wc_attribute_taxonomy_name( $attr_name ));							 			
 
 							 			if ( empty($term) and !is_wp_error($term) ){																																
-											$term = term_exists(htmlspecialchars($value), wc_attribute_taxonomy_name( $attr_name ));	
+											$term = is_exists_term(htmlspecialchars($value), wc_attribute_taxonomy_name( $attr_name ));	
 											if ( empty($term) and !is_wp_error($term) and intval($attr_data['is_create_taxonomy_terms'][$i])){		
 												
 												$term = wp_insert_term(
@@ -915,8 +920,10 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 										}
 									}
 
-									if ( ! is_wp_error($term) )												
+									if ( ! is_wp_error($term) )				
+									{										
 										$attr_values[] = (int) $term['term_taxonomy_id']; 
+									}																		
 
 						 		}
 
@@ -1125,7 +1132,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 			} elseif ( 'variable' === $product_type and ! $this->options['link_all_variations'] ) {
 
 				// Stock status is always determined by children so sync later
-				$stock_status = '';
+				// $stock_status = '';
 
 				if ( $product_manage_stock[$i] == 'yes' ) {
 					$manage_stock = 'yes';
@@ -1152,61 +1159,13 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 
 		} else {
 			update_post_meta( $pid, '_stock_status', wc_clean( $product_stock_status[$i] ) );
-		}		
+		}				
 
 		// Upsells
-		if ( !empty( $product_up_sells[$i] ) ) {
-			$upsells = array();
-			$ids = array_filter(explode(',', $product_up_sells[$i]), 'trim');
-			foreach ( $ids as $id ){								
-				$args = array(
-					'post_type' => 'product',
-					'meta_query' => array(
-						array(
-							'key' => '_sku',
-							'value' => $id,						
-						)
-					)
-				);			
-				$query = new WP_Query( $args );
-				
-				if ( $query->have_posts() ) $upsells[] = $query->post->ID;
-
-				wp_reset_postdata();
-			}								
-
-			$this->pushmeta($pid, '_upsell_ids', $upsells);	
-			
-		} else {
-			if ($is_new_product or $this->is_update_cf('_upsell_ids')) delete_post_meta( $pid, '_upsell_ids' );
-		}
+		$this->import_linked_products($pid, $product_up_sells[$i], '_upsell_ids', $is_new_product, $logger, $import->id);
 
 		// Cross sells
-		if ( !empty( $product_cross_sells[$i] ) ) {
-			$crosssells = array();
-			$ids = array_filter(explode(',', $product_cross_sells[$i]), 'trim');
-			foreach ( $ids as $id ){
-				$args = array(
-					'post_type' => 'product',
-					'meta_query' => array(
-						array(
-							'key' => '_sku',
-							'value' => $id,						
-						)
-					)
-				);			
-				$query = new WP_Query( $args );
-				
-				if ( $query->have_posts() ) $crosssells[] = $query->post->ID;
-
-				wp_reset_postdata();
-			}								
-			
-			$this->pushmeta($pid, '_crosssell_ids', $crosssells);	
-
-		} else {
-			if ($is_new_product or $this->is_update_cf('_crosssell_ids')) delete_post_meta( $pid, '_crosssell_ids' );
-		}
+		$this->import_linked_products($pid, $product_cross_sells[$i], '_crosssell_ids', $is_new_product, $logger, $import->id);		
 
 		// Downloadable options
 		if ( $is_downloadable == 'yes' ) {
@@ -1262,7 +1221,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 		wc_delete_product_transients($pid);
 		
 		// VARIATIONS
-		if ( $product_types[$i] == "variable" and ! $this->options['link_all_variations'] and "xml" != $import->options['matching_parent'] ){												
+		if ( ( in_array($product_type, array('variation', 'variable')) or $product_types[$i] == "variable" ) and ! $this->options['link_all_variations'] and "xml" != $import->options['matching_parent'] ){												
 
 			$set_defaults = false;
 
@@ -1425,7 +1384,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 							'post_content' 	=> '',	
 							'post_status'   => $post_status,					
 							'post_parent' 	=> $product_parent_post_id,
-							'post_type' 	=> 'product_variation'									
+							'post_type' 	=> 'product_variation'							
 						);		
 
 						if ( $pid and ! $is_new_product and ! $this->is_update_data_allowed('is_update_status'))
@@ -1644,16 +1603,19 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 
 													$term = get_term_by('name', $values, $cname, ARRAY_A);
 
+													// For compatibility with WPML plugin
+						 							$term = apply_filters('wp_all_import_term_exists', $term, $cname, $values, null);
+
 											 		if ( empty($term) and !is_wp_error($term) ){	
-														$term = term_exists($values, $cname);
+														$term = is_exists_term($values, $cname);
 
 														if ( empty($term) and !is_wp_error($term) ){																																
-															$term = term_exists(htmlspecialchars($values), $cname);
+															$term = is_exists_term(htmlspecialchars($values), $cname);
 														}
 													}
 
 													if ( ! empty($term) and ! is_wp_error($term) ){	
-														$term = get_term_by('id', $term['term_id'], $cname);									
+														$term = get_term_by('id', $term['term_id'], $cname);																							
 														if ( ! empty($term) and ! is_wp_error($term) )
 															update_post_meta($pid, 'attribute_' . sanitize_title( $attr_name ), $term->slug);																					
 													}
@@ -1720,11 +1682,14 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 
 												$term = get_term_by('name', $values, $cname, ARRAY_A);
 
+												// For compatibility with WPML plugin
+						 						$term = apply_filters('wp_all_import_term_exists', $term, $cname, $values, null);
+
 										 		if ( empty($term) and !is_wp_error($term) ){	
-													$term = term_exists($values, $cname);
+													$term = is_exists_term($values, $cname);
 
 													if ( empty($term) and !is_wp_error($term) ){																																
-														$term = term_exists(htmlspecialchars($values), $cname);
+														$term = is_exists_term(htmlspecialchars($values), $cname);
 													}
 												}
 
@@ -1756,6 +1721,8 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 						if ($product_parent_post_id) wc_delete_product_transients($product_parent_post_id);		
 
 						if ($create_new_variation) do_action( 'pmxi_saved_post', $pid, null);
+
+						do_action( 'pmxi_update_product_variation', $pid );				
 
 						$create_new_variation = false;
 
@@ -1806,9 +1773,9 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 			$previousID = get_option('wp_all_import_' . $import->id . '_parent_product');							
 
 			// [execute only for parent products]								
-			if ( ! empty($previousID) and ( empty($product_parent_post_id) or $product_parent_post_id != $previousID or ! isset($product_types[$i + 1])) ){
+			if ( ! isset($product_types[$i + 1]) or ( ! empty($previousID) and ( empty($product_parent_post_id) or $product_parent_post_id != $previousID or "yes" == $this->options['is_keep_former_posts'] ) ) ){
 
-				$parent_product_ids = array($previousID);				
+				$parent_product_ids = empty($previousID) ? array() : array($previousID);
 				
 				if ( ! isset($product_types[$i + 1]) and ! empty($product_parent_post_id) and ! in_array($product_parent_post_id, $parent_product_ids)) 
 				{
@@ -1820,7 +1787,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 					$parent_product_ids[] = $pid;
 				}				
 
-				foreach ($parent_product_ids as $post_parent) {																							
+				foreach ($parent_product_ids as $post_parent) {																										
 
 					$children = get_posts( array(
 						'post_parent' 	=> $post_parent,
@@ -1834,7 +1801,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 
 					if ( count($children) ){						
 
-						$product_type_term = term_exists('variable', 'product_type', 0);	
+						$product_type_term = is_exists_term('variable', 'product_type', 0);	
 						if ( ! empty($product_type_term) and ! is_wp_error($product_type_term) ){	
 							$this->associate_terms( $post_parent, array( (int) $product_type_term['term_taxonomy_id'] ), 'product_type' );	
 						}
@@ -1945,6 +1912,8 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 										foreach ($value as $val) {
 											if ( $attribute['is_taxonomy'] ){
 												$term = get_term_by('slug', $val, $attribute['name'], ARRAY_A);
+												// For compatibility with WPML plugin
+						 						$term = apply_filters('wp_all_import_term_exists', $term, $attribute['name'], $val, null);
 												if ( ! empty($term) and ! is_wp_error($term) )
 												{
 													$val = $term['name'];
@@ -2032,13 +2001,15 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 								 		foreach ($values as $key => $value) {								 			
 
 								 			$term = get_term_by('name', $value, $attribute['name'], ARRAY_A);
+								 			// For compatibility with WPML plugin
+						 					$term = apply_filters('wp_all_import_term_exists', $term, $attribute['name'], $value, null);
 
 						 					if ( empty($term) and !is_wp_error($term) ){	
 								 			
-									 			$term = term_exists($value, $attribute['name']);	
+									 			$term = is_exists_term($value, $attribute['name']);	
 
 									 			if ( empty($term) and !is_wp_error($term) ){																																
-													$term = term_exists(htmlspecialchars($value), $attribute['name']);	
+													$term = is_exists_term(htmlspecialchars($value), $attribute['name']);	
 													if ( empty($term) and !is_wp_error($term) and $attribute['is_create_taxonomy_terms']){													
 														$term = wp_insert_term(
 															$value, // the term 
@@ -2100,9 +2071,9 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 							 	$attribute_position++;		
 							}				
 							
-							if ($import->options['is_default_attributes'] and (empty($articleData['ID']) or $import->options['update_all_data'] == "yes" or $import->options['update_all_data'] == "no" and $import->options['is_update_attributes'])) $this->pushmeta($post_parent, '_default_attributes', $default_attributes);
+							if ($import->options['is_default_attributes'] and (empty($articleData['ID']) or $import->options['update_all_data'] == "yes" or $import->options['update_all_data'] == "no" and $import->options['is_update_attributes'])) $this->pushmeta($post_parent, '_default_attributes', $default_attributes);							
 
-							if (empty($articleData['ID']) or $import->options['update_all_data'] == "yes" or $import->options['update_all_data'] == "no" and $import->options['is_update_attributes']){ 
+							if ($is_new_product or $import->options['update_all_data'] == "yes" or $import->options['update_all_data'] == "no" and $import->options['is_update_attributes']){ 
 								
 								$current_product_attributes = get_post_meta($post_parent, '_product_attributes', true);						
 
@@ -2144,7 +2115,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 			// Link All Variations
 			if ( "variable" == $product_type and $this->options['link_all_variations'] and ($this->options['update_all_data'] == "yes" or ($this->options['update_all_data'] == "no" and $this->options['is_update_attributes']) or $is_new_product)){
 
-				$added_variations = $this->pmwi_link_all_variations($pid, $this->options);
+				$added_variations = $this->pmwi_link_all_variations($pid, $this->options, $import->id);
 
 				$logger and call_user_func($logger, sprintf(__('<b>CREATED</b>: %s variations for parent product %s.', 'wpai_woocommerce_addon_plugin'), $added_variations, $articleData['post_title']));	
 
@@ -2586,12 +2557,22 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 
 						$logger and call_user_func($logger, sprintf(__('- `%s`: variation created successfully', 'wpai_woocommerce_addon_plugin'), sprintf( __( 'Variation #%s of %s', 'wpai_woocommerce_addon_plugin' ), absint( $variation_to_update_id ), esc_html( get_the_title( $pid ) ) )));
 
-					} else {						
+					} else {											
 							
 						$this->wpdb->update( $this->wpdb->posts, $variation, array( 'ID' => $variation_to_update_id ) );
 						//do_action( 'woocommerce_update_product_variation', $variation_to_update_id );
 						$logger and call_user_func($logger, sprintf(__('- `%s`: variation updated successfully', 'wpai_woocommerce_addon_plugin'), $variation_post_title));
 						
+						if ( $import->options['update_all_data'] == 'yes' or ( $import->options['update_all_data'] == 'no' and $import->options['is_update_attachments'])) {
+							$logger and call_user_func($logger, sprintf(__('Deleting attachments for `%s`', 'wp_all_import_plugin'), $variation_post_title));								
+							wp_delete_attachments($variation_to_update_id, true, 'files');
+						}
+						// handle obsolete attachments (i.e. delete or keep) according to import settings
+						if ( $import->options['update_all_data'] == 'yes' or ( $import->options['update_all_data'] == 'no' and $import->options['is_update_images'] and $import->options['update_images_logic'] == "full_update")){
+							$logger and call_user_func($logger, sprintf(__('Deleting images for `%s`', 'wp_all_import_plugin'), $variation_post_title));								
+							wp_delete_attachments($variation_to_update_id, ! $import->options['do_not_remove_images'], 'images');
+						}
+
 					}		
 
 					do_action( 'pmxi_update_product_variation', $variation_to_update_id );								
@@ -2708,9 +2689,9 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 					}
 					else{
 
-						$vt_shipping_class = term_exists($variation_product_shipping_class[ $j ], 'product_shipping_class', 0);	
+						$vt_shipping_class = is_exists_term($variation_product_shipping_class[ $j ], 'product_shipping_class', 0);	
 						if ( empty($vt_shipping_class) and !is_wp_error($vt_shipping_class) ){																																
-							$vt_shipping_class = term_exists(htmlspecialchars($variation_product_shipping_class[ $j ]), 'product_shipping_class', 0);						
+							$vt_shipping_class = is_exists_term(htmlspecialchars($variation_product_shipping_class[ $j ]), 'product_shipping_class', 0);						
 						}
 						if ( ! is_wp_error($vt_shipping_class) )												
 							$v_shipping_class = (int) $vt_shipping_class['term_id']; 				
@@ -2899,13 +2880,15 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 								if (intval($attr_data['is_create_taxonomy_terms'][0])) $this->create_taxonomy($a_name, $logger);
 
 								$term = get_term_by('name', $values, wc_attribute_taxonomy_name( $a_name ), ARRAY_A);
+								// For compatibility with WPML plugin
+						 		$term = apply_filters('wp_all_import_term_exists', $term, wc_attribute_taxonomy_name( $a_name ), $values, null);
 
 								if ( empty($term) and ! is_wp_error($term) ){		
 
-						 			$term = term_exists($values, wc_attribute_taxonomy_name( $a_name ));							 			
+						 			$term = is_exists_term($values, wc_attribute_taxonomy_name( $a_name ));							 			
 
 						 			if ( empty($term) and !is_wp_error($term) ){																																
-										$term = term_exists(htmlspecialchars($values), wc_attribute_taxonomy_name( $a_name ));	
+										$term = is_exists_term(htmlspecialchars($values), wc_attribute_taxonomy_name( $a_name ));	
 										if ( empty($term) and !is_wp_error($term) and intval($attr_data['is_create_taxonomy_terms'][0])){		
 											
 											$term = wp_insert_term(
@@ -2935,6 +2918,11 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 
 					if ( ! empty($uploads) and false === $uploads['error'] and !empty($variation_image[$j]) and (empty($articleData['ID']) or $import->options['update_all_data'] == "yes" or ( $import->options['update_all_data'] == "no" and $import->options['is_update_images']))) {
 
+						require_once(ABSPATH . 'wp-admin/includes/image.php');	
+
+						$targetDir = $uploads['path'];
+						$targetUrl = $uploads['url'];
+
 						$gallery_attachment_ids = array();	
 
 						foreach ($variation_image[$j] as $featured_image)
@@ -2945,109 +2933,88 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 
 								foreach ($imgs as $img_url) { if (empty($img_url)) continue;	
 
-									$attid = false;
+									$attid = false;		
+
+									$attch = null;	
 
 									$url = str_replace(" ", "%20", trim($img_url));
 									$bn  = wp_all_import_sanitize_filename(basename($url));
 									
 									$img_ext = pmxi_getExtensionFromStr($url);									
 									$default_extension = pmxi_getExtension($bn);																									
-
 									if ($img_ext == "") 										
 										$img_ext = pmxi_get_remote_image_ext($url);																			
 
 									// generate local file name
-									$image_name = urldecode(sanitize_file_name((($img_ext) ? str_replace("." . $default_extension, "", $bn) : $bn))) . (("" != $img_ext) ? '.' . $img_ext : '');																	
-									
+									$image_name = apply_filters("wp_all_import_image_filename", urldecode(sanitize_file_name((($img_ext) ? str_replace("." . $default_extension, "", $bn) : $bn))) . (("" != $img_ext) ? '.' . $img_ext : ''));																										
 									// if wizard store image data to custom field									
 									$create_image = false;
 									$download_image = true;
 
 									$image_filename = wp_unique_filename($uploads['path'], $image_name);
-									$image_filepath = $uploads['path'] . '/' . $image_filename;
-									
-									// keep existing and add newest images
-									if ( ! empty($articleData['ID']) and $import->options['is_update_images'] and $import->options['update_images_logic'] == "add_new" and $import->options['update_all_data'] == "no"){ 																																											
+									$image_filepath = $uploads['path'] . DIRECTORY_SEPARATOR . $image_filename;																
+
+									// search existing attachment
+									if ($import->options['search_existing_images'] or "gallery" == $import->options['download_images']){
 										
-										$attachment_imgs = get_posts( array(
-											'post_type' => 'attachment',
-											'posts_per_page' => -1,
-											'post_parent' => $variation_to_update_id,												
-										) );
+										$image_filename = $image_name;
 
-										if ( $attachment_imgs ) {
-											foreach ( $attachment_imgs as $attachment_img ) {													
-												if ($attachment_img->guid == $uploads['url'] . '/' . $image_name){
-													$download_image = false;
-													$success_images = true;
-													
-													set_post_thumbnail($variation_to_update_id, $attachment_img->ID);													
-													$gallery_attachment_ids[] = $attachment_img->ID;	
+										$attch = wp_all_import_get_image_from_gallery($image_name, $targetDir, "images");
 
-													$logger and call_user_func($logger, sprintf(__('- <b>Image SKIPPED</b>: The image %s is always exists for the %s', 'wpai_woocommerce_addon_plugin'), basename($attachment_img->guid), $variation_post_title));							
-												}
-											}												
-										}
+										if ("gallery" == $import->options['download_images']) $download_image = false;
 
-									}
-
-									if ($import->options['search_existing_images']){
-										$image_filename = $image_name;												
-
-										$attch = $this->wpdb->get_row( $this->wpdb->prepare( "SELECT * FROM " . $this->wpdb->posts . " WHERE (post_title = %s OR post_title = %s OR post_name = %s) AND post_type = %s AND post_mime_type LIKE %s;", $image_name, preg_replace('/\\.[^.\\s]{3,4}$/', '', $image_name), sanitize_title($image_name), "attachment", "image%" ) );
-
-										if ( $attch != null ){			
+										if (empty($attch))
+										{
+											$logger and call_user_func($logger, sprintf(__('- <b>WARNING</b>: Image %s not found in media gallery.', 'wp_all_import_plugin'), trim($image_name)));
+										}	
+										else
+										{
+											$logger and call_user_func($logger, sprintf(__('- Using existing image `%s` for post `%s` ...', 'wp_all_import_plugin'), trim($image_name), $variation_post_title));
 											$download_image = false;
-											$create_image = false;																								
-											$attid = $attch->ID;
-											set_post_thumbnail($variation_to_update_id, $attid); 																							
-											$gallery_attachment_ids[] = $attid;	
-										}													
+											$create_image   = false;
+											$attid 			= $attch->ID;															
+										}	
 									}
 
-									if ($download_image){											
+									if ($download_image && "gallery" != $import->options['download_images']){
 
 										// do not download images
-										if ( ! $import->options['download_images'] or $import->options['variable_image_use_parent']){ 		
+										if ( "no" == $import->options['download_images'] ){													
 
 											$image_filename = $image_name;
-											$image_filepath = $uploads['path'] . '/' . $image_filename;																							
-											
-											$existing_attachment = $this->wpdb->get_row( $this->wpdb->prepare( "SELECT * FROM " . $this->wpdb->prefix ."posts WHERE guid = '%s'", $uploads['url'] . '/' . $image_filename ) );
-											
-											if ( ! empty($existing_attachment->ID) ){
-
-												$download_image = false;	
-												$create_image = false;	
+											$image_filepath = $targetDir . DIRECTORY_SEPARATOR . $image_filename;		
 												
-												set_post_thumbnail($variation_to_update_id, $existing_attachment->ID); 																							
-												$gallery_attachment_ids[] = $existing_attachment->ID;	
+											$wpai_uploads = $uploads['basedir'] . DIRECTORY_SEPARATOR . PMXI_Plugin::FILES_DIRECTORY . DIRECTORY_SEPARATOR;
+											$wpai_image_path = $wpai_uploads . str_replace('%20', ' ', $url);
 
-												do_action( 'pmxi_gallery_image', $variation_to_update_id, $existing_attachment->ID, $image_filepath); 
-
-											}
-											else{													
-												
-												if ( @file_exists($image_filepath) ){
-													$download_image = false;																				
-													if( ! ($image_info = @getimagesize($image_filepath)) or ! in_array($image_info[2], array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG))) {
-														$logger and call_user_func($logger, sprintf(__('- <b>WARNING</b>: File %s is not a valid image and cannot be set as featured one', 'wpai_woocommerce_addon_plugin'), $image_filepath));														
-														@unlink($image_filepath);
-													} else {
-														$create_image = true;											
-													}
+											$logger and call_user_func($logger, sprintf(__('- Searching for existing image `%s` in `%s` folder', 'wp_all_import_plugin'), $wpai_image_path, $wpai_uploads));
+											
+											if ( @file_exists($wpai_image_path) and @copy( $wpai_image_path, $image_filepath )){
+												$download_image = false;		
+												// valdate import attachments
+												if( ! ($image_info = @getimagesize($image_filepath)) or ! in_array($image_info[2], array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG))) {
+													$logger and call_user_func($logger, sprintf(__('- <b>WARNING</b>: File %s is not a valid image and cannot be set as featured one', 'wp_all_import_plugin'), $image_filepath));														
+													@unlink($image_filepath);
+												} else {
+													$create_image = true;											
+													$logger and call_user_func($logger, sprintf(__('- Image `%s` has been successfully found', 'wp_all_import_plugin'), $wpai_image_path));
 												}
-											}											
+											}													
 										}	
-
-										if ($download_image){
+										else {												
 											
+											$logger and call_user_func($logger, sprintf(__('- Downloading image from `%s`', 'wp_all_import_plugin'), $url));
+
 											$request = get_file_curl($url, $image_filepath);
 
 											if ( (is_wp_error($request) or $request === false) and ! @file_put_contents($image_filepath, @file_get_contents($url))) {
 												@unlink($image_filepath); // delete file since failed upload may result in empty file created
-											} elseif( ($image_info = @getimagesize($image_filepath)) and in_array($image_info[2], array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG))) {
-												$create_image = true;											
+											} else{
+
+												if( ($image_info = @getimagesize($image_filepath)) and in_array($image_info[2], array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG))) {
+													$create_image = true;		
+													$logger and call_user_func($logger, sprintf(__('- Image `%s` has been successfully downloaded', 'wp_all_import_plugin'), $url));									
+												}
 											}												
 											
 											if ( ! $create_image ){
@@ -3057,59 +3024,96 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 												$request = get_file_curl($url, $image_filepath);
 
 												if ( (is_wp_error($request) or $request === false) and ! @file_put_contents($image_filepath, @file_get_contents($url))) {
-													$logger and call_user_func($logger, sprintf(__('- <b>WARNING</b>: File %s cannot be saved locally as %s', 'wpai_woocommerce_addon_plugin'), $url, $image_filepath));													
+													$logger and call_user_func($logger, sprintf(__('- <b>WARNING</b>: File %s cannot be saved locally as %s', 'wp_all_import_plugin'), $url, $image_filepath));													
 													@unlink($image_filepath); // delete file since failed upload may result in empty file created										
-												} elseif( ! ($image_info = @getimagesize($image_filepath)) or ! in_array($image_info[2], array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG))) {
-													$logger and call_user_func($logger, sprintf(__('- <b>WARNING</b>: File %s is not a valid image and cannot be set as featured one', 'wpai_woocommerce_addon_plugin'), $url));													
-													@unlink($image_filepath);
-												} else {
-													$create_image = true;											
+												} 
+												else{
+													if( ! ($image_info = @getimagesize($image_filepath)) or ! in_array($image_info[2], array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG))) {
+														$logger and call_user_func($logger, sprintf(__('- <b>WARNING</b>: File %s is not a valid image and cannot be set as featured one', 'wp_all_import_plugin'), $url));														
+														@unlink($image_filepath);
+													} else {
+														$create_image = true;	
+														$logger and call_user_func($logger, sprintf(__('- Image `%s` has been successfully downloaded', 'wp_all_import_plugin'), $url));												
+													}
 												}
 											}
-										}
-									}
+										}												
+									}			
+
+									$handle_image = false;						
 
 									if ($create_image){
 
-										// you must first include the image.php file
-										// for the function wp_generate_attachment_metadata() to work
-										require_once(ABSPATH . 'wp-admin/includes/image.php');	
+										$handle_image = array(
+											'file' => $image_filepath,
+											'url'  => $targetUrl . '/' . $image_filename,
+											'type' => image_type_to_mime_type($image_info[2])
+										); 
+										
+										$logger and call_user_func($logger, sprintf(__('- Creating an attachment for image `%s`', 'wp_all_import_plugin'), $handle_image['url']));	
+
+										$attachment_title = explode(".", $image_name);
+										if (is_array($attachment_title) and count($attachment_title) > 1) array_pop($attachment_title);
 
 										$attachment = array(
-											'post_mime_type' => image_type_to_mime_type($image_info[2]),
-											'guid' => $uploads['url'] . '/' . $image_filename,
-											'post_title' => $image_filename,
-											'post_content' => ''										
+											'post_mime_type' => $handle_image['type'],
+											'guid' => $handle_image['url'],
+											'post_title' => implode(".", $attachment_title),
+											'post_content' => ''											
 										);
-										if (($image_meta = wp_read_image_metadata($image_filepath))) {
+										if ($image_meta = wp_read_image_metadata($handle_image['file'])) {
 											if (trim($image_meta['title']) && ! is_numeric(sanitize_title($image_meta['title'])))
 												$attachment['post_title'] = $image_meta['title'];
 											if (trim($image_meta['caption']))
 												$attachment['post_content'] = $image_meta['caption'];
-										}
+										}											
 
-										$attid = wp_insert_attachment($attachment, $image_filepath, $variation_to_update_id);
+										$attid = wp_insert_attachment($attachment, $handle_image['file'], $variation_to_update_id);										
 
 										if (is_wp_error($attid)) {
-											$logger and call_user_func($logger, __('- <b>WARNING</b>', 'wpai_woocommerce_addon_plugin') . ': ' . $attid->get_error_message());											
+											$logger and call_user_func($logger, __('- <b>WARNING</b>', 'wp_all_import_plugin') . ': ' . $attid->get_error_message());		
 										} else {
-																						
-											wp_update_attachment_metadata($attid, wp_generate_attachment_metadata($attid, $image_filepath));																																										
+											wp_update_attachment_metadata($attid, wp_generate_attachment_metadata($attid, $handle_image['file']));							
+										}																				
+									}	
 
-											do_action( 'pmxi_gallery_image', $variation_to_update_id, $attid, $image_filepath); 
+									if ($attid)
+									{	
 
-											$success_images = true;											
-											set_post_thumbnail($variation_to_update_id, $attid); 																						
-											$gallery_attachment_ids[] = $attid;												
+										if ($attch != null and empty($attch->post_parent)){
+											wp_update_post(
+											    array(
+											        'ID' => $attch->ID, 
+											        'post_parent' => $variation_to_update_id
+											    )
+											);											
+										}
 
-										}										
+										do_action( 'pmxi_gallery_image', $variation_to_update_id, $attid, ($handle_image) ? $handle_image['file'] : $image_filepath); 
+
+										$success_images = true;												
+
+										$post_thumbnail_id = get_post_thumbnail_id( $variation_to_update_id );
+										
+										if (empty($post_thumbnail_id) and $import->options['is_featured'] ) {
+											set_post_thumbnail($variation_to_update_id, $attid);
+										}
+										elseif(!in_array($attid, $gallery_attachment_ids) and $post_thumbnail_id != $attid){
+											$gallery_attachment_ids[] = $attid;	
+										}
+
+										if ($attch != null and empty($attch->post_parent))
+										{
+											$logger and call_user_func($logger, sprintf(__('- Attachment has been successfully updated for image `%s`', 'wp_all_import_plugin'), ($handle_image) ? $handle_image['url'] : $targetUrl . '/' . $image_filename));
+										}																										
+										elseif(empty($attch))
+										{
+											$logger and call_user_func($logger, sprintf(__('- Attachment has been successfully created for image `%s`', 'wp_all_import_plugin'), ($handle_image) ? $handle_image['url'] : $targetUrl . '/' . $image_filename));
+										}
 									}																									
 								}							
 							}						
-						}
-						// Set product gallery images
-						if ( ! empty($gallery_attachment_ids) )
-							update_post_meta($variation_to_update_id, '_product_image_gallery', implode(',', $gallery_attachment_ids));		
+						}						
 					}							
 
 					wc_delete_product_transients( $variation_to_update_id );	
@@ -3261,13 +3265,15 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 								 		foreach ($values as $key => $value) {
 
 									 		$term = get_term_by('name', $value, wc_attribute_taxonomy_name( $attr_name ), ARRAY_A);
+									 		// For compatibility with WPML plugin
+						 					$term = apply_filters('wp_all_import_term_exists', $term, wc_attribute_taxonomy_name( $attr_name ), $value, null);
 
 									 		if ( empty($term) and !is_wp_error($term) ){		
 
-									 			$term = term_exists($value, wc_attribute_taxonomy_name( $attr_name ));							 			
+									 			$term = is_exists_term($value, wc_attribute_taxonomy_name( $attr_name ));							 			
 
 									 			if ( empty($term) and !is_wp_error($term) ){																																
-													$term = term_exists(htmlspecialchars($value), wc_attribute_taxonomy_name( $attr_name ));	
+													$term = is_exists_term(htmlspecialchars($value), wc_attribute_taxonomy_name( $attr_name ));	
 													if ( empty($term) and !is_wp_error($term) and intval($attr_data['is_create_taxonomy_terms'][0])){		
 														
 														$term = wp_insert_term(
@@ -3374,22 +3380,25 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 		{
 			// Get all existing meta keys of parent product
 			$existing_meta_keys = array(); 
-			
-			foreach (get_post_meta($importData['pid'], '') as $cur_meta_key => $cur_meta_val) $existing_meta_keys[$cur_meta_key] = $cur_meta_val;			
 
-			if ( ! empty($existing_meta_keys) and ! empty($importData['import']->options['custom_name']) )
+			$table = _get_meta_table('post');
+
+			$post_meta_infos = $this->wpdb->get_results("SELECT meta_key, meta_value FROM $table WHERE post_id = " . $importData['pid'] );
+		
+			if ( ! empty($post_meta_infos) and ! empty($importData['import']->options['custom_name']) )
 			{
-				foreach ($existing_meta_keys as $key => $value) 
-				{
-					if ( in_array($key, $importData['import']->options['custom_name']) )
+				foreach ($post_meta_infos as $meta_info) {
+					
+					if ( in_array($meta_info->meta_key, $importData['import']->options['custom_name']) )
 					{
-						$this->pushmeta($pid, $key, $value);
-					}
+						$this->pushmeta($pid, $meta_info->meta_key, maybe_unserialize($meta_info->meta_value));
+					}					
 				}
-			}		
-
+			}
+						
 			// save thumbnail
 			$post_thumbnail_id = get_post_thumbnail_id( $importData['pid'] );
+
 			if ($post_thumbnail_id)
 			{
 				set_post_thumbnail($pid, $post_thumbnail_id);
@@ -3400,9 +3409,10 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 				do_action('pmxi_gallery_image', $pid, $post_thumbnail_id, false);										
 			}	
 
-			$this->associate_terms($pid, false, 'product_cat');	
-			$this->associate_terms($pid, false, 'product_tag');				
-			
+			if ($importData['import']->options['create_draft'] == 'yes' and $p->post_status == 'draft')
+			{
+				$this->wpdb->update( $this->wpdb->posts, array('post_status' => 'publish' ), array('ID' => $pid));				
+			}							
 		} 
 				
 		$table = $this->wpdb->posts;
@@ -3411,15 +3421,24 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 
 		if ($p)
 		{
+			$post_to_update_id = false;
+
 			if ($p->post_type == 'product_variation')
 			{
 				if ($importData['import']->options['create_draft'] == 'yes' and $p->post_status == 'draft')
 				{
 					$this->wpdb->update( $this->wpdb->posts, array('post_status' => 'publish' ), array('ID' => $importData['pid']));				
-				}			
+				}	
 
-				$this->associate_terms($importData['pid'], false, 'product_cat');	
-				$this->associate_terms($importData['pid'], false, 'product_tag');	
+				$this->wpdb->update( $this->wpdb->posts, array( 'post_excerpt' => '', 'post_name' => sanitize_title($p->post_title), 'guid' => '' ), array('ID' => $importData['pid']));										
+
+				$post_taxonomies = array_diff_key(get_taxonomies_by_object_type(array('product'), 'object'), array_flip(array('post_format', 'product_type', 'product_shipping_class')));
+				if ( ! empty($post_taxonomies) ):
+					foreach ($post_taxonomies as $ctx):
+						if ( strpos($ctx->name, "pa_") === 0 ) continue;
+						$this->associate_terms($importData['pid'], false, $ctx->name);						
+					endforeach;
+				endif;	
 
 				delete_post_meta($importData['pid'], '_v_product_manage_stock');
 				delete_post_meta($importData['pid'], '_v_stock');
@@ -3427,38 +3446,77 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 				delete_post_meta($importData['pid'], '_v_variation_enabled');
 				delete_post_meta($importData['pid'], '_first_variation_attributes');
 				delete_post_meta($importData['pid'], '_v_shipping_class');
+
+				$post_to_update_id = $p->post_parent;
 			}			
 			else
 			{
 				update_post_meta( $importData['pid'], '_product_version', WC_VERSION );
-				wc_delete_product_transients($importData['pid']);		
+				$post_to_update_id = $importData['pid'];
+
+				// [associate linked products]
+				$wp_all_import_not_linked_products = get_option('wp_all_import_not_linked_products_' . $importData['import']->id );
+
+				if ( ! empty($wp_all_import_not_linked_products) )
+				{
+					$post_to_update_sku = get_post_meta($post_to_update_id, '_sku', true);					
+
+					foreach ($wp_all_import_not_linked_products as $product) 
+					{						
+						if ( $product['pid'] != $post_to_update_id && ! empty($product['not_linked_products']) )
+						{																				
+							if ( in_array($post_to_update_sku, $product['not_linked_products']) 
+									or in_array( (string) $post_to_update_id, $product['not_linked_products']) 
+										or in_array($p->post_title, $product['not_linked_products']) 
+											or in_array($p->post_name, $product['not_linked_products']) 
+											)
+							{								
+								$linked_products = get_post_meta($product['pid'], $product['type'], true);								
+								
+								if (empty($linked_products)) $linked_products = array();
+
+								if ( ! in_array($post_to_update_id, $linked_products))
+								{
+									$linked_products[] = $post_to_update_id;
+
+									$importData['logger'] and call_user_func($importData['logger'], sprintf(__('Added to %s list of product ID %d.', 'wpai_woocommerce_addon_plugin'), $product['type'] == '_upsell_ids' ? 'Up-Sells' : 'Cross-Sells', $product['pid']) );		
+
+									update_post_meta($product['pid'], $product['type'], $linked_products);
+									
+								}
+							}							
+						}
+					}
+				}
+				// [\associate linked products]
 			}			
+
+			// [update product gallery]
+			$tmp_gallery = explode(",", get_post_meta( $post_to_update_id, '_product_image_gallery_tmp', true));
+			$gallery     = explode(",", get_post_meta( $post_to_update_id, '_product_image_gallery', true));
+			if (is_array($gallery)){
+				$gallery = array_filter($gallery);
+				if ( ! empty($tmp_gallery))
+				{
+					$gallery = array_unique(array_merge($gallery, $tmp_gallery));
+				}					
+			}
+			elseif ( ! empty($tmp_gallery))		
+			{
+				$gallery = $tmp_gallery;
+			}
+			update_post_meta( $post_to_update_id, '_product_image_gallery', implode(",", $gallery) );
+			// [\update product gallery]
+
+			wc_delete_product_transients($importData['pid']);		
 		}
 					
 		
 	}
 
-	public function make_simple_product($post_parent){
+	public function make_simple_product($post_parent){		
 
-		// $children = get_posts( array(
-		// 	'post_parent' 	=> $post_parent,
-		// 	'posts_per_page'=> -1,
-		// 	'post_type' 	=> 'product_variation',
-		// 	'fields' 		=> 'ids',
-		// 	'orderby'		=> 'ID',
-		// 	'order'			=> 'ASC',
-		// 	'post_status'	=> array('draft', 'publish', 'trash', 'pending', 'future', 'private')
-		// ) );			
-		
-		// if (count($children)){
-		// 	foreach ($children as $child) {
-		// 		wp_delete_post($child);
-		// 	}
-		// }
-
-		//wp_set_object_terms( $post_parent, 'simple', 'product_type' );
-
-		$product_type_term = term_exists('simple', 'product_type', 0);	
+		$product_type_term = is_exists_term('simple', 'product_type', 0);	
 		if ( ! empty($product_type_term) and ! is_wp_error($product_type_term) ){	
 			$this->associate_terms( $post_parent, array( (int) $product_type_term['term_taxonomy_id'] ), 'product_type' );	
 		}
@@ -3473,8 +3531,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 		$p = $this->wpdb->get_row($this->wpdb->prepare("SELECT * FROM $table WHERE ID = %d;", (int) $pid));		
 
 		if ($p and $p->post_parent){
-
-			$gallery = explode(",", get_post_meta($p->post_parent, '_product_image_gallery', true));
+			$gallery = explode(",", get_post_meta($p->post_parent, '_product_image_gallery_tmp', true));
 			if (is_array($gallery)){
 				$gallery = array_filter($gallery);
 				if ( ! in_array($attid, $gallery) ) $gallery[] = $attid;
@@ -3483,7 +3540,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 				$gallery = array($attid);
 			}
 
-			update_post_meta($p->post_parent, '_product_image_gallery', implode(',', $gallery));
+			update_post_meta($p->post_parent, '_product_image_gallery_tmp', implode(',', $gallery));
 		
 		}
 
@@ -3512,34 +3569,12 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 	protected function pushmeta($pid, $meta_key, $meta_value){
 
 		if (empty($meta_key)) return;		
-
-		//$table = _get_meta_table( 'post' );
 		
 		if ( empty($this->articleData['ID']) or $this->is_update_cf($meta_key)){			
 
 			update_post_meta($pid, $meta_key, $meta_value);
-
-			/*$this->wpdb->query($this->wpdb->prepare("DELETE FROM $table WHERE `post_id` = $pid AND `meta_key` = %s", $meta_key));
-
-			$this->post_meta_to_insert[] = array(
-				'meta_key' => $meta_key,
-				'meta_value' => $meta_value,
-				'pid' => $pid
-			);*/
-		}
-		/*elseif ($this->is_update_cf($meta_key)){						
-	
-	        $this->wpdb->query($this->wpdb->prepare("DELETE FROM $table WHERE `post_id` = $pid AND `meta_key` = %s", $meta_key));			
-				
-			// previous meta field is not found
-			$this->post_meta_to_insert[] = array(
-				'meta_key' => $meta_key,
-				'meta_value' => $meta_value,
-				'pid' => $pid
-			);
 			
-		}*/
-
+		}		
 	}
 
 	/**
@@ -3572,6 +3607,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 			if ( ! is_wp_error( $terms ) ) {				
 				foreach ($terms as $term_info) {
 					$term_ids[] = $term_info->term_taxonomy_id;
+					delete_woocommerce_term_meta( $term_info->term_taxonomy_id, 'product_ids' );
 					$this->wpdb->query(  $this->wpdb->prepare("UPDATE {$this->wpdb->term_taxonomy} SET count = count - 1 WHERE term_taxonomy_id = %d", $term_info->term_taxonomy_id) );
 				}				
 				$in_tt_ids = "'" . implode( "', '", $term_ids ) . "'";				
@@ -3599,6 +3635,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
     		$values[] = $this->wpdb->prepare( "(%d, %d, %d)", $pid, $tt, ++$term_order);
     		$this->wpdb->query( "UPDATE {$this->wpdb->term_taxonomy} SET count = count + 1 WHERE term_taxonomy_id = $tt" );
 			delete_transient( 'wc_ln_count_' . md5( sanitize_key( $tx_name ) . sanitize_key( $tt ) ) );
+			delete_woocommerce_term_meta( $tt, 'product_ids' );
     	}
 		                					
 
@@ -3627,19 +3664,31 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 					if (strpos($meta_info->meta_key, '_min') === false and strpos($meta_info->meta_key, '_max') === false and ! in_array($meta_info->meta_key, array('_default_attributes', '_price'))) 
 					{
 						$this->pushmeta($new_id, $meta_info->meta_key, maybe_unserialize($meta_info->meta_value));						
-					}			
-					if ($meta_info->meta_key == '_price' and (empty($this->articleData['ID']) or $this->is_update_cf('_price')))
-					{
-						$sale_price    = get_post_meta($id, '_sale_price', true);
-						$regular_price = get_post_meta($id, '_regular_price', true);
-						$price = ($sale_price and $sale_price <= $regular_price) ? $sale_price : $regular_price;
-						$this->pushmeta($new_id, '_price', $price);
-					}			
+					}											
 					//$meta_key = $meta_info->meta_key;
 					// $this->wpdb->query($this->wpdb->prepare("DELETE FROM $table WHERE `post_id` = $new_id AND `meta_key` = %s", $meta_key));
 					// $meta_value = addslashes($meta_info->meta_value);
 					// $sql_query_sel[]= "SELECT $new_id, '$meta_key', '$meta_value'";
 				//}
+			}
+			if (empty($this->articleData['ID']) or $this->is_update_cf('_price'))
+			{
+				$sale_price    = get_post_meta($id, '_sale_price', true);
+				$regular_price = get_post_meta($id, '_regular_price', true);
+				if ($sale_price != '' && $regular_price != '')
+				{
+					$price = ($sale_price <= $regular_price) ? $sale_price : $regular_price;
+				}
+				elseif ($sale_price != '')
+				{
+					$price = $sale_price;
+				}
+				else
+				{
+					$price = $regular_price;
+				}
+				
+				$this->pushmeta($new_id, '_price', $price);
 			}
 			// if ( ! empty($sql_query_sel) ){
 			// 	$sql_query.= implode(" UNION ALL ", $sql_query_sel);
@@ -3749,7 +3798,7 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 	 	}
 	}
 
-	function pmwi_link_all_variations($product_id, $options = array()) {
+	function pmwi_link_all_variations($product_id, $options = array(), $import_id) {
 
 		global $woocommerce;
 
@@ -3766,23 +3815,21 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 		$v = $_product->get_attributes();		
 
 		// Put variation attributes into an array
-		foreach ( $_product->get_attributes() as $attribute ) {
+		foreach ( $_product->get_attributes() as $attribute ) {			
 
-			if ( ! $attribute['is_variation'] ) continue;
+			if ( ! $attribute['is_variation'] ) {
+				continue;
+			}
 
 			$attribute_field_name = 'attribute_' . sanitize_title( $attribute['name'] );
 
 			if ( $attribute['is_taxonomy'] ) {
-				$post_terms = wp_get_post_terms( $post_id, $attribute['name'] );
-				$options = array();
-				foreach ( $post_terms as $term ) {
-					$options[] = $term->slug;
-				}
+				$options = wc_get_product_terms( $post_id, $attribute['name'], array( 'fields' => 'slugs' ) );
 			} else {
 				$options = explode( '|', $attribute['value'] );
 			}
 
-			$options = array_map( 'sanitize_title', array_map( 'trim', $options ) );
+			$options = array_map( 'trim', $options );
 
 			$variations[ $attribute_field_name ] = $options;
 		}
@@ -3833,7 +3880,15 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 			if ( in_array( $variation, $available_variations ) )
 				continue;
 
-			$variation_id = wp_insert_post( $variation_post_data );			
+			$variation_id = wp_insert_post( $variation_post_data );		
+
+			$postRecord = new PMXI_Post_Record();
+			$postRecord->isEmpty() and $postRecord->set(array(
+				'post_id' => $variation_id,
+				'import_id' => $import_id,
+				'unique_key' => 'Variation ' . $variation_id . ' of ' . $post_id,
+				'product_key' => ''
+			))->insert();			
 			
 			update_post_meta( $variation_id, '_regular_price', get_post_meta( $post_id, '_regular_price', true ) );
 			update_post_meta( $variation_id, '_sale_price', get_post_meta( $post_id, '_sale_price', true ) );
@@ -4064,6 +4119,108 @@ class PMWI_Import_Record extends PMWI_Model_Record {
 					$url = preg_replace('%' . preg_quote($url, '%') . '(?=([\s\'"]|$))%i', $link->getUrl(), $url);								
 				}									
 			}
+		}
+	}
+
+	function import_linked_products($pid, $products, $type, $is_new_product, $logger, $import_id)
+	{
+		if ( ! $is_new_product and ! $this->is_update_cf($type) ) return;
+
+		if ( ! empty( $products ) ) 
+		{
+			$not_found = array();
+
+			$linked_products = array();
+			
+			$ids = array_filter(explode(',', $products), 'trim');
+
+			foreach ( $ids as $id )
+			{
+				// search linked product by _SKU
+				$args = array(
+					'post_type' => 'product',
+					'meta_query' => array(
+						array(
+							'key' => '_sku',
+							'value' => $id,						
+						)
+					)
+				);			
+				$query = new WP_Query( $args );
+
+				$linked_product = false;
+				
+				if ( $query->have_posts() ) 
+				{
+					$linked_product = get_post($query->post->ID);
+				}
+
+				wp_reset_postdata();
+
+				if ( ! $linked_product )
+				{							
+					if (is_numeric($id))
+					{
+						// search linked product by ID						
+						$query = new WP_Query( array( 'post_type' => 'product', 'post__in' => array( $id ) ) );	
+						if ( $query->have_posts() ) 
+						{							
+							$linked_product = get_post($query->post->ID);
+						}						
+						wp_reset_postdata();
+					}				
+					if ( ! $linked_product )
+					{
+						// search linked product by slug
+						$args = array(
+						  'name'        => $id,
+						  'post_type'   => 'product',
+						  'post_status' => 'publish',
+						  'numberposts' => 1
+						);
+						$query = get_posts($args);
+						if( $query )
+						{							
+							$linked_product = $query[0];
+						}
+						wp_reset_postdata();
+					}	
+				}
+
+				if ($linked_product)
+				{
+					$linked_products[] = $linked_product->ID;					
+					
+					$logger and call_user_func($logger, sprintf(__('Product `%s` with ID `%d` added to %s list.', 'wpai_woocommerce_addon_plugin'), $linked_product->post_title, $linked_product->ID, $type == '_upsell_ids' ? 'Up-Sells' : 'Cross-Sells') );		
+				}
+				else
+				{
+					$not_found[] = $id;
+				}							
+			}	
+
+			// not all linked products founded
+			if ( ! empty($not_found))
+			{
+				$not_founded_linked_products = get_option( 'wp_all_import_not_linked_products_' . $import_id );
+
+				if (empty($not_founded_linked_products)) $not_founded_linked_products = array();				
+
+				$not_founded_linked_products[] = array(					
+					'pid'  => $pid,
+					'type' => $type,
+					'not_linked_products' => $not_found
+				);
+
+				update_option( 'wp_all_import_not_linked_products_' . $import_id, $not_founded_linked_products );
+			}					
+
+			$this->pushmeta($pid, $type, $linked_products);	
+			
+		} 
+		else 
+		{
+			delete_post_meta( $pid, $type );
 		}
 	}
 
