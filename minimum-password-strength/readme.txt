@@ -3,7 +3,7 @@ Contributors: itsananderson, Zer0Divisor
 Donate link: 
 Tags: security, password, administration
 Requires at least: 3.0
-Tested up to: 4.0
+Tested up to: 4.4.2
 Stable tag: 1.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -27,6 +27,10 @@ For now, all users have the same password strength requirements, but a later rel
 1. Configure your required password strength in Settings -> Password Strength
 
 == Changelog ==
+
+= 1.2.0 =
+* Enforce password strength during password reset
+* Update "Tested up to" tag
 
 = 1.1.2 =
 * Fixing the installation instructions

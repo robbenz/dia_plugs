@@ -3,7 +3,7 @@
 /*
  * Plugin Name: Minimum Password Strength
  * Description: Enforce a specific password strength. Uses the same strength calculations as the WordPress password strength meter
- * Version: 1.1.2
+ * Version: 1.2.0
  * Plugin URI: http://wordpress.org/extend/plugins/minimum-password-strength/
  * Author: Will Anderson and Tony Ferrell
  * Author URI: http://codeawhile.com/
@@ -29,6 +29,7 @@
  	public static function start() {
 		add_action( 'user_profile_update_errors', array( __CLASS__, 'check_password_strength' ) );
 		add_action( 'admin_menu', array( __CLASS__, 'add_menu' ) );
+		add_action( 'validate_password_reset', array( __CLASS__, 'check_password_strength' ) );
 	}
 
 	public static function check_password_strength( $errors ) {
