@@ -4,16 +4,102 @@
  *
  * The WooCommerce Jetpack Functions.
  *
- * @version 2.4.0
+ * @version 2.4.4
  * @author  Algoritmika Ltd.
  */
 
 /*
- * wcj_get_select_options()
+ * wcj_get_product_input_fields.
  *
- * @version  2.4.0
- * @since    2.4.0
- * @return   boolean
+ * @version 2.4.4
+ * @since   2.4.4
+ * @return  string
+ */
+if ( ! function_exists( 'wcj_get_product_input_fields' ) ) {
+	function wcj_get_product_input_fields( $item ) {
+		$product_input_fields = array();
+		foreach ( $item as $key => $value ) {
+			if ( false !== strpos( $key, 'wcj_product_input_fields_' ) ) {
+				$product_input_fields[] = /* $key . ': ' . */ $value;
+			}
+		}
+		return ( ! empty( $product_input_fields ) ) ? /* ' (' . */ implode( ', ', $product_input_fields ) /* . ')' */ : '';
+	}
+}
+
+/*
+ * wcj_get_left_to_free_shipping.
+ *
+ * @version 2.4.4
+ * @since   2.4.4
+ * @return  string
+ */
+if ( ! function_exists( 'wcj_get_left_to_free_shipping' ) ) {
+	function wcj_get_left_to_free_shipping( $content ) {
+		if ( '' == $content ) {
+			$content = __( '%left_to_free% left to free shipping', 'woocommerce-jetpack' );
+		}
+		$free_shipping = new WC_Shipping_Free_Shipping();
+		if ( in_array( $free_shipping->requires, array( 'min_amount', 'either', 'both' ) ) && isset( WC()->cart->cart_contents_total ) ) {
+			if ( WC()->cart->prices_include_tax ) {
+				$total = WC()->cart->cart_contents_total + array_sum( WC()->cart->taxes );
+			} else {
+				$total = WC()->cart->cart_contents_total;
+			}
+			if ( $total >= $free_shipping->min_amount ) {
+				return '';
+			} else {
+				$content = str_replace( '%left_to_free%',             wc_price( $free_shipping->min_amount - $total ), $content );
+				$content = str_replace( '%free_shipping_min_amount%', wc_price( $free_shipping->min_amount ),          $content );
+				return $content;
+			}
+		}
+	}
+}
+
+/*
+ * wcj_get_cart_filters()
+ *
+ * @version 2.4.4
+ * @since   2.4.4
+ * @return  array
+ */
+if ( ! function_exists( 'wcj_get_cart_filters' ) ) {
+	function wcj_get_cart_filters() {
+		return array(
+			'woocommerce_before_cart'                    => __( 'Before cart', 'woocommerce-jetpack' ),
+			'woocommerce_before_cart_table'              => __( 'Before cart table', 'woocommerce-jetpack' ),
+			'woocommerce_before_cart_contents'           => __( 'Before cart contents', 'woocommerce-jetpack' ),
+			'woocommerce_cart_contents'                  => __( 'Cart contents', 'woocommerce-jetpack' ),
+			'woocommerce_cart_coupon'                    => __( 'Cart coupon', 'woocommerce-jetpack' ),
+			'woocommerce_cart_actions'                   => __( 'Cart actions', 'woocommerce-jetpack' ),
+			'woocommerce_after_cart_contents'            => __( 'After cart contents', 'woocommerce-jetpack' ),
+			'woocommerce_after_cart_table'               => __( 'After cart table', 'woocommerce-jetpack' ),
+			'woocommerce_cart_collaterals'               => __( 'Cart collaterals', 'woocommerce-jetpack' ),
+			'woocommerce_after_cart'                     => __( 'After cart', 'woocommerce-jetpack' ),
+
+			'woocommerce_before_cart_totals'             => __( 'Before cart totals', 'woocommerce-jetpack' ),
+			'woocommerce_cart_totals_before_shipping'    => __( 'Cart totals: Before shipping', 'woocommerce-jetpack' ),
+			'woocommerce_cart_totals_after_shipping'     => __( 'Cart totals: After shipping', 'woocommerce-jetpack' ),
+			'woocommerce_cart_totals_before_order_total' => __( 'Cart totals: Before order total', 'woocommerce-jetpack' ),
+			'woocommerce_cart_totals_after_order_total'  => __( 'Cart totals: After order total', 'woocommerce-jetpack' ),
+			'woocommerce_proceed_to_checkout'            => __( 'Proceed to checkout', 'woocommerce-jetpack' ),
+			'woocommerce_after_cart_totals'              => __( 'After cart totals', 'woocommerce-jetpack' ),
+
+			'woocommerce_before_shipping_calculator'     => __( 'Before shipping calculator', 'woocommerce-jetpack' ),
+			'woocommerce_after_shipping_calculator'      => __( 'After shipping calculator', 'woocommerce-jetpack' ),
+
+			'woocommerce_cart_is_empty'                  => __( 'If cart is empty', 'woocommerce-jetpack' ),
+		);
+	}
+}
+
+/*
+ * wcj_is_module_enabled()
+ *
+ * @version 2.4.0
+ * @since   2.4.0
+ * @return  boolean
  */
 if ( ! function_exists( 'wcj_is_module_enabled' ) ) {
 	function wcj_is_module_enabled( $module_id ) {
@@ -117,7 +203,7 @@ if ( ! function_exists( 'wcj_is_product_wholesale_enabled' ) ) {
  }
 
 /**
- * wcj_get_products.
+ * add_wcj_get_products_filter.
  */
 add_action( 'init', 'add_wcj_get_products_filter' );
 if ( ! function_exists( 'add_wcj_get_products_filter' ) ) {
@@ -125,22 +211,33 @@ if ( ! function_exists( 'add_wcj_get_products_filter' ) ) {
 		add_filter( 'wcj_get_products_filter', 'wcj_get_products' );
 	}
 }
+
+/**
+ * wcj_get_products.
+ *
+ * @version 2.4.4
+ */
 if ( ! function_exists( 'wcj_get_products' ) ) {
-	function wcj_get_products( $products ) {
-		//if (is_admin()) require_once(ABSPATH . 'wp-includes/pluggable.php');
-		//$products = array();
-		$args = array(
-			'post_type'			=> 'product',
-			'post_status' 		=> 'any',
-			'posts_per_page' 	=> -1,
-		);
-		$loop = new WP_Query( $args );
-		while ( $loop->have_posts() ) : $loop->the_post();
-			$products[ strval( $loop->post->ID ) ] = get_the_title( $loop->post->ID );
-		endwhile;
-		//TODO:
-		// reset_postdata? reset_query?
-		//print_r( $products );
+	function wcj_get_products( $products = array() ) {
+		$offset = 0;
+		$block_size = 96;
+		while( true ) {
+			$args = array(
+				'post_type'      => 'product',
+				'post_status'    => 'any',
+				'posts_per_page' => $block_size,
+				'offset'         => $offset,
+				'orderby'        => 'title',
+				'order'          => 'ASC',
+			);
+			$loop = new WP_Query( $args );
+			if ( ! $loop->have_posts() ) break;
+			while ( $loop->have_posts() ) : $loop->the_post();
+				$products[ strval( $loop->post->ID ) ] = get_the_title( $loop->post->ID );
+			endwhile;
+			$offset += $block_size;
+		}
+		wp_reset_postdata();
 		return $products;
 	}
 }
@@ -509,12 +606,54 @@ if ( ! function_exists( 'wcj_get_order_statuses' ) ) {
 
 /**
  * wcj_get_currencies_names_and_symbols.
+ *
+ * @version 2.4.4
  */
 if ( ! function_exists( 'wcj_get_currencies_names_and_symbols' ) ) {
-	function wcj_get_currencies_names_and_symbols() {
-		$currencies = include( wcj_plugin_path() . '/includes/currencies/wcj-currencies.php' );
-		foreach( $currencies as $data ) {
-			$currency_names_and_symbols[ $data['code'] ] = $data['name'] . ' (' . $data['symbol'] . ')';
+	function wcj_get_currencies_names_and_symbols( $result = 'names_and_symbols', $scope = 'all' ) {
+		$currency_names_and_symbols = array();
+		/* if ( ! wcj_is_module_enabled( 'currency' ) ) {
+			return $currency_names_and_symbols;
+		} */
+		if ( 'all' === $scope || 'no_custom' === $scope ) {
+//			$currencies = include( wcj_plugin_path() . '/includes/currencies/wcj-currencies.php' );
+//			include( wcj_plugin_path() . '/includes/currencies/wcj-currencies.php' );
+			$currencies = wcj_get_currencies_array();
+			foreach( $currencies as $data ) {
+				switch ( $result ) {
+					case 'names_and_symbols':
+						$currency_names_and_symbols[ $data['code'] ] = $data['name'] . ' (' . $data['symbol'] . ')';
+						break;
+					case 'names':
+						$currency_names_and_symbols[ $data['code'] ] = $data['name'];
+						break;
+					case 'symbols':
+						$currency_names_and_symbols[ $data['code'] ] = $data['symbol'];
+						break;
+				}
+			}
+		}
+		if ( wcj_is_module_enabled( 'currency' ) && ( 'all' === $scope || 'custom_only' === $scope ) ) {
+			// Custom currencies
+			$custom_currency_total_number = apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_currency_custom_currency_total_number', 1 ) );
+			for ( $i = 1; $i <= $custom_currency_total_number; $i++) {
+				$custom_currency_code   = get_option( 'wcj_currency_custom_currency_code_'   . $i );
+				$custom_currency_name   = get_option( 'wcj_currency_custom_currency_name_'   . $i );
+				$custom_currency_symbol = get_option( 'wcj_currency_custom_currency_symbol_' . $i );
+				if ( '' != $custom_currency_code && '' != $custom_currency_name /* && '' != $custom_currency_symbol */ ) {
+					switch ( $result ) {
+						case 'names_and_symbols':
+							$currency_names_and_symbols[ $custom_currency_code ] = $custom_currency_name . ' (' . $custom_currency_symbol . ')';
+							break;
+						case 'names':
+							$currency_names_and_symbols[ $custom_currency_code ] = $custom_currency_name;
+							break;
+						case 'symbols':
+							$currency_names_and_symbols[ $custom_currency_code ] = $custom_currency_symbol;
+							break;
+					}
+				}
+			}
 		}
 		return $currency_names_and_symbols;
 	}
@@ -523,19 +662,22 @@ if ( ! function_exists( 'wcj_get_currencies_names_and_symbols' ) ) {
 /**
  * wcj_get_currency_symbol.
  *
- * @version 2.2.7
+ * @version 2.4.4
  */
 if ( ! function_exists( 'wcj_get_currency_symbol' ) ) {
 	function wcj_get_currency_symbol( $currency_code ) {
 		$return = '';
-		$currencies = include( wcj_plugin_path() . '/includes/currencies/wcj-currencies.php' );
-		foreach( $currencies as $data ) {
-			if ( $currency_code == $data['code'] ) {
-				$return = $data['symbol'];
-				break;
+		$currencies = wcj_get_currencies_names_and_symbols( 'symbols', 'no_custom' );
+		if ( isset( $currencies[ $currency_code ] ) ) {
+			if ( wcj_is_module_enabled( 'currency' ) ) {
+				$return = apply_filters( 'wcj_get_option_filter', $currencies[ $currency_code ], get_option( 'wcj_currency_' . $currency_code, $currencies[ $currency_code ] ) );
+			} else {
+				$return = $currencies[ $currency_code ];
 			}
+		} else {
+			$currencies = wcj_get_currencies_names_and_symbols( 'symbols', 'custom_only' );
+			$return = isset( $currencies[ $currency_code ] ) ? $currencies[ $currency_code ] : '';
 		}
-		$return = apply_filters( 'wcj_get_option_filter', $return, get_option( 'wcj_currency_' . $currency_code, $return ) );
 		return ( '' != $return ) ? $return : false;
 	}
 }

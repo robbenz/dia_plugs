@@ -463,7 +463,7 @@ if ( is_admin() ){
 	}
 
     $wppb_generalSettings = get_option( 'wppb_general_settings' );
-    if ( $wppb_generalSettings['emailConfirmation'] == 'yes' ) {
+    if ( !empty( $wppb_generalSettings['emailConfirmation'] ) && ( $wppb_generalSettings['emailConfirmation'] == 'yes' ) ) {
         if( is_multisite() )
             add_action( 'wpmu_delete_user', 'wppb_delete_user_from_signups_table' );
         else

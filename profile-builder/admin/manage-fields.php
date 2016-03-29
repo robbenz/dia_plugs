@@ -894,16 +894,22 @@ function wppb_wpml_compat_with_fields( $oldvalue, $_newvalue ){
 
 	if ( is_array( $_newvalue ) ){
         foreach ( $_newvalue as $field ){
-            $field_title = $field['field-title'];
-            $field_description = $field['description'];
 			if ( in_array($field['field'], $default_fields) ){
 				$prefix = 'default_field_';
 			} else {
 				$prefix = 'custom_field_';
 			}
             if (function_exists('icl_register_string')){
-                icl_register_string('plugin profile-builder-pro', $prefix . $field['id'].'_title_translation' , $field_title);
-                icl_register_string('plugin profile-builder-pro', $prefix . $field['id'].'_description_translation', $field_description);
+                if( !empty( $field['field-title'] ) )
+                    icl_register_string('plugin profile-builder-pro', $prefix . $field['id'].'_title_translation' , $field['field-title'] );
+                if( !empty( $field['description'] ) )
+                    icl_register_string('plugin profile-builder-pro', $prefix . $field['id'].'_description_translation', $field['description'] );
+                if( !empty( $field['labels'] ) )
+                    icl_register_string('plugin profile-builder-pro', $prefix . $field['id'].'_labels_translation', $field['labels'] );
+                if( !empty( $field['default-value'] ) )
+                    icl_register_string('plugin profile-builder-pro', $prefix . $field['id'].'_default_value_translation', $field['default-value'] );
+                if( !empty( $field['default-content'] ) )
+                    icl_register_string('plugin profile-builder-pro', $prefix . $field['id'].'_default_content_translation', $field['default-content'] );
             }
         }
     }

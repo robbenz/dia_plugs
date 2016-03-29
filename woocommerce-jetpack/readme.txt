@@ -3,7 +3,7 @@ Contributors: algoritmika,anbinder,solovjov
 Tags: woocommerce,booster for woocommerce,woocommerce jetpack,custom price labels,call for price,currency symbol,remove sorting,remove old product slugs,add to cart text,order number,sequential order numbering,email pdf invoice,pdf invoice,pdf invoices,already in cart,empty cart,redirect to checkout,minimum order amount,customize checkout fields,checkout fields,email,customize product tabs,product tabs,related products number,empty cart,redirect add to cart,redirect to checkout,product already in cart,custom payment gateway,payment gateway icon,auto-complete all orders,custom order statuses,custom order status,remove text from price,custom css,hide categories count,hide subcategories count,hide category count,hide subcategory count,display total sales,custom product tabs,remove product tab,payment gateway fee,vat,gateway by country,price by country,currency switcher
 Requires at least: 3.8
 Tested up to: 4.4
-Stable tag: 2.4.3
+Stable tag: 2.4.4
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -118,6 +118,40 @@ To unlock all Booster for WooCommerce features, please install additional [Boost
 1. Plugin admin area.
 
 == Changelog ==
+
+= 2.4.4 - 23/03/2016 =
+* Dev - "Booster Currencies Array" (wcj-currencies.php) updated.
+* Dev - `wcj_get_currencies_names_and_symbols()` and `wcj_get_currency_symbol()` functions modified.
+* Fix - "http" removed in exchange_rates.js. Fixes bug when loading https.
+* Dev - Shortcodes - Orders - `[wcj_order_items_table]` - `item_product_input_fields` and `item_key=` options (columns) added.
+* Fix - PRICES & CURRENCIES - Prices and Currencies by Country - Shipping (taxable) calculation fixed.
+* Fix - PRICES & CURRENCIES - Prices and Currencies by Country - Wrong currency in emails bug fixed (again).
+* Fix - PRICES & CURRENCIES - Prices and Currencies by Country - Autogenerate Groups - `UK` changed to `GB` in `wcj_get_country_currency()`.
+* Dev - PRICES & CURRENCIES - Prices and Currencies by Country - "Countries Selection" admin option added.
+* Fix - PRICES & CURRENCIES - Currency for External Products - `change_currency_code()` added.
+* Dev - PRICES & CURRENCIES - Currency for External Products - Custom currencies added to the list.
+* Dev - PRICES & CURRENCIES - Currency for External Products - "Reset settings" button added.
+* Dev - PRICES & CURRENCIES - Bulk Price Converter - "Price type to modify" functionality added to the Bulk Price Converter tool.
+* Dev - PRICES & CURRENCIES - Bulk Price Converter - "None" product category added to the Bulk Price Converter tool.
+* Dev - PRICES & CURRENCIES - Bulk Price Converter - "Pretty price" functionality added to the Bulk Price Converter tool.
+* Fix - PRICES & CURRENCIES - Currency Exchange Rates - Only enabled modules currencies are added to the list.
+* Fix - PRICES & CURRENCIES - Currency Exchange Rates - `no_changes` currency bug fixed.
+* Fix - PRICES & CURRENCIES - Multicurrency and Currency Exchange Rates - Currency pairs added to Currency Exchange Rates module.
+* Dev - BUTTON & PRICE LABELS - Custom Price Labels - WooCommerce Subscription products support added.
+* Dev - PRODUCTS - Product Tabs - "CATEGORIES to HIDE this tab" and "CATEGORIES to SHOW this tab" options added, instead of depreciated "Comma separated CATEGORY IDs..." options.
+* Dev - PRODUCTS - Product Tabs - "PRODUCTS to HIDE this tab" and "PRODUCTS to SHOW this tab" options added, instead of depreciated "Comma separated PRODUCT IDs..." options.
+* Dev - PRODUCTS - Product Tabs - "TAGS to HIDE this tab" and "TAGS to SHOW this tab" options added.
+* Dev - PRODUCTS - Product Tabs - "Reset settings" button added.
+* Dev - PAYMENT GATEWAYS - Gateways by Country or State - "Include States (Base Country)" and "Exclude States (Base Country)" options added.
+* Dev - SHIPPING & ORDERS - Shipping - "Left to free shipping" functionality added (including widget and shortcode).
+* Dev - SHIPPING & ORDERS - Shipping - Code refactoring.
+* Dev - SHIPPING & ORDERS - Order Numbers - "Use MySQL Transaction" option added to admin settings. This will ensure no duplicated order numbers for shops with large number of simultaneous orders (sequential).
+* Dev - SHIPPING & ORDERS - Order Numbers - "Orders Renumerate" tool code refactoring.
+* Fix - PDF Invoicing - Header - "Default Images Directory" option added (`K_PATH_IMAGES` in `tcpdf_config.php`).
+* Dev - EMAILS & MISC. - WPML - wpml-config.xml file updated.
+* Dev - EMAILS & MISC. - WPML - "Regenerate wpml-config.xml file" tool optimized for speed.
+* Fix - EMAILS & MISC. - WPML - "Regenerate wpml-config.xml file" link fixed.
+* Fix - EMAILS & MISC. - WPML - "Regenerate wpml-config.xml file" tool bug fixed.
 
 = 2.4.3 - 09/03/2016 =
 * Dev - PAYMENT GATEWAYS - Gateways Currency - "Reset settings" button added to admin settings.

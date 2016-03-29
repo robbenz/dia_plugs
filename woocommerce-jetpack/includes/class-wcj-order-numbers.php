@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Order Numbers class.
  *
- * @version 2.3.10
+ * @version 2.4.4
  * @author  Algoritmika Ltd.
  */
 
@@ -67,7 +67,7 @@ class WCJ_Order_Numbers extends WCJ_Module {
 	/**
 	 * Add Renumerate Orders tool to WooCommerce menu (the content).
 	 *
-	 * @version 2.2.7
+	 * @version 2.4.4
 	 */
 	public function create_renumerate_orders_tool() {
 		$result_message = '';
@@ -76,8 +76,8 @@ class WCJ_Order_Numbers extends WCJ_Module {
 			$result_message = '<p><div class="updated"><p><strong>' . __( 'Orders successfully renumerated!', 'woocommerce-jetpack' ) . '</strong></p></div></p>';
 		}
 		?><div>
-			<h2><?php echo __( 'WooCommerce Jetpack - Renumerate Orders', 'woocommerce-jetpack' ); ?></h2>
-			<p><?php echo __( 'The tool renumerates all orders. Press the button below to renumerate all existing orders starting from order counter settings in WooCommerce > Settings > Jetpack > Order Numbers.', 'woocommerce-jetpack' ); ?></p>
+			<?php echo $this->get_tool_header_html( 'renumerate_orders' ); ?>
+			<p><?php echo __( 'Press the button below to renumerate all existing orders starting from order counter settings in WooCommerce > Settings > Booster > Order Numbers.', 'woocommerce-jetpack' ); ?></p>
 			<?php echo $result_message; ?>
 			<form method="post" action="">
 				<input class="button-primary" type="submit" name="renumerate_orders" value="<?php echo __( 'Renumerate orders', 'woocommerce-jetpack' ); ?>">
@@ -94,16 +94,38 @@ class WCJ_Order_Numbers extends WCJ_Module {
 
 	/**
 	 * Add/update order_number meta to order.
+	 *
+	 * @version 2.4.4
 	 */
 	public function add_order_number_meta( $order_id, $do_overwrite ) {
 
-		if ( 'shop_order' !== get_post_type( $order_id ) )
+		if ( 'shop_order' !== get_post_type( $order_id ) ) {
 			return;
+		}
 
 		if ( true === $do_overwrite || 0 == get_post_meta( $order_id, '_wcj_order_number', true ) ) {
-			$current_order_number = get_option( 'wcj_order_number_counter' );
-			update_option( 'wcj_order_number_counter', ( $current_order_number + 1 ) );
-			update_post_meta( $order_id, '_wcj_order_number', $current_order_number );
+			if ( 'yes' === get_option( 'wcj_order_number_use_mysql_transaction_enabled', 'no' ) ) {
+				global $wpdb;
+				$wpdb->query( 'START TRANSACTION' );
+				$wp_options_table = $wpdb->prefix . 'options';
+				$result_select = $wpdb->get_row( "SELECT * FROM $wp_options_table WHERE option_name = 'wcj_order_number_counter'" );
+				if ( NULL != $result_select ) {
+					$current_order_number = $result_select->option_value;
+					$result_update = $wpdb->update( $wp_options_table, array( 'option_value' => ( $current_order_number + 1 ) ), array( 'option_name' => 'wcj_order_number_counter' ) );
+					if ( NULL != $result_update ) {
+						$wpdb->query( 'COMMIT' ); // all ok
+						update_post_meta( $order_id, '_wcj_order_number', $current_order_number );
+					} else {
+						$wpdb->query( 'ROLLBACK' ); // something went wrong, Rollback
+					}
+				} else {
+					$wpdb->query( 'ROLLBACK' ); // something went wrong, Rollback
+				}
+			} else {
+				$current_order_number = get_option( 'wcj_order_number_counter' );
+				update_option( 'wcj_order_number_counter', ( $current_order_number + 1 ) );
+				update_post_meta( $order_id, '_wcj_order_number', $current_order_number );
+			}
 		}
 	}
 
@@ -133,7 +155,7 @@ class WCJ_Order_Numbers extends WCJ_Module {
 	/**
 	 * get_settings.
 	 *
-	 * @version 2.3.10
+	 * @version 2.4.4
 	 */
 	function get_settings() {
 
@@ -213,6 +235,15 @@ class WCJ_Order_Numbers extends WCJ_Module {
 				'custom_attributes'
 				           => apply_filters( 'get_wc_jetpack_plus_message', '', 'readonly' ),
 				'css'      => 'width:300px;',
+			),
+
+			array(
+				'title'    => __( 'Use MySQL Transaction', 'woocommerce-jetpack' ),
+				'desc'     => __( 'Enable', 'woocommerce-jetpack' ),
+				'desc_tip' => __( 'This should be enabled if you have a lot of simultaneous orders in your shop - to prevent duplicate order numbers (sequential).', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_order_number_use_mysql_transaction_enabled',
+				'default'  => 'no',
+				'type'     => 'checkbox',
 			),
 
 			array( 'type'  => 'sectionend', 'id' => 'wcj_order_numbers_options' ),

@@ -144,6 +144,10 @@
 	padding-bottom:14px;
 }
 
+.wppb-user-forms .wppb-form-field > ul {
+    margin-left: 0;
+}
+
 .wppb-form-field label,
 #wppb-login-wrap .login-username label,
 #wppb-login-wrap .login-password label{

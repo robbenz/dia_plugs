@@ -3,7 +3,7 @@
 Plugin Name: Booster for WooCommerce
 Plugin URI: http://booster.io
 Description: Supercharge your WooCommerce site with these awesome powerful features.
-Version: 2.4.3
+Version: 2.4.4
 Author: Algoritmika Ltd
 Author URI: http://www.algoritmika.com
 Copyright: © 2016 Algoritmika Ltd.
@@ -21,7 +21,7 @@ if ( ! class_exists( 'WC_Jetpack' ) ) :
  * Main WC_Jetpack Class
  *
  * @class   WC_Jetpack
- * @version 2.4.3
+ * @version 2.4.4
  */
 
 final class WC_Jetpack {
@@ -330,8 +330,7 @@ final class WC_Jetpack {
 	/**
 	 * Include required core files used in admin and on the frontend.
 	 *
-	 * @version 2.4.3
-	 * @since   2.4.3
+	 * @version 2.4.4
 	 */
 	private function includes() {
 
@@ -352,6 +351,7 @@ final class WC_Jetpack {
 
 		// Widgets
 		include_once( 'includes/widgets/class-wcj-widget-multicurrency.php' );
+		include_once( 'includes/widgets/class-wcj-widget-left-to-free-shipping.php' );
 
 		// Abstracts
 		//include_once( 'includes/abstracts/class-wcj-product-input-fields.php' );
@@ -362,6 +362,8 @@ final class WC_Jetpack {
 
 	/**
 	 * include_functions.
+	 *
+	 * @version 2.4.4
 	 */
 	private function include_functions() {
 		include_once( 'includes/functions/wcj-debug-functions.php' );
@@ -369,6 +371,8 @@ final class WC_Jetpack {
 		include_once( 'includes/functions/wcj-html-functions.php' );
 		include_once( 'includes/functions/wcj-country-functions.php' );
 		include_once( 'includes/functions/wcj-invoicing-functions.php' );
+
+		include_once( 'includes/currencies/wcj-currencies.php' );
 	}
 
 	/**

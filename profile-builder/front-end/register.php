@@ -20,7 +20,8 @@ function wppb_signup_password_random_password_filter( $password ) {
 			//check for password in signup meta
 			$meta = unserialize( $signup->meta );
 			
-			$password = $meta['user_pass'];
+			if ( !empty($meta['user_pass']) )
+                $password = $meta['user_pass'];
 		}
 	}
 	

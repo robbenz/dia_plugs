@@ -2,7 +2,7 @@
 /*
 Plugin Name: Social Icons Widget
 Plugin URI: http://github.com/dannisbet/Social-Icons-Widget
-Version: 15.10.1
+Version: 16.04
 Description: Displays a list of social media website icons and a link to your profile.
 Author: Daniel Nisbet
 Author URI: https://nisbetcreative.com/
@@ -25,7 +25,7 @@ class Social_Icons_Widget extends WP_Widget {
 
 		// Register Stylesheets
 		add_action('admin_print_styles', array($this, 'register_admin_styles'));
-		add_action('wp_enqueue_scripts', array($this, 'register_widget_styles'));
+		add_action('wp_enqueue_scripts', array($this, 'register_widget_styles'), 5);
 
 		include('lib/social-networks.php');
 	}

@@ -5,7 +5,7 @@ Tags: registration, user profile, user registration, custom field registration, 
 
 Requires at least: 3.1
 Tested up to: 4.4.2
-Stable tag: 2.3.2
+Stable tag: 2.3.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -145,6 +145,11 @@ This plugin adds/removes user fields in the front-end. Both default and extra pr
 10. Profile Builder Login Widget
 
 == Changelog ==
+= 2.3.3 =
+* Added more fields to be available in wpml string translations: labels, default value and default content
+* Made css modifications so that Checkbox, Radio and Select fields align properly in Twenty Sixteen theme
+* Fixed different notices and warnings that appeared in certain cases
+
 = 2.3.2 =
 * When upgrading from an older version than 2.2.6 on a Multisite install Email Confirmation is set to yes automatically now
 * Fixed notice undefined variable from wppb_mail when using filter to not send email

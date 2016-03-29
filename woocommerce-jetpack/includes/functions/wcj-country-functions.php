@@ -4,7 +4,7 @@
  *
  * The WooCommerce Country Jetpack Functions.
  *
- * @version  2.4.0
+ * @version  2.4.4
  * @author   Algoritmika Ltd.
  */
 
@@ -84,6 +84,21 @@ if ( ! function_exists( 'wcj_get_country_name_by_code' ) ) {
 		if ( isset( $countries[ $country_code ] ) ) return $countries[ $country_code ];
 
 		return false;
+	}
+}
+
+/**
+ * Get all states array.
+ *
+ * @version 2.4.4
+ * @since   2.4.4
+ * @return array
+ */
+if ( ! function_exists( 'wcj_get_states' ) ) {
+	function wcj_get_states() {
+		$base_country = WC()->countries->get_base_country();
+		$states = WC()->countries->get_states( $base_country );
+		return ( isset( $states ) && ! empty( $states ) ) ? $states : array();
 	}
 }
 

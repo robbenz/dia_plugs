@@ -501,7 +501,9 @@ class Profile_Builder_Form_Creator{
 			if( ! isset( $userdata['role'] ) ) {
 				$userdata['role'] = $this->args['role'];
 			} else {
-				$this->args['redirect_url'] = wppb_custom_redirect_url( 'after_registration', $this->args['redirect_url'], $userdata["user_login"], $userdata['role'] );
+				if( isset( $wppb_module_settings['wppb_customRedirect'] ) && $wppb_module_settings['wppb_customRedirect'] == 'show' && function_exists( 'wppb_custom_redirect_url' ) ) {
+					$this->args['redirect_url'] = wppb_custom_redirect_url( 'after_registration', $this->args['redirect_url'], $userdata["user_login"], $userdata['role'] );
+				}
 			}
 
             $userdata['user_pass'] = wp_hash_password( $userdata['user_pass'] );
@@ -518,7 +520,9 @@ class Profile_Builder_Form_Creator{
 			if( ! isset( $userdata['role'] ) ) {
 				$userdata['role'] = $this->args['role'];
 			} else {
-				$this->args['redirect_url'] = wppb_custom_redirect_url( 'after_registration', $this->args['redirect_url'], $userdata["user_login"], $userdata['role'] );
+				if( isset( $wppb_module_settings['wppb_customRedirect'] ) && $wppb_module_settings['wppb_customRedirect'] == 'show' && function_exists( 'wppb_custom_redirect_url' ) ) {
+					$this->args['redirect_url'] = wppb_custom_redirect_url( 'after_registration', $this->args['redirect_url'], $userdata["user_login"], $userdata['role'] );
+				}
 			}
 
             $userdata = wp_unslash( $userdata );

@@ -3,8 +3,8 @@ Contributors: dannisbet, nisbetcreative
 Tags: social, media, widget, follow, profile, icons, 500px, About.me, Behance, Dribbble, Codepen, Email, Envato, Facebook, Flickr, FourSquare, GitHub, Google+, Instagram, Kickstarter, Klout, LinkedIn, Medium, Path, Pinterest, RSS, Speaker Deck, StumbleUpon, Technorati, Tumblr, Twitter, Vimeo, Vine, WordPress, Yelp, YouTube, Zerply
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CJN7XU3Z7XHDL
 Requires at least: 3.5.1
-Tested up to: 4.3
-Stable tag: 15.10.1
+Tested up to: 4.4
+Stable tag: 16.04
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -75,58 +75,66 @@ The opening and closing unordered list tags can be edited or changed with the so
 == Changelog ==
 
 = 15.10 =
-* Fix error with WPML where changing languages broke the icon path.
+* Removed all of the floats in favor of display:inline-block instead
+* Style now queues above theme's style.css in most themes
+
+= 15.10 =
+* Fix error with WPML where changing languages broke the icon path
 
 = 15.07 =
-* Replaced http:// in unused input boxes with placeholder attribute instead.
-* Added CSS for icons in widget settings.
-* Updated the way icon path for custom icons is generated to stop conflicts with multilingual plugins.
+* Replaced http:// in unused input boxes with placeholder attribute instead
+* Added CSS for icons in widget settings
+* Updated the way icon path for custom icons is generated to stop conflicts with multilingual plugins
 
 = 15.06 =
-* Fixed Undefined index errors.
-* Removed Technorati profile field.
-* Added dailymotion and Twitch profile fields.
+* Fixed Undefined index errors
+* Removed Technorati profile field
+* Added dailymotion and Twitch profile fields
 
 = 14.10 =
-* Added Soundcloud to default list of services.
-* Implemented slash fix for those running the plugin on XAMMP/Windows (Thanks VictoriousK).
+* Added Soundcloud to default list of services
+* Implemented slash fix for those running the plugin on XAMMP/Windows (Thanks VictoriousK)
 
 = 14.08 =
-* Added prefixes to PHP variables to prevent conflicts with other plugins.
+* Added prefixes to PHP variables to prevent conflicts with other plugins
 
 = 14.07 =
-* Added 500px, Codepen, Envato, Kickstarter, Speaker Deck, Vine.
-* Removed Forrst.
-* Added ability to filter opening, closing tags and HTML for icon output.
-* Added target="_blank" for links to open in a new window by default.
+* Added 500px, Codepen, Envato, Kickstarter, Speaker Deck, Vine
+* Removed Forrst
+* Added ability to filter opening, closing tags and HTML for icon output
+* Added target="_blank" for links to open in a new window by default
 
 = 14.05 =
-* Fixed broken image links when WordPress is installed under a directory.
+* Fixed broken image links when WordPress is installed under a directory
 
 = 14.04 =
-* Added new options for About.me, Email, GitHub, Medium, and WordPress profile links.
-* Updated all icons to Simple Icons set.
+* Added new options for About.me, Email, GitHub, Medium, and WordPress profile links
+* Updated all icons to Simple Icons set
 
 = 14.03 =
-* Removed @getimagesize function for compatibility purposes.
-* New accounts are now added via WordPress filter rather than editing core plugin code.
+* Removed @getimagesize function for compatibility purposes
+* New accounts are now added via WordPress filter rather than editing core plugin code
 
 = 13.05 =
-* Fixed image and CSS paths.
+* Fixed image and CSS paths
 
 = 13.04 =
-* Initial commit.
+* Initial commit
 
 = trunk =
-* Initial commit.
+* Initial commit
 
 == Upgrade Notice ==
 
+= 15.10 =
+* Removed all of the floats in favor of display:inline-block instead
+* Style now queues above theme's style.css in most themes
+
 = 14.03 =
-Removed @getimagesize function for compatibility purposes. New accounts are now added via WordPress filter rather than editing core plugin code.
+Removed @getimagesize function for compatibility purposes. New accounts are now added via WordPress filter rather than editing core plugin code
 
 = 13.05 =
-Fixed image and CSS paths.
+Fixed image and CSS paths
 
 = 13.04 =
-Initial commit to WordPress plugin repository.
+Initial commit to WordPress plugin repository
