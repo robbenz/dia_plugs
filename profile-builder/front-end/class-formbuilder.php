@@ -255,6 +255,9 @@ class Profile_Builder_Form_Creator{
 		if( isset( $_REQUEST['action'] ) ){
 			$field_check_errors = $this->wppb_test_required_form_values( $_REQUEST );			
 			if( empty( $field_check_errors ) ){
+
+                do_action('wppb_before_saving_form_values',$_REQUEST, $this->args);
+
 				// we only have a $user_id on default registration (no email confirmation, no multisite)
 				$user_id = $this->wppb_save_form_values( $_REQUEST );
 				

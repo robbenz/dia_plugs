@@ -5,7 +5,7 @@ Tags: registration, user profile, user registration, custom field registration, 
 
 Requires at least: 3.1
 Tested up to: 4.4.2
-Stable tag: 2.3.3
+Stable tag: 2.3.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,6 +14,8 @@ Simple to use profile plugin allowing front-end login, user registration and edi
 == Description ==
 
 **Profile Builder is WordPress user registration done right.**
+
+**Like this plugin?** Consider leaving a [5 star review](https://wordpress.org/support/view/plugin-reviews/profile-builder?filter=5).
 
 It lets you customize your website by adding a front-end menu for all your users, 
 giving them a more flexible way to modify their user profile or register users (front-end user registration).
@@ -145,6 +147,12 @@ This plugin adds/removes user fields in the front-end. Both default and extra pr
 10. Profile Builder Login Widget
 
 == Changelog ==
+= 2.3.4 =
+* We now load the plugin translation from the current theme in the folder local_pb_lang if it exists otherwise normally from the plugin dir
+* Fixed notices regarding the 'add_meta_box' hook
+* Added a filter in wordpress-creation-kit API before testing for required fields: 'wck_before_test_required'
+* Added hook before saving fields: 'wppb_before_saving_form_values'
+
 = 2.3.3 =
 * Added more fields to be available in wpml string translations: labels, default value and default content
 * Made css modifications so that Checkbox, Radio and Select fields align properly in Twenty Sixteen theme

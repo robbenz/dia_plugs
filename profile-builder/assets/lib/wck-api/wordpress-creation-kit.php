@@ -680,7 +680,7 @@ class Wordpress_Creation_Kit_PB{
 
 	/* Helper function for required fields */
 	function wck_test_required( $meta_array, $meta, $values, $id ){
-		$fields = $meta_array;
+        $fields = apply_filters( 'wck_before_test_required', $meta_array, $meta, $values, $id );
 		$required_fields = array();
 		$required_fields_with_errors = array();
 		$required_message = '';
@@ -1453,8 +1453,9 @@ class WCK_Page_Creator_PB{
 	/**
 	 * Do action 'add_meta_boxes'. This hook isn't executed by default on a admin page so we have to add it.
 	 */
-	function wck_settings_page_add_meta_boxes() {					
-		do_action( 'add_meta_boxes', $this->hookname );		
+	function wck_settings_page_add_meta_boxes() {
+        global $post;
+		do_action( 'add_meta_boxes', $this->hookname, $post );
 	}
 	
 	/**
