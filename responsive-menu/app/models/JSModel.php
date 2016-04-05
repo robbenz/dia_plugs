@@ -187,12 +187,12 @@ class RM_JSModel extends RM_BaseModel {
         */
 
         if( $options['RMX'] || $options['RMClickImgClicked'] ) : 
+            
+            $closeX = " \$RMjQuery( '#click-menu #RMX, #click-menu img.rm-img-clicked' ).css( 'display', 'none' );
+                        \$RMjQuery( '#click-menu #RM3Lines, #click-menu img.rm-img-to-click' ).css( 'display', 'block' ); ";
 
-            $closeX = " \$RMjQuery( '#click-menu #RMX' ).css( 'display', 'none' );
-                        \$RMjQuery( '#click-menu #RM3Lines' ).css( 'display', 'block' ); ";
-
-            $showX = " \$RMjQuery( '#click-menu #RM3Lines' ).css( 'display', 'none' );
-                         \$RMjQuery( '#click-menu #RMX' ).css( 'display', 'block' ); ";        
+            $showX = " \$RMjQuery( '#click-menu #RM3Lines, #click-menu img.rm-img-to-click' ).css( 'display', 'none' );
+                         \$RMjQuery( '#click-menu #RMX, #click-menu img.rm-img-clicked' ).css( 'display', 'block' ); ";        
         else :
 
             $closeX = "";

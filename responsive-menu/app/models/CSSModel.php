@@ -428,20 +428,61 @@ $css .= $options['RMExternal'] ? '' : '<style>';
                 text-decoration: none{$important}
             }
             
-            #click-menu #RMX {
-
+            #click-menu #RMX 
+            {
                 display: none;
                 font-size: 24px;
                 line-height: {$clickMenuHeight}px{$important}
                 height: {$clickMenuHeight}px{$important}
                 color: $clickCol{$important}
+                top: -4px{$important}
+                position: relative{$important}
             }
             
+
+            #click-menu #RMX.threelines-float-left,
+            #click-menu #RMX.threelines-float-right,
+            #click-menu-label
+            {
+                line-height: {$options['RMClickTitleHeight']}px{$important}
+            }
+
+            #click-menu-label.click-menu-label-left
+            {
+                float: left{$important}
+                margin-right: 10px{$important}
+            }
+                        
+
+            #click-menu-label.click-menu-label-right
+            {
+                float: right{$important}
+                margin-left: 5px{$important}
+            }
+
+            #click-menu img,
             #click-menu .threeLines
             {
                 width: {$lineWidth}px{$important}
                 height: {$clickMenuHeight}px{$important}
-                margin: auto{$important}
+                margin: {$lineMargin}px auto{$important}
+            }
+
+            #click-menu img.rm-img-clicked
+            {
+                display: none;
+            }
+
+            #click-menu img
+            {
+                height: auto{$important}
+            }
+
+            #click-menu img.click-menu-float-left,
+            #click-menu img.click-menu-float-right,
+            #click-menu .threeLines.threelines-float-left
+            {
+                float: left{$important}
             }
 
             #click-menu .threeLines .line

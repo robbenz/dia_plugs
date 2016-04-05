@@ -1,5 +1,13 @@
 <!-- Added by Responsive Menu Plugin for WordPress - http://responsive.menu -->
 
+
+<?php 
+    if($data['RMClickTitlePos'] == 'left' || $data['RMClickTitlePos'] == 'right')
+        $title_pos_class = 'threelines-float-left';
+    else
+        $title_pos_class = '';
+     ?>
+
 <div id="click-menu" 
      class="<?php echo is_admin_bar_showing() ? 'admin-bar-showing ' : ''; ?> 
      <?php echo $data['RMAnim']; ?>"
@@ -7,20 +15,25 @@
      aria-label="Responsive Menu Button"
      >
 
+<?php if( $data['RMClickTitle'] && ( $data['RMClickTitlePos'] == 'top' || $data['RMClickTitlePos'] == 'left' ) ) : ?>
+
+    <div id="click-menu-label" class="click-menu-label-<?php echo $data['RMClickTitlePos']; ?>"><?php echo $data['RMClickTitle']; ?></div>
+
+<?php endif; ?>
+
 <?php if( $data['RMX'] || $data['RMClickImgClicked'] ) : ?>
 
     <?php if( $data['RMClickImgClicked'] ) : ?>
     
         <img 
-            id="RMX" 
             src="<?php echo $data['RMClickImgClicked']; ?>" 
-            class="click-menu-image"
+            class="click-menu-image rm-img-clicked <?php echo 'click-menu-float-' . $data['RMClickTitlePos']; ?>"
             alt="Responsive Menu Image"
             title="Responsive Menu Image" />
     
     <?php else : ?>
     
-        <div class="threeLines" id="RMX">×</div>
+        <div class="threeLines <?php echo $title_pos_class; ?>" id="RMX">×</div>
     
     <?php endif; ?>
 
@@ -28,7 +41,7 @@
 
 <?php if( !$data['RMClickImg'] ) : ?>
 
-    <div class="threeLines" id="RM3Lines">       
+    <div class="threeLines <?php echo $title_pos_class; ?>" id="RM3Lines">       
         <div class="line"></div>
         <div class="line"></div>
         <div class="line"></div>
@@ -37,17 +50,16 @@
 <?php else : ?>
 
     <img 
-        id="RM3Lines" 
         src="<?php echo $data['RMClickImg']; ?>" 
-        class="click-menu-image"
+        class="click-menu-image rm-img-to-click <?php echo 'click-menu-float-' . $data['RMClickTitlePos']; ?>"
         alt="Responsive Menu Clicked Image"
         title="Responsive Menu Clicked Image" />
 
 <?php endif; ?>
 
-<?php if( $data['RMClickTitle'] ) : ?>
+<?php if( $data['RMClickTitle'] && ($data['RMClickTitlePos'] == 'bottom' || $data['RMClickTitlePos'] == 'right' ) ) : ?>
 
-    <div id="click-menu-label"><?php echo $data['RMClickTitle']; ?></div>
+    <div id="click-menu-label" class="click-menu-label-<?php echo $data['RMClickTitlePos']; ?>"><?php echo $data['RMClickTitle']; ?></div>
 
 <?php endif; ?>
 

@@ -3,8 +3,8 @@ Contributors: ResponsiveMenu
 Donate link: http://responsive.menu/donate/
 Tags: responsive, menu, responsive menu, mobile menu, wordpress responsive menu, wp responsive menu, tablet menu, mobile, tablet, 3 lines, 3 line, three line, three lines
 Requires at least: 3.5.0
-Tested up to: 4.4.1
-Stable tag: 2.8.6
+Tested up to: 4.5
+Stable tag: 2.8.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -79,6 +79,8 @@ This is a Highly Customisable Responsive Menu Plugin for WordPress, with 70 cust
 <li> - Ability to choose if menu is shown on left or right of screen</li>
 <li> - Ability to set theme location menu</li>
 <li> - Ability to reset to default</li>
+<li> - Ability to set menu text location</li>
+<li> - Ability to set menu text line height</li>
 <li> - Plus more...</li>
 </ul>
 The plugin creates a nice three-lined mobile menu button (or custom image if you choose) that users can click to bring a slide out menu (from the left, right, top or bottom - again your choice), which is easily navigated. A lot nicer and neater than the select drop-down menu alternative.
@@ -131,6 +133,12 @@ Alternatively:
 3. Example Front End Expanded Menu
 
 == Changelog ==
+
+= 2.8.7 =
+* Added absolute paths to file inclusions
+* Added ability to set menu title text location (top, bottom, left, right)
+* Added ability to set menu title text line height (useful for above)
+* Fixed width on custom menu images for consistency
 
 = 2.8.6 (28th January 2016) =
 * Added Menu Title Link to WPML

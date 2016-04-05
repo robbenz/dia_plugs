@@ -615,6 +615,56 @@
 
                     </td>
                 </tr>
+                <tr>
+                    <td>
+
+                        <h4><?php _e('Click Button Title Position', 'responsive-menu'); ?></h4> 
+
+                        <h5><?php _e('This defines where the menu button title is shown in relation to the 3 lines', 'responsive-menu'); ?></h5>
+
+                        <select name="RMClickTitlePos">
+
+                            <option 
+                                value="bottom"
+                                <?php echo 'bottom' == $data['RMClickTitlePos'] ? 'selected="selected"' : ''; ?>>
+                                Below
+                            </option>
+
+                            <option 
+                                value="top"
+                                <?php echo 'top' == $data['RMClickTitlePos'] ? 'selected="selected"' : ''; ?>>
+                                On Top
+                            </option>
+
+                            <option 
+                                value="left"
+                                <?php echo 'left' == $data['RMClickTitlePos'] ? 'selected="selected"' : ''; ?>>
+                                Left
+                            </option>
+
+                            <option 
+                                value="right"
+                                <?php echo 'right' == $data['RMClickTitlePos'] ? 'selected="selected"' : ''; ?>>
+                                Right
+                            </option>
+
+                        </select>
+
+                    </td>
+                    <td>
+                        
+                        <h4><?php _e('Click Menu Title Height', 'responsive-menu'); ?></h4> 
+
+                        <h5><?php _e('This is helpful for sorting size issues with menu text set to left/right', 'responsive-menu'); ?>.</h5>
+
+                        <input 
+                            type="text" 
+                            name="RMClickTitleHeight" 
+                            id="RMClickTitleHeight"
+                            value="<?php echo isset($data['RMClickTitleHeight']) ? $data['RMClickTitleHeight'] : RM_Registry::get('defaults', 'RMClickTitleHeight'); ?>"
+                            />px
+                    </td>
+                </tr>
             </table>
 
             <h3><?php _e('Click Button Size Settings', 'responsive-menu'); ?></h3>

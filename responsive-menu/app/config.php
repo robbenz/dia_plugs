@@ -14,7 +14,7 @@
 $config = array( 
     
     
-    'current_version' => "2.8.6",
+    'current_version' => "2.8.7",
    
     
     'plugins_dir' => plugin_dir_path( __FILE__ ),
@@ -299,8 +299,14 @@ $defaults = array(
     
     /* Added in 2.6 by Mkdgs*/
     
-     'RMThemeLocation' => null,
+    'RMThemeLocation' => null,
     
+    /* Added in 2.8.7 */
+
+    'RMClickTitlePos' => 'bottom',
+
+    'RMClickTitleHeight' => '14'
+
 );
 
 

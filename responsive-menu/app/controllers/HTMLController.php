@@ -34,40 +34,40 @@ class RM_HTMLController extends RM_BaseController {
         
         if( $args ) :
             
-            if( $args['rm'] )
+            if( isset( $args['rm'] ) )
                 $args['RM'] = $args['rm'];
             
-            if( $args['menu'] )
+            if( isset( $args['menu'] ) )
                 $args['RM'] = $args['menu'];
             
-            if( $args['title'] )
+            if( isset( $args['title'] ) )
                 $args['RMTitle'] = $args['title'];
             
-            if( $args['title_link'] )
+            if( isset( $args['title_link'] ) )
                 $args['RMTitleLink'] = $args['title_link'];
             
-            if( $args['title_open'] )
+            if( isset( $args['title_open'] ) )
                 $args['RMTitleLoc'] = $args['title_open'];
             
-            if( $args['html'] )
+            if( isset( $args['html'] ) )
                 $args['RMHtml'] = $args['html'];
             
-            if( $args['html_loc'] )
+            if( isset( $args['html_loc'] ) )
                 $args['RMHtmlLoc'] = $args['html_loc'];
             
-            if( $args['title_img'] )
+            if( isset( $args['title_img'] ) )
                 $args['RMImage'] = $args['title_img'];
             
-            if( $args['search_loc'] )
+            if( isset( $args['search_loc'] ) )
                 $args['RMSearchPos'] = $args['search_loc'];
             
-            if( $args['btn_img'] )
+            if( isset( $args['btn_img'] ) )
                 $args['RMClickImg'] = $args['btn_img'];
             
-            if( $args['btn_img_clicked'] )
+            if( isset( $args['btn_img_clicked'] ) )
                 $args['RMClickImgClicked'] = $args['btn_img_clicked'];
             
-            if( $args['btn_title'] )
+            if( isset( $args['btn_title'] ) )
                 $args['RMClickTitle'] = $args['btn_title'];
             
             endif;

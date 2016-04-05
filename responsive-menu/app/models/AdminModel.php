@@ -179,7 +179,13 @@ class RM_AdminModel extends RM_BaseModel {
         /* Added in 2.6 Mkdgs */
         
         $RMThemeLocation = isset( $data['RMThemeLocation'] ) ? $data['RMThemeLocation'] : RM_Registry::get( 'defaults', 'RMThemeLocation' );
-        
+
+        /* Added in 2.8.7 */
+
+        $RMClickTitlePos = isset( $data['RMClickTitlePos'] ) ? $data['RMClickTitlePos'] : RM_Registry::get( 'defaults', 'RMClickTitlePos' );
+
+        $RMClickTitleHeight = isset( $data['RMClickTitleHeight'] ) ? $data['RMClickTitleHeight'] : RM_Registry::get( 'defaults', 'RMClickTitleHeight' );
+
         $optionsArray = array(
             
             // Filter Input Correctly
@@ -352,6 +358,12 @@ class RM_AdminModel extends RM_BaseModel {
             /* Added in 2.6 Mkdgs */          
             
             'RMThemeLocation' => self::Filter( $RMThemeLocation ),
+            
+            /* Added in 2.8.7 */
+
+            'RMClickTitlePos' => self::Filter( $RMClickTitlePos ),
+            
+            'RMClickTitleHeight' => self::Filter( $RMClickTitleHeight ),
             
         );
 
