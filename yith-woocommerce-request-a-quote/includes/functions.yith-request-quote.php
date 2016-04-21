@@ -414,5 +414,5 @@ function ywraq_verify_token( $token, $action, $order_id, $email){
 }
 
 function ywraq_get_browse_list_message(){
-    return apply_filters( 'ywraq_product_added_view_browse_list' , __( 'Browse the list', 'ywraq' ) );
+    return apply_filters( 'ywraq_product_added_view_browse_list' , __( 'View Your Quote', 'ywraq' ) );
 }

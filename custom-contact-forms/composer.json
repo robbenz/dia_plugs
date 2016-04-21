@@ -1,0 +1,6 @@
+{
+    "name": "tlovett1/custom-contact-forms",
+	"require": {
+        "abeautifulsite/simple-php-captcha": "^1.0.0"
+	}
+}

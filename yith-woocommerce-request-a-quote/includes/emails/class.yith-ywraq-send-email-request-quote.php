@@ -31,8 +31,8 @@ if ( !class_exists( 'YITH_YWRAQ_Send_Email_Request_Quote' ) ) {
             $this->title       = __( 'Email to request a quote', 'ywraq' );
             $this->description = __( 'This email is sent when a user clicks on "Request a quote" button', 'ywraq' );
 
-            $this->heading = __( 'Request a quote', 'ywraq' );
-            $this->subject = __( '[Request a quote]', 'ywraq' );
+            $this->heading = __( 'Request A Quote', 'ywraq' );
+            $this->subject = __( '[Online Quote Request]', 'ywraq' );
 
             $this->template_html  = 'emails/request-quote.php';
             $this->template_plain = 'emails/plain/request-quote.php';
@@ -47,7 +47,7 @@ if ( !class_exists( 'YITH_YWRAQ_Send_Email_Request_Quote' ) ) {
             $this->recipient = $this->get_option( 'recipient' );
 
             if ( !$this->recipient ) {
-                $this->recipient = get_option( 'admin_email' );
+              //  $this->recipient = get_option( 'admin_email' );
             }
 
             $this->enable_cc = $this->get_option( 'enable_cc' );
@@ -67,7 +67,7 @@ if ( !class_exists( 'YITH_YWRAQ_Send_Email_Request_Quote' ) ) {
             $this->raq                = $args;
             $this->raq['raq_content'] = YITH_Request_Quote()->get_raq_return();
 
-            $return = $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
+            $return = $this->send( 'rbenz@diamedicalusa.com', $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
 
             if ( $return ) {
                 YITH_Request_Quote()->clear_raq_list();
@@ -184,7 +184,7 @@ if ( !class_exists( 'YITH_YWRAQ_Send_Email_Request_Quote' ) ) {
                 'recipient'  => array(
                     'title'       => __( 'Recipient(s)', 'ywraq' ),
                     'type'        => 'text',
-                    'description' => sprintf( __( 'Enter recipients (comma separated) for this email. Defaults to <code>%s</code>', 'ywraq' ), esc_attr( get_option( 'admin_email' ) ) ),
+                    'description' => sprintf( __( 'Enter recipients (comma separated) for this email. Defaults to <code>%s</code>', 'ywraq' ), esc_attr( get_option( '' ) ) ),
                     'placeholder' => '',
                     'default'     => ''
                 ),

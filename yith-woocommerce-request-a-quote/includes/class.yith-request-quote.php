@@ -431,7 +431,7 @@ if ( !class_exists( 'YITH_Request_Quote' ) ) {
             }
 
             if ( $return == 'true' ) {
-                $message = apply_filters( 'yith_ywraq_product_added_to_list_message', __( 'Product added!', 'ywraq' ) );
+                $message = apply_filters( 'yith_ywraq_product_added_to_list_message', __( 'Product has been added to your quote.', 'ywraq' ) );
             }
             elseif ( $return == 'exists' ) {
                 $message = apply_filters( 'yith_ywraq_product_already_in_list_message', __( 'Product already in the list.', 'ywraq' ) );
@@ -551,18 +551,39 @@ if ( !class_exists( 'YITH_Request_Quote' ) ) {
                 if ( !isset( $_POST['rqa_email'] ) || empty( $_POST['rqa_email'] ) || !preg_match( $regex, $_POST['rqa_email'] ) ) {
                     $errors[] = '<p>' . __( 'Please enter a valid email', 'ywraq' ) . '</p>';
                 }
-
-                if ( YITH_Request_Quote()->is_empty() ) {
-                    $errors[] = '<p>' . __( 'Your list is empty, add products to the list to send a request', 'ywraq' ) . '</p>';
+                if ( empty( $_POST['rqa_facility'] ) ) {
+                    $errors[] = '<p>' . __( 'Please enter your facility name', 'ywraq' ) . '</p>';
                 }
+                if ( empty( $_POST['rqa_zip'] ) ) {
+                    $errors[] = '<p>' . __( 'Please a valid Zip Code', 'ywraq' ) . '</p>';
+                }
+
+              //  if ( YITH_Request_Quote()->is_empty() ) {
+              //      $errors[] = '<p>' . __( 'Your list is empty, add products to the list to send a request', 'ywraq' ) . '</p>';
+              //  }
 
                 if ( empty( $errors ) ) {
 
                     $args = array(
-                        'user_name'    => $_POST['rqa_name'],
-                        'user_email'   => $_POST['rqa_email'],
-                        'user_message' => nl2br($_POST['rqa_message']),
-                        'raq_content'  => YITH_Request_Quote()->get_raq_return()
+                        'user_name'     => $_POST['rqa_name'],
+                        'user_email'    => $_POST['rqa_email'],
+                        'facility_name' => $_POST['rqa_facility'],
+                        'zipcode'       => $_POST['rqa_zip'],
+                        'phonenumber'   => $_POST['rqa_phone'],
+                        'partnumber'    => $_POST['rqa_part'],
+                        'partdesc'      => $_POST['rqa_desc'],
+                        'partqty'       => $_POST['rqa_qty'],
+                        'partnumber1'   => $_POST['rqa_part1'],
+                        'partdesc1'     => $_POST['rqa_desc1'],
+                        'partqty1'      => $_POST['rqa_qty1'],
+                        'partnumber2'   => $_POST['rqa_part2'],
+                        'partdesc2'     => $_POST['rqa_desc2'],
+                        'partqty2'      => $_POST['rqa_qty2'],
+                        'addedonepart'  =>  $_POST['addedonepart[]'],
+                        'addedonedesc'  =>  $_POST['addedonedesc[]'],
+                        'addedoneqty'   =>  $_POST['addedoneqty[]'],
+                        'user_message'  => nl2br($_POST['rqa_message']),
+                        'raq_content'   => YITH_Request_Quote()->get_raq_return()
                     );
 
                     do_action( 'ywraq_process', $args );
@@ -613,4 +634,3 @@ if ( !class_exists( 'YITH_Request_Quote' ) ) {
 function YITH_Request_Quote() {
     return YITH_Request_Quote::get_instance();
 }
-

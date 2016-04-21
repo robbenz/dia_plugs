@@ -1,0 +1,42 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "15925754d0f98bc69b3e94b24a7e28a2",
+    "content-hash": "5bd4605afd060df8df04214b804a8650",
+    "packages": [
+        {
+            "name": "abeautifulsite/simple-php-captcha",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/claviska/simple-php-captcha.git",
+                "reference": "f4f6db43cced1db6a82c8a5ff1a4bef48937b39b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/claviska/simple-php-captcha/zipball/f4f6db43cced1db6a82c8a5ff1a4bef48937b39b",
+                "reference": "f4f6db43cced1db6a82c8a5ff1a4bef48937b39b",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A simple PHP CAPTCHA script",
+            "homepage": "http://www.abeautifulsite.net/",
+            "time": "2016-02-25 17:04:47"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}
