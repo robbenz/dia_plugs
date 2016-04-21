@@ -579,9 +579,6 @@ if ( !class_exists( 'YITH_Request_Quote' ) ) {
                         'partnumber2'   => $_POST['rqa_part2'],
                         'partdesc2'     => $_POST['rqa_desc2'],
                         'partqty2'      => $_POST['rqa_qty2'],
-                        'addedonepart'  =>  $_POST['addedonepart[]'],
-                        'addedonedesc'  =>  $_POST['addedonedesc[]'],
-                        'addedoneqty'   =>  $_POST['addedoneqty[]'],
                         'user_message'  => nl2br($_POST['rqa_message']),
                         'raq_content'   => YITH_Request_Quote()->get_raq_return()
                     );
