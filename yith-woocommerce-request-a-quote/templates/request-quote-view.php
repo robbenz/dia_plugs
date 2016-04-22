@@ -11,7 +11,7 @@
 if( count($raq_content) == 0):
 ?>
 	<p><?php//  _e('Your quote is currently empty, <a href="https://partsonline.diamedicalusa.com/medical-equipment/">Click Here</a> to get started', 'ywraq') ?></p>
-     <?php include 'request-quote-form.php'; ?>
+     <?php include (TEMPLATEPATH . '/request-quote-form.php'); ?>
 <?php else: ?>
     <form id="yith-ywraq-form" name="yith-ywraq-form" action="<?php echo esc_url( YITH_Request_Quote()->get_raq_page_url( 'update' ) ) ?>" method="post">
 	<table class="shop_table cart" id="yith-ywrq-table-list" cellspacing="0">
