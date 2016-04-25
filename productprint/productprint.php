@@ -11,7 +11,7 @@
  * Tags: WooCommerce, print, product, cart, commerce, configurable, e-commerce, ecommerce, print button, print friendly, printer, printer friendly, printing, printout, reports, sales, sell, shop, shopping, store, woo commerce, wordpress ecommerce
  * Requires at least: 3.5
  * Tested up to: 4.3
- * 
+ *
  * Text Domain productprint
  */
 
@@ -59,7 +59,7 @@ add_action('admin_init', 'ppp_init' );
 		add_action('admin_print_styles', array($this,'productprint_addcssfiles')); //loads plugins css files
 
 		//we are going to use a PHP switch function to determine the print select option set in the admin settings.
-		
+
 		/*** my new init stuff ***/
 		$option_name = 'productprint_ops' ;
 
@@ -76,13 +76,13 @@ add_action('admin_init', 'ppp_init' );
 			//default setting for the plugin, normally used after first install as a default
 
 			$options = array(
-						'featured_image' => 1, 
-						'gallery' => 1, 
+						'featured_image' => 1,
+						'gallery' => 1,
 						'product_description' => 1,
-						'price'=> 1, 
-						'product_attributes'=> 1, 
-						'short_description' => 1, 
-						'stock_level' => 1, 
+						'price'=> 1,
+						'product_attributes'=> 1,
+						'short_description' => 1,
+						'stock_level' => 1,
 						'reviews' => 1,
 						'img_position' => 'right',
 						'img_width' => '50%',
@@ -95,13 +95,13 @@ add_action('admin_init', 'ppp_init' );
 						'gallery_border' => '1',
 						'font_family' => 'Arial',
 						'font_size' => '16px',
-						'button_position' => '4', 
+						'button_position' => '4',
 						'button_legend' => 'Print',
 						'sku' => '',
 						);
     		add_option( $option_name, $options, $deprecated, $autoload );
 		}
-		
+
 		switch($options['button_position']) {
 
 		case 1:
@@ -120,7 +120,7 @@ add_action('admin_init', 'ppp_init' );
 		add_action('woocommerce_after_single_product', array($this, 'productprint_button')); break;
 
 		}; // end Switch statement
- 	}	
+ 	}
 
 
 
@@ -130,15 +130,15 @@ public function productprint_addcssfiles() {
 	wp_enqueue_style('thickbox');
 }
 
-	
+
 
 public function productprint_localize() {
 
 	// Localization
 	load_plugin_textdomain('productprint', false, dirname(plugin_basename(__FILE__)). "/languages" );
-} 
+}
 
-		
+
 
 public function action_admin_menu() {
 
@@ -146,18 +146,18 @@ public function action_admin_menu() {
 	add_options_page(__('ProductPrint' , 'productprint'), __('ProductPrint' , 'productprint'), 'manage_options', 'productprint-settings', array($this, 'productprint_settings'));
 }
 
-	
+
 
 public function productprint_settings() {
 
 	//default setting for the plugin, normally used after first install as a default
-	$def = array(		'featured_image' => '1', 
-						'gallery' => '1', 
-						'product_description' => '1', 
-						'price' => '1', 
-						'product_attributes' => '1', 
-						'short_description' => '1', 
-						'stock_level' => '1', 
+	$def = array(		'featured_image' => '1',
+						'gallery' => '1',
+						'product_description' => '1',
+						'price' => '1',
+						'product_attributes' => '1',
+						'short_description' => '1',
+						'stock_level' => '1',
 						'reviews' => '1',
 						'img_position' => 'right',
 						'img_width' => '50%',
@@ -170,7 +170,7 @@ public function productprint_settings() {
 						'gallery_border' => '0',
 						'font_family' => 'Arial',
 						'font_size' => '16px',
-						'button_position' => '4', 
+						'button_position' => '4',
 						'button_legend' => 'Print',
 						'sku' => '',
 						);
@@ -178,25 +178,25 @@ public function productprint_settings() {
 	//defines the KEYS to available image positions.
 	$img_positions = array( 'left', 'none', 'right' );
 
-	//the font for the text page, 
+	//the font for the text page,
 	$fonts = array('Arial', 'Calibri', 'Courier', 'Garamond', 'Georgia', 'Helvetica', 'Minion', 'Monospace', 'Palatino', 'Sans-serif', 'Serif', 'Times', 'Times New Roman', 'Verdana');
 
 		?>
 
 
 		<div class="wrap">
-	
+
 			<h1><img style="margin-right:15px;"src="<?php print (SC_PRODUCTPRINT_PLUGIN_URL . '/assets/icon.png') ?>"><?php _e('Your ProductPrint Settings', 'productprint'); ?></h1>
-			
+
 			<hr />
-			
+
 			<?php $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'settings'; ?>
 
 			<h2 class="nav-tab-wrapper">
-				
+
 				<a href="?page=productprint-settings&tab=settings" class="nav-tab"<?php echo $active_tab == 'settings' ? 'nav-tab-active' : ''; ?>">Settings</a>
 				<a href="?page=productprint-settings&tab=upgrade" class="nav-tab"<?php echo $active_tab == 'upgrade' ? 'nav-tab-active' : ''; ?>"><?php _e ('Upgrade to ProductPrint Pro', 'productprint'); ?></a>
-				
+
 			</h2>
 			<?php
 		if( $active_tab == 'upgrade' ) { /****************** UPGRADE TAB **********************************************************/
@@ -471,7 +471,7 @@ Click this link to <a href="http://www.togethernet.ltd.uk/productprintpro-woocom
 				/*** $options should be set assuming user has visited the admin pages once ***/
 				/* $options = array_merge($def, $options); */
 				?>
-				
+
 				<h3><?php _e('Print button', 'productprint'); ?></h3>
 
 				<table>
@@ -482,36 +482,36 @@ Click this link to <a href="http://www.togethernet.ltd.uk/productprintpro-woocom
 					</tr>
 					</th>
 					<tr><td><label><?php _e('Position on the page', 'productprint'); ?></label></td><td>
-						
-						<select name="productprint_ops[button_position]" id="button_position">	
-						
+
+						<select name="productprint_ops[button_position]" id="button_position">
+
 						<option value="1" <?php selected($options['button_position'], 1); ?>> <?php _e('Before product', 'productprint'); ?></option>
-		
+
 						<option value="2" <?php selected($options['button_position'], 2); ?>> <?php _e('Before product title', 'productprint'); ?></option>
-		
+
 						<option value="3" <?php selected($options['button_position'], 3); ?>> <?php _e('After product title', 'productprint'); ?></option>
-		
+
 						<option value="4" <?php selected($options['button_position'], 4); ?>> <?php _e('After product price', 'productprint'); ?></option>
-		
+
 						<option value="5" <?php selected($options['button_position'], 5); ?>> <?php _e('After short description', 'productprint'); ?></option>
-		
+
 						<option value="6" <?php selected($options['button_position'], 6); ?>> <?php _e('After add to cart button', 'productprint'); ?></option>
-		
+
 						<option value="7" <?php selected($options['button_position'], 7); ?>> <?php _e('After product', 'productprint'); ?></option>
-		
+
 						</select></td></tr>
-								
+
 					<tr><td><span><?php _e('Label for the button', 'productprint'); ?></span></td><td>
-						
+
 					<input id="button_legend" type="text" size="20" name="productprint_ops[button_legend]" value="<?php print sanitize_text_field($options['button_legend']) ?>" /></td></tr>
-		
+
 				</table>
-		
+
 				</p>
 				<hr />
 
 				<?php // gallery settings ?>
-		
+
 					<p>
 						<h3><?php _e('Featured Image Settings', 'productprint'); ?></h3>
 						<table>
@@ -521,7 +521,7 @@ Click this link to <a href="http://www.togethernet.ltd.uk/productprintpro-woocom
 						<td style="width: 250px;"></td>
 						</tr>
 						</th>
-						<tr><td><span><?php _e('Show featured image?', 'productprint'); ?></span></td><td><select name="productprint_ops[featured_image]"><option value='1'><?php _e('Yes', 'productprint'); ?></option><option value='0' 
+						<tr><td><span><?php _e('Show featured image?', 'productprint'); ?></span></td><td><select name="productprint_ops[featured_image]"><option value='1'><?php _e('Yes', 'productprint'); ?></option><option value='0'
 							<?php if (isset($options['featured_image']) && $options['featured_image'] == 0)
 							echo "selected='selected'"; ?>>
 							<?php _e('No', 'productprint'); ?></option></select>
@@ -541,36 +541,36 @@ Click this link to <a href="http://www.togethernet.ltd.uk/productprintpro-woocom
 						</select>
 						</td>
 						</tr>
-		
+
 				<?php // featured image width and margin settings ?>
-		
+
 					<span> <?php _e('Append either px or % to the width. The height will scale in proportion.', 'productprint'); ?> </span>
 					<tr><td><span><?php _e('Width', 'productprint'); ?></span></td><td><input type="text" name="productprint_ops[img_width]" value="<?php print $options['img_width'] ?>" /></td></tr>
 					<span> <?php _e('Append either px or % to the margin values.', 'productprint'); ?> </span>
 					<tr><td><span><?php _e('Left margin', 'productprint'); ?></span></td><td><input type="text" name="productprint_ops[img_marginleft]" value="<?php print $options['img_marginleft'] ?>" /></td></tr>
-		
+
 					<tr><td><span><?php _e('Right margin', 'productprint'); ?></span></td><td><input type="text" name="productprint_ops[img_marginright]" value="<?php print $options['img_marginright'] ?>" /></td></tr>
-		
+
 					<tr><td><span><?php _e('Top margin', 'productprint'); ?></span></td><td><input type="text" name="productprint_ops[img_margintop]" value="<?php print $options['img_margintop'] ?>" /></td></tr>
-		
+
 					<tr><td><span><?php _e('Bottom margin', 'productprint'); ?></span></td><td><input type="text" name="productprint_ops[img_marginbottom]" value="<?php print $options['img_marginbottom'] ?>" /></td></tr>
-		
-					<tr><td><span><?php _e('Show border?', 'productprint'); ?></span></td><td><select name="productprint_ops[show_border]"><option value='1'><?php _e('Yes', 'productprint'); ?></option><option value='0' 
+
+					<tr><td><span><?php _e('Show border?', 'productprint'); ?></span></td><td><select name="productprint_ops[show_border]"><option value='1'><?php _e('Yes', 'productprint'); ?></option><option value='0'
 							<?php
 						if (isset($options['show_border']) && $options['show_border'] == 0)
 							echo "selected='selected'";
 					?>>
 							<?php _e('No', 'productprint'); ?></option></select></td></tr>
 				</table>
-		
+
 				</p>
-		
+
 				<hr />
-				
+
 				<?php //Gallery Options for the plugin ?>
-		
+
 				<p>
-		
+
 				<h3><?php _e('Gallery Options', 'productprint'); ?></h3>
 					<span> <?php _e('Append either px or % to the width. The height will scale in proportion.', 'productprint'); ?> </span>
 					<table>
@@ -580,33 +580,33 @@ Click this link to <a href="http://www.togethernet.ltd.uk/productprintpro-woocom
 						<td style="width: 250px;"></td>
 						</tr>
 						</th>
-					<tr><td><span><?php _e('Show gallery?', 'productprint'); ?></span></td><td><select name="productprint_ops[gallery]"><option value='1'><?php _e('Yes', 'productprint'); ?></option><option value='0' 
+					<tr><td><span><?php _e('Show gallery?', 'productprint'); ?></span></td><td><select name="productprint_ops[gallery]"><option value='1'><?php _e('Yes', 'productprint'); ?></option><option value='0'
 							<?php if (isset($options['gallery']) && $options['gallery'] == 0)
 							echo "selected='selected'"; ?>>
 							<?php _e('No', 'productprint'); ?></option></select></td></tr>
-								
+
 					<tr><td><span><?php _e('Gallery Image Width', 'productprint'); ?></span></td><td><input type="text" name="productprint_ops[gallery_img_width]" value="<?php print $options['gallery_img_width'] ?>" /></td></tr>
-		
-					<tr><td><span><?php _e('Show borders?', 'productprint'); ?></span></td><td><select name="productprint_ops[gallery_border]"><option value='1'><?php _e('Yes', 'productprint'); ?></option><option value='0' 
+
+					<tr><td><span><?php _e('Show borders?', 'productprint'); ?></span></td><td><select name="productprint_ops[gallery_border]"><option value='1'><?php _e('Yes', 'productprint'); ?></option><option value='0'
 							<?php
 						if (isset($options['gallery_border']) && $options['gallery_border'] == 0)
 							echo "selected='selected'";
 					?>>
 							<?php _e('No', 'productprint'); ?></option></select></td></tr>
 					</table>
-		
+
 				</p>
-		
+
 				<hr />
-		
+
 				<?php //plugins font settings ?>
-		
+
 				<p>
-		
+
 				<h3><?php _e('Printer font', 'productprint'); ?></h3>
-				
-				
-				
+
+
+
 				<table>
 					<th>
 					<tr>
@@ -615,35 +615,35 @@ Click this link to <a href="http://www.togethernet.ltd.uk/productprintpro-woocom
 					</tr>
 					</th>
 					<tr><td><label><?php _e('Font Family', 'productprint'); ?></label></td><td>
-						
+
 					<select name="productprint_ops[font_family]">
-		
+
 						<option value="">-- <?php _e('font family', 'productprint'); ?> --</option>
-		
+
 						<?php foreach($fonts as $font): ?>
-		
+
 						<option value="<?php print $font; ?>" <?php print ($options['font_family'] == $font) ? 'selected="selected"' : ''; ?>>
-		
+
 							<?php print $font; ?>
-		
+
 						</option>
-		
+
 						<?php endforeach; ?>
-		
+
 					</select>
-							
+
 					</td></tr>
-								
+
 					<tr><td><span><?php _e('Font Size', 'productprint'); ?></span></td><td><input type="text" name="productprint_ops[font_size]" value="<?php print $options['font_size'] ?>" /></td></tr>
-		
+
 				</table>
-		
+
 				</p>
-		
+
 				<hr />
 
 				<?php submit_button(); ?>
-		
+
 				</form>
 			<?php } /* end of else section */ ?>
 		</div> <?php
@@ -666,14 +666,14 @@ Click this link to <a href="http://www.togethernet.ltd.uk/productprintpro-woocom
 		<a href="<?php print $nonced_url; ?>"  id="print_button_id" target="_blank" rel="nofollow" class="button print-button"><?php print (sanitize_text_field($ops['button_legend'])) ?></a>
 
 		<script type="text/javascript">
-		jQuery('document').ready(function($) 
+		jQuery('document').ready(function($)
 		{
     		if(jQuery("input[name='variation_id']"))
     		{
     		    jQuery("input[name='variation_id']" ).change(function() {
         			variationnn_id=jQuery("input[name='variation_id']" ).val();
         			//alert("variationn_id="+variationnn_id);
-        			cur_href=document.getElementById("print_button_id").href; 
+        			cur_href=document.getElementById("print_button_id").href;
         			cur_href2=cur_href.split('&variation_id');
         			cur_href=cur_href2[0];
         			document.getElementById("print_button_id").href=cur_href+"&variation_id="+variationnn_id;
