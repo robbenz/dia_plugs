@@ -674,7 +674,7 @@ class WC_Multiple_addresses {
 		}
 
 		$alt_field = array(
-			'label'    => __( '<a href="https://partsonline.diamedicalusa.com/my-account/multiple-shipping-addresses/">Edit Predefined addresses</a>', self::$plugin_slug ),
+			'label'    => __( '<a href="https://diamedicalusa.com/my-account/multiple-shipping-addresses/">Edit Predefined addresses</a>', self::$plugin_slug ),
 			'required' => false,
 			'class'    => array( 'form-row predefined-links' ),
 			'clear'    => true,
