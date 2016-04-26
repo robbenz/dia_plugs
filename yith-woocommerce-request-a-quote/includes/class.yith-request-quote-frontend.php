@@ -163,11 +163,9 @@ if ( !class_exists( 'YITH_YWRAQ_Frontend' ) ) {
                 global $product;
             }
 
-
             if ( !apply_filters( 'yith_ywraq_before_print_button', true, $product ) ) {
                 return;
             }
-
 
             $style_button = ( get_option( 'ywraq_show_btn_link' ) == 'button' ) ? 'button' : '';
 
