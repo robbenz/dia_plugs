@@ -4,8 +4,8 @@ Donate link: http://www.cozmoslabs.com/wordpress-profile-builder/
 Tags: registration, user profile, user registration, custom field registration, customize profile, user fields, extra user fields, builder, profile builder, custom user profile, user profile page, edit profile, custom registration, custom registration form, custom registration page, registration page, user custom fields, user listing, front-end user listing, user login, user registration form, front-end login, login redirect, login widget, front-end register, front-end registration, front-end edit profile, front-end user registration, custom redirects, user email, avatar upload, email confirmation, user approval, customize registration email, minimum password length, minimum password strength, password strength meter, multiple registration forms, register, register form, register user, register users, login form, member directory, redirect user
 
 Requires at least: 3.1
-Tested up to: 4.4.2
-Stable tag: 2.3.4
+Tested up to: 4.5
+Stable tag: 2.3.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -147,6 +147,11 @@ This plugin adds/removes user fields in the front-end. Both default and extra pr
 10. Profile Builder Login Widget
 
 == Changelog ==
+= 2.3.5 =
+* Fixed issue regarding password update not working in certain cases
+* Changed label for when login with username is selected
+* Fixed small css issue regarding checkboxes labels
+
 = 2.3.4 =
 * We now load the plugin translation from the current theme in the folder local_pb_lang if it exists otherwise normally from the plugin dir
 * Fixed notices regarding the 'add_meta_box' hook

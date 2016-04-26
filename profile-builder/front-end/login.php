@@ -172,6 +172,9 @@ function wppb_front_end_login( $atts ){
 		if ( isset( $wppb_generalSettings['loginWith'] ) && ( $wppb_generalSettings['loginWith'] == 'email' ) )
 			$form_args['label_username'] = __( 'Email', 'profile-builder' );
 
+        if ( isset( $wppb_generalSettings['loginWith'] ) && ( $wppb_generalSettings['loginWith'] == 'username' ) )
+            $form_args['label_username'] = __( 'Username', 'profile-builder' );
+
 		// change the label argument for username on login with username or email when Username and Email is enabled
 		if ( isset( $wppb_generalSettings['loginWith'] ) && ( $wppb_generalSettings['loginWith'] == 'usernameemail' ) )
 			$form_args['label_username'] = __( 'Username or Email', 'profile-builder' );

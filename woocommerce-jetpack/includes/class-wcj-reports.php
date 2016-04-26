@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Reports class.
  *
- * @version 2.3.0
+ * @version 2.4.7
  * @author  Algoritmika Ltd.
  */
 
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 if ( ! class_exists( 'WCJ_Reports' ) ) :
 
-class WCJ_Reports {
+class WCJ_Reports extends WCJ_Module {
 
 	/** @var string Report ID. */
 	public $report_id;
@@ -25,30 +25,33 @@ class WCJ_Reports {
 
 	/**
 	 * Constructor.
+	 *
+	 * @version 2.4.7
 	 */
 	public function __construct() {
 
-		// Main hooks
-		if ( 'yes' === get_option( 'wcj_reports_enabled' ) ) {
+		$this->id         = 'reports';
+		$this->short_desc = __( 'Reports', 'woocommerce-jetpack' );
+		$this->desc       = __( 'WooCommerce stock, sales, customers etc. reports.', 'woocommerce-jetpack' );
+		parent::__construct();
+
+		if ( $this->is_enabled() ) {
 			if ( is_admin() ) {
-				add_filter( 'woocommerce_admin_reports', 		array( $this, 'add_customers_by_country_report' ) );
-				add_filter( 'woocommerce_admin_reports', 		array( $this, 'add_stock_reports' ) );
-				add_filter( 'woocommerce_admin_reports', 		array( $this, 'add_sales_reports' ) );
-				add_action( 'init',						 		array( $this, 'catch_arguments' ) );
+
+				add_filter( 'woocommerce_admin_reports', array( $this, 'add_customers_by_country_report' ) );
+				add_filter( 'woocommerce_admin_reports', array( $this, 'add_stock_reports' ) );
+				add_filter( 'woocommerce_admin_reports', array( $this, 'add_sales_reports' ) );
+				add_action( 'init',                      array( $this, 'catch_arguments' ) );
 
 				include_once( 'reports/wcj-class-reports-customers.php' );
 				include_once( 'reports/wcj-class-reports-stock.php' );
 				include_once( 'reports/wcj-class-reports-sales.php' );
+				include_once( 'reports/wcj-class-reports-monthly-sales.php' );
 
-				add_action( 'admin_bar_menu', 					array( $this, 'add_custom_order_reports_ranges_to_admin_bar' ), PHP_INT_MAX );
-				add_action( 'admin_bar_menu', 					array( $this, 'add_custom_order_reports_ranges_by_month_to_admin_bar' ), PHP_INT_MAX );
+				add_action( 'admin_bar_menu', array( $this, 'add_custom_order_reports_ranges_to_admin_bar' ), PHP_INT_MAX );
+				add_action( 'admin_bar_menu', array( $this, 'add_custom_order_reports_ranges_by_month_to_admin_bar' ), PHP_INT_MAX );
 			}
 		}
-
-		// Settings hooks
-		add_filter( 'wcj_settings_sections', 					array( $this, 'settings_section' ) ); 			// Add section to WooCommerce > Settings > Jetpack
-		add_filter( 'wcj_settings_reports', 					array( $this, 'get_settings' ),       100 );    // Add the settings
-		add_filter( 'wcj_features_status', 						array( $this, 'add_enabled_option' ), 100 );	// Add Enable option to Jetpack Settings Dashboard
 	}
 
 	/**
@@ -158,13 +161,13 @@ class WCJ_Reports {
 					'href'  => add_query_arg( array( 'range' => 'custom', 'start_date' => date( 'Y-m-01', strtotime( '-1 month' ) ), 'end_date' => date( 'Y-m-d', strtotime( '-1 month' ) ), ) ),
 					'meta' => array( 'title' => __( 'Same Days Last Month', 'woocommerce-jetpack' ), ),
 				),
-				/*array(
+				/* array(
 					'parent' => $parent,
 					'id' => $parent . '_' . 'last_week',
 					'title' => __( 'Last Week', 'woocommerce-jetpack' ),
 					'href'  => add_query_arg( array( 'range' => 'custom', 'start_date' => date( 'Y-m-d', strtotime( 'last monday' ) ), 'end_date' => date( 'Y-m-d', strtotime( 'last sunday' ) ), ) ),
 					'meta' => array( 'title' => __( 'Last Week', 'woocommerce-jetpack' ), ),
-				),*/
+				), */
 				array(
 					'parent' => $parent,
 					'id' => $parent . '_' . 'last_year',
@@ -197,6 +200,16 @@ class WCJ_Reports {
 	}
 
 	/**
+	 * get_report_monthly_sales.
+	 * @version 2.4.7
+	 * @since   2.4.7
+	 */
+	function get_report_monthly_sales() {
+		$report = new WCJ_Reports_Monthly_Sales();
+		echo $report->get_report();
+	}
+
+	/**
 	 * get_report_stock.
 	 */
 	public function get_report_stock() {
@@ -218,7 +231,7 @@ class WCJ_Reports {
 	/**
 	 * Add reports to WooCommerce > Reports > Sales
 	 *
-	 * @version 2.3.0
+	 * @version 2.4.7
 	 * @since   2.3.0
 	 */
 	public function add_sales_reports( $reports ) {
@@ -226,8 +239,15 @@ class WCJ_Reports {
 		$reports['orders']['reports']['booster_products_sales'] = array(
 			'title'       => __( 'Booster: Product Sales', 'woocommerce-jetpack' ),
 			'description' => '',
-			'hide_title'  => true,
+			'hide_title'  => false,
 			'callback'    => array( $this, 'get_report_sales' ),
+		);
+
+		$reports['orders']['reports']['booster_monthly_sales'] = array(
+			'title'       => __( 'Booster: Monthly Sales', 'woocommerce-jetpack' ) . ' <sup>[' . __( 'Beta', 'woocommerce-jetpack' ) . ']</sup>',
+			'description' => '',
+			'hide_title'  => false,
+			'callback'    => array( $this, 'get_report_monthly_sales' ),
 		);
 
 		return $reports;
@@ -284,64 +304,86 @@ class WCJ_Reports {
 		return $reports;
 	}
 
-	/**
-	 * Add Enable option to Jetpack Settings Dashboard.
-	 */
-	public function add_enabled_option( $settings ) {
-		$all_settings = $this->get_settings();
-		$settings[] = $all_settings[1];
-		return $settings;
-	}
-
 	/*
 	 * Add the settings.
+	 *
+	 * @version 2.4.7
 	 */
 	function get_settings() {
-
-		$settings = array(
-
-			array( 'title' 	=> __( 'Reports Options', 'woocommerce-jetpack' ), 'type' => 'title', 'desc' => '', 'id' => 'wcj_reports_options' ),
-
+		$reports = array(
 			array(
-				'title' 	=> __( 'Reports', 'woocommerce-jetpack' ),
-				'desc' 		=> '<strong>' . __( 'Enable Module', 'woocommerce-jetpack' ) . '</strong>',
-				'desc_tip' 	=> __( 'WooCommerce stock, sales, customers etc. reports.', 'woocommerce-jetpack' ),
-				'id' 		=> 'wcj_reports_enabled',
-				'default'	=> 'no',
-				'type' 		=> 'checkbox'
+				'title'     => __( 'Product Sales', 'woocommerce-jetpack' ),
+				'tab'       => 'orders',
+				'tab_title' => 'Orders',
+				'report'    => 'booster_products_sales',
 			),
-
-			array( 'type' 	=> 'sectionend', 'id' => 'wcj_reports_options' ),
-
 			array(
-				'title' 	=> __( 'Available Reports', 'woocommerce-jetpack' ),
-				'type' 		=> 'title',
-				'desc' 		=> '<p>'
-							   . __( 'Booster: Customers by Country. Available in WooCommerce > Reports > Customers.', 'woocommerce-jetpack' )
-							   . '</p><p>'
-							   . __( 'Booster: Customers by Country Sets. Available in WooCommerce > Reports > Customers.', 'woocommerce-jetpack' )
-							   . '</p><p>'
-							   . __( 'Booster: All in Stock with sales data. Available in WooCommerce > Reports > Stock.', 'woocommerce-jetpack' )
-							   . '</p><p>'
-							   . __( 'Booster: Understocked products (calculated by sales data). Available in WooCommerce > Reports > Stock.', 'woocommerce-jetpack' )
-							   . '</p><p>'
-							   . __( 'Booster: Overstocked products (calculated by sales data). Available in WooCommerce > Reports > Stock.', 'woocommerce-jetpack' )
-							   . '</p>',
-				'id' 		=> 'wcj_reports_more_options'
+				'title'     => __( 'Monthly Sales (with currency conversions)', 'woocommerce-jetpack' ),
+				'tab'       => 'orders',
+				'tab_title' => 'Orders',
+				'report'    => 'booster_monthly_sales',
 			),
-
-			array( 'type' 	=> 'sectionend', 'id' => 'wcj_reports_more_options' ),
+			array(
+				'title'     => __( 'Customers by Country', 'woocommerce-jetpack' ),
+				'tab'       => 'customers',
+				'tab_title' => 'Customers',
+				'report'    => 'customers_by_country',
+			),
+			array(
+				'title'     => __( 'Customers by Country Sets', 'woocommerce-jetpack' ),
+				'tab'       => 'customers',
+				'tab_title' => 'Customers',
+				'report'    => 'customers_by_country_sets',
+			),
+			array(
+				'title'     => __( 'All in Stock with sales data', 'woocommerce-jetpack' ),
+				'tab'       => 'stock',
+				'tab_title' => 'Stock',
+				'report'    => 'on_stock',
+			),
+			array(
+				'title'     => __( 'Understocked products (calculated by sales data)', 'woocommerce-jetpack' ),
+				'tab'       => 'stock',
+				'tab_title' => 'Stock',
+				'report'    => 'understocked',
+			),
+			array(
+				'title'     => __( 'Overstocked products (calculated by sales data)', 'woocommerce-jetpack' ),
+				'tab'       => 'stock',
+				'tab_title' => 'Stock',
+				'report'    => 'overstocked',
+			),
 		);
-
-		return $settings;
-	}
-
-	/*
-	 * Add settings section to WooCommerce > Settings > Jetpack.
-	 */
-	function settings_section( $sections ) {
-		$sections['reports'] = __( 'Reports', 'woocommerce-jetpack' );
-		return $sections;
+		$settings = array(
+			array(
+				'title'     => __( 'Available Reports', 'woocommerce-jetpack' ),
+				'type'      => 'title',
+				'id'        => 'wcj_reports_more_options'
+			),
+		);
+//		$button_style = "background: red; border-color: red; box-shadow: 0 1px 0 red; text-shadow: 0 -1px 1px #a00,1px 0 1px #a00,0 1px 1px #a00,-1px 0 1px #a00;";
+		$button_style = '';
+		foreach ( $reports as $report ) {
+			$settings = array_merge( $settings, array(
+				array(
+//					'title'    => 'WooCommerce > Reports > ' . $report['tab_title'] . ' > ' . $report['title'],
+					'title'    => '[' . $report['tab_title'] . '] ' . $report['title'],
+					'id'       => 'wcj_' . $report['report'] . '_link',
+					'type'     => 'custom_link',
+					'link'     => '<a class="button-primary" '
+						. 'style="' . $button_style . '" '
+						. 'href="' . get_admin_url() . 'admin.php?page=wc-reports&tab=' . $report['tab'] . '&report=' . $report['report'] . '">'
+						. __( 'View report', 'woocommerce-jetpack' ) . '</a>',
+				),
+			) );
+		}
+		$settings = array_merge( $settings, array(
+			array(
+				'type'      => 'sectionend',
+				'id'        => 'wcj_reports_more_options',
+			),
+		) );
+		return $this->add_standard_settings( $settings );
 	}
 }
 

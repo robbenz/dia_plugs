@@ -515,8 +515,7 @@ function wpp_export( $export ) {
 		((get_option('wpp_pt_md'))? get_option( 'wpp_ph_prod_mod_date' ) .': '.$print_modified_date.'<br>':'');
 		$pt_footer = ((get_option('wpp_pt_header'))?'<br>'.get_option('wpp_ph_exp_date').': '. date("D M j G:i:s Y / O ") .' GMT
 		<br> '.get_option( 'wpp_ph_page_exported_from' ).' '.get_option('blogname').' 
-		[ <a href="'.(str_replace( array('&wpp_export=print','?wpp_export=print'), '', $_SERVER['REQUEST_URI'] )).'" target="_blank">'.get_option('siteurl').'</a> ]<hr/>
-		Product Print by <a href="http://www.gvectors.com/?wpp" target="_blank">WooCommerce PDF & Print</a> plugin.':'');
+		[ <a href="'.(str_replace( array('&wpp_export=print','?wpp_export=print'), '', $_SERVER['REQUEST_URI'] )).'" target="_blank">'.get_option('siteurl').'</a> ]<hr/>':'');
 		require( WPP_FOLDER . 'template/header/print_head.php' );
 		require( WPP_FOLDER . 'template/print.php' );
 		echo $print; 

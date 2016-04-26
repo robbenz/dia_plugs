@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Module class.
  *
- * @version 2.4.3
+ * @version 2.4.7
  * @since   2.2.0
  * @author  Algoritmika Ltd.
  */
@@ -20,6 +20,7 @@ if ( ! class_exists( 'WCJ_Module' ) ) :
 	public $desc;
 	public $parent_id; // for `submodule` only
 	public $type;      // `module` or `submodule`
+	public $link;
 
 	/**
 	 * Constructor.
@@ -88,17 +89,20 @@ if ( ! class_exists( 'WCJ_Module' ) ) :
 	/**
 	 * save_meta_box.
 	 *
-	 * @since 2.4.3
+	 * @since 2.4.5
 	 */
 	function save_meta_box( $post_id, $post ) {
 		// Check that we are saving with current metabox displayed.
 		if ( ! isset( $_POST[ 'woojetpack_' . $this->id . '_save_post' ] ) ) return;
 		// Save options
 		foreach ( $this->get_meta_box_options() as $option ) {
-			$option_value  = ( isset( $_POST[ $option['name'] ] ) ) ? $_POST[ $option['name'] ] : $option['default'];
-			$the_post_id   = ( isset( $option['product_id'] )     ) ? $option['product_id']     : $post_id;
-			$the_meta_name = ( isset( $option['meta_name'] ) )      ? $option['meta_name']  : '_' . $option['name'];
-			update_post_meta( $the_post_id, $the_meta_name, $option_value );
+			$is_enabled = ( isset( $option['enabled'] ) && 'no' === $option['enabled'] ) ? false : true;
+			if ( $is_enabled ) {
+				$option_value  = ( isset( $_POST[ $option['name'] ] ) ) ? $_POST[ $option['name'] ] : $option['default'];
+				$the_post_id   = ( isset( $option['product_id'] )     ) ? $option['product_id']     : $post_id;
+				$the_meta_name = ( isset( $option['meta_name'] ) )      ? $option['meta_name']      : '_' . $option['name'];
+				update_post_meta( $the_post_id, $the_meta_name, $option_value );
+			}
 		}
 	}
 
@@ -125,38 +129,41 @@ if ( ! class_exists( 'WCJ_Module' ) ) :
 	/**
 	 * create_meta_box.
 	 *
-	 * @since 2.4.3
+	 * @since 2.4.5
 	 */
 	function create_meta_box() {
 		$current_post_id = get_the_ID();
 		$html = '';
 		$html .= '<table>';
 		foreach ( $this->get_meta_box_options() as $option ) {
-			$the_post_id   = ( isset( $option['product_id'] ) ) ? $option['product_id'] : $current_post_id;
-			$the_meta_name = ( isset( $option['meta_name'] ) )  ? $option['meta_name']  : '_' . $option['name'];
-			$option_value = get_post_meta( $the_post_id, $the_meta_name, true );
-			$input_ending = ' id="' . $option['name'] . '" name="' . $option['name'] . '" value="' . $option_value . '">';
-			switch ( $option['type'] ) {
-				case 'number':
-					$field_html = '<input class="short" type="number"' . $input_ending;
-					break;
-				case 'price':
-					$field_html = '<input class="short wc_input_price" type="number" step="0.0001"' . $input_ending;
-					break;
-				case 'date':
-					$field_html = '<input class="input-text" display="date" type="text"' . $input_ending;
-					break;
-				case 'textarea':
-					$field_html = '<textarea style="min-width:300px;"' . ' id="' . $option['name'] . '" name="' . $option['name'] . '">' . $option_value . '</textarea>';
-					break;
+			$is_enabled = ( isset( $option['enabled'] ) && 'no' === $option['enabled'] ) ? false : true;
+			if ( $is_enabled ) {
+				$the_post_id   = ( isset( $option['product_id'] ) ) ? $option['product_id'] : $current_post_id;
+				$the_meta_name = ( isset( $option['meta_name'] ) )  ? $option['meta_name']  : '_' . $option['name'];
+				$option_value = get_post_meta( $the_post_id, $the_meta_name, true );
+				$input_ending = ' id="' . $option['name'] . '" name="' . $option['name'] . '" value="' . $option_value . '">';
+				switch ( $option['type'] ) {
+					case 'price':
+						$field_html = '<input class="short wc_input_price" type="number" step="0.0001"' . $input_ending;
+						break;
+					case 'date':
+						$field_html = '<input class="input-text" display="date" type="text"' . $input_ending;
+						break;
+					case 'textarea':
+						$field_html = '<textarea style="min-width:300px;"' . ' id="' . $option['name'] . '" name="' . $option['name'] . '">' . $option_value . '</textarea>';
+						break;
+					default:
+						$field_html = '<input class="short" type="' . $option['type'] . '"' . $input_ending;
+						break;
+				}
+				$html .= '<tr>';
+				$html .= '<th style="text-align:left;">' . $option['title'] . '</th>';
+				if ( isset( $option['desc'] ) && '' != $option['desc'] ) {
+					$html .= '<td style="font-style:italic;">' . $option['desc'] . '</td>';
+				}
+				$html .= '<td>' . $field_html . '</td>';
+				$html .= '</tr>';
 			}
-			$html .= '<tr>';
-			$html .= '<th style="text-align:left;">' . $option['title'] . '</th>';
-			if ( isset( $option['desc'] ) && '' != $option['desc'] ) {
-				$html .= '<td style="font-style:italic;">' . $option['desc'] . '</td>';
-			}
-			$html .= '<td>' . $field_html . '</td>';
-			$html .= '</tr>';
 		}
 		$html .= '</table>';
 		$html .= '<input type="hidden" name="woojetpack_' . $this->id . '_save_post" value="woojetpack_' . $this->id . '_save_post">';
@@ -350,7 +357,7 @@ if ( ! class_exists( 'WCJ_Module' ) ) :
 	/**
 	 * add_reset_settings_button.
 	 *
-	 * @version 2.4.0
+	 * @version 2.4.7
 	 * @since   2.4.0
 	 */
 	function add_reset_settings_button( $settings ) {
@@ -362,7 +369,9 @@ if ( ! class_exists( 'WCJ_Module' ) ) :
 				'id'    => 'wcj_' . $this->id . '_reset_settings_options',
 			),
 			array(
-				'title'    => __( 'Reset Module to Default Settings', 'woocommerce-jetpack' ),
+				'title'    => ( 'module' === $this->type ) ?
+					__( 'Reset Module to Default Settings', 'woocommerce-jetpack' ) :
+					__( 'Reset Submodule to Default Settings', 'woocommerce-jetpack' ),
 				'id'       => 'wcj_' . $this->id . '_reset_settings',
 				'type'     => 'custom_link',
 				'link'     => '<a class="button-primary" style="' . $reset_button_style . '" href="' . add_query_arg( 'wcj_reset_settings', $this->id, remove_query_arg( 'wcj_confirm_reset_settings' ) ) . '">' . __( 'Reset settings', 'woocommerce-jetpack' ) . '</a>',
@@ -385,9 +394,18 @@ if ( ! class_exists( 'WCJ_Module' ) ) :
 	 * settings_section.
 	 * only for `module`
 	 *
-	 * @version 2.2.7
+	 * @version 2.4.7
 	 */
 	function add_enable_module_setting( $settings, $module_desc = '' ) {
+		if ( 'module' != $this->type ) {
+			return $settings;
+		}
+		$the_link = '';
+		if ( isset( $this->link ) &&  '' != $this->link ) {
+			$the_link = ' <a class="button-primary"' .
+				' style="background: green; border-color: green; box-shadow: 0 1px 0 green; text-shadow: 0 -1px 1px #0a0,1px 0 1px #0a0,0 1px 1px #0a0,-1px 0 1px #0a0;"' .
+				' href="' . $this->link . '?source=module_documentation_button" target="_blank">' . __( 'Documentation', 'woocommerce-jetpack' ) . '</a>';
+		}
 		$enable_module_setting = array(
 			array(
 				'title' => $this->short_desc . ' ' . __( 'Module Options', 'woocommerce-jetpack' ),
@@ -398,10 +416,12 @@ if ( ! class_exists( 'WCJ_Module' ) ) :
 			array(
 				'title'    => $this->short_desc,
 				'desc'     => '<strong>' . __( 'Enable Module', 'woocommerce-jetpack' ) . '</strong>',
-				'desc_tip' => $this->desc,
+				'desc_tip' => $this->desc . $the_link,
 				'id'       => 'wcj_' . $this->id . '_enabled',
 				'default'  => 'no',
 				'type'     => 'checkbox',
+				'wcj_desc' => $this->desc,
+				'wcj_link' => ( isset( $this->link ) ? $this->link : '' ),
 			),
 			array(
 				'type' => 'sectionend',

@@ -32,7 +32,6 @@ define('SC_PRODUCTPRINT_PLUGIN_URL', WP_PLUGIN_URL . '/' . basename(SC_PRODUCTPR
 
 
 
-
 function ppp_init(){ /*** tell WordPress about the new set of options ***/
 	register_setting( 'ppp_plugin_options', 'productprint_ops', 'ppp_validate_options' );
 }

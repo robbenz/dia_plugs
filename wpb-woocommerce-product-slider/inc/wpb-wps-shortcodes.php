@@ -43,7 +43,7 @@ if( !function_exists( 'wpb_wps_shortcode' ) ):
 				$return_string .= '<figure>';			
 				$return_string .= '<a href="'.get_permalink().'" class="wpb_pro_img_url">';
 				if (has_post_thumbnail( $loop->post->ID )){
-					$return_string .= get_the_post_thumbnail($loop->post->ID,'shop_catalog_image_size', array('class' => "wpb_pro_img"));
+					$return_string .= get_the_post_thumbnail($loop->post->ID, 'shop_catalog', array('class' => "wpb_pro_img"));
 				}else{
 				    $return_string .= '<img id="place_holder_thm" src="'.woocommerce_placeholder_img_src().'" alt="Placeholder" />';
 				}
@@ -106,7 +106,7 @@ if( !function_exists('wpb_wps_feature_shortcode') ):
 				$return_string .= '<figure>';			
 				$return_string .= '<a href="'.get_permalink().'" class="wpb_pro_img_url">';
 				if (has_post_thumbnail( $loop->post->ID )){
-					$return_string .= get_the_post_thumbnail($loop->post->ID,'shop_catalog_image_size', array('class' => "wpb_pro_img"));
+					$return_string .= get_the_post_thumbnail($loop->post->ID, 'shop_catalog', array('class' => "wpb_pro_img"));
 				}else{
 				    $return_string .= '<img id="place_holder_thm" src="'.woocommerce_placeholder_img_src().'" alt="Placeholder" />';
 				}
@@ -166,7 +166,7 @@ if( !function_exists('wpb_wps_sideber_shortcode') ):
 				$return_string .= '<figure>';
 				$return_string .= '<a href="'.get_permalink().'" class="wpb_pro_img_url">';
 				if ( has_post_thumbnail( $loop->post->ID ) ){
-					$return_string .= get_the_post_thumbnail($loop->post->ID,'shop_catalog_image_size', array('class' => "wpb_pro_img"));
+					$return_string .= get_the_post_thumbnail($loop->post->ID, 'shop_catalog', array('class' => "wpb_pro_img"));
 				}else{
 				    $return_string .= '<img id="place_holder_thm" src="'.woocommerce_placeholder_img_src().'" alt="Placeholder" />';
 				}
@@ -231,7 +231,7 @@ if( !function_exists('wpb_wps_sideber_feature_shortcode') ):
 				$return_string .= '<figure>';			
 				$return_string .= '<a href="'.get_permalink().'" class="wpb_pro_img_url">';
 				if (has_post_thumbnail( $loop->post->ID )){
-					$return_string .= get_the_post_thumbnail($loop->post->ID,'shop_catalog_image_size', array('class' => "wpb_pro_img"));
+					$return_string .= get_the_post_thumbnail($loop->post->ID, 'shop_catalog', array('class' => "wpb_pro_img"));
 				}else{
 				    $return_string .= '<img id="place_holder_thm" src="'.woocommerce_placeholder_img_src().'" alt="Placeholder" />';
 				}

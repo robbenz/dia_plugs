@@ -209,6 +209,7 @@ input#send_credentials_via_email{
 	float:none;
 	min-width:0;
 	padding-left:5px;
+    width:auto;
 }
 
 .wppb-checkbox-terms-and-conditions input,

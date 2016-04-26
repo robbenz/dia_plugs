@@ -2,7 +2,7 @@
 Contributors: wpbean
 Tags: woocommerce product slider, woocommerce product gallery slider, woocommerce product slider plugin, woocommerce product slider plugin free, woocommerce featured product slider, woocommerce widget product slider, woocommerce featured products slider, multiple product slider, on sale product carousel, product, product carousel, product content slider, woocommerce product slider plugin free, product contents carousel, product rotator, product slider, products slider, responsive product slider, woo slider, woocommerce, woocommerce product carousel, WooCommerce Products, woocommerce products slider, woocommerce slider, carousel, woocommerce image slider, woocommerce responsive slider, woocommerce advance slider, best woocommerce product slider, easy woocommerce product slider, woocommerce slider free, woocommerce slider plugin, slider for woocommerce, woocommerce category slider, product slider carousel for woocommerce, woocommerce product slider and carousel plugin
 Requires at least: 3.6
-Tested up to: 4.4.1
+Tested up to: 4.5
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -15,7 +15,7 @@ Number one free WooCommerce Product slider plugin.
 The WPB WooCommerce Product slider is most popular & best free WooCommerce product slider plugin. We have thousands of active install of this plugin. If you are thinking to build a shopping site using WooCommerce, then WPB WooCommerce Product slider plugin is most required to you for taking your conversion rate to the next level.
 
 
->[Upgrade to the Pro Version Now!&raquo;](http://wpbean.com/product/wpb-woocommerce-product-slider-pro)  |  [DEMO](http://23.227.167.145/wpbean/demo1/wpb-woocommerce-product-slider-pro/)  |  [Support](http://wpbean.com/support/) |  [Documentation](http://mangotheme.com/doc/woo_pro_slider/)
+>[Upgrade to the Pro Version Now!&raquo;](http://wpbean.com/product/wpb-woocommerce-product-slider-pro)  |  [DEMO](http://demo1.wpbean.com/wpb-woocommerce-product-slider-pro/)  |  [Support](http://wpbean.com/support/) |  [Documentation](http://mangotheme.com/doc/woo_pro_slider/)
 
 See the <a href="http://wordpress.org/plugins/wpb-woo-product-slider/screenshots/">screenshots section</a> for visuals on WPB Woocommerce Product slider features.
 

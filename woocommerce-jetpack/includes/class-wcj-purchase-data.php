@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Purchase Data class.
  *
- * @version 2.2.6
+ * @version 2.4.5
  * @since   2.2.0
  * @author  Algoritmika Ltd.
  */
@@ -18,9 +18,9 @@ class WCJ_Purchase_Data extends WCJ_Module {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.2.4
+	 * @version 2.4.5
 	 */
-	public function __construct() {
+	function __construct() {
 
 		$this->id         = 'purchase_data';
 		$this->short_desc = __( 'Product Cost Price', 'woocommerce-jetpack' );
@@ -29,10 +29,8 @@ class WCJ_Purchase_Data extends WCJ_Module {
 
 		if ( $this->is_enabled() ) {
 
-			add_action( 'add_meta_boxes',    array( $this, 'add_purchase_price_meta_box' ) );
-			add_action( 'save_post_product', array( $this, 'save_purchase_price_meta_box' ), PHP_INT_MAX, 2 );
-
-			//add_action( 'init', array( $this, 'calculate_all_products_profit' ) );
+			add_action( 'add_meta_boxes',    array( $this, 'add_meta_box' ) );
+			add_action( 'save_post_product', array( $this, 'save_meta_box' ), PHP_INT_MAX, 2 );
 
 			if ( 'yes' === get_option( 'wcj_purchase_data_custom_columns_profit', 'no' ) ) {
 				add_filter( 'manage_edit-shop_order_columns',        array( $this, 'add_order_columns' ),     PHP_INT_MAX );
@@ -55,25 +53,23 @@ class WCJ_Purchase_Data extends WCJ_Module {
 	 * Output custom columns for orders
 	 *
 	 * @param   string $column
-	 * @version 2.2.6
+	 * @version 2.4.5
 	 * @since   2.2.4
+	 * @todo    forecasted profit
 	 */
-	public function render_order_columns( $column ) {
-
+	function render_order_columns( $column ) {
 		if ( 'profit' === $column ) {
 			$total_profit = 0;
 			$the_order = wc_get_order( get_the_ID() );
 			if ( 'completed' === $the_order->get_status() ) {
 				$is_forecasted = false;
 				foreach ( $the_order->get_items() as $item_id => $item ) {
-//					$product = $this->get_product_from_item( $item );
 					$the_profit = 0;
-					if ( 0 != ( $purchase_price = wc_get_product_purchase_price( $item['product_id'] ) ) ) {
+					$product_id = ( isset( $item['variation_id'] ) && 0 != $item['variation_id'] ) ? $item['variation_id'] : $item['product_id'];
+					if ( 0 != ( $purchase_price = wc_get_product_purchase_price( $product_id ) ) ) {
 						$the_profit = ( $item['line_total'] + $item['line_tax'] ) - $purchase_price * $item['qty'];
-//						$total_profit += $the_profit;
-//						echo $item['line_total'] . ' ~ ' . $purchase_price . ' ~ ' . $item['qty'];
 					} else {
-						//$the_profit = ( $item['line_total'] + $item['line_tax'] ) * 0.2;
+//						$the_profit = ( $item['line_total'] + $item['line_tax'] ) * $average_profit_margin;
 						$is_forecasted = true;
 					}
 					$total_profit += $the_profit;
@@ -88,175 +84,145 @@ class WCJ_Purchase_Data extends WCJ_Module {
 	}
 
 	/**
-	 * get_options.
+	 * get_meta_box_options.
+	 *
+	 * @version 2.4.5
+	 * @since   2.4.5
+	 * @todo    wcj_purchase_price_currency
 	 */
-	public function get_options() {
-		return array(
-			array(
-				'name'    => 'wcj_purchase_price',
-				'default' => 0,
-			),
-			array(
-				'name'    => 'wcj_purchase_price_extra',
-				'default' => 0,
-			),
-			/* array(
-				'name'    => 'wcj_purchase_price_currency',
-				'default' => '',
-			), */
-			array(
-				'name'    => 'wcj_purchase_date',
-				'default' => '',
-			),
-			array(
-				'name'    => 'wcj_purchase_partner',
-				'default' => '',
-			),
-			array(
-				'name'    => 'wcj_purchase_info',
-				'default' => '',
-			),
-		);
-	}
-
-	/**
-	 * save_purchase_price_meta_box.
-	 */
-	public function save_purchase_price_meta_box( $post_id, $post ) {
-
-		// Check that we are saving with purchase price metabox displayed.
-		if ( ! isset( $_POST['woojetpack_purchase_price_save_post'] ) )
-			return;
-
-		// Save options
-		foreach ( $this->get_options() as $option ) {
-			$option_value = isset( $_POST[ $option['name'] ] ) ? $_POST[ $option['name'] ] : $option['default'];
-			update_post_meta( $post_id, '_' . $option['name'], $option_value );
+	function get_meta_box_options() {
+		$main_product_id = get_the_ID();
+		$_product = wc_get_product( $main_product_id );
+		$products = array();
+		if ( $_product->is_type( 'variable' ) ) {
+			$available_variations = $_product->get_available_variations();
+			foreach ( $available_variations as $variation ) {
+				$variation_product = wc_get_product( $variation['variation_id'] );
+				$products[ $variation['variation_id'] ] = ' (' . $variation_product->get_formatted_variation_attributes( true ) . ')';
+			}
+		} else {
+			$products[ $main_product_id ] = '';
 		}
-	}
-
-	/**
-	 * add_purchase_price_meta_box.
-	 */
-	public function add_purchase_price_meta_box() {
-		add_meta_box(
-			'wc-jetpack-purchase-price',
-			__( 'WooCommerce Jetpack', 'woocommerce-jetpack' ) . ': ' . $this->short_desc,
-			array( $this, 'create_purchase_price_meta_box' ),
-			'product',
-			'normal',
-			'high' );
-	}
-
-	/**
-	 * create_purchase_price_meta_box.
-	 */
-	public function create_purchase_price_meta_box() {
-
-		$current_post_id = get_the_ID();
-
-		$purchase_price = 0;
-
-		$html = '';
-		$html .= '<div style="width:40%;">';
-		$html .= '<table>';
-		foreach ( $this->get_options() as $option ) {
-
-			$option_value = get_post_meta( $current_post_id, '_' . $option['name'], true );
-
-			switch ( $option['name'] ) {
-				case 'wcj_purchase_price':
-					$title = __( 'Product cost (purchase) price', 'woocommerce-jetpack' ) . ' (' . get_woocommerce_currency_symbol() . ')';
-					$field_html = '<input class="short wc_input_price" type="number" step="0.0001"';
-					break;
-				case 'wcj_purchase_price_extra':
-					$title = __( 'Extra expenses (shipping etc.)', 'woocommerce-jetpack' ) . ' (' . get_woocommerce_currency_symbol() . ')';
-					$field_html = '<input class="short wc_input_price" type="number" step="0.0001"';
-					break;
-				case 'wcj_purchase_partner':
-					$title = __( 'Seller', 'woocommerce-jetpack' );
-					$field_html = '<input class="input-text" type="text"';
-					break;
-				case 'wcj_purchase_date':
-					$title = __( '(Last) Purchase date', 'woocommerce-jetpack' );
-					$field_html = '<input class="input-text" display="date" type="text"';
-					break;
-				case 'wcj_purchase_info':
-					$title = __( 'Purchase info', 'woocommerce-jetpack' );
-					$field_html = '<textarea id="' . $option['name'] . '" name="' . $option['name'] . '">' . $option_value . '</textarea>';
-					break;
-			}
-
-			if ( 'wcj_purchase_info' != $option['name'] ) {
-				$field_html .= ' id="' . $option['name'] . '" name="' . $option['name'] . '" value="' . $option_value . '">';
-			}
-
-			if ( 'wcj_purchase_price' == $option['name']  || 'wcj_purchase_price_extra' == $option['name'] ) {
-				// Saving for later use
-				$purchase_price += $option_value;
-			}
-
-			$html .= '<tr>';
-			$html .= '<th>' . $title . '</th>';
-			$html .= '<td>' . $field_html . '</td>';
-			$html .= '</tr>';
+		$options = array();
+		foreach ( $products as $product_id => $desc ) {
+			$product_options = apply_filters( 'wcj_purchase_data_product_options', array(
+				array(
+					'name'       => 'wcj_purchase_price_' . $product_id,
+					'default'    => 0,
+					'type'       => 'price',
+					'title'      => __( 'Product cost (purchase) price', 'woocommerce-jetpack' ) . ' (' . get_woocommerce_currency_symbol() . ')',
+					'desc'       => $desc,
+					'product_id' => $product_id,
+					'meta_name'  => '_' . 'wcj_purchase_price',
+					'enabled'    => get_option( 'wcj_purchase_price_enabled', 'yes' ),
+				),
+				array(
+					'name'       => 'wcj_purchase_price_extra_' . $product_id,
+					'default'    => 0,
+					'type'       => 'price',
+					'title'      => __( 'Extra expenses (shipping etc.)', 'woocommerce-jetpack' ) . ' (' . get_woocommerce_currency_symbol() . ')',
+					'desc'       => $desc,
+					'product_id' => $product_id,
+					'meta_name'  => '_' . 'wcj_purchase_price_extra',
+					'enabled'    => get_option( 'wcj_purchase_price_extra_enabled', 'yes' ),
+				),
+				array(
+					'name'       => 'wcj_purchase_price_affiliate_commission_' . $product_id,
+					'default'    => 0,
+					'type'       => 'price',
+					'title'      => __( 'Affiliate commission', 'woocommerce-jetpack' ) . ' (' . get_woocommerce_currency_symbol() . ')',
+					'desc'       => $desc,
+					'product_id' => $product_id,
+					'meta_name'  => '_' . 'wcj_purchase_price_affiliate_commission',
+					'enabled'    => get_option( 'wcj_purchase_price_affiliate_commission_enabled', 'no' ),
+				),
+				array(
+					'name'       => 'wcj_purchase_date_' . $product_id,
+					'default'    => '',
+					'type'       => 'date',
+					'title'      => __( '(Last) Purchase date', 'woocommerce-jetpack' ),
+					'desc'       => $desc,
+					'product_id' => $product_id,
+					'meta_name'  => '_' . 'wcj_purchase_date',
+					'enabled'    => get_option( 'wcj_purchase_date_enabled', 'yes' ),
+				),
+				array(
+					'name'       => 'wcj_purchase_partner_' . $product_id,
+					'default'    => '',
+					'type'       => 'text',
+					'title'      => __( 'Seller', 'woocommerce-jetpack' ),
+					'desc'       => $desc,
+					'product_id' => $product_id,
+					'meta_name'  => '_' . 'wcj_purchase_partner',
+					'enabled'    => get_option( 'wcj_purchase_partner_enabled', 'yes' ),
+				),
+				array(
+					'name'       => 'wcj_purchase_info_' . $product_id,
+					'default'    => '',
+					'type'       => 'textarea',
+					'title'      => __( 'Purchase info', 'woocommerce-jetpack' ),
+					'desc'       => $desc,
+					'product_id' => $product_id,
+					'meta_name'  => '_' . 'wcj_purchase_info',
+					'enabled'    => get_option( 'wcj_purchase_info_enabled', 'yes' ),
+				),
+			), $product_id, $desc );
+			$options = array_merge( $options, $product_options );
 		}
-		$html .= '</table>';
-		$html .= '<input type="hidden" name="woojetpack_purchase_price_save_post" value="woojetpack_purchase_price_save_post">';
-		$html .= '</div>';
-		echo $html;
+		return $options;
+	}
 
-		if ( 0 != $purchase_price ) {
-			$the_product = wc_get_product( $current_post_id );
-			$the_price = $the_product->get_price();
-			if ( 0 != $the_price ) {
-				$html = '';
-				$html .= '<h5>' . __( 'Report', 'woocommerce-jetpack' ) . '</h5>';
-				$html .= '<table class="widefat" style="width:300px;">';
+	/**
+	 * create_meta_box.
+	 *
+	 * @version 2.4.5
+	 * @since   2.4.5
+	 * @todo    min_profit
+	 */
+	function create_meta_box() {
 
-				$html .= '<tr>';
-				$html .= '<th>';
-				$html .= __( 'Selling', 'woocommerce-jetpack' );
-				$html .= '</th>';
-				$html .= '<td>';
-				$html .= wc_price( $the_price );
-				$html .= '</td>';
-				$html .= '</tr>';
+		parent::create_meta_box();
 
-				$html .= '<tr>';
-				$html .= '<th>';
-				$html .= __( 'Buying', 'woocommerce-jetpack' );
-				$html .= '</th>';
-				$html .= '<td>';
-				$html .= wc_price( $purchase_price );
-				$html .= '</td>';
-				$html .= '</tr>';
-
-				$the_profit = $the_price - $purchase_price;
-				$html .= '<tr>';
-				$html .= '<th>';
-				$html .= __( 'Profit', 'woocommerce-jetpack' );
-				$html .= '</th>';
-				$html .= '<td>';
-				$html .= wc_price( $the_profit )
-					. sprintf( ' (%0.2f %%)', ( $the_profit / $purchase_price * 100 ) );
-					//. sprintf( ' (%0.2f %%)', ( $the_profit / $the_price * 100 ) );
-				$html .= '</td>';
-				$html .= '</tr>';
-
-				/* $the_min_profit = $purchase_price * 0.25;
-				$the_min_price = $purchase_price * 1.25;
-				$html .= '<tr>';
-				$html .= '<th>';
-				$html .= __( 'Min Profit', 'woocommerce-jetpack' );
-				$html .= '</th>';
-				$html .= '<td>';
-				$html .= wc_price( $the_min_profit ) . ' ' . __( 'at', 'woocommerce-jetpack' ) . ' ' . wc_price( $the_min_price );
-				$html .= '</td>';
-				$html .= '</tr>'; */
-
-				$html .= '</table>';
-				echo $html;
+		// Report
+		$main_product_id = get_the_ID();
+		$_product = wc_get_product( $main_product_id );
+		$products = array();
+		if ( $_product->is_type( 'variable' ) ) {
+			$available_variations = $_product->get_available_variations();
+			foreach ( $available_variations as $variation ) {
+				$variation_product = wc_get_product( $variation['variation_id'] );
+				$products[ $variation['variation_id'] ] = ' (' . $variation_product->get_formatted_variation_attributes( true ) . ')';
+			}
+		} else {
+			$products[ $main_product_id ] = '';
+		}
+		foreach ( $products as $product_id => $desc ) {
+			$purchase_price = wc_get_product_purchase_price( $product_id );
+			if ( 0 != $purchase_price ) {
+				$the_product = wc_get_product( $product_id );
+				$the_price = $the_product->get_price();
+				if ( 0 != $the_price ) {
+					$the_profit = $the_price - $purchase_price;
+					$table_data = array();
+					$table_data[] = array( __( 'Selling', 'woocommerce-jetpack' ), wc_price( $the_price ) );
+					$table_data[] = array( __( 'Buying', 'woocommerce-jetpack' ),  wc_price( $purchase_price ) );
+					$table_data[] = array( __( 'Profit', 'woocommerce-jetpack' ),  wc_price( $the_profit )
+						. sprintf( ' (%0.2f %%)', ( $the_profit / $purchase_price * 100 ) ) );
+//						. sprintf( ' (%0.2f %%)', ( $the_profit / $the_price * 100 ) ) );
+					/* $the_min_profit = $purchase_price * 0.25;
+					$the_min_price = $purchase_price * 1.25;
+					$html .= __( 'Min Profit', 'woocommerce-jetpack' );
+					$html .= wc_price( $the_min_profit ) . ' ' . __( 'at', 'woocommerce-jetpack' ) . ' ' . wc_price( $the_min_price ); */
+					$html = '';
+					$html .= '<h5>' . __( 'Report', 'woocommerce-jetpack' ) . $desc . '</h5>';
+					$html .= wcj_get_table_html( $table_data, array(
+						'table_heading_type' => 'none',
+						'table_class'        => 'widefat striped',
+						'table_style'        => 'width:50%;min-width:300px;',
+						'columns_styles'     => array( 'width:33%;' ),
+					) );
+					echo $html;
+				}
 			}
 		}
 	}
@@ -264,52 +230,80 @@ class WCJ_Purchase_Data extends WCJ_Module {
 	/**
 	 * calculate_all_products_profit.
 	 *
-	function calculate_all_products_profit() {
-		$args = array(
-			'post_type'			=> 'product',
-			'post_status' 		=> 'any',
-			'posts_per_page' 	=> -1,
-		);
-		$loop = new WP_Query( $args );
-		while ( $loop->have_posts() ) : $loop->the_post();
-
-			$current_post_id = $loop->post->ID;
-			$option_name = 'wcj_purchase_price';
-			if ( ! ( $purchase_price = get_post_meta( $current_post_id, '_' . $option_name, true ) ) )
-				$purchase_price = 0;
-
-			$the_product = wc_get_product( $current_post_id );
-			$the_price = $the_product->get_price();
-
-			if ( 0 != $purchase_price ) {
-				//echo( '<p>' );
-				/*wcj_log(
-					get_the_title()
-					. ' - '
-					. wc_price( $purchase_price )
-					. ' - '
-					. wc_price( $the_price )
-					. ' - '
-					. wc_price( $the_price - $purchase_price )
-				);*//*
-				//echo( '</p>' );
-
-				//$the_total
-			}
-
-		endwhile;
-
-		//wp_reset_query();
-		//die();
-	}
+	 * @todo
+	 */
+	/* function calculate_all_products_profit() { } */
 
 	/**
 	 * get_settings.
 	 *
-	 * @version 2.2.4
+	 * @version 2.4.5
+	 * @todo    add options to set fields and column titles
 	 */
 	function get_settings() {
 		$settings = array(
+			array(
+				'title'     => __( 'Price Fields', 'woocommerce-jetpack' ),
+				'type'      => 'title',
+				'desc'      => __( 'This fields will be added to product\'s edit page and will be included in product\'s purchase cost calculation.', 'woocommerce-jetpack' ),
+				'id'        => 'wcj_purchase_data_price_fields_options',
+			),
+			array(
+				'title'     => __( 'Product cost (purchase) price', 'woocommerce-jetpack' ),
+				'desc'      => __( 'Enable', 'woocommerce-jetpack' ),
+				'id'        => 'wcj_purchase_price_enabled',
+				'default'   => 'yes',
+				'type'      => 'checkbox',
+			),
+			array(
+				'title'     => __( 'Extra expenses (shipping etc.)', 'woocommerce-jetpack' ),
+				'desc'      => __( 'Enable', 'woocommerce-jetpack' ),
+				'id'        => 'wcj_purchase_price_extra_enabled',
+				'default'   => 'yes',
+				'type'      => 'checkbox',
+			),
+			array(
+				'title'     => __( 'Affiliate commission', 'woocommerce-jetpack' ),
+				'desc'      => __( 'Enable', 'woocommerce-jetpack' ),
+				'id'        => 'wcj_purchase_price_affiliate_commission_enabled',
+				'default'   => 'no',
+				'type'      => 'checkbox',
+			),
+			array(
+				'type'      => 'sectionend',
+				'id'        => 'wcj_purchase_data_price_fields_options',
+			),
+			array(
+				'title'     => __( 'Info Fields', 'woocommerce-jetpack' ),
+				'type'      => 'title',
+				'desc'      => __( 'This fields will be added to product\'s edit page.', 'woocommerce-jetpack' ),
+				'id'        => 'wcj_purchase_data_info_fields_options',
+			),
+			array(
+				'title'     => __( '(Last) Purchase date', 'woocommerce-jetpack' ),
+				'desc'      => __( 'Enable', 'woocommerce-jetpack' ),
+				'id'        => 'wcj_purchase_date_enabled',
+				'default'   => 'yes',
+				'type'      => 'checkbox',
+			),
+			array(
+				'title'     => __( 'Seller', 'woocommerce-jetpack' ),
+				'desc'      => __( 'Enable', 'woocommerce-jetpack' ),
+				'id'        => 'wcj_purchase_partner_enabled',
+				'default'   => 'yes',
+				'type'      => 'checkbox',
+			),
+			array(
+				'title'     => __( 'Purchase info', 'woocommerce-jetpack' ),
+				'desc'      => __( 'Enable', 'woocommerce-jetpack' ),
+				'id'        => 'wcj_purchase_info_enabled',
+				'default'   => 'yes',
+				'type'      => 'checkbox',
+			),
+			array(
+				'type'      => 'sectionend',
+				'id'        => 'wcj_purchase_data_info_fields_options',
+			),
 			array(
 				'title'     => __( 'Orders List Custom Columns', 'woocommerce-jetpack' ),
 				'type'      => 'title',
@@ -328,7 +322,7 @@ class WCJ_Purchase_Data extends WCJ_Module {
 				'id'        => 'wcj_purchase_data_custom_columns_options',
 			),
 		);
-		return $this->add_enable_module_setting( $settings );
+		return $this->add_standard_settings( $settings );
 	}
 }
 

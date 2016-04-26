@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Product Input Fields abstract class.
  *
- * @version 2.4.0
+ * @version 2.4.7
  * @author  Algoritmika Ltd.
  */
 
@@ -27,7 +27,7 @@ class WCJ_Product_Input_Fields_Abstract {
 	/**
 	 * get_options.
 	 *
-	 * @version 2.4.0
+	 * @version 2.4.7
 	 */
 	public function get_options() {
 		$options = array(
@@ -137,6 +137,23 @@ class WCJ_Product_Input_Fields_Abstract {
 			),
 
 			array(
+				'id'                => 'wcj_product_input_fields_type_datepicker_changeyear_' . $this->scope . '_',
+				'title'             => __( 'If datepicker/weekpicker is selected, set if you want to add year selector', 'woocommerce-jetpack' ),
+				'short_title'       => __( 'Datepicker/Weekpicker: Change year', 'woocommerce-jetpack' ),
+				'type'              => 'checkbox',
+				'default'           => 'no',
+			),
+
+			array(
+				'id'                => 'wcj_product_input_fields_type_datepicker_yearrange_' . $this->scope . '_',
+				'title'             => __( 'If datepicker/weekpicker is selected, and year selector is enabled, set year range here', 'woocommerce-jetpack' ),
+				'short_title'       => __( 'Datepicker/Weekpicker: Year range', 'woocommerce-jetpack' ),
+//				'desc_tip'          => __( 'The range of years displayed in the year drop-down: either relative to today\'s year ("-nn:+nn"), relative to the currently selected year ("c-nn:c+nn"), absolute ("nnnn:nnnn"), or combinations of these formats ("nnnn:-nn"). Note that this option only affects what appears in the drop-down, to restrict which dates may be selected use the minDate and/or maxDate options.', 'woocommerce-jetpack' ),
+				'type'              => 'text',
+				'default'           => 'c-10:c+10',
+			),
+
+			array(
 				'id'                => 'wcj_product_input_fields_type_datepicker_firstday_' . $this->scope . '_',
 				'title'             => __( 'If datepicker/weekpicker is selected, set first week day here', 'woocommerce-jetpack' ),
 				'short_title'       => __( 'Datepicker/Weekpicker: First week day', 'woocommerce-jetpack' ),
@@ -230,6 +247,8 @@ class WCJ_Product_Input_Fields_Abstract {
 
 	/**
 	 * output_custom_input_fields_in_admin_order.
+	 *
+	 * @version 2.4.6
 	 */
 	function output_custom_input_fields_in_admin_order( $item_id, $item, $_product ) {
 		echo '<table cellspacing="0" class="display_meta">';
@@ -250,7 +269,9 @@ class WCJ_Product_Input_Fields_Abstract {
 				//$the_value = $upload_url . '/' . $the_value;
 				//$the_value = '<img style="width:50px;" src="' . $the_value . '">'; */
 				$the_value = maybe_unserialize( $the_value );
-				$the_value = '<a href="' . add_query_arg( 'wcj_download_file', $item_id . '.' . pathinfo( $the_value['name'], PATHINFO_EXTENSION ) ) . '">' . $the_value['name'] . '</a>';
+				if ( isset( $the_value['name'] ) ) {
+					$the_value = '<a href="' . add_query_arg( 'wcj_download_file', $item_id . '.' . pathinfo( $the_value['name'], PATHINFO_EXTENSION ) ) . '">' . $the_value['name'] . '</a>';
+				}
 			} else {
 				if ( 'no' === get_option( 'wcj_product_input_fields_make_nicer_name_enabled' ) ) {
 					continue;
@@ -360,6 +381,8 @@ class WCJ_Product_Input_Fields_Abstract {
 
 	/**
 	 * validate_product_input_fields_on_add_to_cart.
+	 *
+	 * @version 2.4.5
 	 */
 	public function validate_product_input_fields_on_add_to_cart( $passed, $product_id ) {
 		$total_number = apply_filters( 'wcj_get_option_filter', 1, $this->get_value( 'wcj_' . 'product_input_fields' . '_' . $this->scope . '_total_number', $product_id, 1 ) );
@@ -393,17 +416,17 @@ class WCJ_Product_Input_Fields_Abstract {
 				}
 			}
 
-
-			if ( 'file' === $type && '' != $_FILES[ $field_name ]['name'] ) {
+			if ( 'file' === $type && isset( $_FILES[ $field_name ] ) && '' != $_FILES[ $field_name ]['name'] ) {
 				// Validate file type
-				$file_accept = $this->get_value( 'wcj_product_input_fields_type_file_accept_' . $this->scope . '_' . $i, $product_id, '' );
-				$file_accept = explode( ',', $file_accept );
-				if ( is_array( $file_accept ) && ! empty( $file_accept ) ) {
-					$file_type = '.' . pathinfo( $_FILES[ $field_name ]['name'], PATHINFO_EXTENSION );
-					if ( ! in_array( $file_type, $file_accept ) ) {
-						$passed = false;
-						wc_add_notice( __( 'Wrong file type!', 'woocommerce-jetpack' ), 'error' );
-						//wc_add_notice( $this->get_value( 'wcj_product_input_fields_wrong_file_type_msg_' . $this->scope . '_' . $i, $product_id, '' ), 'error' );
+				if ( '' != ( $file_accept = $this->get_value( 'wcj_product_input_fields_type_file_accept_' . $this->scope . '_' . $i, $product_id, '' ) ) ) {
+					$file_accept = explode( ',', $file_accept );
+					if ( is_array( $file_accept ) && ! empty( $file_accept ) ) {
+						$file_type = '.' . pathinfo( $_FILES[ $field_name ]['name'], PATHINFO_EXTENSION );
+						if ( ! in_array( $file_type, $file_accept ) ) {
+							$passed = false;
+							wc_add_notice( __( 'Wrong file type!', 'woocommerce-jetpack' ), 'error' );
+//							wc_add_notice( $this->get_value( 'wcj_product_input_fields_wrong_file_type_msg_' . $this->scope . '_' . $i, $product_id, '' ), 'error' );
+						}
 					}
 				}
 			}
@@ -415,7 +438,7 @@ class WCJ_Product_Input_Fields_Abstract {
 	/**
 	 * add_product_input_fields_to_frontend.
 	 *
-	 * @version 2.4.0
+	 * @version 2.4.7
 	 */
 	public function add_product_input_fields_to_frontend() {
 		global $product;
@@ -434,10 +457,17 @@ class WCJ_Product_Input_Fields_Abstract {
 			if ( '' == $datepicker_format ) {
 				$datepicker_format = get_option( 'date_format' );
 			}
-			$datepicker_format = wcj_date_format_php_to_js_v2( $datepicker_format );
-			$datepicker_mindate = $this->get_value( 'wcj_product_input_fields_type_datepicker_mindate_' . $this->scope . '_' . $i, $product->id, -365 );
-			$datepicker_maxdate = $this->get_value( 'wcj_product_input_fields_type_datepicker_maxdate_' . $this->scope . '_' . $i, $product->id, 365 );
-			$datepicker_firstday = $this->get_value( 'wcj_product_input_fields_type_datepicker_firstday_' . $this->scope . '_' . $i, $product->id, 0 );
+			$datepicker_format     = wcj_date_format_php_to_js_v2( $datepicker_format );
+			$datepicker_mindate    = $this->get_value( 'wcj_product_input_fields_type_datepicker_mindate_' . $this->scope . '_' . $i, $product->id, -365 );
+			$datepicker_maxdate    = $this->get_value( 'wcj_product_input_fields_type_datepicker_maxdate_' . $this->scope . '_' . $i, $product->id, 365 );
+			$datepicker_firstday   = $this->get_value( 'wcj_product_input_fields_type_datepicker_firstday_' . $this->scope . '_' . $i, $product->id, 0 );
+			$datepicker_changeyear = $this->get_value( 'wcj_product_input_fields_type_datepicker_changeyear_' . $this->scope . '_' . $i, $product->id, 'no' );
+			$datepicker_yearrange  = $this->get_value( 'wcj_product_input_fields_type_datepicker_yearrange_' . $this->scope . '_' . $i, $product->id, 'c-10:c+10' );
+			if ( 'on' === $datepicker_changeyear || 'yes' === $datepicker_changeyear ) {
+				$datepicker_year = 'changeyear="1" yearRange="' . $datepicker_yearrange . '" ';
+			} else {
+				$datepicker_year = '';
+			}
 
 			$timepicker_format = $this->get_value( 'wcj_product_input_fields_type_timepicker_format_' . $this->scope . '_' . $i, $product->id, 'hh:mm p' );
 			$timepicker_interval = $this->get_value( 'wcj_product_input_fields_type_timepicker_interval_' . $this->scope . '_' . $i, $product->id, 15 );
@@ -475,12 +505,12 @@ class WCJ_Product_Input_Fields_Abstract {
 
 					case 'datepicker':
 
-						echo '<p>' . $title . '<input firstday="' . $datepicker_firstday . '" dateformat="' . $datepicker_format . '" mindate="' . $datepicker_mindate . '" maxdate="' . $datepicker_maxdate . '" type="' . $type . '" display="date" name="' . $field_name . '" placeholder="' . $placeholder . '"' . $custom_attributes . '>' . '</p>';
+						echo '<p>' . $title . '<input ' . $datepicker_year . 'firstday="' . $datepicker_firstday . '" dateformat="' . $datepicker_format . '" mindate="' . $datepicker_mindate . '" maxdate="' . $datepicker_maxdate . '" type="' . $type . '" display="date" name="' . $field_name . '" placeholder="' . $placeholder . '"' . $custom_attributes . '>' . '</p>';
 						break;
 
 					case 'weekpicker':
 
-						echo '<p>' . $title . '<input firstday="' . $datepicker_firstday . '" dateformat="' . $datepicker_format . '" mindate="' . $datepicker_mindate . '" maxdate="' . $datepicker_maxdate . '" type="' . $type . '" display="week" name="' . $field_name . '" placeholder="' . $placeholder . '"' . $custom_attributes . '>' . '</p>';
+						echo '<p>' . $title . '<input ' . $datepicker_year . 'firstday="' . $datepicker_firstday . '" dateformat="' . $datepicker_format . '" mindate="' . $datepicker_mindate . '" maxdate="' . $datepicker_maxdate . '" type="' . $type . '" display="week" name="' . $field_name . '" placeholder="' . $placeholder . '"' . $custom_attributes . '>' . '</p>';
 						break;
 
 					case 'timepicker':
@@ -622,7 +652,7 @@ class WCJ_Product_Input_Fields_Abstract {
 	/**
 	 * Adds product input values to order details (and emails).
 	 *
-	 * @version 2.4.0
+	 * @version 2.4.7
 	 */
 	public function add_product_input_fields_to_order_item_name( $name, $item, $is_cart = false ) {
 
@@ -661,7 +691,7 @@ class WCJ_Product_Input_Fields_Abstract {
 
 				if ( 'file' === $type ) {
 					$value = maybe_unserialize( $value );
-					$value = $value['name'];
+					$value = ( isset( $value['name'] ) ) ? $value['name'] : '';
 				}
 
 				if ( '' != $value ) {

@@ -4,26 +4,30 @@
  *
  * The WooCommerce Jetpack Product Listings class.
  *
- * @class		WCJ_Product_Listings
- * @version		1.2.0
- * @category	Class
- * @author 		Algoritmika Ltd.
+ * @version 2.4.6
+ * @author  Algoritmika Ltd.
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 if ( ! class_exists( 'WCJ_Product_Listings' ) ) :
 
-class WCJ_Product_Listings {
+class WCJ_Product_Listings extends WCJ_Module {
 
 	/**
 	 * Constructor.
+	 *
+	 * @version 2.4.6
 	 */
 	public function __construct() {
-	    // Main hooks
-		if ( 'yes' === get_option( 'wcj_product_listings_enabled' ) ) {
+		$this->id         = 'product_listings';
+		$this->short_desc = __( 'Product Listings', 'woocommerce-jetpack' );
+		$this->desc       = __( 'Change WooCommerce display options for shop and category pages: show/hide categories count, exclude categories, show/hide empty categories.', 'woocommerce-jetpack' );
+		parent::__construct();
+
+		if ( $this->is_enabled() ) {
 			// Exclude and Hide Empty
-			add_filter( 'woocommerce_product_subcategories_args', 		array( $this, 'filter_subcategories' ), 100 );
+			add_filter( 'woocommerce_product_subcategories_args',       array( $this, 'filter_subcategories' ), 100 );
 			add_filter( 'woocommerce_product_subcategories_hide_empty', array( $this, 'filter_subcategories_show_empty' ), 100 );
 			// Hide Count
 			if ( 'yes' === get_option( 'wcj_product_listings_hide_cats_count_on_shop' ) || 'yes' === get_option( 'wcj_product_listings_hide_cats_count_on_archive' ) )
@@ -31,67 +35,43 @@ class WCJ_Product_Listings {
 			// Settings to "WooCommerce > Settings > Products > Product Listings"
 			add_filter( 'woocommerce_product_settings', array( $this, 'add_fields_to_woocommerce_settings' ), 100 );
 		}
-	    // Settings hooks
-	    add_filter( 'wcj_settings_sections', array( $this, 'settings_section' ) );
-	    add_filter( 'wcj_settings_product_listings', array( $this, 'get_settings' ), 100 );
-	    add_filter( 'wcj_features_status', array( $this, 'add_enabled_option' ), 100 );
-	}
-
-	/**
-	 * add_enabled_option.
-	 */
-	public function add_enabled_option( $settings ) {
-	    $all_settings = $this->get_settings();
-	    $settings[] = $all_settings[1];
-	    return $settings;
 	}
 
 	/**
 	 * get_settings.
+	 *
+	 * @version 2.4.6
 	 */
 	function get_settings() {
 
-	    $settings = array(
-
-	        array( 'title' => __( 'Product Listings Options', 'woocommerce-jetpack' ), 'type' => 'title', 'desc' => __( '', 'woocommerce-jetpack' ), 'id' => 'wcj_product_listings_options' ),
-
-	        array(
-	            'title'    => __( 'Product Listings', 'woocommerce-jetpack' ),
-	            'desc'     => '<strong>' . __( 'Enable Module', 'woocommerce-jetpack' ) . '</strong>',
-	            'desc_tip' => __( 'Change WooCommerce display options for shop and category pages: show/hide categories count, exclude categories, show/hide empty categories.', 'woocommerce-jetpack' ),
-	            'id'       => 'wcj_product_listings_enabled',
-	            'default'  => 'no',
-	            'type'     => 'checkbox',
-	        ),
-
-	        array( 'type'  => 'sectionend', 'id' => 'wcj_product_listings_options' ),
+		$settings = array(
 
 			array( 'title' => __( 'Shop Page Display Options', 'woocommerce-jetpack' ), 'type' => 'title', 'desc' => __( 'This will work only when "Shop Page Display" in "WooCommerce > Settings > Products > Product Listings" is set to "Show subcategories" or "Show both".', 'woocommerce-jetpack' ), 'id' => 'wcj_product_listings_shop_page_options' ),
 
 			array(
-	            'title'    => __( 'Categories Count', 'woocommerce-jetpack' ),
+				'title'    => __( 'Categories Count', 'woocommerce-jetpack' ),
 				'desc'	   => __( 'Hide categories count on shop page', 'woocommerce-jetpack' ),
-	            'id'       => 'wcj_product_listings_hide_cats_count_on_shop',
-	            'default'  => 'no',
-	            'type'     => 'checkbox',
-	        ),
+				'id'       => 'wcj_product_listings_hide_cats_count_on_shop',
+				'default'  => 'no',
+				'type'     => 'checkbox',
+			),
 
-	        array(
+			array(
 				'title'    => __( 'Exclude Categories', 'woocommerce-jetpack' ),
 				'desc_tip' => __(' Excludes one or more categories from the shop page. This parameter takes a comma-separated list of categories by unique ID, in ascending order. Leave blank to disable.', 'woocommerce-jetpack' ),
-	            'id'       => 'wcj_product_listings_exclude_cats_on_shop',
-	            'default'  => '',
-	            'type'     => 'text',
+				'id'       => 'wcj_product_listings_exclude_cats_on_shop',
+				'default'  => '',
+				'type'     => 'text',
 				'css'	   => 'width:50%;min-width:300px;',
-	        ),
+			),
 
-	        array(
-	            'title'    => __( 'Hide Empty', 'woocommerce-jetpack' ),
+			array(
+				'title'    => __( 'Hide Empty', 'woocommerce-jetpack' ),
 				'desc'     => __( 'Hide empty categories on shop page', 'woocommerce-jetpack' ),
-	            'id'       => 'wcj_product_listings_hide_empty_cats_on_shop',
-	            'default'  => 'yes',
-	            'type'     => 'checkbox',
-	        ),
+				'id'       => 'wcj_product_listings_hide_empty_cats_on_shop',
+				'default'  => 'yes',
+				'type'     => 'checkbox',
+			),
 
 			array(
 					'title'    => __( 'Show Products', 'woocommerce-jetpack' ),
@@ -106,31 +86,31 @@ class WCJ_Product_Listings {
 			array( 'title' => __( 'Category Display Options', 'woocommerce-jetpack' ), 'type' => 'title', 'desc' => __( 'This will work only when "Default Category Display" in "WooCommerce > Settings > Products > Product Listings" is set to "Show subcategories" or "Show both".', 'woocommerce-jetpack' ), 'id' => 'wcj_product_listings_archive_pages_options' ),
 
 			array(
-	            'title'    => __( 'Subcategories Count', 'woocommerce-jetpack' ),
+				'title'    => __( 'Subcategories Count', 'woocommerce-jetpack' ),
 				'desc'     => __( 'Hide subcategories count on category pages', 'woocommerce-jetpack' ),
-	            'id'       => 'wcj_product_listings_hide_cats_count_on_archive',
-	            'default'  => 'no',
-	            'type'     => 'checkbox',
+				'id'       => 'wcj_product_listings_hide_cats_count_on_archive',
+				'default'  => 'no',
+				'type'     => 'checkbox',
 				'custom_attributes'	=> apply_filters( 'get_wc_jetpack_plus_message', '', 'disabled' ),
 				'desc_tip'	=> apply_filters( 'get_wc_jetpack_plus_message', '', 'desc' ),
-	        ),
+			),
 
-	        array(
-	            'title'    => __( 'Exclude Subcategories', 'woocommerce-jetpack' ),
+			array(
+				'title'    => __( 'Exclude Subcategories', 'woocommerce-jetpack' ),
 				'desc_tip' => __(' Excludes one or more categories from the category (archive) pages. This parameter takes a comma-separated list of categories by unique ID, in ascending order. Leave blank to disable.', 'woocommerce-jetpack' ),
-	            'id'       => 'wcj_product_listings_exclude_cats_on_archives',
-	            'default'  => '',
-	            'type'     => 'text',
+				'id'       => 'wcj_product_listings_exclude_cats_on_archives',
+				'default'  => '',
+				'type'     => 'text',
 				'css'	   => 'width:50%;min-width:300px;',
-	        ),
+			),
 
-	        array(
-	            'title'    => __( 'Hide Empty', 'woocommerce-jetpack' ),
+			array(
+				'title'    => __( 'Hide Empty', 'woocommerce-jetpack' ),
 				'desc'     => __( 'Hide empty subcategories on category pages', 'woocommerce-jetpack' ),
-	            'id'       => 'wcj_product_listings_hide_empty_cats_on_archives',
-	            'default'  => 'yes',
-	            'type'     => 'checkbox',
-	        ),
+				'id'       => 'wcj_product_listings_hide_empty_cats_on_archives',
+				'default'  => 'yes',
+				'type'     => 'checkbox',
+			),
 
 			array(
 					'title'    => __( 'Show Products', 'woocommerce-jetpack' ),
@@ -141,17 +121,9 @@ class WCJ_Product_Listings {
 			),
 
 			array( 'type'  => 'sectionend', 'id' => 'wcj_product_listings_archive_pages_options' ),
-	    );
+		);
 
-	    return $settings;
-	}
-
-	/**
-	 * settings_section.
-	 */
-	function settings_section( $sections ) {
-	    $sections['product_listings'] = __( 'Product Listings', 'woocommerce-jetpack' );
-	    return $sections;
+		return $this->add_standard_settings( $settings );
 	}
 
 	/**

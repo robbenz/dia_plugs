@@ -1,9 +1,9 @@
 === Booster for WooCommerce ===
 Contributors: algoritmika,anbinder,solovjov
 Tags: woocommerce,booster for woocommerce,woocommerce jetpack,custom price labels,call for price,currency symbol,remove sorting,remove old product slugs,add to cart text,order number,sequential order numbering,email pdf invoice,pdf invoice,pdf invoices,already in cart,empty cart,redirect to checkout,minimum order amount,customize checkout fields,checkout fields,email,customize product tabs,product tabs,related products number,empty cart,redirect add to cart,redirect to checkout,product already in cart,custom payment gateway,payment gateway icon,auto-complete all orders,custom order statuses,custom order status,remove text from price,custom css,hide categories count,hide subcategories count,hide category count,hide subcategory count,display total sales,custom product tabs,remove product tab,payment gateway fee,vat,gateway by country,price by country,currency switcher
-Requires at least: 3.8
-Tested up to: 4.4
-Stable tag: 2.4.4
+Requires at least: 4.1
+Tested up to: 4.5
+Stable tag: 2.4.7
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -51,6 +51,7 @@ Booster for WooCommerce is a WordPress plugin that supercharges your site with a
 * *Cart* - Add custom info to WooCommerce cart page. Add empty cart button.
 * *Checkout Core Fields* - Customize WooCommerce core checkout fields. Disable/enable fields, set required, change labels and/or placeholders.
 * *Checkout Custom Fields* - Add custom fields to WooCommerce checkout page.
+* *Checkout Files Upload* - Let customers upload files on WooCommerce checkout.
 * *Checkout Custom Info* - Add custom info to WooCommerce checkout page.
 * *Empty Cart Button* - Add and customize "Empty Cart" button to cart page.
 * *Mini Cart* - Customize WooCommerce mini cart widget.
@@ -118,6 +119,74 @@ To unlock all Booster for WooCommerce features, please install additional [Boost
 1. Plugin admin area.
 
 == Changelog ==
+
+= 2.4.7 - 19/04/2016 =
+* Dev - Fixing plugin's performance issue - Version (`booster_for_woocommerce_version`) parameter added.
+* Dev - `source` parameter added to documentation link (module and dashboard).
+* Fix - PRODUCTS - Product Input Fields - File type field - Admin order view (order details) - Check for not empty file name added.
+* Dev - PRODUCTS - Product Input Fields - Datepicker/Weekpicker - Year selector and year range options added.
+* Dev - PRODUCTS - Product Tabs - Product edit metabox renamed.
+* Dev - PRODUCTS - Product Tabs - Per product tabs - Styling (in admin product edit) changed.
+* Dev - PRODUCTS - Product Tabs - Per product tabs - Default title/priority/content/conditional visibility by products/categories/tags options added.
+* Fix - CART & CHECKOUT - Checkout Files Upload - Fixed wrong "is required" validation when field is disabled.
+* Dev - CART & CHECKOUT - Checkout Files Upload - Settings field type changed from `text` to `textarea` (in all notice and main label fields).
+* Dev - CART & CHECKOUT - Checkout Files Upload - Files info added to order details and emails.
+* Dev - CART & CHECKOUT - Checkout Files Upload - Conditional visibility by products/categories/tags options added.
+* Fix - CART & CHECKOUT - Checkout Custom Fields - Name instead of value in order details and admin order view for select and radio type fields.
+* Dev - CART & CHECKOUT - Checkout Custom Fields - Datepicker/Weekpicker - Year selector and year range options added.
+* Dev - CART & CHECKOUT - Checkout Custom Fields - Documentation link added.
+* Fix - CART & CHECKOUT - Checkout Custom Info - Priority bug fixed.
+* Dev - CART & CHECKOUT - Checkout Custom Info - Documentation link added. Reset button added.
+* Fix - PAYMENT GATEWAYS - Gateways per Product or Category - Additional check added in `filter_available_payment_gateways_per_category` function. This is fixing compatibility issue with "WooCommerce Subscriptions" plugin.
+* Dev - PAYMENT GATEWAYS - Gateways per Product or Category - Documentation link added. Reset button added.
+* Dev - PDF INVOICING & PACKING SLIPS - Reset buttons added to all submodules.
+* Dev - PDF INVOICING & PACKING SLIPS - Documentation link added.
+* Dev - PDF INVOICING & PACKING SLIPS - Display & Misc. - "Actions" buttons added (and column buttons removed).
+* Dev - PDF INVOICING & PACKING SLIPS - Page Settings - Page Format - Options added.
+* Dev - PDF INVOICING & PACKING SLIPS - "Invoices Report" tool - Buttons renamed.
+* Dev - EMAILS & MISC. - EU VAT Number - Unnecessary `woocommerce_checkout_update_order_meta` filter function removed.
+* Dev - EMAILS & MISC. - EU VAT Number - VAT number info added to order details and emails.
+* Dev - EMAILS & MISC. - Reports - "Available Reports" section in admin's settings modified.
+* Dev - EMAILS & MISC. - Reports - "Booster: Monthly Sales" added.
+
+= 2.4.6 - 07/04/2016 =
+* Dev - Documentation link added to `WCJ_Module` class.
+* Dev - Functions - `wcj_current_filter_priority()` function added (affected Checkout Files Upload module).
+* Dev - BUTTON & PRICE LABELS - Add to Cart Labels - Code refactoring.
+* Dev - BUTTON & PRICE LABELS - Call for Price - Code refactoring.
+* Dev - PRODUCTS - Product Listings - Code refactoring.
+* Fix - PRODUCTS - Product Info V2 - Priority bug fixed.
+* Fix - PRODUCTS - Product Input Fields - File type field - Admin order view - Check for not empty file name added.
+* Fix - CART & CHECKOUT - Checkout Custom Fields - Admin fields edit - Styling bug fixed (full row styling added) and proper select type display added.
+* Fix - CART & CHECKOUT - Cart - Priority bug fixed.
+* Dev - CART & CHECKOUT - Cart - Documentation link added. Reset button added.
+* Fix - CART & CHECKOUT - Mini Cart - Priority bug fixed.
+* Dev - CART & CHECKOUT - Mini Cart - Documentation link added.
+* Dev - SHIPPING & ORDERS - Shipping Calculator - Code refactoring.
+* Dev - EMAILS & MISC. - Reports - Code refactoring.
+
+= 2.4.5 - 06/04/2016 =
+* Dev - `K_TCPDF_THROW_EXCEPTION_ERROR` "is defined" check added to `tcpdf_config.php` file.
+* Dev - Default type added to `WCJ_Module::create_meta_box()` (works for `text` type).
+* Fix - Shortcodes - General - `[wcj_get_left_to_free_shipping]` bug fixed.
+* Dev - Shortcodes - General - `[wcj_currency_select_link_list]` shortcode added.
+* Dev - Shortcodes - General - `[wcj_currency_select_radio_list]` shortcode added.
+* Fix - Shortcodes - Orders - `[wcj_order_checkout_field]` - `field_id` string conversion added.
+* Fix - Widgets - Multicurrency Switcher - Default title value set to blank.
+* Dev - Widgets - Multicurrency Switcher - "Switcher type" options added.
+* Fix - PRICES & CURRENCIES - Prices and Currencies by Country - Wrong currency in emails bug fixed (again).
+* Fix - PRICES & CURRENCIES - Prices and Currencies by Country - Main price empty (or Call for Price) bug fixed.
+* Dev - PRODUCTS - SKU - Description tip added to "Variable Products Variations" option.
+* Fix - PRODUCTS - Product Input Fields - File type field - "Leave blank to accept all files" bug fixed.
+* Fix - PRODUCTS - Product Input Fields - File type field - Adding from archive bug fixed.
+* Dev - PRODUCTS - Product Cost Price - "Affiliate commission" optional field added (also affected `WCJ_Product` class).
+* Dev - PRODUCTS - Product Cost Price - Options to enable/disable fields added (also affected functions in `WCJ_Module` and `WCJ_Product` classes).
+* Dev - PRODUCTS - Product Cost Price - `wcj_purchase_data_product_options` and `wcj_get_product_purchase_price` filters added (second filter added to `WCJ_Product` class).
+* Dev - PRODUCTS - Product Cost Price - Variable products support added.
+* Dev - PRODUCTS - Product Cost Price - Code refactoring.
+* Dev - CART & CHECKOUT - Checkout Custom Fields - Custom fields added to user profile and to checkout page defaults.
+* Dev - CART & CHECKOUT - Checkout Files Upload - Initial module release.
+* Dev - EMAILS & MISC. - Emails - "New order (Status)" triggers added to custom emails.
 
 = 2.4.4 - 23/03/2016 =
 * Dev - "Booster Currencies Array" (wcj-currencies.php) updated.

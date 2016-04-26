@@ -276,17 +276,16 @@ else{
 			}
 			function Footer()
 			{
-				$footer_text_1 = '[ Export product details as PDF file has been powered by ';
-				$footer_text_2 = ' WooCommerce PDF & Print ' ;
-				$footer_text_3 = ' plugin. ]';
-				$this->SetY(-10);
-				$this->SetFont('Times','I',9);
-				$this->SetTextColor(150,150,150);
-				$this->Write(6, $footer_text_1 );
-				$this->SetTextColor(130,130,130);
-				$this->Write(6, $footer_text_2, 'http://www.gvectors.com/?page=wpp' );
-				$this->SetTextColor(150,150,150);
-				$this->Write(6, $footer_text_3 );
+			//	$footer_text_1 = '[ Export product details as PDF file has been powered by ';
+			//	$footer_text_2 = ' WooCommerce PDF & Print ' ;
+			//	$footer_text_3 = ' plugin. ]';
+		//		$this->SetY(-10);
+				// $this->SetTextColor(150,150,150);
+				// $this->Write(6, $footer_text_1 );
+				// $this->SetTextColor(130,130,130);
+				//$this->Write(6, $footer_text_2, 'http://www.gvectors.com/?page=wpp' );
+				// $this->SetTextColor(150,150,150);
+				// $this->Write(6, $footer_text_3 );
 				$this->SetTextColor(50,50,50);
 				$this->Cell(0,6,'|  Page '.$this->PageNo().'/{nb}  |',0,0,'R');
 			}
