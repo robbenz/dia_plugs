@@ -47,7 +47,7 @@ if ( !class_exists( 'YITH_YWRAQ_Send_Email_Request_Quote' ) ) {
             $this->recipient = $this->get_option( 'recipient' );
 
             if ( !$this->recipient ) {
-              //  $this->recipient = get_option( 'admin_email' );
+                $this->recipient = get_option( 'admin_email' );
             }
 
             $this->enable_cc = $this->get_option( 'enable_cc' );
@@ -67,7 +67,7 @@ if ( !class_exists( 'YITH_YWRAQ_Send_Email_Request_Quote' ) ) {
             $this->raq                = $args;
             $this->raq['raq_content'] = YITH_Request_Quote()->get_raq_return();
 
-            $return = $this->send( 'rbenz@diamedicalusa.com', $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
+            $return = $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
 
             if ( $return ) {
                 YITH_Request_Quote()->clear_raq_list();
@@ -184,7 +184,7 @@ if ( !class_exists( 'YITH_YWRAQ_Send_Email_Request_Quote' ) ) {
                 'recipient'  => array(
                     'title'       => __( 'Recipient(s)', 'ywraq' ),
                     'type'        => 'text',
-                    'description' => sprintf( __( 'Enter recipients (comma separated) for this email. Defaults to <code>%s</code>', 'ywraq' ), esc_attr( get_option( '' ) ) ),
+                    'description' => sprintf( __( 'Enter recipients (comma separated) for this email. Defaults to <code>%s</code>', 'ywraq' ), esc_attr( get_option( 'admin_email' ) ) ),
                     'placeholder' => '',
                     'default'     => ''
                 ),
@@ -192,7 +192,7 @@ if ( !class_exists( 'YITH_YWRAQ_Send_Email_Request_Quote' ) ) {
                     'title'       => __( 'Send CC copy', 'ywraq' ),
                     'type'        => 'checkbox',
                     'description' => __( 'Send a carbon copy to the user', 'ywraq' ),
-                    'default'     => 'yes'
+                    'default'     => 'no'
                 ),
                 'heading'    => array(
                     'title'       => __( 'Email Heading', 'woocommerce' ),
