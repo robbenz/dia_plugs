@@ -557,6 +557,9 @@ if ( !class_exists( 'YITH_Request_Quote' ) ) {
                 if ( empty( $_POST['rqa_zip'] ) ) {
                     $errors[] = '<p>' . __( 'Please a valid Zip Code', 'ywraq' ) . '</p>';
                 }
+                if ( empty( $_POST['rqa_phone'] ) ) {
+                    $errors[] = '<p>' . __( 'Please a valid Phone Number', 'ywraq' ) . '</p>';
+                }
 
               //  if ( YITH_Request_Quote()->is_empty() ) {
               //      $errors[] = '<p>' . __( 'Your list is empty, add products to the list to send a request', 'ywraq' ) . '</p>';

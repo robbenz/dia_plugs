@@ -34,7 +34,7 @@ $facility_name = ( ! empty( $current_user ) ) ? $current_user->facility_name : '
     </p>
 
     <p class="form-row form-row-wide validate-required" id="rqa_phone_row">
-      <label for="rqa-phone" class=""><?php _e( 'Phone Number', 'ywraq' ) ?></label>
+      <label for="rqa-phone" class=""><?php _e( 'Phone Number', 'ywraq' ) ?><abbr class="required" title="required">*</abbr></label></label>
       <input type="text" class="input-text " name="rqa_phone" id="rqa-phone" placeholder="" value="<?php echo $phonenumber ?>" >
     </p>
 

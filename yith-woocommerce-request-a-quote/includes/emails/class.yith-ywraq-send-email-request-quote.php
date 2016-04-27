@@ -192,7 +192,7 @@ if ( !class_exists( 'YITH_YWRAQ_Send_Email_Request_Quote' ) ) {
                     'title'       => __( 'Send CC copy', 'ywraq' ),
                     'type'        => 'checkbox',
                     'description' => __( 'Send a carbon copy to the user', 'ywraq' ),
-                    'default'     => 'no'
+                    'default'     => 'yes'
                 ),
                 'heading'    => array(
                     'title'       => __( 'Email Heading', 'woocommerce' ),

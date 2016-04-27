@@ -120,7 +120,7 @@ if( count($raq_content) == 0):
 					    echo $product_quantity;
 					?>
 				</td>
-
+<?php if (is_user_logged_in() ): ?>
                 <td class="product-unit-price">
                     <?php
                         echo apply_filters( 'yith_ywraq_hide_price_template' , WC()->cart->get_product_price( $_product, $raq['price'] ));
@@ -132,6 +132,14 @@ if( count($raq_content) == 0):
                         echo apply_filters( 'yith_ywraq_hide_price_template' , WC()->cart->get_product_subtotal( $_product, $raq['quantity'] ));
                     ?>
                 </td>
+<?php else: ?>
+<td colspan="1.5"  class="product-unit-price">
+
+<div style="margin:0 !important; width:120px !important; float:right;" id="viewprice-detail-search"><a href="#" class="eModal-1">View Price</a></div>
+
+</td>
+<?php endif; ?>
+
 			</tr>
 
 	<?php endforeach ?>
