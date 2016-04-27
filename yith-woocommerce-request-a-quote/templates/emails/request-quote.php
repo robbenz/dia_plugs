@@ -36,7 +36,7 @@
             }
             ?>
             <tr>
-                <td scope="col" style="text-align:left; border: 1px solid #eee;"><a href="<?php echo get_edit_post_link( $_product->id )?>"><?php echo $_product->post->post_title ?></a>
+                <td scope="col" style="text-align:left; border: 1px solid #eee;"><a href="<?php echo get_edit_post_link( $_product->id )?>"><?php echo $_product->post->post_title . '<br> (# ' . $_product->get_sku(). ')' ?></a>
                  <?php  if( isset($item['variations'])): ?><small><?php echo yith_ywraq_get_product_meta($item); ?></small><?php endif ?></td>
                 <td scope="col" style="text-align:left; border: 1px solid #eee;"><?php echo $item['quantity'] ?></td>
                 <td scope="col" style="text-align:left; border: 1px solid #eee;"><?php echo WC()->cart->get_product_price( $_product, $raq['price'] ); ?></td>
