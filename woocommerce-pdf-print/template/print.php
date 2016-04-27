@@ -57,7 +57,7 @@ img{
     <td bgcolor="#FFFFFF" style="font-size:14px; color:#000000;">
 	<h1>'. $wpp_title .'</h1>
 	'.str_replace('<img ','<img style="padding:5px; border:1px solid #CCCCCC; background:#F5F5F5; float:left; margin-right:40px;" ', $wpp_featured_image).' 
-	'.(($wpp_price_html) ? '<p style="font-size:20px; color:#006600;">' .$wpp_price.'</p>
+	'.(($wpp_price_html) ? '
 	' : '').''.(($wpp_sku) ? '<p style="font-size:14px;"><b>'.get_option( 'wpp_ph_sku' ).'</b>: '.$wpp_sku.'</p>
 	' : '' ).''.(($wpp_stock) ? '<p style="font-size:14px;"><b>'.get_option( 'wpp_ph_in_stock' ).'</b>: '.$wpp_stock.'</p>
 	' : '' ).''.(($wpp_rating) ? '<p style="font-size:14px;"><b>'.get_option( 'wpp_ph_rating' ).'</b>: '.$wpp_rating.'</p>
@@ -75,17 +75,6 @@ img{
 	' : '' ).'
 	<p class=MsoNormal>&nbsp;</p>
 	<div style="clear:both"></div>
-	</td>
-  </tr>
-  <tr>
-    <td  bgcolor="#FFFFFF" style="font-size:13px; color:#000000;">
-	'.$pt_links.'
-	</td>
-  </tr>
-  <tr>
-    <td  bgcolor="#FFFFFF" style="font-size:13px; color:#000000;">
-	'.$pt_date.'
-	'.$pt_md_date.'
 	</td>
   </tr>
   <tr>
