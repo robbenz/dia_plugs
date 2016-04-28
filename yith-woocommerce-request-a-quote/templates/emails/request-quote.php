@@ -97,6 +97,13 @@
 <p><strong><?php _e( 'Name:', 'ywraq' ); ?></strong> <?php echo $raq_data['user_name'] ?></p>
 <p><strong><?php _e( 'Email:', 'ywraq' ); ?></strong> <a href="mailto:<?php echo $raq_data['user_email']; ?>"><?php echo $raq_data['user_email']; ?></a></p>
 <p><strong><?php _e( 'Facility Name:', 'ywraq' ); ?></strong> <?php echo $raq_data['facility_name'] ?></p>
+<?php if( ! empty( $raq_data['address']) ): ?>
+  <h3><?php _e( 'Mail Catalog To:', 'ywraq' ); ?></h3>
+<p><strong><?php _e( 'Address:', 'ywraq' ); ?></strong> <?php echo $raq_data['address'] ?></p>
+<p><strong><?php _e( 'City:', 'ywraq' ); ?></strong> <?php echo $raq_data['city'] ?></p>
+<p><strong><?php _e( 'State:', 'ywraq' ); ?></strong> <?php echo $raq_data['state'] ?></p>
+<?php endif ?>
 <p><strong><?php _e( 'Zip Code:', 'ywraq' ); ?></strong> <?php echo $raq_data['zipcode'] ?></p>
 <p><strong><?php _e( 'Phone Number:', 'ywraq' ); ?></strong> <?php echo $raq_data['phonenumber'] ?></p>
+
 <?php do_action( 'woocommerce_email_footer' ); ?>

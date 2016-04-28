@@ -33,15 +33,15 @@ $facility_name = ( ! empty( $current_user ) ) ? $current_user->facility_name : '
       <input type="email" class="input-text " name="rqa_email" id="rqa-email" placeholder="" value="<?php echo $user_email ?>" required>
     </p>
 
-    <p class="form-row form-row-wide validate-required" id="rqa_phone_row">
-      <label for="rqa-phone" class=""><?php _e( 'Phone Number', 'ywraq' ) ?><abbr class="required" title="required">*</abbr></label></label>
-      <input type="text" class="input-text " name="rqa_phone" id="rqa-phone" placeholder="" value="<?php echo $phonenumber ?>" >
-    </p>
-
     <p class="form-row form-row-wide validate-required" id="rqa_facility_row">
       <label for="rqa-facility" class=""><?php _e( 'Facility Name', 'ywraq' ) ?>
       <abbr class="required" title="required">*</abbr></label>
       <input type="text" class="input-text " name="rqa_facility" id="rqa-facility" placeholder="" value="<?php echo esc_attr( wp_unslash( $facility_name ) ); ?>" required>
+    </p>
+
+    <p class="form-row form-row-wide validate-required" id="rqa_phone_row">
+      <label for="rqa-phone" class=""><?php _e( 'Phone Number', 'ywraq' ) ?><abbr class="required" title="required">*</abbr></label></label>
+      <input type="text" class="input-text " name="rqa_phone" id="rqa-phone" placeholder="" value="<?php echo $phonenumber ?>" >
     </p>
 
     <p class="form-row form-row-wide validate-required" id="rqa_zip_row">
@@ -49,59 +49,65 @@ $facility_name = ( ! empty( $current_user ) ) ? $current_user->facility_name : '
       <abbr class="required" title="required">*</abbr></label>
       <input type="text" class="input-text " name="rqa_zip" id="rqa-zip" placeholder="" value="<?php echo $zipcode ?>" required>
     </p>
+    <input style="float:left; clear:both;" type="checkbox" value="<?php echo $check1 ?>" name="rqa_cat" id="rqa-cat" placeholder="" ><label for="catyesno" class=""><h5 style="margin: 0 5px; font-size:16px; "><?php _e( 'Please Mail Me A Catalog', 'ywraq' ) ?></h5></label>
+
+<div id="cat_mail">
+  <p class="form-row form-row-wide" id="rqa_address">
+    <label for="rqa-address" class=""><?php _e( 'Address', 'ywraq' ) ?></label>
+    <input type="text" class="input-text " name="rqa_address" id="rqa-address" placeholder="" value="<?php echo esc_attr( wp_unslash( $address ) ); ?>" >
+  </p>
+  <p class="form-row form-row-wide" id="rqa_city">
+    <label for="rqa-city" class=""><?php _e( 'City', 'ywraq' ) ?></label>
+    <input type="text" class="input-text " name="rqa_city" id="rqa-city" placeholder="" value="<?php echo esc_attr( wp_unslash( $city) ); ?>" >
+  </p>
+  <p class="form-row form-row-wide" id="rqa_state">
+    <label for="rqa-city" class=""><?php _e( 'State', 'ywraq' ) ?></label>
+    <input type="text" class="input-text " name="rqa_state" id="rqa-state" placeholder="" value="<?php echo esc_attr( wp_unslash( $state ) ); ?>" >
+  </p>
+</div>
 
     <div id="userRows">
-      <h3 style="margin-top:5em; display:block; width:85%;clear:both;">Additional Products</h3>
+      <h3 style="margin-top:5em; display:block;clear:both;">Additional Products</h3>
       <!-- <a href="javascript:;" id="addRow">Add Row</a><br /> -->
 
-      <p style="clear:both;" class="form-row form-row-wide validate-required" id="add_pro_PN">
+      <p style="clear:both;" class="form-row form-row-wide" id="add_pro_PN">
         <label for="rqa-part" class="">Part Number</label>
         <input type="text" class="input-text " name="rqa_part" value="<?php echo $partnumber ?>" placeholder="" id="rqa-part">
       </p>
-
-      <p class="form-row form-row-wide validate-required" id="add_pro_DS">
+      <p class="form-row form-row-wide" id="add_pro_DS">
         <label for="rqa-desc" class="">Product Name / Description</label>
         <input type="text" class="input-text " name="rqa_desc" value="<?php echo $partdesc ?>" placeholder="" id="rqa-desc" >
       </p>
-
-      <p class="form-row form-row-wide validate-required" id="add_pro_QT">
+      <p class="form-row form-row-wide" id="add_pro_QT">
         <label for="rqa-qty" class="">Quantity</label>
         <input type="text" class="input-text " name="rqa_qty" value="<?php echo $partqty ?>" placeholder="" id="rqa-qty" >
       </p>
 
-
-      <p style="clear:both;" class="form-row form-row-wide validate-required" id="add_pro_PN">
+      <p style="clear:both;" class="form-row form-row-wide" id="add_pro_PN">
         <label for="rqa-part" class="">Part Number</label>
         <input type="text" class="input-text " name="rqa_part1" value="<?php echo $partnumber1 ?>" placeholder="" id="rqa-part">
       </p>
-
-      <p class="form-row form-row-wide validate-required" id="add_pro_DS">
+      <p class="form-row form-row-wide" id="add_pro_DS">
         <label for="rqa-desc" class="">Product Name / Description</label>
         <input type="text" class="input-text " name="rqa_desc1" value="<?php echo $partdesc1 ?>" placeholder="" id="rqa-desc" >
       </p>
-
-      <p class="form-row form-row-wide validate-required" id="add_pro_QT">
+      <p class="form-row form-row-wide" id="add_pro_QT">
         <label for="rqa-qty" class="">Quantity</label>
         <input type="text" class="input-text " name="rqa_qty1" value="<?php echo $partqty1 ?>" placeholder="" id="rqa-qty" >
       </p>
 
-
-
-      <p style="clear:both;" class="form-row form-row-wide validate-required" id="add_pro_PN">
+      <p style="clear:both;" class="form-row form-row-wide" id="add_pro_PN">
         <label for="rqa-part" class="">Part Number</label>
         <input type="text" class="input-text " name="rqa_part2" value="<?php echo $partnumber2 ?>" placeholder="" id="rqa-part">
       </p>
-
-      <p class="form-row form-row-wide validate-required" id="add_pro_DS">
+      <p class="form-row form-row-wide" id="add_pro_DS">
         <label for="rqa-desc" class="">Product Name / Description</label>
         <input type="text" class="input-text " name="rqa_desc2" value="<?php echo $partdesc2 ?>" placeholder="" id="rqa-desc" >
       </p>
-
-      <p class="form-row form-row-wide validate-required" id="add_pro_QT">
+      <p class="form-row form-row-wide" id="add_pro_QT">
         <label for="rqa-qty" class="">Quantity</label>
         <input type="text" class="input-text " name="rqa_qty2" value="<?php echo $partqty2 ?>" placeholder="" id="rqa-qty" >
       </p>
-
     </div>
 
     <p style="clear:both" class="form-row" id="rqa_message_row">
