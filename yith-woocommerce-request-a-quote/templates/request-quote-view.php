@@ -123,13 +123,19 @@ if( count($raq_content) == 0):
 <?php if (is_user_logged_in() ): ?>
                 <td class="product-unit-price">
                     <?php
-                        echo apply_filters( 'yith_ywraq_hide_price_template' , WC()->cart->get_product_price( $_product, $raq['price'] ));
+
+										$benzy_price = WC()->cart->get_product_price( $_product, $raq['price'] );
+										echo str_replace("$0.00", "Preparing Quote", $benzy_price );
+
+                      //  echo apply_filters( 'yith_ywraq_hide_price_template' , WC()->cart->get_product_price( $_product, $raq['price'] ));
                     ?>
                 </td>
 
 <td class="product-subtotal">
                     <?php
-                        echo apply_filters( 'yith_ywraq_hide_price_template' , WC()->cart->get_product_subtotal( $_product, $raq['quantity'] ));
+										$sub_benzy_price = WC()->cart->get_product_subtotal( $_product, $raq['quantity'] );
+										echo str_replace("$0.00", " ", $sub_benzy_price );
+										// echo apply_filters( 'yith_ywraq_hide_price_template' , );
                     ?>
                 </td>
 <?php else: ?>

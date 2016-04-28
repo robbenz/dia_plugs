@@ -39,8 +39,18 @@
                 <td scope="col" style="text-align:left; border: 1px solid #eee;"><a href="<?php echo get_edit_post_link( $_product->id )?>"><?php echo $_product->post->post_title . '<br> (# ' . $_product->get_sku(). ')' ?></a>
                  <?php  if( isset($item['variations'])): ?><small><?php echo yith_ywraq_get_product_meta($item); ?></small><?php endif ?></td>
                 <td scope="col" style="text-align:left; border: 1px solid #eee;"><?php echo $item['quantity'] ?></td>
-                <td scope="col" style="text-align:left; border: 1px solid #eee;"><?php echo WC()->cart->get_product_price( $_product, $raq['price'] ); ?></td>
-                <td scope="col" style="text-align:left; border: 1px solid #eee;"><?php echo WC()->cart->get_product_subtotal( $_product, $item['quantity'] ); ?></td>
+                <td scope="col" style="text-align:left; border: 1px solid #eee;">
+                  <?php
+                  $send_benzy_price = WC()->cart->get_product_price( $_product, $raq['price'] );
+                  echo str_replace("$0.00", "Preparing Quote", $send_benzy_price);
+                  ?>
+                </td>
+                <td scope="col" style="text-align:left; border: 1px solid #eee;">
+                  <?php
+                  $send_benzy_sub_price = WC()->cart->get_product_subtotal( $_product, $item['quantity'] );
+                  echo str_replace("$0.00", " ", $send_benzy_sub_price);
+                  ?>
+              </td>
             </tr>
         <?php
         endforeach;
