@@ -12,15 +12,12 @@ if ( is_user_logged_in() ) {
     $current_user = get_user_by( 'id', get_current_user_id() );
 }
 
-$user_name = ( ! empty( $current_user ) ) ?  $current_user->user_firstname . ' ' . $current_user->user_lastname : '';
+$user_name = ( ! empty( $current_user ) ) ?  $current_user->shipping_first_name . " " . $current_user->shipping_last_name: '';
 
 $user_email = ( ! empty( $current_user ) ) ?  $current_user->user_email : '';
-$facility_name = ( ! empty( $current_user ) ) ? $current_user->facility_name : '';
+$facility_name = ( ! empty( $current_user ) ) ? $current_user->shipping_company : '';
 $zipcode = ( ! empty( $current_user ) ) ? $current_user->shipping_postcode : '';
 $phonenumber = ( ! empty( $current_user ) ) ? $current_user->billing_phone : '';
-
-// $city = ( ! empty( $current_user ) ) ? $current_user->shipping_city : '';
-// $address = ( ! empty( $current_user ) ) ?  $current_user->shipping_address_1 . ' ' . $current_user->shipping_address_2 : '';
 
 ?>
 <div class="yith-ywraq-mail-form-wrapper">

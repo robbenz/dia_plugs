@@ -8,17 +8,28 @@
  */
 ?>
 
-<?php  if(empty( $raq_data['partnumber']) && empty( $raq_data['partdesc']) && empty( $raq_data['partqty']) && empty( $raq_data['raq_content'] )): ?>
-
 <?php
+if(empty( $raq_data['partnumber']) && empty( $raq_data['partdesc']) && empty( $raq_data['partqty']) && empty( $raq_data['raq_content'] )):
 $catalog_header = __( 'Request A Catalog', 'ywraq' );
 do_action( 'woocommerce_email_header', $catalog_header );
 ?>
 <p><?php printf( __( 'You received a Catalog request from %s.', 'ywraq' ), $raq_data['user_name'] ); ?></p>
 
+<?php  elseif( ! empty( $raq_data['address']) ):
+  if (!empty( $raq_data['raq_content'] )|| !empty( $raq_data['partqty']) || !empty( $raq_data['partdesc']) || !empty( $raq_data['partnumber']) ) {
+$catalog_quote_header = __( 'Request A Catalog &amp; Mail Catalog', 'ywraq' );
+do_action( 'woocommerce_email_header', $catalog_quote_header );
+}
+?>
+<p><?php printf( __( 'You received a quote request from %s.', 'ywraq' ), $raq_data['user_name'] ); ?></p>
+<p><?php printf( __( '%s would also like a catalog in the mail.', 'ywraq' ), $raq_data['user_name'] ); ?></p>
+
+
+
 <?php else: ?>
 <?php do_action( 'woocommerce_email_header', $email_heading ); ?>
 <p><?php printf( __( 'You received a quote request from %s. The request is the following:', 'ywraq' ), $raq_data['user_name'] ); ?></p>
+
 <?php endif ?>
 <?php do_action( 'yith_ywraq_email_before_raq_table', $raq_data ); ?>
 
