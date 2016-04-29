@@ -24,8 +24,6 @@ if ( ! function_exists( 'is_plugin_active' ) ) {
     require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 }
 
-
-
 // This version can't be activate if premium version is active  ________________________________________
 if ( defined( 'YITH_YWRAQ_PREMIUM' ) ) {
     function yith_ywraq_install_free_admin_notice() {

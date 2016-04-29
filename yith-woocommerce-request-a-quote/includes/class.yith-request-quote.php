@@ -29,12 +29,10 @@ if ( !class_exists( 'YITH_Request_Quote' ) ) {
          */
         public $session_class;
 
-
         /**
          * Content of session
          */
         public $raq_content = array();
-
 
         /**
          * Returns single instance of the class
