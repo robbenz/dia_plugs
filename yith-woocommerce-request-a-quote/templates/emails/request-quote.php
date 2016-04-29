@@ -17,7 +17,7 @@ do_action( 'woocommerce_email_header', $catalog_header );
 
 <?php  elseif( ! empty( $raq_data['address']) ):
   if (!empty( $raq_data['raq_content'] )|| !empty( $raq_data['partqty']) || !empty( $raq_data['partdesc']) || !empty( $raq_data['partnumber']) ) {
-$catalog_quote_header = __( 'Request A Catalog &amp; Mail Catalog', 'ywraq' );
+$catalog_quote_header = __( 'Request A Quote &amp; Mail Catalog', 'ywraq' );
 do_action( 'woocommerce_email_header', $catalog_quote_header );
 }
 ?>
