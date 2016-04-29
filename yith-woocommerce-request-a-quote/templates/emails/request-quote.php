@@ -8,14 +8,23 @@
  */
 ?>
 
+<?php  if(empty( $raq_data['partnumber']) && empty( $raq_data['partdesc']) && empty( $raq_data['partqty']) && empty( $raq_data['raq_content'] )): ?>
+
+<?php
+$catalog_header = __( 'Request A Catalog', 'ywraq' );
+do_action( 'woocommerce_email_header', $catalog_header );
+?>
+<p><?php printf( __( 'You received a Catalog request from %s.', 'ywraq' ), $raq_data['user_name'] ); ?></p>
+
+<?php else: ?>
 <?php do_action( 'woocommerce_email_header', $email_heading ); ?>
-
 <p><?php printf( __( 'You received a quote request from %s. The request is the following:', 'ywraq' ), $raq_data['user_name'] ); ?></p>
-
+<?php endif ?>
 <?php do_action( 'yith_ywraq_email_before_raq_table', $raq_data ); ?>
 
-<h2><?php _e('Request Quote', 'ywraq') ?></h2>
 
+<?php if ( !empty( $raq_data['raq_content'] ) ): ?>
+<h2><?php _e('Request Quote', 'ywraq') ?></h2>
 <table cellspacing="0" cellpadding="6" style="width: 100%; border: 1px solid #eee;" border="1" bordercolor="#eee">
     <thead>
     <tr>
@@ -58,8 +67,13 @@
     ?>
     </tbody>
 </table>
+<?php endif ?>
 
 <?php do_action( 'yith_ywraq_email_after_raq_table', $raq_data ); ?>
+
+<?php  if(empty( $raq_data['partnumber']) && empty( $raq_data['partdesc']) && empty( $raq_data['partqty'])): ?>
+  <?php  echo ''; ?>
+<?php  else: ?>
 <h2><?php _e( 'Additional Products', 'ywraq' ); ?></h2>
 <table cellspacing="0" cellpadding="6" style="width: 100%; border: 1px solid #eee;" border="1" bordercolor="#eee">
   <thead>
@@ -83,15 +97,15 @@
   <td scope="col" style="text-align:left; border: 1px solid #eee;"><?php echo $raq_data['partdesc2'] ?></td>
   <td scope="col" style="text-align:left; border: 1px solid #eee;"><?php echo $raq_data['partqty2'] ?></td>
 </tr>
-
-
 </tbody>
 </table>
+<?php   endif ?>
 
 <?php if( ! empty( $raq_data['user_message']) ): ?>
 <h2><?php _e( 'Customer message', 'ywraq' ); ?></h2>
     <p><?php echo $raq_data['user_message'] ?></p>
-<?php endif ?>
+  <?php endif ?>
+
 <h2><?php _e( 'Customer details', 'ywraq' ); ?></h2>
 
 <p><strong><?php _e( 'Name:', 'ywraq' ); ?></strong> <?php echo $raq_data['user_name'] ?></p>
