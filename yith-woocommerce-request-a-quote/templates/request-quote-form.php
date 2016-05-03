@@ -52,16 +52,30 @@ $phonenumber = ( ! empty( $current_user ) ) ? $current_user->billing_phone : '';
       <abbr class="required" title="required">*</abbr></label>
       <input type="text" class="input-text " name="rqa_zip" id="rqa-zip" placeholder="" value="<?php echo $zipcode ?>" required>
     </p>
-<h4 style=" width:35%; margin-top:5px; ">Would You Like A Catalog?</h4>
+
+
+    <h4 style=" width:35%; margin-top:5px; ">Would You Like A Catalog?</h4>
+<!--
 <select style=" width:50%;">
  <option value="Select">Select One</option>
- <option name="rqa_cat" value="<?php echo $cat_sendmail ?>">Mail</option>
- <option value="<?php echo $cat_email ?>">eMail</option>
- <option name="rqa_cat" value="<?php echo $cat_both ?>">Both</option>
+ <option name="rqa_cat" value="">Mail</option>
+ <option value="">eMail</option>
+ <option name="rqa_cat" value="">Both</option>
+</select> -->
+
+<?php  $selectOption = $_POST['taskOption'];
+?>
+
+<select style=" width:50%;" name="taskOption">
+  <option name="rqa_cat_select" value="">Select One</option>
+  <option name="rqa_cat_sendmail" value="Mail">Mail</option>
+  <option name="rqa_cat_email" value="eMail">eMail</option>
+  <option name="rqa_cat_both" value="Both Mail &amp; Email">Both Mail &amp; Email</option>
 </select>
 
-  <!--  <input style="float:left; clear:both;" type="checkbox" value="<?php //echo $check1 ?>" name="rqa_cat" id="rqa-cat" placeholder="" ><label for="catyesno" class=""><h5 style="margin: 0 5px; font-size:16px; "><?php _e( 'Please Mail Me A Catalog', 'ywraq' ) ?></h5></label>
--->
+  <!--  <input style="float:left; clear:both;" type="checkbox" value="<?php //echo $check1 ?>" name="rqa_cat" id="rqa-cat" placeholder="" ><label for="catyesno" class=""><h5 style="margin: 0 5px; font-size:16px; "><?php // _e( 'Please Mail Me A Catalog', 'ywraq' ) ?></h5></label> -->
+
+
 <div id="cat_mail">
   <p class="form-row form-row-wide" id="rqa_address">
     <label for="rqa-address" class=""><?php _e( 'Address', 'ywraq' ) ?></label>
