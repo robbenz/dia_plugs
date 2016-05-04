@@ -158,9 +158,9 @@
 	$('#status').each(function () {
 
 		var then = $('#then');		
-		start_date = moment().sod();		
+		start_date = wpai_moment().sod();		
 		update = function(){
-			var duration = moment.duration({'seconds' : 1});
+			var duration = wpai_moment.duration({'seconds' : 1});
 			start_date.add(duration); 
 			
 			if ($('#process_notice').is(':visible') && ! $('.wpallimport-modal-message').is(':visible')){

@@ -124,6 +124,7 @@
 						$image_name = apply_filters("wp_all_import_image_filename", urldecode(sanitize_file_name((($img_ext) ? str_replace("." . $default_extension, "", $bn) : $bn))) . (("" != $img_ext) ? '.' . $img_ext : ''));						
 
 						$attch   = wp_all_import_get_image_from_gallery($image_name);
+						
 						$img_url = (empty($attch)) ? '' : trim(wp_get_attachment_url($attch->ID));
 						?>
 						<img src="<?php echo trim($img_url);?>" style="width:64px; margin:5px; vertical-align:top;"/>

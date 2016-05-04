@@ -52,7 +52,7 @@ class PMXI_ArrayToXML
 	            else
 	            {                
 	                // add single node.
-	                $value =  htmlspecialchars($value);
+	                $value =  htmlspecialchars(preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', ' ', $value));
 	                $xml->addChild($key, $value);
 
 	            }

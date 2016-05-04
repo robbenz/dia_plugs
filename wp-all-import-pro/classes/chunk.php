@@ -89,11 +89,7 @@ class PMXI_Chunk {
 
     if ($is_html)
     {
-      if (function_exists('stream_filter_register') and $this->options['filter']){
-        stream_filter_register('preprocessxml', 'preprocessXml_filter');
-        $path = 'php://filter/read=preprocessxml/resource=' . $this->file;   
-      }
-      else $path = $this->file;
+      $path = $this->get_file_path();
 
       $this->is_404 = true;
 
@@ -105,11 +101,8 @@ class PMXI_Chunk {
 
     if (empty($this->options['element']) or $this->options['get_cloud'])
     {      
-      if (function_exists('stream_filter_register') and $this->options['filter']){
-        stream_filter_register('preprocessxml', 'preprocessXml_filter');
-        $path = 'php://filter/read=preprocessxml/resource=' . $this->file;   
-      }
-      else $path = $this->file;
+
+      $path = $this->get_file_path();
 
       $reader = new XMLReader();
       $reader->open($path);
@@ -152,17 +145,29 @@ class PMXI_Chunk {
       }
     }                           
 
-    if (function_exists('stream_filter_register') and $this->options['filter']){
-      stream_filter_register('preprocessxml', 'preprocessXml_filter');
-      $path = 'php://filter/read=preprocessxml/resource=' . $this->file;        
-    }
-    else $path = $this->file;
+    $path = $this->get_file_path();
 
     $this->reader = new XMLReader();            
     @$this->reader->open($path);
     @$this->reader->setParserProperty(XMLReader::VALIDATE, false);
 
   }  
+
+  function get_file_path()
+  {
+    $is_enabled_stream_filter = apply_filters('wp_all_import_is_enabled_stream_filter', true);
+    if ( function_exists('stream_filter_register') and $this->options['filter'] and $is_enabled_stream_filter )
+    {
+        stream_filter_register('preprocessxml', 'preprocessXml_filter');
+        if (defined('HHVM_VERSION'))
+           $path = $this->file;
+        else
+           $path = 'php://filter/read=preprocessxml/resource=' . $this->file;
+    }
+    else $path = $this->file;
+
+    return $path;
+  }
 
   /**
    * __destruct
@@ -275,8 +280,8 @@ class preprocessXml_filter extends php_user_filter {
         {
           // the & symbol is not valid in XML, so replace it with temporary word _ampersand_
           $bucket->data = str_replace("&", "_ampersand_", $bucket->data);
-        }        
-        $bucket->data = $this->replace_colons($bucket->data);        
+          $bucket->data = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', ' ', $this->replace_colons($bucket->data));        
+        }                
         $consumed += $bucket->datalen;        
         stream_bucket_append($out, $bucket);
       }      

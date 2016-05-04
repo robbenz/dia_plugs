@@ -523,6 +523,11 @@
 	border: 1px solid #c7c7c7;
 	margin-top: 10px;
 }
+/*.wpallimport-plugin .CodeMirror-scroll {
+  height: auto;
+  overflow-y: hidden;
+  overflow-x: auto;
+}*/
 .wpallimport-plugin .wp_all_import_functions_preloader{
 	background: url("../img/preloader.gif") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
 	margin-top: 6px;
@@ -533,6 +538,15 @@
 	display: none;
 	position: relative;
 	float: right;
+}
+.wpallimport-plugin .wpallimport-free-edition-notice p{
+	color: #000 !important;
+	font-size: 1.3em !important;	
+	margin-bottom: 0;
+}
+.wpallimport-plugin .upgrade_link{
+	color: #000 !important;
+	font-size: 1.3em !important;	
 }
 .wpallimport-plugin .wp-all-import-sure-to-delete{
 	display: none;
@@ -569,6 +583,10 @@
 	color: #777;
 	margin-top: 5px;
 	font-size:20px;
+}
+.wpallimport-plugin p.wpallimport-bundle-notice{
+	margin-top: 0;
+	margin-bottom: 15px;
 }
 /*--------------------------------------------------------------------------
 *
@@ -1363,6 +1381,13 @@
 	content: "\f174";
 	color: #555;
 	margin-top: 0;
+}
+.wpallimport-plugin #custom_type_selector .dd-option .dashicon-shop_order:before,
+.wpallimport-plugin #custom_type_selector .dd-selected .dashicon-shop_order:before{
+	font-family: "WooCommerce";
+	content: "\e03d";
+	color: #555;
+	margin-top: 2px;
 }
 .wpallimport-plugin #custom_type_selector .dd-option .dashicon-cpt:before,
 .wpallimport-plugin #custom_type_selector .dd-selected .dashicon-cpt:before{

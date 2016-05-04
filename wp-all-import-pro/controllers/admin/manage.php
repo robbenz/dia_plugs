@@ -208,6 +208,10 @@ class PMXI_Admin_Manage extends PMXI_Controller_Admin {
 			@mkdir($bundle_dir);
 
 			$tpl_name = empty($import->friendly_name) ? $import->name : $import->friendly_name;
+			if (empty($tpl_name)) 
+			{
+				$tpl_name = 'Import_' . $import->id;
+			}
 			$tpl_data = array(						
 				'name' => $tpl_name,
 				'is_keep_linebreaks' => 0,

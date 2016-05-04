@@ -111,15 +111,15 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 	 */
 	public function index() {
 
-		PMXI_Plugin::$session->clean_session();
+		$action = $this->input->get('action');
 		
 		$this->data['reimported_import'] = $import = new PMXI_Import_Record();
 		$this->data['id'] = $id = $this->input->get('id');
 		$this->data['parent_import'] = $parent_import = $this->input->get('parent_import', 0);		
 		$parent_import_record = new PMXI_Import_Record();
 
-		$default = array(
-			'type' => 'upload',			
+		$DefaultOptions = array(
+			'type' => '',			
 			'wizard_type' => 'new',
 			'custom_type' => 'post',
 			'show_hidden_cpt' => 0,
@@ -139,7 +139,7 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 		);
 
 		if ($parent_import and ! $parent_import_record->getById($parent_import)->isEmpty()){
-			$default['custom_type'] = $parent_import_record->options['custom_type'];
+			$DefaultOptions['custom_type'] = $parent_import_record->options['custom_type'];
 		}
 
 		if ($id) { // update requested but corresponding import is not found
@@ -157,11 +157,20 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 
 			}
 			else{
-				$default['custom_type'] = $import->options['custom_type'];	
+				$DefaultOptions['custom_type'] = $import->options['custom_type'];	
 			}
 		}			
+
+		if ( ! in_array($action, array('index')))
+		{
+			PMXI_Plugin::$session->clean_session();				
+		}		 
+		else
+		{			
+			$DefaultOptions = (PMXI_Plugin::$session->has_session() ? PMXI_Plugin::$session->first_step : array()) + $DefaultOptions;											
+		}
 		
-		$this->data['post'] = $post = $this->input->post( $default );			
+		$this->data['post'] = $post = $this->input->post( $DefaultOptions );			
 		
 		if ( ! class_exists('DOMDocument') or ! class_exists('XMLReader') ) {
 			$this->errors->add('form-validation', __('Required PHP components are missing.<br/><br/>WP All Import requires DOMDocument, XMLReader, and XMLWriter PHP modules to be installed.<br/>These are standard features of PHP, and are necessary for WP All Import to read the files you are trying to import.<br/>Please contact your web hosting provider and ask them to install and activate the DOMDocument, XMLReader, and XMLWriter PHP modules.', 'wp_all_import_plugin'));						
@@ -219,7 +228,7 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 							$post['root_element'] = $upload_result['root_element'];
 						$post['feed_type'] = $upload_result['feed_type'];
 					}	
-				}			
+				}							
 			} 
 			elseif ('file' == $this->input->post('type')) {
 						
@@ -390,7 +399,8 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 					'action' => 'import',
 					'elements_cloud' => (!empty($elements_cloud)) ? $elements_cloud : array(),
 					'pointer' => 1,
-					'deligate' => $deligate					
+					'deligate' => $deligate,
+					'first_step' => $post					
 				);		
 				
 				// apply options from WP All Export bundle
@@ -912,7 +922,7 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 			    while ($xml = $file->read()) {					      	
 
 			    	if ( ! empty($xml) )
-			      	{			
+			      	{						      		
 			      		//PMXI_Import_Record::preprocessXml($xml);	      						      							      					      						      	
 			      		$xml = "<?xml version=\"1.0\" encoding=\"". $post['import_encoding'] ."\"?>" . "\n" . $xml;			
 			      		
@@ -952,7 +962,7 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 			$functions = $wp_uploads['basedir'] . DIRECTORY_SEPARATOR . WP_ALL_IMPORT_UPLOADS_BASE_DIRECTORY . DIRECTORY_SEPARATOR . 'functions.php';
 			if ( @file_exists($functions) )
 				require_once $functions;
-			
+
 			// validate
 			try {
 				if (empty($xml)){
@@ -1430,13 +1440,14 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 		
 		if ($this->isWizard) {			
 			$this->data['source_type'] = PMXI_Plugin::$session->source['type'];
-			$DefaultOptions = (isset(PMXI_Plugin::$session->options) ? PMXI_Plugin::$session->options : array()) + $default;
+			$DefaultOptions = (isset(PMXI_Plugin::$session->options) ? PMXI_Plugin::$session->options : array()) + $default;			
 			foreach (PMXI_Admin_Addons::get_active_addons() as $class) {
 				if (class_exists($class)) $DefaultOptions += call_user_func(array($class, "get_default_import_options"));			
 			}
 			$DefaultOptions['wizard_type'] = PMXI_Plugin::$session->wizard_type;
 			$DefaultOptions['custom_type'] = PMXI_Plugin::$session->custom_type;
 			$DefaultOptions['delimiter'] = PMXI_Plugin::$session->is_csv;
+
 			$post = $this->input->post( apply_filters('pmxi_options_options', $DefaultOptions, $this->isWizard) );
 			
 		} else {	
@@ -1714,7 +1725,7 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 			$DefaultOptions = (isset(PMXI_Plugin::$session->options) ? PMXI_Plugin::$session->options : array()) + $default;
 			foreach (PMXI_Admin_Addons::get_active_addons() as $class) {
 				if (class_exists($class)) $DefaultOptions += call_user_func(array($class, "get_default_import_options"));			
-			}
+			}			
 			if (PMXI_Plugin::$session->options['custom_type'] != 'import_users'){
 				if (empty(PMXI_Plugin::$session->options['title']))
 					$this->warnings->add('form-validation', __('<strong>Warning:</strong> your title is blank.'));
@@ -2477,6 +2488,9 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 
 		wp_cache_flush();
 
+		wp_defer_term_counting(true);
+		wp_defer_comment_counting(true);
+
 		if ( PMXI_Plugin::is_ajax() or ! $ajax_processing ) {	
 			
 			$functions  = $wp_uploads['basedir'] . DIRECTORY_SEPARATOR . WP_ALL_IMPORT_UPLOADS_BASE_DIRECTORY . DIRECTORY_SEPARATOR . 'functions.php';
@@ -2580,7 +2594,7 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 									PMXI_Plugin::$session->set('chunk_number', PMXI_Plugin::$session->chunk_number + $elements->length);
 									PMXI_Plugin::$session->save_data();
 									continue;
-								}									
+								}																
 
 								if ( ! $loop and $ajax_processing ) ob_start();								
 
@@ -2692,8 +2706,7 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 		}		
 		
 		if ( ( PMXI_Plugin::is_ajax() and empty(PMXI_Plugin::$session->local_paths) ) or ! $ajax_processing or ! empty($import->canceled) ) {
-			
-			$import->delete_source( $logger );
+						
 			$import->set(array(
 				'processing' => 0, // unlock cron requests	
 				'triggered' => 0,
@@ -2723,7 +2736,10 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 			$import->set(array(
 				'registered_on' => date('Y-m-d H:i:s'),
 				'executing' => 0
-			))->update();					
+			))->update();		
+
+			wp_defer_term_counting(false);
+			wp_defer_comment_counting(false);			
 
 			// add history log			
 			$custom_type = get_post_type_object( $import->options['custom_type'] );			
@@ -2742,6 +2758,7 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 
 			do_action( 'pmxi_after_xml_import', $import->id );
 
+			$import->delete_source( $logger );
 			$import->options['is_import_specified'] and $logger and call_user_func($logger, 'Done');	
 
 echo <<<COMPLETE

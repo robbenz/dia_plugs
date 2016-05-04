@@ -11,7 +11,7 @@ if ( ! function_exists('wp_all_import_secure_file') ){
 
 			if ( @is_dir($dir) and $remove_dir ) wp_all_import_remove_source($dir . DIRECTORY_SEPARATOR . 'index.php' );
 
-			@mkdir($dir, 0755);
+			@wp_mkdir_p($dir);
 
 			if (@is_writable($dir) and @is_dir($dir)){
 				$targetDir = $dir;					

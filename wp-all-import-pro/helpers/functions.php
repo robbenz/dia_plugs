@@ -34,6 +34,7 @@
 				if (preg_match('%jpg%i', $content_type[1])) return 'jpg';
 				if (preg_match('%png%i', $content_type[1])) return 'png';
 				if (preg_match('%gif%i', $content_type[1])) return 'gif';
+				if (preg_match('%svg%i', $content_type[1])) return 'svg';
 				return ($content_type[1] == "unknown") ? "" : $content_type[1];
 			}
 

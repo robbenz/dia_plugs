@@ -9,8 +9,8 @@
 				<table class="form-table" style="max-width:none;">
 					<tr>
 						<td>					
-							<input type="hidden" name="encoding" value="<?php echo ($isWizard) ? PMXI_Plugin::$session->encoding : $post['encoding']; ?>"/>
-							<input type="hidden" name="delimiter" value="<?php echo ($isWizard) ? PMXI_Plugin::$session->is_csv : $post['delimiter']; ?>"/>
+							<input type="hidden" name="encoding" value="<?php echo ($this->isWizard) ? PMXI_Plugin::$session->encoding : $post['encoding']; ?>"/>
+							<input type="hidden" name="delimiter" value="<?php echo ($this->isWizard) ? PMXI_Plugin::$session->is_csv : $post['delimiter']; ?>"/>
 
 							<?php $is_support_post_format = ( current_theme_supports( 'post-formats' ) && post_type_supports( $post_type, 'post-formats' ) ) ? true : false; ?>
 							

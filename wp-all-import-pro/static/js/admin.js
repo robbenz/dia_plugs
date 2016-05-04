@@ -279,7 +279,7 @@
 
 			if ($(this).attr('rel') == 'upload_type'){
 				$('input[type=file]').click();
-			}
+			}			
 			if ( ! showImportType){		
 				$('.wpallimport-choose-file').find('.wpallimport-upload-resource-step-two').slideUp();
 				$('.wpallimport-choose-file').find('.wpallimport-submit-buttons').hide();						
@@ -315,6 +315,8 @@
 
 		    var $indicator = $('.img_preloader').css({'visibility':'visible'});
 
+		    $('.wpallimport-upload-type-container[rel=url_type]').find('.wpallimport-note').find('span').hide();
+
 		    var ths = $(this);
 
 			$.ajax({
@@ -324,11 +326,7 @@
 				success: function(response) {
 
 					if (response.success){						
-						$('.wpallimport-choose-file').find('.wpallimport-upload-resource-step-two').slideDown(400, function(){
-							$('.wpallimport-choose-file').find('.wpallimport-submit-buttons').show();						
-						});						
-						$('.wpallimport-choose-file').find('input[name=downloaded]').val(window.JSON.stringify(response.upload_result));
-
+						
 						if (response.post_type)
 						{
 							var index = $('#custom_type_selector li:has(input[value="'+ response.post_type +'"])').index();
@@ -345,6 +343,20 @@
 						else
 						{
 							$('.auto-generate-template').hide();
+						}
+
+						if ( response.post_type && response.notice !== false ) {
+							var $note = $('.wpallimport-upload-type-container[rel=url_type]').find('.wpallimport-note');
+							$note.find('span').html("<div class='wpallimport-free-edition-notice'>" + response.notice + "</div>").show();							
+							$('.wpallimport-choose-file').find('.wpallimport-submit-buttons').hide();
+							$('.wpallimport-choose-file').find('.wpallimport-upload-resource-step-two').slideUp();
+							$('input[name=filepath]').val('');
+						}
+						else {
+							$('.wpallimport-choose-file').find('.wpallimport-upload-resource-step-two').slideDown(400, function(){
+								$('.wpallimport-choose-file').find('.wpallimport-submit-buttons').show();						
+							});						
+							$('.wpallimport-choose-file').find('input[name=downloaded]').val(window.JSON.stringify(response.upload_result));
 						}
 
 					}
@@ -408,28 +420,75 @@
 			width: 600,	
 			onSelected: function(selectedData){											
 
+				$('.wpallimport-upload-type-container[rel=file_type]').find('.wpallimport-note').find('span').hide();
+
 		    	if (selectedData.selectedData.value != ""){
 		    		
 		    		$('#file_selector').find('.dd-selected').css({'color':'#555'});
-
-		    		var i = 0;
+		    		
 					var filename = selectedData.selectedData.value;
 					$('#file_selector').find('.dd-option-value').each(function(){
-						if (filename == $(this).val()) return false;
-						i++;
+						if (filename == $(this).val()) return false;						
 					});
 
 					$('.wpallimport-choose-file').find('input[name=file]').val(filename);	
-										
-					$('.wpallimport-choose-file').find('.wpallimport-upload-resource-step-two').slideDown(400, function(){
-						$('.wpallimport-choose-file').find('.wpallimport-submit-buttons').show();
+
+					var request = {
+						action: 'get_bundle_post_type',		
+						security: wp_all_import_security,							
+						file: filename						
+				    };		
+				    
+					$.ajax({
+						type: 'POST',
+						url: ajaxurl,
+						data: request,
+						success: function(response) {
+
+							if (response.post_type)
+							{
+								var index = $('#custom_type_selector li:has(input[value="'+ response.post_type +'"])').index();
+								if (index != -1)
+								{
+									$('#custom_type_selector').ddslick('select', {index: index });
+									$('.auto-generate-template').css({'display':'inline-block'}).attr('rel', 'url_type');
+								}
+								else
+								{
+									$('.auto-generate-template').hide();
+								}
+							}
+
+							if (response.post_type && response.notice !== false)
+							{
+								var $note = $('.wpallimport-upload-type-container[rel=file_type]').find('.wpallimport-note');
+								$note.find('span').html("<div class='wpallimport-free-edition-notice'>" + response.notice + "</div>").show();								
+								$('.wpallimport-choose-file').find('.wpallimport-submit-buttons').hide();
+								$('.wpallimport-choose-file').find('.wpallimport-upload-resource-step-two').slideUp();								
+							}
+							else 
+							{
+								$('.wpallimport-choose-file').find('.wpallimport-upload-resource-step-two').slideDown(400, function(){
+									$('.wpallimport-choose-file').find('.wpallimport-submit-buttons').show();
+								});
+							}							
+						},
+						error: function(response) {													
+							$('.wpallimport-header').next('.clear').after(response.responseText);
+						},			
+						dataType: "json"
 					});					
+														
 		    	}
-		    	else{
-		    		$('.wpallimport-choose-file').find('input[name=file]').val('');	
-		    		$('#file_selector').find('.dd-selected').css({'color':'#cfceca'});
-		    		$('.wpallimport-choose-file').find('.wpallimport-upload-resource-step-two').slideUp();
-					$('.wpallimport-choose-file').find('.wpallimport-submit-buttons').hide();	
+		    	else
+		    	{
+		    		if ($('.wpallimport-import-from.selected').attr('rel') == 'file_type')
+		    		{
+		    			$('.wpallimport-choose-file').find('input[name=file]').val('');	
+			    		$('#file_selector').find('.dd-selected').css({'color':'#cfceca'});
+			    		$('.wpallimport-choose-file').find('.wpallimport-upload-resource-step-two').slideUp();
+						$('.wpallimport-choose-file').find('.wpallimport-submit-buttons').hide();	
+		    		}		    		
 		    	}
 		    } 
 		});
@@ -794,9 +853,9 @@
 		});		
 
 		// Clear all detected custom fields
-		$form.find('.clear_detected_cf').click(function(){			
-			if ($detected_cf.length){
-				var parent = $(this).parents('.wpallimport-collapsed-content:first');
+		$form.find('.clear_detected_cf').click(function(){
+			var parent = $(this).parents('.wpallimport-collapsed-content:first');
+			if ($detected_cf.length){				
 				for (var i = 0; i < $detected_cf.length; i++){
 					parent.find('input[name^=custom_name]:visible').each(function(){
 						if ($detected_cf[i].key == $(this).val()) $(this).parents('tr').first().remove();
@@ -1982,9 +2041,15 @@
 	        matchBrackets: true,
 	        mode: "application/x-httpd-php",
 	        indentUnit: 4,
-	        indentWithTabs: true
+	        indentWithTabs: true,
+	        lineWrapping: true
 	    });
-	    editor.setCursor(1);
+	    editor.setCursor(1);	 
+	    $('.CodeMirror').resizable({
+		  resize: function() {
+		    editor.setSize("100%", $(this).height());
+		  }
+		});   
 	}
 
     $('.wp_all_import_save_functions').click(function(){

@@ -71,7 +71,7 @@ $l10n = array(
 							<h2 style="margin-bottom: 10px;"><?php _e('First, specify previously exported file', 'wp_all_import_plugin'); ?></h2>
 							<h2 class="wp_all_import_subheadline"><?php _e('The data in this file can be modified, but the structure of the file (column/element names) should not change.', 'wp_all_import_plugin'); ?></h2>
 							<?php endif; ?>
-							<a class="wpallimport-import-from wpallimport-upload-type <?php echo ('upload' == $post['type'] and ! empty($_POST)) ? 'selected' : '' ?>" rel="upload_type" href="javascript:void(0);">
+							<a class="wpallimport-import-from wpallimport-upload-type <?php echo ('upload' == $post['type']) ? 'selected' : '' ?>" rel="upload_type" href="javascript:void(0);">
 								<span class="wpallimport-icon"></span>
 								<span class="wpallimport-icon-label"><?php _e('Upload a file', 'wp_all_import_plugin'); ?></span>
 							</a>
@@ -91,15 +91,22 @@ $l10n = array(
 							<div id="plupload-ui" class="wpallimport-file-type-options">
 					            <div>				                
 					                <input type="hidden" name="filepath" value="<?php echo $post['filepath'] ?>" id="filepath"/>
-					                <a id="select-files" href="javascript:void(0);"/><?php _e('Click here to select file from your computer...', 'wp_all_import_plugin'); ?></a>
+					                <a id="select-files" href="javascript:void(0);" <?php if (empty($post['filepath'])):?>style="display:none;"<?php endif; ?> /><?php _e('Click here to select file from your computer...', 'wp_all_import_plugin'); ?></a>
 					                <div id="progressbar" class="wpallimport-progressbar">
-					                	
+					                	<?php if (!empty($post['filepath'])):?>
+					                	<span><?php _e('Upload Complete', 'wp_all_import_plugin');?></span> - <?php echo basename($post['filepath']); ?>
+					                	<?php endif; ?>
 					                </div>
-					                <div id="progress" class="wpallimport-progress">
+					                <div id="progress" class="wpallimport-progress" <?php if (!empty($post['filepath'])):?>style="visibility: visible; display: block;"<?php endif; ?>>
+					                	<?php if (!empty($post['filepath'])):?>
+					                	<div class="wpallimport-upload-process ui-progressbar ui-widget ui-widget-content ui-corner-all" id="upload_process" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><div class="ui-progressbar-value ui-widget-header ui-corner-left ui-corner-right" style="width: 100%;"></div></div>
+					                	<?php else: ?>
 					                	<div id="upload_process" class="wpallimport-upload-process"></div>				                	
+					                	<?php endif; ?>
 					                </div>
 					            </div>
 					        </div>
+					        <div class="wpallimport-note" style="margin: 0 auto; font-size: 13px;"><span></span></div>		
 						</div>
 						<div class="wpallimport-upload-type-container" rel="url_type">						
 							<div class="wpallimport-file-type-options">
@@ -110,9 +117,10 @@ $l10n = array(
 							</div>
 							<div class="wpallimport-note" style="margin: 20px auto 0; font-size: 13px;">
 								<?php _e('<strong>Hint:</strong> After you create this import, you can schedule it to run automatically, on a pre-defined schedule, with cron jobs. If anything in your file has changed, WP All Import can update your site with the changed data automatically.', 'wp_all_import_plugin'); ?>
+								<span></span>
 							</div>
-							<input type="hidden" name="downloaded" value="<?php echo $post['downloaded']; ?>"/>
-							<input type="hidden" name="template" value="<?php echo $post['template']; ?>"/>
+							<input type="hidden" name="downloaded" value="<?php echo esc_attr($post['downloaded']); ?>"/>
+							<input type="hidden" name="template" value="<?php echo esc_attr($post['template']); ?>"/>
 						</div>
 						<div class="wpallimport-upload-type-container" rel="file_type">			
 							<?php $upload_dir = wp_upload_dir(); ?>					
@@ -158,6 +166,7 @@ $l10n = array(
 								
 								<div class="wpallimport-note" style="margin: 0 auto; font-size: 13px;">
 									<?php printf(__('Upload files to <strong>%s</strong> and they will appear in this list', 'wp_all_import_plugin'), $upload_dir['basedir'] . $files_directory) ?>
+									<span></span>
 								</div>
 							</div>
 						</div>		
@@ -188,7 +197,7 @@ $l10n = array(
 									
 									$custom_types = get_post_types(array('_builtin' => true), 'objects') + get_post_types(array('_builtin' => false, 'show_ui' => true), 'objects'); 
 									foreach ($custom_types as $key => $ct) {
-										if (in_array($key, array('attachment', 'revision', 'nav_menu_item'))) unset($custom_types[$key]);
+										if (in_array($key, array('attachment', 'revision', 'nav_menu_item', 'shop_coupon'))) unset($custom_types[$key]);
 									}
 									$custom_types = apply_filters( 'pmxi_custom_types', $custom_types );
 
@@ -212,13 +221,31 @@ $l10n = array(
 									</div>
 									<select name="custom_type_selector" id="custom_type_selector" class="wpallimport-post-types">								
 										<?php if ( ! empty($custom_types)): ?>							
-											<?php foreach ($custom_types as $key => $cpt) :?>	
+											<?php foreach ($custom_types as $key => $ct) :?>	
 												<?php 
 													$image_src = 'dashicon-cpt';
-													if (  in_array($key, array('post', 'page', 'product', 'import_users') ) )
-														$image_src = 'dashicon-' . $key;										
+
+													$cpt = $key;
+													$cpt_label = $ct->labels->name;
+
+													if (class_exists('WooCommerce'))
+													{
+														if ($key == 'product')
+														{
+															$cpt = 'shop_order';
+															$cpt_label = $custom_types['shop_order']->labels->name;
+														}
+														elseif($key == 'shop_order')
+														{
+															$cpt = 'product';
+															$cpt_label = $custom_types['product']->labels->name;
+														}
+													}
+												
+													if (  in_array($cpt, array('post', 'page', 'product', 'import_users', 'shop_order') ) )
+														$image_src = 'dashicon-' . $cpt;										
 												?>
-											<option value="<?php echo $key; ?>" data-imagesrc="dashicon <?php echo $image_src; ?>"><?php echo $cpt->labels->name; ?></option>
+											<option value="<?php echo $cpt; ?>" data-imagesrc="dashicon <?php echo $image_src; ?>" <?php if ( $cpt == $post['custom_type'] ):?>selected="selected"<?php endif; ?>><?php echo $cpt_label; ?></option>
 											<?php endforeach; ?>
 										<?php endif; ?>
 										<?php if ( ! empty($hidden_post_types)): ?>							

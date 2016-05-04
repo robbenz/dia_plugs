@@ -40,7 +40,10 @@ class PMXI_Config implements IteratorAggregate {
 			$filePath = realpath($filePath);
 			if ($filePath and ! in_array($filePath, $this->loaded)) {
 				require $filePath;
-				
+				//handle unc paths for the anonymous function
+				if(substr($filePath, 0, 2) == "\\\\"){
+					$filePath = str_replace('\\','\\\\',$filePath);
+				}
 				$sandbox = create_function('', "require '$filePath'; if(array_keys(get_defined_vars()) != array('config')) return array(); return \$config;");
 				$config = $sandbox();
 				$this->loaded[] = $filePath;
