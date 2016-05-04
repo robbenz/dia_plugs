@@ -23,8 +23,6 @@ do_action( 'woocommerce_email_header', $catalog_quote_header );
 ?>
 <p><?php printf( __( 'You received a quote request from %s.', 'ywraq' ), $raq_data['user_name'] ); ?></p>
 
-
-
 <?php else: ?>
 <?php do_action( 'woocommerce_email_header', $email_heading ); ?>
 <p><?php printf( __( 'You received a quote request from %s. The request is the following:', 'ywraq' ), $raq_data['user_name'] ); ?></p>
