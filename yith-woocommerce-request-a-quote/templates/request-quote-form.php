@@ -63,7 +63,7 @@ $phonenumber = ( ! empty( $current_user ) ) ? $current_user->billing_phone : '';
  <option name="rqa_cat" value="">Both</option>
 </select> -->
 
-<?php  $selectOption = $_POST['taskOption'];
+<?php // $selectOption = $_POST['taskOption'];
 ?>
 
 <select style=" width:50%;" name="taskOption">
@@ -93,7 +93,7 @@ $phonenumber = ( ! empty( $current_user ) ) ? $current_user->billing_phone : '';
 
     <div id="userRows">
       <h3 style="margin-top:5em; display:block;clear:both;">Additional Products</h3>
-      <!-- <a href="javascript:;" id="addRow">Add Row</a><br /> -->
+ <a href="javascript:;" id="addRow">Add Row</a><br />
 
       <p style="clear:both;" class="form-row form-row-wide" id="add_pro_PN">
         <label for="rqa-part" class="">Part Number</label>
@@ -108,7 +108,7 @@ $phonenumber = ( ! empty( $current_user ) ) ? $current_user->billing_phone : '';
         <input type="text" class="input-text " name="rqa_qty" value="<?php echo $partqty ?>" placeholder="" id="rqa-qty" >
       </p>
 
-      <p style="clear:both;" class="form-row form-row-wide" id="add_pro_PN">
+    <!--  <p style="clear:both;" class="form-row form-row-wide" id="add_pro_PN">
         <label for="rqa-part" class="">Part Number</label>
         <input type="text" class="input-text " name="rqa_part1" value="<?php echo $partnumber1 ?>" placeholder="" id="rqa-part">
       </p>
@@ -132,7 +132,7 @@ $phonenumber = ( ! empty( $current_user ) ) ? $current_user->billing_phone : '';
       <p class="form-row form-row-wide" id="add_pro_QT">
         <label for="rqa-qty" class="">Quantity</label>
         <input type="text" class="input-text " name="rqa_qty2" value="<?php echo $partqty2 ?>" placeholder="" id="rqa-qty" >
-      </p>
+      </p>-->
     </div>
 
     <p style="clear:both" class="form-row" id="rqa_message_row">

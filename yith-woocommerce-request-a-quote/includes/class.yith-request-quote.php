@@ -583,10 +583,18 @@ if ( !class_exists( 'YITH_Request_Quote' ) ) {
                         'address'       => $_POST['rqa_address'],
                         'city'          => $_POST['rqa_city'],
                         'state'         => $_POST['rqa_state'],
-                        'selectOption' => $_POST['taskOption'],
+                        'selectOption'  => $_POST['taskOption'],
                         'user_message'  => nl2br($_POST['rqa_message']),
                         'raq_content'   => YITH_Request_Quote()->get_raq_return()
                     );
+                    if(isset($_POST["addedonepart"])){
+                      $capture_field_vals ="";
+                      foreach($_POST["addedonepart"] as $key => $text_field){
+                        $capture_field_vals .= $text_field .", ";
+                      }
+
+                      echo $capture_field_vals;
+                    }
                     do_action( 'ywraq_process', $args );
                     do_action( 'send_raq_mail', $args );
                     wp_redirect( YITH_Request_Quote()->get_raq_page_url(), 301 );
