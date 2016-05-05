@@ -96,26 +96,15 @@ do_action( 'woocommerce_email_header', $catalog_quote_header );
   <td scope="col" style="text-align:left; border: 1px solid #eee;"><?php echo $raq_data['partqty'] ?></td>
 </tr>
 <tr>
-  <?php
-  $raq_addrow = '<td scope="col" style="text-align:left; border: 1px solid #eee;">';
-  $raq_endtable_row = '</td>';
-
-   foreach($_POST['addedonepart'] as $add_part) {
-     echo $raq_addrow . $add_part . $raq_endtable_row;
-   } ?>
-
+  <td scope="col" style="text-align:left; border: 1px solid #eee;"><?php echo $raq_data['partnumber1'] ?></td>
   <td scope="col" style="text-align:left; border: 1px solid #eee;"><?php echo $raq_data['partdesc1'] ?></td>
   <td scope="col" style="text-align:left; border: 1px solid #eee;"><?php echo $raq_data['partqty1'] ?></td>
 </tr>
-
-
-<!-- <tr>
-  <td scope="col" style="text-align:left; border: 1px solid #eee;"><?php // echo $raq_data['partnumber2'] ?></td>
-  <td scope="col" style="text-align:left; border: 1px solid #eee;"><?php // echo $raq_data['partdesc2'] ?></td>
-  <td scope="col" style="text-align:left; border: 1px solid #eee;"><?php // echo $raq_data['partqty2'] ?></td>
-</tr> -->
-
-
+<tr>
+  <td scope="col" style="text-align:left; border: 1px solid #eee;"><?php echo $raq_data['partnumber2'] ?></td>
+  <td scope="col" style="text-align:left; border: 1px solid #eee;"><?php echo $raq_data['partdesc2'] ?></td>
+  <td scope="col" style="text-align:left; border: 1px solid #eee;"><?php echo $raq_data['partqty2'] ?></td>
+</tr>
 </tbody>
 </table>
 <?php   endif ?>
