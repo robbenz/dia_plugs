@@ -79,7 +79,7 @@ if ( !class_exists( 'YITH_Request_Quote' ) ) {
             }else{
                 add_action( 'wc_ajax_yith_ywraq_action', array( $this, 'ajax' ) );
             }
-            
+
             /* session settings */
             add_action( 'wp_loaded', array( $this, 'init' ), 30 ); // Get raq after WP and plugins are loaded.
             add_action( 'wp_loaded', array( $this, 'ywraq_time_validation_schedule' ) );
@@ -96,7 +96,7 @@ if ( !class_exists( 'YITH_Request_Quote' ) ) {
             add_filter( 'woocommerce_locate_template', array( $this, 'filter_woocommerce_template' ), 10, 3 );
 
             add_action( 'ywraq_clean_cron', array( $this, 'clean_session') );
-            
+
             /* compatibility with email template WC_Subscriptions */
             if( class_exists('WC_Subscriptions') ) {
                 add_filter('ywraq_quote_subtotal_item', array( $this, 'update_subtotal_item_price'), 10, 3);
@@ -760,6 +760,15 @@ if ( !class_exists( 'YITH_Request_Quote' ) ) {
                 }else{
                     $user_additional_field = isset( $_POST['rqa_text_field'] ) ? $_POST['rqa_text_field'] : '';
                 }
+                if ( empty( $_POST['rqa_facility'] ) ) {
+                    $errors[] = '<p>' . __( 'Please enter your facility name', 'ywraq' ) . '</p>';
+                }
+                if ( empty( $_POST['rqa_zip'] ) ) {
+                    $errors[] = '<p>' . __( 'Please a valid Zip Code', 'ywraq' ) . '</p>';
+                }
+                if ( empty( $_POST['rqa_phone'] ) ) {
+                    $errors[] = '<p>' . __( 'Please a valid Phone Number', 'ywraq' ) . '</p>';
+                }
 
                 if ( get_option('ywraq_additional_text_field_2') == 'yes' && get_option( 'ywraq_additional_text_field_required_3' ) == 'yes' && isset( $_POST['rqa_text_field_2'] ) && empty( $_POST['rqa_text_field_2'] ) ) {
                     $errors[] = '<p>' . sprintf( __( 'Please enter a value for %s', 'yith-woocommerce-request-a-quote' ), get_option('ywraq_additional_text_field_label_2') ) . '</p>';
@@ -792,9 +801,9 @@ if ( !class_exists( 'YITH_Request_Quote' ) ) {
                 }
 
 
-                if ( YITH_Request_Quote()->is_empty() ) {
-                    $errors[] = ywraq_get_list_empty_message();
-                }
+          //      if ( YITH_Request_Quote()->is_empty() ) {
+          //          $errors[] = ywraq_get_list_empty_message();
+          //      }
 
                 $errors = apply_filters( 'ywraq_request_validate_fields', $errors, $_POST);
 
@@ -802,6 +811,22 @@ if ( !class_exists( 'YITH_Request_Quote' ) ) {
                     $args = array(
                         'user_name'               => $_POST['rqa_name'],
                         'user_email'              => $_POST['rqa_email'],
+                        'facility_name'           => $_POST['rqa_facility'],
+                        'zipcode'                 => $_POST['rqa_zip'],
+                        'phonenumber'             => $_POST['rqa_phone'],
+                        'partnumber'              => $_POST['rqa_part'],
+                        'partdesc'                => $_POST['rqa_desc'],
+                        'partqty'                 => $_POST['rqa_qty'],
+                        'partnumber1'             => $_POST['rqa_part1'],
+                        'partdesc1'               => $_POST['rqa_desc1'],
+                        'partqty1'                => $_POST['rqa_qty1'],
+                        'partnumber2'             => $_POST['rqa_part2'],
+                        'partdesc2'               => $_POST['rqa_desc2'],
+                        'partqty2'                => $_POST['rqa_qty2'],
+                        'address'                 => $_POST['rqa_address'],
+                        'city'                    => $_POST['rqa_city'],
+                        'state'                   => $_POST['rqa_state'],
+                        'selectOption'            => $_POST['taskOption'],
                         'user_message'            => nl2br( $_POST['rqa_message'] ),
                         'user_additional_field'   => $user_additional_field,
                         'user_additional_field_2' => $user_additional_field_2,
@@ -833,7 +858,7 @@ if ( !class_exists( 'YITH_Request_Quote' ) ) {
                     if ( get_option( 'ywraq_enable_order_creation', 'yes' ) == 'yes' ) {
                         do_action( 'ywraq_process', $args );
                     }
-                    
+
                     do_action( 'send_raq_mail', $args );
 
 
@@ -951,7 +976,7 @@ if ( !class_exists( 'YITH_Request_Quote' ) ) {
             return $customer_id;
         }
 
-        
+
         /**
          *
          *
@@ -971,7 +996,7 @@ if ( !class_exists( 'YITH_Request_Quote' ) ) {
          */
         public function clean_session(){
             global $wpdb;
-            
+
             $wpdb->query("DELETE FROM ". $wpdb->prefix ."options  WHERE option_name LIKE '_yith_ywraq_session_%'");
 
         }
@@ -1118,4 +1143,3 @@ if ( !class_exists( 'YITH_Request_Quote' ) ) {
 function YITH_Request_Quote() {
     return YITH_Request_Quote::get_instance();
 }
-

@@ -17,6 +17,7 @@ if( get_option( 'ywraq_enable_order_creation', 'yes' ) == 'yes' ) :
     <h2><?php _e('Request a Quote', 'yith-woocommerce-request-a-quote') ?></h2>
 <?php endif ?>
 
+
 <?php do_action( 'yith_ywraq_email_before_raq_table', $raq_data ); ?>
     <table cellspacing="0" cellpadding="6" style="width: 100%; border: 1px solid #eee;border-collapse: collapse;">
         <thead>
@@ -27,6 +28,8 @@ if( get_option( 'ywraq_enable_order_creation', 'yes' ) == 'yes' ) :
             <?php endif ?>
             <th scope="col" style="text-align:left; border: 1px solid #eee;"><?php _e( 'Product', 'yith-woocommerce-request-a-quote' ); ?></th>
             <th scope="col" style="text-align:left; border: 1px solid #eee;"><?php _e( 'Quantity', 'yith-woocommerce-request-a-quote' ); ?></th>
+            <th scope="col" style="text-align:left; border: 1px solid #eee;"><?php _e( 'Unit Price', 'yith-woocommerce-request-a-quote' ); ?></th>
+
             <?php if( $show_total_column ): ?>
             <th scope="col" style="text-align:left; border: 1px solid #eee;"><?php _e( 'Subtotal', 'yith-woocommerce-request-a-quote' ); ?></th>
             <?php endif ?>
@@ -36,7 +39,7 @@ if( get_option( 'ywraq_enable_order_creation', 'yes' ) == 'yes' ) :
         <?php
         if( ! empty( $raq_data['raq_content'] ) ):
             foreach( $raq_data['raq_content'] as $key => $item ):
-                
+
                 if( isset( $item['variation_id']) ){
                     $_product = wc_get_product( $item['variation_id'] );
                 }else{
@@ -51,12 +54,12 @@ if( get_option( 'ywraq_enable_order_creation', 'yes' ) == 'yes' ) :
                 $title = $_product->get_title();
 
                 if( $_product->get_sku() != '' && get_option('ywraq_show_sku') == 'yes' ){
-                    $title .= apply_filters( 'ywraq_sku_label', __( ' SKU:', 'yith-woocommerce-request-a-quote' ) ) . $_product->get_sku();
+                    $title .= apply_filters( 'ywraq_sku_label', __( '<br /> Part Number: ', 'yith-woocommerce-request-a-quote' ) ) . $_product->get_sku();
                 }
 
                 do_action( 'ywraq_before_request_quote_view_item', $raq_data, $key );
 
-              
+
                 ?>
 
                 <tr>
@@ -76,18 +79,25 @@ if( get_option( 'ywraq_enable_order_creation', 'yes' ) == 'yes' ) :
                     <td scope="col" style="text-align:left;border: 1px solid #eee;"><a href="<?php echo  $_product->get_permalink() ?>"><?php echo $title ?></a>
                         <?php  if( isset($item['variations']) || isset($item['addons'] ) || isset($item['yith_wapo_options'] ) ): ?><small><?php echo yith_ywraq_get_product_meta($item); ?></small><?php endif ?></td>
                     <td scope="col" style="text-align:left;border: 1px solid #eee;"><?php echo $item['quantity'] ?></td>
+                    <td scope="col" style="text-align:left; border: 1px solid #eee;">
+                      <?php
+                      $send_benzy_price = WC()->cart->get_product_price( $_product, $raq['price'] );
+                      echo str_replace("$0.00", "Preparing Quote", $send_benzy_price);
+                      ?>
+                    </td>
                     <?php if( $show_total_column ): ?>
-                    <td scope="col" style="text-align:left;border: 1px solid #eee;"><?php
-                        if( $show_price ){
-                            echo apply_filters( 'yith_ywraq_hide_price_template' , WC()->cart->get_product_subtotal( $_product, $item['quantity'] ), $_product->id , $item );
-                        }
-                        ?></td>
+                      <td scope="col" style="text-align:left; border: 1px solid #eee;">
+                        <?php
+                        $send_benzy_sub_price = WC()->cart->get_product_subtotal( $_product, $item['quantity'] );
+                        echo str_replace("$0.00", " ", $send_benzy_sub_price);
+                        ?>
+                    </td>
                     <?php endif ?>
                 </tr>
             <?php
                 do_action( 'ywraq_after_request_quote_view_item_on_email', $raq_data['raq_content'], $key );
             endforeach;
-        
+
         endif;
         ?>
         </tbody>

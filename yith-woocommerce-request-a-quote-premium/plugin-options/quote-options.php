@@ -26,7 +26,7 @@ return array(
 
 		'enable_order_creation' => array(
 			'name'    => __( 'Enable order creation', 'yith-woocommerce-request-a-quote' ),
-			'desc'    => __( 'If checked, the orders will be created. (Reccomanded)', 'yith-woocommerce-request-a-quote' ),
+			'desc'    => __( 'If checked, the orders will be created. (Reccomended)', 'yith-woocommerce-request-a-quote' ),
 			'id'      => 'ywraq_enable_order_creation',
 			'type'    => 'checkbox',
 			'default' => 'yes'
