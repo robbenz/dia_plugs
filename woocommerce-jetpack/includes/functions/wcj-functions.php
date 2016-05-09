@@ -4,9 +4,59 @@
  *
  * The WooCommerce Jetpack Functions.
  *
- * @version 2.4.6
+ * @version 2.4.8
  * @author  Algoritmika Ltd.
  */
+
+if ( ! function_exists( 'wcj_variation_radio_button' ) ) {
+	/**
+	 * wcj_variation_radio_button.
+	 *
+	 * @version 2.4.8
+	 * @since   2.4.8
+	 */
+	function wcj_variation_radio_button( $_product, $variation ) {
+		$attributes_html = '';
+		$variation_attributes_display_values = array();
+		$is_checked = true;
+		foreach ( $variation['attributes'] as $attribute_full_name => $attribute_value ) {
+
+			$attributes_html .= ' ' . $attribute_full_name . '="' . $attribute_value . '"';
+
+			$attribute_name = $attribute_full_name;
+			$prefix = 'attribute_';
+			if ( substr( $attribute_full_name, 0, strlen( $prefix ) ) === $prefix ) {
+				$attribute_name = substr( $attribute_full_name, strlen( $prefix ) );
+			}
+
+			$checked = isset( $_REQUEST[ 'attribute_' . sanitize_title( $attribute_name ) ] ) ? wc_clean( $_REQUEST[ 'attribute_' . sanitize_title( $attribute_name ) ] ) : $_product->get_variation_default_attribute( $attribute_name );
+			if ( $checked != $attribute_value ) $is_checked = false;
+
+			$terms = get_terms( $attribute_name );
+			foreach ( $terms as $term ) {
+				if ( is_object( $term ) && isset( $term->slug ) && $term->slug === $attribute_value && isset( $term->name ) ) {
+					$attribute_value = $term->name;
+				}
+			}
+
+			$variation_attributes_display_values[] = $attribute_value;
+
+		}
+		$variation_title = implode( ', ', $variation_attributes_display_values ) . ' (' . wc_price( $variation['display_price'] ) . ')';
+		$variation_id    = $variation['variation_id'];
+		$is_checked = checked( $is_checked, true, false );
+
+		echo '<td style="width:10%;">';
+		echo '<input name="wcj_variations" type="radio"' . $attributes_html . ' variation_id="' . $variation_id . '"' . $is_checked . '>';
+		echo '</td>';
+		echo '<td>';
+		echo $variation_title;
+		echo '<br>';
+//		echo '<small>' . $variation['variation_description'] . '</small>';
+		echo '<small>' . get_post_meta( $variation_id, '_variation_description', true )  . '</small>';
+		echo '</td>';
+	}
+}
 
 /*
  * wcj_current_filter_priority.
@@ -44,7 +94,7 @@ if ( ! function_exists( 'wcj_get_product_input_fields' ) ) {
 /*
  * wcj_get_left_to_free_shipping.
  *
- * @version 2.4.4
+ * @version 2.4.8
  * @since   2.4.4
  * @return  string
  */
@@ -61,7 +111,7 @@ if ( ! function_exists( 'wcj_get_left_to_free_shipping' ) ) {
 				$total = WC()->cart->cart_contents_total;
 			}
 			if ( $total >= $free_shipping->min_amount ) {
-				return '';
+				return get_option( 'wcj_shipping_left_to_free_info_content_reached', __( 'You have Free delivery', 'woocommerce-jetpack' ) );
 			} else {
 				$content = str_replace( '%left_to_free%',             wc_price( $free_shipping->min_amount - $total ), $content );
 				$content = str_replace( '%free_shipping_min_amount%', wc_price( $free_shipping->min_amount ),          $content );

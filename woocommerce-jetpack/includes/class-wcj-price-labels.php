@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Price Labels class.
  *
- * @version 2.4.4
+ * @version 2.4.8
  * @author  Algoritmika Ltd.
  */
 
@@ -259,15 +259,26 @@ class WCJ_Price_Labels extends WCJ_Module {
 
 	/**
 	 * add_price_label_meta_box.
+	 *
+	 * @version 2.4.8
 	 */
 	public function add_price_label_meta_box() {
-		add_meta_box( 'wc-jetpack-price-labels', 'WooCommerce Jetpack: Custom Price Labels', array( $this, 'wcj_price_label' ), 'product', 'normal', 'high' );
+		add_meta_box(
+			'wc-jetpack-price-labels',
+			__( 'Booster: Custom Price Labels', 'woocommerce-jetpack' ),
+			array( $this, 'create_price_label_meta_box' ),
+			'product',
+			'normal',
+			'high'
+		);
 	}
 
 	/*
-	 * wcj_price_label - back end.
+	 * create_price_label_meta_box - back end.
+	 *
+	 * @version 2.4.8
 	 */
-	public function wcj_price_label() {
+	public function create_price_label_meta_box() {
 
 		$current_post_id = get_the_ID();
 		echo '<table style="width:100%;">';
@@ -389,7 +400,7 @@ class WCJ_Price_Labels extends WCJ_Module {
 	/*
 	 * custom_price - front end.
 	 *
-	 * @version 2.4.4
+	 * @version 2.4.8
 	 */
 	public function custom_price( $price, $product ) {
 
@@ -548,7 +559,11 @@ class WCJ_Price_Labels extends WCJ_Module {
 		}
 
 //		return do_shortcode( $price . $current_filter_name . $product->product_type . $labels_array['variation_variable'] . $labels_array['variation_variation'] );
-		return do_shortcode( $price );
+		global $wcj_product_id_for_shortcode;
+		$wcj_product_id_for_shortcode = ( isset( $product->variation_id ) ) ? $product->variation_id : $product->id;
+		$result = do_shortcode( $price );
+		$wcj_product_id_for_shortcode = 0;
+		return $result;
 	}
 
 	/**

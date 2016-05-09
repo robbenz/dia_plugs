@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Multicurrency class.
  *
- * @version 2.4.3
+ * @version 2.4.8
  * @since   2.4.3
  * @author  Algoritmika Ltd.
  */
@@ -18,13 +18,14 @@ class WCJ_Multicurrency extends WCJ_Module {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.4.3
+	 * @version 2.4.8
 	 */
 	function __construct() {
 
 		$this->id         = 'multicurrency';
-		$this->short_desc = __( 'Multicurrency', 'woocommerce-jetpack' );
+		$this->short_desc = __( 'Multicurrency (Currency Switcher)', 'woocommerce-jetpack' );
 		$this->desc       = __( 'Add multiple currencies (currency switcher) to WooCommerce.', 'woocommerce-jetpack' );
+		$this->link       = 'http://booster.io/features/woocommerce-multicurrency-currency-switcher/';
 		parent::__construct();
 
 		add_filter( 'init', array( $this, 'add_settings_hook' ) );
@@ -35,6 +36,10 @@ class WCJ_Multicurrency extends WCJ_Module {
 			if ( 'yes' === get_option( 'wcj_multicurrency_per_product_enabled' , 'yes' ) ) {
 				add_action( 'add_meta_boxes',    array( $this, 'add_meta_box' ) );
 				add_action( 'save_post_product', array( $this, 'save_meta_box' ), PHP_INT_MAX, 2 );
+			}
+
+			if ( is_admin() ) {
+				include_once( 'reports/class-wcj-currency-reports.php' );
 			}
 		}
 	}
@@ -129,7 +134,7 @@ class WCJ_Multicurrency extends WCJ_Module {
 	}
 
 	/**
-	 * change_price_by_currency.
+	 * get_currency_exchange_rate.
 	 *
 	 * @version 2.4.3
 	 */
@@ -207,7 +212,7 @@ class WCJ_Multicurrency extends WCJ_Module {
 	/**
 	 * change_shipping_price_by_currency.
 	 *
-	 * @version 2.4.3
+	 * @version 2.4.8
 	 */
 	function change_shipping_price_by_currency( $package_rates, $package ) {
 		$currency_exchange_rate = $this->get_currency_exchange_rate( $this->get_current_currency_code() );
@@ -215,6 +220,11 @@ class WCJ_Multicurrency extends WCJ_Module {
 		foreach ( $package_rates as $id => $package_rate ) {
 			if ( 1 != $currency_exchange_rate && isset( $package_rate->cost ) ) {
 				$package_rate->cost = $package_rate->cost * $currency_exchange_rate;
+				if ( isset( $package_rate->taxes ) && ! empty( $package_rate->taxes ) ) {
+					foreach ( $package_rate->taxes as $tax_id => $tax ) {
+						$package_rate->taxes[ $tax_id ] = $package_rate->taxes[ $tax_id ] * $currency_exchange_rate;
+					}
+				}
 			}
 			$modified_package_rates[ $id ] = $package_rate;
 		}

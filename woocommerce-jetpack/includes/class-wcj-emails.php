@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Emails class.
  *
- * @version 2.4.5
+ * @version 2.4.8
  * @author  Algoritmika Ltd.
  */
 
@@ -43,13 +43,40 @@ class WCJ_Emails extends WCJ_Module {
 	}
 
 	/**
+	 * get_order_statuses.
+	 *
+	 * @version 2.4.8
+	 * @since   2.4.8
+	 */
+	function get_order_statuses() {
+		$result = array();
+		$statuses = function_exists( 'wc_get_order_statuses' ) ? wc_get_order_statuses() : array();
+		foreach( $statuses as $status => $status_name ) {
+			$result[ substr( $status, 3 ) ] = $statuses[ $status ];
+		}
+		return $result;
+	}
+
+	/**
 	 * add_custom_woocommerce_email_actions.
 	 *
-	 * @version 2.4.5
+	 * @version 2.4.8
 	 * @since   2.4.5
 	 */
 	function add_custom_woocommerce_email_actions( $email_actions ) {
+
 		$email_actions[] = 'woocommerce_new_order';
+
+		$order_statuses = $this->get_order_statuses();
+		foreach ( $order_statuses as $slug => $name ) {
+			$email_actions[] = 'woocommerce_order_status_' . $slug;
+			foreach ( $order_statuses as $slug2 => $name2 ) {
+				if ( $slug != $slug2 ) {
+					$email_actions[] = 'woocommerce_order_status_' . $slug . '_to_' . $slug2;
+				}
+			}
+		}
+
 		return $email_actions;
 	}
 
@@ -152,7 +179,7 @@ class WCJ_Emails extends WCJ_Module {
 	/**
 	 * get_settings.
 	 *
-	 * @version 2.3.10
+	 * @version 2.4.8
 	 */
 	function get_settings() {
 		$settings = array(
@@ -168,14 +195,24 @@ class WCJ_Emails extends WCJ_Module {
 				'default'  => 1,
 				'type'     => 'custom_number',
 				'desc'     => apply_filters( 'get_wc_jetpack_plus_message', '', 'desc' ),
-				'custom_attributes'
-				           => apply_filters( 'get_wc_jetpack_plus_message', '', 'readonly' ),
+				'custom_attributes' => apply_filters( 'get_wc_jetpack_plus_message', '', 'readonly' ),
 			),
+		);
+		$total_number = apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_emails_custom_emails_total_number', 1 ) );
+		for ( $i = 1; $i <= $total_number; $i++ ) {
+			$settings [] = array(
+				'title'    => __( 'Admin Title Custom Email', 'woocommerce-jetpack' ) . ' #' . $i,
+				'id'       => 'wcj_emails_custom_emails_admin_title_' . $i,
+				'default'  => __( 'Custom', 'woocommerce-jetpack' ) . ' #' . $i,
+				'type'     => 'text',
+			);
+		}
+		$settings = array_merge( $settings, array(
 			array(
 				'type'     => 'sectionend',
 				'id'       => 'wcj_emails_custom_emails_options',
 			),
-		);
+		) );
 		$settings = array_merge( $settings, $this->get_emails_forwarding_settings() );
 		return $this->add_standard_settings( $settings );
 	}

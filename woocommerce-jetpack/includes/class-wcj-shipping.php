@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Shipping class.
  *
- * @version 2.4.4
+ * @version 2.4.8
  * @author  Algoritmika Ltd.
  */
 
@@ -17,18 +17,20 @@ class WCJ_Shipping extends WCJ_Module {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.4.4
+	 * @version 2.4.8
 	 */
 	function __construct() {
 
 		$this->id         = 'shipping';
 		$this->short_desc = __( 'Shipping', 'woocommerce-jetpack' );
 		$this->desc       = __( 'Hide WooCommerce shipping when free is available.', 'woocommerce-jetpack' );
+		$this->link       = 'http://booster.io/features/woocommerce-shipping/';
 		parent::__construct();
 
 		if ( $this->is_enabled() ) {
-//			include_once( 'shipping/class-wc-shipping-wcj-custom.php' );
-//			add_filter( 'woocommerce_available_shipping_methods', array( $this, 'hide_all_shipping_when_free_is_available' ), 10, 1 );
+
+			include_once( 'shipping/class-wc-shipping-wcj-custom.php' );
+
 			add_filter( 'woocommerce_package_rates',     array( $this, 'hide_shipping_when_free_is_available' ), 10, 2 );
 			add_filter( 'woocommerce_shipping_settings', array( $this, 'add_hide_shipping_if_free_available_fields' ), 100 );
 
@@ -104,12 +106,12 @@ class WCJ_Shipping extends WCJ_Module {
 	function hide_shipping_when_free_is_available( $rates, $package ) {
 		// Only modify rates if free_shipping is present
 		if ( isset( $rates['free_shipping'] ) ) {
-			// To unset a single rate/method, do the following. This example unsets flat_rate shipping
+			// Unset a single rate/method
 			if ( 'yes' === get_option( 'wcj_shipping_hide_if_free_available_local_delivery' ) ) {
 				unset( $rates['local_delivery'] );
 			}
 			if ( 'yes' === get_option( 'wcj_shipping_hide_if_free_available_all' ) ) {
-				// To unset all methods except for free_shipping, do the following
+				// Unset all methods except for free_shipping
 				$free_shipping          = $rates['free_shipping'];
 				$rates                  = array();
 				$rates['free_shipping'] = $free_shipping;
@@ -117,25 +119,6 @@ class WCJ_Shipping extends WCJ_Module {
 		}
 		return $rates;
 	}
-
-	/**
-	* Hide ALL Shipping option when free shipping is available
-	*
-	* @param array $available_methods
-	*/
-	/* function hide_all_shipping_when_free_is_available( $available_methods ) {
-		if( isset( $available_methods['free_shipping'] ) ) {
-			// Get Free Shipping array into a new array
-			$freeshipping = array();
-			$freeshipping = $available_methods['free_shipping'];
-			// Empty the $available_methods array
-			unset( $available_methods );
-			// Add Free Shipping back into $avaialble_methods
-			$available_methods = array();
-			$available_methods[] = $freeshipping;
-		}
-		return $available_methods;
-	} */
 
 	/**
 	 * add_hide_shipping_if_free_available_fields.
@@ -172,10 +155,48 @@ class WCJ_Shipping extends WCJ_Module {
 	/**
 	 * get_settings.
 	 *
-	 * @version 2.4.4
+	 * @version 2.4.8
 	 */
 	function get_settings() {
+		$wocommerce_shipping_settings_url = admin_url( 'admin.php?page=wc-settings&tab=shipping' );
+		$wocommerce_shipping_settings_url = '<a href="' . $wocommerce_shipping_settings_url . '">' . __( 'WooCommerce > Settings > Shipping', 'woocommerce-jetpack' ) . '</a>';
 		$settings = array(
+			array(
+				'title'    => __( 'Custom Shipping', 'woocommerce-jetpack' ),
+				'type'     => 'title',
+				'id'       => 'wcj_shipping_custom_shipping_options',
+				'desc'     => __( 'This section lets you set number of custom shipping methods to add.', 'woocommerce-jetpack' )
+					. ' ' . sprintf( __( 'After setting the number, visit %s to set each method options.', 'woocommerce-jetpack' ), $wocommerce_shipping_settings_url ),
+			),
+			array(
+				'title'    => __( 'Custom Shipping Methods Number', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_shipping_custom_shipping_total_number',
+				'default'  => 1,
+				'type'     => 'custom_number',
+				'desc'     => apply_filters( 'get_wc_jetpack_plus_message', '', 'desc' ),
+				'custom_attributes' => apply_filters( 'get_wc_jetpack_plus_message', '', 'readonly' ),
+				'custom_attributes' => array_merge(
+					is_array( apply_filters( 'get_wc_jetpack_plus_message', '', 'readonly' ) ) ? apply_filters( 'get_wc_jetpack_plus_message', '', 'readonly' ) : array(),
+					array( 'step' => '1', 'min' => '0', 'max' => '10', )
+				),
+			),
+		);
+		$total_number = apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_shipping_custom_shipping_total_number', 1 ) );
+		for ( $i = 1; $i <= $total_number; $i++ ) {
+			$settings [] = array(
+				'title'    => __( 'Admin Title Custom Shipping', 'woocommerce-jetpack' ) . ' #' . $i,
+				'id'       => 'wcj_shipping_custom_shipping_admin_title_' . $i,
+				'default'  => __( 'Custom', 'woocommerce-jetpack' ) . ' #' . $i,
+				'type'     => 'text',
+			);
+		}
+		$settings = array_merge( $settings, array(
+			array(
+				'type'     => 'sectionend',
+				'id'       => 'wcj_shipping_custom_shipping_options',
+			),
+		) );
+		$settings = array_merge( $settings, array(
 			array(
 				'title'    => __( 'Hide if free is available', 'woocommerce-jetpack' ),
 				'type'     => 'title',
@@ -204,7 +225,7 @@ class WCJ_Shipping extends WCJ_Module {
 			array(
 				'title'    => __( 'Left to Free Shipping Info Options', 'woocommerce-jetpack' ),
 				'type'     => 'title',
-				'desc'     => __( 'This section lets you enable info or cart, mini cart and checkout pages.', 'woocommerce-jetpack' )
+				'desc'     => __( 'This section lets you enable info on cart, mini cart and checkout pages.', 'woocommerce-jetpack' )
 					. '<br>' . __( 'You can also use <em>Booster - Left to Free Shipping</em> widget, <em>[wcj_get_left_to_free_shipping content=""]</em> shortcode or <em>wcj_get_left_to_free_shipping( $content );</em> function.', 'woocommerce-jetpack' )
 					. '<br>' . __( 'In content you can use: <em>%left_to_free%</em> and <em>%free_shipping_min_amount%</em> shortcodes.', 'woocommerce-jetpack' ),
 				'id'       => 'wcj_shipping_left_to_free_info_options',
@@ -235,7 +256,7 @@ class WCJ_Shipping extends WCJ_Module {
 			),
 			array(
 				'title'    => '',
-				'desc'     => __( 'Order (Priority)', 'woocommerce-jetpack' ),
+				'desc'     => __( 'Position Order (Priority)', 'woocommerce-jetpack' ),
 				'id'       => 'wcj_shipping_left_to_free_info_priority_cart',
 				'default'  => 10,
 				'type'     => 'number',
@@ -273,7 +294,7 @@ class WCJ_Shipping extends WCJ_Module {
 			),
 			array(
 				'title'    => '',
-				'desc'     => __( 'Order (Priority)', 'woocommerce-jetpack' ),
+				'desc'     => __( 'Position Order (Priority)', 'woocommerce-jetpack' ),
 				'id'       => 'wcj_shipping_left_to_free_info_priority_mini_cart',
 				'default'  => 10,
 				'type'     => 'number',
@@ -317,17 +338,25 @@ class WCJ_Shipping extends WCJ_Module {
 			),
 			array(
 				'title'    => '',
-				'desc'     => __( 'Order (Priority)', 'woocommerce-jetpack' ),
+				'desc'     => __( 'Position Order (Priority)', 'woocommerce-jetpack' ),
 				'id'       => 'wcj_shipping_left_to_free_info_priority_checkout',
 				'default'  => 10,
 				'type'     => 'number',
 				'css'      => 'width:250px;',
 			),
 			array(
+				'title'    => __( 'Message on Free Shipping Reached', 'woocommerce-jetpack' ),
+				'desc_tip' => __( 'You can set it empty', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_shipping_left_to_free_info_content_reached',
+				'default'  => __( 'You have Free delivery', 'woocommerce-jetpack' ),
+				'type'     => 'textarea',
+				'css'      => 'width:30%;min-width:300px;height:100px;',
+			),
+			array(
 				'type'     => 'sectionend',
 				'id'       => 'wcj_shipping_left_to_free_info_options',
 			),
-		);
+		) );
 		return $this->add_standard_settings( $settings );
 	}
 }

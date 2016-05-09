@@ -3,7 +3,7 @@
 Plugin Name: Booster for WooCommerce
 Plugin URI: http://booster.io
 Description: Supercharge your WooCommerce site with these awesome powerful features.
-Version: 2.4.7
+Version: 2.4.8
 Author: Algoritmika Ltd
 Author URI: http://www.algoritmika.com
 Copyright: © 2016 Algoritmika Ltd.
@@ -21,7 +21,7 @@ if ( ! class_exists( 'WC_Jetpack' ) ) :
  * Main WC_Jetpack Class
  *
  * @class   WC_Jetpack
- * @version 2.4.7
+ * @version 2.4.8
  */
 
 final class WC_Jetpack {
@@ -32,7 +32,7 @@ final class WC_Jetpack {
 	 * @var   string
 	 * @since 2.4.7
 	 */
-	public $version = '2.4.7';
+	public $version = '2.4.8';
 
 	/**
 	 * @var WC_Jetpack The single instance of the class
@@ -338,7 +338,7 @@ final class WC_Jetpack {
 	/**
 	 * Include required core files used in admin and on the frontend.
 	 *
-	 * @version 2.4.4
+	 * @version 2.4.8
 	 */
 	private function includes() {
 
@@ -359,6 +359,7 @@ final class WC_Jetpack {
 
 		// Widgets
 		include_once( 'includes/widgets/class-wcj-widget-multicurrency.php' );
+		include_once( 'includes/widgets/class-wcj-widget-country-switcher.php' );
 		include_once( 'includes/widgets/class-wcj-widget-left-to-free-shipping.php' );
 
 		// Abstracts
@@ -403,7 +404,7 @@ final class WC_Jetpack {
 	/**
 	 * Include modules and submodules
 	 *
-	 * @version 2.4.7
+	 * @version 2.4.8
 	 */
 	private function include_modules() {
 		$settings = array();
@@ -422,6 +423,7 @@ final class WC_Jetpack {
 		$settings[] = include_once( 'includes/class-wcj-purchase-data.php' );
 		$settings[] = include_once( 'includes/class-wcj-crowdfunding.php' );
 		$settings[] = include_once( 'includes/class-wcj-wholesale-price.php' );
+		$settings[] = include_once( 'includes/class-wcj-product-open-pricing.php' );
 		$settings[] = include_once( 'includes/class-wcj-product-images.php' );
 		$settings[] = include_once( 'includes/class-wcj-add-to-cart.php' );
 		$settings[] = include_once( 'includes/class-wcj-more-button-labels.php' );
@@ -450,6 +452,7 @@ final class WC_Jetpack {
 		$settings[] = include_once( 'includes/class-wcj-emails.php' );
 		$settings[] = include_once( 'includes/class-wcj-currencies.php' );
 		$settings[] = include_once( 'includes/class-wcj-multicurrency.php' );
+		$settings[] = include_once( 'includes/class-wcj-multicurrency-product-base-price.php' );
 		$settings[] = include_once( 'includes/class-wcj-currency-external-products.php' );
 		$settings[] = include_once( 'includes/class-wcj-price-by-country.php' );
 		$settings[] = include_once( 'includes/class-wcj-currency-exchange-rates.php' );

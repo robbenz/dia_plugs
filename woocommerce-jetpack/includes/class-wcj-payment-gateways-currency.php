@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Payment Gateways Currency class.
  *
- * @version 2.4.3
+ * @version 2.4.8
  * @since   2.3.0
  * @author  Algoritmika Ltd.
  */
@@ -18,7 +18,7 @@ class WCJ_Payment_Gateways_Currency extends WCJ_Module {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.3.5
+	 * @version 2.4.8
 	 */
 	function __construct() {
 
@@ -32,13 +32,16 @@ class WCJ_Payment_Gateways_Currency extends WCJ_Module {
 		if ( $this->is_enabled() ) {
 			/* add_action( 'init', array( $this, 'add_hooks' ) ); */
 			$this->add_hooks();
+			if ( is_admin() ) {
+				include_once( 'reports/class-wcj-currency-reports.php' );
+			}
 		}
 	}
 
 	/**
 	 * add_hooks.
 	 *
-	 * @version 2.3.2
+	 * @version 2.4.8
 	 * @since   2.3.2
 	 */
 	function add_hooks() {
@@ -49,8 +52,40 @@ class WCJ_Payment_Gateways_Currency extends WCJ_Module {
 
 		add_filter( 'woocommerce_get_price', array( $this, 'change_price_by_gateway' ), PHP_INT_MAX, 2 );
 
+		add_filter( 'woocommerce_package_rates', array( $this, 'change_shipping_price_by_gateway' ), PHP_INT_MAX, 2 );
+
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_checkout_script' ) );
 		add_action( 'init',               array( $this, 'register_script' ) );
+	}
+
+	/**
+	 * change_shipping_price_by_gateway.
+	 *
+	 * @version 2.4.8
+	 * @since   2.4.8
+	 */
+	function change_shipping_price_by_gateway( $package_rates, $package ) {
+		if ( $this->is_cart_or_checkout() ) {
+			global $woocommerce;
+			$current_gateway = $woocommerce->session->chosen_payment_method;
+			if ( '' != $current_gateway ) {
+				$gateway_currency_exchange_rate = get_option( 'wcj_gateways_currency_exchange_rate_' . $current_gateway );
+				$modified_package_rates = array();
+				foreach ( $package_rates as $id => $package_rate ) {
+					if ( 1 != $gateway_currency_exchange_rate && isset( $package_rate->cost ) ) {
+						$package_rate->cost = $package_rate->cost * $gateway_currency_exchange_rate;
+						if ( isset( $package_rate->taxes ) && ! empty( $package_rate->taxes ) ) {
+							foreach ( $package_rate->taxes as $tax_id => $tax ) {
+								$package_rate->taxes[ $tax_id ] = $package_rate->taxes[ $tax_id ] * $gateway_currency_exchange_rate;
+							}
+						}
+					}
+					$modified_package_rates[ $id ] = $package_rate;
+				}
+				return $modified_package_rates;
+			}
+		}
+		return $package_rates;
 	}
 
 	/**

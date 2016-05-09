@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Products Shortcodes class.
  *
- * @version 2.4.0
+ * @version 2.4.8
  * @author  Algoritmika Ltd.
  */
 
@@ -17,7 +17,7 @@ class WCJ_Products_Shortcodes extends WCJ_Shortcodes {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.4.0
+	 * @version 2.4.8
 	 */
 	public function __construct() {
 
@@ -71,6 +71,7 @@ class WCJ_Products_Shortcodes extends WCJ_Shortcodes {
 			'sep'             => ', ',
 			'add_links'       => 'yes',
 			'add_percent_row' => 'no',
+			'add_price_row'   => 'yes',
 			'show_always'     => 'yes',
 			'hide_if_zero'    => 'no',
 			'reverse'         => 'no',
@@ -84,16 +85,24 @@ class WCJ_Products_Shortcodes extends WCJ_Shortcodes {
 	/**
 	 * Inits shortcode atts and properties.
 	 *
-	 * @param array $atts Shortcode atts.
-	 *
-	 * @return array The (modified) shortcode atts.
+	 * @version 2.4.8
+	 * @param   array $atts Shortcode atts.
+	 * @return  array The (modified) shortcode atts.
 	 */
 	function init_atts( $atts ) {
 
 		// Atts
-		$atts['product_id'] = ( 0 == $atts['product_id'] ) ? get_the_ID() : $atts['product_id'];
-		if ( 0 == $atts['product_id'] ) return false;
-		if ( 'product' !== get_post_type( $atts['product_id'] ) ) return false;
+		if ( 0 == $atts['product_id'] ) {
+			global $wcj_product_id_for_shortcode;
+			if ( 0 != $wcj_product_id_for_shortcode ) {
+				$atts['product_id'] = $wcj_product_id_for_shortcode;
+			} else {
+				$atts['product_id'] = get_the_ID();
+			}
+			if ( 0 == $atts['product_id'] ) return false;
+		}
+		$the_post_type = get_post_type( $atts['product_id'] );
+		if ( 'product' !== $the_post_type && 'product_variation' !== $the_post_type ) return false;
 
 		// Class properties
 		$this->the_product = wc_get_product( $atts['product_id'] );
@@ -210,23 +219,63 @@ class WCJ_Products_Shortcodes extends WCJ_Shortcodes {
 	/**
 	 * wcj_product_price_excluding_tax.
 	 *
-	 * @version 2.4.0
+	 * @version 2.4.8
 	 * @since   2.4.0
 	 */
 	function wcj_product_price_excluding_tax( $atts ) {
-		$the_price = $this->the_product->get_price_excluding_tax();
-		return ( 'yes' === $atts['hide_currency'] ) ? $the_price : wc_price( $the_price );
+		if ( $this->the_product->is_type( 'variable' ) ) {
+			// Variable
+			$prices = $this->the_product->get_variation_prices( false );
+			$min_product_id = key( $prices['price'] );
+			end( $prices['price'] );
+			$max_product_id = key( $prices['price'] );
+			if ( 0 != $min_product_id && 0 != $max_product_id ) {
+				$min_variation_product = wc_get_product( $min_product_id );
+				$max_variation_product = wc_get_product( $max_product_id );
+				$min = $min_variation_product->get_price_excluding_tax();
+				$max = $max_variation_product->get_price_excluding_tax();
+				if ( 'yes' !== $atts['hide_currency'] ) {
+					$min = wc_price( $min );
+					$max = wc_price( $max );
+				}
+				return ( $min != $max ) ? sprintf( '%s-%s', $min, $max ) : $min;
+			}
+		} else {
+			 // Simple etc.
+			$the_price = $this->the_product->get_price_excluding_tax();
+			return ( 'yes' === $atts['hide_currency'] ) ? $the_price : wc_price( $the_price );
+		}
 	}
 
 	/**
 	 * wcj_product_price_including_tax.
 	 *
-	 * @version 2.4.0
+	 * @version 2.4.8
 	 * @since   2.4.0
 	 */
 	function wcj_product_price_including_tax( $atts ) {
-		$the_price = $this->the_product->get_price_including_tax();
-		return ( 'yes' === $atts['hide_currency'] ) ? $the_price : wc_price( $the_price );
+		if ( $this->the_product->is_type( 'variable' ) ) {
+			// Variable
+			$prices = $this->the_product->get_variation_prices( false );
+			$min_product_id = key( $prices['price'] );
+			end( $prices['price'] );
+			$max_product_id = key( $prices['price'] );
+			if ( 0 != $min_product_id && 0 != $max_product_id ) {
+				$min_variation_product = wc_get_product( $min_product_id );
+				$max_variation_product = wc_get_product( $max_product_id );
+				$min = $min_variation_product->get_price_including_tax();
+				$max = $max_variation_product->get_price_including_tax();
+				if ( 'yes' !== $atts['hide_currency'] ) {
+					$min = wc_price( $min );
+					$max = wc_price( $max );
+				}
+				return ( $min != $max ) ? sprintf( '%s-%s', $min, $max ) : $min;
+			}
+		} else {
+			 // Simple etc.
+			$the_price = $this->the_product->get_price_including_tax();
+			return ( 'yes' === $atts['hide_currency'] ) ? $the_price : wc_price( $the_price );
+		}
 	}
 
 	/**
@@ -555,6 +604,7 @@ class WCJ_Products_Shortcodes extends WCJ_Shortcodes {
 	/**
 	 * Returns product (modified) price.
 	 *
+	 * @version 2.4.8
 	 * @todo    variable products: a) not range; and b) price by country.
 	 * @return  string The product (modified) price
 	 */
@@ -571,7 +621,7 @@ class WCJ_Products_Shortcodes extends WCJ_Shortcodes {
 				$min = wc_price( $min );
 				$max = wc_price( $max );
 			}
-			return sprintf( '%s-%s', $min, $max );
+			return ( $min != $max ) ? sprintf( '%s-%s', $min, $max ) : $min;
 		}
 		// Simple etc.
 		else {
@@ -583,13 +633,14 @@ class WCJ_Products_Shortcodes extends WCJ_Shortcodes {
 
 	/**
 	 * wcj_product_wholesale_price_table.
+	 *
+	 * @version 2.4.8
 	 */
 	function wcj_product_wholesale_price_table( $atts ) {
 
 		if ( ! wcj_is_product_wholesale_enabled( $this->the_product->id ) ) return '';
 
 		$wholesale_price_levels = array();
-
 		for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_wholesale_price_levels_number', 1 ) ); $i++ ) {
 			$level_qty        = get_option( 'wcj_wholesale_price_level_min_qty_' . $i, PHP_INT_MAX );
 			$discount_percent = get_option( 'wcj_wholesale_price_level_discount_percent_' . $i, 0 );
@@ -599,13 +650,12 @@ class WCJ_Products_Shortcodes extends WCJ_Shortcodes {
 
 		$data_qty = array();
 		$data_price = array();
-
+		$data_discount_percent = array();
 		foreach ( $wholesale_price_levels as $wholesale_price_level ) {
 
 			$the_price = '';
-
-			// Variable
 			if ( $this->the_product->is_type( 'variable' ) ) {
+				// Variable
 				$min = $this->the_product->get_variation_price( 'min', false );
 				$max = $this->the_product->get_variation_price( 'max', false );
 				if ( '' !== $wholesale_price_level['koef'] && is_numeric( $wholesale_price_level['koef'] ) ) {
@@ -616,11 +666,10 @@ class WCJ_Products_Shortcodes extends WCJ_Shortcodes {
 					$min = wc_price( $min );
 					$max = wc_price( $max );
 				}
-				$the_price = sprintf( '%s-%s', $min, $max );
-			}
-			// Simple etc.
-			else {
-				//$the_price = wc_price( round( $this->the_product->get_price() * $wholesale_price_level['koef'], $precision ) );
+				$the_price = ( $min != $max ) ? sprintf( '%s-%s', $min, $max ) : $min;
+			} else {
+				// Simple etc.
+//				$the_price = wc_price( round( $this->the_product->get_price() * $wholesale_price_level['koef'], $precision ) );
 				$the_price = $this->the_product->get_price();
 				if ( '' !== $wholesale_price_level['koef'] && is_numeric( $wholesale_price_level['koef'] ) ) {
 					$the_price = $the_price * $wholesale_price_level['koef'];
@@ -630,19 +679,27 @@ class WCJ_Products_Shortcodes extends WCJ_Shortcodes {
 				}
 			}
 
-			$data_qty[]              = str_replace( '%level_qty%', $wholesale_price_level['quantity'], $atts['heading_format'] ) ;
-			$data_price[]            = $the_price;
+			$data_qty[] = str_replace( '%level_qty%', $wholesale_price_level['quantity'], $atts['heading_format'] ) ;
+			if ( 'yes' === $atts['add_price_row'] ) {
+				$data_price[] = $the_price;
+			}
 			if ( 'yes' === $atts['add_percent_row'] ) {
 				$data_discount_percent[] = '-' . $wholesale_price_level['discount_percent'] . '%';
 			}
 		}
 
-		$table_rows = array( $data_qty, $data_price, );
+		$table_rows = array( $data_qty, );
+		if ( 'yes' === $atts['add_price_row'] ) {
+			$table_rows[] = $data_price;
+		}
 		if ( 'yes' === $atts['add_percent_row'] ) {
 			$table_rows[] = $data_discount_percent;
 		}
-		$table_styles = array( 'columns_styles' => array( 'text-align: center;', 'text-align: center;', 'text-align: center;', ), );
-		return wcj_get_table_html( $table_rows, $table_styles );
+		$columns_styles = array();
+		for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_wholesale_price_levels_number', 1 ) ); $i++ ) {
+			$columns_styles[] = 'text-align: center;';
+		}
+		return wcj_get_table_html( $table_rows, array( 'columns_styles' => $columns_styles ) );
 	}
 
 	/**

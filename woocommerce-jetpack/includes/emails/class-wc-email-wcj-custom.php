@@ -11,7 +11,7 @@ if ( ! class_exists( 'WC_Email_WCJ_Custom' ) ) :
  *
  * An email sent to recipient list when selected triggers are called.
  *
- * @version 2.4.5
+ * @version 2.4.8
  * @since   2.3.9
  * @author  Algoritmika Ltd.
  * @extends WC_Email
@@ -21,13 +21,13 @@ class WC_Email_WCJ_Custom extends WC_Email {
 	/**
 	 * Constructor
 	 *
-	 * @version 2.4.5
+	 * @version 2.4.8
 	 */
 	function __construct( $id = 1 ) {
 
 		$this->id               = 'wcj_custom' . '_' . $id;
 		$this->customer_email   = ( '%customer%' === $this->get_option( 'recipient' ) ) ? true : false;
-		$this->title            = __( 'Custom', 'woocommerce-jetpack' ) . ' #' . $id;
+		$this->title            = get_option( 'wcj_emails_custom_emails_admin_title_' . $id, __( 'Custom', 'woocommerce-jetpack' ) . ' #' . $id );
 		$this->description      = __( 'Custom emails are sent to the recipient list when selected triggers are called.', 'woocommerce-jetpack' );
 
 		$this->heading          = __( 'Custom Heading', 'woocommerce' );
@@ -134,8 +134,9 @@ class WC_Email_WCJ_Custom extends WC_Email {
 	/**
 	 * get_content_html function.
 	 *
-	 * @access public
-	 * @return string
+	 * @version 2.4.8
+	 * @access  public
+	 * @return  string
 	 */
 	function get_content_html() {
 		/* ob_start();
@@ -146,14 +147,15 @@ class WC_Email_WCJ_Custom extends WC_Email {
 			'plain_text'    => false
 		), '', wcj_plugin_path() . '/templates' );
 		return ob_get_clean(); */
-		return $this->get_option( 'content_html_template' );
+		return do_shortcode( $this->get_option( 'content_html_template' ) );
 	}
 
 	/**
 	 * get_content_plain function.
 	 *
-	 * @access public
-	 * @return string
+	 * @version 2.4.8
+	 * @access  public
+	 * @return  string
 	 */
 	function get_content_plain() {
 		/* ob_start();
@@ -164,7 +166,7 @@ class WC_Email_WCJ_Custom extends WC_Email {
 			'plain_text'    => true
 		), '', wcj_plugin_path() . '/templates' );
 		return ob_get_clean(); */
-		return $this->get_option( 'content_plain_template' );
+		return do_shortcode( $this->get_option( 'content_plain_template' ) );
 	}
 
 	/**
@@ -272,6 +274,7 @@ class WC_Email_WCJ_Custom extends WC_Email {
 			'content_html_template' => array(
 				'title'         => __( 'HTML template', 'woocommerce' ),
 				'type'          => 'textarea',
+				'desc_tip'      => __( 'You can use shortcodes here. E.g. Booster\'s order shortcodes.', 'woocommerce' ),
 				'description'   => '',
 				'placeholder'   => '',
 				'default'       => $default_html_template,
@@ -280,6 +283,7 @@ class WC_Email_WCJ_Custom extends WC_Email {
 			'content_plain_template' => array(
 				'title'         => __( 'Plain text template', 'woocommerce' ),
 				'type'          => 'textarea',
+				'desc_tip'      => __( 'You can use shortcodes here. E.g. Booster\'s order shortcodes.', 'woocommerce' ),
 				'description'   => '',
 				'placeholder'   => '',
 				'default'       => $default_plain_template,
