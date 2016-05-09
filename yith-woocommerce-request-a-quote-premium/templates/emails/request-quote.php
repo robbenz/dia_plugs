@@ -38,7 +38,7 @@ do_action( 'woocommerce_email_header', $catalog_quote_header );
 <p></p>
 
 <?php if( $customer != 0 && ( get_option( 'ywraq_enable_link_details' ) == "yes" && get_option( 'ywraq_enable_order_creation', 'yes' ) == 'yes' ) ): ?>
-<p><?php printf( __( 'You can see details here: <a href="%s">#%s</a>', 'yith-woocommerce-request-a-quote' ), YITH_YWRAQ_Order_Request()->get_view_order_url($order_id, $page_detail_admin), $order_id ); ?></p>
+<p><?php printf( __( 'You can see details here: <a href="%s">#EC-%s</a>', 'yith-woocommerce-request-a-quote' ), YITH_YWRAQ_Order_Request()->get_view_order_url($order_id, $page_detail_admin), $order_id ); ?></p>
 <?php endif ?>
 
 <?php  if(empty( $raq_data['partnumber']) && empty( $raq_data['partdesc']) && empty( $raq_data['partqty'])): ?>

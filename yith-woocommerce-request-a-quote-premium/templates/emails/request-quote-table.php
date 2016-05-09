@@ -12,7 +12,7 @@ $show_total_column = ( get_option( 'ywraq_hide_total_column', 'yes' ) == 'yes' )
 
 if( get_option( 'ywraq_enable_order_creation', 'yes' ) == 'yes' ) :
 ?>
-    <h2><?php printf(__('Request a Quote #%s', 'yith-woocommerce-request-a-quote'), $raq_data['order_id']) ?></h2>
+    <h2><?php printf(__('Request a Quote #EC-%s', 'yith-woocommerce-request-a-quote'), $raq_data['order_id']) ?></h2>
 <?php else: ?>
     <h2><?php _e('Request a Quote', 'yith-woocommerce-request-a-quote') ?></h2>
 <?php endif ?>
