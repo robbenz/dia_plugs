@@ -187,7 +187,7 @@ if ( !function_exists( 'yith_ywraq_get_product_meta_from_order_item' ) ) {
 
 
                 $taxonomy = $name;
-              
+
                 // If this is a term slug, get the term's nice name
                 if ( taxonomy_exists( $taxonomy ) ) {
                     $term = get_term_by( 'slug', $val[0], $taxonomy );
@@ -529,7 +529,7 @@ function ywraq_get_list_empty_message(){
     $empty_list_message = sprintf( '<p class="ywraq_list_empty_message">%s<p>',  __( 'Your list is empty, add products to the list to send a request', 'yith-woocommerce-request-a-quote' ) );
     $shop_url           = function_exists( 'wc_get_page_id' ) ? get_permalink( wc_get_page_id( 'shop' ) ) : get_permalink( woocommerce_get_page_id( 'shop' ) );
     $shop_url  = apply_filters( 'yith_ywraq_return_to_shop_url', $shop_url );
-    $empty_list_message .= sprintf( '<p class="return-to-shop"><a class="button wc-backward" href="%s">%s</a><p>', $shop_url, __( 'Return To Shop', 'yith-woocommerce-request-a-quote' ) );
+    $empty_list_message .= sprintf( '<p class="return-to-shop"><a class="button wc-backward" href="%s">%s</a><p>', $shop_url, __( 'Shop More Medical Equipment', 'yith-woocommerce-request-a-quote' ) );
 
     return apply_filters( 'ywraq_get_list_empty_message', $empty_list_message );
 }
@@ -587,22 +587,22 @@ function ywraq_get_attachment_id_by_url( $url ) {
 
 /**
  * Return the message after that the request quote sending
- * 
+ *
  * @param $new_order
  *
  * @return string
  */
 function ywraq_get_message_after_request_quote_sending( $new_order ){
-    
+
     $ywraq_message_after_sent_the_request = get_option( 'ywraq_message_after_sent_the_request' );
     $ywraq_message_to_view_details        = get_option( 'ywraq_message_to_view_details' );
-    
+
     if( is_user_logged_in() &&  ( get_option( 'ywraq_enable_link_details' ) == "yes" && get_option( 'ywraq_enable_order_creation', 'yes' ) == 'yes') ){
         $message = sprintf(__( '%s %s <a href="%s">#%s</a>', 'yith-woocommerce-request-a-quote' ), $ywraq_message_after_sent_the_request, $ywraq_message_to_view_details, YITH_YWRAQ_Order_Request()->get_view_order_url($new_order), $new_order );
     }else{
         $message = $ywraq_message_after_sent_the_request;
     }
-    
+
     return $message;
 }
 
@@ -633,6 +633,5 @@ function ywraq_get_label( $key, $echo = false ) {
     } else {
         return $label;
     }
-    
-}
 
+}

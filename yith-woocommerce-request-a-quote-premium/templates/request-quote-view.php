@@ -173,7 +173,7 @@ else: ?>
 			<?php if( $show_price): ?>
 			<tr>
 				<td colspan="6" class="actions">
-					<a class="button wc-backward" href="<?php echo apply_filters( 'yith_ywraq_return_to_shop_url' ,$shop_url ); ?>"><?php _e('Return to Shop', 'yith-woocommerce-request-a-quote') ?></a>
+					<a class="button wc-backward" href="<?php echo apply_filters( 'yith_ywraq_return_to_shop_url' ,$shop_url ); ?>"><?php _e('Shop More Medical Equipment', 'yith-woocommerce-request-a-quote') ?></a>
 					<input type="submit" class="button" name="update_raq" value="<?php _e('Update List', 'yith-woocommerce-request-a-quote') ?>">
 					<input type="hidden" id="update_raq_wpnonce" name="update_raq_wpnonce" value="<?php echo wp_create_nonce( 'update-request-quote-quantity' ) ?>">
 				</td>
