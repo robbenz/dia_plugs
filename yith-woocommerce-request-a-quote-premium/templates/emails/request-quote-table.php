@@ -10,14 +10,17 @@
 $show_price =  true;
 $show_total_column = ( get_option( 'ywraq_hide_total_column', 'yes' ) == 'yes' ) ? false : true;
 
+if( ! empty( $raq_data['raq_content'] ) ):
+
 if( get_option( 'ywraq_enable_order_creation', 'yes' ) == 'yes' ) :
 ?>
+
     <h2><?php printf(__('Request a Quote #EC-%s', 'yith-woocommerce-request-a-quote'), $raq_data['order_id']) ?></h2>
 <?php else: ?>
     <h2><?php _e('Request a Quote', 'yith-woocommerce-request-a-quote') ?></h2>
 <?php endif ?>
 
-
+<?php endif ?>
 <?php do_action( 'yith_ywraq_email_before_raq_table', $raq_data ); ?>
     <table cellspacing="0" cellpadding="6" style="width: 100%; border: 1px solid #eee;border-collapse: collapse;">
         <thead>
