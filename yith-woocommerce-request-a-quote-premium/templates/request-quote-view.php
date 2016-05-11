@@ -11,9 +11,9 @@ $shop_url           = function_exists( 'wc_get_page_id' ) ? get_permalink( wc_ge
 $colspan = get_option( 'ywraq_hide_total_column', 'yes' ) == 'yes' ? '4' : '5';
 
 if( count($raq_content) == 0):
+include ('request-quote-form.php');
 
-	echo ywraq_get_list_empty_message();
-//  include ('request-quote-form.php');
+//	echo ywraq_get_list_empty_message();
 
 else: ?>
     <form id="yith-ywraq-form" name="yith-ywraq-form" action="<?php echo esc_url( YITH_Request_Quote()->get_raq_page_url() ) ?>" method="post">

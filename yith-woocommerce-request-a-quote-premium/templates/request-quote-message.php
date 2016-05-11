@@ -11,6 +11,11 @@
 ?>
 <div class="ywraq-question-message">
     <?php
+
+    include ('request-quote-form.php');
+
+
+
     if( isset($message) && $message != ''): ?>
        <p><?php echo  $message ?></p>
     <?php
