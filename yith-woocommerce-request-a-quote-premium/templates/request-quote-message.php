@@ -12,9 +12,10 @@
 <div class="ywraq-question-message">
     <?php
 
-    include ('request-quote-form.php');
-
-
+  if  ( YITH_Request_Quote()->is_empty() ):
+include ('request-quote-form.php');
+    
+endif;
 
     if( isset($message) && $message != ''): ?>
        <p><?php echo  $message ?></p>
