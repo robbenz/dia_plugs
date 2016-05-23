@@ -12,7 +12,7 @@ $customer = get_post_meta( $order_id, '_customer_user', true);
 $page_detail_admin = ( get_option('ywraq_quote_detail_link') == 'editor' ) ? true : false;
 
 if(empty( $raq_data['partnumber']) && empty( $raq_data['partdesc']) && empty( $raq_data['partqty']) && empty( $raq_data['raq_content'] )):
-$catalog_header = __( 'You\'re Catalog Is On The Way!', 'yith-woocommerce-request-a-quote' );
+$catalog_header = __( 'Your Catalog Is On The Way!', 'yith-woocommerce-request-a-quote' );
 do_action( 'woocommerce_email_header', $catalog_header );
 ?>
 <p><?php printf( __( 'You received a Catalog request from %s.', 'yith-woocommerce-request-a-quote' ), $raq_data['user_name'] ); ?></p>

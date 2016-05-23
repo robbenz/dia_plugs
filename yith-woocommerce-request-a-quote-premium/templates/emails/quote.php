@@ -27,6 +27,7 @@ if( isset( $raq_data['lang']) ){
 }
 ?>
 
+
     <h2><?php printf(  __( '%s n. %d', 'yith-woocommerce-request-a-quote' ), $email_title, $raq_data['order-number'] ) ?></h2>
 
     <p><?php echo $email_description; ?></p>
@@ -101,12 +102,12 @@ if( ! empty( $af2 ) ){
 $af3 = get_post_meta( $order->id, 'ywraq_customer_additional_field_3', true );
 if( ! empty( $af3 ) ){
     printf( '<p><strong>%s</strong>: %s</p>', get_option('ywraq_additional_text_field_label_3'), get_post_meta( $order->id, 'ywraq_customer_additional_field_3', true ) );
-} 
+}
 
 $af4 = get_post_meta( $order->id, 'ywraq_customer_other_email_content', true );
 if( ! empty( $af4 ) ){
     printf( '<p>%s</p>', $af4);
-} 
+}
 
 ?>
 
