@@ -27,7 +27,6 @@ if( isset( $raq_data['lang']) ){
 }
 ?>
 
-
     <h2><?php printf(  __( '%s n. %d', 'yith-woocommerce-request-a-quote' ), $email_title, $raq_data['order-number'] ) ?></h2>
 
     <p><?php echo $email_description; ?></p>

@@ -37,6 +37,7 @@ do_action( 'woocommerce_email_header', $catalog_quote_header );
 ?>
 <p></p>
 
+
 <?php if( $customer != 0 && ( get_option( 'ywraq_enable_link_details' ) == "yes" && get_option( 'ywraq_enable_order_creation', 'yes' ) == 'yes' ) ): ?>
 <p><?php printf( __( 'You can see details here: <a href="%s">#EC-%s</a>', 'yith-woocommerce-request-a-quote' ), YITH_YWRAQ_Order_Request()->get_view_order_url($order_id, $page_detail_admin), $order_id ); ?></p>
 <?php endif ?>
@@ -69,8 +70,8 @@ do_action( 'woocommerce_email_header', $catalog_quote_header );
 </tr>
 </tbody>
 </table>
-<?php   endif ?>
 
+<?php endif ?>
 
 <?php if( ! empty( $raq_data['user_message']) ): ?>
 <h2><?php _e( 'Customer\'s message', 'yith-woocommerce-request-a-quote' ); ?></h2>
@@ -96,8 +97,4 @@ do_action( 'woocommerce_email_header', $catalog_quote_header );
 <p><strong><?php _e( 'Zip Code:', 'yith-woocommerce-request-a-quote' ); ?></strong> <?php echo $raq_data['zipcode'] ?></p>
 <p><strong><?php _e( 'Phone Number:', 'yith-woocommerce-request-a-quote' ); ?></strong> <?php echo $raq_data['phonenumber'] ?></p>
 
-<?php
-
-do_action( 'woocommerce_email_footer', $email );
-
-?>
+<?php do_action( 'woocommerce_email_footer', $email ); ?>

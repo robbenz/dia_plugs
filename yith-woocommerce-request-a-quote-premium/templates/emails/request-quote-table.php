@@ -77,6 +77,7 @@ if( get_option( 'ywraq_enable_order_creation', 'yes' ) == 'yes' ) :
                         </td>
                     <?php endif ?>
 
+
                     <td scope="col" style="text-align:left;border: 1px solid #eee;"><a href="<?php echo  $_product->get_permalink() ?>"><?php echo $title ?></a>
                         <?php  if( isset($item['variations']) || isset($item['addons'] ) || isset($item['yith_wapo_options'] ) ): ?><small><?php echo yith_ywraq_get_product_meta($item); ?></small><?php endif ?></td>
                     <td scope="col" style="text-align:left;border: 1px solid #eee;"><?php echo $item['quantity'] ?></td>
