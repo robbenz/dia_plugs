@@ -186,3 +186,18 @@ function wppbc_disable_admin_approval_for_user_role( $user_id ) {
 		clean_object_term_cache( $user_id, 'user_status' );
 	}
 }
+
+/* authors and contributors shouldn't be allowed to create pages with the register shortcode in them */
+add_filter( 'the_content', 'wppb_maybe_remove_register_shortcode' );
+function wppb_maybe_remove_register_shortcode( $content ){
+    if ( has_shortcode( $content, 'wppb-register' ) ){
+        $author_id = get_the_author_meta( 'ID' );
+        if( !empty( $author_id ) ){
+            if( !user_can( $author_id, 'edit_others_posts' ) ) {
+                remove_shortcode('wppb-register');
+            }
+        }
+    }
+
+    return $content;
+}

@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Checkout Custom Fields class.
  *
- * @version 2.4.8
+ * @version 2.5.0
  * @author  Algoritmika Ltd.
  */
 
@@ -17,7 +17,7 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.4.7
+	 * @version 2.5.0
 	 */
 	function __construct() {
 
@@ -33,9 +33,11 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 
 			add_action( 'woocommerce_admin_billing_fields',             array( $this, 'add_custom_billing_fields_to_admin_order_display' ), PHP_INT_MAX );
 			add_action( 'woocommerce_admin_shipping_fields',            array( $this, 'add_custom_shipping_fields_to_admin_order_display' ), PHP_INT_MAX );
-			add_action( 'woocommerce_admin_shipping_fields',            array( $this, 'add_custom_order_and_account_fields_to_admin_order_display' ), PHP_INT_MAX );
+			add_action( 'woocommerce_admin_order_data_after_shipping_address', array( $this, 'add_custom_order_and_account_fields_to_admin_order_display' ), PHP_INT_MAX );
 
-			add_action( 'woocommerce_order_details_after_order_table',  array( $this, 'add_custom_fields_to_order_display' ), PHP_INT_MAX );
+			if ( 'yes' === get_option( 'wcj_checkout_custom_fields_add_to_order_received', 'yes' ) ) {
+				add_action( 'woocommerce_order_details_after_order_table', array( $this, 'add_custom_fields_to_order_display' ), PHP_INT_MAX );
+			}
 			add_action( 'woocommerce_email_after_order_table',          array( $this, 'add_custom_fields_to_emails' ), PHP_INT_MAX, 2 );
 
 			add_filter( 'woo_ce_order_fields',                          array( $this, 'add_custom_fields_to_store_exporter' ) );
@@ -294,14 +296,24 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 	/**
 	 * add_custom_fields_to_order_display.
 	 *
-	 * @version 2.4.7
+	 * @version 2.5.0
 	 * @since   2.3.0
 	 */
-	function add_custom_fields_to_order_display( $order ) {
+	function add_custom_fields_to_order_display( $order, $section = '', $add_styling = false ) {
 		$post_meta = get_post_meta( $order->id );
+		$final_output = '';
 		foreach( $post_meta as $key => $values ) {
 
 			if ( false !== strpos( $key, 'wcj_checkout_field_' ) && isset( $values[0] ) ) {
+
+				if ( '' != $section ) {
+//					$the_section_meta_key = str_replace( 'wcj_checkout_field_', 'wcj_checkout_field_section_', $key );
+					//$the_section = current( explode( '_', $key ) );
+					$the_section = strtok( $key, '_' );
+					if ( $section !== $the_section ) {
+						continue;
+					}
+				}
 
 				if (
 					false !== strpos( $key, '_label_' ) ||
@@ -320,6 +332,10 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 				} elseif ( is_array( $values[0] ) && isset( $values[0]['label'] ) ) {
 					$output .= $values[0]['label'] . ': ';
 					// TODO convert from before version 2.3.0
+				}
+
+				if ( $add_styling && '' != $output ) {
+					$output = '<strong>' . $output . '</strong>';
 				}
 
 				$the_value = ( is_array( $values[0] ) && isset( $values[0]['value'] ) ) ? $values[0]['value'] : $values[0];
@@ -351,7 +367,16 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 					$output .= $the_value;
 				}
 
-				if ( '' != $output ) echo $output . '<br>';
+				if ( '' != $output ) {
+					$final_output .= $output . '<br>';
+				}
+			}
+		}
+		if ( '' != $final_output ) {
+			if ( $add_styling ) {
+				echo '<div class="clear"></div><p>' . $final_output . '</p>';
+			} else {
+				echo $final_output;
 			}
 		}
 	}
@@ -445,11 +470,17 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 
 	/**
 	 * add_custom_order_and_account_fields_to_admin_order_display
+	 *
+	 * @version 2.5.0
 	 */
-	public function add_custom_order_and_account_fields_to_admin_order_display( $fields ) {
+	public function add_custom_order_and_account_fields_to_admin_order_display( $order ) {
+		$this->add_custom_fields_to_order_display( $order, 'order',   true );
+		$this->add_custom_fields_to_order_display( $order, 'account', true );
+		/*
 		$fields = $this->add_woocommerce_admin_fields( $fields, 'order' );
 		$fields = $this->add_woocommerce_admin_fields( $fields, 'account' );
 		return $fields;
+		*/
 	}
 
 	/**
@@ -559,43 +590,48 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 	/**
 	 * get_settings.
 	 *
-	 * @version 2.4.8
+	 * @version 2.5.0
 	 */
 	public function get_settings() {
 
 		$settings = array(
-
 			array(
-				'title'    => __( 'Checkout Custom Fields Options', 'woocommerce-jetpack' ),
-				'type'     => 'title',
-				'desc'     => '',//__( 'This section lets you add custom checkout fields.', 'woocommerce-jetpack' ),
-				'id'       => 'wcj_checkout_custom_fields_options',
+				'title'     => __( 'Checkout Custom Fields Options', 'woocommerce-jetpack' ),
+				'type'      => 'title',
+				'desc'      => '',//__( 'This section lets you add custom checkout fields.', 'woocommerce-jetpack' ),
+				'id'        => 'wcj_checkout_custom_fields_options',
 			),
-
 			array(
 				'title'     => __( 'Add All Fields to Admin Emails', 'woocommerce-jetpack' ),
-				'desc'      => __( 'Enable', 'woocommerce-jetpack' ),
+				'desc'      => __( 'Add', 'woocommerce-jetpack' ),
 				'id'        => 'wcj_checkout_custom_fields_email_all_to_admin',
 				'default'   => 'yes',
 				'type'      => 'checkbox',
 			),
-
 			array(
 				'title'     => __( 'Add All Fields to Customers Emails', 'woocommerce-jetpack' ),
-				'desc'      => __( 'Enable', 'woocommerce-jetpack' ),
+				'desc'      => __( 'Add', 'woocommerce-jetpack' ),
 				'id'        => 'wcj_checkout_custom_fields_email_all_to_customer',
 				'default'   => 'yes',
 				'type'      => 'checkbox',
 			),
-
-			array( 'type'  => 'sectionend', 'id' => 'wcj_checkout_custom_fields_options' ),
-
 			array(
-				'title'    => __( 'The Fields', 'woocommerce-jetpack' ),
-				'type'     => 'title',
-				'id'       => 'wcj_checkout_custom_fields_individual_options',
+				'title'     => __( 'Add All Fields to "Order Received" Page', 'woocommerce-jetpack' ),
+				'desc'      => __( 'Add', 'woocommerce-jetpack' ),
+				'id'        => 'wcj_checkout_custom_fields_add_to_order_received',
+				'default'   => 'yes',
+				'type'      => 'checkbox',
+			),
+			array(
+				'type'      => 'sectionend',
+				'id'        => 'wcj_checkout_custom_fields_options',
 			),
 
+			array(
+				'title'     => __( 'The Fields', 'woocommerce-jetpack' ),
+				'type'      => 'title',
+				'id'        => 'wcj_checkout_custom_fields_individual_options',
+			),
 			array(
 				'title'     => __( 'Custom Fields Number', 'woocommerce-jetpack' ),
 				'desc_tip'  => __( 'Click "Save changes" after you change this number.', 'woocommerce-jetpack' ),
@@ -629,7 +665,9 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 				array(
 					array(
 						'title'     => __( 'Custom Field', 'woocommerce-jetpack' ) . ' #' . $i,
-						'desc'      => __( 'enabled', 'woocommerce-jetpack' ),
+						'desc'      => __( 'Enabled', 'woocommerce-jetpack' ),
+						'desc_tip'  => /* __( 'Key', 'woocommerce-jetpack' ) . ': ' . */
+							get_option( 'wcj_checkout_custom_field_section_' . $i, 'billing' ) . '_' . 'wcj_checkout_field_' . $i,
 						'id'        => 'wcj_checkout_custom_field_enabled_' . $i,
 						'default'   => 'no',
 						'type'      => 'checkbox',
@@ -848,7 +886,6 @@ class WCJ_Checkout_Custom_Fields extends WCJ_Module {
 				)
 			);
 		}
-
 		$settings[] = array( 'type'  => 'sectionend', 'id' => 'wcj_checkout_custom_fields_individual_options' );
 
 		return $this->add_standard_settings( $settings );

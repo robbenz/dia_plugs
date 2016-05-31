@@ -1036,9 +1036,18 @@ class Wordpress_Creation_Kit_PB{
     function wck_save_single_metabox( $post_id, $post ){
         if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
             return $post_id;
-        // check permissions
-        if ( !current_user_can( 'edit_page', $post_id ) )
-            return $post_id;
+
+        // Check the user's permissions.
+        if ( isset( $_POST['post_type'] ) && 'page' == $_POST['post_type'] ) {
+            if ( ! current_user_can( 'edit_page', $post_id ) ) {
+                return $post_id;
+            }
+        } else {
+            if ( ! current_user_can( 'edit_post', $post_id ) ) {
+                return $post_id;
+            }
+        }
+
         /* only go through for metaboxes defined for this post type */
         if( get_post_type( $post_id ) != $this->args['post_type'] )
             return $post_id;

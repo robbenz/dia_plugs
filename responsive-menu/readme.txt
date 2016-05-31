@@ -4,7 +4,7 @@ Donate link: http://responsive.menu/donate/
 Tags: responsive, menu, responsive menu, mobile menu, wordpress responsive menu, wp responsive menu, tablet menu, mobile, tablet, 3 lines, 3 line, three line, three lines
 Requires at least: 3.5.0
 Tested up to: 4.5
-Stable tag: 2.8.7
+Stable tag: 2.8.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,7 +12,7 @@ This is a Highly Customisable Responsive Menu Plugin for WordPress
 
 == Description ==
 
-This is a Highly Customisable Responsive Menu Plugin for WordPress, with 70 customisable options for a nice mobile menu or tablet menu experience enabling you to change the: 
+This is a Highly Customisable Responsive Menu Plugin for WordPress, with 70 customisable options for a nice mobile menu or tablet menu experience enabling you to change the:
 <br />
 <ul>
 <li> - Menu Title</li>
@@ -134,6 +134,9 @@ Alternatively:
 
 == Changelog ==
 
+= 2.8.8 (12th May 2016) =
+* Added class to body when menu is opened
+
 = 2.8.7 =
 * Added absolute paths to file inclusions
 * Added ability to set menu title text location (top, bottom, left, right)
@@ -171,7 +174,7 @@ Alternatively:
 	- Menu Auto-Height option
 	- Background scrolling disabled option
 * Added "Reset to default" option
-* Removed Metatag check 
+* Removed Metatag check
 * Improved transient caching
 * Bugfixes
 
@@ -190,8 +193,8 @@ Alternatively:
 * Fixed issue with custom sub menu classes
 * Button now compatible with Apple Voiceover
 * Changed "X" close icon to the math symbol "x" - Thanks to patlog for the idea!
-* Added many more shortcode options as below:           
-                     
+* Added many more shortcode options as below:
+
     - "title"
     - "title_link"
     - "title_open"
@@ -211,14 +214,14 @@ Alternatively:
 = 2.3 (16th Feb 2015) =
 
 * Added ability to set custom click menu trigger
-* Added ability to set custom walker function - Thanks to Mickael Desgranges for this 
+* Added ability to set custom walker function - Thanks to Mickael Desgranges for this
 * Added option to push menu button with animation
 * Added option to change Current Page background hover colour
 * Added option to change Current Page Link hover colour
 * Fixed issue with accordion menu not retracting
 * Enabled 0 values for animation speed to in affect remove animation
 * Added easy view of Shortcode options in admin
-* Added ability to place shortcodes in extra html content - Thanks to Mickael Desgranges for this 
+* Added ability to place shortcodes in extra html content - Thanks to Mickael Desgranges for this
 * Leveraged WordPress persistent transient caching to significantly increase load speed
 
 = 2.2 (29th Oct 2014) =

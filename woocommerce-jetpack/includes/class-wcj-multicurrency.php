@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Multicurrency class.
  *
- * @version 2.4.8
+ * @version 2.5.0
  * @since   2.4.3
  * @author  Algoritmika Ltd.
  */
@@ -18,7 +18,7 @@ class WCJ_Multicurrency extends WCJ_Module {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.4.8
+	 * @version 2.5.0
 	 */
 	function __construct() {
 
@@ -31,7 +31,8 @@ class WCJ_Multicurrency extends WCJ_Module {
 		add_filter( 'init', array( $this, 'add_settings_hook' ) );
 
 		if ( $this->is_enabled() ) {
-			add_filter( 'init', array( $this, 'add_hooks' ) );
+//			add_filter( 'init', array( $this, 'add_hooks' ) );
+			$this->add_hooks();
 
 			if ( 'yes' === get_option( 'wcj_multicurrency_per_product_enabled' , 'yes' ) ) {
 				add_action( 'add_meta_boxes',    array( $this, 'add_meta_box' ) );
@@ -95,7 +96,7 @@ class WCJ_Multicurrency extends WCJ_Module {
 	/**
 	 * add_hooks.
 	 *
-	 * @version 2.4.3
+	 * @version 2.5.0
 	 */
 	function add_hooks() {
 		// Session
@@ -120,16 +121,50 @@ class WCJ_Multicurrency extends WCJ_Module {
 			add_filter( 'woocommerce_variation_prices_regular_price', array( $this, 'change_price_by_currency' ), PHP_INT_MAX - 1, 2 );
 			add_filter( 'woocommerce_variation_prices_sale_price',    array( $this, 'change_price_by_currency' ), PHP_INT_MAX - 1, 2 );
 			add_filter( 'woocommerce_get_variation_prices_hash',      array( $this, 'get_variation_prices_hash' ), PHP_INT_MAX - 1, 3 );
+			// Grouped products
+			add_filter( 'woocommerce_get_price_including_tax',        array( $this, 'change_price_by_currency_grouped' ), PHP_INT_MAX - 1, 3 );
+			add_filter( 'woocommerce_get_price_excluding_tax',        array( $this, 'change_price_by_currency_grouped' ), PHP_INT_MAX - 1, 3 );
 		}
+	}
+
+	/**
+	 * change_price_by_currency_grouped.
+	 *
+	 * @version 2.5.0
+	 * @since   2.5.0
+	 */
+	function change_price_by_currency_grouped( $price, $qty, $_product ) {
+		if ( $_product->is_type( 'grouped' ) ) {
+			if ( 'yes' === get_option( 'wcj_multicurrency_per_product_enabled' , 'yes' ) ) {
+				$get_price_method = 'get_price_' . get_option( 'woocommerce_tax_display_shop' ) . 'uding_tax';
+				foreach ( $_product->get_children() as $child_id ) {
+					$the_price = get_post_meta( $child_id, '_price', true );
+					$the_product = wc_get_product( $child_id );
+					$the_price = $the_product->$get_price_method( 1, $the_price );
+					if ( $the_price == $price ) {
+						return $this->change_price_by_currency( $price, $the_product );
+					}
+				}
+			} else {
+				return $this->change_price_by_currency( $price, null );
+			}
+		}
+		return $price;
 	}
 
 	/**
 	 * get_variation_prices_hash.
 	 *
-	 * @version 2.4.3
+	 * @version 2.5.0
 	 */
 	function get_variation_prices_hash( $price_hash, $_product, $display ) {
-		$price_hash['wcj_currency'] = $this->get_current_currency_code();
+		$currency_code = $this->get_current_currency_code();
+		$currency_exchange_rate = $this->get_currency_exchange_rate( $currency_code );
+		$price_hash['wcj_multicurrency_data'] = array(
+			$currency_code,
+			$currency_exchange_rate,
+			get_option( 'wcj_multicurrency_per_product_enabled', 'yes' ),
+		);
 		return $price_hash;
 	}
 
@@ -151,22 +186,46 @@ class WCJ_Multicurrency extends WCJ_Module {
 	}
 
 	/**
+	 * do_revert.
+	 *
+	 * @version 2.5.0
+	 * @since   2.5.0
+	 */
+	function do_revert() {
+		return ( 'yes' === get_option( 'wcj_multicurrency_revert', 'no' ) && is_checkout() );
+	}
+
+	/**
 	 * change_price_by_currency.
 	 *
-	 * @version 2.4.3
+	 * @version 2.5.0
 	 */
 	function change_price_by_currency( $price, $_product ) {
+
+		if ( '' === $price ) {
+			return $price;
+		}
+
+		if ( $this->do_revert() ) {
+			return $price;
+		}
 
 		// Per product
 		if ( 'yes' === get_option( 'wcj_multicurrency_per_product_enabled' , 'yes' ) ) {
 			$the_product_id = ( isset( $_product->variation_id ) ) ? $_product->variation_id : $_product->id;
 			if ( '' != ( $regular_price_per_product = get_post_meta( $the_product_id, '_' . 'wcj_multicurrency_per_product_regular_price_' . $this->get_current_currency_code(), true ) ) ) {
-				if ( 'woocommerce_get_price' == current_filter() || 'woocommerce_variation_prices_price' == current_filter() ) {
+				$the_current_filter = current_filter();
+				if ( 'woocommerce_get_price_including_tax' == $the_current_filter || 'woocommerce_get_price_excluding_tax' == $the_current_filter ) {
+					$get_price_method = 'get_price_' . get_option( 'woocommerce_tax_display_shop' ) . 'uding_tax';
+					return $_product->$get_price_method();
+				} elseif ( 'woocommerce_get_price' == $the_current_filter || 'woocommerce_variation_prices_price' == $the_current_filter ) {
 					$sale_price_per_product = get_post_meta( $the_product_id, '_' . 'wcj_multicurrency_per_product_sale_price_' . $this->get_current_currency_code(), true );
 					return ( '' != $sale_price_per_product && $sale_price_per_product < $regular_price_per_product ) ? $sale_price_per_product : $regular_price_per_product;
-				} elseif ( 'woocommerce_get_regular_price' == current_filter() || 'woocommerce_variation_prices_regular_price' == current_filter() ) {
+
+				} elseif ( 'woocommerce_get_regular_price' == $the_current_filter || 'woocommerce_variation_prices_regular_price' == $the_current_filter ) {
 					return $regular_price_per_product;
-				} elseif ( 'woocommerce_get_sale_price' == current_filter() || 'woocommerce_variation_prices_sale_price' == current_filter() ) {
+
+				} elseif ( 'woocommerce_get_sale_price' == $the_current_filter || 'woocommerce_variation_prices_sale_price' == $the_current_filter ) {
 					$sale_price_per_product = get_post_meta( $the_product_id, '_' . 'wcj_multicurrency_per_product_sale_price_' . $this->get_current_currency_code(), true );
 					return ( '' != $sale_price_per_product ) ? $sale_price_per_product : $price;
 				}
@@ -185,9 +244,12 @@ class WCJ_Multicurrency extends WCJ_Module {
 	/**
 	 * change_currency_symbol.
 	 *
-	 * @version 2.4.3
+	 * @version 2.5.0
 	 */
 	function change_currency_symbol( $currency_symbol, $currency ) {
+		if ( $this->do_revert() ) {
+			return $currency_symbol;
+		}
 		return wcj_get_currency_symbol( $this->get_current_currency_code( $currency ) );
 	}
 
@@ -203,18 +265,24 @@ class WCJ_Multicurrency extends WCJ_Module {
 	/**
 	 * change_currency_code.
 	 *
-	 * @version 2.4.3
+	 * @version 2.5.0
 	 */
 	function change_currency_code( $currency ) {
+		if ( $this->do_revert() ) {
+			return $currency;
+		}
 		return $this->get_current_currency_code( $currency );
 	}
 
 	/**
 	 * change_shipping_price_by_currency.
 	 *
-	 * @version 2.4.8
+	 * @version 2.5.0
 	 */
 	function change_shipping_price_by_currency( $package_rates, $package ) {
+		if ( $this->do_revert() ) {
+			return $package_rates;
+		}
 		$currency_exchange_rate = $this->get_currency_exchange_rate( $this->get_current_currency_code() );
 		$modified_package_rates = array();
 		foreach ( $package_rates as $id => $package_rate ) {
@@ -253,7 +321,7 @@ class WCJ_Multicurrency extends WCJ_Module {
 	/**
 	 * add_settings.
 	 *
-	 * @version 2.4.3
+	 * @version 2.5.0
 	 * @todo    rounding (maybe)
 	 */
 	function add_settings() {
@@ -286,6 +354,13 @@ class WCJ_Multicurrency extends WCJ_Module {
 				'desc_tip' => __( 'This will add meta boxes in product edit.', 'woocommerce-jetpack' ),
 				'id'       => 'wcj_multicurrency_per_product_enabled',
 				'default'  => 'yes',
+				'type'     => 'checkbox',
+			),
+			array(
+				'title'    => __( 'Revert Currency to Default on Checkout', 'woocommerce-jetpack' ),
+				'desc'     => __( 'Enable', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_multicurrency_revert',
+				'default'  => 'no',
 				'type'     => 'checkbox',
 			),
 			array(

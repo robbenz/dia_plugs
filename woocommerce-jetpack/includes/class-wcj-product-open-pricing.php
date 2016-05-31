@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Product Open Pricing class.
  *
- * @version 2.4.8
+ * @version 2.5.1
  * @since   2.4.8
  * @author  Algoritmika Ltd.
  */
@@ -18,7 +18,7 @@ class WCJ_Product_Open_Pricing extends WCJ_Module {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.4.8
+	 * @version 2.5.0
 	 * @since   2.4.8
 	 */
 	function __construct() {
@@ -26,7 +26,7 @@ class WCJ_Product_Open_Pricing extends WCJ_Module {
 		$this->id         = 'product_open_pricing';
 		$this->short_desc = __( 'Product Open Pricing (Name Your Price)', 'woocommerce-jetpack' );
 		$this->desc       = __( 'Let your WooCommerce store customers enter price for the product manually.', 'woocommerce-jetpack' );
-		$this->link       = '';
+		$this->link       = 'http://booster.io/features/woocommerce-product-open-pricing-name-your-price/';
 		parent::__construct();
 
 		if ( $this->is_enabled() ) {
@@ -37,6 +37,7 @@ class WCJ_Product_Open_Pricing extends WCJ_Module {
 			add_filter( 'woocommerce_get_variation_price_html',   array( $this, 'hide_original_price' ), PHP_INT_MAX, 2 );
 			add_filter( 'woocommerce_is_sold_individually',       array( $this, 'hide_quantity_input_field' ), PHP_INT_MAX, 2 );
 			add_filter( 'woocommerce_is_purchasable',             array( $this, 'is_purchasable' ), PHP_INT_MAX, 2 );
+			add_filter( 'woocommerce_product_supports',           array( $this, 'disable_add_to_cart_ajax' ), PHP_INT_MAX, 3 );
 			add_filter( 'woocommerce_product_add_to_cart_url',    array( $this, 'add_to_cart_url' ), PHP_INT_MAX, 2 );
 			add_filter( 'woocommerce_product_add_to_cart_text',   array( $this, 'add_to_cart_text' ), PHP_INT_MAX, 2 );
 			add_action( 'woocommerce_before_add_to_cart_button',  array( $this, 'add_open_price_input_field_to_frontend' ), PHP_INT_MAX );
@@ -60,9 +61,22 @@ class WCJ_Product_Open_Pricing extends WCJ_Module {
 	}
 
 	/**
+	 * disable_add_to_cart_ajax.
+	 *
+	 * @version 2.5.0
+	 * @since   2.5.0
+	 */
+	function disable_add_to_cart_ajax( $supports, $feature, $_product ) {
+		if ( $this->is_open_price_product( $_product ) && 'ajax_add_to_cart' === $feature ) {
+			$supports = false;
+		}
+		return $supports;
+	}
+
+	/**
 	 * save_meta_box_value.
 	 *
-	 * @version 2.4.8
+	 * @version 2.5.0
 	 * @since   2.4.8
 	 */
 	function save_meta_box_value( $option_value, $option_name, $module_id ) {
@@ -76,12 +90,13 @@ class WCJ_Product_Open_Pricing extends WCJ_Module {
 			$args = array(
 				'post_type'      => 'product',
 				'post_status'    => 'any',
-				'posts_per_page' => -1,
+				'posts_per_page' => 1,
 				'meta_key'       => '_' . 'wcj_product_open_price_enabled',
 				'meta_value'     => 'yes',
+				'post__not_in'   => array( get_the_ID() ),
 			);
 			$loop = new WP_Query( $args );
-			$c = $loop->found_posts;
+			$c = $loop->found_posts + 1;
 			if ( $c >= 2 ) {
 				add_filter( 'redirect_post_location', array( $this, 'add_notice_query_var' ), 99 );
 				return 'no';
@@ -307,42 +322,45 @@ class WCJ_Product_Open_Pricing extends WCJ_Module {
 	/**
 	 * add_open_price_input_field_to_frontend.
 	 *
-	 * @version 2.4.8
+	 * @version 2.5.1
 	 * @since   2.4.8
 	 */
 	function add_open_price_input_field_to_frontend() {
 		$the_product = wc_get_product();
 		if ( $this->is_open_price_product( $the_product ) ) {
+			// Title
 			$title = get_option( 'wcj_product_open_price_label_frontend', __( 'Name Your Price', 'woocommerce-jetpack' ) );
+			// Input field
+			$value = ( isset( $_POST['wcj_open_price'] ) ) ? $_POST['wcj_open_price'] : get_post_meta( $the_product->id, '_' . 'wcj_product_open_price_default_price', true );
 //			$placeholder = $the_product->get_price();
-			$value = ( isset( $_POST['wcj_open_price'] ) ) ?
-				$_POST['wcj_open_price'] :
-				get_post_meta( $the_product->id, '_' . 'wcj_product_open_price_default_price', true );
 			$custom_attributes = '';
 			$wc_price_decimals = wc_get_price_decimals();
 			if ( $wc_price_decimals > 0 ) {
 				$custom_attributes .= sprintf( 'step="0.%0' . ( $wc_price_decimals ) . 'd" ', 1 );
 			}
-			echo
-				/* '<div>' . */ '<label for="wcj_open_price">' . $title . '</label>' . ' '
-				. '<input '
-					. 'type="number" '
-					. 'class="text" '
-					. 'style="width:75px;text-align:center;" '
-					. 'name="wcj_open_price" '
-					. 'id="wcj_open_price" '
-//					. 'placeholder="' . $placeholder . '" '
-					. 'value="' . $value . '" '
-					. $custom_attributes
-				. '>'
-				. ' ' . get_woocommerce_currency_symbol() /* . '</div>' */;
+			$input_field = '<input '
+				. 'type="number" '
+				. 'class="text" '
+				. 'style="width:75px;text-align:center;" '
+				. 'name="wcj_open_price" '
+				. 'id="wcj_open_price" '
+//				. 'placeholder="' . $placeholder . '" '
+				. 'value="' . $value . '" '
+				. $custom_attributes . '>';
+			// Currency symbol
+			$currency_symbol = get_woocommerce_currency_symbol();
+			echo str_replace(
+				array( '%frontend_label%', '%open_price_input%', '%currency_symbol%' ),
+				array( $title,             $input_field,         $currency_symbol ),
+				get_option( 'wcj_product_open_price_frontend_template', '<label for="wcj_open_price">%frontend_label%</label> %open_price_input% %currency_symbol%' )
+			);
 		}
 	}
 
 	/**
 	 * get_settings.
 	 *
-	 * @version 2.4.8
+	 * @version 2.5.1
 	 * @since   2.4.8
 	 */
 	function get_settings() {
@@ -358,6 +376,14 @@ class WCJ_Product_Open_Pricing extends WCJ_Module {
 				'default'  => __( 'Name Your Price', 'woocommerce-jetpack' ),
 				'type'     => 'text',
 				'css'      => 'width:250px;',
+			),
+			array(
+				'title'    => __( 'Frontend Template', 'woocommerce-jetpack' ),
+				'desc_tip' => __( 'Here you can use' ) . ': ' . '%frontend_label%, %open_price_input%, %currency_symbol%',
+				'id'       => 'wcj_product_open_price_frontend_template',
+				'default'  => '<label for="wcj_open_price">%frontend_label%</label> %open_price_input% %currency_symbol%',
+				'type'     => 'textarea',
+				'css'      => 'min-width:300px;width:50%;',
 			),
 			array(
 				'title'    => __( 'Message on Empty Price', 'woocommerce-jetpack' ),

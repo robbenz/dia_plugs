@@ -270,6 +270,17 @@ var fields 	=	{
 																					]
 																},
 
+                        'Select (Currency)':					{	'show_rows'	:	[
+                                                                                        '.row-field-title',
+                                                                                        '.row-meta-name',
+                                                                                        '.row-description',
+                                                                                        '.row-show-currency-symbol',
+                                                                                        '.row-default-option-currency',
+                                                                                        '.row-required',
+                                                                                        '.row-overwrite-existing'
+                                                                                    ]
+                                                                },
+
 						'Select (Timezone)':					{	'show_rows'	:	[
 																						'.row-field-title',
 																						'.row-meta-name',
@@ -347,6 +358,40 @@ var fields 	=	{
 																						'.row-overwrite-existing'
 																					]
 																},
+
+
+                        'Timepicker':							{	'show_rows'	:	[
+                                                                                        '.row-field-title',
+                                                                                        '.row-meta-name',
+                                                                                        '.row-description',
+                                                                                        '.row-required',
+                                                                                        '.row-time-format',
+                                                                                        '.row-overwrite-existing'
+                                                                                    ]
+                                                                },
+
+                        'Colorpicker':							{	'show_rows'	:	[
+																						'.row-field-title',
+																						'.row-meta-name',
+																						'.row-description',
+																						'.row-required',
+																						'.row-overwrite-existing'
+																					]
+																},
+
+
+                        'Validation':							{	'show_rows'	:	[
+                                                                                        '.row-field-title',
+                                                                                        '.row-meta-name',
+                                                                                        '.row-description',
+                                                                                        '.row-validation-possible-values',
+                                                                                        '.row-custom-error-message',
+                                                                                        '.row-required'
+                                                                                    ],
+                                                                    'required'	:	[
+                                                                        true
+                                                                    ]
+                                                                },
 
 						'reCAPTCHA':							{	'show_rows'	:	[
 																						'.row-field-title',
@@ -571,7 +616,7 @@ function wppb_handle_user_role_field( container_name ) {
                 sortOrderElements.shift();
 
                 for( var i=0; i < sortOrderElements.length; i++ ) {
-                    jQuery( container_name + ' ' + '.row-user-roles .wck-checkboxes').append( jQuery( container_name + ' ' + '.row-user-roles .wck-checkboxes input[value=' + sortOrderElements[i] + ']').parent().parent().get(0) );
+                    jQuery( container_name + ' ' + '.row-user-roles .wck-checkboxes').append( jQuery( container_name + ' ' + '.row-user-roles .wck-checkboxes input[value="' + sortOrderElements[i] + '"]').parent().parent().get(0) );
                 }
             }
         },

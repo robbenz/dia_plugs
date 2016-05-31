@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Product Input Fields class.
  *
- * @version 2.4.8
+ * @version 2.5.0
  * @author  Algoritmika Ltd.
  */
 
@@ -66,7 +66,7 @@ class WCJ_Product_Input_Fields extends WCJ_Module {
 	/**
 	 * handle_downloads.
 	 *
-	 * @version 2.2.2
+	 * @version 2.5.0
 	 * @since   2.2.2
 	 */
 	public function handle_downloads() {
@@ -74,7 +74,7 @@ class WCJ_Product_Input_Fields extends WCJ_Module {
 			$file_name = $_GET['wcj_download_file'];
 			$upload_dir = wcj_get_wcj_uploads_dir( 'input_fields_uploads' );
 			$file_path = $upload_dir . '/' . $file_name;
-			if ( is_super_admin() || is_shop_manager() ) {
+			if ( wcj_is_user_role( 'administrator' ) || is_shop_manager() ) {
 				header( "Expires: 0" );
 				header( "Cache-Control: must-revalidate, post-check=0, pre-check=0" );
 				header( "Cache-Control: private", false );
@@ -114,7 +114,7 @@ class WCJ_Product_Input_Fields extends WCJ_Module {
 	/**
 	 * get_settings.
 	 *
-	 * @version 2.4.0
+	 * @version 2.5.0
 	 */
 	function get_settings() {
 
@@ -239,6 +239,35 @@ class WCJ_Product_Input_Fields extends WCJ_Module {
 			array(
 				'type'     => 'sectionend',
 				'id'       => 'wcj_product_input_fields_frontend_view_options',
+			),
+		) );
+
+		$settings = array_merge( $settings, array(
+			array(
+				'title'    => __( 'Emails Options', 'woocommerce-jetpack' ),
+				'type'     => 'title',
+				'id'       => 'wcj_product_input_fields_emails_options',
+			),
+
+			array(
+				'title'    => __( 'Attach Files to Admin\'s New Order Emails', 'woocommerce-jetpack' ),
+				'desc'     => __( 'Attach', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_product_input_fields_attach_to_admin_new_order',
+				'default'  => 'yes',
+				'type'     => 'checkbox',
+			),
+
+			array(
+				'title'    => __( 'Attach Files to Customer\'s Processing Order Emails', 'woocommerce-jetpack' ),
+				'desc'     => __( 'Attach', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_product_input_fields_attach_to_customer_processing_order',
+				'default'  => 'yes',
+				'type'     => 'checkbox',
+			),
+
+			array(
+				'type'     => 'sectionend',
+				'id'       => 'wcj_product_input_fields_emails_options',
 			),
 		) );
 

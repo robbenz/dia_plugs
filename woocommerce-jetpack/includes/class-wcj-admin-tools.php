@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Admin Tools class.
  *
- * @version 2.3.10
+ * @version 2.5.0
  * @author  Algoritmika Ltd.
  */
 
@@ -17,13 +17,14 @@ class WCJ_Admin_Tools extends WCJ_Module {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.3.10
+	 * @version 2.5.0
 	 */
 	public function __construct() {
 
 		$this->id         = 'admin_tools';
 		$this->short_desc = __( 'Admin Tools', 'woocommerce-jetpack' );
 		$this->desc       = __( 'Booster for WooCommerce debug and log tools.', 'woocommerce-jetpack' );
+		$this->link       = 'http://booster.io/features/woocommerce-booster-admin-tools/';
 		parent::__construct();
 
 		$this->add_tools( array(
@@ -38,12 +39,12 @@ class WCJ_Admin_Tools extends WCJ_Module {
 	/**
 	 * create_tool.
 	 *
-	 * @version 2.3.10
+	 * @version 2.5.0
 	 */
 	public function create_admin_tools_tool() {
 
 		$the_notice = '';
-		if ( isset( $_GET['wcj_delete_log'] ) && is_super_admin() ) {
+		if ( isset( $_GET['wcj_delete_log'] ) && wcj_is_user_role( 'administrator' ) ) {
 			update_option( 'wcj_log', '' );
 			$the_notice .= __( 'Log deleted successfully.', 'woocommerce-jetpack' );
 		}

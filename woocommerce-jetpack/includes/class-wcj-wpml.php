@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack WPML class.
  *
- * @version 2.4.8
+ * @version 2.5.0
  * @since   2.2.0
  * @author  Algoritmika Ltd.
  */
@@ -18,13 +18,14 @@ class WCJ_WPML extends WCJ_Module {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.4.4
+	 * @version 2.5.0
 	 */
 	function __construct() {
 
 		$this->id         = 'wpml';
-		$this->short_desc = __( 'WPML', 'woocommerce-jetpack' );
+		$this->short_desc = __( 'Booster WPML', 'woocommerce-jetpack' );
 		$this->desc       = __( 'Booster for WooCommerce basic WPML support.', 'woocommerce-jetpack' );
+		$this->link       = 'http://booster.io/features/woocommerce-booster-wpml/';
 		parent::__construct();
 
 		if ( $this->is_enabled() ) {
@@ -89,11 +90,11 @@ class WCJ_WPML extends WCJ_Module {
 	/**
 	 * create_wpml_xml_file.
 	 *
-	 * @version 2.4.1
+	 * @version 2.5.0
 	 * @since   2.4.1
 	 */
 	function create_wpml_xml_file_tool() {
-		if ( ! isset( $_GET['create_wpml_xml_file'] ) || ! is_super_admin() ) {
+		if ( ! isset( $_GET['create_wpml_xml_file'] ) || ! wcj_is_user_role( 'administrator' ) ) {
 			return;
 		}
 		if ( ! isset( $_GET['section'] ) || 'wpml' != $_GET['section'] ) {

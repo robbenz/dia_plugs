@@ -1,8 +1,8 @@
-=== WPB Woocommerce Product slider ===
+=== WPB WooCommerce Product Slider ===
 Contributors: wpbean
 Tags: woocommerce product slider, woocommerce product gallery slider, woocommerce product slider plugin, woocommerce product slider plugin free, woocommerce featured product slider, woocommerce widget product slider, woocommerce featured products slider, multiple product slider, on sale product carousel, product, product carousel, product content slider, woocommerce product slider plugin free, product contents carousel, product rotator, product slider, products slider, responsive product slider, woo slider, woocommerce, woocommerce product carousel, WooCommerce Products, woocommerce products slider, woocommerce slider, carousel, woocommerce image slider, woocommerce responsive slider, woocommerce advance slider, best woocommerce product slider, easy woocommerce product slider, woocommerce slider free, woocommerce slider plugin, slider for woocommerce, woocommerce category slider, product slider carousel for woocommerce, woocommerce product slider and carousel plugin
 Requires at least: 3.6
-Tested up to: 4.5
+Tested up to: 4.5.2
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -15,7 +15,7 @@ Number one free WooCommerce Product slider plugin.
 The WPB WooCommerce Product slider is most popular & best free WooCommerce product slider plugin. We have thousands of active install of this plugin. If you are thinking to build a shopping site using WooCommerce, then WPB WooCommerce Product slider plugin is most required to you for taking your conversion rate to the next level.
 
 
->[Upgrade to the Pro Version Now!&raquo;](http://wpbean.com/product/wpb-woocommerce-product-slider-pro)  |  [DEMO](http://demo1.wpbean.com/wpb-woocommerce-product-slider-pro/)  |  [Support](http://wpbean.com/support/) |  [Documentation](http://mangotheme.com/doc/woo_pro_slider/)
+>[Upgrade to the Pro Version Now!&raquo;](http://wpbean.com/product/wpb-woocommerce-product-slider-pro)  |  [DEMO](http://demo1.wpbean.com/wpb-woocommerce-product-slider-pro/)  |  [Support](http://wpbean.com/support/) |  [Documentation](https://wordpress.org/plugins/wpb-woocommerce-product-slider/installation/)
 
 See the <a href="http://wordpress.org/plugins/wpb-woo-product-slider/screenshots/">screenshots section</a> for visuals on WPB Woocommerce Product slider features.
 
@@ -61,7 +61,7 @@ https://www.youtube.com/watch?v=abgnW7wN5pY&feature=youtu.be
 
 ### You may also like our some other WooCommerce plugins
 
->[WPB WooCommerce Related Products Slider](https://wordpress.org/plugins/wpb-woocommerce-related-products-slider/)  |  [Woocommerce Image Zoom](https://wordpress.org/plugins/woocommerce-image-zoom/)  |  [WooCommerce LightBox](https://wordpress.org/plugins/woocommerce-lightbox/)
+>[WPB WooCommerce Related Products Slider](https://wordpress.org/plugins/wpb-woocommerce-related-products-slider/)  |  [Woocommerce Image Zoom](https://wordpress.org/plugins/woocommerce-image-zoom/)  |  [WooCommerce LightBox](https://wordpress.org/plugins/woocommerce-lightbox/) |  [WooCommerce WooCommerce Custom Tab Manager](https://wordpress.org/plugins/wpb-woocommerce-custom-tab-manager/)
 
 == Installation ==
 
@@ -86,8 +86,17 @@ Method 2 (FTP):
 3. If you successfully upload the plugin You will find WPB WOO Product Slider here.
 
 4. Active the plugin and you are ready to go.
- 
 
+* Using this plugin's shortcode to show products slider in page: 
+	1. In your WordPress admin navigate to Pages > Add New Page.
+	2. Use the shortcodes bellow to show the product slider.
+	3. Latest products slider shortcode:  [wpb-latest-product title="Latest Product"]
+	4. Featured products slider shortcode:  [wpb-feature-product title="Feature Products"]
+
+* Using this plugin's widgets to show products slider in sidebar area:
+	1. In your WordPress admin navigate to Appearance > Widgets. Here you will see two widgets for showing latest and featured products slider.
+	2. Use WPB Feature Products Slider widget for showing featured products slider in your sidebar area. Make sure you have some featured products.
+	3. Use WPB Latest Products Slider widget for showing latest products slider in your sidebar area.
 
 
 == Frequently asked questions ==
@@ -113,6 +122,9 @@ Yes you can. I have created two different widget for this plugin, one for latest
 4. WPB Woocommerce Product Slider in admin widgets 
 
 == Changelog ==
+
+= version 1.0.7 =
+* Documentation updated.
 
 = version 1.0.4 =
 * Feature products slider widget's bug  fixed.

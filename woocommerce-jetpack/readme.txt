@@ -1,9 +1,9 @@
 === Booster for WooCommerce ===
-Contributors: algoritmika,anbinder,solovjov
+Contributors: algoritmika,anbinder
 Tags: woocommerce,booster for woocommerce,woocommerce jetpack,custom price labels,call for price,currency symbol,remove sorting,remove old product slugs,add to cart text,order number,sequential order numbering,email pdf invoice,pdf invoice,pdf invoices,already in cart,empty cart,redirect to checkout,minimum order amount,customize checkout fields,checkout fields,email,customize product tabs,product tabs,related products number,empty cart,redirect add to cart,redirect to checkout,product already in cart,custom payment gateway,payment gateway icon,auto-complete all orders,custom order statuses,custom order status,remove text from price,custom css,hide categories count,hide subcategories count,hide category count,hide subcategory count,display total sales,custom product tabs,remove product tab,payment gateway fee,vat,gateway by country,price by country,currency switcher
 Requires at least: 4.1
 Tested up to: 4.5
-Stable tag: 2.4.8
+Stable tag: 2.5.1
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -23,8 +23,10 @@ Booster for WooCommerce is a WordPress plugin that supercharges your site with a
 * *Currency for External Products* - Set different currency for external WooCommerce products.
 * *Multicurrency (Currency Switcher)* - Add multiple currencies (currency switcher) to WooCommerce.
 * *Multicurrency Product Base Price* - Enter prices for WooCommerce products in different currencies.
+* *Price by User Role* - Display WooCommerce products prices by user roles.
 * *Prices and Currencies by Country* - Change WooCommerce product price and currency automatically by customer's country.
 * *Product Open Pricing (Name Your Price)* - Let your WooCommerce store customers enter price for the product manually.
+* *Product Price by Formula* - Set formula for automatic WooCommerce product price calculation.
 * *Wholesale Price* - Set WooCommerce wholesale pricing depending on product quantity in cart (buy more pay less).
 
 **Button & Price Labels**
@@ -36,6 +38,7 @@ Booster for WooCommerce is a WordPress plugin that supercharges your site with a
 
 **Products**
 
+* *Bookings* - Add bookings products to WooCommerce.
 * *Crowdfunding* - Add crowdfunding products to WooCommerce.
 * *Product Add to Cart* - Set any local url to redirect to on WooCommerce Add to Cart. Automatically add to cart on product visit. Display radio buttons instead of drop box for variable products.
 * *Product Cost Price* - Save WooCommerce product purchase costs data for admin reports.
@@ -44,17 +47,18 @@ Booster for WooCommerce is a WordPress plugin that supercharges your site with a
 * *Product Input Fields* - WooCommerce product input fields.
 * *Product Listings* - Change WooCommerce display options for shop and category pages: show/hide categories count, exclude categories, show/hide empty categories.
 * *Product Tabs* - Add custom product tabs - globally or per product. Customize or completely remove WooCommerce default product tabs.
+* *Product by Country* - Display WooCommerce products by customers country.
 * *Related Products* - Change displayed WooCommerce related products number, columns, order, relate by tag and/or category, or hide related products completely.
 * *SKU* - Generate WooCommerce SKUs automatically.
 * *Sorting* - Add more WooCommerce sorting options or remove all sorting including default.
 
 **Cart & Checkout**
 
-* *Cart* - Add custom info to WooCommerce cart page. Add empty cart button.
+* *Cart* - Add custom info to WooCommerce cart page.
 * *Checkout Core Fields* - Customize WooCommerce core checkout fields. Disable/enable fields, set required, change labels and/or placeholders.
 * *Checkout Custom Fields* - Add custom fields to WooCommerce checkout page.
-* *Checkout Files Upload* - Let customers upload files on WooCommerce checkout.
 * *Checkout Custom Info* - Add custom info to WooCommerce checkout page.
+* *Checkout Files Upload* - Let customers upload files on (or after) WooCommerce checkout.
 * *Empty Cart Button* - Add and customize "Empty Cart" button to cart page.
 * *Mini Cart* - Customize WooCommerce mini cart widget.
 
@@ -62,18 +66,18 @@ Booster for WooCommerce is a WordPress plugin that supercharges your site with a
 
 * *Custom Gateways* - Add multiple custom payment gateways to WooCommerce.
 * *Gateways Currency* - Currency per WooCommerce payment gateway.
-* *Gateways Fees* - Enable extra fees for WooCommerce payment gateways.
+* *Gateways Fees and Discounts* - Enable extra fees or discounts for WooCommerce payment gateways.
 * *Gateways Icons* - Change or completely remove icons (images) for any (default or custom) WooCommerce payment gateway.
 * *Gateways Min/Max* - Add min/max amounts for WooCommerce payment gateways to show up.
-* *Gateways by Country* - Set countries to include/exclude for WooCommerce payment gateways to show up.
-* *Gateways per Category* - Show payment gateway only if there is product of selected category in WooCommerce cart.
+* *Gateways by Country or State* - Set countries or states to include/exclude for WooCommerce payment gateways to show up.
+* *Gateways per Product or Category* - Show WooCommerce gateway only if there is selected product or product category in cart.
 
 **Shipping & Orders**
 
 * *Address Formats* - Set address format in WooCommerce orders on per country basis. Force base country display.
 * *Order Custom Statuses* - Custom statuses for WooCommerce orders.
 * *Order Numbers* - WooCommerce sequential order numbering, custom order number prefix, suffix and number width.
-* *Orders* - Minimum WooCommerce order amount; orders auto-complete.
+* *Orders* - Minimum WooCommerce order amount; orders auto-complete; custom admin order list columns.
 * *Shipping* - Add multiple custom shipping methods to WooCommerce. Hide WooCommerce shipping when free is available. Display "left to free shipping" info.
 * *Shipping Calculator* - Customize WooCommerce shipping calculator on cart page.
 
@@ -84,12 +88,12 @@ Booster for WooCommerce is a WordPress plugin that supercharges your site with a
 **Emails & Misc.**
 
 * *Admin Tools* - Booster for WooCommerce debug and log tools.
-* *Emails* - Add custom emails. Add another email recipient(s) to all WooCommerce emails.
+* *Booster WPML* - Booster for WooCommerce basic WPML support.
 * *EU VAT Number* - Collect and validate EU VAT numbers on WooCommerce checkout. Automatically disable VAT for valid numbers. Add all EU countries VAT standard rates to WooCommerce.
+* *Emails* - Add custom emails. Add another email recipient(s) to all WooCommerce emails.
 * *General* - Separate custom CSS for front and back end. Shortcodes in Wordpress text widgets.
 * *Old Slugs* - Remove old WooCommerce products slugs.
 * *Reports* - WooCommerce stock, sales, customers etc. reports.
-* *WPML* - Booster for WooCommerce basic WPML support.
 
 = Feedback =
 * We are open to your suggestions and feedback - thank you for using or trying out one of our plugins!
@@ -98,11 +102,6 @@ Booster for WooCommerce is a WordPress plugin that supercharges your site with a
 
 = More =
 * Visit the [Booster for WooCommerce plugin page](http://booster.io/)
-
-= Available Translations =
-* French - `fr_FR` by Jean-Marc Schreiber.
-* Dutch - `nl_NL`.
-* Russian - `ru_RU`.
 
 == Installation ==
 
@@ -122,8 +121,112 @@ To unlock all Booster for WooCommerce features, please install additional [Boost
 
 == Changelog ==
 
+= 2.5.1 - 24/05/2016 =
+* Dev - PRICES & CURRENCIES - Product Price by Formula - No more using `namespace` (as it required PHP 5 >= 5.3.0).
+* Dev - PRICES & CURRENCIES - Product Open Pricing (Name Your Price) - "Frontend Template" option added.
+* Dev - PRICES & CURRENCIES - Prices and Currencies by Country - get_customer_country_by_ip() - Check for if `WC_Geolocation` class exists added.
+* Dev - Shortcodes - Orders - `[wcj_order_items_table]` - `item_weight` column added.
+
+= 2.5.0 - 23/05/2016 =
+* Dev - Multisite support added.
+* Dev - `is_super_admin()` replaced with `wcj_is_user_role()`.
+* Dev - "Plugin renamed..." notice (`name_changed_notice`) removed.
+* Fix - Translations - Translation domain fixed (in `jetpack_menu()`).
+* Dev - Translations - Text domain added to the plugin header.
+* Dev - Translations - POT file updated.
+* Dev - `WCJ_Module` - `create_meta_box()` and `save_meta_box()` - `title` option type added.
+* Dev - `WCJ_Module` - `create_meta_box()` - `multiple` attribute added to `select` type option.
+* Dev - Functions - `wcj_get_current_currency_code()` function added.
+* Dev - Functions - `wcj_get_currency_exchange_rate()` function added.
+* Dev - Widgets - Multicurrency Switcher - "module not enabled" message added.
+* Dev - Widgets - Country Switcher - "module not enabled" and "wrong configuration" messages added.
+* Fix - Shortcodes - Orders - `[wcj_order_items_table]` - Fixed for deleted products.
+* Fix - Shortcodes - Orders - `[wcj_order_items_table]` - `item_name` and `item_variation` - Variation data fixed (`pa_` removed and `urlencode` added).
+* Dev - Shortcodes - Orders - `[wcj_order_items_table]` - `item_name` - `style_item_name_variation` attribute added.
+* Dev - Shortcodes - Orders - `[wcj_order_items_table]` - `debug` column added.
+* Dev - Shortcodes - Orders - `[wcj_order_total_in_words]` - Bulgarian language (`lang="BG"`) added.
+* Fix - Shortcodes - Products - `get_product_orders_data` - `total_orders` fixed.
+* Dev - Shortcodes - Products - `get_product_orders_data` - `offset` shortcodes attribute added.
+* Dev - Shortcodes - Products - `get_product_orders_data` and `[wcj_product_time_since_last_sale]` - Query by blocks.
+* Dev - Shortcodes - Products - `[wcj_product_crowdfunding_goal_remaining_progress_bar]` shortcode added.
+* Dev - Shortcodes - Products - `[wcj_product_crowdfunding_time_remaining_progress_bar]` shortcode added.
+* Dev - Shortcodes - Products - `[wcj_product_total_orders_items]` shortcode added.
+* Dev - Shortcodes - Products - `date_i18n` added to `[wcj_product_crowdfunding_startdate]` and `[wcj_product_crowdfunding_deadline]`.
+* Dev - PRICES & CURRENCIES - Product Price by Formula - Initial module release.
+* Dev - PRICES & CURRENCIES - Price by User Role - Initial module release.
+* Fix - PRICES & CURRENCIES - Prices and Currencies by Country - Now rounding applies to global (not per product) conversions only.
+* Fix - PRICES & CURRENCIES - Prices and Currencies by Country - Additional check in `get_customer_country_group_id()` to prevent PHP notice on empty value.
+* Fix - PRICES & CURRENCIES - Prices and Currencies by Country - `get_variation_prices_hash()` - Variable products main price fixed.
+* Fix - PRICES & CURRENCIES - Prices and Currencies by Country - Support for grouped products added.
+* Dev - PRICES & CURRENCIES - Prices and Currencies by Country - "Customer Country Detection Method" changed from "by user selection" to "by IP, then by user selection".
+* Dev - PRICES & CURRENCIES - Prices and Currencies by Country - `get_customer_country_group_id()` - Not recalculating `customer_country_group_id` - works faster now.
+* Fix - PRICES & CURRENCIES - Multicurrency (Currency Switcher) - `get_variation_prices_hash()` - Variable products main price fixed.
+* Fix - PRICES & CURRENCIES - Multicurrency (Currency Switcher) - Empty price bug fixed.
+* Fix - PRICES & CURRENCIES - Multicurrency (Currency Switcher) - Support for grouped products added.
+* Dev - PRICES & CURRENCIES - Multicurrency (Currency Switcher) - "Revert Currency to Default on Checkout" option added.
+* Dev - PRICES & CURRENCIES - Multicurrency (Currency Switcher) - `add_hooks()` moved from `init` hook to constructor.
+* Fix - PRICES & CURRENCIES - Multicurrency Product Base Price - Support for grouped products added.
+* Fix - PRICES & CURRENCIES - Multicurrency Product Base Price - `get_variation_prices_hash()` - Variable products main price fixed.
+* Fix - PRICES & CURRENCIES - Product Open Pricing (Name Your Price) - `post__not_in` added to `save_meta_box_value`.
+* Dev - PRICES & CURRENCIES - Product Open Pricing (Name Your Price) - `posts_per_page` lowered to query only necessary number of product in `save_meta_box_value`.
+* Dev - PRICES & CURRENCIES - Product Open Pricing (Name Your Price) - `disable_add_to_cart_ajax` added.
+* Fix - PRICES & CURRENCIES - Wholesale Price - Mini cart bug fixed.
+* Dev - PRICES & CURRENCIES - Wholesale Price - Major code refactoring.
+* Dev - PRICES & CURRENCIES - Wholesale Price - Per product functionality added.
+* Fix - BUTTON & PRICE LABELS - Custom Price Labels - Products query is made by blocks now (`wcj_get_products()`).
+* Dev - BUTTON & PRICE LABELS - Custom Price Labels - `create_migrate_from_custom_price_labels_tool` - Query by blocks.
+* Dev - PRODUCTS - Bookings - Initial module release.
+* Dev - PRODUCTS - Product by Country - Initial module release.
+* Fix - PRODUCTS - Product Info V2 - Products query is made by blocks now (`wcj_get_products()`).
+* Fix - PRODUCTS - Product Tabs - Local product tabs number field set to min zero (instead of one).
+* Dev - PRODUCTS - Product Input Fields - "Emails Options" added.
+* Dev - PRODUCTS - Product Add to Cart - Add to Cart Variable Product - Display Radio Buttons Instead of Drop Box - `label` tag added.
+* Dev - CART & CHECKOUT - Checkout Files Upload - "Add to Thank You page" and "Add to My Account page" options added.
+* Fix - CART & CHECKOUT - Empty Cart Button - "Wrapping DIV style" option fixed in free version.
+* Dev - CART & CHECKOUT - Empty Cart Button - "Button position on the Checkout page" option added.
+* Fix - CART & CHECKOUT - Checkout Custom Fields - `add_custom_order_and_account_fields_to_admin_order_display`.
+* Dev - CART & CHECKOUT - Checkout Custom Fields - Field ID display added to module's settings page.
+* Dev - CART & CHECKOUT - Checkout Custom Fields - "Add All Fields to Order Received Page" option added.
+* Fix - PAYMENT GATEWAYS - Gateways per Product or Category - Products query is made by blocks now (`wcj_get_products()`).
+* Dev - PAYMENT GATEWAYS - Gateways Fees and Discounts - Compatibility with PayPal Express added.
+* Dev - SHIPPING & ORDERS - Order Numbers - `renumerate_orders` - Query by blocks.
+* Fix - EMAILS & MISC. - Old Slugs - `$wpdb->prefix` fix.
+* Fix - EMAILS & MISC. - Reports - `gather_orders_data` - Fixed for deleted products (caused PHP notice).
+* Dev - EMAILS & MISC. - Reports - `gather_products_data` - Query by blocks.
+* Tweak - Admin Modules Menu - "Shipping" module set to default in SHIPPING & ORDERS category.
+* Tweak - PRICES & CURRENCIES - Currency Exchange Rates - Documentation link added. Reset button added.
+* Tweak - PRICES & CURRENCIES - Multicurrency Product Base Price - Documentation link added.
+* Tweak - PRICES & CURRENCIES - Product Open Pricing (Name Your Price) - Documentation link added.
+* Tweak - PRICES & CURRENCIES - Currency for External Products - Documentation link added.
+* Tweak - PRICES & CURRENCIES - Bulk Price Converter - Documentation link added.
+* Tweak - PRICES & CURRENCIES - Wholesale Price - Reset button added.
+* Tweak - BUTTON & PRICE LABELS - Custom Price Labels - Documentation link added. Reset button added.
+* Tweak - PRODUCTS - Product Add to Cart - Description updated.
+* Tweak - PRODUCTS - Crowdfunding - Reset button added.
+* Tweak - PRODUCTS - Product Info - Documentation link added.
+* Tweak - PRODUCTS - Product Info V2 - Documentation link added.
+* Tweak - CART & CHECKOUT - Empty Cart Button - Documentation link added. Reset button added.
+* Tweak - CART & CHECKOUT - Checkout Core Fields - Documentation link added. Reset button added.
+* Tweak - PAYMENT GATEWAYS - Gateways Currency - Documentation link added.
+* Tweak - PAYMENT GATEWAYS - Gateways Fees and Discounts - Documentation link added. Reset button added.
+* Tweak - PAYMENT GATEWAYS - Gateways Icons - Documentation link added. Reset button added.
+* Tweak - PAYMENT GATEWAYS - Gateways Min/Max - Documentation link added.
+* Tweak - PAYMENT GATEWAYS - Gateways by Country or State - Documentation link added.
+* Tweak - SHIPPING & ORDERS - Shipping - Module description updated.
+* Tweak - SHIPPING & ORDERS - Orders - Documentation link added. Reset button added.
+* Tweak - SHIPPING & ORDERS - Order Numbers - Documentation link added.
+* Tweak - SHIPPING & ORDERS - Order Custom Statuses - Documentation link added. Reset button added.
+* Tweak - EMAILS & MISC. - Booster WPML - Documentation link added. Short description updated.
+* Tweak - EMAILS & MISC. - EU VAT Number - Documentation link added.
+* Tweak - EMAILS & MISC. - EU VAT Number - Description updated.
+* Tweak - EMAILS & MISC. - Emails - Documentation link added.
+* Tweak - EMAILS & MISC. - Old Slugs - Documentation link added. Reset button added.
+* Tweak - EMAILS & MISC. - Reports - Documentation link added.
+* Tweak - EMAILS & MISC. - Admin Tools - Documentation link added.
+* Tweak - EMAILS & MISC. - General - Documentation link added.
+
 = 2.4.8 - 04/05/2016 =
-* Dev - "Booster - Country Switcher" widget added.
+* Dev - Widgets - "Booster - Country Switcher" widget added.
 * Dev - Currency reports added to Multicurrency and Gateways Currency modules.
 * Dev - `WCJ_Module` - `create_meta_box` - `select` type added.
 * Dev - `WCJ_Module` - `create_meta_box` now takes option default value if no post meta is set.

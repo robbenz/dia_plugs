@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Product Custom Info class.
  *
- * @version 2.4.8
+ * @version 2.5.0
  * @since   2.4.0
  * @author  Algoritmika Ltd.
  */
@@ -18,13 +18,14 @@ class WCJ_Product_Custom_info extends WCJ_Module {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.4.6
+	 * @version 2.5.0
 	 */
 	public function __construct() {
 
 		$this->id         = 'product_custom_info';
 		$this->short_desc = __( 'Product Info V2', 'woocommerce-jetpack' );
 		$this->desc       = __( 'Add additional info to WooCommerce category and single product pages.', 'woocommerce-jetpack' );
+		$this->link       = 'http://booster.io/features/woocommerce-product-info/';
 		parent::__construct();
 
 		add_action( 'init', array( $this, 'add_settings_hook' ) );
@@ -94,23 +95,11 @@ class WCJ_Product_Custom_info extends WCJ_Module {
 	/**
 	 * add_settings.
 	 *
-	 * @version 2.4.8
+	 * @version 2.5.0
 	 */
 	function add_settings() {
 
-		$products = array();
-		$args = array(
-			'post_type'      => 'product',
-			'post_status'    => 'any',
-			'posts_per_page' => -1,
-		);
-		$loop = new WP_Query( $args );
-		if ( $loop->have_posts() ) {
-			while ( $loop->have_posts() ) : $loop->the_post();
-				$products[ strval( $loop->post->ID ) ] = get_the_title( $loop->post->ID );
-			endwhile;
-			wp_reset_postdata();
-		}
+		$products = wcj_get_products();
 
 		$settings = array();
 		$single_or_archive_array = array( 'single', 'archive' );

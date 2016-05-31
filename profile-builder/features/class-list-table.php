@@ -872,7 +872,7 @@ class PB_WP_List_Table {
 		static $row_class = '';
 		$row_class = ( $row_class == '' ? ' class="alternate"' : '' );
 
-		echo '<tr' . $row_class . '>';
+        echo '<tr id="user-'. $item['ID'] .'" ' . $row_class . '>';
 		$this->single_row_columns( $item );
 		echo '</tr>';
 	}

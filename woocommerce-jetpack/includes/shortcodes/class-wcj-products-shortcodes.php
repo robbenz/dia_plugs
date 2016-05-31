@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Products Shortcodes class.
  *
- * @version 2.4.8
+ * @version 2.5.0
  * @author  Algoritmika Ltd.
  */
 
@@ -17,7 +17,7 @@ class WCJ_Products_Shortcodes extends WCJ_Shortcodes {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.4.8
+	 * @version 2.5.0
 	 */
 	public function __construct() {
 
@@ -36,12 +36,15 @@ class WCJ_Products_Shortcodes extends WCJ_Shortcodes {
 			'wcj_product_purchase_price',
 			'wcj_product_total_sales',
 			'wcj_product_total_orders',
+			'wcj_product_total_orders_items',
 			'wcj_product_total_orders_sum',
 			'wcj_product_crowdfunding_goal',
 			'wcj_product_crowdfunding_goal_remaining',
+			'wcj_product_crowdfunding_goal_remaining_progress_bar',
 			'wcj_product_crowdfunding_startdate',
 			'wcj_product_crowdfunding_deadline',
 			'wcj_product_crowdfunding_time_remaining',
+			'wcj_product_crowdfunding_time_remaining_progress_bar',
 			'wcj_product_shipping_class',
 			'wcj_product_dimensions',
 			'wcj_product_formatted_name',
@@ -61,22 +64,24 @@ class WCJ_Products_Shortcodes extends WCJ_Shortcodes {
 		);
 
 		$this->the_atts = array(
-			'product_id'      => 0,
-			'image_size'      => 'shop_thumbnail',
-			'multiply_by'     => '',
-			'hide_currency'   => 'no',
-			'excerpt_length'  => 0,
-			'name'            => '',
-			'heading_format'  => 'from %level_qty% pcs.',
-			'sep'             => ', ',
-			'add_links'       => 'yes',
-			'add_percent_row' => 'no',
-			'add_price_row'   => 'yes',
-			'show_always'     => 'yes',
-			'hide_if_zero'    => 'no',
-			'reverse'         => 'no',
-			'find'            => '',
-			'replace'         => '',
+			'product_id'       => 0,
+			'image_size'       => 'shop_thumbnail',
+			'multiply_by'      => '',
+			'hide_currency'    => 'no',
+			'excerpt_length'   => 0,
+			'name'             => '',
+			'heading_format'   => 'from %level_qty% pcs.',
+			'sep'              => ', ',
+			'add_links'        => 'yes',
+			'add_percent_row'  => 'no',
+			'add_discount_row' => 'no',
+			'add_price_row'    => 'yes',
+			'show_always'      => 'yes',
+			'hide_if_zero'     => 'no',
+			'reverse'          => 'no',
+			'find'             => '',
+			'replace'          => '',
+			'offset'           => '',
 		);
 
 		parent::__construct();
@@ -114,45 +119,72 @@ class WCJ_Products_Shortcodes extends WCJ_Shortcodes {
 	/**
 	 * get_product_orders_data.
 	 *
-	 * @version 2.2.6
+	 * @version 2.5.0
 	 * @since   2.2.6
 	 */
-	function get_product_orders_data( $return_value = 'total_orders' ) {
+	function get_product_orders_data( $return_value = 'total_orders', $atts ) {
 		$total_orders = 0;
-		$total_sum = 0;
-		$args = array(
-			'post_type'      => 'shop_order',
-			'post_status'    => 'wc-completed',
-			'posts_per_page' => -1,
-			'orderby'        => 'date',
-			'order'          => 'ASC',
-			'date_query'     => array(
-				array(
-					'after'     => get_post_meta( $this->the_product->id, '_' . 'wcj_crowdfunding_startdate', true ),
-					'inclusive' => true,
+		$total_qty    = 0;
+		$total_sum    = 0;
+		$offset = 0;
+		$block_size = 96;
+		while( true ) {
+			$args = array(
+				'post_type'      => 'shop_order',
+				'post_status'    => 'wc-completed',
+				'posts_per_page' => $block_size,
+				'offset'         => $offset,
+				'orderby'        => 'date',
+				'order'          => 'ASC',
+				'date_query'     => array(
+					array(
+						'after'     => get_post_meta( $this->the_product->id, '_' . 'wcj_crowdfunding_startdate', true ),
+						'inclusive' => true,
+					),
 				),
-			),
-		);
-		$loop = new WP_Query( $args );
-		while ( $loop->have_posts() ) : $loop->the_post();
-			$order_id = $loop->post->ID;
-			$the_order = wc_get_order( $order_id );
-			$the_items = $the_order->get_items();
-			foreach( $the_items as $item ) {
-				if ( $this->the_product->id == $item['product_id'] ) {
-					$total_sum += $item['line_total'] + $item['line_tax'];
+			);
+			$loop = new WP_Query( $args );
+			if ( ! $loop->have_posts() ) break;
+			while ( $loop->have_posts() ) : $loop->the_post();
+				$order_id = $loop->post->ID;
+				$the_order = wc_get_order( $order_id );
+				$the_items = $the_order->get_items();
+				$item_found = false;
+				foreach( $the_items as $item ) {
+					if ( $this->the_product->id == $item['product_id'] ) {
+						$total_sum += $item['line_total'] + $item['line_tax'];
+						$total_qty += $item['qty'];
+						$item_found = true;
+					}
+				}
+				if ( $item_found ) {
 					$total_orders++;
 				}
-			}
-		endwhile;
+			endwhile;
+			$offset += $block_size;
+		}
 		wp_reset_postdata();
-		return ( 'orders_sum' === $return_value ) ? $total_sum : $total_orders;
+		switch ( $return_value ) {
+			case 'orders_sum':
+				$return = $total_sum;
+				break;
+			case 'total_items':
+				$return = $total_qty;
+				break;
+			default: // 'total_orders'
+				$return = $total_orders;
+				break;
+		}
+		if ( 0 != $atts['offset'] ) {
+			$return += $atts['offset'];
+		}
+		return $return;
 	}
 
 	/**
 	 * wcj_product_time_since_last_sale.
 	 *
-	 * @version 2.4.0
+	 * @version 2.5.0
 	 * @since   2.4.0
 	 * @todo    not finished
 	 */
@@ -162,31 +194,38 @@ class WCJ_Products_Shortcodes extends WCJ_Shortcodes {
 		$do_use_only_completed_orders = true;
 		// Get the ID before new query
 		$the_ID = get_the_ID();
-		// Create args for new query
-		$args = array(
-			'post_type'      => 'shop_order',
-			'post_status'    => ( true === $do_use_only_completed_orders ? 'wc-completed' : 'any' ),
-			'posts_per_page' => -1,
-			'orderby'        => 'date',
-			'order'          => 'DESC',
-			'date_query'     => array( array( 'after'   => strtotime( '-' . $days_to_cover . ' days' ) ) ),
-		);
-		// Run new query
-		$loop = new WP_Query( $args );
-		// Analyze the results, i.e. orders
-		while ( $loop->have_posts() ) : $loop->the_post();
-			$order = new WC_Order( $loop->post->ID );
-			$items = $order->get_items();
-			foreach ( $items as $item ) {
-				// Run through all order's items
-				if ( $item['product_id'] == $the_ID ) {
-					// Found sale!
-					$result = sprintf( __( '%s ago', 'woocommerce-jetpack' ), human_time_diff( get_the_time( 'U' ), current_time( 'timestamp' ) ) );
-					wp_reset_postdata();
-					return $result;
+		$offset = 0;
+		$block_size = 96;
+		while( true ) {
+			// Create args for new query
+			$args = array(
+				'post_type'      => 'shop_order',
+				'post_status'    => ( true === $do_use_only_completed_orders ? 'wc-completed' : 'any' ),
+				'posts_per_page' => $block_size,
+				'offset'         => $offset,
+				'orderby'        => 'date',
+				'order'          => 'DESC',
+				'date_query'     => array( array( 'after'   => strtotime( '-' . $days_to_cover . ' days' ) ) ),
+			);
+			// Run new query
+			$loop = new WP_Query( $args );
+			if ( ! $loop->have_posts() ) break;
+			// Analyze the results, i.e. orders
+			while ( $loop->have_posts() ) : $loop->the_post();
+				$order = new WC_Order( $loop->post->ID );
+				$items = $order->get_items();
+				foreach ( $items as $item ) {
+					// Run through all order's items
+					if ( $item['product_id'] == $the_ID ) {
+						// Found sale!
+						$result = sprintf( __( '%s ago', 'woocommerce-jetpack' ), human_time_diff( get_the_time( 'U' ), current_time( 'timestamp' ) ) );
+						wp_reset_postdata();
+						return $result;
+					}
 				}
-			}
-		endwhile;
+			endwhile;
+			$offset += $block_size;
+		}
 		wp_reset_postdata();
 		// No sales found
 		return '';
@@ -417,43 +456,53 @@ class WCJ_Products_Shortcodes extends WCJ_Shortcodes {
 	}
 
 	/**
+	 * wcj_product_total_orders_items.
+	 *
+	 * @version 2.5.0
+	 * @since   2.5.0
+	 */
+	function wcj_product_total_orders_items( $atts ) {
+		return $this->get_product_orders_data( 'total_items', $atts );
+	}
+
+	/**
 	 * wcj_product_total_orders.
 	 *
-	 * @version 2.2.6
+	 * @version 2.5.0
 	 * @since   2.2.6
 	 */
 	function wcj_product_total_orders( $atts ) {
-		return $this->get_product_orders_data( 'total_orders' );
+		return $this->get_product_orders_data( 'total_orders', $atts );
 	}
 
 	/**
 	 * wcj_product_total_orders_sum.
 	 *
-	 * @version 2.2.6
+	 * @version 2.5.0
 	 * @since   2.2.6
 	 */
 	function wcj_product_total_orders_sum( $atts ) {
-		return $this->get_product_orders_data( 'orders_sum' );
+		return $this->get_product_orders_data( 'orders_sum', $atts );
 	}
 
 	/**
 	 * wcj_product_crowdfunding_startdate.
 	 *
-	 * @version 2.2.6
+	 * @version 2.5.0
 	 * @since   2.2.6
 	 */
 	function wcj_product_crowdfunding_startdate( $atts ) {
-		return get_post_meta( $this->the_product->id, '_' . 'wcj_crowdfunding_startdate', true );
+		return date_i18n( get_option( 'date_format' ), strtotime( get_post_meta( $this->the_product->id, '_' . 'wcj_crowdfunding_startdate', true ) ) );
 	}
 
 	/**
 	 * wcj_product_crowdfunding_deadline.
 	 *
-	 * @version 2.2.6
+	 * @version 2.5.0
 	 * @since   2.2.6
 	 */
 	function wcj_product_crowdfunding_deadline( $atts ) {
-		return get_post_meta( $this->the_product->id, '_' . 'wcj_crowdfunding_deadline', true );
+		return date_i18n( get_option( 'date_format' ), strtotime( get_post_meta( $this->the_product->id, '_' . 'wcj_crowdfunding_deadline', true ) ) );
 	}
 
 	/**
@@ -486,6 +535,24 @@ class WCJ_Products_Shortcodes extends WCJ_Shortcodes {
 	}
 
 	/**
+	 * wcj_product_crowdfunding_time_remaining_progress_bar.
+	 *
+	 * @version 2.5.0
+	 * @since   2.5.0
+	 */
+	function wcj_product_crowdfunding_time_remaining_progress_bar( $atts ) {
+		$deadline_seconds  = strtotime( get_post_meta( $this->the_product->id, '_' . 'wcj_crowdfunding_deadline', true ) );
+		$startdate_seconds = strtotime( get_post_meta( $this->the_product->id, '_' . 'wcj_crowdfunding_startdate', true ) );
+
+		$seconds_remaining = $deadline_seconds - current_time( 'timestamp' );
+		$seconds_total     = $deadline_seconds - $startdate_seconds;
+
+		$current_value = $seconds_remaining;
+		$max_value     = $seconds_total;
+		$return = '<progress value="' . $current_value . '" max="' . $max_value . '"></progress>';
+	}
+
+	/**
 	 * wcj_product_crowdfunding_goal.
 	 *
 	 * @version 2.2.6
@@ -503,6 +570,18 @@ class WCJ_Products_Shortcodes extends WCJ_Shortcodes {
 	 */
 	function wcj_product_crowdfunding_goal_remaining( $atts ) {
 		return $this->wcj_product_crowdfunding_goal( $atts ) - $this->wcj_product_total_orders_sum( $atts );
+	}
+
+	/**
+	 * wcj_product_crowdfunding_goal_remaining_progress_bar.
+	 *
+	 * @version 2.5.0
+	 * @since   2.5.0
+	 */
+	function wcj_product_crowdfunding_goal_remaining_progress_bar( $atts ) {
+		$current_value = $this->wcj_product_total_orders_sum( $atts );
+		$max_value     = $this->wcj_product_crowdfunding_goal( $atts );
+		return '<progress value="' . $current_value . '" max="' . $max_value . '"></progress>';
 	}
 
 	/**
@@ -634,33 +713,49 @@ class WCJ_Products_Shortcodes extends WCJ_Shortcodes {
 	/**
 	 * wcj_product_wholesale_price_table.
 	 *
-	 * @version 2.4.8
+	 * @version 2.5.0
 	 */
 	function wcj_product_wholesale_price_table( $atts ) {
 
 		if ( ! wcj_is_product_wholesale_enabled( $this->the_product->id ) ) return '';
 
 		$wholesale_price_levels = array();
-		for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_wholesale_price_levels_number', 1 ) ); $i++ ) {
-			$level_qty        = get_option( 'wcj_wholesale_price_level_min_qty_' . $i, PHP_INT_MAX );
-			$discount_percent = get_option( 'wcj_wholesale_price_level_discount_percent_' . $i, 0 );
-			$discount_koef    = 1.0 - ( $discount_percent / 100.0 );
-			$wholesale_price_levels[] = array( 'quantity' => $level_qty, 'koef' => $discount_koef, 'discount_percent' => $discount_percent, );
+		if ( wcj_is_product_wholesale_enabled_per_product( $this->the_product->id ) ) {
+			for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_post_meta( $this->the_product->id, '_' . 'wcj_wholesale_price_levels_number', true ) ); $i++ ) {
+				$level_qty                = get_post_meta( $this->the_product->id, '_' . 'wcj_wholesale_price_level_min_qty_' . $i, true );
+				$discount                 = get_post_meta( $this->the_product->id, '_' . 'wcj_wholesale_price_level_discount_' . $i, true );
+				$wholesale_price_levels[] = array( 'quantity' => $level_qty, 'discount' => $discount, );
+			}
+		} else {
+			for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_wholesale_price_levels_number', 1 ) ); $i++ ) {
+				$level_qty                = get_option( 'wcj_wholesale_price_level_min_qty_' . $i, PHP_INT_MAX );
+				$discount                 = get_option( 'wcj_wholesale_price_level_discount_percent_' . $i, 0 );
+				$wholesale_price_levels[] = array( 'quantity' => $level_qty, 'discount' => $discount, );
+			}
 		}
 
-		$data_qty = array();
-		$data_price = array();
-		$data_discount_percent = array();
-		foreach ( $wholesale_price_levels as $wholesale_price_level ) {
+		$discount_type = ( wcj_is_product_wholesale_enabled_per_product( $this->the_product->id ) )
+			? get_post_meta( $this->the_product->id, '_' . 'wcj_wholesale_price_discount_type', true )
+			: get_option( 'wcj_wholesale_price_discount_type', 'percent' );
 
+		$data_qty              = array();
+		$data_price            = array();
+		$data_discount         = array();
+		$columns_styles        = array();
+		foreach ( $wholesale_price_levels as $wholesale_price_level ) {
 			$the_price = '';
+
 			if ( $this->the_product->is_type( 'variable' ) ) {
 				// Variable
 				$min = $this->the_product->get_variation_price( 'min', false );
 				$max = $this->the_product->get_variation_price( 'max', false );
-				if ( '' !== $wholesale_price_level['koef'] && is_numeric( $wholesale_price_level['koef'] ) ) {
-					$min = $min * $wholesale_price_level['koef'];
-					$max = $max * $wholesale_price_level['koef'];
+				if ( 'fixed' === $discount_type ) {
+					$min = $min - $wholesale_price_level['discount'];
+					$max = $max - $wholesale_price_level['discount'];
+				} else {
+					$coefficient = 1.0 - ( $wholesale_price_level['discount'] / 100.0 );
+					$min = $min * $coefficient;
+					$max = $max * $coefficient;
 				}
 				if ( 'yes' !== $atts['hide_currency'] ) {
 					$min = wc_price( $min );
@@ -669,10 +764,12 @@ class WCJ_Products_Shortcodes extends WCJ_Shortcodes {
 				$the_price = ( $min != $max ) ? sprintf( '%s-%s', $min, $max ) : $min;
 			} else {
 				// Simple etc.
-//				$the_price = wc_price( round( $this->the_product->get_price() * $wholesale_price_level['koef'], $precision ) );
 				$the_price = $this->the_product->get_price();
-				if ( '' !== $wholesale_price_level['koef'] && is_numeric( $wholesale_price_level['koef'] ) ) {
-					$the_price = $the_price * $wholesale_price_level['koef'];
+				if ( 'fixed' === $discount_type ) {
+					$the_price = $the_price - $wholesale_price_level['discount'];
+				} else {
+					$coefficient = 1.0 - ( $wholesale_price_level['discount'] / 100.0 );
+					$the_price = $the_price * $coefficient;
 				}
 				if ( 'yes' !== $atts['hide_currency'] ) {
 					$the_price = wc_price( $the_price );
@@ -684,8 +781,21 @@ class WCJ_Products_Shortcodes extends WCJ_Shortcodes {
 				$data_price[] = $the_price;
 			}
 			if ( 'yes' === $atts['add_percent_row'] ) {
-				$data_discount_percent[] = '-' . $wholesale_price_level['discount_percent'] . '%';
+				if ( 'fixed' === $discount_type ) {
+					// todo (maybe)
+				} else {
+					$data_discount[] = '-' . $wholesale_price_level['discount'] . '%';
+				}
 			}
+			if ( 'yes' === $atts['add_discount_row'] ) {
+				if ( 'fixed' === $discount_type ) {
+					$data_discount[] = '-' . wc_price( $wholesale_price_level['discount'] );
+				} else {
+					// todo (maybe)
+				}
+			}
+
+			$columns_styles[] = 'text-align: center;';
 		}
 
 		$table_rows = array( $data_qty, );
@@ -693,12 +803,9 @@ class WCJ_Products_Shortcodes extends WCJ_Shortcodes {
 			$table_rows[] = $data_price;
 		}
 		if ( 'yes' === $atts['add_percent_row'] ) {
-			$table_rows[] = $data_discount_percent;
+			$table_rows[] = $data_discount;
 		}
-		$columns_styles = array();
-		for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_wholesale_price_levels_number', 1 ) ); $i++ ) {
-			$columns_styles[] = 'text-align: center;';
-		}
+
 		return wcj_get_table_html( $table_rows, array( 'columns_styles' => $columns_styles ) );
 	}
 

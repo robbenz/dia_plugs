@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Price by Country Core class.
  *
- * @version 2.4.5
+ * @version 2.5.1
  * @author  Algoritmika Ltd.
  */
 
@@ -25,88 +25,93 @@ class WCJ_Price_by_Country_Core {
 	/**
 	 * add_hooks.
 	 *
-	 * @version 2.4.0
+	 * @version 2.5.0
 	 */
 	function add_hooks() {
 
-		if ( 'by_user_selection' === get_option( 'wcj_price_by_country_customer_country_detection_method', 'by_ip' ) ) {
-
+		if (
+			'by_user_selection'            === get_option( 'wcj_price_by_country_customer_country_detection_method', 'by_ip' ) ||
+			'by_ip_then_by_user_selection' === get_option( 'wcj_price_by_country_customer_country_detection_method', 'by_ip' )
+		) {
 			if ( ! session_id() ) {
 				session_start();
 			}
-
 			if ( isset( $_REQUEST[ 'wcj-country' ] ) ) {
 				$_SESSION[ 'wcj-country' ] = $_REQUEST[ 'wcj-country' ];
 			}
+			if ( ! isset( $_SESSION[ 'wcj-country' ] ) && 'by_ip_then_by_user_selection' === get_option( 'wcj_price_by_country_customer_country_detection_method', 'by_ip' ) ) {
+				if ( null != ( $country = $this->get_customer_country_by_ip() ) ) {
+					$_SESSION[ 'wcj-country' ] = $country;
+				}
+			}
 		}
 
-		//if (  ) { // TODO
+		// Price hooks
+		add_filter( 'woocommerce_get_price',         array( $this, 'change_price_by_country' ), PHP_INT_MAX - 1, 2 );
+		add_filter( 'woocommerce_get_sale_price',    array( $this, 'change_price_by_country' ), PHP_INT_MAX - 1, 2 );
+		add_filter( 'woocommerce_get_regular_price', array( $this, 'change_price_by_country' ), PHP_INT_MAX - 1, 2 );
 
-			// Price hooks
-//			add_filter( 'woocommerce_variation_prices',            array( $this, 'change_price_by_country_variations' ), PHP_INT_MAX - 1, 2 );
-			add_filter( 'woocommerce_get_price',                   array( $this, 'change_price_by_country' ), PHP_INT_MAX - 1, 2 );
-			add_filter( 'woocommerce_get_sale_price',              array( $this, 'change_price_by_country' ), PHP_INT_MAX - 1, 2 );
-			add_filter( 'woocommerce_get_regular_price',           array( $this, 'change_price_by_country' ), PHP_INT_MAX - 1, 2 );
-//			add_filter( 'woocommerce_get_variation_price',         array( $this, 'change_price_by_country' ), PHP_INT_MAX, 2 );
-//			add_filter( 'woocommerce_get_variation_sale_price',    array( $this, 'change_price_by_country' ), PHP_INT_MAX, 2 );
-//			add_filter( 'woocommerce_get_variation_regular_price', array( $this, 'change_price_by_country' ), PHP_INT_MAX, 2 );
-//			add_filter( 'booking_form_calculated_booking_cost',    array( $this, 'change_price_by_country' ), PHP_INT_MAX );
-//			add_filter( 'woocommerce_get_price_html',              array( $this, 'fix_variable_product_price_on_sale' ), 10 , 2 );
+		// Variable products
+		add_filter( 'woocommerce_variation_prices_price',         array( $this, 'change_price_by_country' ), PHP_INT_MAX - 1, 2 );
+		add_filter( 'woocommerce_variation_prices_regular_price', array( $this, 'change_price_by_country' ), PHP_INT_MAX - 1, 2 );
+		add_filter( 'woocommerce_variation_prices_sale_price',    array( $this, 'change_price_by_country' ), PHP_INT_MAX - 1, 2 );
+		add_filter( 'woocommerce_get_variation_prices_hash',      array( $this, 'get_variation_prices_hash' ), PHP_INT_MAX - 1, 3 );
 
-			// Currency hooks
-			add_filter( 'woocommerce_currency_symbol',             array( $this, 'change_currency_symbol' ), PHP_INT_MAX - 1, 2 );
-			add_filter( 'woocommerce_currency',                    array( $this, 'change_currency_code' ),   PHP_INT_MAX - 1, 1 );
+		// Grouped products
+		add_filter( 'woocommerce_get_price_including_tax', array( $this, 'change_price_by_country_grouped' ), PHP_INT_MAX - 1, 3 );
+		add_filter( 'woocommerce_get_price_excluding_tax', array( $this, 'change_price_by_country_grouped' ), PHP_INT_MAX - 1, 3 );
 
-			// Shipping
-			add_filter( 'woocommerce_package_rates',               array( $this, 'change_shipping_price_by_country' ), PHP_INT_MAX - 1, 2 );
+		// Currency hooks
+		add_filter( 'woocommerce_currency_symbol', array( $this, 'change_currency_symbol' ), PHP_INT_MAX - 1, 2 );
+		add_filter( 'woocommerce_currency',        array( $this, 'change_currency_code' ),   PHP_INT_MAX - 1, 1 );
 
-			// Variable products
-			add_filter( 'woocommerce_variation_prices_price',         array( $this, 'change_price_by_country' ), PHP_INT_MAX - 1, 2 );
-			add_filter( 'woocommerce_variation_prices_regular_price', array( $this, 'change_price_by_country' ), PHP_INT_MAX - 1, 2 );
-			add_filter( 'woocommerce_variation_prices_sale_price',    array( $this, 'change_price_by_country' ), PHP_INT_MAX - 1, 2 );
-			add_filter( 'woocommerce_get_variation_prices_hash',      array( $this, 'get_variation_prices_hash' ), PHP_INT_MAX - 1, 3 );
-		//}
-
-		// Country selection box
-		/* if ( 'by_user_selection' === get_option( 'wcj_price_by_country_customer_country_detection_method', 'by_ip' ) ) {
-			add_filter( 'woocommerce_get_price_html', array( $this, 'add_country_selection_box' ), PHP_INT_MAX, 2 );
-		} */
-
-		// Debug
-//		add_shortcode( 'wcj_debug_price_by_country', array( $this, 'get_debug_info' ) );
+		// Shipping
+		add_filter( 'woocommerce_package_rates', array( $this, 'change_shipping_price_by_country' ), PHP_INT_MAX - 1, 2 );
 	}
 
 	/**
-	 * add_country_selection_box.
+	 * change_price_by_country_grouped.
 	 *
-	function add_country_selection_box( $price_html, $_product ) {
-		$html = '';
-
-		$form_method  = get_option( 'wcj_price_by_country_country_selection_box_method', 'get' );
-		$select_class = get_option( 'wcj_price_by_country_country_selection_box_class', '' );
-		$select_style = get_option( 'wcj_price_by_country_country_selection_box_style', '' );
-
-		$html .= '<form action="" method="' . $form_method . '">';
-
-		$html .= '<select name="wcj-country" id="wcj-country" style="' . $select_style . '" class="' . $select_class . '" onchange="this.form.submit()">';
-		$countries = wcj_get_countries();
-
-		/* if ( 'get' == $form_method ) {
-			$selected_country = ( isset( $_GET[ 'wcj-country' ] ) ) ? $_GET[ 'wcj-country' ] : '';
-		} else {
-			$selected_country = ( isset( $_POST[ 'wcj-country' ] ) ) ? $_POST[ 'wcj-country' ] : '';
-		} *//*
-		$selected_country = ( isset( $_REQUEST[ 'wcj-country' ] ) ) ? $_REQUEST[ 'wcj-country' ] : '';
-
-		foreach ( $countries as $country_code => $country_name ) {
-
-			$html .= '<option value="' . $country_code . '" ' . selected( $country_code, $selected_country, false ) . '>' . $country_name . '</option>';
+	 * @version 2.5.0
+	 * @since   2.5.0
+	 */
+	function change_price_by_country_grouped( $price, $qty, $_product ) {
+		if ( $_product->is_type( 'grouped' ) ) {
+			if ( 'yes' === get_option( 'wcj_price_by_country_local_enabled' ) ) {
+				$get_price_method = 'get_price_' . get_option( 'woocommerce_tax_display_shop' ) . 'uding_tax';
+				foreach ( $_product->get_children() as $child_id ) {
+					$the_price = get_post_meta( $child_id, '_price', true );
+					$the_product = wc_get_product( $child_id );
+					$the_price = $the_product->$get_price_method( 1, $the_price );
+					if ( $the_price == $price ) {
+						return $this->change_price_by_country( $price, $child_id );
+					}
+				}
+			} else {
+				return $this->change_price_by_country( $price, 0 );
+			}
 		}
-		$html .= '</select>';
+		return $price;
+	}
 
-		$html .= '</form>';
-
-		return $price_html . $html;
+	/**
+	 * get_customer_country_by_ip.
+	 *
+	 * @version 2.5.1
+	 * @since   2.5.0
+	 */
+	function get_customer_country_by_ip() {
+		if ( class_exists( 'WC_Geolocation' ) ) {
+			// Get the country by IP
+			$location = WC_Geolocation::geolocate_ip();
+			// Base fallback
+			if ( empty( $location['country'] ) ) {
+				$location = wc_format_country_state_string( apply_filters( 'woocommerce_customer_default_location', get_option( 'woocommerce_default_country' ) ) );
+			}
+			return ( isset( $location['country'] ) ) ? $location['country'] : null;
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -115,9 +120,7 @@ class WCJ_Price_by_Country_Core {
 	 * @version 2.4.4
 	 */
 	function change_shipping_price_by_country( $package_rates, $package ) {
-
 		if ( null != ( $group_id = $this->get_customer_country_group_id() ) ) {
-
 			$country_exchange_rate = get_option( 'wcj_price_by_country_exchange_rate_group_' . $group_id, 1 );
 			$modified_package_rates = array();
 			foreach ( $package_rates as $id => $package_rate ) {
@@ -132,118 +135,40 @@ class WCJ_Price_by_Country_Core {
 				$modified_package_rates[ $id ] = $package_rate;
 			}
 			return $modified_package_rates;
-
 		} else {
 			return $package_rates;
 		}
 	}
 
 	/**
-	 * get_debug_info.
-	 *
-	function get_debug_info( $args ) {
-		$html = '';
-		if ( 'yes' === get_option( 'wcj_price_by_country_local_enabled' ) ) {
-			$html .= '<p>';
-			$html .= __( 'Price by Country on per Product Basis is enabled.', 'woocommerce-jetpack' );
-			$html .= '</p>';
-		}
-
-		$data = array();
-		$data[] = array( '#', __( 'Countries', 'woocommerce-jetpack' ), __( 'Focus Country', 'woocommerce-jetpack' ), __( 'Regular Price', 'woocommerce-jetpack' ), __( 'Sale Price', 'woocommerce-jetpack' ) );
-		global $product;
-		for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_price_by_country_total_groups_number', 1 ) ); $i++ ) {
-
-			$row = array();
-
-			$row[] = $i;
-
-			$country_exchange_rate_group = get_option( 'wcj_price_by_country_exchange_rate_countries_group_' . $i );
-			$country_exchange_rate_group = str_replace( ' ', '', $country_exchange_rate_group );
-			$row[] = $country_exchange_rate_group;
-
-			$country_exchange_rate_group = explode( ',', $country_exchange_rate_group );
-			$_GET['country'] = $country_exchange_rate_group[0];
-			$row[] = $country_exchange_rate_group[0];
-			$currency_code = wcj_get_currency_symbol( get_option( 'wcj_price_by_country_exchange_rate_currency_group_' . $i ) );
-			$row[] = $product->get_regular_price() . ' ' . $currency_code;
-			$row[] = $product->get_sale_price() . ' ' . $currency_code;
-
-			$data[] = $row;
-		}
-		//$html .= wcj_get_table_html( $data, '', false );
-		$html = wcj_get_table_html( $data, array( 'table_heading_type' => 'vertical', ) );
-		return $html;
-	}
-
-	/**
-	 * fix_variable_product_price_on_sale.
-	 *
-	public function fix_variable_product_price_on_sale( $price, $product ) {
-		if ( $product->is_type( 'variable' ) ) {
-			if ( ! $product->is_on_sale() ) {
-				$start_position = strpos( $price, '<del>' );
-				$length = strpos( $price, '</del>' ) - $start_position;
-				// Fixing the price, i.e. removing the sale tags
-				return substr_replace( $price, '', $start_position, $length );
-			}
-		}
-		// No changes
-		return $price;
-	}
-
-	/**
 	 * get_customer_country_group_id.
 	 *
-	 * @version 2.4.4
+	 * @version 2.5.0
 	 */
 	public function get_customer_country_group_id() {
 
 		// We already know the group - nothing to calculate - return group
-//		if ( null != $this->customer_country_group_id && $this->customer_country_group_id > 0 )
-//			return $this->customer_country_group_id;
+		if ( null != $this->customer_country_group_id && $this->customer_country_group_id > 0 ) {
+			return $this->customer_country_group_id;
+		}
 
-		// We've already tried - no country was detected, no need to try again
-		/* if ( -1 === $this->customer_country_group_id )
-			return null; */
-
-		if ( isset( $_GET['country'] ) && '' != $_GET['country'] && is_super_admin() ) {
-
+		// Get the country
+		if ( isset( $_GET['country'] ) && '' != $_GET['country'] && wcj_is_user_role( 'administrator' ) ) {
 			$country = $_GET['country'];
-
 		} elseif ( 'yes' === get_option( 'wcj_price_by_country_override_on_checkout_with_billing_country', 'no' )
 			/* && is_checkout() */
 			&& '' != WC()->customer->get_country()
 		) {
-
 			$country = WC()->customer->get_country();
-
 		} else {
-
 			if ( 'by_ip' === get_option( 'wcj_price_by_country_customer_country_detection_method', 'by_ip' ) ) {
-
-				// Get the country by IP
-				$location = WC_Geolocation::geolocate_ip();
-				// Base fallback
-				if ( empty( $location['country'] ) ) {
-					$location = wc_format_country_state_string( apply_filters( 'woocommerce_customer_default_location', get_option( 'woocommerce_default_country' ) ) );
-				}
-				$country = ( isset( $location['country'] ) ) ? $location['country'] : null;
-
+				$country = $this->get_customer_country_by_ip();
+			} elseif ( 'by_ip_then_by_user_selection' === get_option( 'wcj_price_by_country_customer_country_detection_method', 'by_ip' ) ) {
+				$country = ( isset( $_SESSION[ 'wcj-country' ] ) ) ? $_SESSION[ 'wcj-country' ] : $this->get_customer_country_by_ip();
 			} elseif ( 'by_user_selection' === get_option( 'wcj_price_by_country_customer_country_detection_method', 'by_ip' ) ) {
-
-				/* $form_method  = get_option( 'wcj_price_by_country_country_selection_box_method', 'get' );
-				if ( 'get' == $form_method ) {
-					$country = ( isset( $_GET[ 'wcj-country' ] ) ) ? $_GET[ 'wcj-country' ] : null;
-				} else {
-					$country = ( isset( $_POST[ 'wcj-country' ] ) ) ? $_POST[ 'wcj-country' ] : null;
-				} */
 				$country = ( isset( $_SESSION[ 'wcj-country' ] ) ) ? $_SESSION[ 'wcj-country' ] : null;
-
 			} elseif ( 'by_wpml' === get_option( 'wcj_price_by_country_customer_country_detection_method', 'by_ip' ) ) {
-
 				$country = ( defined( 'ICL_LANGUAGE_CODE' ) ) ? ICL_LANGUAGE_CODE : null;
-
 			}
 		}
 
@@ -267,9 +192,8 @@ class WCJ_Price_by_Country_Core {
 					$country_exchange_rate_group = get_option( 'wcj_price_by_country_countries_group_chosen_select_' . $i );
 					break;
 			}
-			if ( in_array( $country, $country_exchange_rate_group ) ) {
+			if ( is_array( $country_exchange_rate_group ) && in_array( $country, $country_exchange_rate_group ) ) {
 				$this->customer_country_group_id = $i;
-				//wcj_log( 'customer_country_group_id=' . $this->customer_country_group_id );
 				return $i;
 			}
 		}
@@ -285,8 +209,9 @@ class WCJ_Price_by_Country_Core {
 	public function change_currency_symbol( $currency_symbol, $currency ) {
 		if ( null != ( $group_id = $this->get_customer_country_group_id() ) ) {
 			$country_currency_code = get_option( 'wcj_price_by_country_exchange_rate_currency_group_' . $group_id );
-			if ( '' != $country_currency_code )
+			if ( '' != $country_currency_code ) {
 				return wcj_get_currency_symbol( $country_currency_code );
+			}
 		}
 		return $currency_symbol;
 	}
@@ -297,48 +222,49 @@ class WCJ_Price_by_Country_Core {
 	public function change_currency_code( $currency ) {
 		if ( null != ( $group_id = $this->get_customer_country_group_id() ) ) {
 			$country_currency_code = get_option( 'wcj_price_by_country_exchange_rate_currency_group_' . $group_id );
-			if ( '' != $country_currency_code )
+			if ( '' != $country_currency_code ) {
 				return $country_currency_code;
+			}
 		}
 		return $currency;
 	}
 
 	/**
-	 * change_price_by_country_variations.
-	 *
-	 * @version 2.3.0
-	 * @since   2.3.0
-	 */
-	/* public function change_price_by_country_variations( $prices_array, $product ) {
-		$modified_prices_array = $prices_array;
-		foreach ( $prices_array as $price_type => $prices ) {
-			foreach ( $prices as $variation_id => $price ) {
-				$modified_prices_array[ $price_type ][ $variation_id ] = $this->change_price_by_country( $price, $variation_id );
-			}
-		}
-		return $modified_prices_array;
-	} */
-
-	/**
 	 * get_variation_prices_hash.
 	 *
-	 * @version 2.4.3
+	 * @version 2.5.0
 	 * @since   2.4.3
 	 */
 	function get_variation_prices_hash( $price_hash, $_product, $display ) {
-		$price_hash['wcj_country_group_id'] = $this->get_customer_country_group_id();
+		$group_id = $this->get_customer_country_group_id();
+		$price_hash['wcj_price_by_country_group_id_data'] = array(
+			$group_id,
+			get_option( 'wcj_price_by_country_rounding' ),
+			get_option( 'wcj_price_by_country_local_enabled' ),
+//			get_option( 'wcj_price_by_country_selection' ),
+//			get_option( 'wcj_price_by_country_total_groups_number' ),
+//			get_option( 'wcj_price_by_country_exchange_rate_countries_group_' . $group_id ),
+//			get_option( 'wcj_price_by_country_countries_group_' . $group_id ),
+//			get_option( 'wcj_price_by_country_countries_group_chosen_select_' . $group_id ),
+			get_option( 'wcj_price_by_country_exchange_rate_currency_group_' . $group_id ),
+			get_option( 'wcj_price_by_country_exchange_rate_group_' . $group_id, 1 ),
+			get_option( 'wcj_price_by_country_make_empty_price_group_' . $group_id, 'no' ),
+		);
 		return $price_hash;
 	}
 
 	/**
 	 * change_price_by_country.
 	 *
-	 * @version 2.4.5
+	 * @version 2.5.0
 	 */
-	public function change_price_by_country( $price, $product ) {
+	function change_price_by_country( $price, $product ) {
 
-		if ( is_numeric( $product ) ) $the_product_id = $product;
-		else $the_product_id = ( isset( $product->variation_id ) ) ? $product->variation_id : $product->id;
+		if ( is_numeric( $product ) ) {
+			$the_product_id = $product;
+		} else {
+			$the_product_id = ( isset( $product->variation_id ) ) ? $product->variation_id : $product->id;
+		}
 
 		if ( null != ( $group_id = $this->get_customer_country_group_id() ) ) {
 
@@ -355,7 +281,13 @@ class WCJ_Price_by_Country_Core {
 				}
 
 				$price_by_country = '';
-				if ( 'woocommerce_get_price' == current_filter() || 'woocommerce_variation_prices_price' == current_filter() ) {
+				$the_current_filter = current_filter();
+				if ( 'woocommerce_get_price_including_tax' == $the_current_filter || 'woocommerce_get_price_excluding_tax' == $the_current_filter ) {
+					$_product = wc_get_product( $the_product_id );
+					$get_price_method = 'get_price_' . get_option( 'woocommerce_tax_display_shop' ) . 'uding_tax';
+					return $_product->$get_price_method();
+
+				} elseif ( 'woocommerce_get_price' == $the_current_filter || 'woocommerce_variation_prices_price' == $the_current_filter ) {
 
 					$regular_or_sale = '_regular_price_';
 					$meta_id = '_' . 'wcj_' . $meta_box_id . $regular_or_sale . $scope . '_' . $group_id;
@@ -365,20 +297,21 @@ class WCJ_Price_by_Country_Core {
 					$meta_id = '_' . 'wcj_' . $meta_box_id . $regular_or_sale . $scope . '_' . $group_id;
 					$sale_price = get_post_meta( $the_product_id, $meta_id, true );
 
-					if ( ! empty( $sale_price ) && $sale_price < $regular_price )
+					if ( ! empty( $sale_price ) && $sale_price < $regular_price ) {
 						$price_by_country = $sale_price;
-					else
+					} else {
 						$price_by_country = $regular_price;
+					}
 
 				}
 				elseif (
-					'woocommerce_get_regular_price' == current_filter() ||
-					'woocommerce_get_sale_price' == current_filter() ||
-					'woocommerce_variation_prices_regular_price' == current_filter() ||
-					'woocommerce_variation_prices_sale_price' == current_filter()
+					'woocommerce_get_regular_price' == $the_current_filter ||
+					'woocommerce_get_sale_price' == $the_current_filter ||
+					'woocommerce_variation_prices_regular_price' == $the_current_filter ||
+					'woocommerce_variation_prices_sale_price' == $the_current_filter
 				) {
 					$regular_or_sale = (
-						'woocommerce_get_regular_price' == current_filter() || 'woocommerce_variation_prices_regular_price' == current_filter()
+						'woocommerce_get_regular_price' == $the_current_filter || 'woocommerce_variation_prices_regular_price' == $the_current_filter
 					) ? '_regular_price_' : '_sale_price_';
 					$meta_id = '_' . 'wcj_' . $meta_box_id . $regular_or_sale . $scope . '_' . $group_id;
 					$price_by_country = get_post_meta( $the_product_id, $meta_id, true );
@@ -401,24 +334,28 @@ class WCJ_Price_by_Country_Core {
 				$country_exchange_rate = get_option( 'wcj_price_by_country_exchange_rate_group_' . $group_id, 1 );
 				if ( 1 != $country_exchange_rate ) {
 					$modified_price = $price * $country_exchange_rate;
+					$rounding = get_option( 'wcj_price_by_country_rounding', 'none' );
+					$precision = get_option( 'woocommerce_price_num_decimals', 2 );
+					switch ( $rounding ) {
+						case 'round':
+							$modified_price = round( $modified_price );
+							break;
+						case 'floor':
+							$modified_price = floor( $modified_price );
+							break;
+						case 'ceil':
+							$modified_price = ceil( $modified_price );
+							break;
+						default: // case 'none':
+							$modified_price = round( $modified_price, $precision ); // $modified_price
+							break;
+					}
 					$is_price_modified = true;
 				}
 			}
 
 			if ( $is_price_modified ) {
-				$rounding = get_option( 'wcj_price_by_country_rounding', 'none' );
-				$precision = get_option( 'woocommerce_price_num_decimals', 2 );
-				switch ( $rounding ) {
-					case 'none':
-						//return ( $modified_price );
-						return round( $modified_price, $precision );
-					case 'round':
-						return round( $modified_price );
-					case 'floor':
-						return floor( $modified_price );
-					case 'ceil':
-						return ceil( $modified_price );
-				}
+				return $modified_price;
 			}
 		}
 		// No changes

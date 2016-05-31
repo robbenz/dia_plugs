@@ -3,9 +3,11 @@
 Plugin Name: Booster for WooCommerce
 Plugin URI: http://booster.io
 Description: Supercharge your WooCommerce site with these awesome powerful features.
-Version: 2.4.8
+Version: 2.5.1
 Author: Algoritmika Ltd
 Author URI: http://www.algoritmika.com
+Text Domain: woocommerce-jetpack
+Domain Path: /langs
 Copyright: © 2016 Algoritmika Ltd.
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -13,7 +15,12 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-if ( ! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) return; // Check if WooCommerce is active
+// Check if WooCommerce is active
+$plugin = 'woocommerce/woocommerce.php';
+if (
+	! in_array( $plugin, apply_filters( 'active_plugins', get_option( 'active_plugins', array() ) ) ) &&
+	! ( is_multisite() && array_key_exists( $plugin, get_site_option( 'active_sitewide_plugins', array() ) ) )
+) return;
 
 if ( ! class_exists( 'WC_Jetpack' ) ) :
 
@@ -21,7 +28,7 @@ if ( ! class_exists( 'WC_Jetpack' ) ) :
  * Main WC_Jetpack Class
  *
  * @class   WC_Jetpack
- * @version 2.4.8
+ * @version 2.5.0
  */
 
 final class WC_Jetpack {
@@ -32,7 +39,7 @@ final class WC_Jetpack {
 	 * @var   string
 	 * @since 2.4.7
 	 */
-	public $version = '2.4.8';
+	public $version = '2.5.1';
 
 	/**
 	 * @var WC_Jetpack The single instance of the class
@@ -56,36 +63,33 @@ final class WC_Jetpack {
 
 	/**
 	 * Cloning is forbidden.
-	 *
-	public function __clone() {
+	 */
+	/* public function __clone() {
 		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'woocommerce' ), '3.9.1' );
-	}
+	} */
 
 	/**
 	 * Unserializing instances of this class is forbidden.
-	 *
-	public function __wakeup() {
+	 */
+	/* public function __wakeup() {
 		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'woocommerce' ), '3.9.1' );
-	}
+	} */
 
 	/**
 	 * WC_Jetpack Constructor.
 	 *
-	 * @version 2.4.0
+	 * @version 2.5.0
 	 * @access public
 	 */
 	public function __construct() {
 
-		/* echo 'Constructor Start: memory_get_usage( false )' . number_format( memory_get_usage( false ), 0, '.', ',' );
-		echo 'Constructor Start: memory_get_usage( true )' . number_format( memory_get_usage( true ), 0, '.', ',' ); */
-
-		//require_once( WP_PLUGIN_DIR . '/woocommerce/woocommerce.php' );
+//		require_once( WP_PLUGIN_DIR . '/woocommerce/woocommerce.php' );
 
 		// Include required files
 		$this->includes();
 
 		//register_activation_hook( __FILE__, array( $this, 'install' ) );
-		//add_action( 'admin_init', array( $this, 'install' ) );
+//		add_action( 'admin_init', array( $this, 'install' ) );
 		add_action( 'init', array( $this, 'init' ), 0 );
 
 		// Settings
@@ -95,7 +99,7 @@ final class WC_Jetpack {
 			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'action_links' ) );
 			add_action( 'admin_menu',                                         array( $this, 'jetpack_menu' ), 100 );
 //			add_filter( 'admin_footer_text',                                  array( $this, 'admin_footer_text' ), 2 );
-			add_action( 'admin_notices',                                      array( $this, 'name_changed_notice' ) );
+//			add_action( 'admin_notices',                                      array( $this, 'name_changed_notice' ) );
 		}
 
 		// Scripts
@@ -106,22 +110,19 @@ final class WC_Jetpack {
 				'yes' === get_option( 'wcj_crowdfunding_enabled' )
 			) {
 				add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_backend_scripts' ) );
-				//add_action( 'admin_head', array( $this, 'add_datepicker_script' ) );
 			}
 		}
 
 		if (
 			'yes' === get_option( 'wcj_product_input_fields_enabled' ) ||
-			'yes' === get_option( 'wcj_checkout_custom_fields_enabled' )
+			'yes' === get_option( 'wcj_checkout_custom_fields_enabled' ) ||
+			'yes' === get_option( 'wcj_product_bookings_enabled' )
 		){
 			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_frontend_scripts' ) );
 		}
 
 		// Loaded action
 		do_action( 'wcj_loaded' );
-
-		/* echo 'Constructor End: memory_get_usage( false )' . number_format( memory_get_usage( false ), 0, '.', ',' );
-		echo 'Constructor End: memory_get_usage( true )' . number_format( memory_get_usage( true ), 0, '.', ',' ); */
 	}
 
 	/**
@@ -221,12 +222,12 @@ final class WC_Jetpack {
 	 * @version 2.2.4
 	 * @since   2.2.4
 	 */
-	public function name_changed_notice() {
+	/* public function name_changed_notice() {
 
 		if ( ! is_admin() ) return;
 
 		//require_once( ABSPATH . 'wp-includes/pluggable.php' );
-		if ( ! is_super_admin() ) return;
+		if ( ! wcj_is_user_role( 'administrator' ) ) return;
 
 		$user_id = get_current_user_id();
 
@@ -251,29 +252,33 @@ final class WC_Jetpack {
 				echo '<div class="' . $class . '"><p>' . $message . '</p><p>' . $button . '</p></div>';
 			}
 		}
-	}
+	} */
 
 	/**
 	 * admin_footer_text
-	 *
-	public function admin_footer_text( $footer_text ) {
-
+	 */
+	/* public function admin_footer_text( $footer_text ) {
 		if ( isset( $_GET['page'] ) ) {
 			if ( 'wcj-tools' === $_GET['page'] || ( 'wc-settings' === $_GET['page'] && isset( $_GET['tab'] ) && 'jetpack' === $_GET['tab'] ) ) {
 				return sprintf( __( 'If you like <strong>WooCommerce Jetpack</strong> please leave us a <a href="%1$s" target="_blank">&#9733;&#9733;&#9733;&#9733;&#9733;</a> rating on <a href="%1$s" target="_blank">WordPress.org</a>. We will be grateful for any help!', 'woocommerce-jetpack' ), 'https://wordpress.org/support/view/plugin-reviews/woocommerce-jetpack?filter=5#postform' );
 			}
 		}
-
 		return $footer_text;
-	}
+	} */
 
 	/**
 	 * Add menu item
 	 *
-	 * @version 2.2.4
+	 * @version 2.5.0
 	 */
 	public function jetpack_menu() {
-		add_submenu_page( 'woocommerce', __( 'Booster for WooCommerce', 'woocommerce' ),  __( 'Booster Settings', 'woocommerce' ) , 'manage_woocommerce', 'admin.php?page=wc-settings&tab=jetpack' );
+		add_submenu_page(
+			'woocommerce',
+			__( 'Booster for WooCommerce', 'woocommerce-jetpack' ),
+			__( 'Booster Settings', 'woocommerce-jetpack' ) ,
+			'manage_woocommerce',
+			'admin.php?page=wc-settings&tab=jetpack'
+		);
 	}
 
 	/**
@@ -363,7 +368,7 @@ final class WC_Jetpack {
 		include_once( 'includes/widgets/class-wcj-widget-left-to-free-shipping.php' );
 
 		// Abstracts
-		//include_once( 'includes/abstracts/class-wcj-product-input-fields.php' );
+//		include_once( 'includes/abstracts/class-wcj-product-input-fields.php' );
 
 		// Modules and Submodules
 		$this->include_modules();
@@ -372,11 +377,13 @@ final class WC_Jetpack {
 	/**
 	 * include_functions.
 	 *
-	 * @version 2.4.4
+	 * @version 2.5.0
 	 */
 	private function include_functions() {
 		include_once( 'includes/functions/wcj-debug-functions.php' );
 		include_once( 'includes/functions/wcj-functions.php' );
+		include_once( 'includes/functions/wcj-functions-number-to-words.php' );
+		include_once( 'includes/functions/wcj-functions-number-to-words-bg.php' );
 		include_once( 'includes/functions/wcj-html-functions.php' );
 		include_once( 'includes/functions/wcj-country-functions.php' );
 		include_once( 'includes/functions/wcj-invoicing-functions.php' );
@@ -387,7 +394,7 @@ final class WC_Jetpack {
 	/**
 	 * include_shortcodes.
 	 *
-	 * @version 2.4.0
+	 * @version 2.5.0
 	 */
 	private function include_shortcodes() {
 		//if ( 'yes' === get_option( 'wcj_shortcodes_enabled', 'no' ) ) {
@@ -398,13 +405,14 @@ final class WC_Jetpack {
 			include_once( 'includes/shortcodes/class-wcj-orders-shortcodes.php' );
 			include_once( 'includes/shortcodes/class-wcj-order-items-shortcodes.php' );
 			include_once( 'includes/shortcodes/class-wcj-products-shortcodes.php' );
+			include_once( 'includes/shortcodes/class-wcj-products-add-form-shortcodes.php' );
 		}
 	}
 
 	/**
 	 * Include modules and submodules
 	 *
-	 * @version 2.4.8
+	 * @version 2.5.0
 	 */
 	private function include_modules() {
 		$settings = array();
@@ -421,10 +429,14 @@ final class WC_Jetpack {
 		$settings[] = include_once( 'includes/class-wcj-product-input-fields.php' );
 		$settings[] = include_once( 'includes/class-wcj-product-bulk-price-converter.php' );
 		$settings[] = include_once( 'includes/class-wcj-purchase-data.php' );
+		$settings[] = include_once( 'includes/class-wcj-product-bookings.php' );
 		$settings[] = include_once( 'includes/class-wcj-crowdfunding.php' );
 		$settings[] = include_once( 'includes/class-wcj-wholesale-price.php' );
 		$settings[] = include_once( 'includes/class-wcj-product-open-pricing.php' );
+		$settings[] = include_once( 'includes/class-wcj-price-by-user-role.php' );
+		$settings[] = include_once( 'includes/class-wcj-product-price-by-formula.php' );
 		$settings[] = include_once( 'includes/class-wcj-product-images.php' );
+		$settings[] = include_once( 'includes/class-wcj-product-by-country.php' );
 		$settings[] = include_once( 'includes/class-wcj-add-to-cart.php' );
 		$settings[] = include_once( 'includes/class-wcj-more-button-labels.php' );
 		$settings[] = include_once( 'includes/class-wcj-cart.php' );
@@ -512,7 +524,7 @@ final class WC_Jetpack {
 						// Admin reset
 						if ( isset ( $_GET['woojetpack_admin_options_reset'] ) ) {
 							require_once( ABSPATH . 'wp-includes/pluggable.php' );
-							if ( is_super_admin() ) {
+							if ( wcj_is_user_role( 'administrator' ) ) {
 								delete_option( $value['id'] );
 							}
 						}

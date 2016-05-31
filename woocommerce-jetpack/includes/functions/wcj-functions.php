@@ -4,15 +4,57 @@
  *
  * The WooCommerce Jetpack Functions.
  *
- * @version 2.4.8
+ * @version 2.5.0
  * @author  Algoritmika Ltd.
  */
+
+if ( ! function_exists( 'wcj_get_current_currency_code' ) ) {
+	/**
+	 * wcj_get_current_currency_code.
+	 *
+	 * @version 2.5.0
+	 * @since   2.5.0
+	 */
+	function wcj_get_current_currency_code( $module ) {
+		$current_currency_code = get_woocommerce_currency();
+		if ( wcj_is_module_enabled( $module ) ) {
+			if ( 'multicurrency' === $module ) {
+				$current_currency_code = ( isset( $_SESSION['wcj-currency'] ) ) ? $_SESSION['wcj-currency'] : $current_currency_code;
+			}
+		}
+		return $current_currency_code;
+	}
+}
+
+if ( ! function_exists( 'wcj_get_currency_exchange_rate' ) ) {
+	/**
+	 * wcj_get_currency_exchange_rate.
+	 *
+	 * @version 2.5.0
+	 * @since   2.5.0
+	 */
+	function wcj_get_currency_exchange_rate( $module, $currency_code ) {
+		$currency_exchange_rate = 1;
+		if ( wcj_is_module_enabled( $module ) ) {
+			if ( 'multicurrency' === $module ) {
+				$total_number = apply_filters( 'wcj_get_option_filter', 2, get_option( 'wcj_multicurrency_total_number', 2 ) );
+				for ( $i = 1; $i <= $total_number; $i++ ) {
+					if ( $currency_code === get_option( 'wcj_multicurrency_currency_' . $i ) ) {
+						$currency_exchange_rate = get_option( 'wcj_multicurrency_exchange_rate_' . $i );
+						break;
+					}
+				}
+			}
+		}
+		return $currency_exchange_rate;
+	}
+}
 
 if ( ! function_exists( 'wcj_variation_radio_button' ) ) {
 	/**
 	 * wcj_variation_radio_button.
 	 *
-	 * @version 2.4.8
+	 * @version 2.5.0
 	 * @since   2.4.8
 	 */
 	function wcj_variation_radio_button( $_product, $variation ) {
@@ -47,13 +89,17 @@ if ( ! function_exists( 'wcj_variation_radio_button' ) ) {
 		$is_checked = checked( $is_checked, true, false );
 
 		echo '<td style="width:10%;">';
-		echo '<input name="wcj_variations" type="radio"' . $attributes_html . ' variation_id="' . $variation_id . '"' . $is_checked . '>';
+		echo '<input id="wcj_variation_' . $variation_id . '" name="wcj_variations" type="radio"' . $attributes_html . ' variation_id="' . $variation_id . '"' . $is_checked . '>';
 		echo '</td>';
 		echo '<td>';
+		echo '<label for="wcj_variation_' . $variation_id . '">';
 		echo $variation_title;
-		echo '<br>';
-//		echo '<small>' . $variation['variation_description'] . '</small>';
-		echo '<small>' . get_post_meta( $variation_id, '_variation_description', true )  . '</small>';
+		if ( '' != ( $variation_description = get_post_meta( $variation_id, '_variation_description', true ) ) ) {
+			echo '<br>';
+//			echo '<small>' . $variation['variation_description'] . '</small>';
+			echo '<small>' . $variation_description . '</small>';
+		}
+		echo '</label>';
 		echo '</td>';
 	}
 }
@@ -253,14 +299,41 @@ if ( ! function_exists( 'wcj_get_wcj_uploads_dir' ) ) {
 }
 
 /**
+ * wcj_is_product_wholesale_enabled_per_product.
+ *
+ * @version 2.5.0
+ * @since   2.5.0
+ */
+if ( ! function_exists( 'wcj_is_product_wholesale_enabled_per_product' ) ) {
+	function wcj_is_product_wholesale_enabled_per_product( $product_id ) {
+		return (
+			'yes' === get_option( 'wcj_wholesale_price_per_product_enable', 'yes' ) &&
+			'yes' === get_post_meta( $product_id, '_' . 'wcj_wholesale_price_per_product_enabled', true )
+		) ? true : false;
+	}
+}
+
+/**
  * wcj_is_product_wholesale_enabled.
+ *
+ * @version 2.5.0
  */
 if ( ! function_exists( 'wcj_is_product_wholesale_enabled' ) ) {
 	function wcj_is_product_wholesale_enabled( $product_id ) {
-		$products_to_include = get_option( 'wcj_wholesale_price_products_to_include', array() );
-		if ( empty ( $products_to_include ) ) return true;
-		foreach ( $products_to_include as $id ) {
-			if ( $product_id == $id ) return true;
+		if ( wcj_is_module_enabled( 'wholesale_price' ) ) {
+			if ( wcj_is_product_wholesale_enabled_per_product( $product_id ) ) {
+				return true;
+			} else {
+				$products_to_include = get_option( 'wcj_wholesale_price_products_to_include', array() );
+				if ( empty ( $products_to_include ) ) {
+					return true;
+				}
+				foreach ( $products_to_include as $id ) {
+					if ( $product_id == $id ) {
+						return true;
+					}
+				}
+			}
 		}
 		return false;
 	}
@@ -341,6 +414,20 @@ if ( ! function_exists( 'is_shop_manager' ) ) {
 }
 
 /**
+ * wcj_is_user_role.
+ *
+ * @version 2.5.0
+ * @since   2.5.0
+ * @return  bool
+ */
+if ( ! function_exists( 'wcj_is_user_role' ) ) {
+	function wcj_is_user_role( $user_role, $user_id = 0 ) {
+		$the_user = ( 0 == $user_id ) ? wp_get_current_user() : get_user_by( 'id', $user_id );
+		return ( isset( $the_user->roles ) && is_array( $the_user->roles ) && in_array( $user_role, $the_user->roles ) ) ? true : false;
+	}
+}
+
+/**
  * validate_VAT.
  *
  * @return mixed: bool on successful checking (can be true or false), null otherwise
@@ -363,126 +450,6 @@ if ( ! function_exists( 'validate_VAT' ) ) {
 		} catch( Exception $exception ) {
 			return null;
 		}
-	}
-}
-
-
-/**
- * convert_number_to_words.
- *
- * @return string
- */
-
-if ( ! function_exists( 'convert_number_to_words' ) ) {
-	function convert_number_to_words( $number ) {
-		$hyphen      = '-';
-		$conjunction = ' and ';
-		$separator   = ', ';
-		$negative    = 'negative ';
-		$decimal     = ' point ';
-		$dictionary  = array(
-			0                   => 'zero',
-			1                   => 'one',
-			2                   => 'two',
-			3                   => 'three',
-			4                   => 'four',
-			5                   => 'five',
-			6                   => 'six',
-			7                   => 'seven',
-			8                   => 'eight',
-			9                   => 'nine',
-			10                  => 'ten',
-			11                  => 'eleven',
-			12                  => 'twelve',
-			13                  => 'thirteen',
-			14                  => 'fourteen',
-			15                  => 'fifteen',
-			16                  => 'sixteen',
-			17                  => 'seventeen',
-			18                  => 'eighteen',
-			19                  => 'nineteen',
-			20                  => 'twenty',
-			30                  => 'thirty',
-			40                  => 'fourty',
-			50                  => 'fifty',
-			60                  => 'sixty',
-			70                  => 'seventy',
-			80                  => 'eighty',
-			90                  => 'ninety',
-			100                 => 'hundred',
-			1000                => 'thousand',
-			1000000             => 'million',
-			1000000000          => 'billion',
-			1000000000000       => 'trillion',
-			1000000000000000    => 'quadrillion',
-			1000000000000000000 => 'quintillion'
-		);
-
-		if (!is_numeric($number)) {
-			return false;
-		}
-
-		if (($number >= 0 && (int) $number < 0) || (int) $number < 0 - PHP_INT_MAX) {
-			// overflow
-			trigger_error(
-				'convert_number_to_words only accepts numbers between -' . PHP_INT_MAX . ' and ' . PHP_INT_MAX,
-				E_USER_WARNING
-			);
-			return false;
-		}
-
-		if ($number < 0) {
-			return $negative . convert_number_to_words(abs($number));
-		}
-
-		$string = $fraction = null;
-
-		if (strpos($number, '.') !== false) {
-			list($number, $fraction) = explode('.', $number);
-		}
-
-		switch (true) {
-			case $number < 21:
-				$string = $dictionary[$number];
-				break;
-			case $number < 100:
-				$tens   = ((int) ($number / 10)) * 10;
-				$units  = $number % 10;
-				$string = $dictionary[$tens];
-				if ($units) {
-					$string .= $hyphen . $dictionary[$units];
-				}
-				break;
-			case $number < 1000:
-				$hundreds  = $number / 100;
-				$remainder = $number % 100;
-				$string = $dictionary[$hundreds] . ' ' . $dictionary[100];
-				if ($remainder) {
-					$string .= $conjunction . convert_number_to_words($remainder);
-				}
-				break;
-			default:
-				$baseUnit = pow(1000, floor(log($number, 1000)));
-				$numBaseUnits = (int) ($number / $baseUnit);
-				$remainder = $number % $baseUnit;
-				$string = convert_number_to_words($numBaseUnits) . ' ' . $dictionary[$baseUnit];
-				if ($remainder) {
-					$string .= $remainder < 100 ? $conjunction : $separator;
-					$string .= convert_number_to_words($remainder);
-				}
-				break;
-		}
-
-		if (null !== $fraction && is_numeric($fraction)) {
-			$string .= $decimal;
-			$words = array();
-			foreach (str_split((string) $fraction) as $number) {
-				$words[] = $dictionary[$number];
-			}
-			$string .= implode(' ', $words);
-		}
-
-		return $string;
 	}
 }
 

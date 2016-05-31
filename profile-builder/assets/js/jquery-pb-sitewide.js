@@ -8,9 +8,9 @@ jQuery( document ).ready(function(){
 });
 
 /*
-* Set the width of the shortcode input based on an element that
-* has the width of its contents
-*/
+ * Set the width of the shortcode input based on an element that
+ * has the width of its contents
+ */
 function setShortcodeInputWidth( $inputField ) {
     var tempSpan = document.createElement('span');
     tempSpan.className = "wppb-shortcode-temp";
@@ -89,10 +89,10 @@ jQuery( function(){
 });
 
 /*
-* Dialog boxes throughout Profile Builder
-*/
+ * Dialog boxes throughout Profile Builder
+ */
 jQuery( function() {
-    jQuery(document).ready( function() {
+    if ( jQuery.fn.dialog ) {
         jQuery('.wppb-modal-box').dialog({
             autoOpen: false,
             modal: true,
@@ -101,9 +101,9 @@ jQuery( function() {
             minHeight: 450
         });
 
-        jQuery('.wppb-open-modal-box').click( function(e) {
+        jQuery('.wppb-open-modal-box').click(function (e) {
             e.preventDefault();
             jQuery('#' + jQuery(this).attr('href')).dialog('open');
         });
-    });
+    }
 });

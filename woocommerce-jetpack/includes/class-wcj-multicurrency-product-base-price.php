@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Multicurrency Product Base Price class.
  *
- * @version 2.4.8
+ * @version 2.5.0
  * @since   2.4.8
  * @author  Algoritmika Ltd.
  */
@@ -17,12 +17,16 @@ class WCJ_Multicurrency_Base_Price extends WCJ_Module {
 
 	/**
 	 * Constructor.
+	 *
+	 * @version 2.5.0
+	 * @since   2.4.8
 	 */
 	function __construct() {
 
 		$this->id         = 'multicurrency_base_price';
 		$this->short_desc = __( 'Multicurrency Product Base Price', 'woocommerce-jetpack' );
 		$this->desc       = __( 'Enter prices for WooCommerce products in different currencies.', 'woocommerce-jetpack' );
+		$this->link       = 'http://booster.io/features/woocommerce-multicurrency-product-base-price/';
 		parent::__construct();
 
 		add_action( 'init', array( $this, 'add_settings_hook' ) );
@@ -44,6 +48,9 @@ class WCJ_Multicurrency_Base_Price extends WCJ_Module {
 				add_filter( 'woocommerce_variation_prices_regular_price', array( $this, 'change_price_by_currency' ), PHP_INT_MAX - 10, 2 );
 				add_filter( 'woocommerce_variation_prices_sale_price',    array( $this, 'change_price_by_currency' ), PHP_INT_MAX - 10, 2 );
 				add_filter( 'woocommerce_get_variation_prices_hash',      array( $this, 'get_variation_prices_hash' ), PHP_INT_MAX - 10, 3 );
+				// Grouped products
+				add_filter( 'woocommerce_get_price_including_tax',        array( $this, 'change_price_by_currency_grouped' ), PHP_INT_MAX - 10, 3 );
+				add_filter( 'woocommerce_get_price_excluding_tax',        array( $this, 'change_price_by_currency_grouped' ), PHP_INT_MAX - 10, 3 );
 			}
 
 			if ( is_admin() ) {
@@ -68,6 +75,27 @@ class WCJ_Multicurrency_Base_Price extends WCJ_Module {
 	}
 
 	/**
+	 * change_price_by_currency_grouped.
+	 *
+	 * @version 2.5.0
+	 * @since   2.5.0
+	 */
+	function change_price_by_currency_grouped( $price, $qty, $_product ) {
+		if ( $_product->is_type( 'grouped' ) ) {
+			$get_price_method = 'get_price_' . get_option( 'woocommerce_tax_display_shop' ) . 'uding_tax';
+			foreach ( $_product->get_children() as $child_id ) {
+				$the_price = get_post_meta( $child_id, '_price', true );
+				$the_product = wc_get_product( $child_id );
+				$the_price = $the_product->$get_price_method( 1, $the_price );
+				if ( $the_price == $price ) {
+					return $this->change_price_by_currency( $price, $the_product );
+				}
+			}
+		}
+		return $price;
+	}
+
+	/**
 	 * change_price_by_currency.
 	 */
 	function change_price_by_currency( $price, $_product ) {
@@ -82,9 +110,16 @@ class WCJ_Multicurrency_Base_Price extends WCJ_Module {
 
 	/**
 	 * get_variation_prices_hash.
+	 *
+	 * @version 2.5.0
 	 */
 	function get_variation_prices_hash( $price_hash, $_product, $display ) {
-		$price_hash['wcj_base_currency'] = get_post_meta( $_product->id, '_' . 'wcj_multicurrency_base_price_currency', true );
+		$multicurrency_base_price_currency = get_post_meta( $_product->id, '_' . 'wcj_multicurrency_base_price_currency', true );
+		$currency_exchange_rate = $this->get_currency_exchange_rate( $multicurrency_base_price_currency );
+		$price_hash['wcj_base_currency'] = array(
+			$multicurrency_base_price_currency,
+			$currency_exchange_rate,
+		);
 		return $price_hash;
 	}
 

@@ -1,8 +1,8 @@
 <?php
 
 class RM_JSModel extends RM_BaseModel {
-    
-    
+
+
     /**
      * Function to create the file to hold the JS file
      *
@@ -10,25 +10,25 @@ class RM_JSModel extends RM_BaseModel {
      * @return file
      * @added 1.6
      */
-    
+
     static function createJSFile( $js ) {
 
-        
+
         $file = fopen( RM_Registry::get( 'config', 'plugin_data_dir' ) . '/js/responsive-menu-' . get_current_blog_id() . '.js', 'w' );
-        
+
         $jsFile = fwrite( $file, $js );
-        
+
         fclose( $file );
-        
-        if( !$file ) 
+
+        if( !$file )
             RM_Status::set( 'error', __( 'Unable to create JS file', 'responsive-menu' ) );
-                
+
         return $jsFile;
-        
-        
-    }  
-    
-    
+
+
+    }
+
+
     /**
      * Function to format, create and get the JS itself
      *
@@ -36,13 +36,13 @@ class RM_JSModel extends RM_BaseModel {
      * @return string
      * @added 1.0
      */
-    
+
     static function getJS( $options ) {
-        
-        
+
+
         $setHeight = $options['RMPos'] == 'fixed' ? '' : " \$RMjQuery( '#responsive-menu' ).css( 'height', \$RMjQuery( document ).height() ); ";
         $breakpoint = empty($options['RMBreak']) ? "600" : $options['RMBreak'];
-        
+
         $RMPushCSS = empty( $options['RMPushCSS'] ) ? "" : $options['RMPushCSS'];
 
         $slideOpen = $options['RMAnim'] == 'push' && !empty($options['RMPushCSS']) ? " \$RMjQuery( 'body' ).addClass( 'RMPushOpen' ); " : '';
@@ -56,7 +56,7 @@ class RM_JSModel extends RM_BaseModel {
             case 'bottom' : $side = 'top'; break;
             default : $side = 'left'; break;
         endswitch;
-                
+
         /* Added 2.0 */
         switch( $options['RMSide'] ) :
             case 'left' : $width = $options['RMWidth']; $neg = '-'; break;
@@ -65,7 +65,7 @@ class RM_JSModel extends RM_BaseModel {
             case 'bottom' : $width = '100'; $neg = ''; break;
             default : $width = '75'; break;
         endswitch;
-        
+
         switch( $options['RMSide']  ) :
             case 'left' : $pushSide = 'left'; $pos = ''; break;
             case 'right' : $pushSide = 'left'; $pos = '-'; break;
@@ -79,20 +79,20 @@ class RM_JSModel extends RM_BaseModel {
             case 'top' : $pushBtnSide = 'top';  break;
             case 'bottom' : $pushBtnSide = 'bottom'; break;
         endswitch;
-		
+
         $sideSlideOpen = $side == 'right' && empty( $slideOpen ) ? " \$RMjQuery( 'body' ).addClass( 'RMPushOpen' ); " : '';
         $sideSlideRemove =  $side == 'right' && empty( $slideRemove ) ? " \$RMjQuery( 'body' ).removeClass( 'RMPushOpen' ); " : '';
-        
+
         /* Added 2.3 */
-        
+
         $trigger = isset( $options['RMTrigger'] ) ? $options['RMTrigger'] : RM_Registry::get( 'defaults', 'RMTrigger' );
-        
+
         $speed = $options['RMAnimSpd'] * 1000;
-        
+
         /* Added 2.5 */
-        
+
         $location = $options['RMLoc'];
-        
+
         /*
         |--------------------------------------------------------------------------
         | Slide Push Animation
@@ -186,19 +186,19 @@ class RM_JSModel extends RM_BaseModel {
         |
         */
 
-        if( $options['RMX'] || $options['RMClickImgClicked'] ) : 
-            
+        if( $options['RMX'] || $options['RMClickImgClicked'] ) :
+
             $closeX = " \$RMjQuery( '#click-menu #RMX, #click-menu img.rm-img-clicked' ).css( 'display', 'none' );
                         \$RMjQuery( '#click-menu #RM3Lines, #click-menu img.rm-img-to-click' ).css( 'display', 'block' ); ";
 
             $showX = " \$RMjQuery( '#click-menu #RM3Lines, #click-menu img.rm-img-to-click' ).css( 'display', 'none' );
-                         \$RMjQuery( '#click-menu #RMX, #click-menu img.rm-img-clicked' ).css( 'display', 'block' ); ";        
+                         \$RMjQuery( '#click-menu #RMX, #click-menu img.rm-img-clicked' ).css( 'display', 'block' ); ";
         else :
 
             $closeX = "";
             $showX = "";
 
-        endif;            
+        endif;
 
         /*
         |--------------------------------------------------------------------------
@@ -217,31 +217,31 @@ class RM_JSModel extends RM_BaseModel {
 
         $activeArrow = $options['RMArImgA'] ? '<img src="' . $options['RMArImgA'] . '" />' : json_decode( $options['RMArShpA'] );
         $inactiveArrow = $options['RMArImgI'] ? '<img src="' . $options['RMArImgI'] . '" />' : json_decode( $options['RMArShpI'] );
-           
+
 
         if ( !$options['RMExpand'] ) :
 
-            $clickedLink = '<span class=\"appendLink rm-append-inactive\">' . $inactiveArrow . '</span>';  
-            $clickLink = '<span class=\"appendLink rm-append-inactive\">' . $inactiveArrow . '</span>';  
+            $clickedLink = '<span class=\"appendLink rm-append-inactive\">' . $inactiveArrow . '</span>';
+            $clickLink = '<span class=\"appendLink rm-append-inactive\">' . $inactiveArrow . '</span>';
 
         else :
 
             $clickedLink = '<span class=\"appendLink rm-append-active\">' . $activeArrow . '</span>';
-            $clickLink = '<span class=\"appendLink rm-append-active\">' . $activeArrow . '</span>'; 
+            $clickLink = '<span class=\"appendLink rm-append-active\">' . $activeArrow . '</span>';
 
         endif;
 
         if( $options['RMExpandPar'] ) :
 
             $clickedLink = '<span class=\"appendLink rm-append-active\">' . $activeArrow . '</span>';
-            $clickLink = '<span class=\"appendLink rm-append-inactive\">' . $inactiveArrow . '</span>'; 
+            $clickLink = '<span class=\"appendLink rm-append-inactive\">' . $inactiveArrow . '</span>';
 
         endif;
 
         if( $options['RMExpandPar'] && $options['RMExpand'] ) :
 
             $clickedLink = '<span class=\"appendLink rm-append-active\">' . $activeArrow . '</span>';
-            $clickLink = '<span class=\"appendLink rm-append-active\">' . $activeArrow . '</span>'; 
+            $clickLink = '<span class=\"appendLink rm-append-active\">' . $activeArrow . '</span>';
 
         endif;
 
@@ -253,7 +253,7 @@ class RM_JSModel extends RM_BaseModel {
         |
         | Initialise the JavaScript output variable ready for appending
         |
-        */   
+        */
 
         $js = null;
 
@@ -264,7 +264,7 @@ class RM_JSModel extends RM_BaseModel {
         |
         | Determine whether to use the <script> tags (when using internal scripts)
         |
-        */       
+        */
 
         $js .= $options['RMExternal'] ? '' : '<script>';
 
@@ -275,7 +275,7 @@ class RM_JSModel extends RM_BaseModel {
         |
         | Setup the initial noConflict and document ready checks
         |
-        */   
+        */
 
         $js .= "
 
@@ -292,7 +292,7 @@ class RM_JSModel extends RM_BaseModel {
         |
         | Stop clicks on the main parent items if option selected
         | Added 2.0
-        */ 
+        */
 
         if( $options['RMIgnParCli'] ) :
 
@@ -325,19 +325,19 @@ class RM_JSModel extends RM_BaseModel {
         |
         | Close menu on page clicks if required
         | Added 2.0
-        */ 
+        */
 
         if( $options['RMCliToClo'] ) :
 
             $js .= "
 
-                \$RMjQuery( document ).bind( 'vclick', function( e ) {  
+                \$RMjQuery( document ).bind( 'vclick', function( e ) {
 
-                    if( e.which != 2 && !\$RMjQuery( e.target ).closest( '#responsive-menu, {$trigger}' ).length ) { 
+                    if( e.which != 2 && !\$RMjQuery( e.target ).closest( '#responsive-menu, {$trigger}' ).length ) {
 
-                        closeRM(); 
+                        closeRM();
 
-                    } 
+                    }
 
                 });
 
@@ -351,7 +351,7 @@ class RM_JSModel extends RM_BaseModel {
         | Click Menu Function
         |--------------------------------------------------------------------------
         |
-        | This is our Click Handler to determine whether or not to open or close 
+        | This is our Click Handler to determine whether or not to open or close
         | the menu when the click menu button has been clicked.
         |
         */
@@ -384,23 +384,24 @@ class RM_JSModel extends RM_BaseModel {
 
             function openRM() {
 
-                $slideOpen  
+                $slideOpen
                 $sideSlideOpen
                 $slideOverCss
                 $slideOver
                 $showX
 
-                \$RMjQuery( '#responsive-menu' ).css( 'display', 'block' ); 
-                \$RMjQuery( '#responsive-menu' ).addClass( 'RMOpened' );  
-                \$RMjQuery( '#click-menu' ).addClass( 'click-menu-active' );  
+                \$RMjQuery( '#responsive-menu' ).css( 'display', 'block' );
+                \$RMjQuery( '#responsive-menu' ).addClass( 'RMOpened' );
+                \$RMjQuery( '#click-menu' ).addClass( 'click-menu-active' );
+                \$RMjQuery( 'body' ).addClass( 'responsive-menu-open' );
 
-                \$RMjQuery( '#responsive-menu' ).stop().animate( { $side: \"0\" }, $speed, 'linear', function() { 
+                \$RMjQuery( '#responsive-menu' ).stop().animate( { $side: \"0\" }, $speed, 'linear', function() {
 
                   $setHeight
 
                   isOpen = true;
 
-                } ); 
+                } );
 
             }
 
@@ -415,7 +416,7 @@ class RM_JSModel extends RM_BaseModel {
         | its state to closed
         |
         | Added by Bhupender
-        | Modified negative width to take directly width of menu instead of '%', 
+        | Modified negative width to take directly width of menu instead of '%',
         | this works for condition where animation is push and max width of menu is less then %
         |
         */
@@ -432,9 +433,10 @@ class RM_JSModel extends RM_BaseModel {
                     $sideSlideRemove
                     $slideOverCssRemove
                     $closeX
-                    \$RMjQuery( '#responsive-menu' ).css( 'display', 'none' );  
-                    \$RMjQuery( '#responsive-menu' ).removeClass( 'RMOpened' );  
-                    \$RMjQuery( '#click-menu' ).removeClass( 'click-menu-active' ); 
+                    \$RMjQuery( '#responsive-menu' ).css( 'display', 'none' );
+                    \$RMjQuery( '#responsive-menu' ).removeClass( 'RMOpened' );
+                    \$RMjQuery( '#click-menu' ).removeClass( 'click-menu-active' );
+                    \$RMjQuery( 'body' ).removeClass( 'responsive-menu-open' ); 
 
                     isOpen = false;
 
@@ -449,25 +451,25 @@ class RM_JSModel extends RM_BaseModel {
         | Menu Resize Function
         |--------------------------------------------------------------------------
         |
-        | This is the main function that deals with resizing the page and is used 
+        | This is the main function that deals with resizing the page and is used
         | to judge whether the menu needs closing once the screen is resized
         |
         |
         | Added by Bhupender
-        | - Modified negative width to take directly width of menu instead of '%', 
+        | - Modified negative width to take directly width of menu instead of '%',
         |   this works for condition where animation is push and max width of menu is less then %
 
         */
 
         $js .= "
 
-            \$RMjQuery( window ).resize( function() { 
+            \$RMjQuery( window ).resize( function() {
 
             	\$RMjQuery( '#responsive-menu' ).stop( true, true );
-            	
+
                 $setHeight
 
-                if( \$RMjQuery( window ).width() > $breakpoint ) { 
+                if( \$RMjQuery( window ).width() > $breakpoint ) {
 
                     if( \$RMjQuery( '#responsive-menu' ).css( '$side' ) != -\$RMjQuery( '#responsive-menu' ).width() ) {
 
@@ -523,8 +525,8 @@ class RM_JSModel extends RM_BaseModel {
         if( $options['RMExpand'] ) :
             $js .= " \$RMjQuery( '#responsive-menu ul ul' ).css( 'display', 'block' ); ";
         endif;
-        
-        $js .= " 
+
+        $js .= "
 
             var clickLink = '{$clickLink}';
             var clickedLink = '{$clickedLink}';
@@ -535,11 +537,11 @@ class RM_JSModel extends RM_BaseModel {
 
                     if( \$RMjQuery( this ).find( '> ul' ).css( 'display' ) == 'none' ) {
 
-                        \$RMjQuery( this ).prepend( clickLink );  
+                        \$RMjQuery( this ).prepend( clickLink );
 
                     } else {
 
-                        \$RMjQuery( this ).prepend( clickedLink );  
+                        \$RMjQuery( this ).prepend( clickedLink );
 
                     }
 
@@ -557,45 +559,45 @@ class RM_JSModel extends RM_BaseModel {
         | This is the part that deals with the accordion animation
 		| Currently only works to one level of depth
         |
-        */     
+        */
 
         if( $options['RMAccordion'] && $options['RMAccordion'] == 'accordion' ) :
 
-            $accordion = " 
+            $accordion = "
 
             if( \$RMjQuery( this ).closest( 'ul' ).is( '.responsive-menu' ) ) {
 
                 \$RMjQuery( '.accordion-open' ).removeClass( 'accordion-open' );
 
-				\$RMjQuery( this ).parent( 'li' ).addClass( 'accordion-open' );	
-								
+				\$RMjQuery( this ).parent( 'li' ).addClass( 'accordion-open' );
+
 				\$RMjQuery( '.responsive-menu > li:not( .accordion-open ) > ul' ).slideUp();
-				
+
 				if( \$RMjQuery( this ).siblings( 'ul' ).is( ':visible' ) ) {
-					\$RMjQuery( this ).parent( 'li' ).removeClass( 'accordion-open' );	
+					\$RMjQuery( this ).parent( 'li' ).removeClass( 'accordion-open' );
 				} else {
-					\$RMjQuery( this ).parent( 'li' ).addClass( 'accordion-open' );	
+					\$RMjQuery( this ).parent( 'li' ).addClass( 'accordion-open' );
 				}
-				
+
 				\$RMjQuery( '.responsive-menu > li > .appendLink' ).removeClass( 'rm-append-inactive' );
-				\$RMjQuery( '.responsive-menu > li > .appendLink' ).addClass( 'rm-append-active' );		
-                
+				\$RMjQuery( '.responsive-menu > li > .appendLink' ).addClass( 'rm-append-active' );
+
                 var AllClosed = true;
-                
+
 				\$RMjQuery( '.responsive-menu > li > .appendLink' ).each( function( i ) {
-					\$RMjQuery( this ).html( \$RMjQuery( this ).hasClass( 'rm-append-active' ) ? '{$inactiveArrow}' : '{$activeArrow}' );	
-					AllClosed = \$RMjQuery( this ).parent( 'li' ).hasClass( 'accordion-open' )? false : AllClosed;		
+					\$RMjQuery( this ).html( \$RMjQuery( this ).hasClass( 'rm-append-active' ) ? '{$inactiveArrow}' : '{$activeArrow}' );
+					AllClosed = \$RMjQuery( this ).parent( 'li' ).hasClass( 'accordion-open' )? false : AllClosed;
 				});
-				
+
 				\$RMjQuery( this ).removeClass( 'rm-append-active' );
 				\$RMjQuery( this ).addClass( 'rm-append-inactive' );
-				
+
 				if( AllClosed ) {
 					\$RMjQuery( this ).removeClass( 'rm-append-inactive' );
 					\$RMjQuery( this ).addClass( 'rm-append-active' );
-				
+
 				}
-								
+
             }
 
             ";
@@ -614,15 +616,15 @@ class RM_JSModel extends RM_BaseModel {
         |
         | This is the function that deals with toggling the toggle buttons
         |
-        */                
+        */
 
-        $js .= "   
+        $js .= "
 
-            \$RMjQuery( '.appendLink' ).on( 'click', function() { 
+            \$RMjQuery( '.appendLink' ).on( 'click', function() {
 
                 $accordion
 
-                \$RMjQuery( this ).nextAll( '#responsive-menu ul ul' ).slideToggle(); 
+                \$RMjQuery( this ).nextAll( '#responsive-menu ul ul' ).slideToggle();
 
                 \$RMjQuery( this ).html( \$RMjQuery( this ).hasClass( 'rm-append-active' ) ? '{$inactiveArrow}' : '{$activeArrow}' );
                 \$RMjQuery( this ).toggleClass( 'rm-append-active rm-append-inactive' );
@@ -631,18 +633,18 @@ class RM_JSModel extends RM_BaseModel {
 
             });
 
-            \$RMjQuery( '.rm-click-disabled' ).on( 'click', function() { 
+            \$RMjQuery( '.rm-click-disabled' ).on( 'click', function() {
 
                 $accordion
 
-                \$RMjQuery( this ).nextAll( '#responsive-menu ul ul' ).slideToggle(); 
+                \$RMjQuery( this ).nextAll( '#responsive-menu ul ul' ).slideToggle();
 
                 \$RMjQuery( this ).siblings( '.appendLink' ).html( \$RMjQuery( this ).hasClass( 'rm-append-active' ) ? '{$inactiveArrow}' : '{$activeArrow}' );
                 \$RMjQuery( this ).toggleClass( 'rm-append-active rm-append-inactive' );
 
                 $setHeight
 
-            }); 
+            });
 
         ";
 
@@ -653,9 +655,9 @@ class RM_JSModel extends RM_BaseModel {
         |
         | This is the function that deals with toggling the toggle buttons
         |
-        */                
+        */
 
-        $js .= "   
+        $js .= "
 
             \$RMjQuery( '.rm-append-inactive' ).siblings( 'ul' ).css( 'display', 'none' );
 
@@ -671,10 +673,10 @@ class RM_JSModel extends RM_BaseModel {
         |
         */
 
-        if ( isset( $options['RMClickClose'] ) && $options['RMClickClose'] == 'close' ) : 
+        if ( isset( $options['RMClickClose'] ) && $options['RMClickClose'] == 'close' ) :
 
-           $js .= " 
-               \$RMjQuery( '#responsive-menu ul li a' ).on( 'click', function() { 
+           $js .= "
+               \$RMjQuery( '#responsive-menu ul li a' ).on( 'click', function() {
 
                    closeRM();
 
@@ -689,7 +691,7 @@ class RM_JSModel extends RM_BaseModel {
         |
         | This closes the initial document ready call
         |
-        */ 
+        */
 
         $js .= '}); ';
 
@@ -700,7 +702,7 @@ class RM_JSModel extends RM_BaseModel {
         |
         | Determine whether to use the <script> tags (when using internal scripts)
         |
-        */       
+        */
 
         $js .= $options['RMExternal'] ? '' : '</script>';
 
@@ -712,12 +714,12 @@ class RM_JSModel extends RM_BaseModel {
         |
         | Finally we return the final script back
         |
-        */   
+        */
 
         return $js;
 
-        
+
     }
-    
+
 
 }

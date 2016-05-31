@@ -4,7 +4,7 @@
  *
  * The WooCommerce Modules Array.
  *
- * @version 2.4.8
+ * @version 2.5.0
  * @since   2.2.0
  * @author  Algoritmika Ltd.
  */
@@ -33,6 +33,8 @@ return array(
 			'bulk_price_converter',
 			'wholesale_price',
 			'product_open_pricing',
+			'price_by_user_role',
+			'product_price_by_formula',
 			'currency_exchange_rates',
 		),
 	),
@@ -62,8 +64,10 @@ return array(
 			'product_input_fields',
 			'product_add_to_cart',
 			'purchase_data',
+			'product_bookings',
 			'crowdfunding',
 			'product_images',
+			'product_by_country',
 		),
 	),
 
@@ -97,7 +101,7 @@ return array(
 
 	'shipping_and_orders' => array(
 		'label'          => __( 'Shipping & Orders', 'woocommerce-jetpack' ),
-		'default_cat_id' => 'orders',
+		'default_cat_id' => 'shipping',
 		'all_cat_ids'    => array(
 			'shipping',
 			'shipping_calculator',

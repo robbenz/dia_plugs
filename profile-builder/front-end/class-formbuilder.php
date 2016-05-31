@@ -121,6 +121,16 @@ class Profile_Builder_Form_Creator{
             $this->args['redirect_url'] = ( isset( $page_settings[0]['url'] ) ? $page_settings[0]['url'] : $this->args['redirect_url'] );
             $this->args['redirect_delay'] = ( isset( $page_settings[0]['display-messages'] ) ? $page_settings[0]['display-messages'] : $this->args['redirect_delay'] );
 		}
+
+        if( !empty( $this->args['role'] ) ){
+            $role_in_arg = get_role( $this->args['role'] );
+            if( !empty( $role_in_arg->capabilities['manage_options'] ) || !empty( $role_in_arg->capabilities['remove_users'] ) ){
+                if( !current_user_can( 'manage_options' ) || !current_user_can( 'remove_users' ) ){
+                    $this->args['role'] = get_option('default_role');
+                    echo apply_filters( 'wppb_register_pre_form_user_role_message', '<p class="alert" id="wppb_general_top_error_message">'.__( 'The role of the created user set to the default role. Only an administrator can register a user with the role assigned to this form.', 'profile-builder').'</p>' );
+                }
+            }
+        }
 	}
 
     function wppb_form_logic() {
