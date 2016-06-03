@@ -10,19 +10,25 @@
 $show_price =  true;
 $show_total_column = ( get_option( 'ywraq_hide_total_column', 'yes' ) == 'yes' ) ? false : true;
 
-
 if( get_option( 'ywraq_enable_order_creation', 'yes' ) == 'yes' ) :
 ?>
 
-    <h2><?php printf(__('Request a Quote #EC-%s', 'yith-woocommerce-request-a-quote'), $raq_data['order_id']) ?></h2>
+    <h2><?php
+if( ! empty( $raq_data['raq_content'] ) ){
+printf(__('Request a Quote #EC-%s', 'yith-woocommerce-request-a-quote'), $raq_data['order_id']);
+}
+?></h2>
 <?php else: ?>
     <h2><?php _e('Request a Quote', 'yith-woocommerce-request-a-quote') ?></h2>
 <?php endif ?>
 
-<?php do_action( 'yith_ywraq_email_before_raq_table', $raq_data ); ?>
+<?php do_action( 'yith_ywraq_email_before_raq_table', $raq_data );
+
+  ?>
     <table cellspacing="0" cellpadding="6" style="width: 100%; border: 1px solid #eee;border-collapse: collapse;">
         <thead>
         <tr>
+          <?php if( ! empty( $raq_data['raq_content'] ) ): ?>
             <?php if( get_option('ywraq_show_preview') == 'yes'):
                 ?>
                 <th scope="col" style="text-align:left; border: 1px solid #eee;"><?php _e( 'Preview', 'yith-woocommerce-request-a-quote' ); ?></th>
@@ -34,9 +40,11 @@ if( get_option( 'ywraq_enable_order_creation', 'yes' ) == 'yes' ) :
             <?php if( $show_total_column ): ?>
             <th scope="col" style="text-align:left; border: 1px solid #eee;"><?php _e( 'Subtotal', 'yith-woocommerce-request-a-quote' ); ?></th>
             <?php endif ?>
+            <?php endif ?>
         </tr>
         </thead>
         <tbody>
+
         <?php
         if( ! empty( $raq_data['raq_content'] ) ):
             foreach( $raq_data['raq_content'] as $key => $item ):
