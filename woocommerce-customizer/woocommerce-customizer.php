@@ -5,11 +5,11 @@
  * Description: Customize WooCommerce without code! Easily change add to cart button text and more.
  * Author: SkyVerge
  * Author URI: http://www.skyverge.com
- * Version: 2.2.0
+ * Version: 2.3.0
  * Text Domain: woocommerce-customizer
  * Domain Path: /i18n/languages/
  *
- * Copyright: (c) 2013-2014 SkyVerge, Inc. (info@skyverge.com)
+ * Copyright: (c) 2013-2016 SkyVerge, Inc. (info@skyverge.com)
  *
  * License: GNU General Public License v3.0
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -21,30 +21,17 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+defined( 'ABSPATH' ) or exit;
 
 // Check if WooCommerce is active
-if ( ! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) )
+if ( ! WC_Customizer::is_woocommerce_active() ) {
 	return;
+}
 
 // WC version check
-if ( version_compare( get_option( 'woocommerce_db_version' ), '2.3.0', '<' ) ) {
+if ( version_compare( get_option( 'woocommerce_db_version' ), '2.4.13', '<' ) ) {
 
-	function woocommerce_customizer_outdated_version_notice() {
-
-		$message = sprintf(
-			__( '%sWooCommerce Customizer is inactive.%s This version requires WooCommerce 2.3 or newer. Please %supdate WooCommerce to version 2.3 or newer%s', 'woocommerce-customizer' ),
-			'<strong>',
-			'</strong>',
-			'<a href="' . admin_url( 'plugins.php' ) . '">',
-			'&nbsp;&raquo;</a>'
-		);
-
-		echo sprintf( '<div class="error"><p>%s</p></div>', $message );
-	}
-
-	add_action( 'admin_notices', 'woocommerce_customizer_outdated_version_notice' );
-
+	add_action( 'admin_notices', WC_Customizer::render_outdated_wc_version_notice() );
 	return;
 }
 
@@ -84,7 +71,10 @@ class WC_Customizer {
 
 
 	/** plugin version number */
-	const VERSION = '2.2.0';
+	const VERSION = '2.3.0';
+
+	/** @var \WC_Customizer single instance of this plugin */
+	protected static $instance;
 
 	/** @var \WC_Customizer_Settings instance */
 	public $settings;
@@ -117,6 +107,30 @@ class WC_Customizer {
 		}
 
 		add_action( 'woocommerce_init', array( $this, 'load_customizations' ) );
+	}
+
+
+	/**
+	 * Cloning instances is forbidden due to singleton pattern.
+	 *
+	 * @since 2.3.0
+	 */
+	public function __clone() {
+
+		/* translators: Placeholders: %s - plugin name */
+		_doing_it_wrong( __FUNCTION__, sprintf( esc_html__( 'You cannot clone instances of %s.', 'woocommerce-customizer' ), 'WooCommerce Customizer' ), '2.3.0' );
+	}
+
+
+	/**
+	 * Unserializing instances is forbidden due to singleton pattern.
+	 *
+	 * @since 2.3.0
+	 */
+	public function __wakeup() {
+
+		/* translators: Placeholders: %s - plugin name */
+		_doing_it_wrong( __FUNCTION__, sprintf( esc_html__( 'You cannot unserialize instances of %s.', 'woocommerce-customizer' ), 'WooCommerce Customizer' ), '2.3.0' );
 	}
 
 
@@ -179,6 +193,44 @@ class WC_Customizer {
 
 		// localization in the init action for WPML support
 		load_plugin_textdomain( 'woocommerce-customizer', false, dirname( plugin_basename( __FILE__ ) ) . '/i18n/languages' );
+	}
+
+
+	/**
+	 * Checks if WooCommerce is active
+	 *
+	 * @since 2.3.0
+	 * @return bool true if WooCommerce is active, false otherwise
+	 */
+	public static function is_woocommerce_active() {
+
+		$active_plugins = (array) get_option( 'active_plugins', array() );
+
+		if ( is_multisite() ) {
+			$active_plugins = array_merge( $active_plugins, get_site_option( 'active_sitewide_plugins', array() ) );
+		}
+
+		return in_array( 'woocommerce/woocommerce.php', $active_plugins ) || array_key_exists( 'woocommerce/woocommerce.php', $active_plugins );
+	}
+
+
+	/**
+	 * Renders a notice when WooCommerce version is outdated
+	 *
+	 * @since 2.3.0
+	 */
+	public static function render_outdated_wc_version_notice() {
+
+		$message = sprintf(
+			/* translators: %1$s and %2$s are <strong> tags. %3$s and %4$s are <a> tags */
+			__( '%1$sWooCommerce Customizer is inactive.%2$s This version requires WooCommerce 2.4.13 or newer. Please %3$supdate WooCommerce to version 2.4.13 or newer%4$s', 'woocommerce-customizer' ),
+			'<strong>',
+			'</strong>',
+			'<a href="' . admin_url( 'plugins.php' ) . '">',
+			'&nbsp;&raquo;</a>'
+		);
+
+		printf( '<div class="error"><p>%s</p></div>', $message );
 	}
 
 
@@ -288,6 +340,24 @@ class WC_Customizer {
 	}
 
 
+	/** Helper methods ******************************************************/
+
+
+	/**
+	 * Main Customizer Instance, ensures only one instance is/can be loaded
+	 *
+	 * @since 2.3.0
+	 * @see wc_customizer()
+	 * @return \WC_Customizer
+	 */
+	public static function instance() {
+		if ( is_null( self::$instance ) ) {
+			self::$instance = new self();
+		}
+		return self::$instance;
+	}
+
+
 	/** Lifecycle methods ******************************************************/
 
 
@@ -331,8 +401,20 @@ class WC_Customizer {
 
 
 /**
+ * Returns the One True Instance of Customizer
+ *
+ * @since 2.3.0
+ * @return \WC_Customizer
+ */
+function wc_customizer() {
+	return WC_Customizer::instance();
+}
+
+
+/**
  * The WC_Customizer global object
+ * @deprecated 2.3.0
  * @name $wc_customizer
  * @global WC_Customizer $GLOBALS['wc_customizer']
  */
-$GLOBALS['wc_customizer'] = new WC_Customizer();
+$GLOBALS['wc_customizer'] = wc_customizer();

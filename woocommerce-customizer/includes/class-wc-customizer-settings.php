@@ -22,7 +22,7 @@
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+defined( 'ABSPATH' ) or exit;
 
 /**
  * Settings
@@ -386,4 +386,4 @@ class WC_Customizer_Settings extends WC_Settings_Page {
 }
 
 // setup settings
-return $GLOBALS['wc_customizer']->settings = new WC_Customizer_Settings();
+return wc_customizer()->settings = new WC_Customizer_Settings();

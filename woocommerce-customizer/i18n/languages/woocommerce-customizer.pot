@@ -2,7 +2,7 @@
 # This file is distributed under the GNU General Public License v3.0.
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Customizer 2.2.0\n"
+"Project-Id-Version: WooCommerce Customizer 2.3.0\n"
 "Report-Msgid-Bugs-To: "
 "https://github.com/skyverge/woocommerce-customizer/issues\n"
 "POT-Creation-Date: 2014-09-05 23:18:53+00:00\n"
@@ -241,21 +241,33 @@ msgstr ""
 msgid "Change the default placeholder image by setting this to a valid image URL"
 msgstr ""
 
-#: woocommerce-customizer.php:36
-msgid ""
-"%sWooCommerce Customizer is inactive.%s This version requires WooCommerce "
-"2.3 or newer. Please %supdate WooCommerce to version 2.3 or newer%s"
+#: woocommerce-customizer.php:121
+#. translators: Placeholders: %s - plugin name
+msgid "You cannot clone instances of %s."
 msgstr ""
 
-#: woocommerce-customizer.php:281
+#: woocommerce-customizer.php:133
+#. translators: Placeholders: %s - plugin name
+msgid "You cannot unserialize instances of %s."
+msgstr ""
+
+#: woocommerce-customizer.php:226
+#. translators: %1$s and %2$s are <strong> tags. %3$s and %4$s are <a> tags
+msgid ""
+"%1$sWooCommerce Customizer is inactive.%2$s This version requires "
+"WooCommerce 2.4.13 or newer. Please %3$supdate WooCommerce to version "
+"2.4.13 or newer%4$s"
+msgstr ""
+
+#: woocommerce-customizer.php:333
 msgid "Configure"
 msgstr ""
 
-#: woocommerce-customizer.php:282
+#: woocommerce-customizer.php:334
 msgid "FAQ"
 msgstr ""
 
-#: woocommerce-customizer.php:283
+#: woocommerce-customizer.php:335
 msgid "Support"
 msgstr ""
 
