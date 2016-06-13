@@ -14,7 +14,6 @@ if ( !defined( 'ABSPATH' ) || !defined( 'YITH_YWRAQ_VERSION' ) ) {
  */
 class YITH_YWRAQ_Order_Request {
 
-
     /**
      * Array with Quote List datas
      */
@@ -84,7 +83,7 @@ class YITH_YWRAQ_Order_Request {
         if ( get_option( 'ywraq_enable_order_creation', 'yes' ) == 'yes' ) {
             add_action( 'ywraq_process', array( $this, 'create_order' ), 10, 1 );
         }
-        
+
         add_filter( 'woocommerce_get_shop_coupon_data', array( $this, 'create_coupon_cart_discount' ), 10, 2 );
 
         //myaccount list quotes
@@ -126,7 +125,7 @@ class YITH_YWRAQ_Order_Request {
         add_action( 'wpcf7_before_send_mail', array( $this, 'create_order_before_mail_cf7' ) );
 
 
-        
+
      }
 
 	/**
@@ -213,11 +212,11 @@ class YITH_YWRAQ_Order_Request {
         if ( ! is_page( wc_get_page_id( 'myaccount' ) ) || ! isset( $wp->query_vars[$view_quote] ) ) {
             return;
         }
-        
+
         $order_id           = $wp->query_vars[$view_quote];
-        $post->post_title   = sprintf( __( 'Quote #%s', 'yith-woocommerce-request-a-quote' ), $order_id );
+        $post->post_title   = sprintf( __( 'Quote #EC-%s', 'yith-woocommerce-request-a-quote' ), $order_id );
         $post->post_content = WC_Shortcodes::shortcode_wrapper( array( $this, 'view_quote' ) );
-        
+
         remove_filter( 'the_content', 'wpautop' );
     }
 
@@ -509,7 +508,7 @@ class YITH_YWRAQ_Order_Request {
     /**
      * Add the order meta to new RAQ order
      *
-     * @param             WC_Order 
+     * @param             WC_Order
      * @param mixed|array Request  a quote args
      *
      * @since  1.4.0
@@ -708,7 +707,7 @@ class YITH_YWRAQ_Order_Request {
 
         $post = isset( $_REQUEST['post'] ) ? $_REQUEST['post'] : ( isset( $_REQUEST['post_ID'] ) ? $_REQUEST['post_ID'] : 0 );
         $post = get_post( $post );
-       
+
         if ( $post  && $post->post_type == 'shop_order' && $this->is_quote( $post->ID ) ) {
             $args = require_once( YITH_YWRAQ_DIR . 'plugin-options/metabox/ywraq-metabox-order.php' );
             if ( ! function_exists( 'YIT_Metabox' ) ) {
@@ -734,7 +733,7 @@ class YITH_YWRAQ_Order_Request {
         if ( !isset( $_POST['yit_metaboxes'] ) || !isset( $_POST['yit_metaboxes']['_ywraq_safe_submit_field'] ) || $_POST['yit_metaboxes']['_ywraq_safe_submit_field'] != 'send_quote' ) {
             return;
         }
-   
+
         $order = wc_get_order( $post_id );
         do_action( 'create_pdf', $order->id );
         do_action( 'send_quote_mail', $order->id );
@@ -851,7 +850,7 @@ class YITH_YWRAQ_Order_Request {
         }
 
         yith_ywraq_add_notice( ywraq_get_message_after_request_quote_sending( $order_id ), 'success' );
-        
+
         wp_send_json(
             array(
                 'rqa_url' => YITH_Request_Quote()->get_raq_page_url(),
@@ -1006,11 +1005,11 @@ class YITH_YWRAQ_Order_Request {
         $order = wc_get_order( $order_id );
         update_post_meta( $order_id, 'ywraq_raq_status', $status );
 
-        //return if the status is the same 
+        //return if the status is the same
         if ( $order->get_status() == 'ywraq-' . $status ) {
             return;
         }
-        
+
         $order->update_status( 'ywraq-' . $status );
         $args = array(
             'order'  => $order,
@@ -1086,7 +1085,7 @@ class YITH_YWRAQ_Order_Request {
 
             if ( in_array( $current_status, array( 'ywraq-pending', 'pending', 'ywraq-accepted') ) ) {
                 if ( YITH_Request_Quote()->enabled_checkout() ) {
-                  
+
                     $this->order_accepted( $order_id );
                     wp_safe_redirect( function_exists( 'wc_get_checkout_url' ) ? wc_get_checkout_url() : WC()->cart->get_checkout_url() );
                     exit;
@@ -1346,7 +1345,7 @@ class YITH_YWRAQ_Order_Request {
             }
 
             yith_ywraq_add_notice( ywraq_get_message_after_request_quote_sending( $new_order ), 'success' );
-            
+
         }
         else {
             yith_ywraq_add_notice( __( 'An error has occurred. Please, contact site administrator.', 'yith-woocommerce-request-a-quote' ), 'error' );
@@ -1442,7 +1441,7 @@ class YITH_YWRAQ_Order_Request {
 
         return $shipping_items;
     }
-    
+
 }
 
 

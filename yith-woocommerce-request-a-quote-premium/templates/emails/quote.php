@@ -27,8 +27,7 @@ if( isset( $raq_data['lang']) ){
 }
 ?>
 
-
-    <h2><?php printf(  __( '%s n. %d', 'yith-woocommerce-request-a-quote' ), $email_title, $raq_data['order-number'] ) ?></h2>
+<h2><?php printf( __( 'DiaMedical USA Proposal For Quote #EC-%s', 'yith-woocommerce-request-a-quote' ), $order->id ) ?></h2>
 
     <p><?php echo $email_description; ?></p>
 
@@ -63,7 +62,6 @@ if( isset( $raq_data['lang']) ){
         <p><?php echo apply_filters( 'ywraq_quote_after_list', nl2br( $after_list ), $order->id ) ?></p>
     <?php endif; ?>
 
-
     <h2><?php _e( 'Customer\'s details', 'yith-woocommerce-request-a-quote' ); ?></h2>
 
     <p><strong><?php _e( 'Name:', 'yith-woocommerce-request-a-quote' ); ?></strong> <?php echo $raq_data['user_name'] ?></p>
@@ -84,8 +82,6 @@ if( $billing_phone != ''): ?>
 if( $billing_vat != ''): ?>
     <p><strong><?php _e( 'Billing VAT:', 'yith-woocommerce-request-a-quote' ); ?></strong> <?php echo $billing_vat ?></p>
 <?php endif; ?>
-
-
 
 <?php
 
@@ -111,7 +107,4 @@ if( ! empty( $af4 ) ){
 
 ?>
 
-
-<?php
-    do_action( 'woocommerce_email_footer', $email);
-?>
+<?php do_action( 'woocommerce_email_footer', $email); ?>

@@ -40,7 +40,7 @@ if ( !class_exists( 'YITH_YWRAQ_Send_Quote' ) ) {
             if( $this->enabled == 'no'){
                 return;
             }
-            
+
             // Triggers for this email
             add_action( 'send_quote_mail_notification', array( $this, 'trigger' ), 15, 1 );
 
@@ -66,7 +66,7 @@ if ( !class_exists( 'YITH_YWRAQ_Send_Quote' ) ) {
          */
         public function trigger( $order_id ) {
 
-         
+
             $this->order_id = $order_id;
 
             if ( $order_id ) {
@@ -126,10 +126,10 @@ if ( !class_exists( 'YITH_YWRAQ_Send_Quote' ) ) {
             if ( $this->enable_bcc ) {
                 $headers .= "Bcc: " . $cc . "\r\n";
             }
-       
+
             $headers .= "Content-Type: " . $this->get_content_type() . "\r\n";
-            
-            
+
+
             return apply_filters( 'woocommerce_email_headers', $headers, $this->id, $this->object );
         }
 
@@ -197,6 +197,7 @@ if ( !class_exists( 'YITH_YWRAQ_Send_Quote' ) ) {
             return sanitize_email( $email_from_email );
         }
 
+
         /**
          * Init form fields to display in WC admin pages
          *
@@ -257,13 +258,13 @@ if ( !class_exists( 'YITH_YWRAQ_Send_Quote' ) ) {
                     'title'       => __( 'Email Title', 'yith-woocommerce-request-a-quote' ),
                     'type'        => 'text',
                     'placeholder' => '',
-                    'default'     =>  __( 'Proposal', 'yith-woocommerce-request-a-quote' )
+                    'default'     =>  __( ' ', 'yith-woocommerce-request-a-quote' )
                 ),
                 'email-description'    => array(
                     'title'       => __( 'Email Description', 'yith-woocommerce-request-a-quote' ),
                     'type'        => 'textarea',
                     'placeholder' => '',
-                    'default'     =>  __( 'You have received this email because you sent a quote request to our shop. The response to your request is the following:', 'yith-woocommerce-request-a-quote' )
+                    'default'     =>  __( 'Please review the following proposal', 'yith-woocommerce-request-a-quote' )
                 ),
                 'email_type' => array(
                     'title'       => __( 'Email type', 'yith-woocommerce-request-a-quote' ),

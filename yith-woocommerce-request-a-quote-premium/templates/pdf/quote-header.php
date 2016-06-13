@@ -14,11 +14,8 @@ $billing_address          = get_post_meta( $order->id, 'ywraq_billing_address', 
 $billing_phone            = get_post_meta( $order->id, 'ywraq_billing_phone', true );
 $billing_vat              = get_post_meta( $order->id, 'ywraq_billing_vat', true );
 
-
-
 $exdata = get_post_meta($order->id, '_ywcm_request_expire', true );
 $expiration_data  = ( $exdata != '') ? date_i18n( wc_date_format(), strtotime( $exdata ) ): '';
-
 $order_date       = date_i18n( wc_date_format(), strtotime( $order->order_date ) );
 
 ?>
@@ -65,5 +62,5 @@ $order_date       = date_i18n( wc_date_format(), strtotime( $order->order_date )
 </div>
 <div class="clear"></div>
 <div class="quote-title">
-    <h2><?php printf( __( 'Quote #%s', 'yith-woocommerce-request-a-quote' ), $order->id ) ?></h2>
+    <h2><?php printf( __( 'Quote #EC-%s', 'yith-woocommerce-request-a-quote' ), $order->id ) ?></h2>
 </div>

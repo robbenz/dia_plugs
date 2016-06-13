@@ -36,13 +36,14 @@ if( function_exists('icl_get_languages') ) {
             <?php endif ?>
             <th scope="col" style="text-align:left; border: 1px solid #eee;"><?php _e( 'Product', 'yith-woocommerce-request-a-quote' ); ?></th>
             <th scope="col" style="text-align:left; border: 1px solid #eee;"><?php _e( 'Quantity', 'yith-woocommerce-request-a-quote' ); ?></th>
+            <th scope="col" style="text-align:left; border: 1px solid #eee;"><?php _e( 'Unit Price', 'yith-woocommerce-request-a-quote' ); ?></th>
             <th scope="col" style="text-align:left; border: 1px solid #eee;"><?php _e( 'Subtotal', 'yith-woocommerce-request-a-quote' ); ?></th>
         </tr>
         </thead>
         <tbody>
         <?php
         $items = $order->get_items();
-        $colspan = 2;
+        $colspan = 3;
         if( ! empty( $items ) ):
 
             foreach( $items as $item ):
@@ -56,7 +57,7 @@ if( function_exists('icl_get_languages') ) {
                 $title = $_product->get_title();
 
                 if( $_product->get_sku() != '' && get_option('ywraq_show_sku') == 'yes' ){
-                    $title .= apply_filters( 'ywraq_sku_label', __( ' SKU:', 'yith-woocommerce-request-a-quote' ) ) . $_product->get_sku();
+                    $title .= apply_filters( 'ywraq_sku_label', __( ' SKU: ', 'yith-woocommerce-request-a-quote' ) ) . $_product->get_sku();
                 }
 
                 $subtotal = wc_price( $item['line_total'] );
@@ -73,7 +74,7 @@ if( function_exists('icl_get_languages') ) {
                         <td scope="col" style="text-align:center;">
                             <?php
                             $thumbnail =  $_product->get_image( array(50,50));
-                            $colspan = 3;
+                            $colspan = 4;
                             if ( ! $_product->is_visible() )
                                 echo $thumbnail;
                             else
@@ -83,8 +84,9 @@ if( function_exists('icl_get_languages') ) {
                     <?php endif ?>
                     <td scope="col" style="text-align:left; border-left: 1px solid #eee"><?php echo $title ?>
                         <?php  if( $meta != '' ): ?><small><?php echo $meta; ?></small><?php endif ?></td>
-                    <td scope="col" style="text-align:center;"><?php echo $item['qty'] ?></td>
+                    <td scope="col" style="text-align:center; border-right: 1px solid #eee"><?php echo $item['qty'] ?></td>
 
+                    <td scope="col" class="last-col" style="text-align:right;  border-right: 1px solid #eee"><?php echo $_product->get_price_html(); ?></td>
                     <td scope="col" class="last-col" style="text-align:right;  border-right: 1px solid #eee"><?php echo apply_filters('ywraq_quote_subtotal_item', $order->get_formatted_line_subtotal( $item ), $item['line_total'], $_product); ?></td>
                 </tr>
 
@@ -92,13 +94,22 @@ if( function_exists('icl_get_languages') ) {
             endforeach; ?>
 
             <?php
-            foreach ( $order->get_order_item_totals() as $key => $total ) {
-                ?>
-                    <tr>
-                        <th scope="col" colspan="<?php echo $colspan ?>" style="text-align:right;"><?php echo $total['label']; ?></th>
-                        <td scope="col" class="last-col" style="text-align:right;"><?php echo $total['value']; ?></td>
-                    </tr>
-                <?php    } ?>
+            $shipping_fee = $order->calculate_shipping();
+            $order_total = $order->get_formatted_order_total();
+            $order_subtotal = $order->get_subtotal_to_display();
+          ?>
+          <tr>
+            <th scope="col" colspan="<?php echo $colspan ?>" style="text-align:right;border: 1px solid #eee;">Subtotal</th>
+            <td scope="col" style="text-align:right;border: 1px solid #eee;"><?php echo $order_subtotal ?></td>
+            </tr>
+          <tr>
+            <th scope="col" colspan="<?php echo $colspan ?>" style="text-align:right;border: 1px solid #eee;">Shipping</th>
+            <td scope="col" style="text-align:right;border: 1px solid #eee;">$<?php echo $shipping_fee ?></td>
+            </tr>
+            <tr>
+            <th scope="col" colspan="<?php echo $colspan ?>" style="text-align:right;border: 1px solid #eee;">Total</th>
+            <td scope="col" style="text-align:right;border: 1px solid #eee;"><?php echo $order_total ?></td>
+          </tr>
         <?php endif; ?>
 
 
@@ -120,7 +131,7 @@ if( function_exists('icl_get_languages') ) {
     </table>
 </div>
 <?php endif ?>
-  
+
 <?php do_action( 'yith_ywraq_email_after_raq_table', $order ); ?>
 
 <?php if ( ( $after_list = get_post_meta( $order->id, '_ywraq_request_response_after', true ) ) != '' ): ?>
