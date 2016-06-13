@@ -32,7 +32,7 @@ if ( !class_exists( 'YITH_YWRAQ_Send_Quote' ) ) {
             $this->description = __( 'This email is sent when an administrator performs the action "Send the quote" from Order Editor', 'yith-woocommerce-request-a-quote' );
 
             $this->heading = __( 'Our Proposal', 'yith-woocommerce-request-a-quote' );
-            $this->subject = __( '[Quote]', 'yith-woocommerce-request-a-quote' );
+            $this->subject = __( '[Quote Proposal]', 'yith-woocommerce-request-a-quote' );
 
             $this->template_html  = 'emails/quote.php';
             $this->template_plain = 'emails/plain/quote.php';

@@ -68,7 +68,6 @@ printf(__('Request a Quote #EC-%s', 'yith-woocommerce-request-a-quote'), $raq_da
 
                 do_action( 'ywraq_before_request_quote_view_item', $raq_data, $key );
 
-
                 ?>
 
                 <tr>
