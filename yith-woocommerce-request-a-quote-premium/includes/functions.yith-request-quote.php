@@ -538,7 +538,7 @@ function ywraq_get_list_empty_message(){
  * @return mixed|void
  */
 function ywraq_get_browse_list_message(){
-    return apply_filters( 'ywraq_product_added_view_browse_list' , __( 'Browse the list', 'yith-woocommerce-request-a-quote' ) );
+    return apply_filters( 'ywraq_product_added_view_browse_list' , __( 'Submit Your Quote Now', 'yith-woocommerce-request-a-quote' ) );
 }
 
 /**

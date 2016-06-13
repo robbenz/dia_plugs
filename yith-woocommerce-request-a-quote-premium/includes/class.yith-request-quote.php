@@ -562,7 +562,7 @@ if ( !class_exists( 'YITH_Request_Quote' ) ) {
             }
 
             if ( $return == 'true' ) {
-                $message = apply_filters( 'yith_ywraq_product_added_to_list_message', __( 'Product added!', 'yith-woocommerce-request-a-quote' ) );
+                $message = apply_filters( 'yith_ywraq_product_added_to_list_message', __( 'Product has been added to quote!', 'yith-woocommerce-request-a-quote' ) );
             }
             elseif ( $return == 'exists' ) {
                 $message = apply_filters( 'yith_ywraq_product_already_in_list_message', __( 'Product already in the list.', 'yith-woocommerce-request-a-quote' ) );

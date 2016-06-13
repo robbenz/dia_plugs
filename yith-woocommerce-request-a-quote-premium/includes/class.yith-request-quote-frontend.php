@@ -68,7 +68,7 @@ if ( !class_exists( 'YITH_YWRAQ_Frontend' ) ) {
 
             add_filter('yith_ywraq-show_btn_single_page', 'yith_ywraq_show_button_in_single_page');
             add_filter('yith_ywraq-btn_other_pages', 'yith_ywraq_show_button_in_other_pages', 10);
-            
+
             if ( ! catalog_mode_plugin_enabled() && get_option( 'ywraq_hide_add_to_cart' ) == 'yes'){
                 add_filter( 'woocommerce_loop_add_to_cart_link', array( $this, 'hide_add_to_cart_loop' ), 10, 2);
             }
@@ -94,7 +94,7 @@ if ( !class_exists( 'YITH_YWRAQ_Frontend' ) ) {
             }
             global $product;
             if ( get_option( 'ywraq_hide_add_to_cart' ) == 'yes' ) {
-                
+
                 if ( isset( $product ) && $product->product_type == 'variable' ) {
 
                     $inline_js = "
@@ -224,7 +224,7 @@ if ( !class_exists( 'YITH_YWRAQ_Frontend' ) ) {
          * @param bool $product
          */
         public function print_button( $product = false ){
-          
+
             if( ! $product ){
                 global $product;
             }
@@ -241,7 +241,7 @@ if ( !class_exists( 'YITH_YWRAQ_Frontend' ) ) {
                 'wpnonce'       => wp_create_nonce( 'add-request-quote-' . $product->id ),
                 'product_id'    => $product->id,
                 'label'         => apply_filters( 'ywraq_product_add_to_quote' , get_option('ywraq_show_btn_link_text') ),
-                'label_browse'  => apply_filters( 'ywraq_product_added_view_browse_list' , __( 'Browse the list', 'yith-woocommerce-request-a-quote' ) ),
+                'label_browse'  => apply_filters( 'ywraq_product_added_view_browse_list' , __( 'Submit Your Quote Now', 'yith-woocommerce-request-a-quote' ) ),
                 'template_part' => 'button',
                 'rqa_url'       => YITH_Request_Quote()->get_raq_page_url(),
                 'exists'        => ( $product->product_type == 'variable' ) ? false : YITH_Request_Quote()->exists( $product->id ),
