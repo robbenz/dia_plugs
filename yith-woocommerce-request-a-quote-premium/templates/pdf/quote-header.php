@@ -45,22 +45,23 @@ $expiration_data  = ( $exdata != '') ? date_i18n( wc_date_format(), strtotime( $
 $order_date       = date_i18n( wc_date_format(), strtotime( $order->order_date ) );
 
 ?>
-<div style="width:11%; float:left;">
-    <img width="100" height="100" src=<?php echo $logo; ?> />
+<div style="width:60%; float:right;">
+    <img style="width:340px; height:130px; "src=<?php echo $logo; ?> />
 </div>
-<div style="width:89%; float:left; margin-top:-12px">
-  <ul style="list-style-type:none;">
+<div style="width:40%; float:left; margin-top:-8px">
+  <ul style="list-style-type:none; line-height:18px;">
     <li style="list-style-type:none;"><strong>DiaMedical USA</strong></li>
-    <li style="list-style-type:none;">5807 W. Maple Suite 175</li>
-    <li style="list-style-type:none;">West Bloomfield, MI</li>
-    <li style="list-style-type:none;">48322</li>
+    <li style="list-style-type:none;">5807 W. Maple, Suite #175</li>
+    <li style="list-style-type:none;">West Bloomfield, MI 48322</li>
+    <li style="list-style-type:none;">P. (248) 855-3966</li>
+    <li style="list-style-type:none;">F. (248) 671-1550</li>
   </ul>
 </div>
 
 <div class="clear"></div>
 
-<div style="float:left; width:46% margin:0 2%; border:1.5px solid #464444; height:169px;" class="admin_info">
-  <p style="border-bottom:1.5px solid #464444; font-size:16px; margin-top:1px;">&nbsp;&nbsp;&nbsp;Bill To: </p>
+<div style="float:left; width:46% margin:0 2%; border:1px solid #464444; height:153px;" class="admin_info">
+  <p style="border-bottom:1px solid #464444; font-size:16px; margin-top:1px;">&nbsp;&nbsp;&nbsp;Bill To: </p>
                 <p style="padding-left:10px;"><strong><?php echo $billing_first_name . ' ' . $billing_last_name; ?></strong><br>
                     <?php echo $user_email ?><br>
                     <?php
@@ -87,8 +88,8 @@ $order_date       = date_i18n( wc_date_format(), strtotime( $order->order_date )
                 </p>
 </div>
 
-<div style="float:right; width:46% margin:0 2%; border:1.5px solid #464444; height:169px;" class="admin_info">
-  <p style="border-bottom:1.5px solid #464444; font-size:16px; margin-top:1px;">&nbsp;&nbsp;&nbsp;Ship To: </p>
+<div style="float:right; width:46% margin:0 2%; border:1px solid #464444; height:153px;" class="admin_info">
+  <p style="border-bottom:1px solid #464444; font-size:16px; margin-top:1px;">&nbsp;&nbsp;&nbsp;Ship To: </p>
                 <p style="padding-left:10px;"><strong><?php echo $shipping_first_name . ' ' . $shipping_last_name; ?></strong><br>
                     <?php echo $user_email ?><br>
                     <?php

@@ -50,9 +50,9 @@ if( isset( $raq_data['lang']) ){
     <?php endif ?>
     <p>
         <?php if ( get_option( 'ywraq_show_accept_link' ) != 'no' ): ?>
-            <a style="height:26px; width:600px; background-color:#78be20; color:#fff; text-decoration:none; font-weight:700;" href="<?php echo esc_url( add_query_arg( $args_accept, YITH_Request_Quote()->get_raq_page_url() ) ) ?>"><?php ywraq_get_label( 'accept', true ) ?></a>
+            <div style="height:26px; width:100%; background-color:#78be20; text-align:center; "><a style="padding:100px 4px;color:#fff; text-decoration:none; font-weight:700;" href="<?php echo esc_url( add_query_arg( $args_accept, YITH_Request_Quote()->get_raq_page_url() ) ) ?>"><?php ywraq_get_label( 'accept', true ) ?></a></div>
         <?php endif;  ?>
-  
+
     </p>
 
     <?php if( ( $after_list = get_post_meta( $order->id, '_ywraq_request_response_after', true ) ) != ''): ?>

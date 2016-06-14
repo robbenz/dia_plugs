@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
         <style type="text/css">
             body {
                 color: #000;
-                font-family: "dejavu sans", "open sans", "sans-serif";
+                font-family: "lato", "helvetica", "open sans", "sans-serif";
             }
             .logo{
                 width: 112px; float:left; margin-right:5px;
@@ -21,11 +21,11 @@ if ( ! defined( 'ABSPATH' ) ) {
                 width: 40%;
                 text-align: right;
             }
-            .clear{height:10px;
+            .clear{height:4px;
                 clear: both;
             }
             .admin_info{
-                font-size: 12px;
+                font-size: 13px;
 
             }
             .diamedical{width:500px; float:left;}
@@ -34,7 +34,7 @@ if ( ! defined( 'ABSPATH' ) ) {
             }
             table.quote-table{
                 border: 0;
-                font-size: 14px;
+                font-size: 14.5px;
             }
 
             .small-title{
@@ -94,7 +94,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                 width: 100%;
                 text-align: center;
                 position: fixed;
-                bottom: 0;
+                bottom:60px;
             }
 
             .pagenum:before {

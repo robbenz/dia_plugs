@@ -6,14 +6,15 @@ if( function_exists('icl_get_languages') && class_exists('YITH_YWRAQ_Multilingua
 }
 ?>
 <div class="footer">
-	<?php if ( $footer != '' ): ?>
+	<?php // if ( $footer != '' ): ?>
+			<?php // echo $footer ?>
 		<div class="footer-content">
 			<p style="color:#00426a; font-size:14px;">Shop over 1,000,000 products on <a style="text-decoration:none; color:#00426a; font-size:14px;" href="http://www.diamedicalusa.com">DiaMedicalUSA.com!</a></p>
 			<p style="color:#00426a; font-size:14px;">Call Us Toll Free: (877) 593-6011 (M-F: 7-6 EST)</p>
 			<p style="color:#00426a; font-size:14px;">Email: orders@diamedicalusa.com</p>
-			<?php echo $footer ?>
+
 </div>
-	<?php endif; ?>
+	<?php  // endif; ?>
 	<?php if ( $pagination != '' ): ?>
 		<div class="page"><?php echo __( 'Page', 'yith-woocommerce-request-a-quote' ) ?> <span class="pagenum"></span>
 		</div>
