@@ -99,12 +99,12 @@ if( function_exists('icl_get_languages') ) {
           <tr>
             <th scope="col" colspan="<?php echo $colspan ?>" style="text-align:right;border: 1px solid #464444;">Subtotal</th>
             <td scope="col" style="text-align:right;border: 1px solid #464444;"><?php echo $order_subtotal ?></td>
-            </tr>
+          </tr>
           <tr>
             <th scope="col" colspan="<?php echo $colspan ?>" style="text-align:right;border: 1px solid #464444;">Shipping</th>
             <td scope="col" style="text-align:right;border: 1px solid #464444;">$<?php echo $shipping_fee ?></td>
-            </tr>
-            <tr>
+          </tr>
+          <tr>
             <th scope="col" colspan="<?php echo $colspan ?>" style="text-align:right;border: 1px solid #464444;">Total</th>
             <td scope="col" style="text-align:right;border: 1px solid #464444;"><?php echo $order_total ?></td>
           </tr>
@@ -114,14 +114,10 @@ if( function_exists('icl_get_languages') ) {
     </table>
 </div>
 <?php if( get_option( 'ywraq_pdf_link' ) == 'yes'): ?>
-<div>
-    <table>
-        <tr>
-            <?php if ( get_option( 'ywraq_show_accept_link' ) != 'no' ): ?>
-            <td style="height:26px;"><a style="float:right; padding:8px 10px; background-color:#78be20; color:#fff; margin-bottom:10px; text-decoration:none; font-weight:700;" href="<?php echo esc_url( add_query_arg( array( 'request_quote' => $order->id, 'status' => 'accepted', 'raq_nonce' => ywraq_get_token( 'accept-request-quote', $order->id, get_post_meta( $order->id, 'ywraq_customer_email', true ) ) ), YITH_Request_Quote()->get_raq_page_url() ) ) ?>" class="pdf-button"><?php ywraq_get_label('accept', true) ?></a></td>
-            <?php endif; ?>
-        </tr>
-    </table>
+<div style="height:26px; width:100%; margin-top:12px;">
+  <?php if ( get_option( 'ywraq_show_accept_link' ) != 'no' ): ?>
+    <a style="padding:8px 10px; background-color:#78be20; color:#fff; margin-bottom:10px; text-decoration:none; font-weight:700;" href="<?php echo esc_url( add_query_arg( array( 'request_quote' => $order->id, 'status' => 'accepted', 'raq_nonce' => ywraq_get_token( 'accept-request-quote', $order->id, get_post_meta( $order->id, 'ywraq_customer_email', true ) ) ), YITH_Request_Quote()->get_raq_page_url() ) ) ?>" class="pdf-button"><?php ywraq_get_label('accept', true) ?></a></td>
+  <?php endif; ?>
 </div>
 <?php endif ?>
 

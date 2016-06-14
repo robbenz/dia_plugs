@@ -84,8 +84,7 @@ do_action( 'yith_ywraq_email_before_raq_table', $order );
 
 				</tr>
 
-				<?php
-			endforeach; ?>
+				<?php	endforeach; ?>
 
 			<?php
 			$shipping_fee = $order->calculate_shipping();

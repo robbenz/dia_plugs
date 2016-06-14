@@ -50,12 +50,9 @@ if( isset( $raq_data['lang']) ){
     <?php endif ?>
     <p>
         <?php if ( get_option( 'ywraq_show_accept_link' ) != 'no' ): ?>
-            <a style="padding:0.6em 1.5em; background-color:#78be20; color:#fff; text-decoration:none; font-weight:700;" href="<?php echo esc_url( add_query_arg( $args_accept, YITH_Request_Quote()->get_raq_page_url() ) ) ?>"><?php ywraq_get_label( 'accept', true ) ?></a>
-        <?php endif;
-      //  echo ( get_option( 'ywraq_show_accept_link' ) != 'no' && get_option( 'ywraq_show_reject_link' ) != 'no' ) ? ' | ' : '';
-        if ( get_option( 'ywraq_show_reject_link' ) != 'no' ): ?>
-            <a style="float:right; padding:0.4em 0.8em; background-color:#d6001c; color:#fff; text-decoration:none; font-weight:700;" href="<?php echo esc_url( add_query_arg( $args_reject, YITH_Request_Quote()->get_raq_page_url() ) ) ?>"><?php ywraq_get_label( 'reject', true ) ?></a>
-        <?php endif; ?>
+            <a style="height:26px; width:600px; background-color:#78be20; color:#fff; text-decoration:none; font-weight:700;" href="<?php echo esc_url( add_query_arg( $args_accept, YITH_Request_Quote()->get_raq_page_url() ) ) ?>"><?php ywraq_get_label( 'accept', true ) ?></a>
+        <?php endif;  ?>
+  
     </p>
 
     <?php if( ( $after_list = get_post_meta( $order->id, '_ywraq_request_response_after', true ) ) != ''): ?>

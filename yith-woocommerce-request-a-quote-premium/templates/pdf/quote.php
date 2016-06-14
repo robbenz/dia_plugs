@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                 width: 40%;
                 text-align: right;
             }
-            .clear{
+            .clear{height:10px;
                 clear: both;
             }
             .admin_info{
@@ -88,7 +88,6 @@ if ( ! defined( 'ABSPATH' ) ) {
                 position: fixed;
                 bottom: 0;
                 text-align: center;
-                font-size: 70%
             }
 
             .footer {

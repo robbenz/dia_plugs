@@ -60,7 +60,7 @@ $order_date       = date_i18n( wc_date_format(), strtotime( $order->order_date )
 <div class="clear"></div>
 
 <div style="float:left; width:46% margin:0 2%; border:1.5px solid #464444; height:169px;" class="admin_info">
-  <p style="border-bottom:2px solid #464444; font-size:16px; margin-top:1px;">&nbsp;&nbsp;&nbsp;Bill To: </p>
+  <p style="border-bottom:1.5px solid #464444; font-size:16px; margin-top:1px;">&nbsp;&nbsp;&nbsp;Bill To: </p>
                 <p style="padding-left:10px;"><strong><?php echo $billing_first_name . ' ' . $billing_last_name; ?></strong><br>
                     <?php echo $user_email ?><br>
                     <?php
@@ -88,7 +88,7 @@ $order_date       = date_i18n( wc_date_format(), strtotime( $order->order_date )
 </div>
 
 <div style="float:right; width:46% margin:0 2%; border:1.5px solid #464444; height:169px;" class="admin_info">
-  <p style="border-bottom:2px solid #464444; font-size:16px; margin-top:1px;">&nbsp;&nbsp;&nbsp;Ship To: </p>
+  <p style="border-bottom:1.5px solid #464444; font-size:16px; margin-top:1px;">&nbsp;&nbsp;&nbsp;Ship To: </p>
                 <p style="padding-left:10px;"><strong><?php echo $shipping_first_name . ' ' . $shipping_last_name; ?></strong><br>
                     <?php echo $user_email ?><br>
                     <?php
