@@ -59,12 +59,9 @@ if ( !class_exists( 'YITH_YWRAQ_Frontend' ) ) {
             //show button in single page
             add_action( 'woocommerce_single_product_summary', array( $this, 'add_button_single_page' ), 35 );
 
-
             //custom styles and javascripts
             add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles_scripts' ) );
-
             add_action( 'woocommerce_single_product_summary', array( $this, 'hide_add_to_cart_single' ), 10 );
-
 
             add_filter('yith_ywraq-show_btn_single_page', 'yith_ywraq_show_button_in_single_page');
             add_filter('yith_ywraq-btn_other_pages', 'yith_ywraq_show_button_in_other_pages', 10);

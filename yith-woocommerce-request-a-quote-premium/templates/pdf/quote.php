@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                 font-family: "dejavu sans", "open sans", "sans-serif";
             }
             .logo{
-                width: 100%;
+                width: 112px; float:left; margin-right:5px;
             }
             .right{
                 float: right;
@@ -28,6 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                 font-size: 12px;
 
             }
+            .diamedical{width:500px; float:left;}
             table{
                 border: 0;
             }
@@ -44,19 +45,19 @@ if ( ! defined( 'ABSPATH' ) ) {
                 padding-right: 5px;
             }
             .small-info p{
-                border-left: 2px solid #a8c6e4;
+                border-left: 2px solid #00426a;
                 padding: 0 0 5px 5px;
                 margin-bottom: 20px;
             }
             .quote-table td{
                 border: 0;
-                border-bottom: 1px solid #eee;
+                border-bottom: 1px solid #464444;
             }
             .quote-table .with-border td{
-                border-bottom: 2px solid #eee;
+                border-bottom: 2px solid #464444;
             }
             .quote-table .with-border td{
-                border-top: 2px solid #eee;
+                border-top: 2px solid #464444;
             }
             .quote-table .quote-total td{
                 height: 100px;
@@ -74,8 +75,8 @@ if ( ! defined( 'ABSPATH' ) ) {
                 font-weight: 600;
             }
             .quote-table .tr-wb{
-                border-left: 1px solid #ccc ;
-                border-right: 1px solid #ccc ;
+                border-left: 1px solid #464444 ;
+                border-right: 1px solid #464444 ;
             }
             .pdf-button{
                 color: #a8c6e4;

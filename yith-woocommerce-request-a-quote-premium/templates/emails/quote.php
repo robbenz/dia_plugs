@@ -50,11 +50,11 @@ if( isset( $raq_data['lang']) ){
     <?php endif ?>
     <p>
         <?php if ( get_option( 'ywraq_show_accept_link' ) != 'no' ): ?>
-            <a href="<?php echo esc_url( add_query_arg( $args_accept, YITH_Request_Quote()->get_raq_page_url() ) ) ?>"><?php ywraq_get_label( 'accept', true ) ?></a>
+            <a style="padding:0.6em 1.5em; background-color:#78be20; color:#fff; text-decoration:none; font-weight:700;" href="<?php echo esc_url( add_query_arg( $args_accept, YITH_Request_Quote()->get_raq_page_url() ) ) ?>"><?php ywraq_get_label( 'accept', true ) ?></a>
         <?php endif;
-        echo ( get_option( 'ywraq_show_accept_link' ) != 'no' && get_option( 'ywraq_show_reject_link' ) != 'no' ) ? ' | ' : '';
+      //  echo ( get_option( 'ywraq_show_accept_link' ) != 'no' && get_option( 'ywraq_show_reject_link' ) != 'no' ) ? ' | ' : '';
         if ( get_option( 'ywraq_show_reject_link' ) != 'no' ): ?>
-            <a href="<?php echo esc_url( add_query_arg( $args_reject, YITH_Request_Quote()->get_raq_page_url() ) ) ?>"><?php ywraq_get_label( 'reject', true ) ?></a>
+            <a style="float:right; padding:0.4em 0.8em; background-color:#d6001c; color:#fff; text-decoration:none; font-weight:700;" href="<?php echo esc_url( add_query_arg( $args_reject, YITH_Request_Quote()->get_raq_page_url() ) ) ?>"><?php ywraq_get_label( 'reject', true ) ?></a>
         <?php endif; ?>
     </p>
 
@@ -64,18 +64,49 @@ if( isset( $raq_data['lang']) ){
 
     <h2><?php _e( 'Customer\'s details', 'yith-woocommerce-request-a-quote' ); ?></h2>
 
-    <p><strong><?php _e( 'Name:', 'yith-woocommerce-request-a-quote' ); ?></strong> <?php echo $raq_data['user_name'] ?></p>
+    <p><strong><?php
+    $billing_first_name =  get_post_meta($order->id, '_billing_first_name',true);
+    $billing_last_name = get_post_meta($order->id, '_billing_last_name',true);
+    _e( 'Name:', 'yith-woocommerce-request-a-quote' ); ?></strong> <?php echo $billing_first_name . ' ' . $billing_last_name; ?></p>
     <p><strong><?php _e( 'Email:', 'yith-woocommerce-request-a-quote' ); ?></strong>
         <a href="mailto:<?php echo $raq_data['user_email']; ?>"><?php echo $raq_data['user_email']; ?></a></p>
 
 <?php
-$billing_address = get_post_meta( $order->id, 'ywraq_billing_address', true );
+/* Sorry your plugin sucks, this didnt work
 $billing_phone   = get_post_meta( $order->id, 'ywraq_billing_phone', true );
 $billing_vat     = get_post_meta( $order->id, 'ywraq_billing_vat', true );
+*/
+
+$billing_first_name =  get_post_meta($order->id, '_billing_first_name',true);
+$billing_last_name = get_post_meta($order->id, '_billing_last_name',true);
+$billing_company = get_post_meta($order->id, '_billing_company',true);
+$billing_address = get_post_meta( $order->id, '_billing_address_1', true );
+$billing_address2 = get_post_meta($order->id, '_billing_address_2',true);
+$billing_city = get_post_meta($order->id, '_billing_city',true);
+$billing_postcode = get_post_meta($order->id, '_billing_postcode',true);
+$billing_country = get_post_meta($order->id, '_billing_country',true);
+$billing_state = get_post_meta($order->id, '_billing_state',true);
+$billing_email = get_post_meta($order->id, '_billing_email',true);
+$billing_phone = get_post_meta($order->id, '_billing_phone',true);
+// $billing_paymethod = get_post_meta($order->id, '_payment_method',true);
+
+
+if( $billing_company != ''): ?>
+    <p><strong><?php _e( 'Company:', 'yith-woocommerce-request-a-quote' ); ?></strong> <?php echo $billing_company; ?></p>
+<?php endif;
 
 if( $billing_address != ''): ?>
-     <p><strong><?php _e( 'Billing Address:', 'yith-woocommerce-request-a-quote' ); ?></strong> <?php echo $billing_address ?></p>
+    <p><strong><?php _e( 'Address:', 'yith-woocommerce-request-a-quote' ); ?></strong> <?php echo $billing_address . ' ' . $billing_address2; ?></p>
 <?php endif;
+
+if( $billing_city != ''): ?>
+    <p><?php echo $billing_city . ', ' . $billing_state; ?></p>
+<?php endif;
+
+if( $billing_postcode != ''): ?>
+    <p><?php echo $billing_postcode; ?></p>
+<?php endif;
+
 if( $billing_phone != ''): ?>
     <p><strong><?php _e( 'Billing Phone:', 'yith-woocommerce-request-a-quote' ); ?></strong> <?php echo $billing_phone ?></p>
 <?php endif;

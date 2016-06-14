@@ -115,11 +115,7 @@ if ( !class_exists( 'YITH_Request_Quote' ) ) {
                 add_filter( 'woocommerce_quantity_input_args', array( $this, 'woocommerce_quantity_input_args' ), 200 );
             }
 
-
-
-
         }
-
 
         /**
          * Initialize session and cookies
@@ -134,8 +130,6 @@ if ( !class_exists( 'YITH_Request_Quote' ) ) {
             }
             $this->session_class = new YITH_YWRAQ_Session();
             $this->set_session();
-
-
 
         }
 
@@ -235,9 +229,6 @@ if ( !class_exists( 'YITH_Request_Quote' ) ) {
         public function get_raq_item_number() {
             return count( $this->raq_content );
         }
-
-
-
 
         /**
          * Get request quote list from session
@@ -455,10 +446,7 @@ if ( !class_exists( 'YITH_Request_Quote' ) ) {
 
                 $this->set_rqa_cookies( sizeof( $this->raq_content ) > 0 );
 
-
             }
-
-
 
             return $return;
 
@@ -571,8 +559,6 @@ if ( !class_exists( 'YITH_Request_Quote' ) ) {
                 $message = apply_filters( 'yith_ywraq_error_adding_to_list_message', $this->get_errors($errors) );
             }
 
-
-
             wp_send_json(
                 array(
                     'result'       => $return,
@@ -600,7 +586,6 @@ if ( !class_exists( 'YITH_Request_Quote' ) ) {
             }
             die();
         }
-
 
         /**
          * Remove an item from the list in ajax mode
@@ -976,7 +961,6 @@ if ( !class_exists( 'YITH_Request_Quote' ) ) {
             return $customer_id;
         }
 
-
         /**
          *
          *
@@ -1076,7 +1060,6 @@ if ( !class_exists( 'YITH_Request_Quote' ) ) {
             return $include;
         }
 
-
         /**
          * Change the value of quantity input for compatibility with WooCommerce Min/Max Quantities
          *
@@ -1109,8 +1092,6 @@ if ( !class_exists( 'YITH_Request_Quote' ) ) {
             $this->quantity = $quantity;
             return $quantity;
         }
-
-
 
 	    /**
          * Check if the checkout is enabled after the acceptance of quote
