@@ -38,24 +38,27 @@ $shipping_country = get_post_meta($order->id, '_shipping_country',true);
 $shipping_state = get_post_meta($order->id, '_shipping_state',true);
 $shipping_phone = get_post_meta($order->id, '_shipping_phone',true);
 
-
-
 $exdata = get_post_meta($order->id, '_ywcm_request_expire', true );
 $expiration_data  = ( $exdata != '') ? date_i18n( wc_date_format(), strtotime( $exdata ) ): '';
 $order_date       = date_i18n( wc_date_format(), strtotime( $order->order_date ) );
 
 ?>
-<div style="width:60%; float:right;">
-    <img style="width:340px; height:130px; "src=<?php echo $logo; ?> />
-</div>
-<div style="width:40%; float:left; margin-top:-8px">
+
+<div style="width:45%; float:left; margin-top:8px">
+  <img height="52" width="350" src="<?php echo site_url(); ?>/wp-content/imgs/pdf/diamedical-logo-01.jpg" />
   <ul style="list-style-type:none; line-height:18px;">
-    <li style="list-style-type:none;"><strong>DiaMedical USA</strong></li>
+  <!--  <li style="list-style-type:none;"><strong>DiaMedical USA</strong></li> -->
     <li style="list-style-type:none;">5807 W. Maple, Suite #175</li>
     <li style="list-style-type:none;">West Bloomfield, MI 48322</li>
     <li style="list-style-type:none;">P. (248) 855-3966</li>
     <li style="list-style-type:none;">F. (248) 671-1550</li>
   </ul>
+</div>
+<div style="width:45%; float:right;">
+    <img height="100" width="350" src="<?php echo site_url(); ?>/wp-content/imgs/pdf/sim-lab-solutions.jpg" />
+    <div style="margin-top:10px;">
+        <h2><?php printf( __( 'QUOTE #EC-%s', 'yith-woocommerce-request-a-quote' ), $order->id ) ?></h2>
+    </div>
 </div>
 
 <div class="clear"></div>
@@ -113,8 +116,21 @@ $order_date       = date_i18n( wc_date_format(), strtotime( $order->order_date )
                 </p>
 </div>
 
+<div class="clear"></div>
+<span style="font-size:14px; font-weight:bolder;">Please Note: </span>
+<span style="font-size:14px;">Shipping has been calculated and added to your total. Shipping will be applied at checkout. </span>
 
 <div class="clear"></div>
+
+<?php if( get_option( 'ywraq_pdf_link' ) == 'yes'): ?>
+<div style="height:26px; width:100%; margin-top:12px;text-align:center; background-color:#78be20; padding-top: 5.5px;">
+  <?php if ( get_option( 'ywraq_show_accept_link' ) != 'no' ): ?>
+    <a style="background-color:#78be20; color:#fff; margin-bottom:10px; text-decoration:none; font-weight:700;" href="<?php echo esc_url( add_query_arg( array( 'request_quote' => $order->id, 'status' => 'accepted', 'raq_nonce' => ywraq_get_token( 'accept-request-quote', $order->id, get_post_meta( $order->id, 'ywraq_customer_email', true ) ) ), YITH_Request_Quote()->get_raq_page_url() ) ) ?>" class="pdf-button"><?php ywraq_get_label('accept', true) ?></a></td>
+  <?php endif; ?>
+</div>
+<?php endif ?>
+
+
 <?php if ( $expiration_data != '' ): ?>
     <tr>
         <td valign="top" class="small-title"><?php echo __( 'Expiration date', 'yith-woocommerce-request-a-quote' ) ?></td>
@@ -124,7 +140,3 @@ $order_date       = date_i18n( wc_date_format(), strtotime( $order->order_date )
     </tr>
 <?php endif ?>
 <div class="clear"></div>
-
-<div class="quote-title">
-    <h2><?php printf( __( 'Quote #EC-%s', 'yith-woocommerce-request-a-quote' ), $order->id ) ?></h2>
-</div>
