@@ -44,7 +44,7 @@ $order_date       = date_i18n( wc_date_format(), strtotime( $order->order_date )
 
 ?>
 
-<div style="width:45%; float:left; margin-top:8px">
+<div style="width:45%; float:left; margin-top:11px">
   <img height="52" width="350" src="<?php echo site_url(); ?>/wp-content/imgs/pdf/diamedical-logo-01.jpg" />
   <ul style="list-style-type:none; line-height:18px;">
   <!--  <li style="list-style-type:none;"><strong>DiaMedical USA</strong></li> -->
@@ -55,7 +55,7 @@ $order_date       = date_i18n( wc_date_format(), strtotime( $order->order_date )
   </ul>
 </div>
 <div style="width:45%; float:right;">
-    <img height="100" width="350" src="<?php echo site_url(); ?>/wp-content/imgs/pdf/sim-lab-solutions.jpg" />
+    <img height="93" width="335" src="<?php echo site_url(); ?>/wp-content/imgs/pdf/sim-lab-solutions.jpg" />
     <div style="margin-top:10px;">
         <h2><?php printf( __( 'QUOTE #EC-%s', 'yith-woocommerce-request-a-quote' ), $order->id ) ?></h2>
     </div>
@@ -129,7 +129,6 @@ $order_date       = date_i18n( wc_date_format(), strtotime( $order->order_date )
   <?php endif; ?>
 </div>
 <?php endif ?>
-
 
 <?php if ( $expiration_data != '' ): ?>
     <tr>

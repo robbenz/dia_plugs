@@ -28,6 +28,8 @@ if( isset( $raq_data['lang']) ){
 ?>
 
 <h2><?php printf( __( 'DiaMedical USA Proposal For Quote #EC-%s', 'yith-woocommerce-request-a-quote' ), $order->id ) ?></h2>
+<span style="font-size:14px; font-weight:bolder;">Please Note: </span>
+<span style="font-size:14px;">Shipping has been calculated and added to your total. Shipping will be applied at checkout. </span>
 
     <p><?php echo $email_description; ?></p>
 
@@ -36,7 +38,9 @@ if( isset( $raq_data['lang']) ){
     <?php if ( $raq_data['expiration_data'] != '' ): ?>
         <p><strong><?php _e( 'Expiration date', 'yith-woocommerce-request-a-quote' ) ?></strong>: <?php echo $raq_data['expiration_data'] ?></p>
     <?php endif ?>
-
+    <?php if ( get_option( 'ywraq_show_accept_link' ) != 'no' ): ?>
+        <div style="height:26px; width:100%; background-color:#78be20; text-align:center; margin-bottom:8px;"><a style="padding:100px 2px;color:#fff; text-decoration:none; font-weight:700; font-size:15px;" href="<?php echo esc_url( add_query_arg( $args_accept, YITH_Request_Quote()->get_raq_page_url() ) ) ?>"><?php ywraq_get_label( 'accept', true ) ?></a></div>
+    <?php endif;  ?>
     <?php if ( !empty( $raq_data['admin_message'] ) ): ?>
         <p><?php echo $raq_data['admin_message'] ?></p>
     <?php endif ?>
@@ -49,9 +53,9 @@ if( isset( $raq_data['lang']) ){
     <p></p>
     <?php endif ?>
     <p>
-        <?php if ( get_option( 'ywraq_show_accept_link' ) != 'no' ): ?>
-            <div style="height:26px; width:100%; background-color:#78be20; text-align:center; "><a style="padding:100px 4px;color:#fff; text-decoration:none; font-weight:700;" href="<?php echo esc_url( add_query_arg( $args_accept, YITH_Request_Quote()->get_raq_page_url() ) ) ?>"><?php ywraq_get_label( 'accept', true ) ?></a></div>
-        <?php endif;  ?>
+          <?php if ( get_option( 'ywraq_show_accept_link' ) != 'no' ): ?>
+              <div style="height:26px; width:100%; background-color:#78be20; text-align:center; "><a style="padding:100px 2px;color:#fff; text-decoration:none; font-weight:700; font-size:15px;" href="<?php echo esc_url( add_query_arg( $args_accept, YITH_Request_Quote()->get_raq_page_url() ) ) ?>"><?php ywraq_get_label( 'accept', true ) ?></a></div>
+          <?php endif;  ?>
 
     </p>
 
@@ -87,7 +91,6 @@ $billing_email = get_post_meta($order->id, '_billing_email',true);
 $billing_phone = get_post_meta($order->id, '_billing_phone',true);
 // $billing_paymethod = get_post_meta($order->id, '_payment_method',true);
 
-
 if( $billing_company != ''): ?>
     <p><strong><?php _e( 'Company:', 'yith-woocommerce-request-a-quote' ); ?></strong> <?php echo $billing_company; ?></p>
 <?php endif;
@@ -107,11 +110,6 @@ if( $billing_postcode != ''): ?>
 if( $billing_phone != ''): ?>
     <p><strong><?php _e( 'Billing Phone:', 'yith-woocommerce-request-a-quote' ); ?></strong> <?php echo $billing_phone ?></p>
 <?php endif;
-if( $billing_vat != ''): ?>
-    <p><strong><?php _e( 'Billing VAT:', 'yith-woocommerce-request-a-quote' ); ?></strong> <?php echo $billing_vat ?></p>
-<?php endif; ?>
-
-<?php
 
 $af1 = get_post_meta( $order->id, 'ywraq_customer_additional_field', true );
 if( ! empty( $af1 ) ){

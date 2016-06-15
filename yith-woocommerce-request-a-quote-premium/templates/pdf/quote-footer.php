@@ -8,10 +8,10 @@ if( function_exists('icl_get_languages') && class_exists('YITH_YWRAQ_Multilingua
 <div class="footer">
 	<?php // if ( $footer != '' ): ?>
 			<?php // echo $footer ?>
-		<div style="line-height:16px;" class="footer-content">
-			<p style="color:#00426a; line-height:16px;font-size:14px;">Shop over 1,000,000 products on <a style="text-decoration:none; color:#00426a; font-size:14px;" href="http://www.diamedicalusa.com">DiaMedicalUSA.com!</a></p>
-			<p style="color:#00426a; line-height:16px;font-size:14px;">Call Us Toll Free: (877) 593-6011 (M-F: 7-6 EST)</p>
-			<p style="color:#00426a; line-height:16px;font-size:14px;">Email: orders@diamedicalusa.com</p>
+		<div class="footer-content">
+			<p style="color:#00426a; line-height:15px;font-size:14px;">Shop over 1,000,000 products on <a style="text-decoration: underline; color:#00426a; font-size:14px;" href="http://www.diamedicalusa.com">DiaMedicalUSA.com!</a></p>
+			<p style="color:#00426a; line-height:15px;font-size:14px;">Call Us Toll Free: (877) 593-6011 (M-F: 7-6 EST)</p>
+			<p style="color:#00426a; line-height:15px;font-size:14px;">Email: orders@diamedicalusa.com</p>
 
 </div>
 	<?php  // endif; ?>
