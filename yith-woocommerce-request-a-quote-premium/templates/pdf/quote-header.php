@@ -140,3 +140,5 @@ $order_date       = date_i18n( wc_date_format(), strtotime( $order->order_date )
     </tr>
 <?php endif ?>
 <div class="clear"></div>
+<div class="clear"></div>
+<div class="clear"></div>
