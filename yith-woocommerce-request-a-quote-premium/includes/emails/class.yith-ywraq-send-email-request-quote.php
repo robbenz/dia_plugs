@@ -76,6 +76,9 @@ if ( !class_exists( 'YITH_YWRAQ_Send_Email_Request_Quote' ) ) {
             $this->raq['order_id']    = is_null( $new_order ) ? 0 : $new_order;
             $this->raq['raq_content'] = YITH_Request_Quote()->get_raq_return();
 
+            $this->find['quote-number']      = '{quote_number}';
+            $this->replace['quote-number'] = $this->raq['order_id'];
+
             $recipients = (array) $this->get_recipient();
 
             if( $this->enable_cc ){
@@ -225,7 +228,7 @@ if ( !class_exists( 'YITH_YWRAQ_Send_Email_Request_Quote' ) ) {
                 'subject'    => array(
                     'title'       => __( 'Subject', 'yith-woocommerce-request-a-quote' ),
                     'type'        => 'text',
-                    'description' => sprintf( __( 'This field lets you edit email subject line. Leave it blank to use default subject text: <code>%s</code>.', 'yith-woocommerce-request-a-quote' ), $this->subject ),
+                    'description' => sprintf( __( 'This field lets you edit email subject line. Leave it blank to use default subject text: <code>%s</code>. You can use {quote_number} as a placeholder that will show the quote number in the quote.', 'yith-woocommerce-request-a-quote' ), $this->subject ),
                     'placeholder' => '',
                     'default'     => ''
                 ),

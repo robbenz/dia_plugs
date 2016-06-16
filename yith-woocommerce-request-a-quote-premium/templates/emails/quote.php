@@ -27,7 +27,7 @@ if( isset( $raq_data['lang']) ){
 }
 ?>
 
-<h2><?php printf( __( 'Accept Below to Order Quote #EC-%s Instantly', 'yith-woocommerce-request-a-quote' ), $order->id ) ?></h2>
+<h2><?php printf( __( 'Click Accept to Order Quote #EC-%s Instantly', 'yith-woocommerce-request-a-quote' ), $order->id ) ?></h2>
 <span style="font-size:14px; font-weight:bolder;">Please Note: </span>
 <span style="font-size:14px;">Shipping has been calculated and added to your total. Shipping will be applied at checkout. </span>
 

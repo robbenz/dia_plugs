@@ -31,8 +31,8 @@ if ( !class_exists( 'YITH_YWRAQ_Send_Quote' ) ) {
             $this->title       = __( 'Email with Quote', 'yith-woocommerce-request-a-quote' );
             $this->description = __( 'This email is sent when an administrator performs the action "Send the quote" from Order Editor', 'yith-woocommerce-request-a-quote' );
 
-            $this->heading = __( 'Shipping Calculated | Order Now', 'yith-woocommerce-request-a-quote' );
-            $this->subject = __( '[Quote proposal]', 'yith-woocommerce-request-a-quote' );
+            $this->heading = __( 'Our Proposal', 'yith-woocommerce-request-a-quote' );
+            $this->subject = __( '[Quote]', 'yith-woocommerce-request-a-quote' );
 
             $this->template_html  = 'emails/quote.php';
             $this->template_plain = 'emails/plain/quote.php';
@@ -82,9 +82,13 @@ if ( !class_exists( 'YITH_YWRAQ_Send_Quote' ) ) {
                 $this->raq['order-id']         = $order_id;
                 $this->recipient               = $this->raq['user_email'];
 
+                $this->find['quote-number']    = '{quote_number}';
+                $this->replace['quote-number'] = $order_id;
+
                 $this->send( $this->recipient, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments( ) );
 
             }
+
 
         }
 
@@ -127,6 +131,7 @@ if ( !class_exists( 'YITH_YWRAQ_Send_Quote' ) ) {
             }
 
             $headers .= "Content-Type: " . $this->get_content_type() . "\r\n";
+
 
             return apply_filters( 'woocommerce_email_headers', $headers, $this->id, $this->object );
         }
@@ -227,7 +232,7 @@ if ( !class_exists( 'YITH_YWRAQ_Send_Quote' ) ) {
                 'subject'    => array(
                     'title'       => __( 'Subject', 'yith-woocommerce-request-a-quote' ),
                     'type'        => 'text',
-                    'description' => sprintf( __( 'This field lets you modify the email subject line. Leave it blank to use the default subject text: <code>%s</code>.', 'yith-woocommerce-request-a-quote' ), $this->subject ),
+                    'description' => sprintf( __( 'This field lets you modify the email subject line. Leave it blank to use the default subject text: <code>%s</code>. You can use {quote_number} as a placeholder that will show the quote number in the quote.', 'yith-woocommerce-request-a-quote' ), $this->subject ),
                     'placeholder' => '',
                     'default'     => ''
                 ),
@@ -255,13 +260,13 @@ if ( !class_exists( 'YITH_YWRAQ_Send_Quote' ) ) {
                     'title'       => __( 'Email Title', 'yith-woocommerce-request-a-quote' ),
                     'type'        => 'text',
                     'placeholder' => '',
-                    'default'     =>  __( ' ', 'yith-woocommerce-request-a-quote' )
+                    'default'     =>  __( 'Proposal', 'yith-woocommerce-request-a-quote' )
                 ),
                 'email-description'    => array(
                     'title'       => __( 'Email Description', 'yith-woocommerce-request-a-quote' ),
                     'type'        => 'textarea',
                     'placeholder' => '',
-                    'default'     =>  __( 'Please review the following proposal', 'yith-woocommerce-request-a-quote' )
+                    'default'     =>  __( 'You have received this email because you sent a quote request to our shop. The response to your request is the following:', 'yith-woocommerce-request-a-quote' )
                 ),
                 'email_type' => array(
                     'title'       => __( 'Email type', 'yith-woocommerce-request-a-quote' ),
