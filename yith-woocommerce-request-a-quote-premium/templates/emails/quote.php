@@ -27,11 +27,11 @@ if( isset( $raq_data['lang']) ){
 }
 ?>
 
-<h2><?php printf( __( 'DiaMedical USA Proposal For Quote #EC-%s', 'yith-woocommerce-request-a-quote' ), $order->id ) ?></h2>
+<h2><?php printf( __( 'Accept Below to Order Quote #EC-%s Instantly', 'yith-woocommerce-request-a-quote' ), $order->id ) ?></h2>
 <span style="font-size:14px; font-weight:bolder;">Please Note: </span>
 <span style="font-size:14px;">Shipping has been calculated and added to your total. Shipping will be applied at checkout. </span>
 
-    <p><?php echo $email_description; ?></p>
+    <p><?php // echo $email_description; ?></p>
 
 <?php if( get_option('ywraq_hide_table_is_pdf_attachment') == 'no'): ?>
     <p><strong><?php _e( 'Request date', 'yith-woocommerce-request-a-quote' ) ?></strong>: <?php echo $raq_data['order-date'] ?></p>
@@ -39,7 +39,7 @@ if( isset( $raq_data['lang']) ){
         <p><strong><?php _e( 'Expiration date', 'yith-woocommerce-request-a-quote' ) ?></strong>: <?php echo $raq_data['expiration_data'] ?></p>
     <?php endif ?>
     <?php if ( get_option( 'ywraq_show_accept_link' ) != 'no' ): ?>
-        <div style="height:26px; width:100%; background-color:#78be20; text-align:center; margin-bottom:8px;"><a style="padding:100px 2px;color:#fff; text-decoration:none; font-weight:700; font-size:15px;" href="<?php echo esc_url( add_query_arg( $args_accept, YITH_Request_Quote()->get_raq_page_url() ) ) ?>"><?php ywraq_get_label( 'accept', true ) ?></a></div>
+        <div style="height:26px; width:100%; background-color:#78be20; text-align:center; margin-bottom:8px;"><a style="color:#fff; text-decoration:none; font-weight:700; font-size:15px;" href="<?php echo esc_url( add_query_arg( $args_accept, YITH_Request_Quote()->get_raq_page_url() ) ) ?>"><?php ywraq_get_label( 'accept', true ) ?></a></div>
     <?php endif;  ?>
     <?php if ( !empty( $raq_data['admin_message'] ) ): ?>
         <p><?php echo $raq_data['admin_message'] ?></p>
@@ -54,7 +54,7 @@ if( isset( $raq_data['lang']) ){
     <?php endif ?>
     <p>
           <?php if ( get_option( 'ywraq_show_accept_link' ) != 'no' ): ?>
-              <div style="height:26px; width:100%; background-color:#78be20; text-align:center; "><a style="padding:100px 2px;color:#fff; text-decoration:none; font-weight:700; font-size:15px;" href="<?php echo esc_url( add_query_arg( $args_accept, YITH_Request_Quote()->get_raq_page_url() ) ) ?>"><?php ywraq_get_label( 'accept', true ) ?></a></div>
+              <div style="height:26px; width:100%; background-color:#78be20; text-align:center; "><a style="color:#fff; text-decoration:none; font-weight:700; font-size:15px;" href="<?php echo esc_url( add_query_arg( $args_accept, YITH_Request_Quote()->get_raq_page_url() ) ) ?>"><?php ywraq_get_label( 'accept', true ) ?></a></div>
           <?php endif;  ?>
 
     </p>
@@ -73,7 +73,7 @@ if( isset( $raq_data['lang']) ){
         <a href="mailto:<?php echo $raq_data['user_email']; ?>"><?php echo $raq_data['user_email']; ?></a></p>
 
 <?php
-/* Sorry your plugin sucks, this didnt work
+/* this didnt work
 $billing_phone   = get_post_meta( $order->id, 'ywraq_billing_phone', true );
 $billing_vat     = get_post_meta( $order->id, 'ywraq_billing_vat', true );
 */

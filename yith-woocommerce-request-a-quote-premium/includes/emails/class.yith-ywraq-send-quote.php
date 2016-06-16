@@ -31,8 +31,8 @@ if ( !class_exists( 'YITH_YWRAQ_Send_Quote' ) ) {
             $this->title       = __( 'Email with Quote', 'yith-woocommerce-request-a-quote' );
             $this->description = __( 'This email is sent when an administrator performs the action "Send the quote" from Order Editor', 'yith-woocommerce-request-a-quote' );
 
-            $this->heading = __( 'Our Proposal', 'yith-woocommerce-request-a-quote' );
-            $this->subject = __( '[Quote Proposal]', 'yith-woocommerce-request-a-quote' );
+            $this->heading = __( 'Shipping Calculated | Order Now', 'yith-woocommerce-request-a-quote' );
+            $this->subject = __( '[Quote proposal]', 'yith-woocommerce-request-a-quote' );
 
             $this->template_html  = 'emails/quote.php';
             $this->template_plain = 'emails/plain/quote.php';
@@ -86,7 +86,6 @@ if ( !class_exists( 'YITH_YWRAQ_Send_Quote' ) ) {
 
             }
 
-
         }
 
 	    /**
@@ -128,7 +127,6 @@ if ( !class_exists( 'YITH_YWRAQ_Send_Quote' ) ) {
             }
 
             $headers .= "Content-Type: " . $this->get_content_type() . "\r\n";
-
 
             return apply_filters( 'woocommerce_email_headers', $headers, $this->id, $this->object );
         }
@@ -196,7 +194,6 @@ if ( !class_exists( 'YITH_YWRAQ_Send_Quote' ) ) {
             $email_from_email = ( isset($this->settings['email_from_email']) && $this->settings['email_from_email'] != '' ) ? $this->settings['email_from_email'] : '';
             return sanitize_email( $email_from_email );
         }
-
 
         /**
          * Init form fields to display in WC admin pages

@@ -15,6 +15,7 @@ $billing_address          = get_post_meta( $order->id, 'ywraq_billing_address', 
 $billing_phone            = get_post_meta( $order->id, 'ywraq_billing_phone', true );
 $billing_vat              = get_post_meta( $order->id, 'ywraq_billing_vat', true );
 */
+
 $billing_first_name =  get_post_meta($order->id, '_billing_first_name',true);
 $billing_last_name = get_post_meta($order->id, '_billing_last_name',true);
 $billing_company = get_post_meta($order->id, '_billing_company',true);
@@ -26,7 +27,6 @@ $billing_country = get_post_meta($order->id, '_billing_country',true);
 $billing_state = get_post_meta($order->id, '_billing_state',true);
 $billing_email = get_post_meta($order->id, '_billing_email',true);
 $billing_phone = get_post_meta($order->id, '_billing_phone',true);
-
 $shipping_first_name =  get_post_meta($order->id, '_shipping_first_name',true);
 $shipping_last_name = get_post_meta($order->id, '_shipping_last_name',true);
 $shipping_company = get_post_meta($order->id, '_shipping_company',true);
