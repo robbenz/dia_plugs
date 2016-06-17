@@ -89,7 +89,6 @@ if ( !class_exists( 'YITH_YWRAQ_Send_Quote' ) ) {
 
             }
 
-
         }
 
 	    /**
