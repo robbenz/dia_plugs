@@ -3,6 +3,7 @@ if ( !defined( 'ABSPATH' ) || !defined( 'YITH_YWRAQ_VERSION' ) ) {
     exit; // Exit if accessed directly
 }
 
+
 /**
  * Implements features of YITH Woocommerce Request A Quote
  *
@@ -65,7 +66,6 @@ if ( !class_exists( 'YITH_YWRAQ_Send_Quote' ) ) {
          * @author   Emanuela Castorina <emanuela.castorina@yithemes.com>
          */
         public function trigger( $order_id ) {
-
 
             $this->order_id = $order_id;
 
