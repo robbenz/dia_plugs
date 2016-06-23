@@ -61,7 +61,7 @@ if( isset( $raq_data['lang']) ){
           <?php endif;
 
           if ( get_option( 'ywraq_show_reject_link' ) != 'no' ): ?>
-              <a style="margin-top:4px; color:#d6001c;" href="<?php echo site_url(); ?>/quote-rejected/&email=jsmith@email.com">No Thank You</a>
+              <a style="margin-top:4px; color:#d6001c;" href="<?php echo site_url(); ?>/quote-rejected/">No Thank You</a>
           <?php endif; ?>
     </p>
 

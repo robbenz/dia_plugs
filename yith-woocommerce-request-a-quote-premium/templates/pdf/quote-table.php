@@ -113,6 +113,7 @@ if( function_exists('icl_get_languages') ) {
         </tbody>
     </table>
 </div>
+<p>Quote valid for 45 days</p>
 <?php if( get_option( 'ywraq_pdf_link' ) == 'yes'): ?>
 <div style="height:26px; width:100%; margin-top:12px;text-align:center; background-color:#78be20; padding-top: 5.5px;">
   <?php if ( get_option( 'ywraq_show_accept_link' ) != 'no' ): ?>

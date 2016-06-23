@@ -107,5 +107,5 @@ do_action( 'yith_ywraq_email_before_raq_table', $order );
 		<?php endif; ?>
 		</tbody>
 	</table>
-
+<p>Quote valid for 45 days</p>
 <?php do_action( 'yith_ywraq_email_after_raq_table', $order ); ?>
