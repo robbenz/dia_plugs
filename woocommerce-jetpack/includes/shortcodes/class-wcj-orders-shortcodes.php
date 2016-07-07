@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Orders Shortcodes class.
  *
- * @version 2.5.0
+ * @version 2.5.3
  * @author  Algoritmika Ltd.
  */
 
@@ -17,7 +17,7 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.4.8
+	 * @version 2.5.3
 	 */
 	public function __construct() {
 
@@ -36,12 +36,14 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 			'wcj_order_custom_field',
 			'wcj_order_custom_meta_field',
 			'wcj_order_meta',
+			'wcj_order_items_meta',
 
 			'wcj_order_subtotal',
 			'wcj_order_subtotal_plus_shipping',
 			'wcj_order_total_discount',
 //			'wcj_order_cart_discount',
 			'wcj_order_shipping_tax',
+			'wcj_order_taxes_html',
 			'wcj_order_total_tax',
 			'wcj_order_total_tax_percent',
 			'wcj_order_total',
@@ -49,6 +51,7 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 			'wcj_order_total_in_words',
 			'wcj_order_total_excl_tax',
 			'wcj_order_shipping_price',
+			'wcj_order_total_refunded',
 
 			'wcj_order_total_fees',
 			'wcj_order_total_fees_incl_tax',
@@ -146,19 +149,20 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 	/**
 	 * wcj_order_total_fees_tax.
 	 *
-	 * @version 2.4.8
+	 * @version 2.5.2
 	 * @since   2.4.8
 	 */
 	function wcj_order_total_fees_tax( $atts ) {
 		$total_fees_tax = 0;
 		$the_fees = $this->the_order->get_fees();
 		foreach ( $the_fees as $the_fee ) {
-			$taxes = maybe_unserialize( $the_fee['line_tax_data'] );
+			/* $taxes = maybe_unserialize( $the_fee['line_tax_data'] );
 			if ( ! empty( $taxes ) && is_array( $taxes ) && isset( $taxes['total'] ) && is_array( $taxes['total'] ) ) {
 				foreach ( $taxes['total'] as $tax ) {
 					$total_fees_tax += $tax;
 				}
-			}
+			} */
+			$total_fees_tax += $this->the_order->get_line_tax( $the_fee );
 		}
 		return $this->wcj_price_shortcode( $total_fees_tax, $atts );
 	}
@@ -166,20 +170,22 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 	/**
 	 * wcj_order_total_fees_incl_tax.
 	 *
-	 * @version 2.4.8
+	 * @version 2.5.2
 	 * @since   2.4.8
+	 * @todo    probably should use get_line_total
 	 */
 	function wcj_order_total_fees_incl_tax( $atts ) {
 		$total_fees = 0;
 		$the_fees = $this->the_order->get_fees();
 		foreach ( $the_fees as $the_fee ) {
 			$total_fees += $the_fee['line_total'];
-			$taxes = maybe_unserialize( $the_fee['line_tax_data'] );
+			/* $taxes = maybe_unserialize( $the_fee['line_tax_data'] );
 			if ( ! empty( $taxes ) && is_array( $taxes ) && isset( $taxes['total'] ) && is_array( $taxes['total'] ) ) {
 				foreach ( $taxes['total'] as $tax ) {
 					$total_fees += $tax;
 				}
-			}
+			} */
+			$total_fees += $this->the_order->get_line_tax( $the_fee );
 		}
 		return $this->wcj_price_shortcode( $total_fees, $atts );
 	}
@@ -278,6 +284,29 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 	 */
 	function wcj_order_billing_phone( $atts ) {
 		return $this->the_order->billing_phone;
+	}
+
+	/**
+	 * wcj_order_items_meta.
+	 *
+	 * @version 2.5.3
+	 * @since   2.5.3
+	 */
+	function wcj_order_items_meta( $atts ) {
+		$items_metas = array();
+		$the_items = $this->the_order->get_items();
+		foreach ( $the_items as $item_id => $item ) {
+			$the_meta = $this->the_order->get_item_meta( $item_id, $atts['meta_key'], true );
+			if ( '' != $the_meta ) {
+				$items_metas[] = $the_meta;
+			}
+			/* foreach ( $item as $key => $value ) {
+				if ( $atts['meta_key'] === $key ) {
+					$items_metas[] = $value;
+				}
+			} */
+		}
+		return ( ! empty( $items_metas ) ) ? implode( ', ', $items_metas ) : '';
 	}
 
 	/**
@@ -439,6 +468,35 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 		$order_total_tax_percent = round( $order_total_tax_percent, $atts['precision'] );
 		apply_filters( 'wcj_order_total_tax_percent', $order_total_tax_percent, $this->the_order );
 		return number_format( $order_total_tax_percent, $atts['precision'] );
+	}
+
+	/**
+	 * wcj_order_total_refunded.
+	 *
+	 * @version 2.5.3
+	 * @since   2.5.3
+	 */
+	function wcj_order_total_refunded( $atts ) {
+		return $this->wcj_price_shortcode( $this->the_order->get_total_refunded(), $atts );
+	}
+
+	/**
+	 * wcj_order_taxes_html.
+	 *
+	 * @version 2.5.3
+	 * @since   2.5.3
+	 */
+	function wcj_order_taxes_html( $atts ) {
+		$order_taxes = $this->the_order->get_taxes();
+		$taxes_html = '';
+		foreach ( $order_taxes as $order_tax ) {
+			$taxes_html .= ( isset( $order_tax['label'] ) ) ? $order_tax['label'] . ': ' : '';
+			$amount = 0;
+			$amount += ( isset( $order_tax['tax_amount'] ) ) ? $order_tax['tax_amount'] : 0;
+			$amount += ( isset( $order_tax['shipping_tax_amount'] ) ) ? $order_tax['shipping_tax_amount'] : 0;
+			$taxes_html .= $this->wcj_price_shortcode( $amount, $atts ) . '<br>';
+		}
+		return $taxes_html;
 	}
 
 	/**

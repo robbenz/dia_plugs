@@ -26,7 +26,7 @@ function wppb_pms_cross_promo() {
 		<hr />
 		<div class="wppb-row">
 			<p>One of the most requested features in Profile Builder was for users to be able to pay for an account.</p>
-			<p>Now that's possible using the free WordPress plugin - <a href="http://www.cozmoslabs.com/wordpress-paid-member-subscriptions/?utm_source=wpbackend&utm_medium=clientsite&utm_content=pb-pms-promo&utm_campaign=PBFree">Paid Member Subscriptions</a>.</p>
+			<p>Now that's possible using the free WordPress plugin - <a href="https://www.cozmoslabs.com/wordpress-paid-member-subscriptions/?utm_source=wpbackend&utm_medium=clientsite&utm_content=pb-pms-promo&utm_campaign=PBFree">Paid Member Subscriptions</a>.</p>
 		</div>
 
 

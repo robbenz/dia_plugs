@@ -4,7 +4,7 @@
  *
  * The WooCommerce Modules Array.
  *
- * @version 2.5.0
+ * @version 2.5.3
  * @since   2.2.0
  * @author  Algoritmika Ltd.
  */
@@ -18,6 +18,7 @@ return array(
 			'alphabetically',
 			'by_category',
 			'active',
+			'manager',
 		),
 	),
 
@@ -28,6 +29,7 @@ return array(
 			'price_by_country',
 			'multicurrency',
 			'multicurrency_base_price',
+			'currency_per_product',
 			'currency',
 			'currency_external_products',
 			'bulk_price_converter',
@@ -36,6 +38,7 @@ return array(
 			'price_by_user_role',
 			'product_price_by_formula',
 			'currency_exchange_rates',
+			'price_formats',
 		),
 	),
 
@@ -57,7 +60,6 @@ return array(
 			'product_listings',
 			'product_tabs',
 			'product_custom_info',
-			'product_info',
 			'related_products',
 			'sorting',
 			'sku',
@@ -66,8 +68,10 @@ return array(
 			'purchase_data',
 			'product_bookings',
 			'crowdfunding',
+			'product_addons',
 			'product_images',
 			'product_by_country',
+			'product_by_user',
 		),
 	),
 
@@ -96,6 +100,7 @@ return array(
 			'payment_gateways_currency',
 			'payment_gateways_min_max',
 			'payment_gateways_by_country',
+			'payment_gateways_by_user_role',
 		),
 	),
 
@@ -141,6 +146,7 @@ return array(
 			'emails',
 			'wpml',
 //			'pdf_invoices',
+			'product_info',
 		),
 	),
 

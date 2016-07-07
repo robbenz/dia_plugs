@@ -158,8 +158,12 @@ function wppb_front_end_login( $atts ){
 		$form_args = array( 'echo' => false, 'id_submit' => 'wppb-submit' );
 
 		// maybe set up the redirect argument
+		if( ! empty( $redirect ) ) {
+			$redirect_url = $redirect;
+		}
+
         if ( ! empty( $redirect_url ) ) {
-			if( $redirect_priority == 'top' ) {
+			if( $redirect_priority == 'top' || ! empty( $redirect ) ) {
 				$form_args['redirect_priority'] = 'top';
 			} else {
 				$form_args['redirect_priority'] = 'normal';

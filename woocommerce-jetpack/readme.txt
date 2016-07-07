@@ -3,7 +3,7 @@ Contributors: algoritmika,anbinder
 Tags: woocommerce,booster for woocommerce,woocommerce jetpack,custom price labels,call for price,currency symbol,remove sorting,remove old product slugs,add to cart text,order number,sequential order numbering,email pdf invoice,pdf invoice,pdf invoices,already in cart,empty cart,redirect to checkout,minimum order amount,customize checkout fields,checkout fields,email,customize product tabs,product tabs,related products number,empty cart,redirect add to cart,redirect to checkout,product already in cart,custom payment gateway,payment gateway icon,auto-complete all orders,custom order statuses,custom order status,remove text from price,custom css,hide categories count,hide subcategories count,hide category count,hide subcategory count,display total sales,custom product tabs,remove product tab,payment gateway fee,vat,gateway by country,price by country,currency switcher
 Requires at least: 4.1
 Tested up to: 4.5
-Stable tag: 2.5.1
+Stable tag: 2.5.3
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -21,8 +21,10 @@ Booster for WooCommerce is a WordPress plugin that supercharges your site with a
 * *Currencies* - Add all world currencies to your WooCommerce store; change currency symbol.
 * *Currency Exchange Rates* - Automatic currency exchange rates for WooCommerce.
 * *Currency for External Products* - Set different currency for external WooCommerce products.
+* *Currency per Product* - Display prices for WooCommerce products in different currencies.
 * *Multicurrency (Currency Switcher)* - Add multiple currencies (currency switcher) to WooCommerce.
 * *Multicurrency Product Base Price* - Enter prices for WooCommerce products in different currencies.
+* *Price Formats* - Set different WooCommerce price formats for different currencies.
 * *Price by User Role* - Display WooCommerce products prices by user roles.
 * *Prices and Currencies by Country* - Change WooCommerce product price and currency automatically by customer's country.
 * *Product Open Pricing (Name Your Price)* - Let your WooCommerce store customers enter price for the product manually.
@@ -40,14 +42,16 @@ Booster for WooCommerce is a WordPress plugin that supercharges your site with a
 
 * *Bookings* - Add bookings products to WooCommerce.
 * *Crowdfunding* - Add crowdfunding products to WooCommerce.
-* *Product Add to Cart* - Set any local url to redirect to on WooCommerce Add to Cart. Automatically add to cart on product visit. Display radio buttons instead of drop box for variable products.
+* *Product Add to Cart* - Set any local url to redirect to on WooCommerce Add to Cart. Automatically add to cart on product visit. Display radio buttons instead of drop box for variable products. Disable quantity input. Disable add to cart button on per product basis. Open external products on add to cart in new window.
+* *Product Addons* - Add (paid/free/discount) addons to WooCommerce products.
 * *Product Cost Price* - Save WooCommerce product purchase costs data for admin reports.
 * *Product Images* - Customize WooCommerce products images, thumbnails and sale flashes.
 * *Product Info* - Add additional info to WooCommerce category and single product pages.
 * *Product Input Fields* - WooCommerce product input fields.
-* *Product Listings* - Change WooCommerce display options for shop and category pages: show/hide categories count, exclude categories, show/hide empty categories.
+* *Product Listings* - Change WooCommerce display options for shop and category pages: show/hide categories count, exclude categories, show/hide empty categories. Add "products per page" selector.
 * *Product Tabs* - Add custom product tabs - globally or per product. Customize or completely remove WooCommerce default product tabs.
 * *Product by Country* - Display WooCommerce products by customers country.
+* *Product by User* - Let users add new WooCommerce products from frontend.
 * *Related Products* - Change displayed WooCommerce related products number, columns, order, relate by tag and/or category, or hide related products completely.
 * *SKU* - Generate WooCommerce SKUs automatically.
 * *Sorting* - Add more WooCommerce sorting options or remove all sorting including default.
@@ -70,6 +74,7 @@ Booster for WooCommerce is a WordPress plugin that supercharges your site with a
 * *Gateways Icons* - Change or completely remove icons (images) for any (default or custom) WooCommerce payment gateway.
 * *Gateways Min/Max* - Add min/max amounts for WooCommerce payment gateways to show up.
 * *Gateways by Country or State* - Set countries or states to include/exclude for WooCommerce payment gateways to show up.
+* *Gateways by User Role* - Set user roles to include/exclude for WooCommerce payment gateways to show up.
 * *Gateways per Product or Category* - Show WooCommerce gateway only if there is selected product or product category in cart.
 
 **Shipping & Orders**
@@ -77,7 +82,7 @@ Booster for WooCommerce is a WordPress plugin that supercharges your site with a
 * *Address Formats* - Set address format in WooCommerce orders on per country basis. Force base country display.
 * *Order Custom Statuses* - Custom statuses for WooCommerce orders.
 * *Order Numbers* - WooCommerce sequential order numbering, custom order number prefix, suffix and number width.
-* *Orders* - Minimum WooCommerce order amount; orders auto-complete; custom admin order list columns.
+* *Orders* - Minimum WooCommerce order amount (optionally by user role); orders auto-complete; custom admin order list columns.
 * *Shipping* - Add multiple custom shipping methods to WooCommerce. Hide WooCommerce shipping when free is available. Display "left to free shipping" info.
 * *Shipping Calculator* - Customize WooCommerce shipping calculator on cart page.
 
@@ -91,7 +96,7 @@ Booster for WooCommerce is a WordPress plugin that supercharges your site with a
 * *Booster WPML* - Booster for WooCommerce basic WPML support.
 * *EU VAT Number* - Collect and validate EU VAT numbers on WooCommerce checkout. Automatically disable VAT for valid numbers. Add all EU countries VAT standard rates to WooCommerce.
 * *Emails* - Add custom emails. Add another email recipient(s) to all WooCommerce emails.
-* *General* - Separate custom CSS for front and back end. Shortcodes in Wordpress text widgets.
+* *General* - Separate custom CSS for front and back end. Shortcodes in Wordpress text widgets. Export tools. Custom roles tool.
 * *Old Slugs* - Remove old WooCommerce products slugs.
 * *Reports* - WooCommerce stock, sales, customers etc. reports.
 
@@ -120,6 +125,87 @@ To unlock all Booster for WooCommerce features, please install additional [Boost
 1. Plugin admin area.
 
 == Changelog ==
+
+= 2.5.3 - 04/07/2016 =
+* Dev - Shortcodes - Orders - `[wcj_order_total_refunded]` shortcode added.
+* Dev - Shortcodes - Orders - `[wcj_order_taxes_html]` shortcode added.
+* Dev - Shortcodes - Orders - `[wcj_order_items_meta]` shortcode added.
+* Dev - PRICES & CURRENCIES - Currency Exchange Rates - "Logging" option removed.
+* Fix - PRICES & CURRENCIES - Prices and Currencies by Country - Price Filter widget fixed. `add_hooks()` function moved from `init` hook to constructor.
+* Dev - PRICES & CURRENCIES - Price by User Role - Class functions replaced with global functions.
+* Dev - PRODUCTS - Bookings - "Hide Quantity Selector" option added.
+* Dev - PRODUCTS - Product Add to Cart - "Open External Products on Add to Cart in New Window" option added.
+* Dev - PRODUCTS - Product Addons - Initial module release.
+* Fix - PRODUCTS - Product by User - Settings moved to `init` hook. This caused "wp-admin show white screen and no errors" on some servers (or "Fatal error: Call to undefined function wp_get_current_user() in ..." message if debug enabled).
+* Dev - PRODUCTS - Product by User - Class functions replaced with global functions.
+* Dev - PRODUCTS - Product Listings - "Products per Page" options added.
+* Fix - PRODUCTS - Product Input Fields - `output_custom_input_fields_in_admin_order()` for shipping bug fixed.
+* Dev - PRODUCTS - SKU - "Allow Duplicate SKUs" option added.
+* Dev - PAYMENT GATEWAYS - Gateways by User Role - Initial module release.
+* Dev - SHIPPING & ORDERS - Orders - "Custom Columns" options added.
+* Dev - SHIPPING & ORDERS - Orders - Settings moved to `init` hook.
+* Dev - SHIPPING & ORDERS - Orders - Order Minimum Amount - "By user role" options added. All order minimum amount hooks moved to `init` action.
+* Fix - SHIPPING & ORDERS - Shipping - Hide if free is available - Fixed to work with WooCommerce since version 2.6.0. "Hide local delivery when free is available" option removed.
+* Fix - SHIPPING & ORDERS - Shipping - Left to Free Shipping - Fixed to work with WooCommerce since version 2.6.0.
+* Dev - PDF INVOICING & PACKING SLIPS - Invoices Report - Added "Refunds" column to the table.
+* Dev - EMAILS & MISC. - Emails - Custom Emails - `do_shortcode` added to custom email recipient.
+* Dev - EMAILS & MISC. - General - "Export Products" tool added.
+* Dev - EMAILS & MISC. - General - "Add/Manage Custom Roles" tool moved from "Price by User Role" module.
+* Dev - EMAILS & MISC. - Reports - Monthly Sales - Major code refactoring. New data added.
+* Tweak - Rating message added.
+* Tweak - Module's documentation button on new line.
+* Tweak - Depreciated module message updated.
+* Tweak - PRODUCTS - Product Add to Cart - Module description updated.
+* Tweak - PRODUCTS - Product by User - Module and admin settings descriptions updated.
+* Tweak - PRODUCTS - Product Info - Moved to EMAILS & MISC. Renamed to "Product Info V1". "Product Info V2" renamed to "Product Info".
+
+= 2.5.2 - 21/06/2016 =
+* Dev - "Manage Settings" functionality added.
+* Dev - `wcj_add_files_upload_form_to_checkout_frontend` function added.
+* Dev - `include_modules` function code refactoring.
+* Fix - Cart `calculate_totals()` added on `wp_loaded` to fix mini cart currency and price issues.
+* Dev - Shortcodes - `module` (and `module_name`) attribute added.
+* Dev - Shortcodes - `visibility` attribute modified.
+* Fix - Shortcodes - Orders - `[wcj_order_total_fees_tax]` and `[wcj_order_total_fees_incl_tax]` - using `get_line_tax()` instead of calculating taxes manually - that should fix the issue with wrong taxes rounding.
+* Dev - Shortcodes - General and Products - `[wcj_wholesale_price_table]` and `[wcj_product_wholesale_price_table]` - Table class added.
+* Fix - Shortcodes - Products - `[wcj_product_wholesale_price_table]` - Price tax bug fixed.
+* Dev - Shortcodes - Products - `[wcj_product_wholesale_price_table]` - `price_row_format` attribute added.
+* Dev - PRICES & CURRENCIES - Currency Exchange Rates - "Logging" option added.
+* Dev - PRICES & CURRENCIES - Currency per Product - Initial module release.
+* Dev - PRICES & CURRENCIES - Multicurrency Product Base Price - Removed from currency reports.
+* Dev - PRICES & CURRENCIES - Prices and Currencies by Country - "Revert Currency to Default on Checkout" option added.
+* Fix - PRICES & CURRENCIES - Prices and Currencies by Country - Loading core on `admin-ajax.php` (caused issue in mini cart).
+* Dev - PRICES & CURRENCIES - Price by User Role - "Make Empty Price" option added.
+* Fix - PRICES & CURRENCIES - Price by User Role - `change_price_by_role_shipping()` fixed (produced an error if price by user role for shipping was disabled).
+* Dev - PRICES & CURRENCIES - Price Formats - Initial module release.
+* Fix - PRICES & CURRENCIES - Wholesale Price - Old price taxes fixed when displaying in cart.
+* Fix - PRODUCTS - Bookings - `is_product` and `is_bookings_product` checks added to `enqueue_scripts` function.
+* Dev - PRODUCTS - Bookings - "Labels and Messages" settings added.
+* Dev - PRODUCTS - Product Add to Cart - "Disable Quantity Field for All Products" option added.
+* Dev - PRODUCTS - Product Add to Cart - Disable Add to Cart Button (on Single Product Page and/or Loop) options added.
+* Dev - PRODUCTS - Product by User - Initial module release.
+* Dev - PRODUCTS - Product Images - Per product "Hide" options added.
+* Fix - PRODUCTS - Product Images - Meta boxes added only if section is enabled.
+* Dev - PRODUCTS - Product Input Fields - "File: Max size" option added.
+* Dev - PRODUCTS - Product Tabs - `do_shortcode` added to custom tab titles.
+* Dev - PRODUCTS - SKU - Sequential number generation option added.
+* Dev - PAYMENT GATEWAYS - Custom Gateways - Custom input fields (and `[wcj_input_field]` shortcode) added.
+* Dev - SHIPPING & ORDERS - Shipping - Custom Shipping - "By Total Cart Weight Table" option added.
+* Dev - SHIPPING & ORDERS - Shipping - "Left to free shipping" - `do_shortcode` added to all messages.
+* Dev - SHIPPING & ORDERS - Order Custom Statuses - Custom icon and icon color options added.
+* Dev - SHIPPING & ORDERS - Order Numbers - "Enable Order Tracking by Custom Number" option added.
+* Fix - PDF INVOICING & PACKING SLIPS - `SetTitle` fixed.
+* Fix - PDF INVOICING & PACKING SLIPS - Display & Misc. - Action buttons icons changed.
+* Dev - PDF INVOICING & PACKING SLIPS - Display & Misc. - Confirmation request added to the delete and create buttons.
+* Fix - PDF INVOICING & PACKING SLIPS - Report Tool - Querying by document date instead of order date.
+* Dev - EMAILS & MISC. - General - "PayPal Email per Product" option added.
+* Dev - EMAILS & MISC. - EU VAT Number - Option ("Display") to append EU VAT number to order and my account billing addresses added.
+* Fix - EMAILS & MISC. - EU VAT Number - `woocommerce_matched_rates` filter changed to `woocommerce_find_rates` - this fixes the issue with sipping tax not exempting.
+* Tweak - "Unlock all" link modified.
+* Tweak - "No active modules found." message added.
+* Tweak - PRODUCTS - Product Images - Module settings rearranged.
+* Tweak - PDF INVOICING & PACKING SLIPS - Numbering - Fields width and order modified.
+* Tweak - PDF INVOICING & PACKING SLIPS - Templates - "Available Shortcodes" info section modified.
 
 = 2.5.1 - 24/05/2016 =
 * Dev - PRICES & CURRENCIES - Product Price by Formula - No more using `namespace` (as it required PHP 5 >= 5.3.0).

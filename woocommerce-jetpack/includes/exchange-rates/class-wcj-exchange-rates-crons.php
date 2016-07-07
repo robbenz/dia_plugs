@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Exchange Rates Crons class.
  *
- * @version 2.4.8
+ * @version 2.5.3
  * @author  Algoritmika Ltd.
  */
 
@@ -23,7 +23,7 @@ class WCJ_Exchange_Rates_Crons {
 
 		add_action( 'wp', array( $this, 'schedule_the_events' ) );
 		$this->update_intervals  = array(
-			//'manual'     => __( 'Enter Rates Manually', 'woocommerce-jetpack' ),
+//			'manual'     => __( 'Enter Rates Manually', 'woocommerce-jetpack' ),
 			'minutely'   => __( 'Update Every Minute', 'woocommerce-jetpack' ),
 			'hourly'     => __( 'Update Hourly', 'woocommerce-jetpack' ),
 			'twicedaily' => __( 'Update Twice Daily', 'woocommerce-jetpack' ),
@@ -64,8 +64,9 @@ class WCJ_Exchange_Rates_Crons {
 	}
 
 	/*
-	 * Functions gets currency exchange rate from rate-exchange.appspot.com server.
-	 * returns rate on success, else 0
+	 * get_exchange_rate.
+	 *
+	 * @return float rate on success, else 0
 	 */
 	function get_exchange_rate( $currency_from, $currency_to ) {
 
@@ -110,7 +111,7 @@ class WCJ_Exchange_Rates_Crons {
 	/**
 	 * On the scheduled action hook, run a function.
 	 *
-	 * @version 2.4.8
+	 * @version 2.5.3
 	 */
 	function update_the_exchange_rates( $interval ) {
 
@@ -142,6 +143,16 @@ class WCJ_Exchange_Rates_Crons {
 				for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_multicurrency_base_price_total_number', 1 ) ); $i++ ) {
 					$currency_to = get_option( 'wcj_multicurrency_base_price_currency_' . $i );
 					$currency_pairs = $this->get_currency_pair( $currency_pairs, $currency_to, 'wcj_multicurrency_base_price_exchange_rate_' . $i );
+				}
+			}
+		}
+
+		if ( wcj_is_module_enabled( 'currency_per_product' ) ) {
+			// Currency Pairs - Preparation - Currency per Product
+			if ( 'manual' != apply_filters( 'wcj_get_option_filter', 'manual', get_option( 'wcj_currency_per_product_exchange_rate_update', 'manual' ) ) ) {
+				for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_currency_per_product_total_number', 1 ) ); $i++ ) {
+					$currency_to = get_option( 'wcj_currency_per_product_currency_' . $i );
+					$currency_pairs = $this->get_currency_pair( $currency_pairs, $currency_to, 'wcj_currency_per_product_exchange_rate_' . $i );
 				}
 			}
 		}
@@ -179,7 +190,15 @@ class WCJ_Exchange_Rates_Crons {
 			} else {
 				$result_message = __( 'Cron job: exchange rates update failed', 'woocommerce-jetpack' );
 			}
-			//wcj_log( $result_message . ': ' . $currency_from . $currency_to . ': ' . $the_rate . ': ' . 'update_the_exchange_rates: ' . $interval );
+			/* if ( 'yes' === get_option( 'wcj_currency_exchange_logging_enabled', 'no' ) ) {
+				wcj_log( $result_message . ': ' . $currency_from . $currency_to . ': ' . $the_rate . ': ' . 'update_the_exchange_rates: ' . $interval );
+			} */
+		}
+
+		if ( wcj_is_module_enabled( 'price_by_country' ) ) {
+			if ( 'yes' === get_option( 'wcj_price_by_country_price_filter_widget_support_enabled', 'no' ) ) {
+				wcj_update_products_price_by_country();
+			}
 		}
 	}
 

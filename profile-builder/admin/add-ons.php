@@ -159,7 +159,7 @@ function wppb_add_ons_content() {
                             // PB version type does not match
                         } else {
 
-                            echo '<a target="_blank" class="button button-secondary right" href="http://www.cozmoslabs.com/wordpress-profile-builder/?utm_source=wpbackend&utm_medium=clientsite&utm_content=add-on-page-upgrade-button&utm_campaign=PB' . $version . '">' . __('Upgrade Profile Builder', 'profile-builder') . '</a>';
+                            echo '<a target="_blank" class="button button-secondary right" href="https://www.cozmoslabs.com/wordpress-profile-builder/?utm_source=wpbackend&utm_medium=clientsite&utm_content=add-on-page-upgrade-button&utm_campaign=PB' . $version . '">' . __('Upgrade Profile Builder', 'profile-builder') . '</a>';
                             echo '<span class="dashicons dashicons-no-alt"></span><span class="wppb-add-on-message">' . __('Not compatible with Profile Builder', 'profile-builder') . ' ' . $version . '</span>';
 
                         }
@@ -277,7 +277,7 @@ function wppb_add_ons_content() {
  */
 function wppb_add_ons_get_remote_content() {
 
-    $response = wp_remote_get('http://www.cozmoslabs.com/wp-content/plugins/cozmoslabs-products-add-ons/profile-builder-add-ons.json');
+    $response = wp_remote_get('https://www.cozmoslabs.com/wp-content/plugins/cozmoslabs-products-add-ons/profile-builder-add-ons.json');
 
     if( is_wp_error($response) ) {
         return false;
@@ -360,7 +360,7 @@ function wppb_add_on_download_zip_file() {
     $wppb_add_on_download_url = $_POST['wppb_add_on_download_url'];
     $wppb_add_on_zip_name = $_POST['wppb_add_on_zip_name'];
 
-    if( strpos( $wppb_add_on_download_url, 'http://www.cozmoslabs.com/' ) === false && strpos( $wppb_add_on_download_url, 'https://downloads.wordpress.org/' )  === false )
+    if( strpos( $wppb_add_on_download_url, 'https://www.cozmoslabs.com/' ) === false && strpos( $wppb_add_on_download_url, 'https://downloads.wordpress.org/' )  === false )
         wp_die();
 
     // Get .zip file

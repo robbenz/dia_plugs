@@ -36,12 +36,12 @@ function wppb_add_plugin_stylesheet() {
 	$wppb_generalSettings = get_option( 'wppb_general_settings' );
 
 	if ( ( file_exists( WPPB_PLUGIN_DIR . '/assets/css/style-front-end.css' ) ) && ( isset( $wppb_generalSettings['extraFieldsLayout'] ) && ( $wppb_generalSettings['extraFieldsLayout'] == 'default' ) ) ){
-		wp_register_style( 'wppb_stylesheet', WPPB_PLUGIN_URL . 'assets/css/style-front-end.css' );
+		wp_register_style( 'wppb_stylesheet', WPPB_PLUGIN_URL . 'assets/css/style-front-end.css', array(), PROFILE_BUILDER_VERSION );
 		wp_enqueue_style( 'wppb_stylesheet' );
 	}
 	if( is_rtl() ) {
 		if ( ( file_exists( WPPB_PLUGIN_DIR . '/assets/css/rtl.css' ) ) && ( isset( $wppb_generalSettings['extraFieldsLayout'] ) && ( $wppb_generalSettings['extraFieldsLayout'] == 'default' ) ) ){
-			wp_register_style( 'wppb_stylesheet_rtl', WPPB_PLUGIN_URL . 'assets/css/rtl.css' );
+			wp_register_style( 'wppb_stylesheet_rtl', WPPB_PLUGIN_URL . 'assets/css/rtl.css', array(), PROFILE_BUILDER_VERSION );
 			wp_enqueue_style( 'wppb_stylesheet_rtl' );
 		}
 	}
@@ -627,6 +627,12 @@ function wppb_recaptcha_field_error($field_title='') {
 
     return $recaptcha_error;
 
+}
+/* Function for displaying phone field error */
+function wppb_phone_field_error( $field_title = '' ) {
+	$phone_error = apply_filters( 'wppb_phone_error' , __( 'Incorrect phone number', 'profile-builder' ) , $field_title );
+
+	return $phone_error;
 }
 
 /* Create a wrapper function for get_query_var */

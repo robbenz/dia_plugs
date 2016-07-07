@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Currency Exchange Rates class.
  *
- * @version 2.5.0
+ * @version 2.5.3
  * @since   2.3.0
  * @author  Algoritmika Ltd.
  */
@@ -86,7 +86,7 @@ class WCJ_Currency_Exchange_Rates extends WCJ_Module {
 	/**
 	 * add_currency_exchange_rates_settings.
 	 *
-	 * @version 2.4.8
+	 * @version 2.5.3
 	 */
 	function add_currency_exchange_rates_settings() {
 
@@ -140,6 +140,14 @@ class WCJ_Currency_Exchange_Rates extends WCJ_Module {
 			}
 		}
 
+		if ( wcj_is_module_enabled( 'currency_per_product' ) ) {
+			// Currency Pairs - Currency per Product
+			for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_currency_per_product_total_number', 1 ) ); $i++ ) {
+				$currency_to = get_option( 'wcj_currency_per_product_currency_' . $i );
+				$settings = $this->add_currency_pair_setting( $currency_from, $currency_to, $settings );
+			}
+		}
+
 		if ( wcj_is_module_enabled( 'payment_gateways_currency' ) ) {
 			// Currency Pairs - Gateway Currency
 			global $woocommerce;
@@ -151,6 +159,14 @@ class WCJ_Currency_Exchange_Rates extends WCJ_Module {
 				}
 			}
 		}
+
+		/* $settings[] = array(
+			'title'    => __( 'Logging', 'woocommerce-jetpack' ),
+			'desc'     => __( 'Enable', 'woocommerce-jetpack' ),
+			'id'       => 'wcj_currency_exchange_logging_enabled',
+			'default'  => 'no',
+			'type'     => 'checkbox',
+		); */
 
 		$settings[] = array(
 			'type'  => 'sectionend',

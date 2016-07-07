@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Orders class.
  *
- * @version 2.5.0
+ * @version 2.5.3
  * @author  Algoritmika Ltd.
  */
 
@@ -17,38 +17,63 @@ class WCJ_Orders extends WCJ_Module {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.5.0
+	 * @version 2.5.3
 	 */
 	public function __construct() {
 
 		$this->id         = 'orders';
 		$this->short_desc = __( 'Orders', 'woocommerce-jetpack' );
-		$this->desc       = __( 'Minimum WooCommerce order amount; orders auto-complete; custom admin order list columns.', 'woocommerce-jetpack' );
+		$this->desc       = __( 'Minimum WooCommerce order amount (optionally by user role); orders auto-complete; custom admin order list columns.', 'woocommerce-jetpack' );
 		$this->link       = 'http://booster.io/features/woocommerce-orders/';
 		parent::__construct();
 
+		add_action( 'init', array( $this, 'add_settings_hook' ) );
+
 		if ( $this->is_enabled() ) {
 
-			if ( get_option( 'wcj_order_minimum_amount' ) > 0 ) {
-				add_action( 'woocommerce_checkout_process', array( $this, 'order_minimum_amount' ) );
-				add_action( 'woocommerce_before_cart',      array( $this, 'order_minimum_amount' ) );
-				if ( 'yes' === get_option( 'wcj_order_minimum_amount_stop_from_seeing_checkout' ) ) {
-					add_action( 'wp',                array( $this, 'stop_from_seeing_checkout' ), 100 );
-//					add_action( 'template_redirect', array( $this, 'stop_from_seeing_checkout' ), 100 );
-				}
-			}
+			// Order minimum amount
+			add_action( 'init', array( $this, 'add_order_minimum_amount_hooks' ) );
 
+			// Order auto complete
 			if ( 'yes' === get_option( 'wcj_order_auto_complete_enabled' ) ) {
 				add_action( 'woocommerce_thankyou', array( $this, 'auto_complete_order' ) );
 			}
 
+			// Custom columns
+			add_filter( 'manage_edit-shop_order_columns',        array( $this, 'add_order_column' ),     PHP_INT_MAX );
+			add_action( 'manage_shop_order_posts_custom_column', array( $this, 'render_order_columns' ), PHP_INT_MAX );
 			if ( 'yes' === get_option( 'wcj_orders_list_custom_columns_country', 'no' ) ) {
-				// Country column
-				add_filter( 'manage_edit-shop_order_columns',        array( $this, 'add_order_column' ),     PHP_INT_MAX );
-				add_action( 'manage_shop_order_posts_custom_column', array( $this, 'render_order_columns' ), PHP_INT_MAX );
 				// Country filtering
 				add_action( 'restrict_manage_posts', array( $this, 'restrict_manage_posts' ) );
 				add_filter( 'parse_query',           array( $this, 'orders_by_country_admin_filter_query' ) );
+			}
+		}
+	}
+
+	/**
+	 * add_order_minimum_amount_hooks.
+	 *
+	 * @version 2.5.3
+	 * @since   2.5.3
+	 */
+	function add_order_minimum_amount_hooks() {
+		$is_order_minimum_amount_enabled = false;
+		if ( get_option( 'wcj_order_minimum_amount', 0 ) > 0 ) {
+			$is_order_minimum_amount_enabled = true;
+		} else {
+			foreach ( wcj_get_user_roles() as $role_key => $role_data ) {
+				if ( get_option( 'wcj_order_minimum_amount_by_user_role_' . $role_key, 0 ) > 0 ) {
+					$is_order_minimum_amount_enabled = true;
+					break;
+				}
+			}
+		}
+		if ( $is_order_minimum_amount_enabled ) {
+			add_action( 'woocommerce_checkout_process', array( $this, 'order_minimum_amount' ) );
+			add_action( 'woocommerce_before_cart',      array( $this, 'order_minimum_amount' ) );
+			if ( 'yes' === get_option( 'wcj_order_minimum_amount_stop_from_seeing_checkout' ) ) {
+				add_action( 'wp',                array( $this, 'stop_from_seeing_checkout' ), 100 );
+//				add_action( 'template_redirect', array( $this, 'stop_from_seeing_checkout' ), 100 );
 			}
 		}
 	}
@@ -86,9 +111,19 @@ class WCJ_Orders extends WCJ_Module {
 
 	/**
 	 * add_order_column.
+	 *
+	 * @version 2.5.3
 	 */
 	function add_order_column( $columns ) {
-		$columns['country'] = __( 'Country', 'woocommerce-jetpack' );
+		if ( 'yes' === get_option( 'wcj_orders_list_custom_columns_country', 'no' ) ) {
+			$columns['country'] = __( 'Country', 'woocommerce-jetpack' );
+		}
+		$total_number = apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_orders_list_custom_columns_total_number', 1 ) );
+		for ( $i = 1; $i <= $total_number; $i++ ) {
+			if ( 'yes' === get_option( 'wcj_orders_list_custom_columns_enabled_' . $i, 'no' ) ) {
+				$columns[ 'wcj_orders_custom_column_' . $i ] = get_option( 'wcj_orders_list_custom_columns_label_' . $i, '' );
+			}
+		}
 		return $columns;
 	}
 
@@ -99,20 +134,30 @@ class WCJ_Orders extends WCJ_Module {
 		$img_src = plugins_url() . '/' . 'woocommerce-jetpack' . '/assets/images/flag-icons/' . strtolower( $country_code ) . '.png';
 		return '<img src="' . $img_src . '" title="' . wcj_get_country_name_by_code( $country_code ) . '">';
 	}
+
 	/**
 	 * Output custom columns for orders
-	 * @param  string $column
+	 *
+	 * @version 2.5.3
+	 * @param   string $column
 	 */
 	public function render_order_columns( $column ) {
-		if ( 'country' != $column ) {
-			return;
+		if ( 'country' === $column && 'yes' === get_option( 'wcj_orders_list_custom_columns_country', 'no' ) ) {
+			$order = wc_get_order( get_the_ID() );
+//			$country_code = wcj_get_customer_country( $order->customer_user );
+			$country_code = $order->billing_country;
+			echo ( 2 == strlen( $country_code ) )
+				? $this->wcj_get_country_flag_by_code( $country_code ) . ' ' . wcj_get_country_name_by_code( $country_code )
+				: wcj_get_country_name_by_code( $country_code );
 		}
-		$order = wc_get_order( get_the_ID() );
-//		$country_code = wcj_get_customer_country( $order->customer_user );
-		$country_code = $order->billing_country;
-		echo ( 2 == strlen( $country_code ) )
-			? $this->wcj_get_country_flag_by_code( $country_code ) . ' ' . wcj_get_country_name_by_code( $country_code )
-			: wcj_get_country_name_by_code( $country_code );
+		$total_number = apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_orders_list_custom_columns_total_number', 1 ) );
+		for ( $i = 1; $i <= $total_number; $i++ ) {
+			if ( 'yes' === get_option( 'wcj_orders_list_custom_columns_enabled_' . $i, 'no' ) ) {
+				if ( 'wcj_orders_custom_column_' . $i === $column ) {
+					echo do_shortcode( get_option( 'wcj_orders_list_custom_columns_value_' . $i, '' ) );
+				}
+			}
+		}
 	}
 
 	/**
@@ -128,17 +173,44 @@ class WCJ_Orders extends WCJ_Module {
 	}
 
 	/**
+	 * get_order_minimum_amount_with_user_roles.
+	 *
+	 * @version 2.5.3
+	 * @since   2.5.3
+	 */
+	function get_order_minimum_amount_with_user_roles() {
+		$minimum = get_option( 'wcj_order_minimum_amount' );
+		$current_user_role = wcj_get_current_user_first_role();
+		foreach ( wcj_get_user_roles() as $role_key => $role_data ) {
+			if ( $role_key === $current_user_role ) {
+				$order_minimum_amount_by_user_role = get_option( 'wcj_order_minimum_amount_by_user_role_' . $role_key, 0 );
+				if ( $order_minimum_amount_by_user_role > /* $minimum */ 0 ) {
+					$minimum = $order_minimum_amount_by_user_role;
+				}
+				break;
+			}
+		}
+		return $minimum;
+	}
+
+	/**
 	 * order_minimum_amount.
+	 *
+	 * @version 2.5.3
 	 */
 	public function order_minimum_amount() {
-		$minimum = get_option( 'wcj_order_minimum_amount' );
-		if ( WC()->cart->total < $minimum ) {
+		$minimum = $this->get_order_minimum_amount_with_user_roles();
+		if ( 0 == $minimum ) {
+			return;
+		}
+		$cart_total = WC()->cart->total;
+		if ( $cart_total < $minimum ) {
 			if( is_cart() ) {
 				if ( 'yes' === get_option( 'wcj_order_minimum_amount_cart_notice_enabled' ) ) {
 					wc_print_notice(
 						sprintf( apply_filters( 'wcj_get_option_filter', 'You must have an order with a minimum of %s to place your order, your current order total is %s.', get_option( 'wcj_order_minimum_amount_cart_notice_message' ) ),
 							woocommerce_price( $minimum ),
-							woocommerce_price( WC()->cart->total )
+							woocommerce_price( $cart_total )
 						),
 						'notice'
 					);
@@ -147,7 +219,7 @@ class WCJ_Orders extends WCJ_Module {
 				wc_add_notice(
 					sprintf( apply_filters( 'wcj_get_option_filter', 'You must have an order with a minimum of %s to place your order, your current order total is %s.', get_option( 'wcj_order_minimum_amount_error_message' ) ),
 						woocommerce_price( $minimum ),
-						woocommerce_price( WC()->cart->total )
+						woocommerce_price( $cart_total )
 					),
 					'error'
 				);
@@ -158,7 +230,8 @@ class WCJ_Orders extends WCJ_Module {
 	/**
 	 * stop_from_seeing_checkout.
 	 *
-	 * @version 2.3.7
+	 * @version 2.5.3
+	 * @todo    cart_contents_total - this is different from value in order_minimum_amount() function
 	 */
 	public function stop_from_seeing_checkout( $wp ) {
 //		if ( is_admin() ) return;
@@ -169,18 +242,49 @@ class WCJ_Orders extends WCJ_Module {
 		if ( ! isset( $woocommerce->cart ) || ! is_object( $woocommerce->cart ) ) {
 			return;
 		}
+		if ( ! is_checkout() ) {
+			return;
+		}
+		$minimum = $this->get_order_minimum_amount_with_user_roles();
+		if ( 0 == $minimum ) {
+			return;
+		}
 		$the_cart_total = isset( $woocommerce->cart->cart_contents_total ) ? $woocommerce->cart->cart_contents_total : 0;
-		if ( 0 != $the_cart_total && $the_cart_total < get_option( 'wcj_order_minimum_amount' ) && is_checkout() ) {
+		if ( 0 == $the_cart_total ) {
+			return;
+		}
+		if ( $the_cart_total < $minimum ) {
 			wp_safe_redirect( $woocommerce->cart->get_cart_url() );
 		}
 	}
 
 	/**
-	 * Add settings arrays to Jetpack Settings.
+	 * add_settings_hook.
 	 *
-	 * @version 2.5.0
+	 * @version 2.5.3
+	 * @since   2.5.3
+	 */
+	function add_settings_hook() {
+		add_filter( 'wcj_orders_settings', array( $this, 'add_settings' ) );
+	}
+
+	/**
+	 * get_settings.
+	 *
+	 * @version 2.5.3
 	 */
 	function get_settings() {
+		$settings = apply_filters( 'wcj_orders_settings', array() );
+		return $this->add_standard_settings( $settings );
+	}
+
+	/**
+	 * add_settings.
+	 *
+	 * @version 2.5.3
+	 * @since   2.5.3
+	 */
+	function add_settings() {
 		$settings = array(
 			array(
 				'title'    => __( 'Order Minimum Amount', 'woocommerce-jetpack' ),
@@ -238,6 +342,36 @@ class WCJ_Orders extends WCJ_Module {
 				'id'       => 'wcj_order_minimum_amount_options',
 			),
 			array(
+				'title'    => __( 'Order Minimum Amount by User Role', 'woocommerce-jetpack' ),
+				'type'     => 'title',
+				'id'       => 'wcj_order_minimum_amount_by_ser_role_options',
+				'desc'     => sprintf( __( 'Custom roles can be added via "Add/Manage Custom Roles" tool in Booster\'s <a href="%s">General</a> module.', 'woocommerce-jetpack' ),
+					admin_url( 'admin.php?page=wc-settings&tab=jetpack&wcj-cat=emails_and_misc&section=general' ) ),
+			),
+		);
+		$c = array( 'guest', 'administrator', 'customer' );
+		$is_r = apply_filters( 'get_wc_jetpack_plus_message', '', 'readonly' );
+		if ( '' == $is_r ) {
+			$is_r = array();
+		}
+		foreach ( wcj_get_user_roles() as $role_key => $role_data ) {
+			$settings = array_merge( $settings, array(
+				array(
+					'title'    => $role_data['name'],
+					'id'       => 'wcj_order_minimum_amount_by_user_role_' . $role_key,
+					'default'  => 0,
+					'type'     => 'number',
+					'custom_attributes' => ( ! in_array( $role_key, $c ) ? array_merge( array( 'step' => '0.0001', 'min'  => '0', ), $is_r ) : array( 'step' => '0.0001', 'min'  => '0', ) ),
+					'desc_tip' => ( ! in_array( $role_key, $c ) ? apply_filters( 'get_wc_jetpack_plus_message', '', 'desc_no_link' ) : '' ),
+				),
+			) );
+		}
+		$settings = array_merge( $settings, array(
+			array(
+				'type'     => 'sectionend',
+				'id'       => 'wcj_order_minimum_amount_by_ser_role_options',
+			),
+			array(
 				'title'    => __( 'Orders Auto-Complete', 'woocommerce-jetpack' ),
 				'type'     => 'title',
 				'desc'     => __( 'This section lets you enable orders auto-complete function.', 'woocommerce-jetpack' ),
@@ -269,11 +403,51 @@ class WCJ_Orders extends WCJ_Module {
 				'type'     => 'checkbox',
 			),
 			array(
+				'title'    => __( 'Custom Columns Total Number', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_orders_list_custom_columns_total_number',
+				'default'  => 1,
+				'type'     => 'custom_number',
+				'desc'     => apply_filters( 'get_wc_jetpack_plus_message', '', 'desc' ),
+				'custom_attributes' => array_merge(
+					is_array( apply_filters( 'get_wc_jetpack_plus_message', '', 'readonly' ) ) ? apply_filters( 'get_wc_jetpack_plus_message', '', 'readonly' ) : array(),
+					array( 'step' => '1', 'min'  => '0', )
+				),
+			),
+		) );
+		$total_number = apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_orders_list_custom_columns_total_number', 1 ) );
+		for ( $i = 1; $i <= $total_number; $i++ ) {
+			$settings = array_merge( $settings, array(
+				array(
+					'title'    => __( 'Custom Column', 'woocommerce-jetpack' ) . ' #' . $i,
+					'desc'     => __( 'Enabled', 'woocommerce-jetpack' ),
+					'id'       => 'wcj_orders_list_custom_columns_enabled_' . $i,
+					'default'  => 'no',
+					'type'     => 'checkbox',
+				),
+				array(
+					'desc'     => __( 'Label', 'woocommerce-jetpack' ),
+					'id'       => 'wcj_orders_list_custom_columns_label_' . $i,
+					'default'  => '',
+					'type'     => 'text',
+					'css'      => 'width:300px;',
+				),
+				array(
+					'desc'     => __( 'Value', 'woocommerce-jetpack' ),
+					'desc_tip' => __( 'You can use shortcodes here.', 'woocommerce-jetpack' ),
+					'id'       => 'wcj_orders_list_custom_columns_value_' . $i,
+					'default'  => '',
+					'type'     => 'text',
+					'css'      => 'width:300px;',
+				),
+			) );
+		}
+		$settings = array_merge( $settings, array(
+			array(
 				'type'     => 'sectionend',
 				'id'       => 'wcj_orders_list_custom_columns_options',
 			),
-		);
-		return $this->add_standard_settings( $settings );
+		) );
+		return $settings;
 	}
 }
 

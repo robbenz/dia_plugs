@@ -86,6 +86,17 @@ jQuery( function(){
     jQuery( '#wppb-ul-settings-args').on('click', '#visible-only-to-logged-in-users_yes', function(){
         jQuery( '.row-visible-to-following-roles', jQuery(this).parent().parent().parent().parent().parent().parent()).toggle();
     });
+
+    jQuery( '#wppb-ul-faceted-args').on('change', '#facet-type', function(){
+        if( jQuery(this).val() == 'checkboxes' ){
+            jQuery( '.row-facet-behaviour, .row-facet-limit', jQuery(this).parent().parent().parent()).show();
+        }
+        else{
+            jQuery( '.row-facet-behaviour, .row-facet-limit', jQuery(this).parent().parent().parent()).hide();
+            jQuery( '.row-facet-behaviour #facet-behaviour', jQuery(this).parent().parent().parent()).val('narrow');
+        }
+    });
+
 });
 
 /*

@@ -722,12 +722,13 @@ class PB_WP_List_Table {
 			if ( in_array( $column_key, $hidden ) )
 				$style = 'display:none;';
 
-			$style = ' style="' . $style . '"';
-
-			if ( 'cb' == $column_key )
+			if ( 'cb' == $column_key ) {
 				$class[] = 'check-column';
-			elseif ( in_array( $column_key, array( 'posts', 'comments', 'links' ) ) )
+				$style .= ' padding: 10px 0 10px 3px;';
+			} elseif ( in_array( $column_key, array( 'posts', 'comments', 'links' ) ) )
 				$class[] = 'num';
+
+			$style = ' style="' . $style . '"';
 
 			if ( isset( $sortable[$column_key] ) ) {
 				list( $orderby, $desc_first ) = $sortable[$column_key];

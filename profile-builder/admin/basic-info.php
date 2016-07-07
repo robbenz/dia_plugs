@@ -87,7 +87,7 @@ function wppb_basic_info_content() {
 				<h3><?php _e( 'Customize Your Forms The Way You Want (*)', 'profile-builder' ); ?></h3>
 				<p><?php _e( 'With Extra Profile Fields you can create the exact registration form your project needs.', 'profile-builder' ); ?></p>
 				<?php if ($version == 'Free'){ ?>
-					<p><a href="http://www.cozmoslabs.com/wordpress-profile-builder/?utm_source=wpbackend&utm_medium=clientsite&utm_content=basicinfo-extrafields&utm_campaign=PBFree" class="wppb-button-free"><?php _e( 'Extra Profile Fields are available in Hobbyist or PRO versions', 'profile-builder' ); ?></a></p>
+					<p><a href="https://www.cozmoslabs.com/wordpress-profile-builder/?utm_source=wpbackend&utm_medium=clientsite&utm_content=basicinfo-extrafields&utm_campaign=PBFree" class="wppb-button-free"><?php _e( 'Extra Profile Fields are available in Hobbyist or PRO versions', 'profile-builder' ); ?></a></p>
 				<?php } else {?>
 					<p><a href="admin.php?page=manage-fields" class="button"><?php _e( 'Get started with extra fields', 'profile-builder' ); ?></a></p>
 				<?php } ?>
@@ -118,7 +118,7 @@ function wppb_basic_info_content() {
 			    <p><a href="admin.php?page=profile-builder-modules" class="button"><?php _e( 'Enable your modules', 'profile-builder' ); ?></a></p>
             <?php endif; ?>
 			<?php if ($version == 'Free'){ ?>
-				<p><a href="http://www.cozmoslabs.com/wordpress-profile-builder/?utm_source=wpbackend&utm_medium=clientsite&utm_content=basicinfo-modules&utm_campaign=PBFree" class="wppb-button-free"><?php _e( 'Find out more about PRO Modules', 'profile-builder' ); ?></a></p>
+				<p><a href="https://www.cozmoslabs.com/wordpress-profile-builder/?utm_source=wpbackend&utm_medium=clientsite&utm_content=basicinfo-modules&utm_campaign=PBFree" class="wppb-button-free"><?php _e( 'Find out more about PRO Modules', 'profile-builder' ); ?></a></p>
 			<?php }?>
 		</div>
 		<div class="wppb-row wppb-3-col">
@@ -170,8 +170,8 @@ function wppb_basic_info_content() {
 		<div>
 			<h3>Extra Notes</h3>
 			<ul>
-				<li><?php printf( __( ' * only available in the %1$sHobbyist and Pro versions%2$s.', 'profile-builder' ) ,'<a href="http://www.cozmoslabs.com/wordpress-profile-builder/?utm_source=wpbackend&utm_medium=clientsite&utm_content=basicinfo-extranotes&utm_campaign=PB'.$version.'" target="_blank">', '</a>' );?></li>
-				<li><?php printf( __( '** only available in the %1$sPro version%2$s.', 'profile-builder' ), '<a href="http://www.cozmoslabs.com/wordpress-profile-builder/?utm_source=wpbackend&utm_medium=clientsite&utm_content=basicinfo-extranotes&utm_campaign=PB'.$version.'" target="_blank">', '</a>' );?></li>
+				<li><?php printf( __( ' * only available in the %1$sHobbyist and Pro versions%2$s.', 'profile-builder' ) ,'<a href="https://www.cozmoslabs.com/wordpress-profile-builder/?utm_source=wpbackend&utm_medium=clientsite&utm_content=basicinfo-extranotes&utm_campaign=PB'.$version.'" target="_blank">', '</a>' );?></li>
+				<li><?php printf( __( '** only available in the %1$sPro version%2$s.', 'profile-builder' ), '<a href="https://www.cozmoslabs.com/wordpress-profile-builder/?utm_source=wpbackend&utm_medium=clientsite&utm_content=basicinfo-extranotes&utm_campaign=PB'.$version.'" target="_blank">', '</a>' );?></li>
 			</ul>
 		</div>
 	</div>

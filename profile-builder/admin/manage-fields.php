@@ -49,6 +49,7 @@ function wppb_manage_fields_submenu(){
         $manage_field_types[] = 'Input (Hidden)';
         $manage_field_types[] = 'Textarea';
         $manage_field_types[] = 'WYSIWYG';
+        $manage_field_types[] = 'Phone';
         $manage_field_types[] = 'Select';
         $manage_field_types[] = 'Select (Multiple)';
         $manage_field_types[] = 'Select (Country)';
@@ -65,13 +66,15 @@ function wppb_manage_fields_submenu(){
         $manage_field_types[] = 'Colorpicker';
         $manage_field_types[] = 'reCAPTCHA';
         $manage_field_types[] = 'Validation';
+        $manage_field_types[] = 'Map';
+        $manage_field_types[] = 'HTML';
     }
 	
 				
 	//Free to Pro call to action on Manage Fields page
 	$field_description = __('Choose one of the supported field types','profile-builder');
 	if( PROFILE_BUILDER == 'Profile Builder Free' ) {
-		$field_description .= sprintf( __('. Extra Field Types are available in <a href="%s">Hobbyist or PRO versions</a>.' , 'profile-builder'), esc_url( 'http://www.cozmoslabs.com/wordpress-profile-builder/?utm_source=wpbackend&utm_medium=clientsite&utm_content=manage-fields-link&utm_campaign=PBFree' ) );
+		$field_description .= sprintf( __('. Extra Field Types are available in <a href="%s">Hobbyist or PRO versions</a>.' , 'profile-builder'), esc_url( 'https://www.cozmoslabs.com/wordpress-profile-builder/?utm_source=wpbackend&utm_medium=clientsite&utm_content=manage-fields-link&utm_campaign=PBFree' ) );
 	}
 
 
@@ -131,8 +134,15 @@ function wppb_manage_fields_submenu(){
         array( 'type' => 'text', 'slug' => 'validation-possible-values', 'title' => __( 'Allowable Values', 'profile-builder' ), 'description' => __( "Enter a comma separated list of possible values. Upon registration if the value provided by the user does not match one of these values, the user will not be registered.", 'profile-builder' ) ),
         array( 'type' => 'text', 'slug' => 'custom-error-message', 'title' => __( 'Error Message', 'profile-builder' ), 'description' => __( "Set a custom error message that will be displayed to the user.", 'profile-builder' ) ),
         array( 'type' => 'select', 'slug' => 'time-format', 'title' => __( 'Time Format', 'profile-builder' ), 'options' => array( '%12 Hours%12', '%24 Hours%24' ), 'description' => __( 'Specify the time format.', 'profile-builder' ) ),
+        array( 'type' => 'text', 'slug' => 'map-api-key', 'title' => __( 'Google Maps API Key', 'profile-builder' ), 'description' => __( 'Enter your Google Maps API key ( <a href="https://console.developers.google.com/flows/enableapi?apiid=maps_backend" target="_blank">Get your API key</a> ). If more than one map fields are added to a form the API key from the first map displayed will be used.', 'profile-builder' ) ),
+        array( 'type' => 'text', 'slug' => 'map-default-lat', 'title' => __( 'Default Latitude', 'profile-builder' ), 'description' => __( "The latitude at which the map should be displayed when no pins are attached.", 'profile-builder' ) ),
+        array( 'type' => 'text', 'slug' => 'map-default-lng', 'title' => __( 'Default Longitude', 'profile-builder' ), 'description' => __( "The longitude at which the map should be displayed when no pins are attached.", 'profile-builder' ) ),
+        array( 'type' => 'text', 'slug' => 'map-default-zoom', 'title' => __( 'Default Zoom Level', 'profile-builder' ), 'description' => __( "Add a number from 0 to 19. The higher the number the higher the zoom.", 'profile-builder' ), 'default' => 16 ),
+        array( 'type' => 'text', 'slug' => 'map-height', 'title' => __( 'Map Height', 'profile-builder' ), 'description' => __( "The height of the map.", 'profile-builder' ), 'default' => 400 ),
 		array( 'type' => 'textarea', 'slug' => 'default-content', 'title' => __( 'Default Content', 'profile-builder' ), 'description' => __( "Default value of the textarea", 'profile-builder' ) ),
-        array( 'type' => 'select', 'slug' => 'required', 'title' => __( 'Required', 'profile-builder' ), 'options' => array( 'No', 'Yes' ), 'default' => 'No', 'description' => __( 'Whether the field is required or not', 'profile-builder' ) ),
+		array( 'type' => 'textarea', 'slug' => 'html-content', 'title' => __( 'HTML Content', 'profile-builder' ), 'description' => __( "Add your HTML (or text) content", 'profile-builder' ) ),
+		array( 'type' => 'text', 'slug' => 'phone-format', 'title' => __( 'Phone Format', 'profile-builder' ), 'default' => '(###) ###-####', 'description' => __( "You can use: # for numbers, parentheses ( ), - sign, + sign, dot . and spaces.", 'profile-builder' ) .'<br>'.  __( "Eg. (###) ###-####", 'profile-builder' ) .'<br>'. __( "Empty field won't check for correct phone number.", 'profile-builder' ) ),
+		array( 'type' => 'select', 'slug' => 'required', 'title' => __( 'Required', 'profile-builder' ), 'options' => array( 'No', 'Yes' ), 'default' => 'No', 'description' => __( 'Whether the field is required or not', 'profile-builder' ) ),
         array( 'type' => 'select', 'slug' => 'overwrite-existing', 'title' => __( 'Overwrite Existing', 'profile-builder' ), 'options' => array( 'No', 'Yes' ), 'default' => 'No', 'description' => __( "Selecting 'Yes' will add the field to the list, but will overwrite any other field in the database that has the same meta-name<br/>Use this at your own risk", 'profile-builder' ) ),
     ) );
 	
@@ -1014,7 +1024,7 @@ function wppb_check_field_on_edit_add( $message, $fields, $required_fields, $met
 				$unique_meta_name_list = array( 'first_name', 'last_name', 'nickname', 'description' );
 
                 //check to see if meta-name is empty
-                $skip_empty_check_for_fields = array('Heading', 'Select (User Role)', 'reCAPTCHA');
+                $skip_empty_check_for_fields = array( 'Heading', 'Select (User Role)', 'reCAPTCHA', 'HTML' );
 
                 if( !in_array( $posted_values['field'], $skip_empty_check_for_fields ) && empty( $posted_values['meta-name'] ) ) {
                     $message .= __( "The meta-name cannot be empty\n", 'profile-builder' );
@@ -1245,3 +1255,98 @@ function wppb_wpml_compat_with_fields( $oldvalue, $_newvalue ){
         }
     }
 }
+
+
+/*
+ * Returns the HTML for a map given the field
+ *
+ */
+function wppb_get_map_output( $field, $args ) {
+
+    $defaults = array(
+        'markers'     => array(),
+        'editable'    => true,
+        'show_search' => true,
+        'extra_attr'  => ''
+    );
+
+    $args = wp_parse_args( $args, $defaults );
+
+    $return = '';
+
+    // Search box
+    // The style:left=-99999px is set to hide the input from the viewport. It will be rewritten when the map gets initialised
+    if( $args['show_search'] )
+        $return .= '<input style="left: -99999px" type="text" id="' . $field['meta-name'] . '-search-box" class="wppb-map-search-box" placeholder="' . __( 'Search Location', 'profile-builder' ) . '" />';
+
+    // Map container
+    $return .= '<div id="' . $field['meta-name'] . '" class="wppb-map-container" style="height: ' . $field['map-height'] . 'px;" data-editable="' . ( $args['editable'] ? 1 : 0 ) . '" data-default-zoom="' . ( !empty( $field['map-default-zoom'] ) ? (int)$field['map-default-zoom'] : 16 ) . '" data-default-lat="' . $field['map-default-lat'] . '" data-default-lng="' . $field['map-default-lng'] . '" ' . $args['extra_attr'] . '></div>';
+
+    if( !empty( $args['markers'] ) ) {
+        foreach( $args['markers'] as $marker )
+            $return .= '<input name="' . $field['meta-name'] . '[]" type="hidden" class="wppb-map-marker" value="' . $marker . '" />';
+    }
+
+    return $return;
+
+}
+
+
+/*
+ * Returns all the saved markers for a map field for a particular user
+ *
+ */
+function wppb_get_user_map_markers( $user_id, $meta_name ) {
+
+    global $wpdb;
+
+    $meta_name .= '_';
+
+    $results = $wpdb->get_results( "SELECT meta_value FROM {$wpdb->usermeta} WHERE user_id={$user_id} AND meta_key LIKE '%{$meta_name}%'", ARRAY_N );
+
+    foreach( $results as $key => $result )
+        $results[$key] = $result[0];
+
+    return $results;
+
+}
+
+/*
+ * Deletes from the database all saved markers
+ *
+ */
+function wppb_delete_user_map_markers( $user_id, $meta_name ) {
+
+    global $wpdb;
+
+    $meta_name .= '_';
+
+    $delete = $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->usermeta} WHERE user_id=%d AND meta_key LIKE %s", $user_id, '%' . $meta_name . '%' ) );
+
+    wp_cache_delete( $user_id, 'user_meta' );
+
+}
+
+
+/*
+ * Save markers upon user activation
+ */
+function wppb_activate_user_map_field( $user_id, $password, $meta ) {
+
+    $manage_fields = get_option( 'wppb_manage_fields', array() );
+
+    if( !empty( $manage_fields ) ) {
+        foreach( $manage_fields as $field ) {
+
+            if( $field['field'] == 'Map' && !empty( $meta[wppb_handle_meta_name($field['meta-name'])] ) && is_array( $meta[wppb_handle_meta_name( $field['meta-name'] )] ) ) {
+
+                foreach( $meta[wppb_handle_meta_name( $field['meta-name'] )] as $key => $position )
+                    update_user_meta( $user_id, $field['meta-name'] . '_' . $key, $position );
+
+            }
+
+        }
+    }
+
+}
+add_action( 'wppb_activate_user', 'wppb_activate_user_map_field', 10, 3 );

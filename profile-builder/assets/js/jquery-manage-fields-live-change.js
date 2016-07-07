@@ -236,7 +236,15 @@ var fields 	=	{
                                                                                         '.row-overwrite-existing'
                                                                                     ]
                                                                 },
-
+                        'Phone':								{	'show_rows'	:	[
+                                                                                        '.row-field-title',
+                                                                                        '.row-meta-name',
+                                                                                        '.row-description',
+                                                                                        '.row-phone-format',
+                                                                                        '.row-required',
+                                                                                        '.row-overwrite-existing'
+                                                                                    ]
+                                                                },
 						'Select':								{	'show_rows'	:	[
 																						'.row-field-title',
 																						'.row-meta-name',
@@ -419,8 +427,29 @@ var fields 	=	{
                                                                     'properties':	{
                                                                         'meta_name_value'	: ''
                                                                     }
-                                                                }
+                                                                },
 
+                        'Map':              					{	'show_rows'	:	[
+                                                                                        '.row-field-title',
+                                                                                        '.row-meta-name',
+                                                                                        '.row-description',
+                                                                                        '.row-map-api-key',
+                                                                                        '.row-map-default-lat',
+                                                                                        '.row-map-default-lng',
+                                                                                        '.row-map-default-zoom',
+                                                                                        '.row-map-height',
+                                                                                        '.row-required'
+                                                                                    ]
+                                                                },
+						'HTML':              					{	'show_rows'	:	[
+																						'.row-field-title',
+																						'.row-description',
+																						'.row-html-content'
+																					],
+                                                                    'properties':	{
+                                                                        'meta_name_value'	: ''
+                                                                    }
+																}
 				}
 var fields_to_show = [
 	'.row-field-title',

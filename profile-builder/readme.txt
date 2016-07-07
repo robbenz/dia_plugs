@@ -1,11 +1,11 @@
-﻿=== Profile Builder - front-end user registration, login and edit profile === 
+﻿=== Profile Builder - front-end user registration, user profile and user login ===
 Contributors: cozmoslabs, reflectionmedia, sareiodata, adispiac, madalin.ungureanu, iova.mihai, barinagabriel
 Donate link: http://www.cozmoslabs.com/wordpress-profile-builder/
-Tags: registration, user profile, user registration, custom field registration, customize profile, user fields, extra user fields, builder, profile builder, custom user profile, user profile page, edit profile, custom registration, custom registration form, custom registration page, registration page, user custom fields, user listing, front-end user listing, user login, user registration form, front-end login, login redirect, login widget, front-end register, front-end registration, front-end edit profile, front-end user registration, custom redirects, user email, avatar upload, email confirmation, user approval, customize registration email, minimum password length, minimum password strength, password strength meter, multiple registration forms, register, register form, register user, register users, login form, member directory, redirect user
+Tags: user registration, user registration form, user fields, extra user fields, edit profile, user custom fields, front-end login, front-end edit profile, front-end user registration, email confirmation, login form
 
 Requires at least: 3.1
-Tested up to: 4.5.2
-Stable tag: 2.3.7
+Tested up to: 4.5.3
+Stable tag: 2.4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -147,6 +147,23 @@ This plugin adds/removes user fields in the front-end. Both default and extra pr
 10. Profile Builder Login Widget
 
 == Changelog ==
+= 2.4.1 =
+Security update for ajax calls
+
+= 2.4.0 =
+* Now we check checkboxes default value to not be empty in the front end forms
+* Display name with email confirmation now is set to First name Last name or Nickname if they exist
+* UI adjustment for checkbox in email confirmation table in the admin area
+
+= 2.3.9 =
+* Security update
+
+= 2.3.8 =
+* Fixed an issue with the redirect parameter for login widget
+* Added extra_attr filter for recover password forms: 'wppb_recover_password_extra_attr'
+* Added filter in select fields for placeholder labels add-on support
+* Fixed the cozmoslabs.com url from http to https
+
 = 2.3.7 =
 * Changed the wppb_curpageurl function to fix the missing www problem from links
 * Added a new filter wppb_send_to_admin_email to Email Confirmation

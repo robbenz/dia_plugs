@@ -30,7 +30,7 @@ class wppb_login_widget extends WP_Widget {
 			echo $before_title . $title . $after_title;
 
 		echo do_shortcode('[wppb-login display="false" register_url="'.$register.'" lostpassword_url="'.$lostpass.'" redirect="'.$redirect.'"]');
-		
+
 		do_action( 'wppb_login_widget_display', $args, $instance);
 			
 		echo $after_widget;

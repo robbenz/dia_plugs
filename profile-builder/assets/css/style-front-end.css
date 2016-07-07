@@ -144,6 +144,14 @@
 	padding-bottom:14px;
 }
 
+.wppb-user-forms .wppb-input-hidden {
+    padding-bottom: 0;
+}
+
+.wppb-user-forms.wppb-user-role-administrator .wppb-input-hidden {
+    padding-bottom: 14px;
+}
+
 .wppb-user-forms .wppb-form-field > ul {
     margin-left: 0;
 }
@@ -197,6 +205,11 @@ input#send_credentials_via_email{
 	margin-left:30%;
 	font-size:80%;
 	font-style:italic;
+}
+
+.wppb-form-field > span.custom_field_html {
+	font-style: normal;
+    font-size: 100%;
 }
 
 .wppb-form-field.wppb-timepicker > span.wppb-timepicker-separator {
@@ -264,6 +277,21 @@ input#send_credentials_via_email{
 .g-recaptcha iframe{
     margin-bottom: 0;
 }
+
+.wppb-form-field input.wppb-map-search-box {
+    position: absolute;
+    top: 10px !important;
+    height: 34px;
+    width: 50%;
+    min-width: 250px;
+    background: #fff;
+    border: 0;
+    border-radius: 1px;
+    padding: 0 10px;
+    box-shadow: 0 1px 1px 0 #c1c1c1;
+    font-family: 'Roboto', sans-serif;
+}
+
 
 /*--------------------------------------------------------------
 4.0 Errors & Notices
@@ -430,6 +458,113 @@ ul.wppb-profile li h3:first-child{
     border-top:1px solid #d2d2d2;
 }
 
+.wppb-faceted-list{
+    list-style: none;
+    margin:0 0 20px;
+}
+
+.wppb-faceted-list:after{
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+}
+
+.wppb-faceted-list > li{
+    float:left;
+    margin-right: 15px;
+    max-width: 300px;
+}
+
+.wppb-faceted-list > li:first-child{
+    float:none;
+    clear:both;
+}
+
+.wppb-userlisting-container .wppb-faceted-list li h5{
+    margin-top: 20px;
+    margin-bottom: 5px;
+}
+
+.wppb-faceted-list label > *{
+    vertical-align: middle;
+}
+
+.wppb-faceted-list input[type="checkbox"]{
+    margin-right: 5px;
+}
+
+.wppb-userlisting-container.spinner{
+    position:relative;
+    opacity: 0.5
+}
+
+.wppb-userlisting-container.spinner:after{
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -16px;
+    margin-left: -16px;
+    display: block;
+    width: 32px;
+    height: 32px;
+    /*background: url('../images/ajax-loader.gif') no-repeat center;*/
+    z-index: 1000;
+}
+
+.wppb-faceted-list .hide-this{
+    display:none;
+}
+
+#wppb-remove-facets-container{
+    list-style: none;
+    margin: 0;
+}
+
+.wppb-remove-facet:before, .wppb-remove-all-facets:before {
+    content: "x";
+    display: inline-block;
+    border-right: 1px dotted #D3CCC9;
+    border-right: 1px dotted #6F6F6F;
+    padding-right: 5px;
+    margin-right: 5px;
+}
+
+.wppb-userlisting-container .wppb-ul-range-values{
+    padding: 5px 0;
+}
+
+.wppb-userlisting-container:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+}
+
+.wppb-float-left{
+    float:left;
+}
+
+.wppb-float-right{
+    float:right;
+}
+
+.wppb-facet-float-left{
+    float:left;
+    max-width:300px;
+}
+
+.wppb-facet-float-right{
+    float:right;
+    max-width:300px;
+}
+
+
 @media screen and ( max-width: 720px ) {
 
     .wppb-table {
@@ -570,4 +705,11 @@ ul.wppb-profile li h3:first-child{
     font-style: italic;
     margin-left: 0;
     margin-bottom: 1.5em;
+}
+
+/**************************************************/
+/* This is very weird: if in  the css there is a rule on table of border-collapse:collapse; then on FFox and Edge the Media upload won't open
+/**************************************************/
+table{
+    border-collapse:separate;
 }

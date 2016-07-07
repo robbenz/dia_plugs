@@ -81,7 +81,7 @@ class Profile_Builder_Form_Creator{
 	function wppb_retrieve_custom_settings(){
 		$this->args['login_after_register'] = apply_filters( 'wppb_automatically_login_after_register', 'No' ); //used only for the register-form settings
 		$this->args['redirect_activated'] = apply_filters( 'wppb_redirect_default_setting', '' );
-		$this->args['redirect_url'] = apply_filters( 'wppb_redirect_default_location', ($this->args['redirect_url'] != '') ? $this->args['redirect_url'] : wppb_curpageurl() );
+		$this->args['redirect_url'] = apply_filters( 'wppb_redirect_default_location', ($this->args['redirect_url'] != '') ? $this->args['redirect_url'] : '' );
         /* for register forms check to see if we have a custom redirect "Redirect After Register" */
         if( PROFILE_BUILDER == 'Profile Builder Pro' ) {
             if( ( $this->args['form_type'] == 'register' || $this->args['form_type'] == 'edit_profile' ) && ( ! current_user_can( 'manage_options' ) ) ) {
@@ -343,8 +343,23 @@ class Profile_Builder_Form_Creator{
 		
 		// use this action hook to add extra content before the register form
 		do_action( 'wppb_before_'.$this->args['form_type'].'_fields', $this->args['form_name'], $this->args['ID'], $this->args['form_type'] );
+
+		$wppb_user_role_class = '';
+		if( is_user_logged_in() ) {
+			$wppb_user = wp_get_current_user();
+
+			if( $wppb_user && isset( $wppb_user->roles ) ) {
+				foreach( $wppb_user->roles as $wppb_user_role ) {
+					$wppb_user_role_class .= ' wppb-user-role-'. $wppb_user_role;
+				}
+			}
+		} else {
+			$wppb_user_role_class = ' wppb-user-logged-out';
+		}
+		$wppb_user_role_class = apply_filters( 'wppb_user_role_form_class', $wppb_user_role_class );
+
         ?>
-        <form enctype="multipart/form-data" method="post" id="<?php if( $this->args['form_type'] == 'register' ) echo 'wppb-register-user';  else if( $this->args['form_type'] == 'edit_profile' ) echo 'wppb-edit-user'; if( isset($this->args['form_name']) && $this->args['form_name'] != "unspecified" ) echo '-' . $this->args['form_name']; ?>" class="wppb-user-forms<?php if( $this->args['form_type'] == 'register' ) echo ' wppb-register-user';  else if( $this->args['form_type'] == 'edit_profile' ) echo ' wppb-edit-user';?>" action="<?php echo apply_filters( 'wppb_form_action', '' ); ?>">
+        <form enctype="multipart/form-data" method="post" id="<?php if( $this->args['form_type'] == 'register' ) echo 'wppb-register-user';  else if( $this->args['form_type'] == 'edit_profile' ) echo 'wppb-edit-user'; if( isset($this->args['form_name']) && $this->args['form_name'] != "unspecified" ) echo '-' . $this->args['form_name']; ?>" class="wppb-user-forms<?php if( $this->args['form_type'] == 'register' ) echo ' wppb-register-user';  else if( $this->args['form_type'] == 'edit_profile' ) echo ' wppb-edit-user'; echo $wppb_user_role_class; ?>" action="<?php echo apply_filters( 'wppb_form_action', '' ); ?>">
 			<?php
             do_action( 'wppb_form_args_before_output', $this->args );
 			echo apply_filters( 'wppb_before_form_fields', '<ul>', $this->args['form_type'] );

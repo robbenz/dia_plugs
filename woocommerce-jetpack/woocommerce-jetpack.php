@@ -3,7 +3,7 @@
 Plugin Name: Booster for WooCommerce
 Plugin URI: http://booster.io
 Description: Supercharge your WooCommerce site with these awesome powerful features.
-Version: 2.5.1
+Version: 2.5.3
 Author: Algoritmika Ltd
 Author URI: http://www.algoritmika.com
 Text Domain: woocommerce-jetpack
@@ -28,7 +28,7 @@ if ( ! class_exists( 'WC_Jetpack' ) ) :
  * Main WC_Jetpack Class
  *
  * @class   WC_Jetpack
- * @version 2.5.0
+ * @version 2.5.3
  */
 
 final class WC_Jetpack {
@@ -39,7 +39,7 @@ final class WC_Jetpack {
 	 * @var   string
 	 * @since 2.4.7
 	 */
-	public $version = '2.5.1';
+	public $version = '2.5.3';
 
 	/**
 	 * @var WC_Jetpack The single instance of the class
@@ -78,7 +78,7 @@ final class WC_Jetpack {
 	/**
 	 * WC_Jetpack Constructor.
 	 *
-	 * @version 2.5.0
+	 * @version 2.5.3
 	 * @access public
 	 */
 	public function __construct() {
@@ -98,12 +98,13 @@ final class WC_Jetpack {
 			add_filter( 'get_wc_jetpack_plus_message',                        array( $this, 'get_wcj_plus_message' ), 100, 2 );
 			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'action_links' ) );
 			add_action( 'admin_menu',                                         array( $this, 'jetpack_menu' ), 100 );
-//			add_filter( 'admin_footer_text',                                  array( $this, 'admin_footer_text' ), 2 );
+			add_filter( 'admin_footer_text',                                  array( $this, 'admin_footer_text' ), 2 );
 //			add_action( 'admin_notices',                                      array( $this, 'name_changed_notice' ) );
 		}
 
 		// Scripts
 		if ( is_admin() ) {
+			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_wcj_backend_scripts' ) );
 			if (
 				'yes' === get_option( 'wcj_purchase_data_enabled' ) ||
 				'yes' === get_option( 'wcj_pdf_invoicing_enabled' ) ||
@@ -121,8 +122,61 @@ final class WC_Jetpack {
 			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_frontend_scripts' ) );
 		}
 
+		if ( wcj_is_module_enabled( 'general' ) && 'yes' === get_option( 'wcj_general_advanced_recalculate_cart_totals', 'no' ) ) {
+			add_action( 'wp_loaded', array( $this, 'fix_mini_cart' ), PHP_INT_MAX );
+		}
+
+		add_action( 'wp_loaded', array( $this, 'manage_options' ), PHP_INT_MAX );
+
 		// Loaded action
 		do_action( 'wcj_loaded' );
+	}
+
+	/**
+	 * enqueue_wcj_backend_scripts.
+	 *
+	 * @version 2.5.3
+	 * @since   2.5.3
+	 */
+	function enqueue_wcj_backend_scripts() {
+		wp_enqueue_style( 'wcj-admin', wcj_plugin_url() . '/includes/css/wcj-admin.css' );
+	}
+
+	/**
+	 * manage_options.
+	 *
+	 * @version 2.5.2
+	 * @since   2.5.2
+	 */
+	function manage_options() {
+		if ( is_admin() ) {
+			if ( isset( $_POST['booster_import_settings'] ) ) {
+				$this->manage_options_import();
+			}
+			if ( isset( $_POST['booster_export_settings'] ) ) {
+				$this->manage_options_export();
+			}
+			if ( isset( $_POST['booster_reset_settings'] ) ) {
+				$this->manage_options_reset();
+			}
+		}
+	}
+
+	/**
+	 * fix_mini_cart.
+	 *
+	 * @version 2.5.2
+	 * @since   2.5.2
+	 * @todo    this is only temporary solution!
+	 */
+	function fix_mini_cart() {
+		if ( ! is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+			if ( null !== ( $wc = WC() ) ) {
+				if ( isset( $wc->cart ) ) {
+					$wc->cart->calculate_totals();
+				}
+			}
+		}
 	}
 
 	/**
@@ -256,15 +310,26 @@ final class WC_Jetpack {
 
 	/**
 	 * admin_footer_text
+	 *
+	 * @version 2.5.3
 	 */
-	/* public function admin_footer_text( $footer_text ) {
+	function admin_footer_text( $footer_text ) {
 		if ( isset( $_GET['page'] ) ) {
 			if ( 'wcj-tools' === $_GET['page'] || ( 'wc-settings' === $_GET['page'] && isset( $_GET['tab'] ) && 'jetpack' === $_GET['tab'] ) ) {
-				return sprintf( __( 'If you like <strong>WooCommerce Jetpack</strong> please leave us a <a href="%1$s" target="_blank">&#9733;&#9733;&#9733;&#9733;&#9733;</a> rating on <a href="%1$s" target="_blank">WordPress.org</a>. We will be grateful for any help!', 'woocommerce-jetpack' ), 'https://wordpress.org/support/view/plugin-reviews/woocommerce-jetpack?filter=5#postform' );
+				/* $rocket_icons = '';
+				for ( $i = 0; $i < 5; $i++ ) {
+					$rocket_icons .= wcj_get_rocket_icon();
+				} */
+				$rocket_icons = wcj_get_5_rocket_image();
+				$rating_link = '<a href="https://wordpress.org/support/view/plugin-reviews/woocommerce-jetpack?filter=5#postform" target="_blank">' . $rocket_icons . '</a>';
+				return sprintf(
+					__( 'If you like <strong>Booster for WooCommerce</strong> please leave us a %s rating. Thank you, we couldn\'t have done it without you!', 'woocommerce-jetpack' ),
+					$rating_link
+				);
 			}
 		}
 		return $footer_text;
-	} */
+	}
 
 	/**
 	 * Add menu item
@@ -284,16 +349,19 @@ final class WC_Jetpack {
 	/**
 	 * Show action links on the plugin screen
 	 *
-	 * @version 2.3.8
+	 * @version 2.5.2
 	 * @param   mixed $links
 	 * @return  array
 	 */
 	public function action_links( $links ) {
-		return array_merge( array(
+		$custom_links = array(
 			'<a href="' . admin_url( 'admin.php?page=wc-settings&tab=jetpack' ) . '">' . __( 'Settings', 'woocommerce' ) . '</a>',
 			'<a href="' . esc_url( 'http://booster.io/' )                       . '">' . __( 'Docs', 'woocommerce' ) . '</a>',
-			'<a href="' . esc_url( 'http://booster.io/plus/' )                  . '">' . __( 'Unlock all', 'woocommerce' ) . '</a>',
-		), $links );
+		);
+		if ( 1 === apply_filters( 'wcj_get_option_filter', 1, '' ) ) {
+			$custom_links[] = '<a href="' . esc_url( 'http://booster.io/plus/' ) . '">' . __( 'Unlock all', 'woocommerce' ) . '</a>';
+		}
+		return array_merge( $custom_links, $links );
 	}
 
 	/**
@@ -394,7 +462,7 @@ final class WC_Jetpack {
 	/**
 	 * include_shortcodes.
 	 *
-	 * @version 2.5.0
+	 * @version 2.5.2
 	 */
 	private function include_shortcodes() {
 		//if ( 'yes' === get_option( 'wcj_shortcodes_enabled', 'no' ) ) {
@@ -406,143 +474,253 @@ final class WC_Jetpack {
 			include_once( 'includes/shortcodes/class-wcj-order-items-shortcodes.php' );
 			include_once( 'includes/shortcodes/class-wcj-products-shortcodes.php' );
 			include_once( 'includes/shortcodes/class-wcj-products-add-form-shortcodes.php' );
+			include_once( 'includes/shortcodes/class-wcj-input-field-shortcodes.php' );
 		}
 	}
 
 	/**
 	 * Include modules and submodules
 	 *
-	 * @version 2.5.0
+	 * @version 2.5.3
 	 */
-	private function include_modules() {
-		$settings = array();
-		$settings[] = include_once( 'includes/class-wcj-price-labels.php' );
-		$settings[] = include_once( 'includes/class-wcj-call-for-price.php' );
-		$settings[] = include_once( 'includes/class-wcj-product-listings.php' );
-		$settings[] = include_once( 'includes/class-wcj-sorting.php' );
-		$settings[] = include_once( 'includes/class-wcj-product-custom-info.php' );
-		$settings[] = include_once( 'includes/class-wcj-product-info.php' );
-		$settings[] = include_once( 'includes/class-wcj-product-add-to-cart.php' );
-		$settings[] = include_once( 'includes/class-wcj-related-products.php' );
-		$settings[] = include_once( 'includes/class-wcj-sku.php' );
-		$settings[] = include_once( 'includes/class-wcj-product-tabs.php' );
-		$settings[] = include_once( 'includes/class-wcj-product-input-fields.php' );
-		$settings[] = include_once( 'includes/class-wcj-product-bulk-price-converter.php' );
-		$settings[] = include_once( 'includes/class-wcj-purchase-data.php' );
-		$settings[] = include_once( 'includes/class-wcj-product-bookings.php' );
-		$settings[] = include_once( 'includes/class-wcj-crowdfunding.php' );
-		$settings[] = include_once( 'includes/class-wcj-wholesale-price.php' );
-		$settings[] = include_once( 'includes/class-wcj-product-open-pricing.php' );
-		$settings[] = include_once( 'includes/class-wcj-price-by-user-role.php' );
-		$settings[] = include_once( 'includes/class-wcj-product-price-by-formula.php' );
-		$settings[] = include_once( 'includes/class-wcj-product-images.php' );
-		$settings[] = include_once( 'includes/class-wcj-product-by-country.php' );
-		$settings[] = include_once( 'includes/class-wcj-add-to-cart.php' );
-		$settings[] = include_once( 'includes/class-wcj-more-button-labels.php' );
-		$settings[] = include_once( 'includes/class-wcj-cart.php' );
-		$settings[] = include_once( 'includes/class-wcj-empty-cart-button.php' );
-		$settings[] = include_once( 'includes/class-wcj-mini-cart.php' );
-		$settings[] = include_once( 'includes/class-wcj-checkout-core-fields.php' );
-		$settings[] = include_once( 'includes/class-wcj-checkout-custom-fields.php' );
-		$settings[] = include_once( 'includes/class-wcj-checkout-files-upload.php' );
-		$settings[] = include_once( 'includes/class-wcj-checkout-custom-info.php' );
-		$settings[] = include_once( 'includes/class-wcj-payment-gateways.php' );
-		$settings[] = include_once( 'includes/class-wcj-payment-gateways-icons.php' );
-		$settings[] = include_once( 'includes/class-wcj-payment-gateways-fees.php' );
-		$settings[] = include_once( 'includes/class-wcj-payment-gateways-per-category.php' );
-		$settings[] = include_once( 'includes/class-wcj-payment-gateways-currency.php' );
-		$settings[] = include_once( 'includes/class-wcj-payment-gateways-min-max.php' );
-		$settings[] = include_once( 'includes/class-wcj-payment-gateways-by-country.php' );
-		$settings[] = include_once( 'includes/class-wcj-shipping.php' );
-		$settings[] = include_once( 'includes/class-wcj-shipping-calculator.php' );
-		$settings[] = include_once( 'includes/class-wcj-address-formats.php' );
-		$settings[] = include_once( 'includes/class-wcj-orders.php' );
-		$settings[] = include_once( 'includes/class-wcj-order-numbers.php' );
-		$settings[] = include_once( 'includes/class-wcj-order-custom-statuses.php' );
-//		$settings[] = include_once( 'includes/class-wcj-pdf-invoices.php' );
-		$settings[] = include_once( 'includes/class-wcj-pdf-invoicing.php' );
-		$settings[] = include_once( 'includes/class-wcj-emails.php' );
-		$settings[] = include_once( 'includes/class-wcj-currencies.php' );
-		$settings[] = include_once( 'includes/class-wcj-multicurrency.php' );
-		$settings[] = include_once( 'includes/class-wcj-multicurrency-product-base-price.php' );
-		$settings[] = include_once( 'includes/class-wcj-currency-external-products.php' );
-		$settings[] = include_once( 'includes/class-wcj-price-by-country.php' );
-		$settings[] = include_once( 'includes/class-wcj-currency-exchange-rates.php' );
-		$settings[] = include_once( 'includes/class-wcj-general.php' );
-//		$settings[] = include_once( 'includes/class-wcj-shortcodes-module.php' );
-		$settings[] = include_once( 'includes/class-wcj-eu-vat-number.php' );
-		$settings[] = include_once( 'includes/class-wcj-old-slugs.php' );
-		$settings[] = include_once( 'includes/class-wcj-reports.php' );
-		$settings[] = include_once( 'includes/class-wcj-admin-tools.php' );
-		$settings[] = include_once( 'includes/class-wcj-wpml.php' );
-		$settings[] = include_once( 'includes/pdf-invoices/settings/class-wcj-pdf-invoicing-numbering.php' );
-		$settings[] = include_once( 'includes/pdf-invoices/settings/class-wcj-pdf-invoicing-templates.php' );
-		$settings[] = include_once( 'includes/pdf-invoices/settings/class-wcj-pdf-invoicing-styling.php' );
-		$settings[] = include_once( 'includes/pdf-invoices/settings/class-wcj-pdf-invoicing-header.php' );
-		$settings[] = include_once( 'includes/pdf-invoices/settings/class-wcj-pdf-invoicing-footer.php' );
-		$settings[] = include_once( 'includes/pdf-invoices/settings/class-wcj-pdf-invoicing-page.php' );
-		$settings[] = include_once( 'includes/pdf-invoices/settings/class-wcj-pdf-invoicing-emails.php' );
-		$settings[] = include_once( 'includes/pdf-invoices/settings/class-wcj-pdf-invoicing-display.php' );
-//		$settings[] = include_once( 'includes/pdf-invoices/settings/class-wcj-pdf-invoicing-general.php' );
+	function include_modules() {
+		$modules_files = array(
+			'includes/class-wcj-price-labels.php',
+			'includes/class-wcj-call-for-price.php',
+			'includes/class-wcj-product-listings.php',
+			'includes/class-wcj-sorting.php',
+			'includes/class-wcj-product-custom-info.php',
+			'includes/class-wcj-product-info.php',
+			'includes/class-wcj-product-add-to-cart.php',
+			'includes/class-wcj-related-products.php',
+			'includes/class-wcj-sku.php',
+			'includes/class-wcj-product-tabs.php',
+			'includes/class-wcj-product-input-fields.php',
+			'includes/class-wcj-product-bulk-price-converter.php',
+			'includes/class-wcj-purchase-data.php',
+			'includes/class-wcj-product-bookings.php',
+			'includes/class-wcj-crowdfunding.php',
+			'includes/class-wcj-product-addons.php',
+			'includes/class-wcj-wholesale-price.php',
+			'includes/class-wcj-product-open-pricing.php',
+			'includes/class-wcj-price-by-user-role.php',
+			'includes/class-wcj-product-price-by-formula.php',
+			'includes/class-wcj-product-images.php',
+			'includes/class-wcj-product-by-country.php',
+			'includes/class-wcj-product-by-user.php',
+			'includes/class-wcj-add-to-cart.php',
+			'includes/class-wcj-more-button-labels.php',
+			'includes/class-wcj-cart.php',
+			'includes/class-wcj-empty-cart-button.php',
+			'includes/class-wcj-mini-cart.php',
+			'includes/class-wcj-checkout-core-fields.php',
+			'includes/class-wcj-checkout-custom-fields.php',
+			'includes/class-wcj-checkout-files-upload.php',
+			'includes/class-wcj-checkout-custom-info.php',
+			'includes/class-wcj-payment-gateways.php',
+			'includes/class-wcj-payment-gateways-icons.php',
+			'includes/class-wcj-payment-gateways-fees.php',
+			'includes/class-wcj-payment-gateways-per-category.php',
+			'includes/class-wcj-payment-gateways-currency.php',
+			'includes/class-wcj-payment-gateways-min-max.php',
+			'includes/class-wcj-payment-gateways-by-country.php',
+			'includes/class-wcj-payment-gateways-by-user-role.php',
+			'includes/class-wcj-shipping.php',
+			'includes/class-wcj-shipping-calculator.php',
+			'includes/class-wcj-address-formats.php',
+			'includes/class-wcj-orders.php',
+			'includes/class-wcj-order-numbers.php',
+			'includes/class-wcj-order-custom-statuses.php',
+//			'includes/class-wcj-pdf-invoices.php',
+			'includes/class-wcj-pdf-invoicing.php',
+			'includes/class-wcj-emails.php',
+			'includes/class-wcj-currencies.php',
+			'includes/class-wcj-multicurrency.php',
+			'includes/class-wcj-multicurrency-product-base-price.php',
+			'includes/class-wcj-currency-per-product.php',
+			'includes/class-wcj-currency-external-products.php',
+			'includes/class-wcj-price-by-country.php',
+			'includes/class-wcj-currency-exchange-rates.php',
+			'includes/class-wcj-price-formats.php',
+			'includes/class-wcj-general.php',
+//			'includes/class-wcj-shortcodes-module.php',
+			'includes/class-wcj-eu-vat-number.php',
+			'includes/class-wcj-old-slugs.php',
+			'includes/class-wcj-reports.php',
+			'includes/class-wcj-admin-tools.php',
+			'includes/class-wcj-wpml.php',
+			'includes/pdf-invoices/settings/class-wcj-pdf-invoicing-numbering.php',
+			'includes/pdf-invoices/settings/class-wcj-pdf-invoicing-templates.php',
+			'includes/pdf-invoices/settings/class-wcj-pdf-invoicing-styling.php',
+			'includes/pdf-invoices/settings/class-wcj-pdf-invoicing-header.php',
+			'includes/pdf-invoices/settings/class-wcj-pdf-invoicing-footer.php',
+			'includes/pdf-invoices/settings/class-wcj-pdf-invoicing-page.php',
+			'includes/pdf-invoices/settings/class-wcj-pdf-invoicing-emails.php',
+			'includes/pdf-invoices/settings/class-wcj-pdf-invoicing-display.php',
+//			'includes/pdf-invoices/settings/class-wcj-pdf-invoicing-general.php',
+		);
+
+		$this->modules = array();
+		foreach ( $modules_files as $module_file ) {
+			$module = include_once( $module_file );
+			$this->modules[ $module->id ] = $module;
+		}
 
 //		do_action( 'woojetpack_modules', $settings );
 
-		// Add options
+		// Add and Manage options
 		if ( is_admin() ) {
+			$this->add_options();
+		}
+	}
 
-			// Modules statuses
-			$submodules_classes = array(
-				'WCJ_PDF_Invoicing_Display',
-				'WCJ_PDF_Invoicing_Emails',
-				'WCJ_PDF_Invoicing_Footer',
-				'WCJ_PDF_Invoicing_Header',
-				'WCJ_PDF_Invoicing_Numbering',
-				'WCJ_PDF_Invoicing_Page',
-				'WCJ_PDF_Invoicing_Styling',
-				'WCJ_PDF_Invoicing_Templates',
-			);
+	/**
+	 * add_options.
+	 *
+	 * @version 2.5.2
+	 * @since   2.5.2
+	 */
+	function add_options() {
 
-			foreach ( $settings as $section ) {
+		// Modules statuses
+		$submodules_classes = array(
+			'WCJ_PDF_Invoicing_Display',
+			'WCJ_PDF_Invoicing_Emails',
+			'WCJ_PDF_Invoicing_Footer',
+			'WCJ_PDF_Invoicing_Header',
+			'WCJ_PDF_Invoicing_Numbering',
+			'WCJ_PDF_Invoicing_Page',
+			'WCJ_PDF_Invoicing_Styling',
+			'WCJ_PDF_Invoicing_Templates',
+		);
 
-				if ( ! in_array( get_class( $section ), $submodules_classes ) ) {
-//					$this->module_statuses[] = $values[1];
-					$status_settings = $section->add_enable_module_setting( array() );
-					$this->module_statuses[] = $status_settings[1];
+		foreach ( $this->modules as $module ) {
+
+			if ( ! in_array( get_class( $module ), $submodules_classes ) ) {
+				$status_settings = $module->add_enable_module_setting( array() );
+				$this->module_statuses[] = $status_settings[1];
+			}
+
+			if ( get_option( 'booster_for_woocommerce_version' ) === $this->version ) {
+				continue;
+			}
+
+			$values = $module->get_settings();
+
+			// Adding options
+			foreach ( $values as $value ) {
+				if ( isset( $value['default'] ) && isset( $value['id'] ) ) {
+
+					$autoload = isset( $value['autoload'] ) ? (bool) $value['autoload'] : true;
+					add_option( $value['id'], $value['default'], '', ( $autoload ? 'yes' : 'no' ) );
+
+					/* if ( $this->is_wpml_value( $module, $value ) ) {
+						$wpml_keys[] = $value['id'];
+					} */
 				}
+			}
+		}
 
-//				if ( ! $section->is_enabled() && ! isset ( $_GET['woojetpack_admin_options_reset'] ) ) {
-				if ( get_option( 'booster_for_woocommerce_version' ) === $this->version && ! isset ( $_GET['woojetpack_admin_options_reset'] ) ) {
-					continue;
+		if ( get_option( 'booster_for_woocommerce_version' ) !== $this->version ) {
+			update_option( 'booster_for_woocommerce_version', $this->version );
+		}
+	}
+
+	/**
+	 * manage_options_import.
+	 *
+	 * @version 2.5.2
+	 * @since   2.5.2
+	 */
+	function manage_options_import() {
+		global $wcj_notice;
+		if( ! isset( $_FILES['booster_import_settings_file']['tmp_name'] ) || '' == $_FILES['booster_import_settings_file']['tmp_name'] ) {
+			$wcj_notice .= __( 'Please upload a file to import!', 'woocommerce-jetpack' );
+			$import_settings = array();
+			unset( $_POST['booster_import_settings'] );
+		} else {
+			$import_counter = 0;
+			$import_settings = file_get_contents( $_FILES['booster_import_settings_file']['tmp_name'] );
+			$import_settings = explode( PHP_EOL, $import_settings );
+			if ( ! is_array( $import_settings ) || 2 !== count( $import_settings ) ) {
+				$wcj_notice .= __( 'Wrong file format!', 'woocommerce-jetpack' );
+			} else {
+				$import_header = $import_settings[0];
+				$required_header = 'Booster for WooCommerce';
+				if ( $required_header !== substr( $import_header, 0, strlen( $required_header ) ) ) {
+					$wcj_notice .= __( 'Wrong file format!', 'woocommerce-jetpack' );
+				} else {
+					$import_settings = json_decode( $import_settings[1], true );
+					foreach ( $import_settings as $import_key => $import_setting ) {
+						update_option( $import_key, $import_setting );
+						$import_counter++;
+					}
+					$wcj_notice .= sprintf( __( '%d options successfully imported.', 'woocommerce-jetpack' ), $import_counter );
 				}
+			}
+		}
+	}
 
-				$values = $section->get_settings();
-
-				// Adding options
-				foreach ( $values as $value ) {
-					if ( isset( $value['default'] ) && isset( $value['id'] ) ) {
-
-						// Admin reset
-						if ( isset ( $_GET['woojetpack_admin_options_reset'] ) ) {
-							require_once( ABSPATH . 'wp-includes/pluggable.php' );
-							if ( wcj_is_user_role( 'administrator' ) ) {
-								delete_option( $value['id'] );
-							}
+	/**
+	 * manage_options_export.
+	 *
+	 * @version 2.5.3
+	 * @since   2.5.2
+	 */
+	function manage_options_export() {
+		$export_settings = array();
+		$export_counter = array();
+		foreach ( $this->modules as $module ) {
+			$values = $module->get_settings();
+			foreach ( $values as $value ) {
+				if ( isset( $value['default'] ) && isset( $value['id'] ) ) {
+					if ( isset ( $_POST['booster_export_settings'] ) ) {
+						$export_settings[ $value['id'] ] = get_option( $value['id'], $value['default'] );
+						if ( ! isset( $export_counter[ $module->short_desc ] ) ) {
+							$export_counter[ $module->short_desc ] = 0;
 						}
-
-						// Finally adding options
-						$autoload = isset( $value['autoload'] ) ? (bool) $value['autoload'] : true;
-						add_option( $value['id'], $value['default'], '', ( $autoload ? 'yes' : 'no' ) );
-
-						/* if ( $this->is_wpml_value( $section, $value ) ) {
-							$wpml_keys[] = $value['id'];
-						} */
+						$export_counter[ $module->short_desc ]++;
 					}
 				}
 			}
+		}
+		$export_settings = json_encode( $export_settings );
+		$export_settings = 'Booster for WooCommerce v' . get_option( 'booster_for_woocommerce_version', 'NA' ) . PHP_EOL . $export_settings;
+		header( "Content-Type: application/octet-stream" );
+		header( "Content-Disposition: attachment; filename=booster_settings.txt" );
+		header( "Content-Type: application/octet-stream" );
+		header( "Content-Type: application/download" );
+		header( "Content-Description: File Transfer" );
+		header( "Content-Length: " . strlen( $export_settings ) );
+		echo $export_settings;
+		die();
+	}
 
-			if ( get_option( 'booster_for_woocommerce_version' ) !== $this->version ) {
-				update_option( 'booster_for_woocommerce_version', $this->version );
+	/**
+	 * manage_options_reset.
+	 *
+	 * @version 2.5.2
+	 * @since   2.5.2
+	 */
+	function manage_options_reset() {
+		global $wcj_notice;
+		$delete_counter = 0;
+		foreach ( $this->modules as $module ) {
+			$values = $module->get_settings();
+			foreach ( $values as $value ) {
+				if ( isset( $value['id'] ) ) {
+					if ( isset ( $_POST['booster_reset_settings'] ) ) {
+						require_once( ABSPATH . 'wp-includes/pluggable.php' );
+						if ( wcj_is_user_role( 'administrator' ) ) {
+							delete_option( $value['id'] );
+							$delete_counter++;
+						}
+					}
+				}
 			}
+		}
+		if ( $delete_counter > 0 ) {
+			$wcj_notice .= sprintf( __( '%d options successfully deleted.', 'woocommerce-jetpack' ), $delete_counter );
 		}
 	}
 

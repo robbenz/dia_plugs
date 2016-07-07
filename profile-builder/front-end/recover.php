@@ -70,15 +70,18 @@ function wppb_create_recover_password_form( $user, $post_data ){
         else
             $passw_two = '';
 
+		$password_label = __( 'Password', 'profile-builder' );
+		$repeat_password_label = __( 'Repeat Password', 'profile-builder' );
+
 		$recover_inputPassword = '
 			<li class="wppb-form-field passw1">
-				<label for="passw1">'. __( 'Password', 'profile-builder' ).'</label>
-				<input class="password" name="passw1" type="password" id="passw1" value="'. $passw_one .'" autocomplete="off" title="'. wppb_password_length_text() .'"/>
+				<label for="passw1">'. $password_label .'</label>
+				<input class="password" name="passw1" type="password" id="passw1" value="'. $passw_one .'" autocomplete="off" title="'. wppb_password_length_text() .'" '. apply_filters( 'wppb_recover_password_extra_attr', '', $password_label, 'password' ) .' />
 			</li><!-- .passw1 -->
 			<input type="hidden" name="userData" value="'.$user->ID.'"/>
 			<li class="wppb-form-field passw2">
-				<label for="passw2">'. __( 'Repeat Password', 'profile-builder' ).'</label>
-				<input class="password" name="passw2" type="password" id="passw2" value="'.$passw_two.'" autocomplete="off" />
+				<label for="passw2">'. $repeat_password_label .'</label>
+				<input class="password" name="passw2" type="password" id="passw2" value="'.$passw_two.'" autocomplete="off" '. apply_filters( 'wppb_recover_password_extra_attr', '', $repeat_password_label, 'repeat_password' ) .' />
 			</li><!-- .passw2 -->';
 
         /* if we have active the password strength checker */
@@ -114,10 +117,12 @@ function wppb_create_recover_password_form( $user, $post_data ){
 
 	$username_email = ( isset( $post_data['username_email'] ) ? $post_data['username_email'] : '' );
 
+	$username_email_label = __( 'Username or E-mail', 'profile-builder' );
+
 	$recover_input = '<ul>
 			<li class="wppb-form-field wppb-username-email">
-				<label for="username_email">'.__( 'Username or E-mail', 'profile-builder' ).'</label>
-				<input class="text-input" name="username_email" type="text" id="username_email" value="'.trim( $username_email ).'" />
+				<label for="username_email">'. $username_email_label .'</label>
+				<input class="text-input" name="username_email" type="text" id="username_email" value="'.trim( $username_email ).'" '. apply_filters( 'wppb_recover_password_extra_attr', '', $username_email_label, 'username_email' ) .' />
 			</li><!-- .username_email --></ul>';
 	echo apply_filters( 'wppb_recover_password_generate_password_input', $recover_input, trim( $username_email ) );
 		?>
@@ -320,7 +325,7 @@ function wppb_front_end_password_recovery(){
 			do_action( 'wppb_before_recover_password_fields' );
 
 			//this is the part that handles the actual recovery
-			if( isset( $_GET['submitted'] ) && isset( $_GET['loginName'] ) && isset( $_GET['key'] ) ){
+			if( isset( $_GET['submitted'] ) && isset( $_GET['loginName'] ) && isset( $_GET['key'] ) && !empty( $_GET['key'] ) ){
 				//get the login name and key and verify if they match the ones in the database
 
 				$key = $_GET['key'];
