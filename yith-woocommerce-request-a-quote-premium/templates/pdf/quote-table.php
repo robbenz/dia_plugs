@@ -80,13 +80,33 @@ if( function_exists('icl_get_languages') ) {
                                 printf( '<a href="%s">%s</a>', $_product->get_permalink(), $thumbnail );
                             ?>
                         </td>
+
                     <?php endif ?>
                     <td scope="col" style="text-align:left; border-left: 1px solid #464444; border-right: 1px solid #464444"><?php echo $title ?>
                         <?php  if( $meta != '' ): ?><small><?php echo $meta; ?></small><?php endif ?></td>
                     <td scope="col" style="text-align:center; border-right: 1px solid #464444"><?php echo $item['qty'] ?></td>
 
-                    <td scope="col" class="last-col" style="text-align:right;  border-right: 1px solid #464444"><?php echo $_product->get_price_html(); ?></td>
-                    <td scope="col" class="last-col" style="text-align:right;  border-right: 1px solid #464444"><?php echo apply_filters('ywraq_quote_subtotal_item', $order->get_formatted_line_subtotal( $item ), $item['line_total'], $_product); ?></td>
+                    <td scope="col" class="last-col" style="text-align:right;  border-right: 1px solid #464444"><?php
+                    // echo $_product->get_price_html();
+                    if ( isset( $item['line_total'] ) ) {
+                      if ( isset( $item['line_subtotal'] ) && $item['line_subtotal'] != $item['line_total'] ) {
+                        echo '<del>' . wc_price( $order->get_item_subtotal( $item, false, true ), array( 'currency' => $order->get_order_currency() ) ) . '</del> ';
+                      }
+                      echo wc_price( $order->get_item_total( $item, false, true ), array( 'currency' => $order->get_order_currency() ) );
+                    }
+
+                    ?></td>
+                    <td scope="col" class="last-col" style="text-align:right;  border-right: 1px solid #464444"><?php
+                    if ( isset( $item['line_total'] ) ) {
+          						if ( isset( $item['line_subtotal'] ) && $item['line_subtotal'] != $item['line_total'] ) {
+          							echo '<del>' . wc_price( $item['line_subtotal'], array( 'currency' => $order->get_order_currency() ) ) . '</del> ';
+          						}
+          						echo wc_price( $item['line_total'], array( 'currency' => $order->get_order_currency() ) );
+          					}
+
+                    // echo apply_filters('ywraq_quote_subtotal_item', $order->get_formatted_line_subtotal( $item ), $item['line_total'], $_product);
+
+                    ?></td>
                 </tr>
 
             <?php endforeach; ?>
@@ -94,12 +114,12 @@ if( function_exists('icl_get_languages') ) {
             <?php
             $shipping_fee   = $order->calculate_shipping();
             $order_total    = $order->get_formatted_order_total();
-            $order_subtotal = $order->get_subtotal_to_display();
+          //  $order_subtotal = $order->get_subtotal_to_display();
           ?>
-          <tr>
-            <th scope="col" colspan="<?php echo $colspan ?>" style="text-align:right;border: 1px solid #464444;">Subtotal</th>
-            <td scope="col" style="text-align:right;border: 1px solid #464444;"><?php echo $order_subtotal ?></td>
-          </tr>
+        <!--  <tr>
+            <th scope="col" colspan="<?php // echo $colspan ?>" style="text-align:right;border: 1px solid #464444;">Subtotal</th>
+            <td scope="col" style="text-align:right;border: 1px solid #464444;"><?php // echo $order_subtotal ?></td>
+          </tr> -->
           <tr>
             <th scope="col" colspan="<?php echo $colspan ?>" style="text-align:right;border: 1px solid #464444;">Shipping</th>
             <td scope="col" style="text-align:right;border: 1px solid #464444;">$<?php echo $shipping_fee ?></td>

@@ -79,8 +79,30 @@ do_action( 'yith_ywraq_email_before_raq_table', $order );
 						<?php if ( $meta != '' ): ?>
 							<small><?php echo $meta; ?></small><?php endif ?></td>
 							<td scope="col" style="text-align:center;border: 1px solid #eee;"><?php echo $item['qty'] ?></td>
-					<td scope="col" style="text-align:center;border: 1px solid #eee;"><?php echo $_product->get_price_html(); ?></td>
-					<td scope="col" style="text-align:right;border: 1px solid #eee;"><?php echo apply_filters('ywraq_quote_subtotal_item', $order->get_formatted_line_subtotal( $item ), $item['line_total'], $_product); ?></td>
+
+					<td scope="col" style="text-align:center;border: 1px solid #eee;"><?php
+
+				// echo $_product->get_price_html();
+
+				if ( isset( $item['line_total'] ) ) {
+					if ( isset( $item['line_subtotal'] ) && $item['line_subtotal'] != $item['line_total'] ) {
+						echo '<del>' . wc_price( $order->get_item_subtotal( $item, false, true ), array( 'currency' => $order->get_order_currency() ) ) . '</del> ';
+					}
+					echo wc_price( $order->get_item_total( $item, false, true ), array( 'currency' => $order->get_order_currency() ) );
+				}
+
+					?>
+				</td>
+					<td scope="col" style="text-align:right;border: 1px solid #eee;"><?php
+					// echo apply_filters('ywraq_quote_subtotal_item', $order->get_formatted_line_subtotal( $item ), $item['line_total'], $_product);
+					//	 echo esc_attr( isset( $item['line_total'] ) ? $item['line_total'] : '' );
+					if ( isset( $item['line_total'] ) ) {
+						if ( isset( $item['line_subtotal'] ) && $item['line_subtotal'] != $item['line_total'] ) {
+							echo '<del>' . wc_price( $item['line_subtotal'], array( 'currency' => $order->get_order_currency() ) ) . '</del> ';
+						}
+						echo wc_price( $item['line_total'], array( 'currency' => $order->get_order_currency() ) );
+					}
+					?></td>
 
 				</tr>
 
@@ -89,13 +111,13 @@ do_action( 'yith_ywraq_email_before_raq_table', $order );
 			<?php
 			$shipping_fee = $order->calculate_shipping();
 			$order_total = $order->get_formatted_order_total();
-			$order_subtotal = $order->get_subtotal_to_display();
+		//	$order_subtotal = $order->get_subtotal_to_display();
 
 			?>
-			<tr>
-				<th scope="col" colspan="<?php echo $colspan ?>" style="text-align:right;border: 1px solid #eee;">Subtotal</th>
-				<td scope="col" style="text-align:right;border: 1px solid #eee;"><?php echo $order_subtotal ?></td>
-				</tr>
+		<!--	<tr>
+				<th scope="col" colspan="<?php //echo $colspan ?>" style="text-align:right;border: 1px solid #eee;">Subtotal</th>
+				<td scope="col" style="text-align:right;border: 1px solid #eee;"><?php //echo $order_subtotal ?></td>
+			</tr> -->
 			<tr>
 				<th scope="col" colspan="<?php echo $colspan ?>" style="text-align:right;border: 1px solid #eee;">Shipping</th>
 				<td scope="col" style="text-align:right;border: 1px solid #eee;">$<?php echo $shipping_fee ?></td>
