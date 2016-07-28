@@ -22,7 +22,7 @@ jQuery(document).ready( function($){
             return false;
         }
 
-        button.parent().hide().removeClass('show'); 
+        button.parent().hide().removeClass('show');
 
         $variation_id.on('change', function () {
 
@@ -79,6 +79,7 @@ jQuery(document).ready( function($){
         else {
             $cart_form = $('.cart');
         }
+        
 
         if ( $t.closest('ul.products').length > 0) {
             var $add_to_cart_el = '',

@@ -159,7 +159,15 @@ class WC_Predictive_Search_Hook_Backbone
 		{{ if ( next_page_number > 1 ) { }}
 		<div id="ps_more_check"></div>
 		{{ } else if ( total_items == 0 && first_load ) { }}
-		<p style="text-align:center"><?php wc_ps_ict_t_e( 'No Result Text', __('<span class="sorry-you-cant-find">Sorry, we don\'t have that part yet.</span><br /><br /><a href="#" class="eModal-2 click-here-parts-link">Click Here To Request A Quote</a>', 'woops') ); ?></p>
+		<p style="padding-left:2em;"><span class="sorry-you-cant-find">Could not find any results</span><br><br><span>However, we may still carry this product</span>
+			<?php //wc_ps_ict_t_e( 'No Result Text', __('<span class="sorry-you-cant-find">Sorry, we don\'t have that part yet.</span><br /><br /><a href="#" class="eModal-2 click-here-parts-link">Click Here To Request A Quote</a>', 'woops') ); ?>
+<p style="padding-left:2em;">Please <a href="#" class="eModal-2 click-here-parts-link" style="font-weight:bold">contact us</a> and we will get back to you with an asnwer as soon as possible.</p>
+<p style="padding-left:2em;">Please include your facility name and address so we can email you an official quote.</p>
+<p style="padding-left:2em;">Thank you</p>
+<p style="padding-left:2em;"><strong>Tel:</strong> (877) 593-6011</p>
+<p style="padding-left:2em;"><strong>Fax:</strong> (248) 671-1550</p>
+<p style="padding-left:2em;"><strong>Email:</strong> sales@diamedicalusa.com</p>
+		</p>
 		{{ } }}
 	</script>
 
