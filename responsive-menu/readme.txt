@@ -1,9 +1,10 @@
 === Responsive Menu ===
 Contributors: ResponsiveMenu
+Donate link: https://responsive.menu/donate
 Tags: responsive, menu, responsive menu, mobile menu, wordpress responsive menu, wp responsive menu, tablet menu, mobile, tablet, 3 lines, 3 line, three line, three lines
 Requires at least: 3.5.0
-Tested up to: 4.5.3
-Stable tag: 3.0.0
+Tested up to: 4.6
+Stable tag: 3.0.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -144,6 +145,72 @@ To view our whole FAQ, please go to https://responsive.menu/faq/
 3. Example Front End Expanded Menu
 
 == Changelog ==
+
+= 3.0.9 (2nd August 2016) =
+* **Requires PHP 5.4**
+* Added current item border colour option
+* Added current item border hover colour option
+* Apply title link to title image
+* Fixed transition bug with iPhone Safari iOS on links
+* Fixed Import option bug
+* Import native jquery-ui-core instead of externally
+* Minor bug fixes
+
+= 3.0.8 (25th July 2016) =
+* **Requires PHP 5.4**
+* Added placeholder search text colour option
+* Improved update process (no longer need to login to admin to trigger)
+* Bug fixes
+
+= 3.0.7 (22nd July 2016) =
+* **Requires PHP 5.4**
+* Added preview option - Pro only
+* Added search box text colour option
+* Added search box background colour option
+* Added search box border colour option
+* Fixed header bar bug with disabled scrolling - PRO
+* Fixed smooth scrolling issue on iOS with disabled scrolling - PRO
+* Added string translation to Search text
+
+= 3.0.6 (13th July 2016) =
+* **Requires PHP 5.4**
+* Improved Database Migration Scripts
+* Changed sub-arrows to only show border on left edge
+* Improved button title text spacing
+* Improved PHP version checking process
+
+= 3.0.5 (13th July 2016) =
+* **Requires PHP 5.4**
+* Fixed bug with push animation
+* Improved PHP version check functionality
+* Fixed issue where custom menu classes weren't being added
+
+= 3.0.4 (9th July 2016) =
+* **Requires PHP 5.4**
+* Fixed bug with overwriting values with shortcode
+
+= 3.0.3 (9th July 2016) =
+* **Requires PHP 5.4**
+* Fixed bug with custom trigger
+* Updated Polylang Support
+* Removed extend() function from Pimple Container as it was throwing security notices in VaultPress - thanks to Brin @ WinningWp.com
+
+= 3.0.2 (8th July 2016) =
+* **Requires PHP 5.4**
+* Fixed issue with close on link click option
+* Improved database migration scripts
+* Updated default button size
+* Improved License Checks (Pro)
+* Removed tab memory (too resource intensive)
+* Fixed Query Monitor "IF" error - thanks to KTS915
+* Bug fixes
+
+= 3.0.1 (7th July 2016) =
+* **Requires PHP 5.4**
+* Initial Bug Fixes
+* Catch non-updated option errors
+* Those using under PHP 5.4 will not crash their site but deactivate
+* License Key Checking Fixed (Pro)
 
 = 3.0.0 (5th July 2016) =
 * **Requires PHP 5.4** - Please ensure you have it installed to work
@@ -368,3 +435,9 @@ To view our whole FAQ, please go to https://responsive.menu/faq/
 * Initial Version Released.
 
 == Upgrade Notice ==
+
+= 2.8.9 =
+Requires PHP 5.4  - DO NOT upgrade if you do not have this installed.
+
+= 2.8.8 =
+Requires PHP 5.4  - DO NOT upgrade if you do not have this installed.

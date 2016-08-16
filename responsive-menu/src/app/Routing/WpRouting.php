@@ -3,26 +3,26 @@
 namespace ResponsiveMenu\Routing;
 use ResponsiveMenu\Routing\Container as Container;
 
-class WpRouting implements Routing
-{
+class WpRouting implements Routing {
 
   protected $container;
 
-  public function __construct(Container $container)
-  {
+  public function __construct(Container $container) {
     $this->container = $container;
   }
 
-  public function route()
-  {
-    if(is_admin())
+  public function route() {
+    if(is_admin()):
       add_action('admin_menu', [$this, 'adminPage']);
-    else
-      add_action('template_redirect', [$this->container['front_controller'], 'index']);
+    else:
+      if(isset($_GET['responsive-menu-preview']) && isset($_POST['menu']))
+        add_action('template_redirect', [$this->container['front_controller'], 'preview']);
+      else
+        add_action('template_redirect', [$this->container['front_controller'], 'index']);
+    endif;
   }
 
-  public function adminPage()
-  {
+  public function adminPage() {
     /* Heavily reliant on WordPress so very hard coded */
     if(isset($_POST['responsive_menu_submit'])):
       $method = 'update';
@@ -44,12 +44,20 @@ class WpRouting implements Routing
       'responsive-menu',
       function() use ($method) {
         $controller = $this->container['admin_controller'];
-        if($method == 'update' || $method == 'reset'):
-          include dirname(dirname(dirname(__FILE__))) . '/config/default_options.php';
-          $controller->$method($default_options);
-        else:
-          $controller->$method();
-        endif;
+        switch ($method) :
+          case 'update':
+            $controller->$method($this->container['default_options'], $_POST['menu']);
+            break;
+          case 'reset':
+            $controller->$method($this->container['default_options']);
+            break;
+          case 'import':
+            $controller->$method($this->container['default_options'], $_FILES['responsive_menu_import_file']);
+            break;
+          default:
+            $controller->$method();
+            break;
+        endswitch;
       },
       'dashicons-menu');
   }

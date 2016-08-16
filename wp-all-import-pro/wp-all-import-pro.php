@@ -3,7 +3,7 @@
 Plugin Name: WP All Import Pro
 Plugin URI: http://www.wpallimport.com/
 Description: The most powerful solution for importing XML and CSV files to WordPress. Import to Posts, Pages, and Custom Post Types. Support for imports that run on a schedule, ability to update existing imports, and much more.
-Version: 4.3.0
+Version: 4.3.1
 Author: Soflyy
 */
 
@@ -31,7 +31,7 @@ if ( is_plugin_active('wp-all-import/plugin.php') ){
 }
 else {
 
-	define('PMXI_VERSION', '4.3.0');
+	define('PMXI_VERSION', '4.3.1');
 
 	define('PMXI_EDITION', 'paid');
 
@@ -272,7 +272,7 @@ else {
 			$this->options = array_intersect_key(get_option($option_name, array()), $options_default) + $options_default;
 			$this->options = array_intersect_key($options_default, array_flip(array('info_api_url'))) + $this->options; // make sure hidden options apply upon plugin reactivation
 			if ('' == $this->options['cron_job_key']) $this->options['cron_job_key'] = wp_all_import_url_title(wp_all_import_rand_char(12));
-
+			
 			update_option($option_name, $this->options);
 			$this->options = get_option(get_class($this) . '_Options');
 
@@ -730,10 +730,11 @@ else {
 		 * @return mixed
 		 */
 		public function getOption($option = NULL) {
+			$options = apply_filters('wp_all_import_config_options', $this->options);
 			if (is_null($option)) {
-				return $this->options;
-			} else if (isset($this->options[$option])) {
-				return $this->options[$option];
+				return $options;
+			} else if (isset($options[$option])) {
+				return $options[$option];
 			} else {
 				throw new Exception("Specified option is not defined for the plugin");
 			}
@@ -1166,7 +1167,8 @@ else {
 				'tax_logic_mapping' => array(),
 				'is_tax_hierarchical_group_delim' => array(),
 				'tax_hierarchical_group_delim' => array(),
-				'nested_files' => array()
+				'nested_files' => array(),
+				'xml_reader_engine' => 0
 			);
 		}
 

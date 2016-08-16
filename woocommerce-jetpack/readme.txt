@@ -1,9 +1,9 @@
 === Booster for WooCommerce ===
-Contributors: algoritmika,anbinder
-Tags: woocommerce,booster for woocommerce,woocommerce jetpack,custom price labels,call for price,currency symbol,remove sorting,remove old product slugs,add to cart text,order number,sequential order numbering,email pdf invoice,pdf invoice,pdf invoices,already in cart,empty cart,redirect to checkout,minimum order amount,customize checkout fields,checkout fields,email,customize product tabs,product tabs,related products number,empty cart,redirect add to cart,redirect to checkout,product already in cart,custom payment gateway,payment gateway icon,auto-complete all orders,custom order statuses,custom order status,remove text from price,custom css,hide categories count,hide subcategories count,hide category count,hide subcategory count,display total sales,custom product tabs,remove product tab,payment gateway fee,vat,gateway by country,price by country,currency switcher
+Contributors: algoritmika
+Tags: woocommerce,booster for woocommerce,woocommerce jetpack
 Requires at least: 4.1
 Tested up to: 4.5
-Stable tag: 2.5.3
+Stable tag: 2.5.4
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -95,8 +95,9 @@ Booster for WooCommerce is a WordPress plugin that supercharges your site with a
 * *Admin Tools* - Booster for WooCommerce debug and log tools.
 * *Booster WPML* - Booster for WooCommerce basic WPML support.
 * *EU VAT Number* - Collect and validate EU VAT numbers on WooCommerce checkout. Automatically disable VAT for valid numbers. Add all EU countries VAT standard rates to WooCommerce.
+* *Export* - WooCommerce export tools.
 * *Emails* - Add custom emails. Add another email recipient(s) to all WooCommerce emails.
-* *General* - Separate custom CSS for front and back end. Shortcodes in Wordpress text widgets. Export tools. Custom roles tool.
+* *General* - Separate custom CSS for front and back end. Shortcodes in Wordpress text widgets. Custom roles tool.
 * *Old Slugs* - Remove old WooCommerce products slugs.
 * *Reports* - WooCommerce stock, sales, customers etc. reports.
 
@@ -126,12 +127,40 @@ To unlock all Booster for WooCommerce features, please install additional [Boost
 
 == Changelog ==
 
+= 2.5.4 - 19/07/2016 =
+* Fix - Manage Settings - Import - New line issue fixed.
+* Dev - Shortcodes - General - `[wcj_country_select_drop_down_list]` - `replace_with_currency` attribute added.
+* Dev - Shortcodes - Orders - `[wcj_order_tax_by_class]` shortcode added.
+* Dev - Shortcodes - Orders - `[wcj_order_total_by_tax_class]` shortcode added.
+* Dev - Shortcodes - Orders - `[wcj_order_subtotal_by_tax_class]` shortcode added.
+* Fix - Shortcodes - Products - Crowdfunding - `get_product_orders_data()` - WooCommerce loop fixed.
+* Fix - Shortcodes - Products - `[wcj_product_time_since_last_sale]` WooCommerce loop fixed.
+* Fix - Shortcodes - Products - `[wcj_product_crowdfunding_time_remaining_progress_bar]` fixed.
+* Fix - Shortcodes - Products - `[wcj_product_crowdfunding_goal]`, `[wcj_product_crowdfunding_goal_remaining]`, `[wcj_product_total_orders_sum]` fixed (and `hide_currency` attribute added).
+* Fix - Shortcodes - Products - `[wcj_product_list_attributes]` fixed.
+* Dev - Shortcodes - Products - `[wcj_product_total_sales]` - `hide_if_zero` and `offset` attributes added.
+* Dev - Shortcodes - Products - `[wcj_product_time_since_last_sale]` attributes added.
+* Dev - Shortcodes - Products - Crowdfunding - Code refactoring - moved to separate file.
+* Fix - PRICES & CURRENCIES - Prices and Currencies by Country - Getting `customer_country_group_id` on every `get_customer_country_group_id()` function call.
+* Dev - PRICES & CURRENCIES - Prices and Currencies by Country - `add_hooks()` function moved from `init` hook to constructor.
+* Dev - PRICES & CURRENCIES - Prices and Currencies by Country - "Add Flags Images to Select Drop-Down Box" option added (`[wcj_country_select_drop_down_list]` shortcode).
+* Dev - PRICES & CURRENCIES - Wholesale Price - "Products to exclude" option added.
+* Dev - PRODUCTS - Product by User - Messages options added.
+* Dev - PRODUCTS - Product by User - Fields ids; `label` tags added.
+* Dev - PRODUCTS - Product by User - Fields (all except Image field) refilled when validate returns false and after product successfully added.
+* Dev - PRODUCTS - Product by User - "Require Unique Title" option added.
+* Fix - EMAILS & MISC. - EU VAT Number - Started using WooCommerce customer `set_is_vat_exempt()` function.
+* Fix - EMAILS & MISC. - EU VAT Number - AJAX call fixed.
+* Dev - EMAILS & MISC. - Export - Initial module release (all tools moved from General module).
+* Dev - EMAILS & MISC. - General - Export Orders tool - Order number, status, item count, total, payment method, billing and shipping info columns added.
+* Tweak - Tags in plugin description and contributors changed.
+
 = 2.5.3 - 04/07/2016 =
 * Dev - Shortcodes - Orders - `[wcj_order_total_refunded]` shortcode added.
 * Dev - Shortcodes - Orders - `[wcj_order_taxes_html]` shortcode added.
 * Dev - Shortcodes - Orders - `[wcj_order_items_meta]` shortcode added.
 * Dev - PRICES & CURRENCIES - Currency Exchange Rates - "Logging" option removed.
-* Fix - PRICES & CURRENCIES - Prices and Currencies by Country - Price Filter widget fixed. `add_hooks()` function moved from `init` hook to constructor.
+* Fix - PRICES & CURRENCIES - Prices and Currencies by Country - Price Filter widget fixed. `woocommerce_currency_symbol` hook moved from `init` hook to constructor.
 * Dev - PRICES & CURRENCIES - Price by User Role - Class functions replaced with global functions.
 * Dev - PRODUCTS - Bookings - "Hide Quantity Selector" option added.
 * Dev - PRODUCTS - Product Add to Cart - "Open External Products on Add to Cart in New Window" option added.
@@ -200,7 +229,7 @@ To unlock all Booster for WooCommerce features, please install additional [Boost
 * Fix - PDF INVOICING & PACKING SLIPS - Report Tool - Querying by document date instead of order date.
 * Dev - EMAILS & MISC. - General - "PayPal Email per Product" option added.
 * Dev - EMAILS & MISC. - EU VAT Number - Option ("Display") to append EU VAT number to order and my account billing addresses added.
-* Fix - EMAILS & MISC. - EU VAT Number - `woocommerce_matched_rates` filter changed to `woocommerce_find_rates` - this fixes the issue with sipping tax not exempting.
+* Fix - EMAILS & MISC. - EU VAT Number - `woocommerce_matched_rates` filter changed to `woocommerce_find_rates` - this fixes the issue with shipping tax not exempting.
 * Tweak - "Unlock all" link modified.
 * Tweak - "No active modules found." message added.
 * Tweak - PRODUCTS - Product Images - Module settings rearranged.

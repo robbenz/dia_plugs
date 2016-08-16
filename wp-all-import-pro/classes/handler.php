@@ -67,7 +67,12 @@ class PMXI_Handler extends PMXI_Session {
 	 * @return array
 	 */
 	public function get_session_data() {
-		return (array) get_option( '_wpallimport_session_' . $this->_import_id . '_', array() );
+		// return (array) get_option( '_wpallimport_session_' . $this->_import_id . '_', array() );
+		global $wpdb;
+
+		$session = $wpdb->get_row( $wpdb->prepare("SELECT option_name, option_value FROM $wpdb->options WHERE option_name = %s", '_wpallimport_session_' . $this->_import_id . '_'), ARRAY_A );				
+
+		return empty($session) ? array() : unserialize($session['option_value']);
 	}
 
     /**
@@ -111,6 +116,13 @@ class PMXI_Handler extends PMXI_Session {
 		$this->_dirty = true;
 
 		$this->save_data();
+
+		$parser_type = get_option('wpai_parser_type_0');
+
+		if ( ! empty($parser_type) ){
+			update_option('wpai_parser_type_' . $import_id, $parser_type);
+			delete_option('wpai_parser_type_0');
+		}
     }
 
     public function clean_session( $import_id = 'new' ){

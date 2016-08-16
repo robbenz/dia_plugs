@@ -588,6 +588,10 @@
 	margin-top: 0;
 	margin-bottom: 15px;
 }
+.wpallimport-plugin .wpallimport-trigger-options{
+	cursor: pointer;
+	margin: 5px 0;
+}
 /*--------------------------------------------------------------------------
 *
 *	Helpers
@@ -1382,6 +1386,8 @@
 	color: #555;
 	margin-top: 0;
 }
+.wpallimport-plugin #custom_type_selector .dd-option .dashicon-shop_coupon:before,
+.wpallimport-plugin #custom_type_selector .dd-selected .dashicon-shop_coupon:before,
 .wpallimport-plugin #custom_type_selector .dd-option .dashicon-shop_order:before,
 .wpallimport-plugin #custom_type_selector .dd-selected .dashicon-shop_order:before{
 	font-family: "WooCommerce";
@@ -3021,14 +3027,16 @@
 	color: #777;
 	margin-top: 2px;
 }
-.wpallimport-plugin .wpallimport-complete-warning{
+.wpallimport-plugin .wpallimport-complete-warning,
+.wpallimport-plugin .wpallimport-orders-complete-warning{
 	display: none;
 	background: url('../img/ui_4.0/exclamation.png') #fff 25px 40px no-repeat;
 	padding: 30px 20px 10px 25px;
 	margin: 40px 0;
 	text-align: left;
 }
-.wpallimport-plugin .wpallimport-complete-warning h3
+.wpallimport-plugin .wpallimport-complete-warning h3,
+.wpallimport-plugin .wpallimport-orders-complete-warning h3
 {
 	color: #425f9a;
 	font-size: 22px;
@@ -3037,7 +3045,8 @@
 	padding-left: 65px; 
 	margin-top: 20px;
 }
-.wpallimport-plugin .wpallimport-complete-warning h4
+.wpallimport-plugin .wpallimport-complete-warning h4,
+.wpallimport-plugin .wpallimport-orders-complete-warning h4
 {
 	color: #777;
 	font-size: 19px;

@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Functions.
  *
- * @version 2.5.3
+ * @version 2.5.4
  * @author  Algoritmika Ltd.
  */
 
@@ -239,6 +239,38 @@ if ( ! function_exists( 'wcj_get_current_currency_code' ) ) {
 			}
 		}
 		return $current_currency_code;
+	}
+}
+
+if ( ! function_exists( 'wcj_get_currency_by_country' ) ) {
+	/**
+	 * wcj_get_currency_by_country.
+	 *
+	 * @version 2.5.4
+	 * @since   2.5.4
+	 */
+	function wcj_get_currency_by_country( $country_code ) {
+		$currency_code = '';
+		for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_price_by_country_total_groups_number', 1 ) ); $i++ ) {
+			switch ( get_option( 'wcj_price_by_country_selection', 'comma_list' ) ) {
+				case 'comma_list':
+					$country_exchange_rate_group = get_option( 'wcj_price_by_country_exchange_rate_countries_group_' . $i );
+					$country_exchange_rate_group = str_replace( ' ', '', $country_exchange_rate_group );
+					$country_exchange_rate_group = explode( ',', $country_exchange_rate_group );
+					break;
+				case 'multiselect':
+					$country_exchange_rate_group = get_option( 'wcj_price_by_country_countries_group_' . $i );
+					break;
+				case 'chosen_select':
+					$country_exchange_rate_group = get_option( 'wcj_price_by_country_countries_group_chosen_select_' . $i );
+					break;
+			}
+			if ( in_array( $country_code, $country_exchange_rate_group ) ) {
+				$currency_code = get_option( 'wcj_price_by_country_exchange_rate_currency_group_' . $i );
+				break;
+			}
+		}
+		return ( '' == $currency_code ) ? get_option( 'woocommerce_currency' ) : $currency_code;
 	}
 }
 
@@ -563,7 +595,7 @@ if ( ! function_exists( 'wcj_is_product_wholesale_enabled_per_product' ) ) {
 /**
  * wcj_is_product_wholesale_enabled.
  *
- * @version 2.5.0
+ * @version 2.5.4
  */
 if ( ! function_exists( 'wcj_is_product_wholesale_enabled' ) ) {
 	function wcj_is_product_wholesale_enabled( $product_id ) {
@@ -571,15 +603,29 @@ if ( ! function_exists( 'wcj_is_product_wholesale_enabled' ) ) {
 			if ( wcj_is_product_wholesale_enabled_per_product( $product_id ) ) {
 				return true;
 			} else {
+				$products_to_include_passed = false;
 				$products_to_include = get_option( 'wcj_wholesale_price_products_to_include', array() );
 				if ( empty ( $products_to_include ) ) {
-					return true;
-				}
-				foreach ( $products_to_include as $id ) {
-					if ( $product_id == $id ) {
-						return true;
+					$products_to_include_passed = true;
+				} else {
+					foreach ( $products_to_include as $id ) {
+						if ( $product_id == $id ) {
+							$products_to_include_passed = true;
+						}
 					}
 				}
+				$products_to_exclude_passed = false;
+				$products_to_exclude = get_option( 'wcj_wholesale_price_products_to_exclude', array() );
+				if ( empty ( $products_to_exclude ) ) {
+					$products_to_exclude_passed = true;
+				} else {
+					foreach ( $products_to_exclude as $id ) {
+						if ( $product_id == $id ) {
+							$products_to_exclude_passed = false;
+						}
+					}
+				}
+				return ( $products_to_include_passed && $products_to_exclude_passed );
 			}
 		}
 		return false;

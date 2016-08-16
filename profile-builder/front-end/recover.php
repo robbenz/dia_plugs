@@ -318,7 +318,7 @@ function wppb_front_end_password_recovery(){
 
 ?>
 
-	<div class="wppb_holder" id="wppb-recover-password">
+	<div class="wppb_holder" id="wppb-recover-password-container">
 
 <?php
 			// use this action hook to add extra content before the password recovery form

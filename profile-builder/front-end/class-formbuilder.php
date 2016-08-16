@@ -80,8 +80,8 @@ class Profile_Builder_Form_Creator{
 	
 	function wppb_retrieve_custom_settings(){
 		$this->args['login_after_register'] = apply_filters( 'wppb_automatically_login_after_register', 'No' ); //used only for the register-form settings
-		$this->args['redirect_activated'] = apply_filters( 'wppb_redirect_default_setting', '' );
-		$this->args['redirect_url'] = apply_filters( 'wppb_redirect_default_location', ($this->args['redirect_url'] != '') ? $this->args['redirect_url'] : '' );
+		$this->args['redirect_activated'] = apply_filters( 'wppb_redirect_default_setting', '-' );
+		$this->args['redirect_url'] = apply_filters( 'wppb_redirect_default_location', ($this->args['redirect_url'] != '') ? $this->args['redirect_url'] : wppb_curpageurl() );
         /* for register forms check to see if we have a custom redirect "Redirect After Register" */
         if( PROFILE_BUILDER == 'Profile Builder Pro' ) {
             if( ( $this->args['form_type'] == 'register' || $this->args['form_type'] == 'edit_profile' ) && ( ! current_user_can( 'manage_options' ) ) ) {
@@ -256,7 +256,13 @@ class Profile_Builder_Form_Creator{
 
         $location .= "/?autologin=true&uid=$user->ID&_wpnonce=$nonce";
 
-        return "<script> window.location.replace('$location'); </script>";
+		$redirect_message = '<p class="redirect_message">'. sprintf( __( 'You will soon be redirected automatically. If you see this page for more than %1$d seconds, please click %2$s.%3$s', 'profile-builder' ), $this->args['redirect_delay'], '<a href="'. $location .'">'. __( 'here', 'profile-builder' ) .'</a>', '<meta http-equiv="Refresh" content="'. $this->args['redirect_delay'] .';url='. $location .'" />' ) .'</p>';
+
+		if ( $this->args['redirect_activated'] == 'No' ) {
+			return "<script> window.location.replace( '$location' ); </script>";
+		} else {
+			return "<script> jQuery( '#wppb_form_success_message' ).after( '$redirect_message' ); </script>";
+		}
 	}
 	
 	function wppb_form_content( $message ){
@@ -626,7 +632,7 @@ class Profile_Builder_Form_Creator{
                         <?php
                         foreach( $users as $user ){
                             ?>
-                            <option value="<?php echo $user->ID ?>" <?php selected( $selected, $user->ID ); ?>><?php echo $user->display_name ?></option>
+                            <option value="<?php echo $user->ID; ?>" <?php selected( $selected, $user->ID ); ?>><?php echo $user->display_name; ?></option>
                             <?php
                         }
                         ?>

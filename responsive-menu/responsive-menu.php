@@ -2,24 +2,31 @@
 
 /*
 Plugin Name: Responsive Menu
-Plugin URI: http://responsive.menu
+Plugin URI: https://responsive.menu
 Description: Highly Customisable Responsive Menu Plugin for WordPress
-Version: 3.0.0
+Version: 3.0.9
 Author: Responsive Menu
 Text Domain: responsive-menu
-Author URI: http://responsive.menu
+Author URI: https://responsive.menu
 License: GPL2
 Tags: responsive, menu, responsive menu
 */
 
 /* Check correct PHP version first */
-register_activation_hook(__FILE__, 'activate_responsive_menu');
-function activate_responsive_menu() {
+add_action('admin_init', 'check_responsive_menu_php_version');
+function check_responsive_menu_php_version() {
   if(version_compare(PHP_VERSION, '5.4', '<')):
-    deactivate_plugins(plugin_basename(__FILE__ ));
-    wp_die(sprintf('Responsive Menu requires PHP 5.4 or higher. You are still on %s', PHP_VERSION));
+    add_action('admin_notices', 'responsive_menu_deactivation_text');
+    deactivate_plugins(plugin_basename(__FILE__));
   endif;
 }
+
+function responsive_menu_deactivation_text() {
+  echo '<div class="error"><p>' . sprintf(__('Responsive Menu requires PHP 5.4 or higher to function and has therefore been automatically disabled. You are still on %s.%sPlease speak to your webhost about upgrading your PHP version. For more information please visit %s', 'responsive-menu'), PHP_VERSION, '<br /><br />', '<a target="_blank" href="https://responsive.menu/why-php-5-4/">this page</a>.') . '</p></div>';
+}
+
+if(version_compare(PHP_VERSION, '5.4', '<'))
+  return;
 
 /* Required includes for plugin to function */
 include dirname(__FILE__) . '/autoload.php';
@@ -34,9 +41,32 @@ add_action('plugins_loaded', function() {
 $wp_router = new ResponsiveMenu\Routing\WpRouting($container);
 $wp_router->route();
 
-if(is_admin()):
-  include dirname(__FILE__) . '/src/config/default_options.php';
-  $migration = new ResponsiveMenu\Database\Migration($container['database'], $default_options);
+/*
+* Initial Migration and Version Check synchronisation */
+add_action('init', function() use($container) {
+  $migration = $container['migration'];
   $migration->setup();
   $migration->synchronise();
+});
+
+if(is_admin()):
+
+  /*
+  Polylang Integration Section */
+  add_action('plugins_loaded', function() use($container) {
+    if(function_exists('pll_register_string')):
+      $service = $container['option_service'];
+      $options = $service->all();
+
+      $menu_to_use = isset($options['menu_to_use']) ? $options['menu_to_use']->getValue() : '';
+      $button_title = isset($options['button_title']) ? $options['button_title']->getValue() : '';
+      $menu_title = isset($options['menu_title']) ? $options['menu_title']->getValue() : '';
+      $menu_title_link = isset($options['menu_title_link']) ? $options['menu_title_link']->getValue() : '';
+
+      pll_register_string('Menu Slug', $menu_to_use, 'Responsive Menu');
+      pll_register_string('Button Title', $button_title, 'Responsive Menu');
+      pll_register_string('Menu Title', $menu_title, 'Responsive Menu');
+      pll_register_string('Menu Title Link', $menu_title_link, 'Responsive Menu');
+    endif;
+  });
 endif;

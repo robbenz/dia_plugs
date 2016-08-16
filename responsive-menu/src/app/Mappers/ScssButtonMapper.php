@@ -27,9 +27,9 @@ class ScssButtonMapper extends ScssMapper
         width: {$this->options['button_width']}px;
         height: {$this->options['button_height']}px;
         @if '{$this->options['button_transparent_background']}' == 'off' {
-          background-color: {$this->options['button_background_colour']};
+          background: {$this->options['button_background_colour']};
           &:hover {
-            background-color: {$this->options['button_background_colour_hover']};
+            background: {$this->options['button_background_colour_hover']};
           }
         }
         position: {$this->options['button_position_type']};
@@ -43,12 +43,13 @@ class ScssButtonMapper extends ScssMapper
       .responsive-menu-label {
         color: {$this->options['button_text_colour']};
         font-size: {$this->options['button_font_size']}px;
+        line-height: {$this->options['button_title_line_height']}px;
         @if '{$this->options['button_font']}' != '' {
           font-family: '{$this->options['button_font']}';
         }
       }
 
-        #responsive-menu-button {
+      #responsive-menu-button {
           display: inline-block;
           transition: transform {$this->options['animation_speed']}s, background-color {$this->options['transition_speed']}s;
         }

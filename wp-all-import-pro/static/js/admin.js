@@ -1255,7 +1255,7 @@
 		var $box = $(this).parents('tbody').first();
 		$(this).parents('tr').first().remove();
 		if ( ! $box.find('tr.form-field:visible').length ){
-			$box.find('.add-new-entry').click();
+			$box.find('.add-new-entry').click();			
 		}
 		return false;
 	});
@@ -2240,6 +2240,37 @@
     	wpai_are_sure_to_delete_import();
     });    
     // [\ Delete Import]    
+
+    if ($('.switcher-target-update_choosen_data').length)
+    {    	
+    	var $re_import_options = $('.switcher-target-update_choosen_data');
+    	var $toggle_re_import_options = $('.wpallimport-trigger-options');
+    	
+    	if ($re_import_options.find('input[type=checkbox]').length == $re_import_options.find('input[type=checkbox]:checked').length)
+    	{
+    		var $newtitle = $toggle_re_import_options.attr('rel');    		
+    		$toggle_re_import_options.attr('rel', $toggle_re_import_options.html());
+    		$toggle_re_import_options.html($newtitle);
+    		$toggle_re_import_options.removeClass('wpallimport-select-all');
+    	}    	
+    }
+
+    $('.wpallimport-trigger-options').click(function(){
+    	var $parent = $(this).parents('.switcher-target-update_choosen_data:first');
+    	var $newtitle = $(this).attr('rel');
+    	if ( $(this).hasClass('wpallimport-select-all') ) 
+    	{
+    		$parent.find('input[type=checkbox]').removeAttr('checked').click();
+    		$(this).removeClass('wpallimport-select-all');    		    		
+    	}
+    	else
+    	{    		
+    		$parent.find('input[type=checkbox]:checked').click();
+    		$(this).addClass('wpallimport-select-all');
+    	}    	
+    	$(this).attr('rel', $(this).html());
+    	$(this).html($newtitle);
+    });
 
 	var fix_tag_position = function(){
 		if ($('.wpallimport-layout').length && $('.tag').length){

@@ -19,7 +19,7 @@ class AdminView implements View
       wp_enqueue_script('postbox');
       wp_enqueue_script('postbox-edit', plugin_dir_url(dirname(dirname(__FILE__))) . 'public/js/admin/postbox-edit.js', array('jquery', 'postbox'));
 
-      wp_enqueue_script('item-drag', '//code.jquery.com/ui/1.11.4/jquery-ui.js', 'jquery', 'null');
+      wp_enqueue_script('jquery-ui-core');
 
       wp_register_style('admin-css',  plugin_dir_url(dirname(dirname(__FILE__))) . 'public/css/admin/main.css', false, null );
       wp_enqueue_style('admin-css');
@@ -27,8 +27,6 @@ class AdminView implements View
       wp_register_script('admin-js',  plugin_dir_url(dirname(dirname(__FILE__))) . 'public/js/admin/main.js', 'jquery', null );
       wp_enqueue_script('admin-js' );
 
-      wp_register_script('sticky-sidebar-js',  plugin_dir_url(dirname(dirname(__FILE__))) . 'public/js/admin/sticky-sidebar.js', 'jquery', null );
-      wp_enqueue_script('sticky-sidebar-js');
     endif;
   }
 

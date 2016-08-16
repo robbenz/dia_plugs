@@ -64,7 +64,10 @@
 		
 		<input type="radio" id="update_choosen_data" class="switcher" name="update_all_data" value="no" <?php echo 'no' == $post['update_all_data'] ? 'checked="checked"': '' ?>/>
 		<label for="update_choosen_data"><?php _e('Choose which data to update', 'wp_all_import_plugin' )?></label><br>
-		<div class="switcher-target-update_choosen_data"  style="padding-left:17px;">
+		<div class="switcher-target-update_choosen_data"  style="padding-left:27px;">
+			<div class="input">
+				<h4 class="wpallimport-trigger-options wpallimport-select-all" rel="<?php _e("Unselect All", "wp_all_import_plugin"); ?>"><?php _e("Select All", "wp_all_import_plugin"); ?></h4>
+			</div>
 			<div class="input">
 				<input type="hidden" name="is_update_status" value="0" />
 				<input type="checkbox" id="is_update_status" name="is_update_status" value="1" <?php echo $post['is_update_status'] ? 'checked="checked"': '' ?> />

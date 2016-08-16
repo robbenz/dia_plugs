@@ -3,7 +3,7 @@
 Plugin Name: Booster for WooCommerce
 Plugin URI: http://booster.io
 Description: Supercharge your WooCommerce site with these awesome powerful features.
-Version: 2.5.3
+Version: 2.5.4
 Author: Algoritmika Ltd
 Author URI: http://www.algoritmika.com
 Text Domain: woocommerce-jetpack
@@ -28,7 +28,7 @@ if ( ! class_exists( 'WC_Jetpack' ) ) :
  * Main WC_Jetpack Class
  *
  * @class   WC_Jetpack
- * @version 2.5.3
+ * @version 2.5.4
  */
 
 final class WC_Jetpack {
@@ -39,7 +39,7 @@ final class WC_Jetpack {
 	 * @var   string
 	 * @since 2.4.7
 	 */
-	public $version = '2.5.3';
+	public $version = '2.5.4';
 
 	/**
 	 * @var WC_Jetpack The single instance of the class
@@ -462,10 +462,9 @@ final class WC_Jetpack {
 	/**
 	 * include_shortcodes.
 	 *
-	 * @version 2.5.2
+	 * @version 2.5.4
 	 */
 	private function include_shortcodes() {
-		//if ( 'yes' === get_option( 'wcj_shortcodes_enabled', 'no' ) ) {
 		if ( ! wcj_is_module_enabled( 'general' ) || ( wcj_is_module_enabled( 'general' ) && 'no' === get_option( 'wcj_general_shortcodes_disable_booster_shortcodes', 'no' ) ) ) {
 			include_once( 'includes/shortcodes/class-wcj-shortcodes.php' );
 			include_once( 'includes/shortcodes/class-wcj-general-shortcodes.php' );
@@ -473,6 +472,7 @@ final class WC_Jetpack {
 			include_once( 'includes/shortcodes/class-wcj-orders-shortcodes.php' );
 			include_once( 'includes/shortcodes/class-wcj-order-items-shortcodes.php' );
 			include_once( 'includes/shortcodes/class-wcj-products-shortcodes.php' );
+			include_once( 'includes/shortcodes/class-wcj-products-crowdfunding-shortcodes.php' );
 			include_once( 'includes/shortcodes/class-wcj-products-add-form-shortcodes.php' );
 			include_once( 'includes/shortcodes/class-wcj-input-field-shortcodes.php' );
 		}
@@ -481,7 +481,7 @@ final class WC_Jetpack {
 	/**
 	 * Include modules and submodules
 	 *
-	 * @version 2.5.3
+	 * @version 2.5.4
 	 */
 	function include_modules() {
 		$modules_files = array(
@@ -543,6 +543,7 @@ final class WC_Jetpack {
 			'includes/class-wcj-currency-exchange-rates.php',
 			'includes/class-wcj-price-formats.php',
 			'includes/class-wcj-general.php',
+			'includes/class-wcj-export-import.php',
 //			'includes/class-wcj-shortcodes-module.php',
 			'includes/class-wcj-eu-vat-number.php',
 			'includes/class-wcj-old-slugs.php',
@@ -629,7 +630,7 @@ final class WC_Jetpack {
 	/**
 	 * manage_options_import.
 	 *
-	 * @version 2.5.2
+	 * @version 2.5.4
 	 * @since   2.5.2
 	 */
 	function manage_options_import() {
@@ -641,7 +642,7 @@ final class WC_Jetpack {
 		} else {
 			$import_counter = 0;
 			$import_settings = file_get_contents( $_FILES['booster_import_settings_file']['tmp_name'] );
-			$import_settings = explode( PHP_EOL, $import_settings );
+			$import_settings = explode( PHP_EOL, preg_replace( '~(*BSR_ANYCRLF)\R~', PHP_EOL, $import_settings ) );
 			if ( ! is_array( $import_settings ) || 2 !== count( $import_settings ) ) {
 				$wcj_notice .= __( 'Wrong file format!', 'woocommerce-jetpack' );
 			} else {

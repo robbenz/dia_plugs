@@ -10,12 +10,17 @@ class Button implements ViewComponent {
   public function render(OptionsCollection $options) {
 
     $button_title = apply_filters('wpml_translate_single_string', $options['button_title']->getValue(), 'Responsive Menu', 'button_title');
+
+    /*
+    Add Polylang Support */
+    if(function_exists('pll__'))
+      $button_title = pll__($button_title);
+
     $button_title_pos = $options['button_title_position']->getValue();
     $button_title_html = $button_title != '' ? '<span class="responsive-menu-label responsive-menu-label-'.$button_title_pos.'">'.$button_title.'</span>' : '';
+
     $accessible = in_array($button_title_pos, array('left', 'right')) ? 'responsive-menu-accessible' : '';
     $content = '';
-
-    $content .= $options['use_header_bar'] == 'on' ? '<div id="responsive-menu-header-bar-button" class="responsive-menu-header-box">' : '';
 
     $content .= '<button id="responsive-menu-button"
             class="responsive-menu-button ' . $accessible .
@@ -26,7 +31,6 @@ class Button implements ViewComponent {
     $content .= '<span class="responsive-menu-box">' . $options->getButtonIcon() . $options->getButtonIconActive() . '</span>';
     $content .= in_array($button_title_pos, array('bottom', 'right')) ? $button_title_html : '';
     $content .= '</button>';
-    $content .= $options['use_header_bar'] == 'on' ? '</div>' : '';
 
     return $content;
 

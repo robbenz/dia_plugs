@@ -29,9 +29,9 @@ function pmxi_wp_ajax_get_bundle_post_type(){
 
 		$archive = new PclZip($uploads . $post['file']);
 
-		$tmp_dir = sys_get_temp_dir() . PHP_EOL . md5(time());
+		$tmp_dir = $wp_uploads['basedir'] . DIRECTORY_SEPARATOR . PMXI_Plugin::TEMP_DIRECTORY . DIRECTORY_SEPARATOR . md5(time());
 
-		mkdir($tmp_dir);
+		@wp_mkdir_p($tmp_dir);
 
 		$v_result_list = $archive->extract(PCLZIP_OPT_PATH, $tmp_dir, PCLZIP_OPT_REPLACE_NEWER);		
 
@@ -64,6 +64,7 @@ function pmxi_wp_ajax_get_bundle_post_type(){
 			switch ( $response['post_type'] ) {
 
 				case 'product':
+				case 'shop_order':
 					
 					if ( ! class_exists('WooCommerce') ) {
 						$response['notice'] = __('<p class="wpallimport-bundle-notice">The import bundle you are using requires WooCommerce.</p><a class="upgrade_link" href="https://wordpress.org/plugins/woocommerce/" target="_blank">Get WooCommerce</a>.', 'wp_all_import_plugin');							

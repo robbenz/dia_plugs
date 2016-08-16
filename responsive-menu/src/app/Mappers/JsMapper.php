@@ -107,7 +107,7 @@ class JsMapper
             }
             if(this.animationType == 'push') {
               $(this.pageWrapper).css({'transform':translate});
-              $('html,body').css('overflow-x', 'hidden');
+              $('html, body').css('overflow-x', 'hidden');
             }
             if(this.pushButton == 'on') {
               $('#responsive-menu-button').css({'transform':translate});
@@ -118,8 +118,8 @@ class JsMapper
           if(this.animationType == 'push') {
             $(this.pageWrapper).css({'transform':''});
             setTimeout(function() {
-              $('html,body').css('overflow-x', '');
-            }, self.animationSpeed * 1000);
+              $('html, body').css('overflow-x', '');
+            }, self.animationSpeed);
           }
           if(this.pushButton == 'on') {
             $('#responsive-menu-button').css({'transform':''});
@@ -127,7 +127,8 @@ class JsMapper
         },
         init: function() {
           var self = this;
-          $(this.trigger).on(this.triggerTypes, function(){
+          $(this.trigger).on(this.triggerTypes, function(e){
+            e.stopPropagation();
             self.triggerMenu();
           });
           $('.responsive-menu-subarrow').on('click', function(e) {
@@ -147,12 +148,17 @@ class JsMapper
             }
           });
           if(this.closeOnLinkClick == 'on') {
-            $(this.linkElement).on('click touchstart', function(e) {
+            $(this.linkElement).on('click', function(e) {
+              e.preventDefault();
+              old_href = $(this).attr('href');
               if(self.isOpen) {
                 if($(e.target).closest('.responsive-menu-subarrow').length) {
                   return;
                 }
                 self.closeMenu();
+                setTimeout(function() {
+                  window.location = old_href;
+                }, self.animationSpeed);
               }
             });
           }

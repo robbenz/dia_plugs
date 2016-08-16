@@ -49,7 +49,7 @@
 								
 									$custom_types = get_post_types(array('_builtin' => true), 'objects') + get_post_types(array('_builtin' => false, 'show_ui' => true), 'objects'); 
 									foreach ($custom_types as $key => $ct) {
-										if (in_array($key, array('attachment', 'revision', 'nav_menu_item', 'shop_coupon'))) unset($custom_types[$key]);
+										if (in_array($key, array('attachment', 'revision', 'nav_menu_item', 'shop_webhook', 'import_users'))) unset($custom_types[$key]);
 									}
 									$custom_types = apply_filters( 'pmxi_custom_types', $custom_types );
 
@@ -62,33 +62,38 @@
 								?>	
 								<div class="wpallimport-change-custom-type">
 									<select name="custom_type_selector" id="custom_type_selector" class="wpallimport-post-types">									
-										<?php if ( ! empty($custom_types)): ?>							
+										<?php if ( ! empty($custom_types)): $unknown_cpt = array(); ?>							
 											<?php foreach ($custom_types as $key => $ct) :?>	
 												<?php 
 													$image_src = 'dashicon-cpt';
 
 													$cpt = $key;
-													$cpt_label = $ct->labels->name;
+													$cpt_label = $ct->labels->name;													
 
-													if (class_exists('WooCommerce'))
+													if (  in_array($cpt, array('post', 'page', 'product', 'shop_order', 'shop_coupon') ) )
 													{
-														if ($key == 'product')
-														{
-															$cpt = 'shop_order';
-															$cpt_label = $custom_types['shop_order']->labels->name;
-														}
-														elseif($key == 'shop_order')
-														{
-															$cpt = 'product';
-															$cpt_label = $custom_types['product']->labels->name;
-														}
-													}
-
-													if (  in_array($cpt, array('post', 'page', 'product', 'shop_order') ) )
 														$image_src = 'dashicon-' . $cpt;										
+													}
+													else
+													{
+														$unknown_cpt[$key] = $ct;
+														continue;
+													}														
 												?>
 											<option value="<?php echo $cpt; ?>" data-imagesrc="dashicon <?php echo $image_src; ?>" <?php if ( $cpt == $post['custom_type'] ) echo 'selected="selected"';?>><?php echo $cpt_label; ?></option>
 											<?php endforeach; ?>
+											<?php if (class_exists('PMUI_Plugin')): ?>
+											<option value="import_users" data-imagesrc="dashicon dashicon-import_users" <?php if ( 'import_users' == $post['custom_type'] ):?>selected="selected"<?php endif; ?>><?php _e('Users', 'wp_all_import_plugin'); ?></option>
+											<?php endif; ?>
+											<?php if ( ! empty($unknown_cpt)):  ?>
+												<?php foreach ($unknown_cpt as $key => $ct):?>
+													<?php
+													$image_src = 'dashicon-cpt';																								
+													$cpt_label = $ct->labels->name;												
+													?>
+													<option value="<?php echo $key;?>" data-imagesrc="dashicon <?php echo $image_src; ?>" <?php if ($key == $post['custom_type']) echo 'selected="selected"'; ?>><?php echo $cpt_label; ?></option>
+												<?php endforeach ?>
+											<?php endif;?>
 										<?php endif; ?>
 										<?php if ( ! empty($hidden_post_types)): ?>							
 											<?php foreach ($hidden_post_types as $key => $cpt) :?>	
@@ -141,6 +146,11 @@
 									<label for="is_cloak"><?php _e('Auto-Cloak Links', 'wp_all_import_plugin') ?> <a href="#help" class="wpallimport-help" style="position:relative; top:0;" title="<?php printf(__('Automatically process all links present in body of created post or page with <b>%s</b> plugin', 'wp_all_import_plugin'), PMLC_Plugin::getInstance()->getName()) ?>">?</a></label>
 								</div> 						
 							<?php endif; ?>							
+							<div class="input">
+								<input type="hidden" name="xml_reader_engine" value="0" />
+								<input type="checkbox" id="xml_reader_engine" class="fix_checkbox" name="xml_reader_engine" value="1" <?php echo $post['xml_reader_engine'] ? 'checked="checked"': '' ?>/>
+								<label for="xml_reader_engine"><?php _e('Use StreamReader instead of XMLReader to parse import file', 'wp_all_import_plugin') ?> <a href="#help" class="wpallimport-help" style="position:relative; top:0;" title="<?php _e('XMLReader is much faster, but has a bug that sometimes prevents certain records from being imported with import files that contain special cases.', 'wp_all_import_plugin'); ?>">?</a></label>
+							</div>
 							
 							<div class="input" style="margin-top: 15px;">
 								<p><?php _e('Friendly Name','wp_all_import_plugin');?></p> <br>

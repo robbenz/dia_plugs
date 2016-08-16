@@ -1,8 +1,8 @@
 === Responsive WordPress Slider - Soliloquy Lite ===
 Contributors: griffinjt
 Tags: wordpress slider, slider, wordpress slider plugin, slider plugin, responsive, responsive slider, image slider, image slider plugin, responsive slider plugin, responsive image slider, responsive image slider plugin, custom post types, slideshow, responsive slideshow, slideshow plugin, responsive slideshow plugin, rotator, image rotator, responsive rotator, jquery slider, javascript slider, jquery rotator, javascript rotator, picture slider, photo slider, photo rotator, shortcode, template tag, wordpress slideshow, photo slider, wordpress responsive slider, wordpress picture slider, responsive picture slider, wordpress image slider, wordpress gallery, image gallery, photo gallery, wordpress photo gallery, wordpress picture gallery, wordpress picture slider, wp slider, best wordpress slider, best slider, best slider wordpress, best responsive slider, best responsive wordpress slider plugin
-Requires at least: 3.5.1
-Tested up to: 4.4.1
+Requires at least: 4.0.0
+Tested up to: 4.6.0
 Stable tag: trunk
 License: GNU General Public License v2.0 or later
 
@@ -74,18 +74,39 @@ The pro version of Soliloquy has many more features and enables you to do so muc
 = Addons =
 
 Soliloquy has many Addons that extend its default functionality to make it do incredible things.
-
+* <a href="http://soliloquywp.com/addons/css/" rel="friend" title="Soliloquy CSS Addon">Soliloquy CSS Addon</a> - Customize your WordPress sliders by adding custom CSS and styles.
 * <a href="http://soliloquywp.com/addons/themes/" rel="friend" title="Soliloquy Themes Addon">Soliloquy Themes Addon</a> - beautiful themes for your WordPress slider.
 * <a href="http://soliloquywp.com/addons/lightbox/" rel="friend" title="Soliloquy Lightbox Addon">Soliloquy Lightbox Addon</a> - use powerful lightbox features to enhance the presentation and interaction with your WordPress slider.
 * <a href="http://soliloquywp.com/addons/instagram/" rel="friend" title="Soliloquy Instagram Addon">Soliloquy Instagram Addon</a> - make awesome responsive WordPress sliders from your Instagram photo stream.
-* <a href="http://soliloquywp.com/addons/crop/" rel="friend" title="Soliloquy Crop Addon">Soliloquy Crop Addon</a> - instantly and dynamically crop images to the size you specify on the fly. No more resizing in Photoshop!
-* <a href="http://soliloquywp.com/addons/featured-content/" rel="friend" title="Soliloquy Featured Content Addon">Soliloquy Featured Content Addon</a> - make a gorgeous WordPress slider from you posts, pages and other custom post types.
+* <a href="http://soliloquywp.com/addons/featured-content/" rel="friend" title="Soliloquy Featured Content Addon">Soliloquy Featured Content Addon</a> - Easily create WordPress sliders based on blog posts, pages, products, testimonials, and other custom post types.
 * <a href="http://soliloquywp.com/addons/pinterest/" rel="friend" title="Soliloquy Pinterest Addon">Soliloquy Pinterest Addon</a> - easily add a "Pin It" button to images in your slider.
 * <a href="http://soliloquywp.com/addons/thumbnails/" rel="friend" title="Soliloquy Thumbnails Addon">Soliloquy Thumbnails Addon</a> - give your slider easy-to-use and responsive thumbnails.
-* <a href="http://soliloquywp.com/addons/filters/" rel="friend" title="Soliloquy Filters Addon">Soliloquy Filters Addon</a> - add 25+  awesome filters to images in your WordPress slider.
 * <a href="http://soliloquywp.com/addons/carousel/" rel="friend" title="Soliloquy Carousel Addon">Soliloquy Carousel Addon</a> - transform your default WordPress slider into a responsive and easy-to-use carousel slider.
+* <a href="http://soliloquywp.com/addons/woocommerce-addon/" rel="friend" title="Soliloquy WooCommerce Addon">Soliloquy WooCommerce Addon</a> - Interactive product sliders for your WooCommerce store.
+* <a href="http://soliloquywp.com/addons/dynamic/" rel="friend" title="Soliloquy Dynamic Addon">Soliloquy Dynamic Addon</a> - Dynamically create sliders on the fly from various different sources.
+* <a href="http://soliloquywp.com/addons/defaults-addon/" rel="friend" title="Soliloquy Defaults Addon">Soliloquy Defaults Addon</a> - Speed up the slider creation process with default settings.
+* <a href="http://soliloquywp.com/addons/schedule/" rel="friend" title="Soliloquy Schedule Addon">Soliloquy Schedule Addon</a> - Schedule sliders or individual slides for specific time intervals.
+* <a href="http://soliloquywp.com/addons/protection-addon/" rel="friend" title="Soliloquy Protection Addon">Soliloquy Protection Addon</a> - Disable right click to prevent users from downloading your images.
+
 
 == Changelog ==
+
+= 2.5.0.3 =
+* Fix: Various minor bugs.
+
+= 2.5.0.2 =
+* Fix: Cases where Meta Edit for slides in unavailable.
+
+= 2.5.0.1 =
+* Fix: PHP 5.2 compat issues causing admin screen to be un-functional 
+* Fix: Numerous UI bug fixes
+
+= 2.5.0 =
+* Added: New UI!
+* Added: Insert Images from Media Library!
+* Added: Display images by list or grid in admin
+* Added: Improved workflows to make slider management easier than ever
+* Fix: Numerous bug fixes, performance, and stability enhancements
 
 = 2.4.0.8 =
 * Fix: Don't try to display alt attributes on images if none exist. Prevents PHP warnings regarding undefined indexes

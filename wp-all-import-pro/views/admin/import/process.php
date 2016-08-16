@@ -43,6 +43,13 @@
 				</h4>				
 				<input type="button" class="button button-primary button-hero wpallimport-large-button wpallimport-delete-and-edit" rel="<?php echo add_query_arg(array('id' => $update_previous->id, 'page' => 'pmxi-admin-manage', 'action' => 'delete_and_edit'), $this->baseUrl); ?>" value="<?php _e('Delete & Edit', 'wp_all_import_plugin'); ?>"/>				
 			</div>
+			<div class="wpallimport-content-section wpallimport-console wpallimport-orders-complete-warning">
+				<h3><?php printf(__('<span id="skipped_count">%s</span> orders were skipped during this import', 'wp_all_import_plugin'), $update_previous->skipped); ?></h3>
+				<h4>
+					<?php printf(__('WP All Import is unable import an order when it cannot match the products or customer specified.<br/><a href="%s" style="margin: 0;">See the import log</a> for a list of which orders were skipped and why.', 'wp_all_import_plugin'), add_query_arg(array('id' => $update_previous->id, 'page' => 'pmxi-admin-history', 'action' => 'log', 'history_id' => PMXI_Plugin::$session->history_id, '_wpnonce' => wp_create_nonce( '_wpnonce-download_log' )), $this->baseUrl)); ?>
+				</h4>				
+				<input type="button" class="button button-primary button-hero wpallimport-large-button wpallimport-delete-and-edit" rel="<?php echo add_query_arg(array('id' => $update_previous->id, 'page' => 'pmxi-admin-manage', 'action' => 'delete_and_edit'), $this->baseUrl); ?>" value="<?php _e('Delete & Edit', 'wp_all_import_plugin'); ?>"/>				
+			</div>
 			<h3 class="wpallimport-complete-success"><?php printf(__('WP All Import successfully imported your file <span>%s</span> into your WordPress installation!','wp_all_import_plugin'), (PMXI_Plugin::$session->source['type'] != 'url') ? basename(PMXI_Plugin::$session->source['path']) : PMXI_Plugin::$session->source['path'])?></h3>						
 			<?php if ($ajax_processing): ?>
 			<p class="wpallimport-log-details"><?php printf(__('There were <span class="wpallimport-errors-count">%s</span> errors and <span class="wpallimport-warnings-count">%s</span> warnings in this import. You can see these in the import log.', 'wp_all_import_plugin'), 0, 0); ?></p>
@@ -209,6 +216,7 @@
 					$('#created_count').html(data.created);	
 					$('.inserted_count').html(data.created);	
 					$('#updated_count').html(data.updated);
+					$('#skipped_count').html(data.skipped);
 					$('#warnings').html(data.warnings);
 					$('#errors').html(data.errors);
 					$('#percents_count').html(data.percentage);
@@ -229,11 +237,18 @@
 							// detect broken auto-created Unique ID and notify user
 							<?php if ( $this->isWizard and $update_previous->options['wizard_type'] == 'new' and ! $update_previous->options['deligate']): ?>
 								if ( data.imported != data.created )
-								{
-									//$('.wpallimport-complete-success').hide();
+								{									
 									$('.wpallimport-complete-warning').show();
+								}																
+							<?php endif; ?>
+
+							<?php if ( ! $update_previous->options['deligate'] and ! empty($update_previous->options['custom_type']) and $update_previous->options['custom_type'] == 'shop_order' and empty($update_previous->options['is_import_specified'])): ?>
+								if ( data.skipped > 0 )
+								{									
+									$('.wpallimport-orders-complete-warning').show();
 								}
 							<?php endif; ?>
+
 
 							$('#import_finished').fadeIn();								
 							
@@ -324,7 +339,8 @@
 
 					var request = {
 						action:'import_failed',			
-						id: '<?php echo $update_previous->id; ?>'						
+						id: '<?php echo $update_previous->id; ?>',
+						security: wp_all_import_security						
 				    };	
 
 				    $.ajax({

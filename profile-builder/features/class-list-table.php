@@ -412,7 +412,7 @@ class PB_WP_List_Table {
 				selected( $m, $year . $month, false ),
 				esc_attr( $arc_row->year . $month ),
 				/* translators: 1: month name, 2: 4-digit year */
-				sprintf( __( '%1$s %2$d' ), $wp_locale->get_month( $month ), $year )
+				sprintf( __( '%1$s %2$d' ), esc_attr( $wp_locale->get_month( $month ) ), esc_attr( $year ) )
 			);
 		}
 ?>

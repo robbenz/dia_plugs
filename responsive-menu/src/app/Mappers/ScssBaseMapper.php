@@ -11,15 +11,14 @@ class ScssBaseMapper extends ScssMapper
     $css = <<<CSS
 
       #responsive-menu-button,
-      #responsive-menu-container,
-      #responsive-menu-header {
+      #responsive-menu-container {
         display: none;
+        -webkit-text-size-adjust: 100%;
       }
 
       @media screen and (max-width: {$this->options['breakpoint']}px) {
 
-        #responsive-menu-container,
-        #responsive-menu-header {
+        #responsive-menu-container {
           display: block;
         }
 
@@ -27,7 +26,7 @@ class ScssBaseMapper extends ScssMapper
         position: fixed;
         top: 0;
         bottom: 0;
-        z-index: 9998;
+        z-index: 99998;
         /* Fix for scroll bars appearing when not needed */
         padding-bottom: 5px;
         margin-bottom: -5px;
@@ -37,9 +36,8 @@ class ScssBaseMapper extends ScssMapper
           width: 100%;
           padding: 0 2%;
           border-radius: 2px;
-          border: 2px solid #dadada;
           height: 50px;
-          background: white;
+          -webkit-appearance: none;
         }
 
         &.push-left,
@@ -136,7 +134,6 @@ class ScssBaseMapper extends ScssMapper
           a {
             width: 100%;
             display: block;
-            margin-top: -1px; // Fix double borders with menu link above
             text-decoration: none;
             padding: 0 5%;
             position: relative;
@@ -165,7 +162,7 @@ class ScssBaseMapper extends ScssMapper
       }
 
       #responsive-menu-button {
-        z-index: 9999;
+        z-index: 99999;
         display: none;
         overflow: hidden;
         img {
@@ -193,39 +190,9 @@ class ScssBaseMapper extends ScssMapper
       .responsive-menu-label.responsive-menu-label-bottom
       {
         display: block;
-        margin: 10px auto;
+        margin: 0 auto;
       }
 
-      #responsive-menu-header {
-        width: 100%;
-        padding: 0 5%;
-        box-sizing: border-box;
-        top: 0;
-        right: 0;
-        left: 0;
-        display: none;
-        .responsive-menu-header-box {
-          display: inline-block;
-          &, & img {
-            vertical-align: middle;
-            max-width: 100%;
-          }
-          &:last-child {
-            float: right;
-            margin-right: 0;
-          }
-        }
-        #responsive-menu-button {
-          position: relative;
-          margin: 0;
-          left: auto;
-          right: auto;
-          bottom: auto;
-        }
-        .responsive-menu-header-box {
-          margin-right: 2%;
-        }
-      }
     }
 CSS;
 

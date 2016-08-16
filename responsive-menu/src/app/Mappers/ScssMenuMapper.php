@@ -46,6 +46,26 @@ class ScssMenuMapper extends ScssMapper
           color: {$this->options['menu_additional_content_colour']};
         }
 
+        .responsive-menu-search-box {
+            background: {$this->options['menu_search_box_background_colour']};
+            border: 2px solid {$this->options['menu_search_box_border_colour']};
+            color: {$this->options['menu_search_box_text_colour']};
+            &:-ms-input-placeholder {
+              color: {$this->options['menu_search_box_placholder_colour']};
+            }
+            &:-webkit-input-placeholder {
+              color: {$this->options['menu_search_box_placholder_colour']};
+            }
+            &:-moz-placeholder {
+              color: {$this->options['menu_search_box_placholder_colour']};
+              opacity: 1;
+            }
+            &::-moz-placeholder {
+              color: {$this->options['menu_search_box_placholder_colour']};
+              opacity: 1;
+            }
+        }
+
         @if '{$this->options['menu_maximum_width']}' != '' {
           max-width: {$this->options['menu_maximum_width']}px;
         }
@@ -57,8 +77,8 @@ class ScssMenuMapper extends ScssMapper
           font-family: '{$this->options['menu_font']}';
         }
 
-        & a, & #responsive-menu-title, & .responsive-menu-subarrow {
-          transition: all {$this->options['transition_speed']}s;
+        & .responsive-menu-item-link, & #responsive-menu-title, & .responsive-menu-subarrow {
+          transition: background-color {$this->options['transition_speed']}s, border-color {$this->options['transition_speed']}s;
         }
 
         #responsive-menu-title {
@@ -94,7 +114,8 @@ class ScssMenuMapper extends ScssMapper
             }
             a {
               line-height: {$this->options['menu_links_height']}px;
-              border: 1px solid {$this->options['menu_item_border_colour']};
+              border-top: 1px solid {$this->options['menu_item_border_colour']};
+              border-bottom: 1px solid {$this->options['menu_item_border_colour']};
               color: {$this->options['menu_link_colour']};
               background-color: {$this->options['menu_item_background_colour']};
               &:hover {
@@ -113,7 +134,7 @@ class ScssMenuMapper extends ScssMapper
                 line-height: {$this->options['submenu_arrow_height']}px;
                 width: {$this->options['submenu_arrow_width']}px;
                 color: {$this->options['menu_sub_arrow_shape_colour']};
-                border: 1px solid {$this->options['menu_sub_arrow_border_colour']};
+                border-left: 1px solid {$this->options['menu_sub_arrow_border_colour']};
                 background-color: {$this->options['menu_sub_arrow_background_colour']};
 
                   &:hover {
@@ -126,9 +147,11 @@ class ScssMenuMapper extends ScssMapper
             &.responsive-menu-current-item > .responsive-menu-item-link {
               background-color: {$this->options['menu_current_item_background_colour']};
               color: {$this->options['menu_current_link_colour']};
+              border-color: {$this->options['menu_current_item_border_colour']};
               &:hover {
                 background-color: {$this->options['menu_current_item_background_hover_colour']};
                 color: {$this->options['menu_current_link_hover_colour']};
+                border-color: {$this->options['menu_current_item_border_hover_colour']};
               }
             }
           }

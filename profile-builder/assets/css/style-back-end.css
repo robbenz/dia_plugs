@@ -49,33 +49,44 @@
 }
 
 .wppb-badge{
-	float:right;
-	color:#ffd3c4;
+	float: right;
+	color: #fff;
 	display: inline-block;
     font-size: 14px;
     font-weight: 600;
     width: 150px;
-	height: 30px;
-	margin-bottom:25px;
-    padding-top: 120px;
+	height: 150px;
+	margin-bottom: 25px;
     text-align: center;
     text-rendering: optimizelegibility;
 }
 
 .wppb-badge.Pro{
-	background:url(../images/logo_pro.png) center 20px no-repeat #d54e21;
+	background:url(../images/pb-logo-pro.png) center no-repeat;
 }
 
 .wppb-badge.Hobbyist{
-	background:url(../images/logo_hobby.png) center 20px no-repeat #d54e21;
+	background:url(../images/pb-logo-hobbyist.png) center no-repeat;
 }
 
 .wppb-badge.Free{
-	background:url(../images/logo_free.png) center 20px no-repeat #d54e21;
+	background:url(../images/pb-logo-free.png) center no-repeat;
 }
 
 .wppb-badge.wppb-pb-pms{
-	background:url(../images/pb+pms.png) center center no-repeat;
+	background:url(../images/pb-pms-cross-promotion-icon.png) center center no-repeat;
+}
+
+.wppb-badge {
+    background-size: cover !important;
+}
+
+.wppb-badge span {
+    display: inline-block;
+    text-transform: uppercase;
+    color: #fff;
+    margin-top: 110px;
+    font-size: 90%;
 }
 
 /* Userlist page */
@@ -469,6 +480,7 @@
 .wppb-add-on .wppb-add-on-title {
     letter-spacing: -0.7px;
     margin-bottom: 7px;
+    margin-top: 7px;
 }
 
 .wppb-add-on .wppb-add-on-title a {
@@ -600,7 +612,7 @@ p .wppb-button-free {
 /* PMS Compatibility page */
 #pms-bottom-install .plugin-card-bottom{
 	border:none;
-	background: #5693d3;
+	background: #e86054;
 	color:#fff;
 }
 
@@ -613,7 +625,7 @@ p .wppb-button-free {
 	font-size: 130%;
 	padding: 10px 20px;
 	height: auto;
-	color: #5693d3;
+	color: #e86054;
 	text-decoration: none;
 }
 

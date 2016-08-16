@@ -5,9 +5,10 @@
 	if ( ! $('body.wpallimport-plugin').length) return; // do not execute any code if we are not on plugin page
 
 	$('.product_data_tabs').find('a').click(function(){
-		$('.product_data_tabs').find('li').removeClass('active');
+		var $parent = $(this).parents('.product_data_tabs').first();
+		$parent.find('li').removeClass('active');
 		$(this).parent('li').addClass('active');
-		$('.panel').hide();
+		$(this).parents('.panel-wrap').first().find('.panel').hide();
 		$('#' + $(this).attr('rel')).show();
 	});
 
@@ -27,9 +28,7 @@
 		if ( ! is_variable && ! is_grouped && ! is_external && is_multiple_product_type )
 		{
 			is_simple = true;
-		}
-
-		console.log(is_simple);
+		}		
 
 		$('.product_data_tabs li, .options_group').each(function(){
 
@@ -378,5 +377,122 @@
 			$parent.find('.advanced_attributes').click();
 		}
 	});
+
+	// [ WC Orders View ]
+	// swither show/hide logic
+	$('select.switcher').live('change', function (e) {	
+
+		var $targets = $('.switcher-target-' + $(this).attr('id'));
+
+		var is_show = $(this).val() == 'xpath'; if ($(this).is('.switcher-reversed')) is_show = ! is_show;
+		if (is_show) {
+			$targets.slideDown();
+		} else {
+			$targets.slideUp().find('.clear-on-switch').add($targets.filter('.clear-on-switch')).val('');
+		}
+
+	}).change();	
+
+	$('a.add-new-line').live('click', function(){
+		var $parent = $(this).parents('table').first();
+		var $template = $parent.children('tbody').children('tr.template');
+		var $clone = $template.clone(true);
+		var $number = parseInt($parent.find('tbody:first').children().not('.template').length) - 1;	
+		
+		var $cloneHtml = $clone.html().replace(/ROWNUMBER/g, $number).replace(/CELLNUMBER/g, 'ROWNUMBER').replace('date-picker', 'datepicker');
+
+		$clone.html($cloneHtml);		
+
+		$clone.insertBefore($template).css('display', 'none').removeClass('template').fadeIn();		
+
+		// datepicker
+		$parent.find('input.datepicker').removeClass('date-picker').addClass('datepicker').datepicker({
+			dateFormat: 'yy-mm-dd',
+			showOn: 'button',
+			buttonText: '',
+			constrainInput: false,
+			showAnim: 'fadeIn',
+			showOptions: 'fast'
+		}).bind('change', function () {
+			var selectedDate = $(this).val();
+			var instance = $(this).data('datepicker');
+			var date = null;
+			if ('' != selectedDate) {
+				try {
+					date = $.datepicker.parseDate(instance.settings.dateFormat || $.datepicker._defaults.dateFormat, selectedDate, instance.settings);
+				} catch (e) {
+					date = null;
+				}
+			}
+			if ($(this).hasClass('range-from')) {
+				$(this).parent().find('.datepicker.range-to').datepicker("option", "minDate", date);
+			}
+			if ($(this).hasClass('range-to')) {
+				$(this).parent().find('.datepicker.range-from').datepicker("option", "maxDate", date);
+			}
+		}).change();
+		$('.ui-datepicker').hide(); // fix: make sure datepicker doesn't break wordpress wpallimport-layout upon initialization		
+
+		return false;
+	});	
+
+	$('a.add-new-line').each(function(){
+		var $parent = $(this).parents('table:first');		
+		if ($(this).parents('table').length < 4 && $parent.children('tbody').children('tr').length == 2)
+		{						
+			$(this).click();	
+		} 
+	});
+
+	$('a.switcher').live('click', function (e) {	
+		
+		var $targets = $('.switcher-target-' + $(this).attr('id'));
+
+		var is_show = $(this).find('span').html() == '+'; if ($(this).is('.switcher-reversed')) is_show = ! is_show;
+		if (is_show) {
+			$(this).find('span').html('-');
+			
+				if ($targets.find('a.add-new-line').length){
+					var $parent = $targets.find('a.add-new-line').parents('table:first');
+					if ($parent.children('tbody').children('tr').length == 2){
+						// $(this).find('a.add-new-line').click();
+						var $add_new = $targets.find('a.add-new-line');
+						var $taxes = $add_new.parents('table').first();
+						var $template = $taxes.children('tbody').children('tr.template');
+						var $clone = $template.clone(true);
+						var $number = parseInt($taxes.find('tbody:first').children().not('.template').length) - 1;	
+						
+						var $cloneHtml = $clone.html().replace(/ROWNUMBER/g, $number).replace(/CELLNUMBER/g, 'ROWNUMBER').replace('date-picker', 'datepicker');
+
+						$clone.html($cloneHtml);		
+
+						$clone.insertBefore($template).css('display', 'none').removeClass('template').show();		
+					}
+				}
+			$targets.slideDown('slow');
+		} else {
+			$(this).find('span').html('+');
+			$targets.slideUp().find('.clear-on-switch').add($targets.filter('.clear-on-switch')).val('');
+		}
+
+	}).click();	
+
+	$('.variable_repeater_mode').live('change', function(){
+		// if variable mode
+		if ($(this).is(':checked'))
+		{
+			var $parent = $(this).parents('.options_group:first');
+			
+			if ($(this).val() == 'xml' || $(this).val() == 'csv')
+			{
+				$parent.find('table.wpallimport_variable_table').find('tr.wpallimport-row-actions').hide();			
+			}						
+			else
+			{
+				$parent.find('table.wpallimport_variable_table').find('tr.wpallimport-row-actions').show();
+			}
+		}
+
+	}).change();
 
 });})(jQuery);

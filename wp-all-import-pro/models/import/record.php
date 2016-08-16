@@ -222,6 +222,8 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 						
 						set_time_limit(0);													
 
+						// wp_all_import_get_reader_engine( array($filePath), array('root_element' => $this->root_element), $this->id );						
+
 						$file = new PMXI_Chunk($filePath, array('element' => $this->root_element, 'encoding' => $this->options['encoding']));
 					    
 					    // chunks counting		    
@@ -1435,14 +1437,14 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 					$logger and !$is_cron and PMXI_Plugin::$session->chunk_number++;
 					$logger and !$is_cron and PMXI_Plugin::$session->save_data();						
 					continue;																		
-				}
+				}				
 
 				wp_cache_flush();
 
 				$logger and call_user_func($logger, __('<b>ACTION</b>: pmxi_before_post_import ...', 'wp_all_import_plugin'));
 				do_action('pmxi_before_post_import', $this->id);															
 
-				if ( empty($titles[$i]) ) {
+				if ( empty($titles[$i]) && $this->options['custom_type'] != 'shop_order') {
 					if ( ! empty($addons_data['PMWI_Plugin']) and !empty($addons_data['PMWI_Plugin']['single_product_parent_ID'][$i]) ){
 						$titles[$i] = $addons_data['PMWI_Plugin']['single_product_parent_ID'][$i] . ' Product Variation';
 					}					
@@ -1453,7 +1455,7 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 				}				
 				
 				if ( $this->options['custom_type'] == 'import_users' ){					
-					$articleData = array(			
+					$articleData = apply_filters('wp_all_import_combine_article_data', array(			
 						'user_pass' => $addons_data['PMUI_Plugin']['pmui_pass'][$i],
 						'user_login' => $addons_data['PMUI_Plugin']['pmui_logins'][$i],
 						'user_nicename' => $addons_data['PMUI_Plugin']['pmui_nicename'][$i],
@@ -1466,11 +1468,11 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 						'description' =>  $addons_data['PMUI_Plugin']['pmui_description'][$i],
 						'nickname' => $addons_data['PMUI_Plugin']['pmui_nickname'][$i],
 						'role' => ('' == $addons_data['PMUI_Plugin']['pmui_role'][$i]) ? 'subscriber' : strtolower($addons_data['PMUI_Plugin']['pmui_role'][$i]),
-					);							
+					), $this->options['custom_type'], $this->id, $i);							
 					$logger and call_user_func($logger, sprintf(__('Combine all data for user %s...', 'wp_all_import_plugin'), $articleData['user_login']));
 				} 
 				else {															
-					$articleData = array(
+					$articleData = apply_filters('wp_all_import_combine_article_data', array(
 						'post_type' => $post_type[$i],
 						'post_status' => ("xpath" == $this->options['status']) ? $post_status[$i] : $this->options['status'],
 						'comment_status' => ("xpath" == $this->options['comment_status']) ? $comment_status[$i] : $this->options['comment_status'],
@@ -1484,7 +1486,7 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 						'post_author' => $post_author[$i],						
 						'menu_order' => (int) $menu_order[$i],
 						'post_parent' => ("no" == $this->options['is_multiple_page_parent']) ? (int) $page_parent[$i] : (int) $this->options['parent']
-					);
+					), $this->options['custom_type'], $this->id, $i);
 					$logger and call_user_func($logger, sprintf(__('Combine all data for post `%s`...', 'wp_all_import_plugin'), $articleData['post_title']));		
 
 					// if ( "xpath" == $this->options['status'] )
@@ -1504,7 +1506,7 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 				$post_to_update = false; $post_to_update_id = false;
 
 				// An array representation of current XML node
-				$current_xml_node = wp_all_import_xml2array($rootNodes[$i]);
+				$current_xml_node = wp_all_import_xml2array($rootNodes[$i]);				
 
 				$check_for_duplicates = apply_filters('wp_all_import_is_check_duplicates', true, $this->id);
 				
@@ -1567,10 +1569,20 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 							}
 						}	
 						else{
-							$logger and call_user_func($logger, sprintf(__('Duplicate post wasn\'n found for post `%s`...', 'wp_all_import_plugin'), $articleData['post_title']));
+							$logger and call_user_func($logger, sprintf(__('Duplicate post wasn\'t found for post `%s`...', 'wp_all_import_plugin'), $articleData['post_title']));
 						}
 					}
-				}				
+				}	
+
+				$is_post_to_skip = apply_filters('wp_all_import_is_post_to_skip', false, $this->id, $current_xml_node, $i, $post_to_update_id);
+
+				if ( $is_post_to_skip ) {
+					$skipped++;																
+					$logger and !$is_cron and PMXI_Plugin::$session->warnings++;					
+					$logger and !$is_cron and PMXI_Plugin::$session->chunk_number++;
+					$logger and !$is_cron and PMXI_Plugin::$session->save_data();						
+					continue;																		
+				}			
 
 				if ( ! empty($specified_records) ) {
 
@@ -1722,10 +1734,7 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 							if ( ! $this->options['is_update_registered'] ) $articleData['user_registered'] = $post_to_update->user_registered;
 							if ( ! $this->options['is_update_display_name'] ) $articleData['display_name'] = $post_to_update->display_name;
 							if ( ! $this->options['is_update_url'] ) $articleData['user_url'] = $post_to_update->user_url;
-						}
-
-						$logger and call_user_func($logger, sprintf(__('Applying filter `pmxi_article_data` for `%s`', 'wp_all_import_plugin'), $articleData['post_title']));	
-						$articleData = apply_filters('pmxi_article_data', $articleData, $this, $post_to_update);
+						}						
 																
 					}
 
@@ -1753,7 +1762,10 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 					// existing post not found though it's track was found... clear the leftover, plugin will continue to treat record as new
 					$postRecord->clear();
 					
-				}									
+				}				
+
+				$logger and call_user_func($logger, sprintf(__('Applying filter `pmxi_article_data` for `%s`', 'wp_all_import_plugin'), $articleData['post_title']));							
+				$articleData = apply_filters('pmxi_article_data', $articleData, $this, $post_to_update);					
 				
 				// no new records are created. it will only update posts it finds matching duplicates for
 				if (  ! $this->options['create_new_records'] and empty($articleData['ID']) ){ 
@@ -2864,10 +2876,11 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 						$logger and call_user_func($logger, sprintf(__('<b>UPDATED</b> `%s` `%s` (ID: %s)', 'wp_all_import_plugin'), $articleData['post_title'], $custom_type_details->labels->singular_name, $pid));
 					}
 
+					$is_update = ! empty($articleData['ID']);
+
 					// fire important hooks after custom fields are added
 					if ( ! $this->options['is_fast_mode'] and $this->options['custom_type'] != 'import_users'){
-						$post_object = get_post( $pid );
-						$is_update = ! empty($articleData['ID']);
+						$post_object = get_post( $pid );						
 						do_action( "save_post_" . $articleData['post_type'], $pid, $post_object, $is_update );
 						do_action( 'save_post', $pid, $post_object, $is_update );
 						do_action( 'wp_insert_post', $pid, $post_object, $is_update );
@@ -2903,7 +2916,7 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 					
 					// [/addons import]										
 					$logger and call_user_func($logger, __('<b>ACTION</b>: pmxi_saved_post', 'wp_all_import_plugin'));
-					do_action( 'pmxi_saved_post', $pid, $rootNodes[$i]); // hook that was triggered immediately after post saved
+					do_action( 'pmxi_saved_post', $pid, $rootNodes[$i], $is_update ); // hook that was triggered immediately after post saved
 					
 					if (empty($articleData['ID'])) $created++; else $updated++;						
 

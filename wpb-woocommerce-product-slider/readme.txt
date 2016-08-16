@@ -7,19 +7,24 @@ Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Number one free WooCommerce Product slider plugin. 
+WPB WooCommerce Product slider is most popular & best free WooCommerce product slider plugin
 
 == Description ==
 
+WPB WooCommerce product slider comes with two different themes for different style product slider for your WooCommerce shop. It can show featured products slider and latest products slider. With this plugin's shortcode you can show the product slider anywhere on you site. It has custom widgets for showing products slider in the sidebar and settings to customize the product slider. It's mobile responsive. Its features make this plugin number one free WooCommerce product slider.
 
-The WPB WooCommerce Product slider is most popular & best free WooCommerce product slider plugin. We have thousands of active install of this plugin. If you are thinking to build a shopping site using WooCommerce, then WPB WooCommerce Product slider plugin is most required to you for taking your conversion rate to the next level.
+We have thousands of active install of this plugin. If you are thinking to build a shopping site using WooCommerce, then WPB WooCommerce Product slider plugin is most required to you for taking your conversion rate to the next level.
 
 
 >[Upgrade to the Pro Version Now!&raquo;](http://wpbean.com/product/wpb-woocommerce-product-slider-pro)  |  [DEMO](http://demo1.wpbean.com/wpb-woocommerce-product-slider-pro/)  |  [Support](http://wpbean.com/support/) |  [Documentation](https://wordpress.org/plugins/wpb-woocommerce-product-slider/installation/)
 
 See the <a href="http://wordpress.org/plugins/wpb-woo-product-slider/screenshots/">screenshots section</a> for visuals on WPB Woocommerce Product slider features.
 
-### Video Documentation:
+### PRO version new features:
+
+https://www.youtube.com/watch?v=bCD6kexPsOI
+
+### PRO version video documentation:
 
 https://www.youtube.com/watch?v=abgnW7wN5pY&feature=youtu.be
 
@@ -34,23 +39,25 @@ https://www.youtube.com/watch?v=abgnW7wN5pY&feature=youtu.be
 * All modern browser support. 
 * Very Lightweight & many More
 
-### Pro features:
+### Pro version features:
 
-* Amazing shortcode builder with all necessary options.
-* Advance widget for PRO version, now it's more easy to use product slider in sidebar.
-* Product slider for specific category products.
-* Product slider for specific products by product id.
+* Six different themes for different slider style with theme style customizer. See the demo.
+* Product slider form specific categories of products. Include or exclude categories.
+* Product slider form specific tags of products. Include or exclude tags.
+* Product slider form specific selected products.
 * Product slider for specific products by product SKU.
+* Product slider form product attribute and attribute values.
 * Product slider for on sell products.
-* Unlimited slider in same page.
+* Amazing new shortcode builder with all necessary options.
 * Visual Composer custom element.
-* Enable or disable option for the title, category, price even add to cart button also.
+* Enable or disable option for the title, category, price, review, even add to cart button also.
 * Control number of product to show in phone, tab, small screen.
 * Shortcode attribute for product image height & width.
 * Product image crop on the fly.
 * Product order & orderby.
-* Two different theme for slider style.
+* Advance widget, now it's more easy to use product slider in sidebar.
 * Option for remove out of stock products form slider.
+* YITH WooCommerce quick view, compare and wish list plugin’s support added.
 * RTL support.
 * Works with all WordPress Themes.
 * Build with HTML5 & CSS3.

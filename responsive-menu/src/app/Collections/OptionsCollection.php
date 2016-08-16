@@ -64,7 +64,7 @@ class OptionsCollection implements \ArrayAccess {
   }
 
   public function offsetGet($offset) {
-    return $this->options[$offset];
+    return isset($this->options[$offset]) ? $this->options[$offset] : null;
   }
 
   public function offsetSet($offset, $value) {
@@ -73,7 +73,12 @@ class OptionsCollection implements \ArrayAccess {
   }
 
   public function offsetUnset($offset) {
-    unset($this->options[$offset]);
+    if(isset($this->options[$offset]))
+      unset($this->options[$offset]);
+  }
+
+  public function isEmpty() {
+    return isset($this->options) && count($this->options) > 0 ? false : true;
   }
 
 }

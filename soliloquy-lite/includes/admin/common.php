@@ -259,6 +259,57 @@ class Soliloquy_Common_Admin_Lite {
         update_post_meta( $id, '_sol_slider_data', $slider_data );
 
     }
+    /**
+     * Called whenever an upgrade button / link is displayed in Lite, this function will
+     * check if there's a shareasale ID specified.
+     *
+     * There are three ways to specify an ID, ordered by highest to lowest priority
+     * - add_filter( 'soliloquy_shareasale_id', function() { return 1234; } );
+     * - define( 'SOLILOQUY_SHAREASALE_ID', 1234 );
+     * - get_option( 'soliloquy_shareasale_id' ); (with the option being in the wp_options table)
+     *
+     * If an ID is present, returns the ShareASale link with the affiliate ID, and tells
+     * ShareASale to then redirect to soliloquywp.com/lite
+     *
+     * If no ID is present, just returns the soliloquywp.com/lite URL with UTM tracking.
+     *
+     * @since 2.5.0
+     */
+    public function get_upgrade_link() {
+
+        if ( class_exists( 'Soliloquy' ) ) {
+            // User is using Soliloquy, so just take them to the Pricing page.
+            // Note: On the Addons screen, if the user has a license, we won't hit this function,
+            // as the API will tell us the direct URL to send the user to based on their license key,
+            // so they see pro-rata pricing.
+            return 'https://soliloquywp.com/pricing/?utm_source=proplugin&utm_medium=link&utm_campaign=WordPress';
+        }
+
+        // Check if there's a constant.
+        $shareasale_id = '';
+        if ( defined( 'SOLILOQUY_SHAREASALE_ID' ) ) {
+            $shareasale_id = SOLILOQUY_SHAREASALE_ID;
+        }
+
+        // If there's no constant, check if there's an option.
+        if ( empty( $shareasale_id ) ) {
+            $shareasale_id = get_option( 'soliloquy_shareasale_id', '' );
+        }
+
+        // Whether we have an ID or not, filter the ID.
+        $shareasale_id = apply_filters( 'soliloquy_shareasale_id', $shareasale_id );
+        
+        // If at this point we still don't have an ID, we really don't have one!
+        // Just return the standard upgrade URL.
+        if ( empty( $shareasale_id ) ) {
+            return 'https://soliloquywp.com/lite/?utm_source=liteplugin&utm_medium=link&utm_campaign=WordPress';
+        }
+
+        // If here, we have a ShareASale ID
+        // Return ShareASale URL with redirect.
+        return 'http://www.shareasale.com/r.cfm?u=' . $shareasale_id . '&b=566240&m=51693&afftrack=&urllink=soliloquywp%2Ecom%2Flite%2F';
+
+    }
 
     /**
      * Returns the singleton instance of the class.

@@ -181,10 +181,12 @@ if( !function_exists( 'wpb_wps_pro_version_info' ) ){
 		?>
 		<h3>PRO Version Features:</h3>
 		<ul>
-			<li>Product slider form selected categories.</li>
-			<li>Product slider form selected product id.</li>
+			<li>Six different new themes for slider.</li>
+			<li>Product slider form selected tags.</li>
+			<li>Product slider form selected products.</li>
 			<li>Product slider form selected product SKU.</li>
 			<li>Product slider form on sell products.</li>
+			<li>Product slider form selected products attribute.</li>
 			<li>Option for controlling columns in phone, tab, small screen.</li>
 			<li>Remove out of stock products form slider.</li>
 			<li>Advance shortcode generator.</li>

@@ -2,8 +2,6 @@ jQuery(function($) {
 
   $('.wp-color-picker').wpColorPicker();
 
-  $('#banner_area').stick_in_parent();
-
   var custom_uploader;
 
   $('.image_button').click(function (e) {
@@ -38,11 +36,8 @@ jQuery(function($) {
 		container_name = '#tab_container_' + $(this).attr('id').replace('tab_', '');
 		$('.tab_container').css('display', 'none');
 		$(container_name).css('display', 'block');
-        $('.tab').removeClass('active_tab');
-        $(this).addClass('active_tab');
-        if(typeof(Storage) !== "undefined") {
-            localStorage.responsive_menu_tab = $(this).attr('id');
-        }
+    $('.tab').removeClass('active_tab');
+    $(this).addClass('active_tab');
 	});
 
     if(typeof(Storage) !== "undefined") {
@@ -58,13 +53,13 @@ jQuery(function($) {
     	}
     }
 
-    if(typeof(Storage) !== "undefined" && localStorage.responsive_menu_tab) {
-        tab_id = localStorage.responsive_menu_tab;
-        container_name = '#tab_container_' + tab_id.replace('tab_', '');
-        $('.tab_container').css('display', 'none');
-        $(container_name).css('display', 'block');
-        $('.tab').removeClass('active_tab');
-        $('#' + tab_id).addClass('active_tab');
-    }
+    $(document).on('click', '#responsive_menu_preview', function(e) {
+      e.preventDefault();
+      $('#responsive_menu_form').attr('action', '/?responsive-menu-preview=true');
+      $('#responsive_menu_form').attr('target', '_blank');
+      $('#responsive_menu_form').submit();
+      $('#responsive_menu_form').attr('action', '');
+      $('#responsive_menu_form').attr('target', '');
+    });
 
 });

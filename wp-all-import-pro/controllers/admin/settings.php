@@ -600,6 +600,7 @@ class PMXI_Admin_Settings extends PMXI_Controller_Admin {
 					switch ( $post_type ) {
 
 						case 'product':
+						case 'shop_order':
 							
 							if ( ! class_exists('WooCommerce') ) {
 								$notice = __('<p class="wpallimport-bundle-notice">The import bundle you are using requires WooCommerce.</p><a class="upgrade_link" href="https://wordpress.org/plugins/woocommerce/" target="_blank">Get WooCommerce</a>.', 'wp_all_import_plugin');							
@@ -640,7 +641,14 @@ class PMXI_Admin_Settings extends PMXI_Controller_Admin {
 					exit(json_encode(array("jsonrpc" => "2.0", "error" => null, "result" => null, "id" => "id", "name" => $upload_result['filePath'], "post_type" => $post_type, "notice" => $notice, "template" => $upload_result['template'], "url_bundle" => true)));
 				}
 				else
-				{
+				{					
+					// $root_element = wp_all_import_get_reader_engine( array($upload_result['filePath']), array('root_element' => $upload_result['root_element']) );	
+
+					// if ( ! empty($root_element) and empty($upload_result['root_element']))
+					// {
+					// 	$upload_result['root_element'] = $root_element;
+					// }
+
 					// validate XML
 					$file = new PMXI_Chunk($upload_result['filePath'], array('element' => $upload_result['root_element']));										    					    					   												
 

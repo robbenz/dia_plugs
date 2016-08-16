@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Product by User class.
  *
- * @version 2.5.3
+ * @version 2.5.4
  * @since   2.5.2
  * @author  Algoritmika Ltd.
  */
@@ -44,7 +44,7 @@ class WCJ_Product_By_User extends WCJ_Module {
 	 *
 	 * @version 2.5.2
 	 * @since   2.5.2
-	 * @todo    check if user's products exist
+	 * @todo    check if any user's products exist
 	 */
 	function add_my_products_tab_my_account_page( $items ) {
 		$items['wcj-my-products'] = __( 'My Products', 'woocommerce-jetpack' );
@@ -118,7 +118,7 @@ class WCJ_Product_By_User extends WCJ_Module {
 					/* $i . ' [' . $_product_id . ']' . */ get_the_post_thumbnail( $_product_id, array( 25, 25 ) ),
 					'<code>'. $_product_data['status'] . '</code>',
 					$_product_data['title'],
-					'<a class="button" href="' . add_query_arg( 'wcj_edit_product', $_product_id, remove_query_arg( array( 'wcj_edit_product_image_delete', 'wcj_delete_product' ) ) ) . '">' . __( 'Edit', 'woocommerce-jetpack' ) . '</a>' . ' ' .
+					'<a class="button" href="' . add_query_arg( 'wcj_edit_product',   $_product_id, remove_query_arg( array( 'wcj_edit_product_image_delete', 'wcj_delete_product' ) ) ) . '">' . __( 'Edit', 'woocommerce-jetpack' ) . '</a>' . ' ' .
 					'<a class="button" href="' . add_query_arg( 'wcj_delete_product', $_product_id, remove_query_arg( array( 'wcj_edit_product_image_delete', 'wcj_edit_product' ) ) ) . '" onclick="return confirm(\'' . __( 'Are you sure?', 'woocommerce-jetpack' ) . '\')">' . __( 'Delete', 'woocommerce-jetpack' ) . '</a>',
 				);
 			}
@@ -150,7 +150,7 @@ class WCJ_Product_By_User extends WCJ_Module {
 	/**
 	 * add_settings.
 	 *
-	 * @version 2.5.3
+	 * @version 2.5.4
 	 * @since   2.5.3
 	 */
 	function add_settings() {
@@ -228,11 +228,32 @@ class WCJ_Product_By_User extends WCJ_Module {
 					'options'  => get_post_statuses(),
 				),
 				array(
+					'title'    => __( 'Require Unique Title', 'woocommerce-jetpack' ),
+					'desc'     => __( 'Enable', 'woocommerce-jetpack' ),
+					'id'       => 'wcj_product_by_user_require_unique_title',
+					'default'  => 'no',
+					'type'     => 'checkbox',
+				),
+				array(
 					'title'    => __( 'Add "My Products" Tab to User\'s My Account Page', 'woocommerce-jetpack' ),
 					'desc'     => __( 'Add', 'woocommerce-jetpack' ),
 					'id'       => 'wcj_product_by_user_add_to_my_account',
 					'default'  => 'yes',
 					'type'     => 'checkbox',
+				),
+				array(
+					'title'    => __( 'Message: Product Successfully Added', 'woocommerce-jetpack' ),
+					'id'       => 'wcj_product_by_user_message_product_successfully_added',
+					'default'  => __( '"%product_title%" successfully added!', 'woocommerce-jetpack' ),
+					'type'     => 'text',
+					'css'      => 'width:300px;',
+				),
+				array(
+					'title'    => __( 'Message: Product Successfully Edited', 'woocommerce-jetpack' ),
+					'id'       => 'wcj_product_by_user_message_product_successfully_edited',
+					'default'  => __( '"%product_title%" successfully edited!', 'woocommerce-jetpack' ),
+					'type'     => 'text',
+					'css'      => 'width:300px;',
 				),
 				array(
 					'type'     => 'sectionend',

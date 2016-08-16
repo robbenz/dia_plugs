@@ -3,8 +3,8 @@ Contributors: dannisbet, nisbetcreative
 Tags: social, media, widget, follow, profile, icons, 500px, About.me, Behance, Dribbble, Codepen, Email, Envato, Facebook, Flickr, FourSquare, GitHub, Google+, Instagram, Kickstarter, Klout, LinkedIn, Medium, Path, Pinterest, RSS, Speaker Deck, StumbleUpon, Technorati, Tumblr, Twitter, Vimeo, Vine, WordPress, Yelp, YouTube, Zerply
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CJN7XU3Z7XHDL
 Requires at least: 3.5.1
-Tested up to: 4.4
-Stable tag: 16.04
+Tested up to: 4.5
+Stable tag: 16.07
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -55,17 +55,17 @@ Output of each icon can be adjusted with the social_icon_output filter:
 
 The opening and closing unordered list tags can be edited or changed with the social_icon_opening_tag and social_icon_closing_tag filters:
 
-	function social_icon_opening_tag($opening) {
+	function social_icons_change_opening($opening) {
 		$opening = '<ul class="'.$ul_class.'">';
 		return $opening;
 	}
-	add_filter('social_icon_output', 'social_icons_html_output');
+	add_filter('social_icon_opening_tag', 'social_icons_change_opening');
 
-	function social_icons_html_output($closing) {
+	function social_icons_change_closing($closing) {
 		$closing = '</ul>';
 		return $closing;
 	}
-	add_filter('social_icon_output', 'social_icons_html_output');
+	add_filter('social_icon_closing_tag', 'social_icons_change_closing');
 
 == Screenshots ==
 
@@ -73,6 +73,9 @@ The opening and closing unordered list tags can be edited or changed with the so
 2. Widget settings via the Appearance > Widgets screen.
 
 == Changelog ==
+
+= 16.07 =
+* Updated some social icons to their newer logos
 
 = 15.10 =
 * Removed all of the floats in favor of display:inline-block instead

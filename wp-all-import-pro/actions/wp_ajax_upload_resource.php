@@ -71,6 +71,13 @@ function pmxi_wp_ajax_upload_resource(){
 		}
 		else {
 
+			// $root_element = wp_all_import_get_reader_engine( array($upload_result['filePath']), array('root_element' => $upload_result['root_element']) );	
+				
+			// if ( ! empty($root_element) and empty($upload_result['root_element']))
+			// {
+			// 	$upload_result['root_element'] = $root_element;
+			// }
+
 			// validate XML
 			$file = new PMXI_Chunk($upload_result['filePath'], array('element' => $upload_result['root_element']));										    					    					   												
 
@@ -127,6 +134,7 @@ function pmxi_wp_ajax_upload_resource(){
 					switch ( $response['post_type'] ) {
 
 						case 'product':
+						case 'shop_order':
 							
 							if ( ! class_exists('WooCommerce') ) {
 								$response['notice'] = __('<p class="wpallimport-bundle-notice">The import bundle you are using requires WooCommerce.</p><a class="upgrade_link" href="https://wordpress.org/plugins/woocommerce/" target="_blank">Get WooCommerce</a>.', 'wp_all_import_plugin');							

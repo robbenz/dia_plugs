@@ -37,6 +37,14 @@ class Soliloquy_Metaboxes_Lite {
     public $base;
 
     /**
+     * Holds the common class object.
+     *
+     * @since 1.0.0
+     *
+     * @var object
+     */
+    public $common;
+    /**
      * Primary class constructor.
      *
      * @since 1.0.0
@@ -45,18 +53,27 @@ class Soliloquy_Metaboxes_Lite {
 
         // Load the base class object.
         $this->base = Soliloquy_Lite::get_instance();
-
+		$this->common = Soliloquy_Common_Admin_Lite::get_instance();
         // Load metabox assets.
         add_action( 'admin_enqueue_scripts', array( $this, 'meta_box_styles' ) );
         add_action( 'admin_enqueue_scripts', array( $this, 'meta_box_scripts' ) );
 
-        // Load the metabox hooks and filters.
-        add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 100 );
+	     // Load the metabox hooks and filters.
+	    add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 100 );
+
+		// Modals
+		//add_filter( 'media_view_strings', array( $this, 'media_view_strings' ) );
 
         // Load all tabs.
-        add_action( 'soliloquy_tab_images', array( $this, 'images_tab' ) );
+        add_action( 'soliloquy_tab_slider', array( $this, 'images_tab' ) );
         add_action( 'soliloquy_tab_config', array( $this, 'config_tab' ) );
         add_action( 'soliloquy_tab_misc', array( $this, 'misc_tab' ) );
+        add_action( 'soliloquy_tab_mobile_lite', array( $this, 'mobile_lite_tab' ) );
+        add_action( 'soliloquy_tab_lightbox_lite', array( $this, 'lightbox_lite_tab' ) );
+        add_action( 'soliloquy_tab_pinterest_lite', array( $this, 'pinterest_lite_tab' ) );
+        add_action( 'soliloquy_tab_schedule_lite', array( $this, 'schedule_lite_tab' ) );
+        add_action( 'soliloquy_tab_carousel_lite', array( $this, 'carousel_lite_tab' ) );
+        add_action( 'soliloquy_tab_thumbnails_lite', array( $this, 'thumbnails_lite_tab' ) );
 
         // Add action to save metabox config options.
         add_action( 'save_post', array( $this, 'save_meta_boxes' ), 10, 2 );
@@ -71,22 +88,24 @@ class Soliloquy_Metaboxes_Lite {
      * @return null Return early if not on the proper screen.
      */
     public function meta_box_styles() {
-	    
-	    // We always need to load metabox.css so we fix 4.0 styling on media grid
-        // Load necessary metabox styles.
-        wp_register_style( $this->base->plugin_slug . '-metabox-style', plugins_url( 'assets/css/metabox.css', $this->base->file ), array(), $this->base->version );
-        wp_enqueue_style( $this->base->plugin_slug . '-metabox-style' );
 
-        if ( 'post' !== get_current_screen()->base ) {
-            return;
-        }
+	   		if ( isset( get_current_screen()->base ) && 'post' !== get_current_screen()->base ) {
+	            return;
+	        }
 
-        if ( isset( get_current_screen()->post_type ) && in_array( get_current_screen()->post_type, $this->get_skipped_posttypes() ) ) {
-            return;
-        }
+	        if ( isset( get_current_screen()->post_type ) && in_array( get_current_screen()->post_type, $this->get_skipped_posttypes() ) ) {
+	            return;
+	        }
 
-        // Fire a hook to load in custom metabox styles.
-        do_action( 'soliloquy_metabox_styles' );
+	        // Load necessary metabox styles.
+	        wp_register_style( $this->base->plugin_slug . '-metabox-style', plugins_url( 'assets/css/metabox.css', $this->base->file ), array(), $this->base->version );
+	        wp_enqueue_style( $this->base->plugin_slug . '-metabox-style' );
+
+	        wp_register_style( $this->base->plugin_slug . '-codemirror', plugins_url( 'assets/css/codemirror.css', $this->base->file ), array(), $this->base->version );
+	        wp_enqueue_style( $this->base->plugin_slug . '-codemirror' );
+			wp_enqueue_style( 'editor-button-css' );
+	        // Fire a hook to load in custom metabox styles.
+	        do_action( 'soliloquy_metabox_styles' );
 
     }
 
@@ -114,12 +133,52 @@ class Soliloquy_Metaboxes_Lite {
         // Set the post_id for localization.
         $post_id = isset( $post->ID ) ? $post->ID : (int) $id;
 
-        // Load necessary metabox scripts.
-        wp_enqueue_script( 'jquery-ui-sortable' );
-        wp_enqueue_media( array( 'post' => $post_id ) );
+	        // Sortables
+	        wp_enqueue_script( 'jquery-ui-sortable' );
 
-        // Load necessary metabox scripts.
-        wp_enqueue_script( 'plupload-handlers' );
+			//Chosen JS
+			wp_register_script( $this->base->plugin_slug . '-chosen', plugins_url( 'assets/js/min/chosen.jquery-min.js', $this->base->file ), array( 'jquery' ), $this->base->version, true );
+			wp_enqueue_script( $this->base->plugin_slug . '-chosen' );
+
+	        // Image Uploader
+	        wp_enqueue_media( array(
+	            'post' => $post_id,
+	        ) );
+	     //   add_filter( 'plupload_init', array( $this, 'plupload_init' ) );
+	        wp_register_script( $this->base->plugin_slug . '-media-upload', plugins_url( 'assets/js/media-upload.js', $this->base->file ), array( 'jquery' ), $this->base->version, true );
+	        wp_enqueue_script( $this->base->plugin_slug . '-media-upload' );
+	        wp_localize_script(
+	            $this->base->plugin_slug . '-media-upload',
+	            'soliloquy_media_uploader',
+	            array(
+	                'ajax'           => admin_url( 'admin-ajax.php' ),
+	                'id'             => $post_id,
+	                'uploader_files_computer'	=> __( 'Select Files from Your Computer', 'soliloquy' ),
+	                'uploader_info_text'		=> __( 'Drag and Drop Files to Upload', 'soliloquy' ),
+	                'load_image'     => wp_create_nonce( 'soliloquy-load-image' ),
+	                'media_position' => get_option( 'soliloquy_slide_position' ),
+	            )
+	        );
+
+	        // Load necessary metabox scripts.
+	        wp_enqueue_script( 'plupload-handlers' );
+
+	        //Load Code Mirror
+	        wp_register_script( $this->base->plugin_slug . '-codemirror', plugins_url( 'assets/js/lib/codemirror.js', $this->base->file ), array(), $this->base->version, true );
+	        wp_enqueue_script( $this->base->plugin_slug . '-codemirror' );
+
+			//Load Clipboard
+	        wp_register_script( $this->base->plugin_slug . '-clipboard', plugins_url( 'assets/js/min/clipboard-min.js', $this->base->file ), array( 'jquery' ), $this->base->version, true );
+		    wp_enqueue_script( $this->base->plugin_slug . '-clipboard' );
+
+	        //Load Chosen
+	        wp_register_script( $this->base->plugin_slug . '-chosen', plugins_url( 'assets/js/min/chosen.jquery-min.js', $this->base->file ), array(), $this->base->version, true );
+		    wp_enqueue_script( $this->base->plugin_slug . '-chosen' );
+
+	        // Form Conditionals
+	        wp_register_script( 'jquery-form-conditionals', plugins_url( 'assets/js/min/jquery.form-conditionals-min.js', $this->base->file ), array( 'jquery', 'plupload-handlers', 'quicktags', 'jquery-ui-sortable', $this->base->plugin_slug . '-codemirror' ), $this->base->version, true );
+	        wp_enqueue_script( 'jquery-form-conditionals' );
+
         wp_register_script( $this->base->plugin_slug . '-metabox-script', plugins_url( 'assets/js/min/metabox-min.js', $this->base->file ), array( 'jquery', 'plupload-handlers', 'quicktags', 'jquery-ui-sortable' ), $this->base->version, true );
         wp_enqueue_script( $this->base->plugin_slug . '-metabox-script' );
         wp_localize_script(
@@ -147,7 +206,6 @@ class Soliloquy_Metaboxes_Lite {
                 'load_image'     => wp_create_nonce( 'soliloquy-load-image' ),
                 'load_slider'    => wp_create_nonce( 'soliloquy-load-slider' ),
                 'path'           => plugin_dir_path( 'assets' ),
-                'plupload'       => $this->get_plupload_init( $post_id ),
                 'refresh_nonce'  => wp_create_nonce( 'soliloquy-refresh' ),
                 'remove'         => __( 'Are you sure you want to remove this slide from the slider?', 'soliloquy' ),
                 'remove_nonce'   => wp_create_nonce( 'soliloquy-remove-slide' ),
@@ -170,12 +228,6 @@ class Soliloquy_Metaboxes_Lite {
             )
         );
 
-        // Load necessary HTML slide scripts and styles.
-        wp_register_script( $this->base->plugin_slug . '-codemirror', plugins_url( 'assets/js/min/codemirror-min.js', $this->base->file ), array(), $this->base->version, true );
-        wp_register_style( $this->base->plugin_slug . '-codemirror', plugins_url( 'assets/css/codemirror.css', $this->base->file ), array(), $this->base->version );
-        wp_enqueue_script( $this->base->plugin_slug . '-codemirror' );
-        wp_enqueue_style( $this->base->plugin_slug . '-codemirror' );
-
         // If on an Soliloquy post type, add custom CSS for hiding specific things.
         if ( isset( get_current_screen()->post_type ) && 'soliloquy' == get_current_screen()->post_type ) {
             add_action( 'admin_head', array( $this, 'meta_box_css' ) );
@@ -185,66 +237,35 @@ class Soliloquy_Metaboxes_Lite {
         do_action( 'soliloquy_metabox_scripts' );
 
     }
+	    /**
+	    * Amends the default Plupload parameters for initialising the Media Uploader, to ensure
+	    * the uploaded image is attached to our Soliloquy CPT
+	    *
+	    * @since 1.0.0
+	    *
+	    * @param array $params Params
+	    * @return array Params
+	    */
+	    public function plupload_init( $params ) {
 
-    /**
-     * Returns custom plupload init properties for the media uploader.
-     *
-     * @since 1.0.0
-     *
-     * @param int $post_id The current post ID.
-     * @return array       Array of plupload init data.
-     */
-    public function get_plupload_init( $post_id ) {
+	        global $post_ID;
 
-        // Prepare $_POST form variables and apply backwards compat filter.
-    	$post_params = array(
-    	    'post_id'  => $post_id,
-    	    '_wpnonce' => wp_create_nonce( 'media-form' ),
-    	    'type'     => '',
-    	    'tab'      => '',
-    	    'short'    => 3
-    	);
-    	$post_params = apply_filters( 'upload_post_params', $post_params );
+	        // Define the Soliloquy ID, so Plupload attaches the uploaded images
+	        // to this Slider
+	        $params['multipart_params']['post_id'] = $post_ID;
 
-    	// Prepare upload size parameters.
-        $max_upload_size = wp_max_upload_size();
+	        // Build an array of supported file types for Plupload
+	        $supported_file_types = Soliloquy_Common_Lite::get_instance()->get_supported_filetypes();
 
-        // Prepare the plupload init array.
-        $plupload_init = array(
-        	'runtimes'            => 'html5,silverlight,flash,html4',
-        	'browse_button'       => 'soliloquy-plupload-browse-button',
-        	'container'           => 'soliloquy-plupload-upload-ui',
-        	'drop_element'        => 'soliloquy-drag-drop-area',
-        	'file_data_name'      => 'async-upload',
-        	'multiple_queues'     => true,
-        	'max_file_size'       => $max_upload_size . 'b',
-        	'url'                 => admin_url( 'async-upload.php' ),
-        	'flash_swf_url'       => includes_url( 'js/plupload/plupload.flash.swf' ),
-        	'silverlight_xap_url' => includes_url( 'js/plupload/plupload.silverlight.xap' ),
-        	'filters'             => array(
-        	    array(
-        	        'title'       => __( 'Allowed Files', 'soliloquy' ),
-        	        'extensions'  => '*'
-                ),
-            ),
-        	'multipart'           => true,
-        	'urlstream_upload'    => true,
-        	'multipart_params'    => $post_params,
-        	'resize'              => false
-        );
+	        // Assign supported file types and return
+	        $params['filters']['mime_types'] = $supported_file_types;
 
-        // If we are on a mobile device, disable multi selection.
-        if ( wp_is_mobile() ) {
-            $plupload_init['multi_selection'] = false;
-        }
+	        // Return and apply a custom filter to our init data.
+	        $params = apply_filters( 'soliloquy_plupload_init', $params, $post_ID );
+	        return $params;
 
-        // Apply backwards compat filter.
-        $plupload_init = apply_filters( 'plupload_init', $plupload_init );
+	    }
 
-        // Return and apply a custom filter to our init data.
-        return apply_filters( 'soliloquy_plupload_init', $plupload_init, $post_id );
-
-    }
 
     /**
      * Hides unnecessary meta box items on Soliloquy post type screens.
@@ -262,33 +283,215 @@ class Soliloquy_Metaboxes_Lite {
 
     }
 
-    /**
-     * Creates metaboxes for handling and managing sliders.
-     *
-     * @since 1.0.0
-     */
-    public function add_meta_boxes() {
+	    /**
+	     * Creates metaboxes for handling and managing sliders.
+	     *
+	     * @since 1.0.0
+	     */
+	    public function add_meta_boxes() {
 
-        // Let's remove all of those dumb metaboxes from our post type screen to control the experience.
-        $this->remove_all_the_metaboxes();
+        	global $post;
 
-        // Get all public post types.
-        $post_types = get_post_types( array( 'public' => true ) );
+        	if ( 'soliloquy' != $post->post_type ){
 
-        // Splice the soliloquy post type since it is not visible to the public by default.
-        $post_types[] = 'soliloquy';
+	        	return;
 
-        // Loops through the post types and add the metaboxes.
-        foreach ( (array) $post_types as $post_type ) {
-            // Don't output boxes on these post types.
-            if ( in_array( $post_type, $this->get_skipped_posttypes() ) ) {
-                continue;
-            }
+        	}
 
-            add_meta_box( 'soliloquy', __( 'Soliloquy Settings', 'soliloquy' ), array( $this, 'meta_box_callback' ), $post_type, 'normal', 'high' );
-        }
+	        // Let's remove all of those dumb metaboxes from our post type screen to control the experience.
+	        $this->remove_all_the_metaboxes();
 
-    }
+	        // Get all public post types.
+	        $post_types = get_post_types( array( 'public' => true ) );
+			$custom = array(
+				get_option( 'soliloquy_dynamic' ),
+				get_option( 'soliloquy_default_slider' ),
+			);
+	        // Splice the soliloquy post type since it is not visible to the public by default.
+	        $post_types[] = 'soliloquy';
+
+	        // Loops through the post types and add the metaboxes.
+	        foreach ( (array) $post_types as $post_type ) {
+	            // Don't output boxes on these post types.
+	            if ( in_array( $post_type, $this->get_skipped_posttypes() ) ) {
+	                continue;
+	            }
+				if ( ! in_array( $post->ID, $custom)){
+
+				add_action('edit_form_after_title', array( $this, 'uploader_html' ), 10 );
+				add_action('edit_form_after_title', array( $this, 'settings_html' ), 11 );
+	            add_meta_box( 'soliloquy-codepanel', __( 'Soliloquy Slider Code', 'soliloquy' ), array( $this, 'code_panel' ), $post_type, 'side', apply_filters( 'soliloquy_metabox_priority', 'low' ) );
+
+	            }
+
+	        }
+	        // Output 'Select Files from Other Sources' button on the media uploader form
+	        add_action( 'post-plupload-upload-ui', array( $this, 'append_media_upload_form' ), 1 );
+	        add_action( 'post-html-upload-ui', array( $this, 'append_media_upload_form' ), 1 );
+	    }
+
+		/**
+		 * Renders the Uploader HTML
+		 *
+		 * @access public
+		 * @param mixed $post
+		 * @return void
+		 * @since 2.5
+		 */
+		public function uploader_html( $post ){
+
+			global $id, $post;
+
+	        if ( isset( get_current_screen()->base ) && 'post' !== get_current_screen()->base ) {
+	            return;
+	        }
+
+	        if ( isset( get_current_screen()->post_type ) && in_array( get_current_screen()->post_type, $this->get_skipped_posttypes() ) ) {
+	            return;
+	        }
+
+	        // Load view
+	        $this->base->load_admin_partial( 'metabox-slider-type.php', array(
+	            'post'      => $post,
+	            'types'     => $this->get_soliloquy_types( $post ),
+	            'instance'  => $this,
+	        ) );
+
+		}
+	    /**
+	     * Appends the "Select Files From Other Sources" button to the Media Uploader, which is called using WordPress'
+	     * media_upload_form() function
+	     *
+	     * CSS positions this button to improve the layout.
+	     *
+	     * @since 2.5.0
+	     */
+	    public function append_media_upload_form() {
+
+	        ?>
+		    <!-- Add from Media Library -->
+		    <a href="#" class="soliloquy-media-library button"  title="<?php _e( 'Click Here to Insert from Other Image Sources', 'soliloquy' ); ?>" style="vertical-align: baseline;">
+				<?php _e( 'Select Files from Other Sources', 'soliloquy' ); ?>
+			</a>
+	        <?php
+
+	    }
+		/**
+		 * settings_html function.
+		 *
+		 * @access public
+		 * @param mixed $post
+		 * @return void
+		 */
+		public function settings_html( $post ){
+
+	        if ( isset( get_current_screen()->base ) && 'post' !== get_current_screen()->base ) {
+	            return;
+	        }
+
+	        if ( isset( get_current_screen()->post_type ) && in_array( get_current_screen()->post_type, $this->get_skipped_posttypes() ) ) {
+	            return;
+	        }
+
+			// Keep security first.
+			wp_nonce_field( 'soliloquy', 'soliloquy' );
+
+			// Check for our meta overlay helper.
+        	$slider_data = get_post_meta( $post->ID, '_sol_slider_data', true );
+			$helper      = get_post_meta( $post->ID, '_sol_just_published', true );
+			?>
+
+			<div id="soliloquy-slider-settings">
+
+	            <ul id="soliloquy-settings-tabs" class="soliloquy-tabs-nav soliloquy-clear" data-update-hashbang="1">
+
+	                <?php $i = 0; foreach ( (array) $this->get_soliloquy_tab_nav() as $id => $title ) :
+
+		            	$class = 0 === $i ? 'soliloquy-tab-nav-active' : ''; ?>
+
+	                    <li id="soliloquy-tab-nav-<?php echo $id; ?>" data-soliloquy-tab class="soliloquy-setting-tab <?php echo $class; ?>" data-tab-id="soliloquy-tab-<?php echo $id; ?>"><a href="#soliloquy-tab-<?php echo $id; ?>" title="<?php echo $title; ?>"><span><?php echo $title; ?></span></a></li>
+
+	                <?php $i++; endforeach; ?>
+
+	            </ul>
+
+				<div id="soliloquy-settings-content" class="soliloquy-clear">
+
+	            <?php $i = 0; foreach ( (array) $this->get_soliloquy_tab_nav() as $id => $title ) :
+
+		        	$class = 0 === $i ? 'soliloquy-tab-active' : ''; ?>
+
+	                <div id="soliloquy-tab-<?php echo $id; ?>" class="soliloquy-tab soliloquy-clear <?php echo $class; ?>">
+
+	                    <?php do_action( 'soliloquy_tab_' . $id, $post ); ?>
+
+	                </div>
+
+	            <?php $i++; endforeach; ?>
+
+	        	</div>
+
+				<div class="soliloquy-clearfix"></div>
+
+			</div>
+
+			<?php
+
+		}
+
+		/**
+		 * sidebar_html function.
+		 *
+		 * @access public
+		 * @return void
+		 */
+		public function code_panel( $post ){
+
+        	$slider_data = get_post_meta( $post->ID, '_sol_slider_data', true );
+
+			if ( isset( $post->post_status ) && 'auto-draft' == $post->post_status ) {
+            	return;
+			}
+
+			// Check for our meta overlay helper.
+			$helper = get_post_meta( $post->ID, '_sol_just_published', true );
+			$class  = '';
+			if ( $helper ) {
+        	    $class = 'soliloquy-helper-active';
+				delete_post_meta( $post->ID, '_sol_just_published' );
+			}
+			?>
+
+			<p><?php _e( 'You can place this slider into your posts, pages, custom post types or widgets using the shortcode below:','soliloquy' ); ?></p>
+                <code id="soliloquy-shortcode" class="soliloquy-code"><?php echo '[soliloquy id="' . $post->ID . '"]'; ?></code>
+      			<a href="#" class="soliloquy-clipboard" data-clipboard-target="#soliloquy-shortcode"><?php _e( 'Copy to Clipboard', 'soliloquy' ); ?></a>
+
+                <?php if ( ! empty( $slider_data['config']['slug'] ) ) : ?>
+                    <br><code id="soliloquy-slug-shortcode" class="soliloquy-code"><?php echo '[soliloquy slug="' . $slider_data['config']['slug'] . '"]'; ?></code>
+        			<a href="#" class="soliloquy-clipboard" data-clipboard-target="#soliloquy-slug-shortcode"><?php _e( 'Copy to Clipboard', 'soliloquy' ); ?></a>
+
+                <?php endif; ?>
+
+
+			<p><?php _e( "You can place this slider into your theme's template files by using the template tag below:", 'soliloquy' ); ?></p>
+                <code id="soliloquy-template-tag" class="soliloquy-code"><?php echo 'if ( function_exists( \'soliloquy\' ) ) { soliloquy( \'' . $post->ID . '\' ); }'; ?></code>
+			 <a href="#" class="soliloquy-clipboard" data-clipboard-target="#soliloquy-template-tag"><?php _e( 'Copy to Clipboard', 'soliloquy' ); ?></a>
+
+                <?php if ( ! empty( $slider_data['config']['slug'] ) ) : ?>
+
+                    <br><code id="soliloquy-slug-tag" class="soliloquy-code"><?php echo 'if ( function_exists( \'soliloquy\' ) ) { soliloquy( \'' . $slider_data['config']['slug'] . '\', \'slug\' ); }'; ?></code>
+                   <a href="#" class="soliloquy-clipboard" data-clipboard-target="#soliloquy-slug-tag"><?php _e( 'Copy to Clipboard', 'soliloquy' ); ?></a>
+
+                <?php endif; ?>
+
+			<h2><?php _e( 'Need Help?', 'soliloquy' ); ?></h2>
+			<div class="soliloquy-yt">
+			<iframe width="560" height="315" src="https://www.youtube.com/embed/wMDtHKJ-TsQ" frameborder="0" allowfullscreen></iframe>
+			</div>
+			<?php
+
+		}
+
 
     /**
      * Removes all the metaboxes except the ones I want on MY POST TYPE. RAGE.
@@ -343,44 +546,6 @@ class Soliloquy_Metaboxes_Lite {
     }
 
     /**
-     * Callback for displaying content in the registered metabox.
-     *
-     * @since 1.0.0
-     *
-     * @param object $post The current post object.
-     */
-    public function meta_box_callback( $post ) {
-
-        // Keep security first.
-        wp_nonce_field( 'soliloquy', 'soliloquy' );
-
-        // Check for our meta overlay helper.
-        $slider_data = get_post_meta( $post->ID, '_sol_slider_data', true );
-        $helper      = get_post_meta( $post->ID, '_sol_just_published', true );
-        $class       = '';
-        if ( $helper ) {
-            $class = 'soliloquy-helper-needed';
-        }
-
-        ?>
-        <div id="soliloquy-tabs" class="soliloquy-clear <?php echo $class; ?>">
-            <?php $this->meta_helper( $post, $slider_data ); ?>
-            <ul id="soliloquy-tabs-nav" class="soliloquy-clear">
-                <?php $i = 0; foreach ( (array) $this->get_soliloquy_tab_nav() as $id => $title ) : $class = 0 === $i ? 'soliloquy-active' : ''; ?>
-                    <li class="<?php echo $class; ?>"><a href="#soliloquy-tab-<?php echo $id; ?>" title="<?php echo $title; ?>"><?php echo $title; ?></a></li>
-                <?php $i++; endforeach; ?>
-            </ul>
-            <?php $i = 0; foreach ( (array) $this->get_soliloquy_tab_nav() as $id => $title ) : $class = 0 === $i ? 'soliloquy-active' : ''; ?>
-                <div id="soliloquy-tab-<?php echo $id; ?>" class="soliloquy-tab soliloquy-clear <?php echo $class; ?>">
-                    <?php do_action( 'soliloquy_tab_' . $id, $post ); ?>
-                </div>
-            <?php $i++; endforeach; ?>
-        </div>
-        <?php
-
-    }
-
-    /**
      * Callback for getting all of the tabs for Soliloquy sliders.
      *
      * @since 1.0.0
@@ -390,10 +555,16 @@ class Soliloquy_Metaboxes_Lite {
     public function get_soliloquy_tab_nav() {
 
         $tabs = array(
-            'images'     => __( 'Images', 'soliloquy' ),
+            'slider'     => __( 'Slider', 'soliloquy' ),
             'config'     => __( 'Config', 'soliloquy' ),
         );
         $tabs = apply_filters( 'soliloquy_tab_nav', $tabs );
+        $tabs['mobile_lite'] = __( 'Mobile', 'soliloquy' );
+        $tabs['thumbnails_lite'] = __( 'Thumbnails', 'soliloquy' );
+        $tabs['carousel_lite'] = __( 'Carousel', 'soliloquy' );
+        $tabs['pinterest_lite'] = __( 'Pinterest', 'soliloquy' );
+        $tabs['lightbox_lite'] = __( 'Lightbox', 'soliloquy' );
+        $tabs['schedule_lite'] = __( 'Schedule', 'soliloquy' );
 
         // "Misc" tab is required.
         $tabs['misc'] = __( 'Misc', 'soliloquy' );
@@ -411,30 +582,27 @@ class Soliloquy_Metaboxes_Lite {
      */
     public function images_tab( $post ) {
 
-        // Output a notice if missing cropping extensions because Soliloquy needs them.
-        if ( ! $this->has_gd_extension() && ! $this->has_imagick_extension() ) {
-            ?>
-            <div class="error below-h2">
-                <p><strong><?php _e( 'The GD or Imagick libraries are not installed on your server. Soliloquy requires at least one (preferably Imagick) in order to crop images and may not work properly without it. Please contact your webhost and ask them to compile GD or Imagick for your PHP install.', 'soliloquy' ); ?></strong></p>
-            </div>
-            <?php
-        }
+	        // Output a notice if missing cropping extensions because Soliloquy needs them.
 
-        // Output the slider type selection items.
-        ?>
-        <ul id="soliloquy-types-nav" class="soliloquy-clear">
-            <li class="soliloquy-type-label"><span><?php _e( 'Slider Type', 'soliloquy' ); ?></span></li>
-            <?php $i = 0; foreach ( (array) $this->get_soliloquy_types( $post ) as $id => $title ) : ?>
-                <li><label for="soliloquy-type-<?php echo $id; ?>"><input id="soliloquy-type-<?php echo sanitize_html_class( $id ); ?>" type="radio" name="_soliloquy[type]" value="<?php echo $id; ?>" <?php checked( $this->get_config( 'type', $this->get_config_default( 'type' ) ), $id ); ?> /> <?php echo $title; ?></label></li>
-            <?php $i++; endforeach; ?>
-            <li class="soliloquy-type-spinner"><span class="spinner soliloquy-spinner"></span></li>
-        </ul>
-        <?php
+	        if ( ! $this->has_gd_extension() && ! $this->has_imagick_extension() ) {
+	            ?>
+	            <div class="error below-h2">
+	                <p><strong><?php _e( 'The GD or Imagick libraries are not installed on your server. Soliloquy requires at least one (preferably Imagick) in order to crop images and may not work properly without it. Please contact your webhost and ask them to compile GD or Imagick for your PHP install.', 'soliloquy' ); ?></strong></p>
+	            </div>
+	            <?php
+	        }
 
-        // Output the display based on the type of slider being created.
-        echo '<div id="soliloquy-slider-main" class="soliloquy-clear">';
-            $this->images_display( $this->get_config( 'type', $this->get_config_default( 'type' ) ), $post );
-        echo '</div>';
+	        // Output the slider type selection items.
+	        ?>
+
+	        <?php
+
+	        // Output the display based on the type of slider being created.
+	        echo '<div id="soliloquy-slider-main" class="soliloquy-clear">';
+
+	            $this->images_display( $this->get_config( 'type', $this->get_config_default( 'type' ) ), $post );
+
+	        echo '</div>';
 
     }
 
@@ -490,172 +658,101 @@ class Soliloquy_Metaboxes_Lite {
      */
     public function do_default_display( $post ) {
 
-        ?>
-        <div class="soliloquy-alert soliloquy-clear" style="margin-bottom:10px;">
-            <?php _e( '<em>Want to make your slider workflow even better?</em> By upgrading to Soliloquy Pro, you can get access to numerous other features, including: <strong>a fully featured slider widget</strong>, <strong>media library support</strong>, <strong>thumbnail and carousel support</strong>, <strong>dynamic sliders on the fly</strong>, <strong>complete slider API</strong>, <strong>powerful slider documentation</strong>, <strong>full mobile and Retina support</strong>, <strong>dedicated customer support</strong> and so much more! <a href="http://soliloquywp.com/lite/?utm_source=liteplugin&utm_medium=link&utm_campaign=WordPress" title="Click here to upgrade to Soliloquy Pro!" target="_blank">Click here to upgrade to Soliloquy Pro!</a>', 'soliloquy' ); ?>
-        </div>
-        <?php
+	        // Prepare output data.
+	        $slider_data = get_post_meta( $post->ID, '_sol_slider_data', true );
 
-        // Output the custom media upload form.
-        Soliloquy_Media_Lite::get_instance()->media_upload_form();
+	        if ( !empty( $slider_data ) && ! empty( $slider_data['slider'] ) && is_array( $slider_data['slider'] ) ) {
 
-        // Prepare output data.
-        $slider_data = get_post_meta( $post->ID, '_sol_slider_data', true );
+				$maybe_update = $this->maybe_update_slides( $slider_data['slider'] );
 
-        ?>
-        <ul id="soliloquy-output" class="soliloquy-clear">
-            <?php if ( ! empty( $slider_data['slider'] ) ) : ?>
-                <?php foreach ( $slider_data['slider'] as $id => $data ) : ?>
-                    <?php echo $this->get_slider_item( $id, $data, ( ! empty( $data['type'] ) ? $data['type'] : 'image' ), $post->ID ); ?>
-                <?php endforeach; ?>
-            <?php endif; ?>
-        </ul>
-        <?php $this->media_library( $post );
+		        if ( $maybe_update == false ) {
 
-    }
+		    		$slider_data = $this->update_slides( $post->ID );
 
-    /**
-     * Inserts the meta icon for displaying useful slider meta like shortcode and template tag.
-     *
-     * @since 1.0.0
-     *
-     * @param object $post        The current post object.
-     * @param array $slider_data Array of slider data for the current post.
-     * @return null               Return early if this is an auto-draft.
-     */
-    public function meta_helper( $post, $slider_data ) {
+		    	}
 
-        if ( isset( $post->post_status ) && 'auto-draft' == $post->post_status ) {
-            return;
-        }
+	        }
 
-        // Check for our meta overlay helper.
-        $helper = get_post_meta( $post->ID, '_sol_just_published', true );
-        $class  = '';
-        if ( $helper ) {
-            $class = 'soliloquy-helper-active';
-            delete_post_meta( $post->ID, '_sol_just_published' );
-        }
+	        //Check if slider has an admin view set
+			if ( isset( $slider_data['admin_view'] ) && $slider_data['admin_view'] != '' ){
 
-        ?>
-        <div class="soliloquy-meta-helper <?php echo $class; ?>">
-            <span class="soliloquy-meta-close-text"><?php _e( '(click the icon to open and close the overlay dialog)', 'soliloquy' ); ?></span>
-            <a href="#" class="soliloquy-meta-icon" title="<?php esc_attr__( 'Click here to view meta information about this slider.', 'soliloquy' ); ?>"></a>
-            <div class="soliloquy-meta-information">
-                <p><?php _e( 'You can place this slider anywhere into your posts, pages, custom post types or widgets by using <strong>one</strong> of the shortcode(s) below:', 'soliloquy' ); ?></p>
-                <code><?php echo '[soliloquy id="' . $post->ID . '"]'; ?></code>
-                <?php if ( ! empty( $slider_data['config']['slug'] ) ) : ?>
-                    <br><code><?php echo '[soliloquy slug="' . $slider_data['config']['slug'] . '"]'; ?></code>
-                <?php endif; ?>
-                <p><?php _e( 'You can also place this slider into your template files by using <strong>one</strong> of the template tag(s) below:', 'soliloquy' ); ?></p>
-                <code><?php echo 'if ( function_exists( \'soliloquy\' ) ) { soliloquy( \'' . $post->ID . '\' ); }'; ?></code>
-                <?php if ( ! empty( $slider_data['config']['slug'] ) ) : ?>
-                    <br><code><?php echo 'if ( function_exists( \'soliloquy\' ) ) { soliloquy( \'' . $slider_data['config']['slug'] . '\', \'slug\' ); }'; ?></code>
-                <?php endif; ?>
-            </div>
-        </div>
-        <?php
+				$slide_view =  $slider_data['admin_view'] ;
 
-    }
+			}else{
 
-    /**
-     * Callback for displaying the UI for selecting images from the media library to insert.
-     *
-     * @since 1.0.0
-     *
-     * @param object $post The current post object.
-     */
-    public function media_library( $post ) {
+				$slide_view = get_option( 'soliloquy_slide_view' );
 
-        ?>
-        <div id="soliloquy-upload-ui-wrapper">
-            <div id="soliloquy-upload-ui" class="soliloquy-image-meta" style="display: none;">
-                <div class="media-modal wp-core-ui">
-                    <a class="media-modal-close" href="#"><span class="media-modal-icon"></span></a>
-                    <div class="media-modal-content">
-                        <div class="media-frame soliloquy-media-frame wp-core-ui hide-menu soliloquy-meta-wrap">
-                            <div class="media-frame-title">
-                                <h1><?php _e( 'Insert Slides into Slider', 'soliloquy' ); ?></h1>
-                            </div>
-                            <div class="media-frame-router">
-                                <div class="media-router">
-                                    <a href="#" class="media-menu-item active" data-soliloquy-content="image-slides"><?php _e( 'Image Slides', 'soliloquy' ); ?></a>
-                                    <?php do_action( 'soliloquy_modal_router', $post ); ?>
-                                </div><!-- end .media-router -->
-                            </div><!-- end .media-frame-router -->
-                            <?php $this->image_slides_content( $post ); ?>
-                            <?php do_action( 'soliloquy_modal_content', $post ); ?>
-                            <div class="media-frame-toolbar">
-                                <div class="media-toolbar">
-                                    <div class="media-toolbar-primary">
-                                        <a href="#" class="soliloquy-media-insert button media-button button-large button-primary media-button-insert" title="<?php esc_attr_e( 'Insert Slides into Slider', 'soliloquy' ); ?>"><?php _e( 'Insert Slides into Slider', 'soliloquy' ); ?></a>
-                                    </div><!-- end .media-toolbar-primary -->
-                                </div><!-- end .media-toolbar -->
-                            </div><!-- end .media-frame-toolbar -->
-                        </div><!-- end .media-frame -->
-                    </div><!-- end .media-modal-content -->
-                </div><!-- end .media-modal -->
-                <div class="media-modal-backdrop"></div>
-            </div><!-- end .soliloquy-image-meta -->
-        </div><!-- end #soliloquy-upload-ui-wrapper-->
-        <?php
+			}
 
-    }
+			//Get View from settings
+			$default_view =  $slide_view === 'grid' ? 'soliloquy-grid' : 'soliloquy-list';
+			//Show/Hide stuff
+			$visible = empty( $slider_data['slider'] ) ? ' soliloquy-hidden' : '';
+			$notvisible = !empty( $slider_data['slider'] ) ? ' soliloquy-hidden' : 'soliloquy-show';
 
-    /**
-     * Outputs the image slides content in the modal selection window.
-     *
-     * @since 1.0.0
-     *
-     * @param object $post The current post object.
-     */
-    public function image_slides_content( $post ) {
+	        ?>
+	        <div id="soliloquy-empty-slider" class="<?php echo $notvisible; ?>">
+		        <div>
+		        <img class="soliloquy-item-img" src="<?php echo plugins_url( 'assets/images/logo-color.png', $this->base->file ); ?>" />
+				<h3><?php _e( 'Create your slider by adding your media files above.', 'soliloquy' ); ?></h3>
+				<p class="soliloquy-help-text"><?php _e( 'Need some help?', 'soliloquy' ); ?> <a href="http://soliloquywp.com/docs/creating-your-first-slider/" target="_blank"><?php _e( 'Watch a video how to add media and create a slider', 'soliloquy' ); ?></a></p>
+		        </div>
+	        </div>
 
-        ?>
-        <div id="soliloquy-image-slides">
-            <div class="media-frame-content">
-                <div class="attachments-browser">
-                    <div class="media-toolbar soliloquy-library-toolbar">
-                        <div class="media-toolbar-primary">
-                            <span class="spinner soliloquy-spinner"></span><input type="search" placeholder="<?php esc_attr_e( 'Search', 'soliloquy' ); ?>" id="soliloquy-slider-search" class="search" value="" />
-                        </div>
-                        <div class="media-toolbar-secondary">
-                            <a class="button media-button button-large button-secodary soliloquy-load-library" href="#" data-soliloquy-offset="20"><?php _e( 'Load More Images from Library', 'soliloquy' ); ?></a><span class="spinner soliloquy-spinner"></span>
-                        </div>
-                    </div>
-                    <?php $library = get_posts( array( 'post_type' => 'attachment', 'post_mime_type' => 'image', 'post_status' => 'inherit', 'posts_per_page' => 20 ) ); ?>
-                    <?php if ( $library ) : ?>
-                    <ul class="attachments soliloquy-slider">
-                    <?php foreach ( (array) $library as $image ) :
-                        $has_slider = get_post_meta( $image->ID, '_sol_has_slider', true );
-                        $class       = $has_slider && in_array( $post->ID, (array) $has_slider ) ? ' selected soliloquy-in-slider' : ''; ?>
-                        <li class="attachment<?php echo $class; ?>" data-attachment-id="<?php echo absint( $image->ID ); ?>">
-                            <div class="attachment-preview landscape">
-                                <div class="thumbnail">
-                                    <div class="centered">
-                                        <?php $src = wp_get_attachment_image_src( $image->ID, 'thumbnail' ); ?>
-                                        <img src="<?php echo esc_url( $src[0] ); ?>" />
-                                    </div>
-                                </div>
-                                <a class="check" href="#"><div class="media-modal-icon"></div></a>
-                            </div>
-                        </li>
-                    <?php endforeach; ?>
-                    </ul><!-- end .soliloquy-meta -->
-                    <?php endif; ?>
-                    <div class="media-sidebar">
-                        <div class="soliloquy-meta-sidebar">
-                            <h3><?php _e( 'Helpful Tips', 'soliloquy' ); ?></h3>
-                            <strong><?php _e( 'Selecting Images', 'soliloquy' ); ?></strong>
-                            <p><?php _e( 'You can insert any image from your Media Library into your slider. If the image you want to insert is not shown on the screen, you can either click on the "Load More Images from Library" button to load more images or use the search box to find the images you are looking for.', 'soliloquy' ); ?></p>
-                        </div><!-- end .soliloquy-meta-sidebar -->
-                    </div><!-- end .media-sidebar -->
-                </div><!-- end .attachments-browser -->
-            </div><!-- end .media-frame-content -->
-        </div><!-- end #soliloquy-image-slides -->
-        <?php
+	        <div class="soliloquy-slide-header<?php echo $visible; ?>">
 
-    }
+	        	<h2 class="soliloquy-intro"><?php _e('Currently in Your Slider', 'soliloquy' ); ?></h2>
+
+				<ul class="soliloquy-list-inline soliloquy-display-toggle">
+	        		<li><a href="#" class="soliloquy-display-grid soliloquy-display<?php echo $slide_view == 'grid' ? ' active-display' : ''; ?>" data-soliloquy-display="grid"><i class="soliloquy-icon-grid"></i></a></li>
+					<li><a href="#" class="soliloquy-display-list soliloquy-display<?php echo $slide_view == 'list' ? ' active-display' : ''; ?>" data-soliloquy-display="list"><i class="soliloquy-icon-list"></i></a></li>
+				</ul>
+
+				<label>
+
+					<input class="soliloquy-select-all" type="checkbox">
+
+					<span class="select-all"><?php _e( 'Select All', 'soliloquy' ); ?></span> (<span class="soliloquy-count">0</span>)
+					<a href="#" class="soliloquy-clear-selected"><?php _e( 'Clear Selected' , 'soliloquy' ); ?></a>
+				</label>
+
+	        </div>
+
+       		<div class="soliloquy-bulk-actions">
+
+				<a href="#" class="button button-soliloquy-delete soliloquy-slides-delete"><?php _e( 'Delete selected files from slider', 'soliloquy' ); ?></a>
+				<a href="#" class="button button-soliloquy-secondary soliloquy-slides-edit"><?php _e( 'Edit Selected Slides', 'soliloquy' ); ?></a>
+
+			</div>
+
+	        <ul id="soliloquy-output" class="<?php echo $default_view; ?> soliloquy-clear" data-view="<?php echo $slide_view; ?>">
+
+	            <?php if ( ! empty( $slider_data['slider'] ) ) : ?>
+
+	                <?php foreach ( $slider_data['slider'] as $id => $data ) : ?>
+
+	                    <?php  echo $this->get_slider_item( $id, $data, ( ! empty( $data['type'] ) ? $data['type'] : 'image' ), $post->ID ); ?>
+
+	                <?php endforeach; ?>
+
+	            <?php endif; ?>
+
+	        </ul>
+
+			<div class="soliloquy-bulk-actions">
+
+				<a href="#" class="button button-soliloquy-delete soliloquy-slides-delete"><?php _e( 'Delete selected files from slider', 'soliloquy' ); ?></a>
+				<a href="#" class="button button-soliloquy-secondary soliloquy-slides-edit"><?php _e( 'Edit Selected Slides', 'soliloquy' ); ?></a>
+
+			</div>
+
+			<div class="soliloquy-alert">
+            	<p class="soliloquy-intro"><?php esc_html_e( 'Want to make your slider workflow even better?' , 'soliloquy' );  ?></p>
+				<p><?php esc_html_e( 'By upgrading to Soliloquy Pro, you can get access to numerous other features, including: a fully featured slider widget, complete slider API, powerful slider documentation, full mobile and Retina support, dedicated customer support and so much more!' ); ?></p>
+				<a href="<?php echo $this->common->get_upgrade_link(); ?>" target="_blank" class="button button-soliloquy"><?php esc_attr_e( 'Click here to Upgrade', 'soliloquy' ); ?></a>
+			</div> <?php
+
+	}
 
     /**
      * Callback for displaying the UI for setting slider config options.
@@ -676,11 +773,13 @@ class Soliloquy_Metaboxes_Lite {
                             <label for="soliloquy-config-slider-theme"><?php _e( 'Slider Theme', 'soliloquy' ); ?></label>
                         </th>
                         <td>
-                            <select id="soliloquy-config-slider-theme" name="_soliloquy[slider_theme]">
+	                        <div class="soliloquy-select">
+                            <select id="soliloquy-config-slider-theme" name="_soliloquy[slider_theme]" class="soliloquy-chosen" data-soliloquy-chosen-options='{ "disable_search":"true", "width": "100%" }'>
                                 <?php foreach ( (array) $this->get_slider_themes() as $i => $data ) : ?>
                                     <option value="<?php echo $data['value']; ?>"<?php selected( $data['value'], $this->get_config( 'slider_theme', $this->get_config_default( 'slider_theme' ) ) ); ?>><?php echo $data['name']; ?></option>
                                 <?php endforeach; ?>
                             </select>
+	                        </div>
                             <p class="description"><?php _e( 'Sets the theme for the slider display.', 'soliloquy' ); ?></p>
                         </td>
                     </tr>
@@ -698,11 +797,13 @@ class Soliloquy_Metaboxes_Lite {
                             <label for="soliloquy-config-transition"><?php _e( 'Slider Transition', 'soliloquy' ); ?></label>
                         </th>
                         <td>
-                            <select id="soliloquy-config-transition" name="_soliloquy[transition]">
+	                        <div class="soliloquy-select">
+                            <select id="soliloquy-config-transition" name="_soliloquy[transition]" class="soliloquy-chosen" data-soliloquy-chosen-options='{ "disable_search":"true", "width": "100%" }'>
                                 <?php foreach ( (array) $this->get_slider_transitions() as $i => $data ) : ?>
                                     <option value="<?php echo $data['value']; ?>"<?php selected( $data['value'], $this->get_config( 'transition', $this->get_config_default( 'transition' ) ) ); ?>><?php echo $data['name']; ?></option>
                                 <?php endforeach; ?>
                             </select>
+                            </div>
                             <p class="description"><?php _e( 'Sets the type of transition for the slider.', 'soliloquy' ); ?></p>
                         </td>
                     </tr>
@@ -747,21 +848,31 @@ class Soliloquy_Metaboxes_Lite {
                             <label for="soliloquy-config-aria-live"><?php _e( 'ARIA Live Value', 'soliloquy' ); ?></label>
                         </th>
                         <td>
-                            <select id="soliloquy-config-aria-live" name="_soliloquy[aria_live]">
+	                        <div class="soliloquy-select">
+                            <select id="soliloquy-config-aria-live" name="_soliloquy[aria_live]" class="soliloquy-chosen" data-soliloquy-chosen-options='{ "disable_search":"true", "width": "100%" }'>
                                 <?php foreach ( (array) Soliloquy_Common_Lite::get_instance()->get_aria_live_values() as $i => $data ) : ?>
                                     <option value="<?php echo $data['value']; ?>"<?php selected( $data['value'], $this->get_config( 'aria_live', $this->get_config_default( 'aria_live' ) ) ); ?>><?php echo $data['name']; ?></option>
                                 <?php endforeach; ?>
                             </select>
+
+	                        </div>
                             <p class="description"><?php _e( 'Accessibility: Defines the priority with which screen readers should treat updates to this slider.', 'soliloquy' ); ?></p>
                         </td>
                     </tr>
                     <?php do_action( 'soliloquy_config_box', $post ); ?>
                 </tbody>
             </table>
-            <div class="soliloquy-alert soliloquy-clear">
-                <?php _e( '<em>Want to do even more with your slider display?</em> By upgrading to Soliloquy Pro, you can get access to numerous other slider display features, including: <strong>full YouTube, Vimeo and Wistia video integration</strong>, <strong>custom HTML slides that can hold ANYTHING</strong>, <strong>custom slider themes</strong>, <strong>mobile specific image assets for blazing fast load times</strong>, <strong>control over navigation arrows and dots</strong>, <strong>pause/play functionality</strong>, <strong>hardware accelerated CSS transitions</strong>, <strong>slider randomization</strong> and so much more! <a href="http://soliloquywp.com/lite/?utm_source=liteplugin&utm_medium=link&utm_campaign=WordPress" title="Click here to upgrade to Soliloquy Pro!" target="_blank">Click here to upgrade to Soliloquy Pro!</a>', 'soliloquy' ); ?>
+
+			<div class="soliloquy-alert">
+
+				<p class="soliloquy-intro"><?php esc_html_e( 'Want to do even more with your slider display?', 'soliloquy' ); ?></p>
+				<p><?php esc_html_e( 'By upgrading to Soliloquy Pro, you can get access to numerous other gallery display features, including: custom image tagging and filtering, mobile specific image assets for blazing fast load times, dedicated and unique gallery URLs, custom gallery themes, gallery thumbnail support and so much more!', 'soliloquy' ); ?></p>
+                <a href="<?php echo $this->common->get_upgrade_link(); ?>" target="_blank" class="button button-soliloquy"><?php esc_attr_e( 'Click here to Upgrade', 'soliloquy' ); ?></a>
+
             </div>
+
         </div>
+
         <?php
 
     }
@@ -773,11 +884,9 @@ class Soliloquy_Metaboxes_Lite {
      *
      * @param object $post The current post object.
      */
-    public function misc_tab( $post ) {
-
-        ?>
+    public function misc_tab( $post ) { ?>
         <div id="soliloquy-misc">
-            <p class="soliloquy-intro"><?php _e( 'The settings below adjust the miscellaneous settings for the slider lightbox display.', 'soliloquy' ); ?></p>
+            <p class="soliloquy-intro"><?php _e( 'The settings below adjust the miscellaneous settings for the slider display.', 'soliloquy' ); ?></p>
             <table class="form-table">
                 <tbody>
                     <tr id="soliloquy-config-title-box">
@@ -819,14 +928,153 @@ class Soliloquy_Metaboxes_Lite {
                     <?php do_action( 'soliloquy_misc_box', $post ); ?>
                 </tbody>
             </table>
-            <div class="soliloquy-alert soliloquy-clear">
-                <?php _e( '<em>Want to take your sliders further?</em> By upgrading to Soliloquy Pro, you can get access to numerous other features, including: <strong>a fully-integrated import/export module for your sliders</strong>, <strong>custom CSS controls for each slider</strong>, <strong>lightbox and featured content support</strong> and so much more! <a href="http://soliloquywp.com/lite/?utm_source=liteplugin&utm_medium=link&utm_campaign=WordPress" title="Click here to upgrade to Soliloquy Pro!" target="_blank">Click here to upgrade to Soliloquy Pro!</a>', 'soliloquy' ); ?>
-            </div>
+
+			<div class="soliloquy-alert">
+
+				<p class="soliloquy-intro"><?php esc_html_e( 'Want to take your sliders further?', 'soliloquy' ); ?></p>
+				<p><?php esc_html_e( 'By upgrading to Soliloquy Pro, you can get access to numerous other features, including: a fully-integrated import/export module for your slider, custom CSS controls for each slider and so much more!', 'soliloquy' ); ?></p>
+                <a href="<?php echo $this->common->get_upgrade_link(); ?>" target="_blank" class="button button-soliloquy"><?php esc_attr_e( 'Click here to Upgrade', 'soliloquy' ); ?></a>
+
+			</div>
+
         </div>
+
+    <?php }
+
+    /**
+     * Callback for displaying the UI for setting slider Mobile Lite.
+     *
+     * @since 2.5.0
+     *
+     * @param object $post The current post object.
+     */
+	function mobile_lite_tab(){ ?>
+
+		<div id="soliloquy-mobile-lite">
+
+			<div class="soliloquy-alert">
+
+				<p class="soliloquy-intro"><?php esc_attr_e( 'Want to take your sliders further?', 'soliloquy' ); ?></p>
+				<p><?php esc_attr_e( 'By upgrading to Soliloquy Pro, you can get access to mobile-specific settings, including mobile image sizes, number of columns, mobile-specific lightbox options and so much more!', 'soliloquy' ); ?></p>
+
+				<a href="<?php echo $this->common->get_upgrade_link(); ?>" target="_blank" class="button button-soliloquy"><?php esc_attr_e( 'Click here to Upgrade', 'soliloquy' ); ?></a>
+
+			</div>
+
+        </div><?php
+
+	}
+    /**
+     * Callback for displaying the UI for setting slider Mobile Lite.
+     *
+     * @since 2.5.0
+     *
+     * @param object $post The current post object.
+     */
+	function carousel_lite_tab(){ ?>
+
+		<div id="soliloquy-carousel-lite">
+
+			<div class="soliloquy-alert">
+
+				<p class="soliloquy-intro"><?php esc_attr_e( 'Want to create a Responsive Carousel Slider?
+', 'soliloquy' ); ?></p>
+				<p><?php esc_attr_e( 'By upgrading to Soliloquy Pro, you can create a responsive carousel slider in WordPress for your images, photos, videos, and even galleries.', 'soliloquy' ); ?></p>
+
+				<a href="<?php echo $this->common->get_upgrade_link(); ?>" target="_blank" class="button button-soliloquy"><?php esc_attr_e( 'Click here to Upgrade', 'soliloquy' ); ?></a>
+
+			</div>
+
+        </div>
+
+		<?php
+	}
+    /**
+     * Callback for displaying the UI for setting slider Mobile Lite.
+     *
+     * @since 2.5.0
+     *
+     * @param object $post The current post object.
+     */
+	function pinterest_lite_tab(){ ?>
+
+		<div id="soliloquy-pinterest-lite">
+
+			<div class="soliloquy-alert">
+
+				<p class="soliloquy-intro"><?php esc_attr_e( 'Want to take your sliders further?', 'soliloquy' ); ?></p>
+				<p><?php esc_attr_e( 'By upgrading to Soliloquy Pro, you can add pinterest sharing buttons to your slider images and Lightbox images. Why not check it out?', 'soliloquy' ); ?></p>
+				<a href="<?php echo $this->common->get_upgrade_link(); ?>" target="_blank" class="button button-soliloquy"><?php esc_attr_e( 'Click here to Upgrade', 'soliloquy' ); ?></a>
+
+			</div>
+
+        </div><?php
+	}
+    /**
+     * Callback for displaying the UI for setting slider Mobile Lite.
+     *
+     * @since 2.5.0
+     *
+     * @param object $post The current post object.
+     */
+	function schedule_lite_tab(){ ?>
+
+		<div id="soliloquy-schedule-lite">
+			<div class="soliloquy-alert">
+				<p class="soliloquy-intro"><?php esc_attr_e( 'Want to take your sliders further?', 'soliloquy' ); ?></p>
+				<p><?php esc_attr_e( 'By upgrading to Soliloquy Pro, you can easily schedule both sliders and individual slides to be displayed at specific time intervals (perfect for highlight time-sensitive content).', 'soliloquy' ); ?></p>
+				<a href="<?php echo $this->common->get_upgrade_link(); ?>" target="_blank" class="button button-soliloquy"><?php esc_attr_e( 'Click here to Upgrade', 'soliloquy' ); ?></a>
+			</div>
+
+        </div>
+
         <?php
+	}
 
-    }
+    /**
+     * Callback for displaying the UI for setting slider Mobile Lite.
+     *
+     * @since 2.5.0
+     *
+     * @param object $post The current post object.
+     */
+	function lightbox_lite_tab(){ ?>
 
+        <div id="soliloquy-lightbox-lite">
+
+			<div class="soliloquy-alert">
+				<p class="soliloquy-intro"><?php esc_attr_e( 'Want even more fine tuned control over your lightbox display?', 'soliloquy' ); ?></p>
+				<p><?php esc_attr_e( 'By upgrading to Soliloquy Pro, you can get access to numerous other lightbox features, including: custom lightbox titles, enable/disable lightbox controls (arrow, keyboard and mousehweel navigation), custom lightbox transition effects, native fullscreen support, gallery deeplinking, image protection, lightbox supersize effects, lightbox slideshows and so much more!', 'soliloquy' ); ?></p>
+				<a href="<?php echo $this->common->get_upgrade_link(); ?>" target="_blank" class="button button-soliloquy"><?php esc_attr_e( 'Click here to Upgrade', 'soliloquy' ); ?></a>
+
+			</div>
+
+		</div><?php
+	}
+
+    /**
+     * Callback for displaying the UI for setting slider Mobile Lite.
+     *
+     * @since 2.5.0
+     *
+     * @param object $post The current post object.
+     */
+	function thumbnails_lite_tab(){ ?>
+
+		<div id="soliloquy-thumbnails-lite">
+
+			<div class="soliloquy-alert">
+
+				<p class="soliloquy-intro"><?php esc_attr_e( 'Want to add Thumbnail Navigation?', 'soliloquy' ); ?></p>
+				<p><?php _e( 'By upgrading to Soliloquy Pro, you can add thumbnail images as navigation for your WordPress slider. <a href="http://soliloquywp.com/addons/thumbnails/">(See Demo)</a>', 'soliloquy' ); ?></p>
+				<a href="<?php echo $this->common->get_upgrade_link(); ?>" target="_blank" class="button button-soliloquy"><?php esc_attr_e( 'Click here to Upgrade', 'soliloquy' ); ?></a>
+
+            </div>
+
+        </div>
+
+        <?php
+	}
     /**
      * Callback for saving values from Soliloquy metaboxes.
      *
@@ -978,123 +1226,33 @@ class Soliloquy_Metaboxes_Lite {
      */
     public function get_slider_image( $id, $data, $post_id = 0 ) {
 
-        $thumbnail = wp_get_attachment_image_src( $id, 'thumbnail' ); ob_start(); ?>
-        <li id="<?php echo $id; ?>" class="soliloquy-slide soliloquy-image soliloquy-status-<?php echo $data['status']; ?>" data-soliloquy-slide="<?php echo $id; ?>">
-            <img src="<?php echo esc_url( $thumbnail[0] ); ?>" alt="<?php esc_attr_e( $data['alt'] ); ?>" />
-            <a href="#" class="soliloquy-remove-slide" title="<?php esc_attr_e( 'Remove Image Slide from Slider?', 'soliloquy' ); ?>"></a>
-            <a href="#" class="soliloquy-modify-slide" title="<?php esc_attr_e( 'Modify Image Slide', 'soliloquy' ); ?>"></a>
-            <?php echo $this->get_slider_image_meta( $id, $data, $post_id ); ?>
-        </li>
-        <?php
-        return ob_get_clean();
+	        $thumbnail = wp_get_attachment_image_src( $id, 'thumbnail' );
 
-    }
+	        $json = version_compare( PHP_VERSION, '5.3.0') >= 0  ? json_encode( $data, JSON_HEX_APOS ) : json_encode( $data );
 
-    /**
-     * Helper method for retrieving the slider image metadata.
-     *
-     * @since 1.0.0
-     *
-     * @param int $id      The ID of the item to retrieve.
-     * @param array $data  Array of data for the item.
-     * @param int $post_id The current post ID.
-     * @return string      The HTML output for the slider item.
-     */
-    public function get_slider_image_meta( $id, $data, $post_id ) {
+	        ob_start(); ?>
 
-        ob_start();
-        ?>
-        <div id="soliloquy-meta-<?php echo $id; ?>" class="soliloquy-meta-container" style="display:none;">
-            <div class="media-modal wp-core-ui">
-                <a class="media-modal-close" href="#"><span class="media-modal-icon"></span></a>
-                <div class="media-modal-content">
-                    <div class="media-frame soliloquy-media-frame wp-core-ui hide-menu hide-router soliloquy-meta-wrap">
-                        <div class="media-frame-title">
-                            <h1><?php _e( 'Edit Metadata', 'soliloquy' ); ?></h1>
-                        </div>
-                        <div class="media-frame-content">
-                            <div class="attachments-browser">
-                                <div class="soliloquy-meta attachments">
-                                    <?php do_action( 'soliloquy_before_image_meta_table', $id, $data, $post_id ); ?>
-                                    <table id="soliloquy-meta-table-<?php echo $id; ?>" class="form-table soliloquy-meta-table" data-soliloquy-meta-id="<?php echo $id; ?>">
-                                        <tbody>
-                                            <?php do_action( 'soliloquy_before_image_meta_settings', $id, $data, $post_id ); ?>
-                                            <tr id="soliloquy-title-box-<?php echo $id; ?>" valign="middle">
-                                                <th scope="row"><label for="soliloquy-title-<?php echo $id; ?>"><?php _e( 'Image Title', 'soliloquy' ); ?></label></th>
-                                                <td>
-                                                    <input id="soliloquy-title-<?php echo $id; ?>" class="soliloquy-title" type="text" name="_soliloquy[meta_title]" value="<?php echo ( ! empty( $data['title'] ) ? esc_attr( $data['title'] ) : '' ); ?>" data-soliloquy-meta="title" />
-                                                    <p class="description"><?php _e( 'Sets the image title attribute for the image.', 'soliloquy' ); ?></p>
-                                                </td>
-                                            </tr>
-                                            <?php do_action( 'soliloquy_before_image_meta_alt', $id, $data, $post_id ); ?>
-                                            <tr id="soliloquy-alt-box-<?php echo $id; ?>" valign="middle">
-                                                <th scope="row"><label for="soliloquy-alt-<?php echo $id; ?>"><?php _e( 'Image Alt Text', 'soliloquy' ); ?></label></th>
-                                                <td>
-                                                    <input id="soliloquy-alt-<?php echo $id; ?>" class="soliloquy-alt" type="text" name="_soliloquy[meta_alt]" value="<?php echo ( ! empty( $data['alt'] ) ? esc_attr( $data['alt'] ) : '' ); ?>" data-soliloquy-meta="alt" />
-                                                    <p class="description"><?php _e( 'The image alt text is used for SEO. You should probably fill this one out!', 'soliloquy' ); ?></p>
-                                                </td>
-                                            </tr>
+	        <li id="<?php echo $id; ?>" class="soliloquy-slide soliloquy-image soliloquy-status-<?php echo $data['status']; ?>" data-soliloquy-slide="<?php echo $id; ?>" data-soliloquy-image-model='<?php echo htmlspecialchars ( $json, ENT_QUOTES, 'UTF-8'); ?>'>
+				<a href="#" class="check"><div class="media-modal-icon"></div></a>
 
-                                            <?php do_action( 'soliloquy_before_image_meta_link', $id, $data, $post_id ); ?>
-                                            <tr id="soliloquy-link-box-<?php echo $id; ?>" class="soliloquy-link-cell" valign="middle">
-                                                <th scope="row"><label for="soliloquy-link-<?php echo $id; ?>"><?php _e( 'Image Hyperlink', 'soliloquy' ); ?></label></th>
-                                                <td>
-                                                    <input id="soliloquy-link-<?php echo $id; ?>" class="soliloquy-link" type="text" name="_soliloquy[meta_link]" value="<?php echo ( ! empty( $data['link'] ) ? esc_url( $data['link'] ) : '' ); ?>" data-soliloquy-meta="link" />
-                                                    <p class="description"><?php _e( 'The image hyperlink determines what opens once the image is clicked. If left empty, no link will be added.', 'soliloquy' ); ?></p>
-                                                </td>
-                                            </tr>
+	            <a href="#" class="soliloquy-remove-slide" title="<?php esc_attr_e( 'Remove Image Slide from Slider?', 'soliloquy' ); ?>"><i class="soliloquy-icon-close"></i></a>
 
-                                            <?php do_action( 'soliloquy_before_image_meta_tab', $id, $data, $post_id ); ?>
-                                            <tr id="soliloquy-tab-box-<?php echo $id; ?>" class="soliloquy-tab-cell" valign="middle">
-                                                <th scope="row"><label for="soliloquy-link-<?php echo $id; ?>"><?php _e( 'Open Link in New Tab', 'soliloquy' ); ?></label></th>
-                                                <td>
-                                                    <input id="soliloquy-tab-<?php echo $id; ?>" class="soliloquy-tab" type="checkbox" name="_soliloquy[meta_tab]" value="1" <?php checked( ( ! empty( $data['linktab'] ) && $data['linktab'] ? 1 : 0 ), 1 ); ?> data-soliloquy-meta="linktab" />
-                                                    <p class="description"><?php _e( 'If enabled, opens the Image Hyperlink in a new browser window/tab.', 'soliloquy' ); ?></p>
-                                                </td>
-                                            </tr>
+	            <a href="#" class="soliloquy-modify-slide" title="<?php esc_attr_e( 'Modify Image Slide', 'soliloquy' ); ?>"><i class="soliloquy-icon-pencil"></i></a>
 
-                                            <?php do_action( 'soliloquy_before_image_meta_caption', $id, $data, $post_id ); ?>
-                                            <tr id="soliloquy-caption-box-<?php echo $id; ?>" valign="middle">
-                                                <th scope="row"><label for="soliloquy-caption-<?php echo $id; ?>"><?php _e( 'Image Caption', 'soliloquy' ); ?></label></th>
-                                                <td>
-                                                    <?php wp_editor( ( ! empty( $data['caption'] ) ? $data['caption'] : '' ), 'soliloquy-caption-' . $id, array( 'textarea_rows' => 5, 'media_buttons' => false, 'wpautop' => false, 'tinymce' => false, 'textarea_name' => '_soliloquy[meta_caption]', 'quicktags' => array( 'buttons' => 'strong,em,link,ul,ol,li,close' ) ) ); ?>
-                                                    <p class="description"><?php _e( 'Image captions can take any type of HTML.', 'soliloquy' ); ?></p>
-                                                </td>
-                                            </tr>
-                                            <?php do_action( 'soliloquy_after_image_meta_settings', $id, $data, $post_id ); ?>
-                                        </tbody>
-                                    </table>
-                                    <?php do_action( 'soliloquy_after_image_meta_table', $id, $data, $post_id ); ?>
-                                </div><!-- end .soliloquy-meta -->
-                                <div class="media-sidebar">
-                                    <div class="soliloquy-meta-sidebar">
-                                        <h3><?php _e( 'Helpful Tips', 'soliloquy' ); ?></h3>
-                                        <strong><?php _e( 'Images and SEO', 'soliloquy' ); ?></strong>
-                                        <p><?php _e( 'Images are a small but important part of your overall SEO strategy. In order to get the most SEO benefits from your slider, it is recommended that you fill out each applicable field with SEO friendly information about the image.', 'soliloquy' ); ?></p>
-                                        <strong><?php _e( 'Image Hyperlinks', 'soliloquy' ); ?></strong>
-                                        <p><?php _e( 'The image hyperlink field is used when you click on an image in the slider.', 'soliloquy' ); ?></p>
-                                        <strong><?php _e( 'Image Captions', 'soliloquy' ); ?></strong>
-                                        <p><?php _e( 'Captions can take any type of HTML content, such as <code>form</code>, <code>iframe</code> and <code>h1</code> tags.', 'soliloquy' ); ?></p>
-                                        <strong><?php _e( 'Saving and Exiting', 'soliloquy' ); ?></strong>
-                                        <p class="no-margin"><?php _e( 'Click on the button below to save your image metadata. You can close this window by either clicking on the "X" above or hitting the <code>esc</code> key on your keyboard.', 'soliloquy' ); ?></p>
-                                    </div><!-- end .soliloquy-meta-sidebar -->
-                                </div><!-- end .media-sidebar -->
-                            </div><!-- end .attachments-browser -->
-                        </div><!-- end .media-frame-content -->
-                        <div class="media-frame-toolbar">
-                            <div class="media-toolbar">
-                                <div class="media-toolbar-primary">
-                                    <a href="#" class="soliloquy-meta-submit button media-button button-large button-primary media-button-insert" title="<?php esc_attr_e( 'Save Metadata', 'soliloquy' ); ?>" data-soliloquy-item="<?php echo $id; ?>"><?php _e( 'Save Metadata', 'soliloquy' ); ?></a>
-                                </div><!-- end .media-toolbar-primary -->
-                            </div><!-- end .media-toolbar -->
-                        </div><!-- end .media-frame-toolbar -->
-                    </div><!-- end .media-frame -->
-                </div><!-- end .media-modal-content -->
-            </div><!-- end .media-modal -->
-            <div class="media-modal-backdrop"></div>
-        </div>
-        <?php
-        return ob_get_clean();
+	           	<div class="soliloquy-item-content">
+	            <img class="soliloquy-item-img" src="<?php echo esc_url( $thumbnail[0] ); ?>" alt="<?php esc_attr_e( $data['alt'] ); ?>" />
+
+	            <div class="soliloquy-item-info">
+
+	            <h3 class="soliloquy-item-title"><?php echo get_the_title( $id ); ?></h3>
+
+	           	</div>
+	           	</div>
+
+	        </li>
+
+	        <?php
+	        return ob_get_clean();
 
     }
 
@@ -1309,6 +1467,97 @@ class Soliloquy_Metaboxes_Lite {
         return extension_loaded( 'imagick' );
 
     }
+    /**
+     * Run through the array and check if ID or attachment_id is set.
+     *
+     * @access public
+     * @param mixed $array
+     * @return void
+     */
+    function maybe_update_slides( $array ){
+
+	    foreach ( $array as $id => $data ) {
+
+			if ( !array_key_exists('id', $data ) || !array_key_exists( 'attachment_id', $data ) ) {
+
+				return false;
+
+			} else {
+
+				continue;
+
+			}
+
+	    }
+
+		return true;
+
+    }
+
+	/**
+	 * Update Soliloquy Lite slides to include ID and Attachemnt ID.
+	 *
+	 * @access public
+	 * @param mixed $post_id
+	 * @return void
+	 */
+	function update_slides( $post_id ){
+
+	    // Grab and update any slider data if necessary.
+	    $in_slider = get_post_meta( $post_id, '_sol_in_slider', true );
+	    if ( empty( $in_slider ) ) {
+	        $in_slider = array();
+	    }
+
+	    // Set data and order of image in slider.
+	    $slider_data = get_post_meta( $post_id, '_sol_slider_data', true );
+
+	    if ( empty( $slider_data ) ) {
+	        $slider_data = array();
+	    }
+
+	    // If no slider ID has been set, set it now.
+	    if ( empty( $slider_data['id'] ) ) {
+	        $slider_data['id'] = $post_id;
+	    }
+
+	    foreach ( $slider_data['slider'] as $id => $data ) {
+
+		    	if ( !array_key_exists('id', $data ) || !array_key_exists('attachment_id', $data ) ){
+
+		            $slide = array(
+		                'status'  		=> isset( $data['status'] ) ? $data['status'] : 'published',
+		                'id'      		=> $id,
+		                'attachment_id' => $id,
+		            );
+
+				   $slide = wp_parse_args( $slide, $data );
+
+			   	}else{
+
+		            $slide = array(
+		                'status'  		=> isset( $data['status'] ) ? $data['status'] : 'published' ,
+		                'id'      		=> isset( $data['id']) ? $data['id'] : $id ,
+		            );
+
+		           $slide = wp_parse_args( $slide, $data );
+
+			   	}
+
+				$slider_data['slider'][ $id ] = $slide;
+				$in_slider[] = $id;
+
+	    }
+
+	    // Update the slider data.
+	   // update_post_meta( $post_id, '_sol_in_slider', $in_slider );
+	    update_post_meta( $post_id, '_sol_slider_data', $slider_data );
+
+		Soliloquy_Common_Lite::get_instance()->flush_slider_caches( $post_id );
+
+		return $slider_data;
+
+	}
 
     /**
      * Returns the singleton instance of the class.

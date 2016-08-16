@@ -26,8 +26,8 @@ function wppb_basic_info_content() {
 
 ?>
 	<div class="wrap wppb-wrap wppb-info-wrap">
-		<div class="wppb-badge <?php echo $version; ?>"><?php printf( __( 'Version %s' ), PROFILE_BUILDER_VERSION ); ?></div>
-		<h1><?php printf( __( '<strong>Profile Builder </strong>' . $version . ' <small>v.</small>%s', 'profile-builder' ), PROFILE_BUILDER_VERSION ); ?></h1>
+		<div class="wppb-badge <?php echo $version; ?>"><span><?php printf( __( 'Version %s' ), PROFILE_BUILDER_VERSION ); ?></span></div>
+		<h1><?php echo __( '<strong>Profile Builder </strong>' . $version, 'profile-builder' ); ?></h1>
 		<p class="wppb-info-text"><?php printf( __( 'The best way to add front-end registration, edit profile and login forms.', 'profile-builder' ) ); ?></p>
 		<hr />
 		<h2 class="wppb-callout"><?php _e( 'For Modern User Interaction', 'profile-builder' ); ?></h2>
@@ -156,7 +156,7 @@ function wppb_basic_info_content() {
 		<hr/>
 		<div class="wrap wppb-wrap wppb-1-3-col">
 			<div>
-				<a href="<?php echo admin_url('options.php?page=profile-builder-pms-promo'); ?>"><img src="<?php echo plugins_url( '../assets/images/basic_info_pms_cross_promo.png', __FILE__ ); ?>" alt="paid member subscriptions"/></a>
+				<a href="<?php echo admin_url('options.php?page=profile-builder-pms-promo'); ?>"><img src="<?php echo plugins_url( '../assets/images/pb-pms-cross-promotion.png', __FILE__ ); ?>" alt="paid member subscriptions"/></a>
 			</div>
 			<div>
 				<h3>Paid user profiles with Profile Builder and Paid Member Subscriptions</h3>

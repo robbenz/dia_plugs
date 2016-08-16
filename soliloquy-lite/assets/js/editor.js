@@ -28,7 +28,7 @@
  *    object for the "soliloquySliderModalData" event, like this:
  *
  *    $(document).on("soliloquySliderModalData", function(e){
- *        console.log(e.slider);
+ *        //console.log(e.slider);
  *    });
  *
  *    This will give you access to the entire array of slider data that
@@ -104,8 +104,8 @@
             } else {
                 // Make the ajax request.
                 var req_data = {
-                    action: 'soliloquy_load_slider_data',
-                    id:     $('.soliloquy-default-ui:first .selected').data('soliloquy-id')
+                    action:  'soliloquy_load_slider_data',
+                    post_id: $('.soliloquy-default-ui:first .selected').data('soliloquy-id')
                 };
                 $.post(ajaxurl, req_data, function(res){
                     // Trigger the event.

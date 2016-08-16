@@ -119,6 +119,16 @@
 	
 	<table class="form-table">
 		<tbody>
+			<!--tr>
+				<th scope="row"><label><?php _e('XMLReader', 'wp_all_import_plugin'); ?></label></th>
+				<td>
+					<fieldset style="padding:0;">						
+						<input type="hidden" name="enable_xmlreader" value="0"/>
+						<label for="enable_xmlreader"><input type="checkbox" value="1" id="enable_xmlreader" name="enable_xmlreader" <?php echo (($post['enable_xmlreader']) ? 'checked="checked"' : ''); ?>><?php _e('Enable XMLReader', 'wp_all_import_plugin'); ?></label>																				
+					</fieldset>														
+					<p class="description"><?php _e('Much faster XML parsing process.', 'wp_all_import_plugin'); ?></p>									
+				</td>
+			</tr-->
 			<tr>
 				<th scope="row"><label><?php _e('Chunk Size', 'wp_all_import_plugin'); ?></label></th>
 				<td>
