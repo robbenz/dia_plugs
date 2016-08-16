@@ -211,6 +211,7 @@
     left: 0;
     width: 100%;
     z-index: 1120;
+    padding-bottom: 25px;
     background: rgba(0, 0, 0, 0.5)
 }
 .soliloquy-container .soliloquy-caption-inside {
@@ -232,7 +233,7 @@
 /**
 * RTL
 */
-.soliloquy-rtl {	
+.soliloquy-rtl {
 	/**
 	* Pager
 	* - add margin to first child
@@ -243,7 +244,7 @@
 	}
 	.soliloquy-pager-item:last-child {
 		margin-left: 0;
-	}	
+	}
 	/**
 	* Direction Controls
 	* - swap left + right controls over
@@ -258,7 +259,7 @@
 		left: auto;
 		background-image: url(images/right.png);
 	}
-	
+
 	/**
 	* Thumbnails
 	* - float right so they display
@@ -278,7 +279,7 @@
 	}
 	.soliloquy-pager-item:last-child {
 		margin-left: 0;
-	}	
+	}
 	/**
 	* Direction Controls
 	* - swap left + right controls over
@@ -293,7 +294,7 @@
 		left: auto;
 		background-image: url(images/right.png);
 	}
-	
+
 	/**
 	* Thumbnails
 	* - float right so they display

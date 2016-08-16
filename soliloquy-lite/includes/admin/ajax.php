@@ -60,31 +60,14 @@ class Soliloquy_Ajax{
 	 */
 	function upgrade_sliders(){
 
-	    // Run a security check first.
+	   // Run a security check first.
 	    check_ajax_referer( 'soliloquy-upgrade', 'nonce' );
 
 	    // Increase the time limit to account for large slider sets and suspend cache invalidations.
 	    set_time_limit( Soliloquy_Common_Lite::get_instance()->get_max_execution_time() );
 	    wp_suspend_cache_invalidation( true );
 
-	    // Update the license key from v1 to v2 if necessary.
-	    $v2_license = get_option( 'soliloquy' );
-
-	    if ( ! $v2_license || empty( $v2_license['key'] ) || empty( $v2_license['type'] ) ) {
-	        $v1_license  = get_option( 'soliloquy_license_key' );
-	        $new_license = Soliloquy_Lite::default_options();
-
-	        if ( ! empty( $v1_license['license'] ) ) {
-	            $new_license['key'] = $v1_license['license'];
-	        }
-
-	        update_option( 'soliloquy', $new_license );
-
-	        // Force the new key to be validated.
-	        Soliloquy_License::get_instance()->validate_key( true );
-	    }
-
-	    // Grab all sliders from v1 and convert them to the new system.
+	    // Grab all sliders and convert them to the new system.
 	    $sliders = get_posts(
 	        array(
 	            'post_type'      => 'soliloquy',
@@ -94,23 +77,17 @@ class Soliloquy_Ajax{
 
 	    // Loop through sliders and convert them.
 	    foreach ( (array) $sliders as $slider ) {
-	        // Grab meta from the v1 and v2 sliders.
-	        $meta    = get_post_meta( $slider->ID, '_soliloquy_settings', true );
-	        $v2_meta = get_post_meta( $slider->ID, '_sol_slider_data', true );
+	        // Grab meta from the v1 sliders.
+	        $meta = get_post_meta( $slider->ID, '_soliloquy_settings', true );
 
-	        // Move meta from v1 to v2, or if already using v2, use v2 as a starting point.
-	        if ( empty( $v2_meta ) ) {
-	            $new_meta = array(
-	                'id'     => $slider->ID,
-	                'config' => array(),
-	                'slider' => array(),
-	                'status' => 'active'
-	            );
-	        } else {
-	            $new_meta = $v2_meta;
-	        }
+	        // Move meta from v1 to v2.
+	        $new_meta = array(
+	            'id'     => $slider->ID,
+	            'config' => array(),
+	            'slider' => array(),
+	            'status' => 'active'
+	        );
 
-	        // Splice meta from v1 to v2.
 	        if ( ! empty( $new_meta['config']['gutter'] ) ) {
 	            $new_meta['config']['gutter'] = 0;
 	        }
@@ -123,56 +100,21 @@ class Soliloquy_Ajax{
 	            $new_meta['config']['mobile'] = 0;
 	        }
 
-	        $new_meta['config']['title'] = $slider->post_title;
-	        $new_meta['config']['slug']  = $slider->post_name;
+	        // Splice meta from v1 to v2.
+	        $new_meta['config']['title']  = $slider->post_title;
+	        $new_meta['config']['slug']   = $slider->post_name;
+	        $new_meta['config']['slider'] = 0;
 
 	        if ( ! empty( $meta['width'] ) ) {
-	            $new_meta['config']['slider_width'] = absint( $meta['width'] );
+	            $new_meta['config']['slider_width'] = $meta['width'];
 	        }
 
 	        if ( ! empty( $meta['height'] ) ) {
-	            $new_meta['config']['slider_height'] = absint( $meta['height'] );
-	        }
-
-	        if ( ! empty( $meta['default'] ) && 'cropped' !== $meta['default'] ) {
-	            $new_meta['config']['slider'] = 0;
-	        }
-
-	        if ( ! empty( $meta['custom'] ) ) {
-	            if ( $meta['custom'] ) {
-	                if ( 'full' == $meta['custom'] ) {
-	                    $new_meta['config']['slider_size'] = 'default';
-	                } else {
-	                    $new_meta['config']['slider_size'] = $meta['custom'];
-
-	                    global $_wp_additional_image_sizes;
-	                    if ( isset( $_wp_additional_image_sizes[$meta['custom']] ) ) {
-	        				$width 	= absint( $_wp_additional_image_sizes[$meta['custom']]['width'] );
-	        				$height = absint( $_wp_additional_image_sizes[$meta['custom']]['height'] );
-	        			} else {
-	        				$width	= absint( get_option( $meta['custom'] . '_size_w' ) );
-	        				$height	= absint( get_option( $meta['custom'] . '_size_h' ) );
-	        			}
-
-	        			if ( $width ) {
-	            			$new_meta['config']['slider_width'] = $width;
-	        			}
-
-	        			if ( $height ) {
-	            			$new_meta['config']['slider_height'] = $height;
-	        			}
-	                }
-	            }
+	            $new_meta['config']['slider_height'] = $meta['height'];
 	        }
 
 	        if ( ! empty( $meta['transition'] ) ) {
-	            if ( 'slide-horizontal' == $meta['transition'] ) {
-	                $new_meta['config']['transition'] = 'horizontal';
-	            } else if ( 'slide-vertical' == $meta['transition'] ) {
-	                $new_meta['config']['transition'] = 'vertical';
-	            } else {
-	                $new_meta['config']['transition'] = 'fade';
-	            }
+	            $new_meta['config']['transition'] = $meta['transition'];
 	        }
 
 	        if ( ! empty( $meta['speed'] ) ) {
@@ -183,162 +125,45 @@ class Soliloquy_Ajax{
 	            $new_meta['config']['speed'] = $meta['duration'];
 	        }
 
-	        if ( ! empty( $meta['animate'] ) ) {
-	            $new_meta['config']['auto'] = $meta['animate'];
-	        }
-
-	        if ( ! empty( $meta['navigation'] ) ) {
-	            $new_meta['config']['arrows'] = $meta['navigation'] ? 1 : 0;
-	        } else {
-	            $new_meta['config']['arrows'] = 0;
-	        }
-
-	        if ( ! empty( $meta['control'] ) ) {
-	            $new_meta['config']['control'] = $meta['control'] ? 1 : 0;
-	        } else {
-	            $new_meta['config']['control'] = 0;
-	        }
-
-	        if ( ! empty( $meta['keyboard'] ) ) {
-	            $new_meta['config']['keyboard'] = $meta['keyboard'];
-	        }
-
-	        if ( ! empty( $meta['pauseplay'] ) ) {
-	            $new_meta['config']['pauseplay'] = $meta['pauseplay'];
-	        }
-
-	        if ( ! empty( $meta['random'] ) ) {
-	            $new_meta['config']['random'] = $meta['random'];
-	        }
-
-	        if ( ! empty( $meta['number'] ) ) {
-	            $new_meta['config']['start'] = $meta['number'];
-	        }
-
-	        if ( ! empty( $meta['loop'] ) ) {
-	            $new_meta['config']['loop'] = $meta['loop'];
-	        }
-
-	        if ( ! empty( $meta['hover'] ) ) {
-	            $new_meta['config']['hover'] = $meta['hover'];
-	        }
-
-	        if ( ! empty( $meta['css'] ) ) {
-	            $new_meta['config']['css'] = $meta['css'];
-	        }
-
-	        if ( ! empty( $meta['smooth'] ) ) {
-	            $new_meta['config']['smooth'] = $meta['smooth'];
-	        }
-
-	        if ( ! empty( $meta['delay'] ) ) {
-	            $new_meta['config']['delay'] = $meta['delay'];
-	        }
-
 	        // Set to the classic theme to keep people from going nuts with a theme change.
-	        if ( ! empty( $meta['theme'] ) && 'metro' == $meta['theme'] ) {
-	            $new_meta['config']['slider_theme'] = 'metro';
-	        } else {
-	            $new_meta['config']['slider_theme'] = 'classic';
-	        }
+	        $new_meta['config']['slider_theme'] = 'classic';
 
 	        // Grab all attachments and add them to the slider.
 	        $attachments = get_posts(
 	            array(
 	    			'orderby' 		 => 'menu_order',
-					'order' 		 => 'ASC',
-					'post_type' 	 => 'attachment',
-					'post_parent' 	 => $slider->ID,
-					'post_status' 	 => null,
-					'posts_per_page' => -1
+	    			'order' 		 => 'ASC',
+	    			'post_type' 	 => 'attachment',
+	    			'post_parent' 	 => $slider->ID,
+	    			'post_status' 	 => null,
+	    			'posts_per_page' => -1
 	            )
 	        );
 
 	        // Loop through attachments and add them to the slider.
 	        foreach ( (array) $attachments as $slide ) {
-	            switch ( $slide->post_mime_type ) {
-	                case 'soliloquy/video' :
-	                    $new_meta['slider'][$slide->ID] = array(
-	                        'status'  => 'active',
-	                        'id'      => $slide->ID,
-	                        'src'     => '',
-	                        'title'   => isset( $slide->post_title ) ? $slide->post_title : '',
-	                        'link'    => '',
-	                        'url'     => isset( $slide->post_content ) ? $slide->post_content : '',
-	                        'thumb'   => '',
-	                        'caption' => isset( $slide->post_excerpt ) ? $slide->post_excerpt : '',
-	                        'type'    => 'video'
-	                    );
-	                    break;
-	                case 'soliloquy/html' :
-	                    $new_meta['slider'][$slide->ID] = array(
-	                        'status' => 'active',
-	                        'id'     => $slide->ID,
-	                        'src'    => '',
-	                        'title'  => isset( $slide->post_title ) ? $slide->post_title : '',
-	                        'link'   => '',
-	                        'code'   => isset( $slide->post_content ) ? $slide->post_content : '',
-	                        'type'   => 'html'
-	                    );
-	                    break;
-	                default :
-	                    $url      = wp_get_attachment_image_src( $slide->ID, 'full' );
-	                    $alt_text = get_post_meta( $slide->ID, '_wp_attachment_image_alt', true );
-	                    $new_meta['slider'][$slide->ID] = array(
-	                        'status'  => 'active',
-	                        'id'      => $slide->ID,
-	                        'src'     => isset( $url[0] ) ? esc_url( $url[0] ) : '',
-	                        'title'   => get_the_title( $slide->ID ),
-	                        'link'    => get_post_meta( $slide->ID, '_soliloquy_image_link', true ),
-	                        'linktab' => get_post_meta( $slider->ID, '_soliloquy_image_link_tab', true ),
-	                        'alt'     => ! empty( $alt_text ) ? $alt_text : get_the_title( $slide->ID ),
-	                        'caption' => ! empty( $slide->post_excerpt ) ? $slide->post_excerpt : '',
-	                        'filter'  => get_post_meta( $slide->ID, '_soliloquy_filters_image_filter', true ),
-	                        'type'    => 'image'
-	                    );
-	                    break;
-	            }
+	            $url      = wp_get_attachment_image_src( $slide->ID, 'full' );
+	            $alt_text = get_post_meta( $slide->ID, '_wp_attachment_image_alt', true );
+	            $new_meta['slider'][$slide->ID] = array(
+	                'status'  => 'active',
+	                'id'      => $slide->ID,
+	                'src'     => isset( $url[0] ) ? esc_url( $url[0] ) : '',
+	                'title'   => get_the_title( $slide->ID ),
+	                'link'    => get_post_meta( $slide->ID, '_soliloquy_image_link', true ),
+	                'alt'     => ! empty( $alt_text ) ? $alt_text : get_the_title( $slide->ID ),
+	                'caption' => ! empty( $slide->post_excerpt ) ? $slide->post_excerpt : '',
+	                'type'    => 'image'
+	            );
 	        }
-
 
 	        // Update the post meta for the new slider.
 	        update_post_meta( $slider->ID, '_sol_slider_data', $new_meta );
 
 	        // Force the post to update.
-	        wp_update_post( array( 'ID' => $slider->ID, 'post_type' => 'soliloquy' ) );
+	        wp_update_post( array( 'ID' => $slider->ID ) );
 
 	        // Flush caches for any sliders.
 	        Soliloquy_Common_Lite::get_instance()->flush_slider_caches( $slider->ID, $new_meta['config']['slug'] );
-	    }
-
-	    // Now grab any v2 sliders and convert the post type back to the proper system.
-	    $v2_sliders = get_posts(
-	        array(
-	            'post_type'      => 'soliloquyv2',
-	            'posts_per_page' => -1
-	        )
-	    );
-
-	    // Loop through the sliders, grab the data, delete and backwards convert them back to 'soliloquy' post type.
-	    foreach ( (array) $v2_sliders as $slider ) {
-	        // Grab any slider meta and add the attachment ID to the data array.
-	        $slider_meta = get_post_meta( $slider->ID, '_sol_slider_data', true );
-	        if ( ! empty( $slider_meta['slider'] ) ) {
-	            foreach ( $slider_meta['slider'] as $id => $data ) {
-	                $slider_meta['slider'][$id]['id'] = $id;
-	            }
-	        }
-
-	        update_post_meta( $slider->ID, '_sol_slider_data', $slider_meta );
-
-	        $data = array(
-	            'ID'        => $slider->ID,
-	            'post_type' => 'soliloquy'
-	        );
-	        wp_update_post( $data );
-
-	        // Flush caches for any sliders.
-	        Soliloquy_Common_Lite::get_instance()->flush_slider_caches( $slider->ID );
 	    }
 
 	    // Turn off cache suspension and flush the cache to remove any cache inconsistencies.
@@ -351,6 +176,7 @@ class Soliloquy_Ajax{
 	    // Send back the response.
 	    echo json_encode( true );
 	    die;
+
 
 	}
 
@@ -440,8 +266,8 @@ class Soliloquy_Ajax{
 	 * @since 1.0.0
 	 */
 	function load_image() {
-		
-	    
+
+
 	    // Run a security check first.
 	    check_ajax_referer( 'soliloquy-load-image', 'nonce' );
 
@@ -739,13 +565,13 @@ class Soliloquy_Ajax{
 
 	    // Run a security check first.
 	    check_ajax_referer( 'soliloquy-save-meta', 'nonce' );
-		
+
 	    // Prepare variables.
 	    $post_id     = absint( $_POST['post_id'] );
 	    $attach_id   = $_POST['attach_id'];
 	    $meta        = $_POST['meta'];
 	    $slider_data = get_post_meta( $post_id, '_sol_slider_data', true );
-		
+
 	    // Go ahead and ensure to store the attachment ID.
 	    $slider_data['slider'][$attach_id]['id'] = $attach_id;
 
@@ -805,17 +631,17 @@ class Soliloquy_Ajax{
 	    // Run a security check first.
 	    // Run a security check first.
 	    check_ajax_referer( 'soliloquy-save-meta', 'nonce' );
-		
+
 	    // Prepare variables.
 	    $post_id     = absint( $_POST['post_id'] );
 	    $attach_id   = $_POST['image_ids'];
 	    $meta        = $_POST['meta'];
 
 	    // Get gallery.
-	    $slider_data = get_post_meta( $post_id, '_sol_slider_data', true );	
+	    $slider_data = get_post_meta( $post_id, '_sol_slider_data', true );
 	    if ( empty( $slider_data ) || ! is_array( $slider_data ) ) {
 	        wp_send_json_error();
-	    } 
+	    }
 
 	    // Iterate through gallery images, updating the metadata.
 	    foreach ( $attach_id as $image_id ) {
@@ -826,7 +652,7 @@ class Soliloquy_Ajax{
 	        }
 		    // Go ahead and ensure to store the attachment ID.
 			$slider_data['slider'][$image_id]['id'] = $image_id;
-			
+
 		    if ( isset( $meta['alt'] ) ) {
 		        $slider_data['slider'][$image_id]['alt'] = trim( esc_html( $meta['alt'] ) );
 		    }
@@ -834,25 +660,25 @@ class Soliloquy_Ajax{
 		    if ( isset( $meta['status'] ) ) {
 		        $slider_data['slider'][$image_id]['status'] = trim( esc_html( $meta['status'] ) );
 		    }
-	
+
 		    if ( isset( $meta['link'] ) ) {
 		        $slider_data['slider'][$image_id]['link'] = esc_url( $meta['link'] );
 		    }
-	
+
 		    if ( isset( $meta['linktab'] ) && $meta['linktab'] ) {
 		        $slider_data['slider'][$image_id]['linktab'] = 1;
 		    } else {
 			    $slider_data['slider'][$image_id]['linktab'] = 0;
 		    }
-	
+
 		    if ( isset( $meta['caption_bulk'] ) ) {
 				$slider_data['slider'][$image_id]['caption'] = trim( $meta['caption_bulk'] );
 		    }
-	
+
 		    if ( isset( $meta['url'] ) ) {
 		        $slider_data['slider'][$image_id]['url'] = esc_url( $meta['url'] );
 		    }
-	
+
 		    if ( isset( $meta['src'] ) ) {
 		        $slider_data['slider'][$image_id]['src'] = esc_url( $meta['src'] );
 		    }
@@ -861,14 +687,14 @@ class Soliloquy_Ajax{
 
 	    // Update the slider data.
 	    update_post_meta( $post_id, '_sol_slider_data', $slider_data );
-	
+
 	    // Flush the slider cache.
 	    Soliloquy_Common_Lite::get_instance()->flush_slider_caches( $post_id );
-	
+
 	    // Done
 	    wp_send_json_success();
 	    die;
-    		
+
 	}
 	/**
 	 * Refreshes the DOM view for a slider.
@@ -1053,18 +879,18 @@ class Soliloquy_Ajax{
 	}
 
 	function slider_view(){
-		
+
 	    // Run a security check first.
-	    check_ajax_referer( 'soliloquy-save-meta', 'nonce' );		
+	    check_ajax_referer( 'soliloquy-save-meta', 'nonce' );
 	    $post_id     = absint( $_POST['post_id'] );
 	    $view        = $_POST['view'];
-	    
+
 	    $slider_data = get_post_meta( $post_id, '_sol_slider_data', true );
 	    // Save the different types of default meta fields for images, videos and HTML slides.
 	    if ( isset( $view ) ) {
 	        $slider_data['admin_view']= trim( esc_html( $view ) );
 	    }
-	    
+
 	    // Allow filtering of meta before saving.
 	    $slider_data = apply_filters( 'soliloquy_ajax_change_status', $slider_data, $meta, $attach_id, $post_id );
 
@@ -1075,19 +901,19 @@ class Soliloquy_Ajax{
 	    Soliloquy_Common_Lite::get_instance()->flush_slider_caches( $post_id );
 
 	    wp_send_json_success();
-	    
+
 	}
-	
+
 	function change_slide_status(){
 	    // Run a security check first.
 	    check_ajax_referer( 'soliloquy-save-meta', 'nonce' );
-		
+
 	    // Prepare variables.
 	    $post_id     = absint( $_POST['post_id'] );
 	    $attach_id   = $_POST['slide_id'];
-	    $status        = $_POST['status']; 
+	    $status        = $_POST['status'];
 	    $slider_data = get_post_meta( $post_id, '_sol_slider_data', true );
-		
+
 	    // Go ahead and ensure to store the attachment ID.
 	    $slider_data['slider'][$attach_id]['id'] = $attach_id;
 
@@ -1107,7 +933,7 @@ class Soliloquy_Ajax{
 
 	    wp_send_json_success();
 	    die;
-	    		
+
 	}
 	/**
 	 * Grabs JS and executes it for any uninitialised sliders on screen
@@ -1134,30 +960,30 @@ class Soliloquy_Ajax{
 	    // Build JS for each slider
 	    $js = '';
 	    foreach ( $_REQUEST['ids'] as $slider_id ) {
-	  
+
 	        // Get slider
 	        $data = $base->get_slider( $slider_id );
-	
+
 	        // If no slider found, skip
 	        if ( ! $data ) {
-				
+
 				if ( class_exists('Soliloquy_Dynamic_Common') ){
-				
+
 					$dynamic_id = Soliloquy_Dynamic_Common::get_instance()->get_dynamic_id();
 					$defaults = get_post_meta( $dynamic_id, '_sol_slider_data', true );
-					
+
 					$data = $defaults;
 					$data['id'] = 'custom_'. $slider_id;
-	
+
 				} else{
-				
+
 					continue;
-					
+
 				}
 	    	}
-		
+
 		}
-	    
+
 	    // Output JS
 	    echo $js;
 	    die();

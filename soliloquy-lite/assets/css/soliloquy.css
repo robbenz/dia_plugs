@@ -211,6 +211,7 @@
   left: 0;
   width: 100%;
   z-index: 1120;
+  padding-bottom: 25px;
   background: rgba(0, 0, 0, 0.5); }
 
 .soliloquy-container .soliloquy-caption-inside {

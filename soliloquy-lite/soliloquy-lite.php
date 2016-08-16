@@ -5,7 +5,7 @@
  * Description: Soliloquy is best responsive WordPress slider plugin. This is the lite version.
  * Author:      Soliloquy Team
  * Author URI:  https://soliloquywp.com
- * Version:     2.5.0.3
+ * Version:     2.5.0.4
  * Text Domain: soliloquy
  * Domain Path: languages
  *
@@ -54,7 +54,7 @@ class Soliloquy_Lite {
      *
      * @var string
      */
-    public $version = '2.5.0.3';
+    public $version = '2.5.0.4';
 
     /**
      * The name of the plugin.
@@ -107,9 +107,7 @@ class Soliloquy_Lite {
 
         // Load the plugin.
         add_action( 'init', array( $this, 'init' ), 0 );
-        add_action( 'admin_notices',                       array( $this, 'giveaway_notice'             )         );
-		add_action( 'admin_init',                          array( $this, 'giveaway_notice_dismiss'     )         );
-        add_action( 'admin_menu',                          array( $this, 'giveaway_menu'               )         );
+
     }
 
     /**
@@ -418,155 +416,7 @@ class Soliloquy_Lite {
         return false;
 
     }
-	/**
-	 * Giveaway admin notice.
-	 *
-	 * @since 1.2.3.1
-	*/
-	public function giveaway_notice() {
 
-		// Only display for admins
-		if ( ! current_user_can( apply_filters( 'soliloquy_manage_cap', 'manage_options' ) ) ) {
-
-			return;
-
-		}
-		// Don't display if has been dismissed or user has been to giveaway page
-		if ( get_option( 'soliloquy_giveaway_07072016', false ) ) {
-
-			return;
-
-		}
-
-	    $dismiss  = esc_url( add_query_arg( array( 'soliloquy_giveaway_dismiss' => true ) ) );
-	    $giveaway = admin_url( 'admin.php?page=soliloquy-giveaway' );
-
-	    ?>
-
-	    <div class="notice soliloquy-giveaway-notice">
-
-	    	<span class="dashicons dashicons-thumbs-up"></span>Are you enjoying <strong>Soliloquy Lite</strong>? We are giving away 10 free licenses of Soliloquy Pro - <a href="<?php echo $giveaway; ?>">Enter the Giveaway Here</a> (It’s easy)
-	            <a href="<?php echo $dismiss; ?>" class="soliloquy-giveaway-dismiss"><span class="dashicons dashicons-dismiss"></span></a>
-	        </div>
-	        <style type="text/css">
-	        .soliloquy-giveaway-notice {
-	            position: relative; padding: 8px 10px 8px 40px; border-left: 0;
-	        }
-	        .soliloquy-giveaway-notice span.dashicons-thumbs-up {
-	            color: white; background: #0e6cad; position: absolute; left: 0; height: 100%; top: 0; padding: 0 5px;
-	        }
-	        .soliloquy-giveaway-notice span.dashicons-thumbs-up:before {
-	            margin-top: 6px; display: inline-block;
-	        }
-	        .soliloquy-giveaway-dismiss {
-	            float: right; color: #999; text-decoration: none;
-	        }
-	        </style>
-	    <?php
-	    }
-
-	    /**
-	     * Giveaway admin notice dismiss.
-	     *
-	     * @since 1.2.3.1
-	     */
-	    public function giveaway_notice_dismiss() {
-
-	        if ( !current_user_can( apply_filters( 'soliloquy_manage_cap', 'manage_options' ) ) ){
-
-	            return;
-
-			}
-
-	        if ( isset( $_GET[ 'soliloquy_giveaway_dismiss' ] ) || ( isset( $_GET['page'] ) && 'soliloquy-giveaway' == $_GET['page'] ) ) {
-
-	            update_option( 'soliloquy_giveaway_07072016', 'hide' );
-
-	        }
-	    }
-
-	    /**
-	     * Giveaway menu item for settings page.
-	     *
-	     * @since 1.2.3.1
-	     */
-	    public function giveaway_menu() {
-
-	        add_submenu_page(
-	            'soliloquy-settings',
-	            __( 'Soliloquy Giveaway', 'soliloquy' ),
-	            __( 'Soliloquy Giveaway', 'soliloquy' ),
-	            apply_filters( 'soliloquy_manage_cap', 'manage_options' ),
-	            'soliloquy-giveaway',
-	            array( $this, 'giveaway_page' )
-	        );
-	    }
-
-	    /**
-	     * Giveaway settings page.
-	     *
-	     * @since 1.2.3.1
-	     */
-	    public function giveaway_page() {
-
-	        // Set option once user goes to this page so they don't see the admin
-	        // notice again when using the WP dashboard
-	        update_option( 'soliloquy_giveaway_07072016', 'hide' );
-			$screen = get_current_screen();
-
-	        ?>
-	        <div id="soliloquy-header">
-
-				<div id="soliloquy-logo"><img src="<?php echo plugins_url( 'assets/images/soliloquy-logo.png', __FILE__  ); ?>" alt="<?php _e( 'Soliloquy', 'soliloquy'); ?>">
-</div>
-
-			</div>
-
-	        <div id="soliloquy-giveaway" class="wrap">
-	            <h1 class="hideme">PRO Giveaway</h1>
-	            <p>Thank you for using Soliloquy Lite. This week, we're expecting to surpass 1 million downloads. To thank you for your support, we're giving away 10 Pro accounts of Soliloquy ($99 value each).</p>
-	            <p>** Winners will be announced on Tuesday, August 16th **</p>
-	            <p>Enter the giveaway below:</p>
-				<a class="rcptr" href="http://www.rafflecopter.com/rafl/display/2ec3ed917/" rel="nofollow" data-raflid="2ec3ed917" data-theme="classic" data-template="" id="rcwidget_ka8qvo07">a Rafflecopter giveaway</a>
-				<script src="https://widget-prime.rafflecopter.com/launch.js"></script>
-	        </div>
-	        <style type="text/css">
-
-   #soliloquy-header {
-  background-color: #ff3700;
-  height: 120px;
-  margin-left: -20px; }
-  #soliloquy-header #soliloquy-logo {
-    margin: 0;
-    padding-top: 25px;
-    line-height: 120px;
-    margin-left: 20px; }
-    #soliloquy-header #soliloquy-logo img {
-      max-width: 288px; }
-	            #soliloquy-giveaway  {
-	                max-width: 800px;
-	            }
-	            #soliloquy-giveaway  h1 {
-	                font-size: 30px;
-	                margin: 0 0 26px 0;
-	            }
-	             #soliloquy-giveaway  .hideme{
-		             display: none;
-	             }
-	            #soliloquy-giveaway p {
-	                font-size: 18px;
-	                margin: 0 0 24px 0;
-	                max-width: 540px;
-	            }
-	            #soliloquy-giveaway iframe#rcwidget_ka8qvo07{
-		            margin: 0!important;
-	            }
-	            .soliloquy-giveaway-notice{
-		            display: none;
-	            }
-	        </style>
-	        <?php
-	    }
 
     /**
      * Returns the singleton instance of the class.
