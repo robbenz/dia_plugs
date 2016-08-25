@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Module class.
  *
- * @version 2.5.3
+ * @version 2.5.5
  * @since   2.2.0
  * @author  Algoritmika Ltd.
  */
@@ -188,7 +188,7 @@ if ( ! class_exists( 'WCJ_Module' ) ) :
 	/**
 	 * create_meta_box.
 	 *
-	 * @since 2.5.0
+	 * @since 2.5.5
 	 */
 	function create_meta_box() {
 		$current_post_id = get_the_ID();
@@ -199,7 +199,7 @@ if ( ! class_exists( 'WCJ_Module' ) ) :
 			if ( $is_enabled ) {
 				if ( 'title' === $option['type'] ) {
 					$html .= '<tr>';
-					$html .= '<th cospan="2" style="text-align:left;">' . $option['title'] . '</th>';
+					$html .= '<th colspan="2" style="text-align:left;">' . $option['title'] . '</th>';
 					$html .= '</tr>';
 				} else {
 					$custom_attributes = '';
@@ -232,6 +232,9 @@ if ( ! class_exists( 'WCJ_Module' ) ) :
 						}
 					} else {
 						$input_ending = ' id="' . $option['name'] . '" name="' . $option['name'] . '" value="' . $option_value . '">';
+						if ( isset( $option['custom_attributes'] ) ) {
+							$input_ending = ' ' . $option['custom_attributes'] . $input_ending;
+						}
 					}
 					switch ( $option['type'] ) {
 						case 'price':
@@ -251,7 +254,10 @@ if ( ! class_exists( 'WCJ_Module' ) ) :
 							break;
 					}
 					$html .= '<tr>';
-					$html .= '<th style="text-align:left;">' . $option['title'] . '</th>';
+					$maybe_tooltip = ( isset( $option['tooltip'] ) && '' != $option['tooltip'] ) ?
+						' <img style="display:inline;" class="wcj-question-icon" src="' . wcj_plugin_url() . '/assets/images/question-icon.png' . '" title="' . $option['tooltip'] . '">' :
+						'';
+					$html .= '<th style="text-align:left;">' . $option['title'] . $maybe_tooltip . '</th>';
 					if ( isset( $option['desc'] ) && '' != $option['desc'] ) {
 						$html .= '<td style="font-style:italic;">' . $option['desc'] . '</td>';
 					}

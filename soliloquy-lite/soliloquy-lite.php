@@ -5,7 +5,7 @@
  * Description: Soliloquy is best responsive WordPress slider plugin. This is the lite version.
  * Author:      Soliloquy Team
  * Author URI:  https://soliloquywp.com
- * Version:     2.5.0.4
+ * Version:     2.5.0.5
  * Text Domain: soliloquy
  * Domain Path: languages
  *
@@ -54,7 +54,7 @@ class Soliloquy_Lite {
      *
      * @var string
      */
-    public $version = '2.5.0.4';
+    public $version = '2.5.0.5';
 
     /**
      * The name of the plugin.
@@ -107,6 +107,9 @@ class Soliloquy_Lite {
 
         // Load the plugin.
         add_action( 'init', array( $this, 'init' ), 0 );
+        
+        add_filter( 'admin_footer_text',     array( $this, 'admin_footer'   ), 1, 2 );
+
 
     }
 
@@ -393,7 +396,22 @@ class Soliloquy_Lite {
         return false;
 
     }
-
+	/**
+	 * When user is on a Soliloquy related admin page, display footer text
+	 * that graciously asks them to rate us.
+	 *
+	 * @since 2.5.0.5
+	 * @param string $text
+	 * @return string
+	 */
+	public function admin_footer( $text ) {
+		global $current_screen;
+		if ( !empty( $current_screen->id ) && strpos( $current_screen->id, 'soliloquy' ) !== false ) {
+			$url  = 'https://wordpress.org/support/view/plugin-reviews/soliloquy-lite?filter=5';
+			$text = sprintf( __( 'Please rate <strong>SoliloquyWP</strong> <a href="%s" target="_blank">&#9733;&#9733;&#9733;&#9733;&#9733;</a> on <a href="%s" target="_blank">WordPress.org</a> to help us spread the word. Thank you from the WPForms team!', 'wpforms' ), $url, $url );
+		}
+		return $text;
+	}
     /**
      * Helper flag method for the Add/Edit Soliloquy screens.
      *

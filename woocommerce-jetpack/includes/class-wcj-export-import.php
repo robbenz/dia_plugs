@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Export Import class.
  *
- * @version 2.5.4
+ * @version 2.5.5
  * @since   2.5.4
  * @author  Algoritmika Ltd.
  * @todo    import products (maybe orders, customers) tool(s);
@@ -82,7 +82,7 @@ class WCJ_Export_Import extends WCJ_Module {
 	/**
 	 * export_csv.
 	 *
-	 * @version 2.4.8
+	 * @version 2.5.5
 	 * @since   2.4.8
 	 */
 	function export_csv() {
@@ -90,7 +90,7 @@ class WCJ_Export_Import extends WCJ_Module {
 			$data = $this->export( $_POST['wcj_export'] );
 			$csv = '';
 			foreach ( $data as $row ) {
-				$csv .= implode( ',', $row ) . PHP_EOL;
+				$csv .= implode( get_option( 'wcj_export_csv_separator', ',' ), $row ) . PHP_EOL;
 			}
 			header( "Content-Type: application/octet-stream" );
 			header( "Content-Disposition: attachment; filename=" . $_POST['wcj_export'] . ".csv" );
@@ -99,20 +99,55 @@ class WCJ_Export_Import extends WCJ_Module {
 			header( "Content-Description: File Transfer" );
 			header( "Content-Length: " . strlen( $csv ) );
 			echo $csv;
+			die();
+		}
+	}
+
+	/**
+	 * export_filter_fileds.
+	 *
+	 * @version 2.5.5
+	 * @since   2.5.5
+	 */
+	function export_filter_fileds( $tool_id ) {
+		$fields = array();
+		switch ( $tool_id ) {
+			case 'orders':
+				$fields = array(
+					'wcj_filter_by_order_billing_country' => __( 'Filter by Billing Country', 'woocommerce-jetpack' ),
+					'wcj_filter_by_product_title'         => __( 'Filter by Product Title', 'woocommerce-jetpack' ),
+				);
+				break;
+		}
+		if ( ! empty( $fields ) ) {
+			$data = array();
+			foreach( $fields as $field_id => $field_desc ) {
+				$field_value = ( isset( $_POST[ $field_id ] ) ) ? $_POST[ $field_id ] : '';
+				$data[] = array(
+					'<label for="' . $field_id . '">' . $field_desc . '</label>',
+					'<input name="' . $field_id . '" id="' . $field_id . '" type="text" value="' . $field_value . '">',
+				);
+			}
+			$data[] = array(
+				'<button class="button-primary" type="submit" name="wcj_export_show" value="' . $tool_id . '">' . __( 'Show', 'woocommerce-jetpack' ) . '</button>',
+				'',
+			);
+			return wcj_get_table_html( $data, array( 'table_class' => 'widefat', 'table_style' => 'width:50%;min-width:300px;', 'table_heading_type' => 'vertical', ) );
 		}
 	}
 
 	/**
 	 * create_export_tool.
 	 *
-	 * @version 2.4.8
+	 * @version 2.5.5
 	 * @since   2.4.8
 	 */
 	function create_export_tool( $tool_id ) {
 		$data = $this->export( $tool_id );
-		echo '<p><form method="post" action="">';
-		echo '<button class="button-primary" type="submit" name="wcj_export" value="' . $tool_id . '">' . __( 'Download CSV', 'woocommerce-jetpack' ) . '</button>';
-		echo '</form></p>';
+		echo '<form method="post" action="">';
+		echo $this->export_filter_fileds( $tool_id );
+		echo '<p><button class="button-primary" type="submit" name="wcj_export" value="' . $tool_id . '">' . __( 'Download CSV', 'woocommerce-jetpack' ) . '</button></p>';
+		echo '</form>';
 		echo wcj_get_table_html( $data, array( 'table_class' => 'widefat striped' ) );
 	}
 
@@ -180,7 +215,7 @@ class WCJ_Export_Import extends WCJ_Module {
 	/**
 	 * export_orders.
 	 *
-	 * @version 2.5.4
+	 * @version 2.5.5
 	 * @since   2.4.8
 	 */
 	function export_orders() {
@@ -191,8 +226,12 @@ class WCJ_Export_Import extends WCJ_Module {
 			__( 'Order Status', 'woocommerce-jetpack' ),
 			__( 'Order Date', 'woocommerce-jetpack' ),
 			__( 'Order Item Count', 'woocommerce-jetpack' ),
+			__( 'Order Items', 'woocommerce-jetpack' ),
+			__( 'Order Currency', 'woocommerce-jetpack' ),
 			__( 'Order Total', 'woocommerce-jetpack' ),
+			__( 'Order Total Tax', 'woocommerce-jetpack' ),
 			__( 'Order Payment Method', 'woocommerce-jetpack' ),
+			__( 'Order Notes', 'woocommerce-jetpack' ),
 			__( 'Billing First Name', 'woocommerce-jetpack' ),
 			__( 'Billing Last Name', 'woocommerce-jetpack' ),
 			__( 'Billing Company', 'woocommerce-jetpack' ),
@@ -230,14 +269,44 @@ class WCJ_Export_Import extends WCJ_Module {
 			while ( $loop_orders->have_posts() ) : $loop_orders->the_post();
 				$order_id = $loop_orders->post->ID;
 				$order = wc_get_order( $order_id );
+
+				if ( isset( $_POST['wcj_filter_by_order_billing_country'] ) && '' != $_POST['wcj_filter_by_order_billing_country'] ) {
+					if ( $order->billing_country != $_POST['wcj_filter_by_order_billing_country'] ) {
+						continue;
+					}
+				}
+
+				$filter_by_product_title = true;
+				if ( isset( $_POST['wcj_filter_by_product_title'] ) && '' != $_POST['wcj_filter_by_product_title'] ) {
+					$filter_by_product_title = false;
+				}
+				$items = array();
+				foreach ( $order->get_items() as $item ) {
+					$items[] = $item['name'];
+					if ( ! $filter_by_product_title ) {
+//						if ( $item['name'] === $_POST['wcj_filter_by_product_title'] ) {
+						if ( false !== strpos( $item['name'], $_POST['wcj_filter_by_product_title'] ) ) {
+							$filter_by_product_title = true;
+						}
+					}
+				}
+				$items = implode( ' / ', $items );
+				if ( ! $filter_by_product_title ) {
+					continue;
+				}
+
 				$data[] = array(
 					$order_id,
 					$order->get_order_number(),
 					$order->get_status(),
 					get_the_date( 'Y/m/d' ),
 					$order->get_item_count(),
-					$order->get_total() . ' ' . $order->get_order_currency(),
+					$items,
+					$order->get_order_currency(),
+					$order->get_total(),
+					$order->get_total_tax(),
 					$order->payment_method_title,
+					$order->customer_note,
 					$order->billing_first_name,
 					$order->billing_last_name,
 					$order->billing_company,
@@ -367,11 +436,27 @@ class WCJ_Export_Import extends WCJ_Module {
 	/**
 	 * get_settings.
 	 *
-	 * @version 2.5.4
+	 * @version 2.5.5
 	 * @since   2.5.4
 	 */
 	function get_settings() {
-		$settings = array();
+		$settings = array(
+			array(
+				'title'   => __( 'Export Options', 'woocommerce-jetpack' ),
+				'type'    => 'title',
+				'id'      => 'wcj_export_options'
+			),
+			array(
+				'title'   => __( 'CSV Separator', 'woocommerce-jetpack' ),
+				'id'      => 'wcj_export_csv_separator',
+				'default' => ',',
+				'type'    => 'text',
+			),
+			array(
+				'type'    => 'sectionend',
+				'id'      => 'wcj_export_options'
+			),
+		);
 		return $this->add_standard_settings( $settings );
 	}
 }

@@ -91,6 +91,9 @@ Soliloquy has many Addons that extend its default functionality to make it do in
 
 == Changelog ==
 
+= 2.5.0.5 =
+* Fix: Typo.
+
 = 2.5.0.4 =
 * Giveaway Ending Thank you!
 * Fix: Various minor bugs.

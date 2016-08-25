@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Products Shortcodes class.
  *
- * @version 2.5.4
+ * @version 2.5.5
  * @author  Algoritmika Ltd.
  */
 
@@ -17,7 +17,7 @@ class WCJ_Products_Shortcodes extends WCJ_Shortcodes {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.5.4
+	 * @version 2.5.5
 	 */
 	public function __construct() {
 
@@ -37,6 +37,9 @@ class WCJ_Products_Shortcodes extends WCJ_Shortcodes {
 			'wcj_product_total_sales',
 			'wcj_product_shipping_class',
 			'wcj_product_dimensions',
+			'wcj_product_length',
+			'wcj_product_width',
+			'wcj_product_height',
 			'wcj_product_formatted_name',
 			'wcj_product_stock_availability',
 			'wcj_product_tax_class',
@@ -76,6 +79,9 @@ class WCJ_Products_Shortcodes extends WCJ_Shortcodes {
 			'days_to_cover'    => 90,
 			'order_status'     => 'wc-completed',
 			'hide_if_no_sales' => 'no',
+			'to_unit'          => '',
+			'round'            => 'no',
+			'precision'        => 2,
 		);
 
 		parent::__construct();
@@ -108,6 +114,39 @@ class WCJ_Products_Shortcodes extends WCJ_Shortcodes {
 		if ( ! $this->the_product ) return false;
 
 		return $atts;
+	}
+
+	/**
+	 * wcj_product_length.
+	 *
+	 * @version 2.5.5
+	 * @since   2.5.5
+	 */
+	function wcj_product_length( $atts ) {
+		$return = ( '' != $atts['to_unit'] ) ? wc_get_dimension( $this->the_product->get_length(), $atts['to_unit'] ) : $this->the_product->get_length();
+		return ( 'yes' === $atts['round'] ) ? round( $return, $atts['precision'] ) : $return;
+	}
+
+	/**
+	 * wcj_product_width.
+	 *
+	 * @version 2.5.5
+	 * @since   2.5.5
+	 */
+	function wcj_product_width( $atts ) {
+		$return = ( '' != $atts['to_unit'] ) ? wc_get_dimension( $this->the_product->get_width(), $atts['to_unit'] ) : $this->the_product->get_width();
+		return ( 'yes' === $atts['round'] ) ? round( $return, $atts['precision'] ) : $return;
+	}
+
+	/**
+	 * wcj_product_height.
+	 *
+	 * @version 2.5.5
+	 * @since   2.5.5
+	 */
+	function wcj_product_height( $atts ) {
+		$return = ( '' != $atts['to_unit'] ) ? wc_get_dimension( $this->the_product->get_height(), $atts['to_unit'] ) : $this->the_product->get_height();
+		return ( 'yes' === $atts['round'] ) ? round( $return, $atts['precision'] ) : $return;
 	}
 
 	/**
@@ -527,23 +566,36 @@ class WCJ_Products_Shortcodes extends WCJ_Shortcodes {
 	/**
 	 * wcj_product_wholesale_price_table.
 	 *
-	 * @version 2.5.2
+	 * @version 2.5.5
 	 */
 	function wcj_product_wholesale_price_table( $atts ) {
 
 		if ( ! wcj_is_product_wholesale_enabled( $this->the_product->id ) ) return '';
 
+		// Check for user role options
+		$role_option_name_addon = '';
+		$user_roles = get_option( 'wcj_wholesale_price_by_user_role_roles', '' );
+		if ( ! empty( $user_roles ) ) {
+			$current_user_role = wcj_get_current_user_first_role();
+			foreach ( $user_roles as $user_role_key ) {
+				if ( $current_user_role === $user_role_key ) {
+					$role_option_name_addon = '_' . $user_role_key;
+					break;
+				}
+			}
+		}
+
 		$wholesale_price_levels = array();
 		if ( wcj_is_product_wholesale_enabled_per_product( $this->the_product->id ) ) {
-			for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_post_meta( $this->the_product->id, '_' . 'wcj_wholesale_price_levels_number', true ) ); $i++ ) {
-				$level_qty                = get_post_meta( $this->the_product->id, '_' . 'wcj_wholesale_price_level_min_qty_' . $i, true );
-				$discount                 = get_post_meta( $this->the_product->id, '_' . 'wcj_wholesale_price_level_discount_' . $i, true );
+			for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_post_meta( $this->the_product->id, '_' . 'wcj_wholesale_price_levels_number' . $role_option_name_addon, true ) ); $i++ ) {
+				$level_qty                = get_post_meta( $this->the_product->id, '_' . 'wcj_wholesale_price_level_min_qty' . $role_option_name_addon . '_' . $i, true );
+				$discount                 = get_post_meta( $this->the_product->id, '_' . 'wcj_wholesale_price_level_discount' . $role_option_name_addon . '_' . $i, true );
 				$wholesale_price_levels[] = array( 'quantity' => $level_qty, 'discount' => $discount, );
 			}
 		} else {
-			for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_wholesale_price_levels_number', 1 ) ); $i++ ) {
-				$level_qty                = get_option( 'wcj_wholesale_price_level_min_qty_' . $i, PHP_INT_MAX );
-				$discount                 = get_option( 'wcj_wholesale_price_level_discount_percent_' . $i, 0 );
+			for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_wholesale_price_levels_number' . $role_option_name_addon, 1 ) ); $i++ ) {
+				$level_qty                = get_option( 'wcj_wholesale_price_level_min_qty' . $role_option_name_addon . '_' . $i, PHP_INT_MAX );
+				$discount                 = get_option( 'wcj_wholesale_price_level_discount_percent' . $role_option_name_addon . '_' . $i, 0 );
 				$wholesale_price_levels[] = array( 'quantity' => $level_qty, 'discount' => $discount, );
 			}
 		}

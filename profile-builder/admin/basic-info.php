@@ -91,20 +91,30 @@ function wppb_basic_info_content() {
 				<?php } else {?>
 					<p><a href="admin.php?page=manage-fields" class="button"><?php _e( 'Get started with extra fields', 'profile-builder' ); ?></a></p>
 				<?php } ?>
-				<ul>
+				<ul style="float: left; margin-right: 50px;">
 					<li><?php _e( 'Avatar Upload', 'profile-builder' ); ?></li>
 					<li><?php _e( 'Generic Uploads', 'profile-builder' ); ?></li>
 					<li><?php _e( 'Agree To Terms Checkbox', 'profile-builder' ); ?></li>
 					<li><?php _e( 'Datepicker', 'profile-builder' ); ?> </li>
+                    <li><?php _e( 'Timepicker', 'profile-builder' ); ?> </li>
+                    <li><?php _e( 'Colorpicker', 'profile-builder' ); ?> </li>
 					<li><?php _e( 'reCAPTCHA', 'profile-builder' ); ?></li>
 					<li><?php _e( 'Country Select', 'profile-builder' ); ?></li>
+                    <li><?php _e( 'Currency Select', 'profile-builder' ); ?></li>
 					<li><?php _e( 'Timezone Select', 'profile-builder' ); ?></li>
-					<li><?php _e( 'Input / Hidden Input', 'profile-builder' ); ?></li>
-					<li><?php _e( 'Checkbox', 'profile-builder' ); ?></li>
-					<li><?php _e( 'Select', 'profile-builder' ); ?></li>
-					<li><?php _e( 'Radio Buttons', 'profile-builder' ); ?></li>
-					<li><?php _e( 'Textarea', 'profile-builder' ); ?></li>
 				</ul>
+
+                <ul style="float: left;">
+                    <li><?php _e( 'Input / Hidden Input', 'profile-builder' ); ?></li>
+                    <li><?php _e( 'Number', 'profile-builder' ); ?></li>
+                    <li><?php _e( 'Checkbox', 'profile-builder' ); ?></li>
+                    <li><?php _e( 'Select', 'profile-builder' ); ?></li>
+                    <li><?php _e( 'Radio Buttons', 'profile-builder' ); ?></li>
+                    <li><?php _e( 'Textarea', 'profile-builder' ); ?></li>
+                    <li><?php _e( 'Validation', 'profile-builder' ); ?></li>
+                    <li><?php _e( 'Map', 'profile-builder' ); ?></li>
+                    <li><?php _e( 'HTML', 'profile-builder' ); ?></li>
+                </ul>
 			</div>
 			<div>
 				<img src="<?php echo WPPB_PLUGIN_URL; ?>assets/images/pb_fields.png" alt="Profile Builder Extra Fields" class="wppb-fields-image" />

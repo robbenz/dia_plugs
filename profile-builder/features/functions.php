@@ -217,7 +217,7 @@ $args = array(
 			'page_type'		=> 'menu_page',
 			'position' 		=> '70,69',
 			'priority' 		=> 1,
-			'icon_url' 		=> WPPB_PLUGIN_URL . 'assets/images/pb_menu_icon.png'
+			'icon_url' 		=> WPPB_PLUGIN_URL . 'assets/images/pb-menu-icon.png'
 		);
 new WCK_Page_Creator_PB( $args );
 

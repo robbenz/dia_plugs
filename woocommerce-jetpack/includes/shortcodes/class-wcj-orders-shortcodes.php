@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Orders Shortcodes class.
  *
- * @version 2.5.4
+ * @version 2.5.5
  * @author  Algoritmika Ltd.
  */
 
@@ -70,7 +70,7 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 	/**
 	 * add_extra_atts.
 	 *
-	 * @version 2.5.0
+	 * @version 2.5.5
 	 */
 	function add_extra_atts( $atts ) {
 		$modified_atts = array_merge( array(
@@ -87,6 +87,7 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 			'decimal'       => __( 'Cents', 'woocommerce-jetpack' ),
 			'precision'     => get_option( 'woocommerce_price_num_decimals', 2 ),
 			'lang'          => 'EN',
+			'unique_only'   => 'no',
 		), $atts );
 
 		return $modified_atts;
@@ -286,7 +287,7 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 	/**
 	 * wcj_order_items_meta.
 	 *
-	 * @version 2.5.3
+	 * @version 2.5.5
 	 * @since   2.5.3
 	 */
 	function wcj_order_items_meta( $atts ) {
@@ -302,6 +303,9 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 					$items_metas[] = $value;
 				}
 			} */
+		}
+		if ( 'yes' === $atts['unique_only'] ) {
+			$items_metas = array_unique( $items_metas );
 		}
 		return ( ! empty( $items_metas ) ) ? implode( ', ', $items_metas ) : '';
 	}
@@ -514,7 +518,7 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 	/**
 	 * wcj_order_tax_by_class.
 	 *
-	 * @version 2.5.4
+	 * @version 2.5.5
 	 * @since   2.5.4
 	 */
 	function wcj_order_tax_by_class( $atts ) {
@@ -522,7 +526,8 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 		$total_tax_by_class = 0;
 		foreach ( $this->the_order->get_items() as $item ) {
 			if ( $tax_class === $item['tax_class'] ) {
-				$total_tax_by_class += $this->the_order->get_line_tax( $item );
+//				$total_tax_by_class += $this->the_order->get_line_tax( $item );
+				$total_tax_by_class += $item['line_tax'];
 			}
 		}
 		return $this->wcj_price_shortcode( $total_tax_by_class, $atts );

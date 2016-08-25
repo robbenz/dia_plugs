@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack General Shortcodes class.
  *
- * @version 2.5.4
+ * @version 2.5.5
  * @author  Algoritmika Ltd.
  */
 
@@ -82,7 +82,7 @@ class WCJ_General_Shortcodes extends WCJ_Shortcodes {
 	/**
 	 * wcj_wholesale_price_table (global only).
 	 *
-	 * @version 2.5.2
+	 * @version 2.5.5
 	 * @since   2.4.8
 	 */
 	function wcj_wholesale_price_table( $atts ) {
@@ -91,10 +91,23 @@ class WCJ_General_Shortcodes extends WCJ_Shortcodes {
 			return '';
 		}
 
+		// Check for user role options
+		$role_option_name_addon = '';
+		$user_roles = get_option( 'wcj_wholesale_price_by_user_role_roles', '' );
+		if ( ! empty( $user_roles ) ) {
+			$current_user_role = wcj_get_current_user_first_role();
+			foreach ( $user_roles as $user_role_key ) {
+				if ( $current_user_role === $user_role_key ) {
+					$role_option_name_addon = '_' . $user_role_key;
+					break;
+				}
+			}
+		}
+
 		$wholesale_price_levels = array();
-		for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_wholesale_price_levels_number', 1 ) ); $i++ ) {
-			$level_qty                = get_option( 'wcj_wholesale_price_level_min_qty_' . $i, PHP_INT_MAX );
-			$discount                 = get_option( 'wcj_wholesale_price_level_discount_percent_' . $i, 0 );
+		for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_wholesale_price_levels_number' . $role_option_name_addon, 1 ) ); $i++ ) {
+			$level_qty                = get_option( 'wcj_wholesale_price_level_min_qty' . $role_option_name_addon . '_' . $i, PHP_INT_MAX );
+			$discount                 = get_option( 'wcj_wholesale_price_level_discount_percent' . $role_option_name_addon . '_' . $i, 0 );
 			$wholesale_price_levels[] = array( 'quantity' => $level_qty, 'discount' => $discount, );
 		}
 
@@ -115,7 +128,7 @@ class WCJ_General_Shortcodes extends WCJ_Shortcodes {
 	/**
 	 * wcj_currency_select_link_list.
 	 *
-	 * @version 2.4.5
+	 * @version 2.5.5
 	 * @since   2.4.5
 	 */
 	function wcj_currency_select_link_list( $atts, $content ) {
@@ -123,7 +136,18 @@ class WCJ_General_Shortcodes extends WCJ_Shortcodes {
 		$shortcode_currencies = $this->get_shortcode_currencies( $atts );
 		// Options
 		$currencies = wcj_get_currencies_names_and_symbols();
-		$selected_currency = ( isset( $_SESSION['wcj-currency'] ) ) ? $_SESSION['wcj-currency'] : '';
+		$selected_currency = '';
+		if ( isset( $_SESSION['wcj-currency'] ) ) {
+			$selected_currency = $_SESSION['wcj-currency'];
+		} else {
+			$module_roles = get_option( 'wcj_multicurrency_role_defaults_roles', '' );
+			if ( ! empty( $module_roles ) ) {
+				$current_user_role = wcj_get_current_user_first_role();
+				if ( in_array( $current_user_role, $module_roles ) ) {
+					$selected_currency = get_option( 'wcj_multicurrency_role_defaults_' . $current_user_role, '' );
+				}
+			}
+		}
 		$links = array();
 		$first_link = '';
 		foreach ( $shortcode_currencies as $currency_code ) {
@@ -166,7 +190,7 @@ class WCJ_General_Shortcodes extends WCJ_Shortcodes {
 	/**
 	 * get_currency_selector.
 	 *
-	 * @version 2.4.5
+	 * @version 2.5.5
 	 * @since   2.4.5
 	 */
 	private function get_currency_selector( $atts, $content, $type = 'select' ) {
@@ -182,7 +206,18 @@ class WCJ_General_Shortcodes extends WCJ_Shortcodes {
 		$shortcode_currencies = $this->get_shortcode_currencies( $atts );
 		// Options
 		$currencies = wcj_get_currencies_names_and_symbols();
-		$selected_currency = ( isset( $_SESSION['wcj-currency'] ) ) ? $_SESSION['wcj-currency'] : '';
+		$selected_currency = '';
+		if ( isset( $_SESSION['wcj-currency'] ) ) {
+			$selected_currency = $_SESSION['wcj-currency'];
+		} else {
+			$module_roles = get_option( 'wcj_multicurrency_role_defaults_roles', '' );
+			if ( ! empty( $module_roles ) ) {
+				$current_user_role = wcj_get_current_user_first_role();
+				if ( in_array( $current_user_role, $module_roles ) ) {
+					$selected_currency = get_option( 'wcj_multicurrency_role_defaults_' . $current_user_role, '' );
+				}
+			}
+		}
 		foreach ( $shortcode_currencies as $currency_code ) {
 			if ( isset( $currencies[ $currency_code ] ) ) {
 				if ( '' == $selected_currency ) {

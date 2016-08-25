@@ -71,7 +71,7 @@
 				</li>
 			</ul>
 			
-			<p class="soliloquy-upsell"><?php esc_attr_e('Soliloqyy Pro allows you to build sliders from Instagram photos, images from your posts, and more.
+			<p class="soliloquy-upsell"><?php esc_attr_e('Soliloquy Pro allows you to build sliders from Instagram photos, images from your posts, and more.
 
 ', 'loquy'); ?></p>
 

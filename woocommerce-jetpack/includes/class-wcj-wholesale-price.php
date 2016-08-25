@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Wholesale Price class.
  *
- * @version 2.5.4
+ * @version 2.5.5
  * @since   2.2.0
  * @author  Algoritmika Ltd.
  * @todo    per variation;
@@ -19,7 +19,7 @@ class WCJ_Wholesale_Price extends WCJ_Module {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.5.0
+	 * @version 2.5.5
 	 */
 	function __construct() {
 
@@ -28,6 +28,8 @@ class WCJ_Wholesale_Price extends WCJ_Module {
 		$this->desc       = __( 'Set WooCommerce wholesale pricing depending on product quantity in cart (buy more pay less).', 'woocommerce-jetpack' );
 		$this->link       = 'http://booster.io/features/woocommerce-wholesale-price/';
 		parent::__construct();
+
+		add_action( 'init', array( $this, 'add_settings_hook' ) );
 
 		if ( $this->is_enabled() ) {
 
@@ -84,27 +86,40 @@ class WCJ_Wholesale_Price extends WCJ_Module {
 	/**
 	 * get_discount_by_quantity.
 	 *
-	 * @version 2.5.0
+	 * @version 2.5.5
 	 */
 	private function get_discount_by_quantity( $quantity, $product_id ) {
 
-		$max_qty_level = 1;
-		$discount = 0;
+		// Check for user role options
+		$role_option_name_addon = '';
+		$user_roles = get_option( 'wcj_wholesale_price_by_user_role_roles', '' );
+		if ( ! empty( $user_roles ) ) {
+			$current_user_role = wcj_get_current_user_first_role();
+			foreach ( $user_roles as $user_role_key ) {
+				if ( $current_user_role === $user_role_key ) {
+					$role_option_name_addon = '_' . $user_role_key;
+					break;
+				}
+			}
+		}
 
+		// Get discount
+		$max_qty_level = 1;
+		$discount      = 0;
 		if ( wcj_is_product_wholesale_enabled_per_product( $product_id ) ) {
-			for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_post_meta( $product_id, '_' . 'wcj_wholesale_price_levels_number', true ) ); $i++ ) {
-				$level_qty = get_post_meta( $product_id, '_' . 'wcj_wholesale_price_level_min_qty_' . $i, true );
+			for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_post_meta( $product_id, '_' . 'wcj_wholesale_price_levels_number' . $role_option_name_addon, true ) ); $i++ ) {
+				$level_qty = get_post_meta( $product_id, '_' . 'wcj_wholesale_price_level_min_qty' . $role_option_name_addon . '_' . $i, true );
 				if ( $quantity >= $level_qty && $level_qty >= $max_qty_level ) {
 					$max_qty_level = $level_qty;
-					$discount = get_post_meta( $product_id, '_' . 'wcj_wholesale_price_level_discount_' . $i, true );
+					$discount = get_post_meta( $product_id, '_' . 'wcj_wholesale_price_level_discount' . $role_option_name_addon . '_' . $i, true );
 				}
 			}
 		} else {
-			for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_wholesale_price_levels_number', 1 ) ); $i++ ) {
-				$level_qty = get_option( 'wcj_wholesale_price_level_min_qty_' . $i, PHP_INT_MAX );
+			for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_wholesale_price_levels_number' . $role_option_name_addon, 1 ) ); $i++ ) {
+				$level_qty = get_option( 'wcj_wholesale_price_level_min_qty' . $role_option_name_addon . '_' . $i, PHP_INT_MAX );
 				if ( $quantity >= $level_qty && $level_qty >= $max_qty_level ) {
 					$max_qty_level = $level_qty;
-					$discount = get_option( 'wcj_wholesale_price_level_discount_percent_' . $i, 0 );
+					$discount = get_option( 'wcj_wholesale_price_level_discount_percent' . $role_option_name_addon . '_' . $i, 0 );
 				}
 			}
 		}
@@ -148,7 +163,7 @@ class WCJ_Wholesale_Price extends WCJ_Module {
 	/**
 	 * calculate_totals.
 	 *
-	 * @version 2.5.2
+	 * @version 2.5.5
 	 * @since   2.5.0
 	 */
 	function calculate_totals( $cart ) {
@@ -170,11 +185,17 @@ class WCJ_Wholesale_Price extends WCJ_Module {
 				continue;
 			}
 
-			$price = $_product->get_price();
-
+			// Prices
 			$tax_display_mode = get_option( 'woocommerce_tax_display_shop' );
 			$get_price_method = 'get_price_' . $tax_display_mode . 'uding_tax';
-			$price_old = $_product->$get_price_method(); // used for display only
+			if ( 0 != ( $variation_id = WC()->cart->cart_contents[ $item_key ]['variation_id'] ) ) {
+				$variation = wc_get_product( $variation_id );
+				$price     = $variation->get_price();
+				$price_old = $variation->$get_price_method(); // used for display only
+			} else {
+				$price     = $_product->get_price();
+				$price_old = $_product->$get_price_method();  // used for display only
+			}
 
 			// If other discount was applied in cart...
 			if ( 'yes' === get_option( 'wcj_wholesale_price_apply_only_if_no_other_discounts', 'no' ) ) {
@@ -214,7 +235,7 @@ class WCJ_Wholesale_Price extends WCJ_Module {
 	/**
 	 * get_meta_box_options.
 	 *
-	 * @version 2.5.0
+	 * @version 2.5.5
 	 * @since   2.5.0
 	 */
 	function get_meta_box_options() {
@@ -244,7 +265,9 @@ class WCJ_Wholesale_Price extends WCJ_Module {
 				'name'    => 'wcj_wholesale_price_levels_number',
 				'default' => 0,
 				'type'    => 'number',
-				'title'   => __( 'Number of levels', 'woocommerce-jetpack' ) . ' (<em>' . __( 'Press "Update" after you change this number', 'woocommerce-jetpack' ) . '</em>)',
+				'title'   => __( 'Number of levels', 'woocommerce-jetpack' ),
+				'tooltip' => __( 'Save product after you change this number.', 'woocommerce-jetpack' ) . apply_filters( 'wcj_get_option_filter', ' ' . __( 'Free Booster\'s version is limited to one level maximum. Please visit http://booster.io to get full version.', 'woocommerce-jetpack' ), '' ),
+				'custom_attributes' => 'min="0" max="' . apply_filters( 'wcj_get_option_filter', 1, 1000 ) . '"',
 			),
 		);
 		for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_post_meta( $product_id, '_' . 'wcj_wholesale_price_levels_number', true ) ); $i++ ) {
@@ -258,31 +281,91 @@ class WCJ_Wholesale_Price extends WCJ_Module {
 					'default' => 0,
 					'type'    => 'number',
 					'title'   => __( 'Level', 'woocommerce-jetpack' ) . ' #' . $i . ' ' . __( 'Min quantity', 'woocommerce-jetpack' ),
+					'custom_attributes' => 'min="0"',
 				),
 				array(
 					'name'    => 'wcj_wholesale_price_level_discount_' . $i,
 					'default' => 0,
-					'type'    => 'number',
+					'type'    => 'price',
 					'title'   => __( 'Level', 'woocommerce-jetpack' ) . ' #' . $i . ' ' . __( 'Discount', 'woocommerce-jetpack' ),
 				),
 			) );
 		}
+
+		$user_roles = get_option( 'wcj_wholesale_price_by_user_role_roles', '' );
+		if ( ! empty( $user_roles ) ) {
+			foreach ( $user_roles as $user_role_key ) {
+				$options = array_merge( $options, array(
+					array(
+						'name'    => 'wcj_wholesale_price_levels_number_' . $user_role_key,
+						'default' => 0,
+						'type'    => 'number',
+						'title'   => __( 'Number of levels', 'woocommerce-jetpack' ) . ' [' . $user_role_key . ']',
+						'tooltip' => __( 'Save product after you change this number.', 'woocommerce-jetpack' ) . apply_filters( 'wcj_get_option_filter', ' ' . __( 'Free Booster\'s version is limited to one level maximum. Please visit http://booster.io to get full version.', 'woocommerce-jetpack' ), '' ),
+						'custom_attributes' => 'min="0" max="' . apply_filters( 'wcj_get_option_filter', 1, 1000 ) . '"',
+					),
+				) );
+				for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_post_meta( $product_id, '_' . 'wcj_wholesale_price_levels_number_' . $user_role_key, true ) ); $i++ ) {
+					$options = array_merge( $options, array(
+						/* array(
+							'type'    => 'title',
+							'title'   => __( 'Level', 'woocommerce-jetpack' ) . ' #' . $i,
+						), */
+						array(
+							'name'    => 'wcj_wholesale_price_level_min_qty_' . $user_role_key . '_' . $i,
+							'default' => 0,
+							'type'    => 'number',
+							'title'   => __( 'Level', 'woocommerce-jetpack' ) . ' #' . $i . ' ' . __( 'Min quantity', 'woocommerce-jetpack' ) . ' [' . $user_role_key . ']',
+							'custom_attributes' => 'min="0"',
+						),
+						array(
+							'name'    => 'wcj_wholesale_price_level_discount_' . $user_role_key . '_' . $i,
+							'default' => 0,
+							'type'    => 'price',
+							'title'   => __( 'Level', 'woocommerce-jetpack' ) . ' #' . $i . ' ' . __( 'Discount', 'woocommerce-jetpack' ) . ' [' . $user_role_key . ']',
+						),
+					) );
+				}
+			}
+		}
+
 		return $options;
+	}
+
+	/**
+	 * add_settings_hook.
+	 *
+	 * @version 2.5.5
+	 * @since   2.5.5
+	 */
+	function add_settings_hook() {
+		add_filter( 'wcj_wholesale_price_settings', array( $this, 'add_settings' ) );
 	}
 
 	/**
 	 * get_settings.
 	 *
-	 * @version 2.5.4
+	 * @version 2.5.5
 	 */
 	function get_settings() {
+		$settings = apply_filters( 'wcj_wholesale_price_settings', array() );
+		return $this->add_standard_settings( $settings );
+	}
+
+	/**
+	 * add_settings.
+	 *
+	 * @version 2.5.5
+	 * @since   2.5.5
+	 */
+	function add_settings() {
 		$products = apply_filters( 'wcj_get_products_filter', array() );
 		$settings = array(
 			array(
 				'title'   => __( 'Options', 'woocommerce-jetpack' ),
 				'type'    => 'title',
 				'desc'    => __( 'Wholesale Price Levels Options. If you want to display prices table on frontend, use [wcj_product_wholesale_price_table] shortcode.', 'woocommerce-jetpack' ),
-				'id'      => 'wcj_wholesale_price_level_options',
+				'id'      => 'wcj_wholesale_price_general_options',
 			),
 			array(
 				'title'   => __( 'Enable per Product', 'woocommerce-jetpack' ),
@@ -347,6 +430,15 @@ class WCJ_Wholesale_Price extends WCJ_Module {
 				'options' => $products,
 			),
 			array(
+				'type'    => 'sectionend',
+				'id'      => 'wcj_wholesale_price_general_options',
+			),
+			array(
+				'title'   => __( 'Wholesale Levels Options', 'woocommerce-jetpack' ),
+				'type'    => 'title',
+				'id'      => 'wcj_wholesale_price_level_options',
+			),
+			array(
 				'title'   => __( 'Number of levels', 'woocommerce-jetpack' ),
 				'id'      => 'wcj_wholesale_price_levels_number',
 				'default' => 1,
@@ -380,7 +472,66 @@ class WCJ_Wholesale_Price extends WCJ_Module {
 			'type'        => 'sectionend',
 			'id'          => 'wcj_wholesale_price_level_options',
 		);
-		return $this->add_standard_settings( $settings );
+		$settings = array_merge( $settings, array(
+			array(
+				'title'   => __( 'Additional User Roles Options', 'woocommerce-jetpack' ),
+				'type'    => 'title',
+				'desc'    => __( 'If you want to set different wholesale pricing options for different user roles, fill this section. Please note that you can also use Booster\'s "Price by User Role" module without filling this section.', 'woocommerce-jetpack' ),
+				'id'      => 'wcj_wholesale_price_by_user_role_options',
+			),
+			array(
+				'title'   => __( 'User Roles Settings', 'woocommerce-jetpack' ),
+				'desc'    => __( 'Save settings after you change this option. Leave blank to disable.', 'woocommerce-jetpack' ),
+				'type'    => 'multiselect',
+				'id'      => 'wcj_wholesale_price_by_user_role_roles',
+				'default' => '',
+				'class'   => 'chosen_select',
+				'options' => wcj_get_user_roles_options(),
+			),
+		) );
+		$user_roles = get_option( 'wcj_wholesale_price_by_user_role_roles', '' );
+		if ( ! empty( $user_roles ) ) {
+			foreach ( $user_roles as $user_role_key ) {
+				$settings = array_merge( $settings, array(
+					array(
+						'title'   => __( 'Number of levels', 'woocommerce-jetpack' ) . ' [' . $user_role_key . ']',
+						'id'      => 'wcj_wholesale_price_levels_number_' . $user_role_key,
+						'default' => 1,
+						'type'    => 'custom_number',
+						'desc'    => apply_filters( 'get_wc_jetpack_plus_message', '', 'desc' ),
+						'custom_attributes' => array_merge(
+							is_array( apply_filters( 'get_wc_jetpack_plus_message', '', 'readonly' ) ) ? apply_filters( 'get_wc_jetpack_plus_message', '', 'readonly' ) : array(),
+							array('step' => '1', 'min' => '1', ) ),
+						'css'     => 'width:100px;',
+					),
+				) );
+				for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_wholesale_price_levels_number_' . $user_role_key, 1 ) ); $i++ ) {
+					$settings = array_merge( $settings, array(
+						array(
+							'title'   => __( 'Min quantity', 'woocommerce-jetpack' ) . ' #' . $i . ' [' . $user_role_key . ']',
+							'desc'    => __( 'Minimum quantity to apply discount', 'woocommerce-jetpack' ),
+							'id'      => 'wcj_wholesale_price_level_min_qty_' . $user_role_key . '_' . $i,
+							'default' => 0,
+							'type'    => 'number',
+							'custom_attributes' => array('step' => '1', 'min' => '0', ),
+						),
+						array(
+							'title'   => __( 'Discount', 'woocommerce-jetpack' ) . ' #' . $i . ' [' . $user_role_key . ']',
+							'desc'    => __( 'Discount', 'woocommerce-jetpack' ),
+							'id'      => 'wcj_wholesale_price_level_discount_percent_' . $user_role_key . '_' . $i, // mislabeled - should be 'wcj_wholesale_price_level_discount_'
+							'default' => 0,
+							'type'    => 'number',
+							'custom_attributes' => array('step' => '0.0001', 'min' => '0', ),
+						),
+					) );
+				}
+			}
+		}
+		$settings[] = array(
+			'type'        => 'sectionend',
+			'id'          => 'wcj_wholesale_price_by_user_role_options',
+		);
+		return $settings;
 	}
 }
 

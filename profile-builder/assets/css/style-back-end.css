@@ -594,18 +594,20 @@
     padding: 0 10px 1px;
     text-decoration: none;
     white-space: nowrap;
-    background: none repeat scroll 0 0 #D54E21;
+    background: none repeat scroll 0 0 #e14d43;
     border-color: #b2401b;
-    box-shadow: 0 1px 0 #ee683b inset, 0 1px 0 rgba(0, 0, 0, 0.08);
-    color: #fff;
+    -webkit-box-shadow: 0 1px 0 #ba281e !important;
+    box-shadow: 0 1px 0 #ba281e !important;
+    color: #fff !important;
     vertical-align:top;
+    text-shadow: 0 -1px 1px #ba281e,1px 0 1px #ba281e,0 1px 1px #ba281e,-1px 0 1px #ba281e !important;
 }
 p .wppb-button-free {
     vertical-align: baseline;
 }
 .wppb-button-free:hover {
-    background: #e45424;
-    border-color: #6d2811;
+    background: #e14d43;
+    border-color: #ba281e;
     color: #fff;
 }
 

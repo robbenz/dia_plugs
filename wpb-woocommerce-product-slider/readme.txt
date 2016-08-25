@@ -2,7 +2,7 @@
 Contributors: wpbean
 Tags: woocommerce product slider, woocommerce product gallery slider, woocommerce product slider plugin, woocommerce product slider plugin free, woocommerce featured product slider, woocommerce widget product slider, woocommerce featured products slider, multiple product slider, on sale product carousel, product, product carousel, product content slider, woocommerce product slider plugin free, product contents carousel, product rotator, product slider, products slider, responsive product slider, woo slider, woocommerce, woocommerce product carousel, WooCommerce Products, woocommerce products slider, woocommerce slider, carousel, woocommerce image slider, woocommerce responsive slider, woocommerce advance slider, best woocommerce product slider, easy woocommerce product slider, woocommerce slider free, woocommerce slider plugin, slider for woocommerce, woocommerce category slider, product slider carousel for woocommerce, woocommerce product slider and carousel plugin
 Requires at least: 3.6
-Tested up to: 4.5.2
+Tested up to: 4.6
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -129,6 +129,9 @@ Yes you can. I have created two different widget for this plugin, one for latest
 4. WPB Woocommerce Product Slider in admin widgets 
 
 == Changelog ==
+
+= version 1.0.9 =
+* WordPress 4.6 compatible.
 
 = version 1.0.7 =
 * Documentation updated.
