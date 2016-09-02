@@ -1,0 +1,79 @@
+.vfb-menu-item-addons {
+	color: $color-green-light;
+}
+
+.vfb-addons-list-container {
+	padding: 10px;
+
+	&,
+	*,
+	*:before,
+	*:after {
+		@include box-sizing(border-box);
+	}
+}
+
+.vfb-addons-list-container:after {
+	clear: both;
+    content: '.';
+    display: block;
+    height: 0;
+    visibility: hidden;
+}
+
+.vfb-addons-widget {
+	background-color: $color-white;
+	margin-bottom: 20px;
+
+	.vfb-addons-widget-header {
+		position: relative;
+		padding: 1px 15px;
+		background-color: $color-black-light;
+		text-align: center;
+
+		h3 {
+			color: $color-white;
+			margin-top: 20px;
+			margin-bottom: 15px;
+			font-size: 24px;
+			font-weight: 300;
+		}
+	}
+
+	.vfb-addons-widget-content,
+	.vfb-addons-widget-footer {
+		position: relative;
+		padding: 15px;
+		text-align: center;
+	}
+}
+
+#vfb-addon-create-post {
+	.vfb-addons-widget-header {
+		background-color: $color-blue-light;
+	}
+}
+
+#vfb-addon-display-entries {
+	.vfb-addons-widget-header {
+		background-color: $color-purple;
+	}
+}
+
+#vfb-addon-notifications {
+	.vfb-addons-widget-header {
+		background-color: $color-orange;
+	}
+}
+
+#vfb-addon-form-designer {
+	.vfb-addons-widget-header {
+		background-color: $color-red;
+	}
+}
+
+#vfb-addon-payments {
+	.vfb-addons-widget-header {
+		background-color: $color-green;
+	}
+}

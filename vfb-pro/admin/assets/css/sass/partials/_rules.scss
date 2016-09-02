@@ -1,0 +1,91 @@
+.vfb-rules-table {
+
+	.vfb-add-condition,
+	.vfb-delete-condition {
+		font-size: 18px;
+
+		&:hover {
+			cursor: pointer;
+		}
+	}
+
+	td {
+		padding-left: 0;
+	}
+
+	.vfb-add-condition:hover {
+		color: $color-green;
+	}
+
+	.vfb-delete-condition:hover {
+		color: $color-red;
+	}
+
+	.vfb-condition-col-if {
+		width: 10%;
+	}
+
+	.vfb-rules-select {
+		max-width: 200px;
+
+		&.vfb-rules-select-type,
+		&.vfb-rules-select-match {
+			width: 70px;
+		}
+
+		&.vfb-rules-select-condition {
+			max-width: 100px;
+		}
+
+		&.vfb-rules-select-label {
+			width: 200px;
+		}
+	}
+}
+
+.vfb-rule-email-value {
+	width: 40% !important;
+}
+
+.vfb-rule-email-email {
+	width: 45% !important;
+}
+
+.vfb-rules-actions {
+	text-align: right;
+	vertical-align: top;
+
+	a {
+		margin-top: 0;
+		font-size: 18px;
+		text-decoration: none;
+		display: inline-block;
+		width: 35px;
+		height: 35px;
+		line-height: 37px;
+		text-align: center;
+		color: $color-white;
+		border-radius: 17px;
+
+		&.vfb-rules-actions-add {
+			margin-right: 5px;
+			background-color: $color-green;
+
+			&:hover {
+				background-color: $color-green-light;
+			}
+		}
+
+		&.vfb-rules-actions-delete {
+			background-color: $color-red;
+
+			&:hover {
+				background-color: $color-red-light;
+			}
+		}
+
+		&:hover {
+			color: $color-white;
+		}
+	}
+}

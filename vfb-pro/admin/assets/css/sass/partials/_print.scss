@@ -1,0 +1,82 @@
+@media print {
+    body * {
+	    float: none;
+    }
+
+    html,
+    .wrap,
+    #wpbody-content {
+	    margin: 0;
+	    padding: 0;
+	    height: auto;
+	    background: none !important;
+	}
+
+	#wpadminbar,
+	#adminmenuwrap,
+	#adminmenushadow,
+	#adminmenuback,
+	.screen-reader-shortcut,
+	#screen-meta,
+	#screen-meta-links,
+	#wpfooter,
+	#icon-options-general,
+	.wrap h2,
+	.view-entry,
+	#major-publishing-actions,
+	.clear {
+		display: none;
+	}
+
+	#wpcontent,
+	body #wpcontent {
+		margin-left: 0;
+		width: auto;
+		height: auto;
+	}
+
+	#entry-edit h3 span {
+		font-weight: normal;
+		font-size: 23px;
+	}
+
+	#side-info-column {
+		float: none;
+		width: 100%;
+		height: auto;
+
+		.postbox .inside {
+			margin: 0;
+			padding: 0;
+		}
+	}
+
+	#minor-publishing,
+	.misc-pub-section,
+	#submitdiv,
+	#submitdiv h3 {
+		margin: 0;
+		border: none;
+		background: none !important;
+	}
+
+	#submitdiv h3 span {
+		font-size: 16px;
+		font-family: sans-serif;
+	}
+
+	.inner-sidebar #side-sortables,
+	.columns-2 .inner-sidebar #side-sortables {
+		margin: 0;
+		padding: 0;
+		width: auto;
+	}
+
+	table {
+	    page-break-inside: auto;
+	}
+
+	tr textarea {
+	    overflow: visible;
+	}
+}

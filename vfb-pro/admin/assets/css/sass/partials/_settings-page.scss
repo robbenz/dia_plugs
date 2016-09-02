@@ -1,0 +1,48 @@
+#vfb-verified-text {
+	.status-1,
+	.status-0 {
+		color: $color-green;
+		font-weight: bold;
+	}
+
+	.status-0 {
+		color: $color-red;
+	}
+
+}
+
+#vfb-deactivate-license {
+	color: $color-red;
+}
+
+#smtp-auth-details,
+#vfb-validation-msgs {
+	display: none;
+
+	&.active {
+		display: table-row-group;
+	}
+}
+
+.vfb-diagnostics-table {
+	border-collapse: collapse;
+	margin-bottom: 1em;
+	width: 100%;
+
+	td,
+	th {
+		background: #eee;
+		border: 1px solid #f1f1f1;
+		font-family: sans-serif;
+		padding: 7px;
+		vertical-align: baseline;
+	}
+
+	th {
+		background-color: #0074a2;
+		color: white;
+		font-weight: bold;
+		text-align: left;
+		width: 16em;
+	}
+}

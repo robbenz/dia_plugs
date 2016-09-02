@@ -1,0 +1,131 @@
+table.vfb-table,
+table.vfb-table *,
+table.vfb-likert,
+table.vfb-likert *,
+.entry-content table.vfb-table,
+.entry-content table.vfb-likert {
+	border-collapse: collapse;
+	border-spacing: 0;
+	margin: 5px 0 0 0;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	text-transform: none;
+	line-height: normal;
+	vertical-align: middle;
+	width: auto;
+	font-size: 12px;
+}
+
+.vfb-table {
+	th,
+	td {
+		display: table-cell;
+		padding: 2px 6px;
+		text-align: center;
+		border: 0;
+		vertical-align: middle;
+
+		input.vfb-form-control,
+		input[type="radio"].vfb-form-control {
+			display: inline;
+			margin: 0;
+			width: auto;
+			height: auto;
+		}
+	}
+
+	&.vfb-likert {
+		margin: 5px 0;
+		width: 100%;
+		border: 1px solid #ddd;
+		border-bottom: none;
+		background: #fdfdfd;
+
+		label {
+			margin: 0;
+		}
+
+		.vfb-likert-head th {
+			padding: 10px 6px;
+			background-color: #f9f9f9;
+			font-weight: normal;
+			border-top: 1px solid #ddd;
+			border-bottom: 1px solid #ddd;
+			border-right: 1px solid #ddd;
+			border-left: 1px solid #ddd;
+		}
+
+		th,
+		td {
+			border-top: 1px solid #ddd;
+			border-bottom: 1px solid #ddd;
+			border-right: 1px solid #ddd;
+			border-left: 1px solid #ddd;
+		}
+
+		.vfb-likert-row th,
+		.vfb-likert-row td {
+			border-top: 1px solid #ddd;
+			border-bottom: 1px solid #ddd;
+			border-right: 1px solid #ddd;
+			border-left: 1px solid #ddd;
+		}
+
+		.vfb-likert-row th {
+			padding: 8px;
+			text-align: left;
+			color: #222;
+			font-weight: bold;
+			background-color: #f9f9f9;
+
+			label {
+				font-weight: bold;
+			}
+		}
+
+		.vfb-likert-row td {
+			background: $color-white;
+		}
+	}
+}
+
+
+.rtl .vfb-table.vfb-likert .vfb-likert-row th {
+	text-align: right;
+}
+
+.vfb-likert-cols-1 td {
+	width: 30%;
+}
+
+.vfb-likert-cols-2 td {
+	width: 25%;
+}
+
+.vfb-likert-cols-3 td {
+	width: 20%;
+}
+
+.vfb-likert-cols-4 td {
+	width: 15%;
+}
+
+.vfb-likert-cols-5 td {
+	width: 12%;
+}
+
+.vfb-likert-cols-6 td,
+.vfb-likert-cols-7 td {
+	width: 10%;
+}
+
+.vfb-likert-cols-8 td,
+.vfb-likert-cols-9 td,
+.vfb-likert-cols-10 td {
+	width: 7%;
+}
+
+.vfb-likert-cols-11 td {
+	width: 6%;
+}

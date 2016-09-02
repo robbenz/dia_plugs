@@ -1,0 +1,61 @@
+#vfb-standard-fields {
+	overflow: visible;
+	padding: 0.5em 0 0.5em 4px;
+	min-height: 325px;
+	height: auto;
+
+	.rtl & {
+		padding: 0.5em 4px 0.5em 0;
+	}
+}
+
+ul.vfb-fields-col-1,
+ul.vfb-fields-col-2 {
+	float: left;
+	width: 50%;
+	list-style: none;
+
+	.rtl & {
+		float: right;
+	}
+}
+
+.vfb-draggable-form-items{
+	position: relative;
+	position: relative;
+	display: block;
+	margin-right: 8px;
+	padding: 4px 0 4px 34px;
+	border: 1px solid $color-gray-medium;
+	border-radius: 3px;
+	color: $color-black-lighter;
+	text-align: left;
+	text-decoration: none;
+	font-size: 12px;
+
+	&:hover {
+		border-color: $color-gray;
+	}
+
+	.rtl & {
+		margin-right: 0;
+		margin-left: 8px;
+		padding: 4px 34px 4px 10px;
+	}
+
+	i {
+		position: absolute;
+		left: 8px;
+		display: inline-block;
+		width: 16px;
+		height: 16px;
+		background-color: transparent;
+		font-size: 16px;
+		line-height: 16px;
+	}
+
+		.rtl & i {
+			right: 8px;
+			left: auto;
+		}
+}

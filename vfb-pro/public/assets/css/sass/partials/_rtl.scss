@@ -1,0 +1,195 @@
+.rtl .vfbp-form {
+	.vfb-radio,
+	.vfb-checkbox {
+		label {
+			padding-left: 0;
+			padding-right: 20px;
+		}
+	}
+
+	.vfb-radio input[type="radio"],
+	.vfb-radio-inline input[type="radio"],
+	.vfb-checkbox input[type="checkbox"],
+	.vfb-checkbox-inline input[type="checkbox"] {
+		margin-left: 0;
+		margin-right: -20px;
+	}
+
+	.vfb-inline-group {
+		.vfb-radio,
+		.vfb-checkbox {
+			float: right;
+			margin-right: 0;
+			margin-left: 30px;
+		}
+	}
+
+	// Radios and checkboxes on same line
+	.vfb-radio-inline,
+	.vfb-checkbox-inline {
+		padding-left: 0;
+		padding-right: 20px;
+	}
+
+	.vfb-radio-inline + .vfb-radio-inline,
+	.vfb-checkbox-inline + .vfb-checkbox-inline {
+		margin-left: 0;
+		margin-right: 10px; // space out consecutive inline controls
+	}
+
+	// Input button groups
+	.vfb-input-group .vfb-form-control:first-child,
+	.vfb-input-group-addon:first-child,
+	.vfb-input-group-btn:first-child > .btn,
+	.vfb-input-group-btn:first-child > .btn-group > .btn,
+	.vfb-input-group-btn:first-child > .dropdown-toggle,
+	.vfb-input-group-btn:last-child > .btn:not(:last-child):not(.dropdown-toggle),
+	.vfb-input-group-btn:last-child > .btn-group:not(:last-child) > .btn {
+		border-top-left-radius: 0;
+		border-bottom-left-radius: 0;
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+
+	.vfb-input-group-addon:first-child {
+		border-right: 0;
+		border-left: 0;
+	}
+
+	.vfb-input-group .vfb-form-control:last-child,
+	.vfb-input-group-addon:last-child,
+	.vfb-input-group-btn:last-child > .btn,
+	.vfb-input-group-btn:last-child > .btn-group > .btn,
+	.vfb-input-group-btn:last-child > .dropdown-toggle,
+	.vfb-input-group-btn:first-child > .btn:not(:first-child),
+	.vfb-input-group-btn:first-child > .btn-group:not(:first-child) > .btn {
+		border-top-left-radius: 4px;
+		border-bottom-left-radius: 4px;
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+
+	.vfb-input-group-addon:last-child {
+		border-left: 0;
+		border-right: 0;
+	}
+
+	// Phone
+	.intl-tel-input {
+		input[type=tel] {
+			padding-left: 0;
+			padding-right: $selectedFlagWidth + $inputPadding;
+			margin-left: auto;
+			margin-right: 0;
+		}
+
+		.selected-flag {
+			padding: 0 $flagPadding 0 0;
+
+			.arrow {
+				left: auto;
+				right: $flagWidth + $arrowPadding;
+			}
+		}
+
+		.country-list {
+			// margin-right to compensate for the padding on the parent
+			margin: 0 (-$borderWidth) 0 0;
+		}
+
+		// spacing between country flag, name and dial code
+		.flag,
+		.country-name {
+			margin-right: 0;
+			margin-left: 6px;
+		}
+	}
+
+	// Name
+	.vfb-name-block {
+		&.vfb-col-10 {
+			.vfb-form-group:first-child div[class*='vfb-col-'] {
+				padding-left: 0;
+				padding-right: 15px;
+			}
+		}
+
+		.vfb-form-group:first-child div[class*='vfb-col-'] {
+			padding-left: auto;
+			padding-right: 0;
+		}
+
+		.vfb-form-group:last-child div[class*='vfb-col-'] {
+			padding-right: auto;
+			padding-left: 0;
+		}
+	}
+
+	// Autocomplete
+	.vfb-autocomplete {
+		&.Tokenize {
+			ul {
+				&.Dropdown {
+					left: auto;
+					right: 0;
+				}
+			}
+
+			ul.TokensContainer {
+				li.Token {
+				    a.Close {
+					    float: left;
+					    margin-left: 0;
+					    margin-right: 8px;
+				    }
+			    }
+			}
+
+			li.Token,
+		    li.TokenSearch {
+			    margin-right: 0;
+			    margin-left: 5px;
+			    float: right;
+		    }
+		}
+	}
+
+	// Password
+	.vfb-progress-bar {
+		float: right;
+	}
+}
+
+// Page Breaks
+.rtl .vfb-wizard {
+	ul {
+	    > li {
+		    float: right;
+
+		    &:last-child div {
+			    margin-right: auto;
+			    margin-left: 0;
+		    }
+
+			div {
+			    margin-right: 0;
+			    margin-left: 0.5em;
+			}
+		}
+	}
+
+	&.actions {
+	    .btn-next,
+	    .btn-back {
+		    float: left;
+	    }
+
+	    .btn-back {
+		    float: right;
+	    }
+
+	    button {
+		    float: left;
+	    }
+	}
+}

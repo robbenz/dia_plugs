@@ -1,0 +1,36 @@
+.vfb-notices {
+	padding: 15px;
+	margin-top: 10px;
+	margin-bottom: 20px;
+	border: 1px solid transparent;
+	border-radius: 4px;
+
+	&.vfb-notice-success {
+		background-color: #dff0d8;
+		border-color: #d6e9c6;
+		color: #3c763d;
+	}
+
+	&.vfb-notice-info {
+		background-color: #d9edf7;
+		border-color: #bce8f1;
+		color: #31708f;
+	}
+
+	&.vfb-notice-warning {
+		background-color: #fcf8e3;
+		border-color: #faebcc;
+		color: #8a6d3b;
+	}
+
+	&.vfb-notice-danger {
+		background-color: #f2dede;
+		border-color: #ebccd1;
+		color: #a94442;
+	}
+
+	h3 {
+		margin-top: 0;
+		color: inherit;
+	}
+}

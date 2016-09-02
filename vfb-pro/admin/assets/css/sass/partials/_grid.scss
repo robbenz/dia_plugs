@@ -1,0 +1,36 @@
+@include make-grid-columns();
+//@include grid-columns( $grid-columns );
+
+.vfb-row {
+	@include make-row();
+}
+
+.vfb-pull-left {
+	float: left !important;
+}
+
+.vfb-pull-right {
+	float: right !important;
+}
+
+// Small grid
+//
+// Columns, offsets, pushes, and pulls for the small device range, from phones
+// to tablets.
+@media (min-width:768px) {
+	@include grid-columns( 'sm', $grid-columns );
+}
+
+// Medium grid
+//
+// Columns, offsets, pushes, and pulls for the desktop device range.
+@media (min-width:992px) {
+	@include grid-columns( 'md', $grid-columns );
+}
+
+// Large grid
+//
+// Columns, offsets, pushes, and pulls for the large desktop device range.
+@media (min-width:1200px) {
+	@include grid-columns( 'lg', $grid-columns );
+}

@@ -1,0 +1,108 @@
+.vfb-create-user-settings,
+.vfb-create-post-settings,
+.vfb-form-design-settings,
+.vfb-cell-settings,
+.vfb-mailchimp-settings,
+.vfb-campaign-monitor-settings,
+.vfb-highrise-settings,
+.vfb-freshbooks-settings,
+.vfb-payments-settings,
+.vfb-paypal-settings {
+	display: none;
+
+	&.active {
+		display: table-row-group;
+	}
+}
+
+.vfb-paypal-billing,
+.vfb-paypal-recurring {
+	display: none;
+
+	&.active {
+		display: table-row;
+	}
+}
+
+.vfb-form-design-settings {
+	.vfb-accordion-container {
+		max-width: 50%;
+	}
+}
+
+.vfb-notifications-api-stati {
+	.status-1,
+	.status-0 {
+		color: $color-green;
+		font-weight: bold;
+	}
+
+	.status-0 {
+		color: $color-red;
+	}
+
+}
+
+#vfb-mailchimp-deactivate-api,
+#vfb-campaign-monitor-deactivate-api,
+#vfb-highrise-deactivate-api,
+#vfb-freshbooks-deactivate-api {
+	color: $color-red;
+}
+
+.vfb-pricing-fields-container{
+	display: block;
+	clear:both;
+	margin-bottom: 1em;
+	padding: 5px 10px;
+	width:330px;
+	border: 1px solid #DFDFDF;
+	border-radius: 3px;
+	background-color: #F5F5F5;
+	box-shadow: 0 1px 0 #FFFFFF inset;
+
+	h3 {
+		margin: 0 0 .5em 0;
+		border-bottom: 1px solid #ccc;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		word-wrap: break-word;
+		position: relative;
+	}
+
+	.vfb-payment-remove-field{
+		float:right;
+		width: 25px;
+		height: 25px;
+		position: absolute;
+		top: 7px;
+		right: 0;
+		overflow: hidden;
+
+		.dashicons {
+			font-size: 25px;
+		}
+	}
+}
+
+.vfb-payment-field-names{
+	display: block;
+	clear:both;
+	padding: 5px 0;
+	height: 24px;
+
+	label {
+		float: left;
+		width: 75%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		word-wrap: break-word;
+		white-space: nowrap;
+	}
+
+	input {
+		float:right;
+		width:20%;
+		text-align: right;
+	}
+}

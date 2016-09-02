@@ -1,0 +1,32 @@
+.vfb-export-entries-options {
+	display: none;
+}
+
+#vfb-export-entries-fields {
+	display: block;
+	overflow: auto;
+	margin-left: 10em;
+	padding: 5px;
+	width: 300px;
+	height: 275px;
+	border: 1px solid $color-gray-lighter;
+	border-radius: 3px;
+	background-color: $color-white;
+}
+
+.vfb-export-label {
+	float: left;
+	width: 10em;
+}
+
+#vfb-export-select-all,
+#vfb-export-unselect-all {
+	display: inline-block;
+	width: 150px;
+	text-align: left;
+}
+
+	#vfb-export-unselect-all {
+		margin-left: 5px;
+		text-align: right;
+	}

@@ -1,0 +1,14 @@
+.vfb-template-tags {
+	table {
+		width: 100%;
+
+		td {
+			width: 50%;
+
+			&.vfb-template-tag {
+				width: 20%;
+				font-family: monospace;
+			}
+		}
+	}
+}

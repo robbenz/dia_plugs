@@ -1,0 +1,291 @@
+#vfb-edit-frame {
+	display: block;
+	margin-top: 23px;
+	margin-left: 300px;
+
+	&:after {
+		display: block;
+		visibility: hidden;
+		clear: both;
+		height: 0;
+		content: '.';
+	}
+}
+
+@media screen and (max-width:782px) {
+	#vfb-edit-frame {
+		float: none;
+		margin-left: 0;
+		width: 100%;
+	}
+}
+
+#vfb-fields-column {
+	display: inline;
+	float: left;
+	clear: both;
+	margin-left: -300px;
+	padding-top: 0;
+	width: 281px;
+
+	.meta-box-title {
+		border-bottom: 1px solid $color-gray-lighter;
+	}
+}
+
+#vfb-fields-management {
+	margin-top: 10px;
+	float: left;
+	min-width: 100%;
+}
+
+#vfb-fields-edit {
+	margin-bottom: 20px;
+	border: 1px solid $color-gray-lighter;
+}
+
+#vfb-form-editor-header,
+#vfb-form-editor-footer {
+	padding: 10px;
+	background-color: $color-gray-lightest;
+
+	.vfb-button-trash:hover {
+		color: $color-red;
+	}
+
+	.vfb-button-duplicate:hover {
+		color: $color-green;
+	}
+}
+
+#vfb-fields-container {
+	padding: 10px;
+	background-color: $color-white;
+
+	// Reset the box-sizing
+	//
+	// Heads up! This reset may cause conflicts with some third-party widgets.
+	// For recommendations on resolving such conflicts, see
+	// http://getbootstrap.com/getting-started/#third-box-sizing
+	&,
+	*,
+	*:before,
+	*:after {
+		@include box-sizing(border-box);
+	}
+
+	// Reset box sizing so wp_editor tabs format properly in a field settings box
+	.wp-switch-editor {
+		box-sizing: content-box;
+	}
+}
+
+#vfb-fields-content {
+	position: relative;
+	float: left;
+	margin-bottom: 20px;
+	width: 100%;
+	min-width: 463px;
+}
+
+	#vfb-fields-container:after,
+	#vfb-fields-content:after {
+		clear: both;
+	    content: '.';
+	    display: block;
+	    height: 0;
+	    visibility: hidden;
+	}
+
+#vfb-fields-list {
+	margin-top: 0;
+	padding: 1em 0;
+}
+
+.vfb-field-item-bar {
+	clear: both;
+	line-height: 1.5em;
+	position: relative;
+	margin: 9px 0 0;
+}
+
+.vfb-field-item-handle {
+	position: relative;
+	overflow: hidden;
+	padding: 10px 15px;
+	//width: 382px;
+	min-width: 400px;
+	max-width: 700px;
+	height: auto;
+	border: 1px solid $color-gray-lighter;
+	background: $color-white;
+	text-shadow: 0 1px 0 $color-white;
+	word-wrap: break-word;
+	line-height: 35px;
+	cursor: move;
+
+	.vfb-field-item-title {
+		display: block;
+		margin-right: 13em;
+		min-height: 20px;
+		font-weight: bold;
+		font-size: 12px;
+		line-height: 20px;
+
+		.vfb-required-asterisk {
+			color: $color-red;
+		}
+
+		.vfb-hover-field-id {
+			font-weight: normal;
+			font-size: 10px;
+			margin-left: 10px;
+			display: none;
+		}
+	}
+
+	&:hover {
+		border-color: $color-gray-dark;
+
+		.vfb-hover-field-id {
+			display: inline;
+		}
+	}
+
+	.vfb-field-item-controls {
+		font-size: 12px;
+		position: absolute;
+		right: 20px;
+		top: -1px;
+
+		a {
+			text-decoration: none;
+		}
+
+		.vfb-field-item-type {
+			display: block;
+			padding: 12px 10px;
+			line-height: 18px;
+			font-size: 12px;
+			color: $color-gray;
+			text-transform: uppercase;
+		}
+
+		.vfb-item-edit-link {
+			position: absolute;
+			right: -20px;
+			top: 0;
+			display: block;
+			width: 30px;
+			height: 40px;
+			margin-right: 0 !important;
+			text-indent: 100%;
+			outline: 0;
+			overflow: hidden;
+			white-space: nowrap;
+			color: $color-gray;
+
+			&:before {
+				right: 0;
+			    content: '\f140';
+			    border: none;
+			    background: 0 0;
+			    font: 400 20px/1 dashicons;
+			    line-height: 2.1;
+			    speak: none;
+			    display: block;
+			    padding: 0;
+			    text-indent: 0;
+			    text-align: center;
+			    position: relative;
+			    -webkit-font-smoothing: antialiased;
+			    -moz-osx-font-smoothing: grayscale;
+			    text-decoration: none !important;
+			}
+
+			&.opened {
+				&:before {
+					content: '\f142';
+				}
+			}
+		}
+	}
+}
+
+.vfb-field-item-settings {
+	display: none;
+	//width: 500px;
+	max-width: 700px;
+	padding: 10px 0;
+	position: relative;
+	z-index: 10;
+	border: 1px solid $color-gray-lighter;
+	border-top: none;
+
+	.vfb-button-trash:hover {
+		color: $color-red;
+	}
+
+	.vfb-button-duplicate:hover {
+		color: $color-green;
+	}
+
+	.vfb-delete-option,
+	.vfb-sort-option {
+		font-size: 18px;
+	}
+
+	.vfb-delete-option:hover {
+		color: $color-red;
+	}
+
+	.vfb-sort-option:hover {
+		color: $color-blue;
+	}
+
+	.vfb-delete-option:hover,
+	.vfb-sort-option:hover {
+		cursor: pointer;
+	}
+
+	.vfb-field-adv-container {
+		margin-bottom: 10px;
+	}
+
+	.vfb-field-adv-settings-link,
+	.vfb-field-validation-settings-link {
+		display: block;
+		width: 100%;
+		margin-bottom: 5px;
+		text-decoration: none;
+	}
+
+	.vfb-field-adv-settings,
+	.vfb-field-validation-settings,
+	.vfb-hidden-custom,
+	.vfb-hidden-seq,
+	.vfb-allow-other-input {
+		display: none;
+
+		&.active {
+			display: block;
+		}
+	}
+}
+
+.vfb-sortable-placeholder{
+	display: block;
+	margin: 8px;
+	//width: 400px;
+	height: 40px;
+	border: 1px dashed $color-gray-medium;
+	border-radius: 3px;
+	background-color: $color-white;
+}
+
+.vfb-page-break-instructions {
+	margin-top: 10px;
+	min-width: 400px;
+	max-width: 700px;
+	text-align:center;
+}

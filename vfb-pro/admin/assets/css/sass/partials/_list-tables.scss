@@ -1,0 +1,47 @@
+// Shorten the Form ID and Entries columns
+.fixed .column-date_updated,
+.fixed .column-entries,
+.fixed .column-id {
+	width: 10%;
+}
+
+// Highlight Today's Entry bubble
+strong .vfb-meta-entries-total span {
+    background-color: $color-blue;
+}
+
+// Container for the Entry count bubble
+.entries-count-wrapper {
+	padding-bottom: 1px;
+	min-width: 22px;
+	font-family: sans-serif;
+}
+
+// Entry count bubble
+.vfb-meta-entries-total,
+.vfb-meta-entries-total-today{
+	display: block;
+	float: left;
+	margin-right: 5px;
+	cursor: pointer;
+
+	.rtl & {
+		float: right;
+		margin-right: 0;
+		margin-left: 5px;
+	}
+
+	& span {
+		display: inline-block;
+		padding: 0 6px;
+		min-width: .7em;
+		height: 1.4em;
+		border-radius: 5px;
+		background-color: $color-gray-medium;
+		color: $color-white;
+		text-align: center;
+		font-weight: bold;
+		font-size: 11px;
+		line-height: 1.4em;
+	}
+}

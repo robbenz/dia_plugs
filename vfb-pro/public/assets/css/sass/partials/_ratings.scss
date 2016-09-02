@@ -1,0 +1,84 @@
+.vfb-rating-input {
+	&.hidden {
+		display: none;
+	}
+}
+
+.vfb-rating-icon {
+	font-size: 20px;
+}
+
+.rating-clear {
+	text-decoration: none;
+}
+
+@font-face {
+	font-family: 'VFBPro-Ratings';
+	src:url('../fonts/VFBPro-Ratings.eot?-4sax10');
+	src:url('../fonts/VFBPro-Ratings.eot?#iefix-4sax10') format('embedded-opentype'),
+		url('../fonts/VFBPro-Ratings.ttf?-4sax10') format('truetype'),
+		url('../fonts/VFBPro-Ratings.woff?-4sax10') format('woff'),
+		url('../fonts/VFBPro-Ratings.svg?-4sax10#VFBPro-Ratings') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+[class^="vfb-rating-"], [class*=" vfb-rating-"] {
+	font-family: 'VFBPro-Ratings';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.vfb-rating-star:before {
+	content: "\e000";
+}
+.vfb-rating-star-2:before {
+	content: "\e001";
+}
+.vfb-rating-star-3:before {
+	content: "\e002";
+}
+.vfb-rating-star-4:before {
+	content: "\e003";
+}
+.vfb-rating-heart:before {
+	content: "\e004";
+}
+.vfb-rating-heart-2:before {
+	content: "\e005";
+}
+.vfb-rating-heart-3:before {
+	content: "\e006";
+}
+.vfb-rating-heart-4:before {
+	content: "\e007";
+}
+.vfb-rating-checkmark:before {
+	content: "\e008";
+}
+.vfb-rating-checkmark-2:before {
+	content: "\e009";
+}
+.vfb-rating-flag:before {
+	content: "\e00a";
+}
+.vfb-rating-flag-2:before {
+	content: "\e00b";
+}
+.vfb-rating-remove:before {
+	content: "\e00c";
+}
+.vfb-rating-close:before {
+	content: "\e00d";
+}
+.vfb-rating-close-2:before {
+	content: "\e00e";
+}

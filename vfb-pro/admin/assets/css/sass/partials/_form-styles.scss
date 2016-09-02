@@ -1,0 +1,70 @@
+.vfb-form-control {
+	display: block;
+	width: 100%;
+	height: 34px;
+	padding: 3px 5px;
+	margin: 0;
+	font-size: 14px;
+	line-height: 1.42857143;
+	color: $color-black-light;
+	background-color: $color-white;
+	background-image: none;
+	border: 1px solid $color-gray-medium;
+
+	// Reset height for textarea's
+	// @at-root uses the selector: textarea.vfb-form-control
+	@at-root textarea#{&} {
+		height: auto;
+		resize: vertical;
+	}
+
+	// Reset select defaults to override WP
+	@at-root select#{&} {
+		height: 34px;
+		line-height: 1.42857143;
+		padding: 3px 5px;
+		vertical-align: baseline;
+	}
+
+
+}
+
+.vfb-form-group {
+	margin-bottom: 15px;
+
+	label {
+		display: inline-block;
+		max-width: 100%; // Force IE8 to wrap long content
+		margin-bottom: 5px;
+		font-weight: normal;
+		font-style: italic;
+		color: $color-gray-darker;
+	}
+}
+
+.vfb-options-table {
+	margin: 0;
+	border: none;
+	width: 100%;
+
+	tbody > tr > th:first-child,
+	tbody > tr > td:first-child {
+		width: 18px;
+	}
+
+	th {
+		padding: 5px 10px 5px 0;
+		vertical-align: bottom;
+		line-height: 1.42857143;
+	}
+
+	.vfb-options-table-actions {
+		width: 10%;
+		text-align: right;
+	}
+
+	.vfb-options-table-buttons {
+		text-align: center;
+		padding: 10px 0;
+	}
+}

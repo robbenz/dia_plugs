@@ -1,0 +1,122 @@
+.vfb-autocomplete {
+	&.vfb-form-control {
+		height: 100px;
+	}
+
+	* {
+		font-family: Arial, Helvetica, sans-serif;
+		font-size: 12px;
+	}
+
+	&.Tokenize {
+		position: relative;
+	    display: inline-block;
+	    zoom: 1;
+
+	    ul {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+
+			li {
+				white-space: nowrap;
+				margin: 0;
+				padding: 0;
+			}
+
+			&.Dropdown {
+				border: 1px solid #ccc;
+
+				display: none;
+			    width: 100%;
+			    position: absolute;
+			    left: 0;
+			    top: 100px;
+			    background-color: white;
+			    overflow-y: auto;
+
+			    -webkit-background-clip: padding-box;
+			       -moz-background-clip: padding;
+			            background-clip: padding-box;
+
+				@include box-shadow( 0 5px 10px rgba(0, 0, 0, 0.2) );
+			    @include border-radius( 6px );
+
+			    z-index: 20;
+
+			    li {
+				    padding: 5px 20px;
+				    overflow: hidden;
+				    cursor: pointer;
+
+				    &.Hover {
+					    color: $color-white;
+					    text-decoration: none;
+					    background-color: #0081c2;
+				    }
+			    }
+			}
+		}
+
+		ul.TokensContainer {
+			cursor: text;
+		    height: 100%;
+		    overflow-y: auto;
+		    background-color: $color-white;
+
+		    li.Token {
+			    color: $color-white;
+			    background-color: #0081c2;
+			    padding: .4em .6em;
+			    font-size: 75%;
+				font-weight: 700;
+				line-height: 1;
+				text-align: center;
+				white-space: nowrap;
+				vertical-align: baseline;
+				border-radius: .25em;
+
+			    a.Close {
+				    font-size: 16px;
+				    line-height: 16px;
+				    vertical-align: baseline;
+				    float: right;
+				    margin-left: 8px;
+				    cursor: pointer;
+				    color: $color-white;
+				    text-decoration: none;
+				    border: 0;
+
+				    &:hover {
+					    background: transparent;
+						text-decoration: none;
+				    }
+			    }
+		    }
+
+		    li.Token.PendingDelete {
+			    -moz-opacity : 0.5;
+			         opacity : 0.5;
+
+			    -ms-filter: "alpha(opacity=50)";
+			        filter : alpha(opacity=50);
+		    }
+
+		    li.Token,
+		    li.TokenSearch {
+			    margin-right: 5px;
+			    height: 20px;
+			    float: left;
+		    }
+
+		    li.TokenSearch input {
+			    margin: 0;
+			    padding: 1px 0;
+			    background-color: $color-white;
+			    line-height: 1;
+			    border: none;
+			    outline: none;
+		    }
+		}
+	}
+}

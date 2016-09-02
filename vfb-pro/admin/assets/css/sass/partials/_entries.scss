@@ -1,0 +1,33 @@
+.post-type-vfb_entry {
+	.wrap .add-new-h2,
+	.tablenav .view-switch,
+	#id-hide,
+	label[for="id-hide"] {
+		display: none;
+	}
+
+	.wp-list-table #id {
+		width: 15%;
+	}
+
+	.wp-list-table #entry-date {
+		width: 10%;
+	}
+
+	.form-table .first {
+		width: 10em;
+	}
+
+	.form-table .vfb-field-data {
+		width: 98%;
+	}
+
+	#vfb_fields_save .inside {
+		margin: 0;
+		padding: 0;
+	}
+
+	#post-body-content {
+		margin-bottom: 0;
+	}
+}

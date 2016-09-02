@@ -1,0 +1,279 @@
+@font-face {
+	font-family: 'VFBPro';
+	src:url('../fonts/VFBPro.eot?-5xcpn4');
+	src:url('../fonts/VFBPro.eot?#iefix-5xcpn4') format('embedded-opentype'),
+		url('../fonts/VFBPro.ttf?-5xcpn4') format('truetype'),
+		url('../fonts/VFBPro.woff?-5xcpn4') format('woff'),
+		url('../fonts/VFBPro.svg?-5xcpn4#VFBPro') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+[class^="vfb-icon-"], [class*=" vfb-icon-"] {
+	font-family: 'VFBPro';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+// Text
+.vfb-icon-type:before {
+	content: "\e000";
+}
+
+// Textarea
+.vfb-icon-file:before {
+	content: "\e001";
+}
+
+// Checkbox
+.vfb-icon-checkbox-checked:before {
+	content: "\e002";
+}
+
+// Radio
+.vfb-icon-radio-checked:before {
+	content: "\e003";
+}
+
+// Select
+.vfb-icon-menu:before {
+	content: "\e004";
+}
+
+// Address
+.vfb-icon-notebook:before {
+	content: "\e005";
+}
+
+// Date
+.vfb-icon-calendar:before {
+	content: "\e006";
+}
+
+// Email
+.vfb-icon-envelop:before {
+	content: "\e007";
+}
+
+// URL
+.vfb-icon-link:before {
+	content: "\e008";
+}
+
+// Currency
+.vfb-icon-coin:before {
+	content: "\e009";
+}
+
+// Number
+.vfb-icon-seven-segment-2:before {
+	content: "\e00a";
+}
+
+// Time
+.vfb-icon-alarm:before {
+	content: "\e00b";
+}
+
+// Phone
+.vfb-icon-phone:before {
+	content: "\e00c";
+}
+
+// HTML
+.vfb-icon-code:before {
+	content: "\e00d";
+}
+
+// File Upload
+.vfb-icon-attachment:before {
+	content: "\e00e";
+}
+
+// Instructions
+.vfb-icon-bubble:before {
+	content: "\e00f";
+}
+
+// Username
+.vfb-icon-user:before {
+	content: "\e010";
+}
+
+// Password
+.vfb-icon-key:before {
+	content: "\e011";
+}
+
+// Hidden
+.vfb-icon-eye:before {
+	content: "\e012";
+}
+
+// Color Picker
+.vfb-icon-eyedropper:before {
+	content: "\e013";
+}
+
+// Autocomplete
+.vfb-icon-puzzle:before {
+	content: "\e014";
+}
+
+// IP Address
+.vfb-icon-network:before {
+	content: "\e015";
+}
+
+// Min
+.vfb-icon-arrow-down:before {
+	content: "\e016";
+}
+
+// Max
+.vfb-icon-arrow-up:before {
+	content: "\e017";
+}
+
+// Range
+.vfb-icon-arrow:before {
+	content: "\e018";
+}
+
+// Page Break
+.vfb-icon-page-break:before {
+	content: "\e019";
+}
+
+// Name
+.vfb-icon-vcard:before {
+	content: "\e01a";
+}
+
+// Rating
+.vfb-icon-thumbs-up:before {
+	content: "\e01b";
+}
+
+// Likert
+.vfb-icon-table:before {
+	content: "\e01c";
+}
+
+// Knob
+.vfb-icon-spinner:before {
+	content: "\e031";
+}
+
+// Signature
+.vfb-icon-quill:before {
+	content: "\e032";
+}
+
+// Settings
+.vfb-icon-cog:before {
+	content: "\e01d";
+}
+
+// Duplicate
+.vfb-icon-copy:before {
+	content: "\e01e";
+}
+
+// Trash
+.vfb-icon-remove:before {
+	content: "\e01f";
+}
+
+// Conditonal
+.vfb-icon-shuffle:before {
+	content: "\e020";
+}
+
+// Add
+.vfb-icon-plus-circle:before {
+	content: "\e021";
+}
+
+// Remove
+.vfb-icon-minus-circle:before {
+	content: "\e022";
+}
+
+// Move
+.vfb-icon-move:before {
+	content: "\e023";
+}
+
+// Bulk Add
+.vfb-icon-stack-plus:before {
+	content: "\e024";
+}
+
+// Create Post - Title
+.vfb-icon-pushpin:before {
+	content: "\e025";
+}
+
+// Create Post - Content
+.vfb-icon-pencil:before {
+	content: "\e026";
+}
+
+// Create Post - Excerpt
+.vfb-icon-quotes-left:before {
+	content: "\e027";
+}
+
+// Create Post - Category
+.vfb-icon-drawer:before {
+	content: "\e028";
+}
+
+// Create Post - Tag
+.vfb-icon-tag:before {
+	content: "\e029";
+}
+
+// Create Post - Featured Image
+.vfb-icon-image:before {
+	content: "\e02a";
+}
+
+// Create Post - Custom Field
+.vfb-icon-starburst:before {
+	content: "\e02b";
+}
+
+// Question Mark
+.vfb-icon-question:before {
+	content: "\e02c";
+}
+
+// Submit Button
+.vfb-icon-key-keyboard:before {
+	content: "\e02d";
+}
+
+// Captcha
+.vfb-icon-warning:before {
+	content: "\e02e";
+}
+
+// Preview form
+.vfb-icon-search:before {
+	content: "\e02f";
+}
+
+// Range Slider
+.vfb-icon-settings:before {
+	content: "\e030";
+}
