@@ -254,17 +254,14 @@ class Profile_Builder_Form_Creator{
 
 		$location = apply_filters('wppb_login_after_reg_redirect_url', $location, $this);
 
-        if( function_exists( 'wppb_cr_replace_tags' ) )
-            $location = wppb_cr_replace_tags( $location );
+        $location .= "/?autologin=true&uid=$user->ID&_wpnonce=$nonce";
 
-        $location = add_query_arg( array( 'autologin' => 'true', 'uid' => $user->ID, '_wpnonce' => $nonce ), $location );
-
-		$redirect_message = '<p class="redirect_message">'. sprintf( __( 'You will soon be redirected automatically. If you see this page for more than %1$d seconds, please click %2$s.%3$s', 'profile-builder' ), $this->args['redirect_delay'], '<a href="'. esc_url( $location ) .'">'. __( 'here', 'profile-builder' ) .'</a>', '<meta http-equiv="Refresh" content="'. esc_attr( $this->args['redirect_delay'] ) .';url='. esc_attr( $location ) .'" />' ) .'</p>';
+		$redirect_message = '<p class="redirect_message">'. sprintf( __( 'You will soon be redirected automatically. If you see this page for more than %1$d seconds, please click %2$s.%3$s', 'profile-builder' ), $this->args['redirect_delay'], '<a href="'. $location .'">'. __( 'here', 'profile-builder' ) .'</a>', '<meta http-equiv="Refresh" content="'. $this->args['redirect_delay'] .';url='. $location .'" />' ) .'</p>';
 
 		if ( $this->args['redirect_activated'] == 'No' ) {
-			return "<script> window.location.replace( '". $location ."' ); </script>";
+			return "<script> window.location.replace( '$location' ); </script>";
 		} else {
-			return "<script> jQuery( '#wppb_form_success_message' ).after( '". $redirect_message ."' ); </script>";
+			return "<script> jQuery( '#wppb_form_success_message' ).after( '$redirect_message' ); </script>";
 		}
 	}
 	
@@ -394,14 +391,7 @@ class Profile_Builder_Form_Creator{
 				$wppb_module_settings = get_option( 'wppb_module_settings' );
 
 				if( isset( $wppb_module_settings['wppb_customRedirect'] ) && $wppb_module_settings['wppb_customRedirect'] == 'show' ) {
-                    if( isset( $_POST['wppb_referer_url'] ) )
-                        $referer = $_POST['wppb_referer_url'];
-                    elseif( isset( $_SERVER['HTTP_REFERER'] ) )
-                        $referer =  $_SERVER['HTTP_REFERER'];
-                    else
-                        $referer = '';
-
-					echo '<input type="hidden" name="wppb_referer_url" value="'.esc_url( $referer ).'"/>';
+					echo '<input type="hidden" name="wppb_referer_url" value="'.esc_url( isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : '' ).'"/>';
 				}
 				?>
 			</p><!-- .form-submit -->

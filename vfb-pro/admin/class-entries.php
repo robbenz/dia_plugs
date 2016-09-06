@@ -577,7 +577,6 @@ class VFB_Pro_Entries {
 					}
 				}
 
-
 				// Reverse escape Signature HTML to display as image
 				if ( in_array( $field['field_type'], array( 'signature' ) ) ) {
 					if ( !empty( $value ) ) {

@@ -1,21 +1,42 @@
 <?php
 
 namespace ResponsiveMenu\Walkers;
-use ResponsiveMenu\Collections\OptionsCollection;
+use ResponsiveMenu\Collections\OptionsCollection as OptionsCollection;
 
-class WpWalker extends \Walker_Nav_Menu {
+class WpWalker extends \Walker_Nav_Menu
+{
 
-    private $current_item;
+    private $curItem;
 
-    public function __construct(OptionsCollection $options) {
+    public function __construct(OptionsCollection $options)
+    {
       $this->options = $options;
     }
 
-  	public function start_el(&$output, $item, $depth = 0, $args = array(), $id = 0) {
+  	public function start_lvl( &$output, $depth = 0, $args = array())
+    {
+      if($this->options['auto_expand_all_submenus'] == 'on'):
+        $class = 'responsive-menu-submenu-open';
+      elseif(
+        ($this->options['auto_expand_current_submenus'] == 'on')
+        && ($this->curItem->current_item_ancestor || $this->curItem->current_item_parent)
+        ):
+        $class = 'responsive-menu-submenu-open';
+      else:
+        $class = '';
+      endif;
+      $output .= "<ul class='responsive-menu-submenu responsive-menu-submenu-depth-" . ($depth + 1) . " {$class}'>";
+  	}
 
-      $this->setCurrentItem($item);
+  	public function end_lvl( &$output, $depth = 0, $args = array() )
+    {
+  		$output .= "</ul>";
+  	}
 
-      $classes = empty($item->classes) ? array() : (array) $item->classes;
+  	public function start_el( &$output, $item, $depth = 0, $args = array(), $id = 0 )
+    {
+      $this->curItem = $item;
+  		$classes = empty( $item->classes ) ? array() : (array) $item->classes;
       $responsive_menu_classes = $classes;
 
       # Turn into our Responsive Menu Classes
@@ -89,37 +110,9 @@ class WpWalker extends \Walker_Nav_Menu {
 
   	}
 
-    public function start_lvl(&$output, $depth = 0, $args = array()) {
-      $output .= "<ul class='responsive-menu-submenu responsive-menu-submenu-depth-" . ($depth + 1) . $this->getSubmenuClassOpenOrNot() . "'>";
-  	}
-
-  	public function end_el(&$output, $item, $depth = 0, $args = array()) {
+  	public function end_el( &$output, $item, $depth = 0, $args = array() )
+    {
   		$output .= "</li>";
   	}
-
-    public function end_lvl(&$output, $depth = 0, $args = array()) {
-  		$output .= "</ul>";
-  	}
-
-    public function setCurrentItem($item) {
-      $this->current_item = $item;
-    }
-
-    public function getCurrentItem() {
-      return $this->current_item;
-    }
-
-    public function getSubmenuClassOpenOrNot() {
-      return $this->expandAllSubmenuOptionsIsOn() || $this->expandCurrentSubmenuOnAndItemIsParent() ? ' responsive-menu-submenu-open' : '';
-    }
-
-    public function expandAllSubmenuOptionsIsOn() {
-      return $this->options['auto_expand_all_submenus'] == 'on';
-    }
-
-    public function expandCurrentSubmenuOnAndItemIsParent() {
-      return ($this->options['auto_expand_current_submenus'] == 'on')
-        && ($this->getCurrentItem()->current_item_ancestor || $this->getCurrentItem()->current_item_parent);
-    }
 
 }

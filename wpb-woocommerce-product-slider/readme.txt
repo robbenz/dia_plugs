@@ -37,7 +37,6 @@ https://www.youtube.com/watch?v=abgnW7wN5pY&feature=youtu.be
 * Advance setting panel.
 * Widget Ready. 
 * All modern browser support. 
-* Translation ready. 
 * Very Lightweight & many More
 
 ### Pro version features:
@@ -130,9 +129,6 @@ Yes you can. I have created two different widget for this plugin, one for latest
 4. WPB Woocommerce Product Slider in admin widgets 
 
 == Changelog ==
-
-= version 2.0 =
-* Added translation support.
 
 = version 1.0.9 =
 * WordPress 4.6 compatible.

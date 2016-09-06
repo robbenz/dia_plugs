@@ -69,7 +69,7 @@ class Soliloquy_Posttype_Lite {
             array(
                 'labels'              => $labels,
                 'public'              => false,
-                'exclude_from_search' => true,
+                'exclude_from_search' => false,
                 'show_ui'             => true,
                 'show_in_admin_bar'   => false,
                 'rewrite'             => false,

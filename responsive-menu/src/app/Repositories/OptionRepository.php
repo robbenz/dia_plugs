@@ -1,16 +1,14 @@
 <?php
 
 namespace ResponsiveMenu\Repositories;
-use ResponsiveMenu\Models\Option;
-use ResponsiveMenu\Collections\OptionsCollection;
-use ResponsiveMenu\Database\Database;
-use ResponsiveMenu\Factories\OptionFactory;
+use ResponsiveMenu\Models\Option as Option;
+use ResponsiveMenu\Collections\OptionsCollection as OptionsCollection;
 
 class OptionRepository {
 
   protected static $table = 'responsive_menu';
 
-  public function __construct(Database $db, OptionFactory $factory, array $defaults) {
+  public function __construct($db, $factory, $defaults) {
     $this->db = $db;
     $this->factory = $factory;
     $this->defaults = $defaults;
@@ -25,7 +23,7 @@ class OptionRepository {
   }
 
   public function update(Option $option) {
-    return $this->db->update(self::$table,
+    $this->db->update(self::$table,
       ['value' => $option->getFiltered()],
       ['name' => $option->getName()]
     );
@@ -34,12 +32,12 @@ class OptionRepository {
   public function create(Option $option) {
     $arguments['name'] = $option->getName();
     $arguments['value'] = $option->getFiltered();
-    $arguments['created_at'] = $this->db->mySqlTime();
-    return $this->db->insert(self::$table, $arguments);
+    $arguments['created_at'] = current_time('mysql');
+    $this->db->insert(self::$table, $arguments);
   }
 
   public function remove($name) {
-    return $this->db->delete(self::$table, $name);
+      $this->db->delete(self::$table, $name);
   }
 
   public function buildFromArray(array $array) {
@@ -52,5 +50,5 @@ class OptionRepository {
 
     return $collection;
   }
-
+  
 }

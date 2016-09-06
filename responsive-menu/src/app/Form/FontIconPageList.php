@@ -1,23 +1,24 @@
 <?php
 
 namespace ResponsiveMenu\Form;
-use ResponsiveMenu\Models\Option;
-use ResponsiveMenu\Form\FormComponent;
+use ResponsiveMenu\Models\Option as Option;
+use ResponsiveMenu\Form\FormComponent as FormComponent;
 
 class FontIconPageList implements FormComponent {
 
-	public function render(Option $option) {
+	public function render(Option $option)
+	{
 
     if($decoded = json_decode($option->getValue()))
       $final = array_filter(array_combine($decoded->id, $decoded->icon));
     else
       $final = null;
 
-    $output = "<div class='font-icon-container'><div class='font-icon-row'><div class='font-icon-cell-id'>" . __('Id', 'responsive-menu') . "</div><div class='font-icon-cell-icon'>" . __('Icon', 'responsive-menu') . "</div></div>";
+    echo "<div class='font-icon-container'><div class='font-icon-row'><div class='font-icon-cell-id'>" . __('Id', 'responsive-menu') . "</div><div class='font-icon-cell-icon'>" . __('Icon', 'responsive-menu') . "</div></div>";
 
     if(is_array($final) && !empty($final)):
-      foreach($final as $id => $icon):
-      		$output .= "
+      foreach( $final as $id => $icon):
+      		echo "
           <div class='font-icon-row'>
             <div class='font-icon-cell-id'>
                 <input
@@ -36,7 +37,7 @@ class FontIconPageList implements FormComponent {
             </div>";
           endforeach;
     else:
-      $output .= "
+      echo "
       <div class='font-icon-row'>
         <div class='font-icon-cell-id'>
             <input
@@ -55,9 +56,9 @@ class FontIconPageList implements FormComponent {
         </div>";
     endif;
 
-      $output .= "</div><div class='add-font-icon'>" . __('Add New Font Icon', 'responsive-menu') . "</div>";
+      echo "</div><div class='add-font-icon'>" . __('Add New Font Icon', 'responsive-menu') . "</div>";
 
-      $output .= "<script>
+      echo "<script>
         jQuery(document).ready(function($) {
           $(document).on('click', '.add-font-icon', function(e) {
             var lastRow = $('#{$option->getName()}_container .font-icon-row').last();
@@ -68,7 +69,6 @@ class FontIconPageList implements FormComponent {
         });
       </script>";
 
-      return $output;
 	}
 
 }

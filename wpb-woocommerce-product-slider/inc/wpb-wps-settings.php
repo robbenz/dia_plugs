@@ -79,8 +79,8 @@ class wpb_wps_lite_settings {
                     'type'      => 'radio',
     				'default'   => 'false',
                     'options'   => array(
-                        'true'  => __( 'Yes', 'wpb-wps' ),
-                        'false' => __( 'No', 'wpb-wps' ),
+                        'true'  => 'Yes',
+                        'false' => 'No'
                     )
 				),
 				array(
@@ -90,8 +90,8 @@ class wpb_wps_lite_settings {
                     'type'      => 'radio',
     				'default'   => 'true',
                     'options'   => array(
-                        'true'  => __( 'Yes', 'wpb-wps' ),
-                        'false' => __( 'No', 'wpb-wps' ),
+                        'true'  => 'Yes',
+                        'false' => 'No'
                     )
 				),
 				array(
@@ -101,8 +101,8 @@ class wpb_wps_lite_settings {
                     'type'      => 'radio',
     				'default'   => 'true',
                     'options'   => array(
-                        'true'  => __( 'Yes', 'wpb-wps' ),
-                        'false' => __( 'No', 'wpb-wps' ),
+                        'true'  => 'Yes',
+                        'false' => 'No'
                     )
 				),
 				array(
@@ -119,8 +119,8 @@ class wpb_wps_lite_settings {
                     'type'      => 'radio',
     				'default'   => 'false',
                     'options'   => array(
-                        'true'  => __( 'Yes', 'wpb-wps' ),
-                        'false' => __( 'No', 'wpb-wps' ),
+                        'true'  => 'Yes',
+                        'false' => 'No'
                     )
 				),
 				array(
@@ -137,8 +137,8 @@ class wpb_wps_lite_settings {
                     'type'      => 'radio',
     				'default'   => 'false',
                     'options'   => array(
-                        'true'  => __( 'Yes', 'wpb-wps' ),
-                        'false' => __( 'No', 'wpb-wps' ),
+                        'true'  => 'Yes',
+                        'false' => 'No'
                     )
 				),
 				array(
@@ -148,8 +148,8 @@ class wpb_wps_lite_settings {
                     'type'      => 'radio',
     				'default'   => 'true',
                     'options'   => array(
-                        'true'  => __( 'Yes', 'wpb-wps' ),
-                        'false' => __( 'No', 'wpb-wps' ),
+                        'true'  => 'Yes',
+                        'false' => 'No'
                     )
 				),
 				array(
@@ -159,8 +159,8 @@ class wpb_wps_lite_settings {
                     'type'      => 'radio',
     				'default'   => 'true',
                     'options'   => array(
-                        'true'  => __( 'Yes', 'wpb-wps' ),
-                        'false' => __( 'No', 'wpb-wps' ),
+                        'true'  => 'Yes',
+                        'false' => 'No'
                     )
 				),
 				
@@ -174,8 +174,8 @@ class wpb_wps_lite_settings {
                     'type'      => 'radio',
     				'default'   => 'true',
                     'options'   => array(
-                        'true'  => __( 'Yes', 'wpb-wps' ),
-                        'false' => __( 'No', 'wpb-wps' ),
+                        'true'  => 'Yes',
+                        'false' => 'No'
                     )
 				),
 				array(
@@ -185,8 +185,8 @@ class wpb_wps_lite_settings {
                     'type'      => 'radio',
     				'default'   => 'true',
                     'options'   => array(
-                        'true'  => __( 'Yes', 'wpb-wps' ),
-                        'false' => __( 'No', 'wpb-wps' ),
+                        'true'  => 'Yes',
+                        'false' => 'No'
                     )
 				),
 				array(
@@ -196,8 +196,8 @@ class wpb_wps_lite_settings {
                     'type'      => 'radio',
     				'default'   => 'false',
                     'options'   => array(
-                        'true'  => __( 'Yes', 'wpb-wps' ),
-                        'false' => __( 'No', 'wpb-wps' ),
+                        'true'  => 'Yes',
+                        'false' => 'No'
                     )
 				),
 				array(
@@ -214,8 +214,8 @@ class wpb_wps_lite_settings {
                     'type'      => 'radio',
     				'default'   => 'true',
                     'options'   => array(
-                        'true'  => __( 'Yes', 'wpb-wps' ),
-                        'false' => __( 'No', 'wpb-wps' ),
+                        'true'  => 'Yes',
+                        'false' => 'No'
                     )
 				),
 				array(
@@ -232,8 +232,8 @@ class wpb_wps_lite_settings {
                     'type'      => 'radio',
     				'default'   => 'false',
                     'options'   => array(
-                        'true'  => __( 'Yes', 'wpb-wps' ),
-                        'false' => __( 'No', 'wpb-wps' ),
+                        'true'  => 'Yes',
+                        'false' => 'No'
                     )
 				),
 				array(
@@ -243,8 +243,8 @@ class wpb_wps_lite_settings {
                     'type'      => 'radio',
     				'default'   => 'true',
                     'options'   => array(
-                        'true'  => __( 'Yes', 'wpb-wps' ),
-                        'false' => __( 'No', 'wpb-wps' ),
+                        'true'  => 'Yes',
+                        'false' => 'No'
                     )
 				),
 				array(
@@ -254,8 +254,8 @@ class wpb_wps_lite_settings {
                     'type'      => 'radio',
     				'default'   => 'true',
                     'options'   => array(
-                        'true'  => __( 'Yes', 'wpb-wps' ),
-                        'false' => __( 'No', 'wpb-wps' ),
+                        'true'  => 'Yes',
+                        'false' => 'No'
                     )
 				),
             ),
@@ -267,9 +267,9 @@ class wpb_wps_lite_settings {
                     'type'      => 'select',
                     'default'   => 'grid cs-style-3',
                     'options'   => array(
-                        'grid cs-style-3'   => __( 'Hover Animation', 'wpb-wps' ),
-    					'grid_no_animation' => __( 'No Animation', 'wpb-wps' ),
-    				)
+                        'grid cs-style-3'   => 'Hover Animation',
+    					'grid_no_animation' => 'No Animation'
+    					)
 				),
 				array(
                     'name'      => 'wpb_slider_type_gen_fea',
@@ -278,9 +278,9 @@ class wpb_wps_lite_settings {
                     'type'      => 'select',
                     'default'   => 'grid cs-style-3',
                     'options'   => array(
-                        'grid cs-style-3'   => __( 'Hover Animation', 'wpb-wps' ),
-                        'grid_no_animation' => __( 'No Animation', 'wpb-wps' ),
-    				)
+                        'grid cs-style-3'   => 'Hover Animation',
+    					'grid_no_animation' => 'No Animation'
+    					)
 				),
 				array(
                     'name'      => 'wpb_slider_type_sid_lat',
@@ -289,9 +289,9 @@ class wpb_wps_lite_settings {
                     'type'      => 'select',
                     'default'   => 'grid cs-style-3',
                     'options'   => array(
-                        'grid cs-style-3'   => __( 'Hover Animation', 'wpb-wps' ),
-                        'grid_no_animation' => __( 'No Animation', 'wpb-wps' ),
-    				)
+                        'grid cs-style-3'   => 'Hover Animation',
+    					'grid_no_animation' => 'No Animation'
+    					)
 				),
 				array(
                     'name'      => 'wpb_slider_type_sid_fea',
@@ -300,8 +300,8 @@ class wpb_wps_lite_settings {
                     'type'      => 'select',
                     'default'   => 'grid cs-style-3',
                     'options'   => array(
-                        'grid cs-style-3'   => __( 'Hover Animation', 'wpb-wps' ),
-                        'grid_no_animation' => __( 'No Animation', 'wpb-wps' ),
+                        'grid cs-style-3'   => 'Hover Animation',
+    					'grid_no_animation' => 'No Animation'
     				)
 				),
 				array(

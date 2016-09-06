@@ -1,7 +1,7 @@
 <?php
 
 namespace ResponsiveMenu\Models;
-use ResponsiveMenu\Filters\Filter;
+use ResponsiveMenu\Filters\Filter as Filter;
 
 class Option {
 
