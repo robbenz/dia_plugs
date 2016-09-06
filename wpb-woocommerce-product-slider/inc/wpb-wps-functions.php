@@ -158,12 +158,12 @@ if( !function_exists('wpb_wps_socail_info') ){
 	function wpb_wps_socail_info(){
 		?>
 		<div class="wpb_wpbean_socials">
-			<h3>For getting updates of our plugins, features update, WordPress new trend, New web technology etc. Follows Us.</h3>
-			<a href="https://twitter.com/wpbean" title="Follow us on Twitter" class="wpb_twitter" target="_blank">Follow Us On Twitter</a>
-			<a href="https://plus.google.com/u/0/+WpBean/posts" title="Follow us on Google+" class="wpb_googleplus" target="_blank">Follow Us On Google Plus</a>
-			<a href="https://www.facebook.com/wpbean" title="Follow us on Facebook" class="wpb_facebook" target="_blank">Like Us On FaceBook</a>
-			<a href="https://www.youtube.com/user/wpbean/videos" title="Follow us on Youtube" class="wpb_youtube" target="_blank">Subscribe Us on YouTube</a>
-			<a href="http://mangotheme.com/doc/woo_pro_slider/" title="This plugin documentation" class="wpb_doc" target="_blank">Documentation</a>
+			<h3><?php _e( 'For getting updates of our plugins, features update, WordPress new trend, New web technology etc. Follows Us.', 'wpb-wps' );?></h3>
+			<a href="https://twitter.com/wpbean" title="Follow us on Twitter" class="wpb_twitter" target="_blank"><?php _e( 'Follow Us On Twitter', 'wpb-wps' );?></a>
+			<a href="https://plus.google.com/u/0/+WpBean/posts" title="Follow us on Google+" class="wpb_googleplus" target="_blank"><?php _e( 'Follow Us On Google Plus', 'wpb-wps' );?></a>
+			<a href="https://www.facebook.com/wpbean" title="Follow us on Facebook" class="wpb_facebook" target="_blank"><?php _e( 'Like Us On FaceBook', 'wpb-wps' );?></a>
+			<a href="https://www.youtube.com/user/wpbean/videos" title="Follow us on Youtube" class="wpb_youtube" target="_blank"><?php _e( 'Subscribe Us on YouTube', 'wpb-wps' );?></a>
+			<a href="http://mangotheme.com/doc/woo_pro_slider/" title="This plugin documentation" class="wpb_doc" target="_blank"><?php _e( 'Documentation', 'wpb-wps' );?></a>
 		</div>
 		<?php
 	}
@@ -179,22 +179,22 @@ add_action( 'wpb_wps_settings_content', 'wpb_wps_pro_version_info' );
 if( !function_exists( 'wpb_wps_pro_version_info' ) ){
 	function wpb_wps_pro_version_info(){
 		?>
-		<h3>PRO Version Features:</h3>
+		<h3><?php _e( 'PRO Version Features:','wpb-wps' ); ?></h3>
 		<ul>
-			<li>Six different new themes for slider.</li>
-			<li>Product slider form selected tags.</li>
-			<li>Product slider form selected products.</li>
-			<li>Product slider form selected product SKU.</li>
-			<li>Product slider form on sell products.</li>
-			<li>Product slider form selected products attribute.</li>
-			<li>Option for controlling columns in phone, tab, small screen.</li>
-			<li>Remove out of stock products form slider.</li>
-			<li>Advance shortcode generator.</li>
-			<li>Visual Composer addon support.</li>
-			<li>RTL support.</li>
-			<li>Product order & orderby.</li>
+			<li><?php _e( 'Six different new themes for slider.','wpb-wps' ); ?></li>
+			<li><?php _e( 'Product slider form selected tags.','wpb-wps' ); ?></li>
+			<li><?php _e( 'Product slider form selected products.','wpb-wps' ); ?></li>
+			<li><?php _e( 'Product slider form selected product SKU.','wpb-wps' ); ?></li>
+			<li><?php _e( 'Product slider form on sell products.','wpb-wps' ); ?></li>
+			<li><?php _e( 'Product slider form selected products attribute.','wpb-wps' ); ?></li>
+			<li><?php _e( 'Option for controlling columns in phone, tab, small screen.','wpb-wps' ); ?></li>
+			<li><?php _e( 'Remove out of stock products form slider.','wpb-wps' ); ?></li>
+			<li><?php _e( 'Advance shortcode generator.','wpb-wps' ); ?></li>
+			<li><?php _e( 'Visual Composer addon support.','wpb-wps' ); ?></li>
+			<li><?php _e( 'RTL support.','wpb-wps' ); ?></li>
+			<li><?php _e( 'Product order & orderby.','wpb-wps' ); ?></li>
 		</ul>
-		<a class="wpb_get_pro_btn" href="http://bit.ly/1PAAzv6" target="_blank">Get The Pro Version</a>
+		<a class="wpb_get_pro_btn" href="http://bit.ly/1PAAzv6" target="_blank"><?php _e( 'Get The Pro Version','wpb-wps' ); ?></a>
 		<?php
 	}
 }

@@ -317,6 +317,18 @@ input#send_credentials_via_email{
     border: 1px solid #C00;
 }
 
+#wppb_general_top_error_message,
+.wppb-error,
+.wppb-warning{
+    color:#222222;
+}
+
+#wppb_general_top_error_message a,
+.wppb-error a,
+.wppb-warning a{
+    color:#007acc;
+}
+
 .wppb-required{
 	color: red;
 }

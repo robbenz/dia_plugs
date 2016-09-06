@@ -1,22 +1,21 @@
 <?php
 
 namespace ResponsiveMenu\Mappers;
+use ResponsiveMenu\Collections\OptionsCollection;
 
-class ScssBaseMapper extends ScssMapper
-{
+class ScssBaseMapper extends ScssMapper {
 
-  public function map()
-  {
+  public function map(OptionsCollection $options) {
 
     $css = <<<CSS
 
-      #responsive-menu-button,
+      button#responsive-menu-button,
       #responsive-menu-container {
         display: none;
         -webkit-text-size-adjust: 100%;
       }
 
-      @media screen and (max-width: {$this->options['breakpoint']}px) {
+      @media screen and (max-width: {$options['breakpoint']}px) {
 
         #responsive-menu-container {
           display: block;
@@ -122,7 +121,7 @@ class ScssBaseMapper extends ScssMapper
           @for \$i from 1 through 6 {
             & ul.responsive-menu-submenu-depth-#{\$i}
             a.responsive-menu-item-link {
-                padding-left: 5% + (5% * \$i);
+                padding-{$options['menu_text_alignment']}: 5% + (5% * \$i);
             }
           }
 
@@ -142,7 +141,6 @@ class ScssBaseMapper extends ScssMapper
             }
             .responsive-menu-subarrow {
               position: absolute;
-              right: 0;
               top: 0;
               bottom: 0;
               text-align: center;
@@ -155,13 +153,13 @@ class ScssBaseMapper extends ScssMapper
         }
       }
 
-      .responsive-menu-button {
+      button#responsive-menu-button {
         .responsive-menu-button-icon-inactive {
           display: none;
         }
       }
 
-      #responsive-menu-button {
+      button#responsive-menu-button {
         z-index: 99999;
         display: none;
         overflow: hidden;

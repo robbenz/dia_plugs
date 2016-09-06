@@ -1,8 +1,8 @@
 <?php
 
 namespace ResponsiveMenu\Controllers;
-use ResponsiveMenu\View\View as View;
-use ResponsiveMenu\Services\OptionService as OptionService;
+use ResponsiveMenu\View\View;
+use ResponsiveMenu\Services\OptionService;
 
 class Admin {
 
@@ -12,47 +12,45 @@ class Admin {
 	}
 
 	public function update($default_options, $new_options) {
-    $this->view->render('main', [
-      'options' => $this->service->updateOptions(array_merge($default_options, array_filter($new_options))),
+    $updated_options = $this->service->combineOptions($default_options, $new_options);
+    return $this->view->render('main', [
+      'options' => $this->service->updateOptions($updated_options),
       'flash' => ['success' =>  __('Responsive Menu Options Updated Successfully', 'responsive-menu')]
     ]);
 	}
 
 	public function reset($default_options) {
-    $this->view->render('main', [
+    return $this->view->render('main', [
       'options' => $this->service->updateOptions($default_options),
       'flash' => ['success' => __('Responsive Menu Options Reset Successfully', 'responsive-menu')]
     ]);
 	}
 
   public function index() {
-    $this->view->render('main', ['options' => $this->service->all()]);
+    return $this->view->render('main', ['options' => $this->service->all()]);
   }
 
-  public function import($default_options, $file) {
-    if(!empty($file['tmp_name'])):
-      $file = file_get_contents($file['tmp_name']);
-      $decoded = (array) json_decode($file);
-      $options = $this->service->updateOptions(array_merge($default_options, array_filter($decoded)));
-      $flash['success'] = __('Responsive Menu Options Reset Successfully', 'responsive-menu');
+  public function import($default_options, $imported_options) {
+
+    if(!empty($imported_options)):
+      $updated_options = $this->service->combineOptions($default_options, $imported_options);
+      $options = $this->service->updateOptions($updated_options);
+      $flash['success'] = __('Responsive Menu Options Imported Successfully', 'responsive-menu');
     else:
       $flash['errors'][] = __('No file selected', 'responsive-menu');
       $options = $this->service->all();
     endif;
 
-    $this->view->render('main', ['options' => $options, 'flash' => $flash]);
+    return $this->view->render('main', ['options' => $options, 'flash' => $flash]);
   }
 
   public function export() {
-    nocache_headers();
-    header( 'Content-Type: application/json; charset=utf-8' );
-    header( 'Content-Disposition: attachment; filename=export.json' );
-    header( "Expires: 0" );
+    $this->view->noCacheHeaders();
     $final = [];
     foreach($this->service->all()->all() as $option)
       $final[$option->getName()] = $option->getValue();
-    echo json_encode($final);
-    exit();
+    $this->view->display(json_encode($final));
+    $this->view->stopProcessing();
   }
 
 }

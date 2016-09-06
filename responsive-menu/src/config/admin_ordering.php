@@ -686,56 +686,101 @@ $order_mapping = [
 * SUB MENUS
 *
 */
-    __('Sub-Menus', 'responsive-menu') => [
+__('Sub-Menus', 'responsive-menu') => [
 
-      __('Toggle Button Colours', 'responsive-menu') =>
-        [
-          [
-            'option' => 'menu_sub_arrow_background_colour',
-            'title' => __('Background Colour', 'responsive-menu'),
-            'label' => __('', 'responsive-menu'),
-            'type' => 'colour',
-            'semi_pro' => true
-          ],
-          [
-            'option' => 'menu_sub_arrow_background_hover_colour',
-            'title' => __('Background Hover Colour', 'responsive-menu'),
-            'label' => __('', 'responsive-menu'),
-            'type' => 'colour',
-            'semi_pro' => true
-          ],
-          [
-            'option' => 'menu_sub_arrow_border_colour',
-            'title' => __('Border Colour', 'responsive-menu'),
-            'label' => __('', 'responsive-menu'),
-            'type' => 'colour',
-            'semi_pro' => true
-          ],
-          [
-            'option' => 'menu_sub_arrow_border_hover_colour',
-            'title' => __('Border Hover Colour', 'responsive-menu'),
-            'label' => __('', 'responsive-menu'),
-            'type' => 'colour',
-            'semi_pro' => true
-          ],
-        ],
-      __('Toggle Icon Colours', 'responsive-menu') =>
-        [
-          [
-            'option' => 'menu_sub_arrow_shape_colour',
-            'title' => __('Icon Colour', 'responsive-menu'),
-            'label' => __('', 'responsive-menu'),
-            'type' => 'colour',
-            'semi_pro' => true
-          ],
-          [
-            'option' => 'menu_sub_arrow_shape_hover_colour',
-            'title' => __('Icon Hover Colour', 'responsive-menu'),
-            'label' => __('', 'responsive-menu'),
-            'type' => 'colour',
-            'semi_pro' => true
-          ],
-        ],
+  __('Toggle Button Background Colours', 'responsive-menu') =>
+    [
+      [
+        'option' => 'menu_sub_arrow_background_colour',
+        'title' => __('Background Colour', 'responsive-menu'),
+        'label' => __('', 'responsive-menu'),
+        'type' => 'colour',
+        'semi_pro' => true
+      ],
+      [
+        'option' => 'menu_sub_arrow_background_hover_colour',
+        'title' => __('Background Hover Colour', 'responsive-menu'),
+        'label' => __('', 'responsive-menu'),
+        'type' => 'colour',
+        'semi_pro' => true
+      ],
+      [
+        'option' => 'menu_sub_arrow_background_colour_active',
+        'title' => __('Background Colour Active', 'responsive-menu'),
+        'label' => __('', 'responsive-menu'),
+        'type' => 'colour',
+        'pro' => true
+      ],
+      [
+        'option' => 'menu_sub_arrow_background_hover_colour_active',
+        'title' => __('Background Hover Colour Active', 'responsive-menu'),
+        'label' => __('', 'responsive-menu'),
+        'type' => 'colour',
+        'pro' => true
+      ],
+    ],
+  __('Toggle Button Border Colours', 'responsive-menu') =>
+    [
+      [
+        'option' => 'menu_sub_arrow_border_colour',
+        'title' => __('Border Colour', 'responsive-menu'),
+        'label' => __('', 'responsive-menu'),
+        'type' => 'colour',
+        'semi_pro' => true
+      ],
+      [
+        'option' => 'menu_sub_arrow_border_hover_colour',
+        'title' => __('Border Hover Colour', 'responsive-menu'),
+        'label' => __('', 'responsive-menu'),
+        'type' => 'colour',
+        'semi_pro' => true
+      ],
+      [
+        'option' => 'menu_sub_arrow_border_colour_active',
+        'title' => __('Border Colour Active', 'responsive-menu'),
+        'label' => __('', 'responsive-menu'),
+        'type' => 'colour',
+        'pro' => true
+      ],
+      [
+        'option' => 'menu_sub_arrow_border_hover_colour_active',
+        'title' => __('Border Hover Colour Active', 'responsive-menu'),
+        'label' => __('', 'responsive-menu'),
+        'type' => 'colour',
+        'pro' => true
+      ],
+    ],
+  __('Toggle Button Icon Colours', 'responsive-menu') =>
+    [
+      [
+        'option' => 'menu_sub_arrow_shape_colour',
+        'title' => __('Icon Colour', 'responsive-menu'),
+        'label' => __('', 'responsive-menu'),
+        'type' => 'colour',
+        'semi_pro' => true
+      ],
+      [
+        'option' => 'menu_sub_arrow_shape_hover_colour',
+        'title' => __('Icon Hover Colour', 'responsive-menu'),
+        'label' => __('', 'responsive-menu'),
+        'type' => 'colour',
+        'semi_pro' => true
+      ],
+      [
+        'option' => 'menu_sub_arrow_shape_colour_active',
+        'title' => __('Icon Colour Active', 'responsive-menu'),
+        'label' => __('', 'responsive-menu'),
+        'type' => 'colour',
+        'pro' => true
+      ],
+      [
+        'option' => 'menu_sub_arrow_shape_hover_colour_active',
+        'title' => __('Icon Hover Colour Active', 'responsive-menu'),
+        'label' => __('', 'responsive-menu'),
+        'type' => 'colour',
+        'pro' => true
+      ],
+    ],
       __('Animations', 'responsive-menu') =>
         [
           [
@@ -764,9 +809,6 @@ $order_mapping = [
 
           ],
         ],
-
-
-
       __('Sizing', 'responsive-menu') =>
         [
           [
@@ -818,6 +860,16 @@ $order_mapping = [
             'title' => __('Image Inactive', 'responsive-menu'),
             'label' => __('', 'responsive-menu'),
             'type' => 'image'
+          ],
+          [
+            'option' => 'arrow_position',
+            'title' => __('Icon Position', 'responsive-menu'),
+            'label' => __('', 'responsive-menu'),
+              'type' => 'select',
+              'select' => [
+                ['value' => 'left', 'display' => 'Left'],
+                ['value' => 'right', 'display' => 'Right']
+              ],
           ]
         ],
       ],

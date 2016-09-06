@@ -4,7 +4,7 @@ Donate link: https://responsive.menu/donate
 Tags: responsive, menu, responsive menu, mobile menu, wordpress responsive menu, wp responsive menu, tablet menu, mobile, tablet, 3 lines, 3 line, three line, three lines
 Requires at least: 3.5.0
 Tested up to: 4.6
-Stable tag: 3.0.9
+Stable tag: 3.0.11
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -146,7 +146,23 @@ To view our whole FAQ, please go to https://responsive.menu/faq/
 
 == Changelog ==
 
-= 3.0.9 (2nd August 2016) =
+= 3.0.11 (29th August 2016) =
+** Requires PHP 5.4**
+* Fixed export options bug (Pro only)
+* Fixed shortcode attributes bug
+
+= 3.0.10 (27th August 2016) =
+* **Requires PHP 5.4**
+* Improved RTL support
+* Additional Content added to WPML/Polylang
+* Added sub-arrow active colours - Pro only
+* Added sub-arrow positioning side option
+* Allow 0 values to be entered
+* Switched sub-menu padding round if right text-alignment used
+* Added item link colours to transition list
+* Minor bug fixes
+
+= 3.0.9 (4th August 2016) =
 * **Requires PHP 5.4**
 * Added current item border colour option
 * Added current item border hover colour option
