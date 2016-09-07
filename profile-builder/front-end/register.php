@@ -42,23 +42,24 @@ function wppb_activate_signup( $key ) {
 	$wppb_general_settings = get_option( 'wppb_general_settings' );
 
 	$signup = ( is_multisite() ? $wpdb->get_row( $wpdb->prepare("SELECT * FROM $wpdb->signups WHERE activation_key = %s", $key) ) : $wpdb->get_row( $wpdb->prepare( "SELECT * FROM ".$wpdb->base_prefix."signups WHERE activation_key = %s", $key ) ) );
-	
+
+    $user_login = ( ( isset( $wppb_general_settings['loginWith'] ) && ( $wppb_general_settings['loginWith'] == 'email' ) ) ? trim( $signup->user_email ) : trim( $signup->user_login ) );
+
+    $user_email = esc_sql( $signup->user_email );
+    /* the password is in hashed form in the signup table so we will add it later */
+    $password = NULL;
+
+    $user_id = username_exists( $user_login );
+
 	if ( empty( $signup ) )
 		return apply_filters( 'wppb_register_activate_user_error_message1', '<p class="error">'.__( 'Invalid activation key!', 'profile-builder' ).'</p>');
 
 	if ( $signup->active )
 		if ( empty( $signup->domain ) )
-			return apply_filters( 'wppb_register_activate_user_error_message2', '<p class="error">'.__( 'This username is now active!', 'profile-builder' ).'</p>' );
+			return apply_filters( 'wppb_register_activate_user_error_message2', '<p class="error">'.__( 'This username is now active!', 'profile-builder' ).'</p>', $user_id );
 
 	$meta = unserialize( $signup->meta );
-	
-	$user_login = ( ( isset( $wppb_general_settings['loginWith'] ) && ( $wppb_general_settings['loginWith'] == 'email' ) ) ? trim( $signup->user_email ) : trim( $signup->user_login ) );
-		
-	$user_email = esc_sql( $signup->user_email );
-    /* the password is in hashed form in the signup table so we will add it later */
-	$password = NULL;
 
-	$user_id = username_exists( $user_login );
 
 	if ( !$user_id )
 		$user_id = wppb_create_user( $user_login, $password, $user_email );
@@ -121,14 +122,15 @@ function wppb_activate_signup( $key ) {
 					$redirect_url = wppb_custom_redirect_url( 'after_success_email_confirmation', '', $user_login );
 				}
 			}
-			$redirect_url = apply_filters( 'wppb_success_email_confirmation_redirect_url', $redirect_url );
-			$wppb_cr_delay = apply_filters( 'wppb_success_email_confirmation_redirect_delay', $wppb_cr_delay = 5 );
+			$redirect_url = apply_filters( 'wppb_success_email_confirmation_redirect_url', $redirect_url, $user_id );
+			$wppb_cr_delay = apply_filters( 'wppb_success_email_confirmation_redirect_delay', $wppb_cr_delay = 5, $user_id );
 
-			$success_message = apply_filters( 'wppb_success_email_confirmation', '<p class="wppb-success">' . __( 'Your email was successfully confirmed.', 'profile-builder' ) . '</p><!-- .success -->' );
-            $admin_approval_message = apply_filters( 'wppb_email_confirmation_with_admin_approval', '<p class="alert">' . __('Before you can access your account, an administrator needs to approve it. You will be notified via email.', 'profile-builder' ) . '</p>' );
+			$success_message = apply_filters( 'wppb_success_email_confirmation', '<p class="wppb-success">' . __( 'Your email was successfully confirmed.', 'profile-builder' ) . '</p><!-- .success -->', $user_id );
+            $admin_approval_message = apply_filters( 'wppb_email_confirmation_with_admin_approval', '<p class="alert">' . __('Before you can access your account, an administrator needs to approve it. You will be notified via email.', 'profile-builder' ) . '</p>', $user_id );
 
 			if( ! empty( $redirect_url ) ) {
-				$wppb_cr_success_message = apply_filters( 'wppb_success_email_confirmation_redirect_message', '<p class="wppb-success">' . __( 'You will soon be redirected automatically.', 'profile-builder' ) . '</p>' ) . '<meta http-equiv="Refresh" content="'.$wppb_cr_delay.';url='.$redirect_url.'" />';
+				$wppb_cr_success_message  = apply_filters( 'wppb_success_email_confirmation_redirect_message', '<p class="wppb-success">' . __( 'You will soon be redirected automatically.', 'profile-builder' ) . '</p>' );
+                $wppb_cr_success_message .= apply_filters( 'wppb_success_email_confirmation_redirect', '<meta http-equiv="Refresh" content="'.$wppb_cr_delay.';url='.$redirect_url.'" />', $wppb_cr_delay, $redirect_url, $user_id );
 			}
 
             $wppb_general_settings = get_option( 'wppb_general_settings', 'false' );

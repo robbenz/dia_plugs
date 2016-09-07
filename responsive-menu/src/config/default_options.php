@@ -1,6 +1,6 @@
 <?php
 
-$default_options = array(
+$default_options = [
 
 	'breakpoint' => 800,
 	'menu_to_hide' => '',
@@ -49,6 +49,7 @@ $default_options = array(
   'inactive_arrow_image' => '',
   'active_arrow_font_icon' => '',
   'inactive_arrow_font_icon' => '',
+  'arrow_position' => 'right',
   'submenu_arrow_width' => '40',
   'submenu_arrow_height' => '40',
   'accordion_animation' => 'off',
@@ -74,10 +75,16 @@ $default_options = array(
   'menu_current_link_hover_colour' => '#fff',
   'menu_sub_arrow_border_colour' => '#212121',
   'menu_sub_arrow_border_hover_colour' => '#fff',
+  'menu_sub_arrow_border_colour_active' => '#212121',
+  'menu_sub_arrow_border_hover_colour_active' => '#fff',
   'menu_sub_arrow_background_colour' => '#212121',
   'menu_sub_arrow_background_hover_colour' => '#3f3f3f',
+  'menu_sub_arrow_background_colour_active' => '#212121',
+  'menu_sub_arrow_background_hover_colour_active' => '#3f3f3f',
   'menu_sub_arrow_shape_colour' => '#fff',
   'menu_sub_arrow_shape_hover_colour' => '#fff',
+  'menu_sub_arrow_shape_colour_active' => '#fff',
+  'menu_sub_arrow_shape_hover_colour_active' => '#fff',
   'menu_font' => null,
   'menu_font_size' => 13,
   'menu_title_font_size' => 13,
@@ -154,4 +161,4 @@ $default_options = array(
   'items_order' => '{"title": "on","menu":"on","search":"on","additional content":"on"}',
   'header_bar_items_order' => '{"logo": "on","title":"on","search":"on","html content":"on","button":"on"}',
 
-);
+];

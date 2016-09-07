@@ -1,7 +1,7 @@
 <?php
 
 namespace ResponsiveMenu\Collections;
-use ResponsiveMenu\Models\Option as Option;
+use ResponsiveMenu\Models\Option;
 
 class OptionsCollection implements \ArrayAccess {
 
@@ -56,7 +56,7 @@ class OptionsCollection implements \ArrayAccess {
 
   public function getButtonIconActive() {
     if($this->options['button_image'] && $this->options['button_image']->getValue())
-      return '<img src="' . $this->options['button_image_when_clicked'] .'" class=" responsive-menu-button-icon responsive-menu-button-icon-inactive" />';
+      return '<img src="' . $this->options['button_image_when_clicked'] .'" class="responsive-menu-button-icon responsive-menu-button-icon-inactive" />';
   }
 
   public function offsetExists($offset) {
@@ -68,8 +68,7 @@ class OptionsCollection implements \ArrayAccess {
   }
 
   public function offsetSet($offset, $value) {
-    if(isset($this->options[$offset]))
-      $this->options[$offset]->setValue($value);
+      $this->options[$offset] = $value;
   }
 
   public function offsetUnset($offset) {

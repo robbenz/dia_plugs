@@ -5,7 +5,7 @@ Tags: user registration, user registration form, user fields, extra user fields,
 
 Requires at least: 3.1
 Tested up to: 4.6
-Stable tag: 2.4.5
+Stable tag: 2.4.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -150,6 +150,10 @@ This plugin adds/removes user fields in the front-end. Both default and extra pr
 10. Profile Builder Login Widget
 
 == Changelog ==
+= 2.4.6 =
+* CSS modifications to accomodate dark/black themes
+* Small changes for E-mail Confirmation and Paid Member Subscriptions compatibility
+
 = 2.4.5 =
 * Modifications to Addons Page
 * Apply filter to email on all forms to allow stripping slashes if necessary
