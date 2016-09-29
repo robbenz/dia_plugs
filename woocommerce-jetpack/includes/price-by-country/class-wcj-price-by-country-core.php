@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Price by Country Core class.
  *
- * @version 2.5.5
+ * @version 2.5.6
  * @author  Algoritmika Ltd.
  */
 
@@ -17,17 +17,30 @@ class WCJ_Price_by_Country_Core {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.5.4
+	 * @version 2.5.6
 	 */
 	public function __construct() {
 		$this->customer_country_group_id = null;
-		$this->add_hooks();
+		if ( 'no' === get_option( 'wcj_price_by_country_for_bots_disabled', 'no' ) || ! $this->is_bot() ) {
+			// `add_hooks()` moved to `init` hook, so in case we need to call `get_customer_country_by_ip()` `WC_Geolocation` class is ready
+			add_action( 'init', array( $this, 'add_hooks' ) );
+		}
+	}
+
+	/**
+	 * is_bot.
+	 *
+	 * @version 2.5.6
+	 * @since   2.5.6
+	 */
+	function is_bot() {
+		return ( isset( $_SERVER['HTTP_USER_AGENT'] ) && preg_match( '/Google-Structured-Data-Testing-Tool|bot|crawl|slurp|spider/i', $_SERVER['HTTP_USER_AGENT'] ) ) ? true : false;
 	}
 
 	/**
 	 * add_hooks.
 	 *
-	 * @version 2.5.4
+	 * @version 2.5.6
 	 */
 	function add_hooks() {
 
@@ -77,8 +90,9 @@ class WCJ_Price_by_Country_Core {
 
 		// Price Filter Widget
 		if ( 'yes' === get_option( 'wcj_price_by_country_price_filter_widget_support_enabled', 'no' ) ) {
-			add_filter( 'woocommerce_price_filter_meta_keys',   array( $this, 'price_filter_meta_keys' ), PHP_INT_MAX, 1 );
-			add_filter( 'woocommerce_product_query_meta_query', array( $this, 'price_filter_meta_query' ), PHP_INT_MAX, 2 );
+			add_filter( 'woocommerce_price_filter_meta_keys',    array( $this, 'price_filter_meta_keys' ), PHP_INT_MAX, 1 );
+			add_filter( 'woocommerce_product_query_meta_query',  array( $this, 'price_filter_meta_query' ), PHP_INT_MAX, 2 );
+			add_filter( 'woocommerce_get_catalog_ordering_args', array( $this, 'sorting_by_price_fix' ), PHP_INT_MAX ); // Sorting
 		}
 	}
 
@@ -92,6 +106,27 @@ class WCJ_Price_by_Country_Core {
 		wp_enqueue_style(  'wcj-wSelect-style', wcj_plugin_url() . '/includes/lib/wSelect/wSelect.css' );
 		wp_enqueue_script( 'wcj-wSelect',       wcj_plugin_url() . '/includes/lib/wSelect/wSelect.min.js', array(), false, true );
 		wp_enqueue_script( 'wcj-wcj-wSelect',   wcj_plugin_url() . '/includes/js/wcj-wSelect.js', array(), false, true );
+	}
+
+	/*
+	 * sorting_by_price_fix.
+	 *
+	 * @version 2.5.6
+	 * @since   2.5.6
+	 */
+	function sorting_by_price_fix( $args ) {
+		if ( null != ( $group_id = $this->get_customer_country_group_id() ) ) {
+			// Get ordering from query string
+			$orderby_value = isset( $_GET['orderby'] ) ? woocommerce_clean( $_GET['orderby'] ) : apply_filters( 'woocommerce_default_catalog_orderby', get_option( 'woocommerce_default_catalog_orderby' ) );
+			// Get orderby arg from string
+			$orderby_value = explode( '-', $orderby_value );
+			$orderby       = esc_attr( $orderby_value[0] );
+			$orderby       = strtolower( $orderby );
+			if ( 'price' == $orderby ) {
+				$args['meta_key'] = '_' . 'wcj_price_by_country_' . $group_id;
+			}
+		}
+		return $args;
 	}
 
 	/**
@@ -198,7 +233,7 @@ class WCJ_Price_by_Country_Core {
 	/**
 	 * get_customer_country_group_id.
 	 *
-	 * @version 2.5.5
+	 * @version 2.5.6
 	 */
 	public function get_customer_country_group_id() {
 
@@ -215,12 +250,12 @@ class WCJ_Price_by_Country_Core {
 		// Get the country
 		if ( isset( $_GET['country'] ) && '' != $_GET['country'] && wcj_is_user_role( 'administrator' ) ) {
 			$country = $_GET['country'];
-		} elseif ( 'yes' === get_option( 'wcj_price_by_country_override_on_checkout_with_billing_country', 'no' )
+		} elseif ( 'no' != ( $override_option = get_option( 'wcj_price_by_country_override_on_checkout_with_billing_country', 'no' ) )
 			/* && is_checkout() */
 			&& isset( WC()->customer )
-			&& '' != WC()->customer->get_country()
+			&& ( ( 'yes' === $override_option && '' != WC()->customer->get_country() ) || ( 'shipping_country' === $override_option && '' != WC()->customer->get_shipping_country() ) )
 		) {
-			$country = WC()->customer->get_country();
+			$country = ( 'yes' === $override_option ) ? WC()->customer->get_country() : WC()->customer->get_shipping_country();
 		} else {
 			if ( 'by_ip' === get_option( 'wcj_price_by_country_customer_country_detection_method', 'by_ip' ) ) {
 				$country = $this->get_customer_country_by_ip();

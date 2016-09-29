@@ -70,6 +70,7 @@ class Soliloquy_Posttype_Lite {
                 'labels'              => $labels,
                 'public'              => false,
                 'exclude_from_search' => true,
+                'publicly_queryable'  => true,
                 'show_ui'             => true,
                 'show_in_admin_bar'   => false,
                 'rewrite'             => false,

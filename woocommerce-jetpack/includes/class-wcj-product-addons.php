@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Product Addons class.
  *
- * @version 2.5.5
+ * @version 2.5.6
  * @since   2.5.3
  * @author  Algoritmika Ltd.
  * @todo    admin order view (names);
@@ -19,7 +19,7 @@ class WCJ_Product_Addons extends WCJ_Module {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.5.5
+	 * @version 2.5.6
 	 * @since   2.5.3
 	 */
 	function __construct() {
@@ -59,7 +59,30 @@ class WCJ_Product_Addons extends WCJ_Module {
 				add_filter( 'woocommerce_order_item_name',                array( $this, 'add_info_to_order_item_name' ), PHP_INT_MAX, 2 );
 				add_action( 'woocommerce_add_order_item_meta',            array( $this, 'add_info_to_order_item_meta' ), PHP_INT_MAX, 3 );
 			}
+			if ( is_admin() ) {
+				if ( 'yes' === get_option( 'wcj_product_addons_hide_on_admin_order_page', 'no' ) ) {
+					add_filter( 'woocommerce_hidden_order_itemmeta', array( $this, 'hide_addons_in_admin_order' ), PHP_INT_MAX );
+				}
+			}
 		}
+	}
+
+	/**
+	 * hide_addons_in_admin_order.
+	 *
+	 * @version 2.5.6
+	 * @since   2.5.6
+	 * @todo    get real number of addons (instead of max_addons = 100)
+	 */
+	function hide_addons_in_admin_order( $hidden_metas ) {
+		$max_addons = 100;
+		for ( $i = 1; $i <= $max_addons; $i++ ) {
+			$hidden_metas[] = '_' . 'wcj_product_all_products_addons_price_' . $i;
+			$hidden_metas[] = '_' . 'wcj_product_all_products_addons_label_' . $i;
+			$hidden_metas[] = '_' . 'wcj_product_per_product_addons_price_' . $i;
+			$hidden_metas[] = '_' . 'wcj_product_per_product_addons_label_' . $i;
+		}
+		return $hidden_metas;
 	}
 
 	/**
@@ -94,13 +117,11 @@ class WCJ_Product_Addons extends WCJ_Module {
 	/**
 	 * price_change_ajax.
 	 *
-	 * @version 2.5.5
+	 * @version 2.5.6
 	 * @since   2.5.3
 	 */
 	function price_change_ajax( $param ) {
 		$the_product = wc_get_product( $_POST['product_id'] );
-		$get_price_method = 'get_price_' . get_option( 'woocommerce_tax_display_shop' ) . 'uding_tax';
-		$the_price = $the_product->$get_price_method();
 		$parent_product_id = ( $the_product->is_type( 'variation' ) ) ? wp_get_post_parent_id( $_POST['product_id'] ) : $_POST['product_id'];
 		$addons = $this->get_product_addons( $parent_product_id );
 		$the_addons_price = 0;
@@ -123,7 +144,9 @@ class WCJ_Product_Addons extends WCJ_Module {
 			}
 		}
 		if ( 0 != $the_addons_price ) {
-			echo wc_price( $the_price + $the_addons_price );
+			$the_price = $the_product->get_price();
+			$the_display_price = $the_product->get_display_price( $the_price + $the_addons_price );
+			echo wc_price( $the_display_price );
 		} else {
 			echo $the_product->get_price_html();
 		}
@@ -224,27 +247,32 @@ class WCJ_Product_Addons extends WCJ_Module {
 	/**
 	 * Adds info to order details (and emails).
 	 *
-	 * @version 2.5.3
+	 * @version 2.5.6
 	 * @since   2.5.3
 	 */
 	function add_info_to_order_item_name( $name, $item, $is_cart = false ) {
 		if ( $is_cart ) {
-			$name .= '<dl class="variation">';
+			$start_format = get_option( 'wcj_product_addons_cart_format_start', '<dl class="variation">' );
+			$item_format  = get_option( 'wcj_product_addons_cart_format_each_addon', '<dt>%addon_label%:</dt><dd>%addon_price%</dd>' );
+			$end_format   = get_option( 'wcj_product_addons_cart_format_end', '</dl>' );
+		} else {
+			$start_format = get_option( 'wcj_product_addons_order_details_format_start', '' );
+			$item_format  = get_option( 'wcj_product_addons_order_details_format_each_addon', '&nbsp;| %addon_label%: %addon_price%' );
+			$end_format   = get_option( 'wcj_product_addons_order_details_format_end', '' );
 		}
+		$name .= $start_format;
 		$addons = $this->get_product_addons( $item['product_id'] );
+		$_product = wc_get_product( $item['product_id'] );
 		foreach ( $addons as $addon ) {
 			if ( isset( $item[ $addon['price_key'] ] ) ) {
-				if ( $is_cart ) {
-					$name .= '<dt>' . $item[ $addon['label_key'] ] . ':' . '</dt>';
-					$name .= '<dd>' . wc_price( $item[ $addon['price_key'] ] ) . '</dd>';
-				} else {
-					$name .= ' | ' . $item[ $addon['label_key'] ] . ': ' . wc_price( $item[ $addon['price_key'] ] );
-				}
+				$name .= str_replace(
+					array( '%addon_label%', '%addon_price%' ),
+					array( $item[ $addon['label_key'] ], wc_price( $_product->get_display_price( $item[ $addon['price_key'] ] ) ) ),
+					$item_format
+				);
 			}
 		}
-		if ( $is_cart ) {
-			$name .= '</dl>';
-		}
+		$name .= $end_format;
 		return $name;
 	}
 
@@ -261,14 +289,14 @@ class WCJ_Product_Addons extends WCJ_Module {
 	/**
 	 * change_price.
 	 *
-	 * @version 2.5.3
+	 * @version 2.5.6
 	 * @since   2.5.3
 	 */
 	function change_price( $price, $_product ) {
 		$addons = $this->get_product_addons( $_product->id );
 		foreach ( $addons as $addon ) {
-			if ( isset( $_product->$addon['price_key'] ) ) {
-				$price += $_product->$addon['price_key'];
+			if ( isset( $_product->{$addon['price_key']} ) ) {
+				$price += $_product->{$addon['price_key']};
 			}
 		}
 		return $price;
@@ -277,14 +305,14 @@ class WCJ_Product_Addons extends WCJ_Module {
 	/**
 	 * add_addons_price_to_cart_item.
 	 *
-	 * @version 2.5.3
+	 * @version 2.5.6
 	 * @since   2.5.3
 	 */
 	function add_addons_price_to_cart_item( $cart_item_data, $cart_item_key ) {
 		$addons = $this->get_product_addons( $cart_item_data['data']->product_id );
 		foreach ( $addons as $addon ) {
 			if ( isset( $cart_item_data[ $addon['price_key'] ] ) ) {
-				$cart_item_data['data']->$addon['price_key'] = $cart_item_data[ $addon['price_key'] ];
+				$cart_item_data['data']->{$addon['price_key']} = $cart_item_data[ $addon['price_key'] ];
 			}
 		}
 		return $cart_item_data;
@@ -293,14 +321,14 @@ class WCJ_Product_Addons extends WCJ_Module {
 	/**
 	 * get_cart_item_addons_price_from_session.
 	 *
-	 * @version 2.5.3
+	 * @version 2.5.6
 	 * @since   2.5.3
 	 */
 	function get_cart_item_addons_price_from_session( $item, $values, $addon ) {
 		$addons = $this->get_product_addons( $item['product_id'] );
 		foreach ( $addons as $addon ) {
 			if ( array_key_exists( $addon['price_key'], $values ) ) {
-				$item['data']->$addon['price_key'] = $values[ $addon['price_key'] ];
+				$item['data']->{$addon['price_key']} = $values[ $addon['price_key'] ];
 			}
 		}
 		return $item;
@@ -340,12 +368,13 @@ class WCJ_Product_Addons extends WCJ_Module {
 	/**
 	 * add_addons_to_frontend.
 	 *
-	 * @version 2.5.5
+	 * @version 2.5.6
 	 * @since   2.5.3
 	 */
 	function add_addons_to_frontend() {
 		$html = '';
 		$addons = $this->get_product_addons( get_the_ID() );
+		$_product = wc_get_product( get_the_ID() );
 		foreach ( $addons as $addon ) {
 			$is_required = ( 'yes' === $addon['is_required'] ) ? ' required' : '';
 			if ( 'checkbox' === $addon['type'] || '' == $addon['type'] ) {
@@ -360,7 +389,7 @@ class WCJ_Product_Addons extends WCJ_Module {
 					'';
 				$html .= '<p>' .
 						'<input type="checkbox" id="' . $addon['checkbox_key'] . '" name="' . $addon['checkbox_key'] . '"' . $is_checked . $is_required . '>' . ' ' .
-						'<label for="' . $addon['checkbox_key'] . '">' . $addon['label_value'] . ' ('. wc_price( $addon['price_value'] ) . ')' . '</label>' .
+						'<label for="' . $addon['checkbox_key'] . '">' . $addon['label_value'] . ' ('. wc_price( $_product->get_display_price( $addon['price_value'] ) ) . ')' . '</label>' .
 						$maybe_tooltip .
 					'</p>';
 			} elseif ( 'radio' === $addon['type'] ) {
@@ -381,7 +410,7 @@ class WCJ_Product_Addons extends WCJ_Module {
 							'';
 						$html .= '<p>' .
 							'<input type="radio" id="' . $addon['checkbox_key'] . '-' . $label . '" name="' . $addon['checkbox_key'] . '" value="' . $label . '"' . $is_checked . $is_required . '>' . ' ' .
-							'<label for="' . $addon['checkbox_key'] . '-' . $label . '">' . $labels[ $i ] . ' ('. wc_price( $prices[ $i ] ) . ')' . '</label>' .
+							'<label for="' . $addon['checkbox_key'] . '-' . $label . '">' . $labels[ $i ] . ' ('. wc_price( $_product->get_display_price( $prices[ $i ] ) ) . ')' . '</label>' .
 							$maybe_tooltip .
 						'</p>';
 					}
@@ -489,7 +518,7 @@ class WCJ_Product_Addons extends WCJ_Module {
 	/**
 	 * get_settings.
 	 *
-	 * @version 2.5.5
+	 * @version 2.5.6
 	 * @since   2.5.3
 	 */
 	function get_settings() {
@@ -618,6 +647,59 @@ class WCJ_Product_Addons extends WCJ_Module {
 				'title'    => __( 'Enable AJAX on Single Product Page', 'woocommerce-jetpack' ),
 				'desc'     => __( 'Enable', 'woocommerce-jetpack' ),
 				'id'       => 'wcj_product_addons_ajax_enabled',
+				'default'  => 'no',
+				'type'     => 'checkbox',
+			),
+			array(
+				'title'    => __( 'Addon in Cart Format', 'woocommerce-jetpack' ),
+				'desc'     => __( 'Before', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_product_addons_cart_format_start',
+				'default'  => '<dl class="variation">',
+				'type'     => 'textarea',
+				'css'      => 'width:300px;',
+			),
+			array(
+				'desc'     => __( 'Each Addon', 'woocommerce-jetpack' ),
+				'desc_tip' => __( 'You can use %addon_label% and %addon_price%.', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_product_addons_cart_format_each_addon',
+				'default'  => '<dt>%addon_label%:</dt><dd>%addon_price%</dd>',
+				'type'     => 'textarea',
+				'css'      => 'width:300px;',
+			),
+			array(
+				'desc'     => __( 'After', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_product_addons_cart_format_end',
+				'default'  => '</dl>',
+				'type'     => 'textarea',
+				'css'      => 'width:300px;',
+			),
+			array(
+				'title'    => __( 'Addon in Order Details Table Format', 'woocommerce-jetpack' ),
+				'desc'     => __( 'Before', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_product_addons_order_details_format_start',
+				'default'  => '',
+				'type'     => 'textarea',
+				'css'      => 'width:300px;',
+			),
+			array(
+				'desc'     => __( 'Each Addon', 'woocommerce-jetpack' ),
+				'desc_tip' => __( 'You can use %addon_label% and %addon_price%.', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_product_addons_order_details_format_each_addon',
+				'default'  => '&nbsp;| %addon_label%: %addon_price%',
+				'type'     => 'textarea',
+				'css'      => 'width:300px;',
+			),
+			array(
+				'desc'     => __( 'After', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_product_addons_order_details_format_end',
+				'default'  => '',
+				'type'     => 'textarea',
+				'css'      => 'width:300px;',
+			),
+			array(
+				'title'    => __( 'Admin Order Page', 'woocommerce-jetpack' ),
+				'desc'     => __( 'Hide all addons', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_product_addons_hide_on_admin_order_page',
 				'default'  => 'no',
 				'type'     => 'checkbox',
 			),

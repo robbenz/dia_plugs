@@ -140,6 +140,11 @@ $order_mapping = [
             'type' => 'image'
           ],
           [
+            'option' => 'menu_title_image_alt',
+            'title' => __('Alt Text', 'responsive-menu'),
+            'label' => __('', 'responsive-menu'),
+          ],
+          [
             'option' => 'menu_title_background_colour',
             'title' => __('Title Background Colour', 'responsive-menu'),
             'label' => __('', 'responsive-menu'),
@@ -263,6 +268,12 @@ $order_mapping = [
       ],
     __('Background Colours', 'responsive-menu') =>
       [
+        [
+          'option' => 'menu_background_image',
+          'title' => __('Background Image', 'responsive-menu'),
+          'label' => __('Enabling this will deactivate all other colour options', 'responsive-menu'),
+          'type' => 'image'
+        ],
         [
           'option' => 'menu_background_colour',
           'title' => __('Background Colour', 'responsive-menu'),
@@ -665,10 +676,20 @@ $order_mapping = [
             'type' => 'image'
           ],
           [
+            'option' => 'button_image_alt',
+            'title' => __('Alt Text', 'responsive-menu'),
+            'label' => __('', 'responsive-menu')
+          ],
+          [
             'option' => 'button_image_when_clicked',
             'title' => __('Image When Clicked', 'responsive-menu'),
             'label' => __('', 'responsive-menu'),
             'type' => 'image'
+          ],
+          [
+            'option' => 'button_image_alt_when_clicked',
+            'title' => __('Alt Text', 'responsive-menu'),
+            'label' => __('', 'responsive-menu')
           ]
         ],
         __('Advanced', 'responsive-menu') =>
@@ -856,10 +877,20 @@ __('Sub-Menus', 'responsive-menu') => [
             'type' => 'image'
           ],
           [
+            'option' => 'active_arrow_image_alt',
+            'title' => __('Alt Text', 'responsive-menu'),
+            'label' => __('', 'responsive-menu')
+          ],
+          [
             'option' => 'inactive_arrow_image',
             'title' => __('Image Inactive', 'responsive-menu'),
             'label' => __('', 'responsive-menu'),
             'type' => 'image'
+          ],
+          [
+            'option' => 'inactive_arrow_image_alt',
+            'title' => __('Alt Text', 'responsive-menu'),
+            'label' => __('', 'responsive-menu')
           ],
           [
             'option' => 'arrow_position',
@@ -1002,6 +1033,12 @@ __('Sub-Menus', 'responsive-menu') => [
           'title' => __('Image', 'responsive-menu'),
           'label' => __('', 'responsive-menu'),
           'type' => 'image',
+          'pro' => true
+        ],
+        [
+          'option' => 'header_bar_logo_alt',
+          'title' => __('Alt Text', 'responsive-menu'),
+          'label' => __('', 'responsive-menu'),
           'pro' => true
         ],
         [

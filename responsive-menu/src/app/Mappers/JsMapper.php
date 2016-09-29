@@ -145,14 +145,19 @@ class JsMapper {
           if(this.closeOnLinkClick == 'on') {
             $(this.linkElement).on('click', function(e) {
               e.preventDefault();
+              /* Fix for when close menu on parent clicks is on */
+              if(self.itemTriggerSubMenu == 'on' && $(this).is('.responsive-menu-item-has-children > ' + self.linkElement)) {
+                return;
+              }
               old_href = $(this).attr('href');
+              old_target = typeof $(this).attr('target') == 'undefined' ? '_self' : $(this).attr('target');
               if(self.isOpen) {
                 if($(e.target).closest('.responsive-menu-subarrow').length) {
                   return;
                 }
                 self.closeMenu();
                 setTimeout(function() {
-                  window.location = old_href;
+                  window.open(old_href, old_target);
                 }, self.animationSpeed);
               }
             });

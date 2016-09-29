@@ -11,7 +11,9 @@ $default_options = [
   // Button Settings
   'button_title' => null,
   'button_image' => null,
+  'button_image_alt' => null,
   'button_image_when_clicked' => null,
+  'button_image_alt_when_clicked' => null,
   'button_font' => null,
   'button_font_icon' => null,
   'button_font_icon_when_clicked' => null,
@@ -46,7 +48,9 @@ $default_options = [
   'active_arrow_shape' => '▲',
   'inactive_arrow_shape' => '▼',
   'active_arrow_image' => '',
+  'active_arrow_image_alt' => '',
   'inactive_arrow_image' => '',
+  'inactive_arrow_image_alt' => '',
   'active_arrow_font_icon' => '',
   'inactive_arrow_font_icon' => '',
   'arrow_position' => 'right',
@@ -57,6 +61,7 @@ $default_options = [
   'auto_expand_current_submenus' => 'off',
 
   'menu_background_colour' => '#212121',
+  'menu_background_image' => '',
   'menu_item_background_colour' => '#212121',
   'menu_item_background_hover_colour' => '#3f3f3f',
   'menu_item_border_colour' => '#212121',
@@ -97,6 +102,7 @@ $default_options = [
   'menu_additional_content_colour' => '#fff',
   'menu_title' => null,
   'menu_title_image' => null,
+  'menu_title_image_alt' => null,
   'menu_title_font_icon' => null,
   'menu_appear_from' => 'left',
   'menu_title_link' => null,
@@ -148,6 +154,7 @@ $default_options = [
   'use_header_bar' => 'off',
   'header_bar_breakpoint' => '800',
   'header_bar_logo' => null,
+  'header_bar_logo_alt' => '',
   'header_bar_logo_link' => null,
   'header_bar_title' => null,
   'header_bar_html_content' => null,
@@ -158,7 +165,7 @@ $default_options = [
   'header_bar_text_color' => '#ffffff',
   'header_bar_position_type' => 'fixed',
 
-  'items_order' => '{"title": "on","menu":"on","search":"on","additional content":"on"}',
-  'header_bar_items_order' => '{"logo": "on","title":"on","search":"on","html content":"on","button":"on"}',
+  'items_order' => '{"title":"on","menu":"on","search":"on","additional content":"on"}',
+  'header_bar_items_order' => '{"logo":"on","title":"on","search":"on","html content":"on","button":"on"}',
 
 ];

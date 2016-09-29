@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack PDF Invoicing class.
  *
- * @version 2.5.5
+ * @version 2.5.6
  * @author  Algoritmika Ltd.
  */
 
@@ -17,7 +17,7 @@ class WCJ_PDF_Invoicing extends WCJ_Module {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.5.5
+	 * @version 2.5.6
 	 */
 	public function __construct() {
 
@@ -52,7 +52,10 @@ class WCJ_PDF_Invoicing extends WCJ_Module {
 				if ( 'disabled' != $the_hook && 'manual' != $the_hook && '' != $the_hook ) {
 					add_action( $the_hook, array( $this, 'create_' . $invoice_type['id'] ) );
 					if ( 'woocommerce_new_order' === $the_hook ) {
-						add_action( 'woocommerce_api_create_order', array( $this, 'create_' . $invoice_type['id'] ) );
+						add_action( 'woocommerce_api_create_order',         array( $this, 'create_' . $invoice_type['id'] ) );
+						add_action( 'woocommerce_cli_create_order',         array( $this, 'create_' . $invoice_type['id'] ) );
+						add_action( 'kco_before_confirm_order',             array( $this, 'create_' . $invoice_type['id'] ) );
+						add_action( 'woocommerce_checkout_order_processed', array( $this, 'create_' . $invoice_type['id'] ) );
 					}
 				}
 			}
@@ -117,7 +120,8 @@ class WCJ_PDF_Invoicing extends WCJ_Module {
 	function create_custom_doc( $order_id ) {
 		return $this->create_document( $order_id, 'custom_doc' );
 	}
-	/**
+
+	/**
 	 * create_document.
 	 */
 	function create_document( $order_id, $invoice_type ) {
@@ -137,7 +141,8 @@ class WCJ_PDF_Invoicing extends WCJ_Module {
 			wcj_delete_invoice( $order_id, $invoice_type );
 		}
 	}
-	/**
+
+	/**
 	 * catch_args.
 	 *
 	 * @version 2.5.0
@@ -155,8 +160,11 @@ class WCJ_PDF_Invoicing extends WCJ_Module {
 			$this->delete_document( $_GET['delete_invoice_for_order_id'], $this->invoice_type_id );
 		}
 	}
-	/**
+
+	/**
 	 * generate_pdf_on_init.
+	 *
+	 * @version 2.5.6
 	 */
 	function generate_pdf_on_init() {
 
@@ -173,8 +181,10 @@ class WCJ_PDF_Invoicing extends WCJ_Module {
 		$the_invoice = wcj_get_pdf_invoice( $this->order_id, $this->invoice_type_id );
 		$dest = ( true === $this->save_as_pdf ) ? 'D' : 'I';
 		$the_invoice->get_pdf( $dest );
+		die();
 	}
-	/**
+
+	/**
 	 * get_settings.
 	 *
 	 * @version 2.4.0

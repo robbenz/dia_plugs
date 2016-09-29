@@ -197,7 +197,7 @@ class Soliloquy_Shortcode_Lite {
 
         // Apply a filter before starting the slider HTML.
         $slider = apply_filters( 'soliloquy_output_start', $slider, $data );
-
+                
         // Build out the slider HTML.
         $slider .= '<div aria-live="' . $this->get_config( 'aria_live', $data ) . '" id="soliloquy-container-' . sanitize_html_class( $data['id'] ) . '" class="' . $this->get_slider_classes( $data ) . '" style="max-width:' . $this->get_config( 'slider_width', $data ) . 'px;max-height:' . $this->get_config( 'slider_height', $data ) . 'px;' . apply_filters( 'soliloquy_output_container_style', '', $data ) . '"' . apply_filters( 'soliloquy_output_container_attr', '', $data ) . '>';
             $slider .= '<ul id="soliloquy-' . sanitize_html_class( $data['id'] ) . '" class="soliloquy-slider soliloquy-slides soliloquy-wrap soliloquy-clear">';

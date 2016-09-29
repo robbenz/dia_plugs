@@ -4,9 +4,8 @@
  *
  * The WooCommerce Jetpack Shipping class.
  *
- * @version 2.5.3
+ * @version 2.5.6
  * @author  Algoritmika Ltd.
- * @todo    Redo custom shipping methods according to new (since WC v2.6.0) shipping zones mechanism
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
@@ -18,7 +17,7 @@ class WCJ_Shipping extends WCJ_Module {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.5.3
+	 * @version 2.5.6
 	 */
 	function __construct() {
 
@@ -26,15 +25,21 @@ class WCJ_Shipping extends WCJ_Module {
 		$this->short_desc = __( 'Shipping', 'woocommerce-jetpack' );
 		$this->desc       =
 			__( 'Add multiple custom shipping methods to WooCommerce.', 'woocommerce-jetpack' ) . ' ' .
+			__( 'Add descriptions and icons to shipping methods on frontend.', 'woocommerce-jetpack') . ' ' .
 			__( 'Hide WooCommerce shipping when free is available.', 'woocommerce-jetpack') . ' ' .
 			__( 'Display "left to free shipping" info.', 'woocommerce-jetpack' );
 		$this->link       = 'http://booster.io/features/woocommerce-shipping/';
 		parent::__construct();
 
+		add_action( 'init', array( $this, 'add_settings_hook' ) );
+
 		if ( $this->is_enabled() ) {
 
 			// Custom Shipping
 			include_once( 'shipping/class-wc-shipping-wcj-custom.php' );
+			if ( 'yes' === get_option( 'wcj_shipping_custom_shipping_w_zones_enabled', 'no' ) ) {
+				include_once( 'shipping/class-wc-shipping-wcj-custom-with-shipping-zones.php' );
+			}
 
 			// Hide if free is available
 			if ( 'yes' === get_option( 'wcj_shipping_hide_if_free_available_all', 'no' ) ) {
@@ -64,7 +69,45 @@ class WCJ_Shipping extends WCJ_Module {
 					get_option( 'wcj_shipping_left_to_free_info_priority_checkout', 10 )
 				);
 			}
+
+			// Shipping Descriptions
+			if ( 'yes' === get_option( 'wcj_shipping_description_enabled', 'no' ) ) {
+				add_filter( 'woocommerce_cart_shipping_method_full_label', array( $this, 'shipping_description' ), PHP_INT_MAX, 2 );
+			}
+
+			// Shipping Icons
+			if ( 'yes' === get_option( 'wcj_shipping_icons_enabled', 'no' ) ) {
+				add_filter( 'woocommerce_cart_shipping_method_full_label', array( $this, 'shipping_icon' ), PHP_INT_MAX, 2 );
+			}
 		}
+	}
+
+	/**
+	 * shipping_icon.
+	 *
+	 * @version 2.5.6
+	 * @since   2.5.6
+	 */
+	function shipping_icon( $label, $method ) {
+		if ( '' != ( $icon_url = get_option( 'wcj_shipping_icon_' . $method->method_id, '' ) ) ) {
+			$style_html = ( '' != ( $style = get_option( 'wcj_shipping_icons_style', 'display:inline;' ) ) ) ?  'style="' . $style . '" ' : '';
+			$img = '<img ' . $style_html . 'class="wcj_shipping_icon" id="wcj_shipping_icon_' . $method->method_id . '" src="' . $icon_url . '">';
+			$label = ( 'before' === get_option( 'wcj_shipping_icons_position', 'before' ) ) ? $img . ' ' . $label : $label . ' ' . $img;
+		}
+		return $label;
+	}
+
+	/**
+	 * shipping_description.
+	 *
+	 * @version 2.5.6
+	 * @since   2.5.6
+	 */
+	function shipping_description( $label, $method ) {
+		if ( '' != ( $desc = get_option( 'wcj_shipping_description_' . $method->method_id, '' ) ) ) {
+			$label .= $desc;
+		}
+		return $label;
 	}
 
 	/**
@@ -158,16 +201,65 @@ class WCJ_Shipping extends WCJ_Module {
 	}
 
 	/**
+	 * add_settings_hook.
+	 *
+	 * @version 2.5.6
+	 * @since   2.5.6
+	 */
+	function add_settings_hook() {
+		add_filter( 'wcj_' . $this->id . '_settings', array( $this, 'add_settings' ) );
+	}
+
+	/**
 	 * get_settings.
 	 *
-	 * @version 2.5.3
+	 * @version 2.5.6
 	 */
 	function get_settings() {
+		$settings = array();
+		$settings = apply_filters( 'wcj_' . $this->id . '_settings', $settings );
+		return $this->add_standard_settings( $settings );
+	}
+
+	/**
+	 * add_settings.
+	 *
+	 * @version 2.5.6
+	 * @since   2.5.6
+	 */
+	function add_settings( $settings ) {
 		$wocommerce_shipping_settings_url = admin_url( 'admin.php?page=wc-settings&tab=shipping' );
 		$wocommerce_shipping_settings_url = '<a href="' . $wocommerce_shipping_settings_url . '">' . __( 'WooCommerce > Settings > Shipping', 'woocommerce-jetpack' ) . '</a>';
 		$settings = array(
 			array(
 				'title'    => __( 'Custom Shipping', 'woocommerce-jetpack' ),
+				'type'     => 'title',
+				'id'       => 'wcj_shipping_custom_shipping_w_zones_options',
+				'desc'     => __( 'This section lets you add custom shipping method.', 'woocommerce-jetpack' )
+					. ' ' . sprintf( __( 'Visit %s to set method\'s options.', 'woocommerce-jetpack' ), $wocommerce_shipping_settings_url ),
+			),
+			array(
+				'title'    => __( 'Custom Shipping', 'woocommerce-jetpack' ),
+				'desc'     => __( 'Enable', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_shipping_custom_shipping_w_zones_enabled',
+				'default'  => 'no',
+				'type'     => 'checkbox',
+			),
+			array(
+				'title'    => __( 'Admin Title', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_shipping_custom_shipping_w_zones_admin_title',
+				'default'  => __( 'Booster: Custom Shipping', 'woocommerce-jetpack' ),
+				'type'     => 'text',
+				'css'      => 'width:300px;',
+			),
+			array(
+				'type'     => 'sectionend',
+				'id'       => 'wcj_shipping_custom_shipping_w_zones_options',
+			),
+		);
+		$settings = array_merge( $settings, array(
+			array(
+				'title'    => __( 'Custom Shipping (Legacy - without Shipping Zones)', 'woocommerce-jetpack' ),
 				'type'     => 'title',
 				'id'       => 'wcj_shipping_custom_shipping_options',
 				'desc'     => __( 'This section lets you set number of custom shipping methods to add.', 'woocommerce-jetpack' )
@@ -179,16 +271,13 @@ class WCJ_Shipping extends WCJ_Module {
 				'default'  => 1,
 				'type'     => 'custom_number',
 				'desc'     => apply_filters( 'get_wc_jetpack_plus_message', '', 'desc' ),
-				'custom_attributes' => apply_filters( 'get_wc_jetpack_plus_message', '', 'readonly' ),
-				'custom_attributes' => array_merge(
-					is_array( apply_filters( 'get_wc_jetpack_plus_message', '', 'readonly' ) ) ? apply_filters( 'get_wc_jetpack_plus_message', '', 'readonly' ) : array(),
-					array( 'step' => '1', 'min' => '0', 'max' => '10', )
-				),
+				'custom_attributes' => is_array( apply_filters( 'get_wc_jetpack_plus_message', '', 'readonly' ) ) ?
+					apply_filters( 'get_wc_jetpack_plus_message', '', 'readonly' ) : array( 'step' => '1', 'min' => '0' ),
 			),
-		);
+		) );
 		$total_number = apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_shipping_custom_shipping_total_number', 1 ) );
 		for ( $i = 1; $i <= $total_number; $i++ ) {
-			$settings [] = array(
+			$settings[] = array(
 				'title'    => __( 'Admin Title Custom Shipping', 'woocommerce-jetpack' ) . ' #' . $i,
 				'id'       => 'wcj_shipping_custom_shipping_admin_title_' . $i,
 				'default'  => __( 'Custom', 'woocommerce-jetpack' ) . ' #' . $i,
@@ -363,7 +452,90 @@ class WCJ_Shipping extends WCJ_Module {
 				'id'       => 'wcj_shipping_left_to_free_info_options',
 			),
 		) );
-		return $this->add_standard_settings( $settings );
+		$settings = array_merge( $settings, array(
+			array(
+				'title'    => __( 'Shipping Descriptions', 'woocommerce-jetpack' ),
+				'type'     => 'title',
+				'desc'     => sprintf( __( 'This section will allow you to add any text (e.g. description) for shipping method. Text will be visible on cart and checkout pages. You can add HTML tags here, e.g. try "%s"', 'woocommerce-jetpack' ), esc_html( '<br><small>Your shipping description.</small>' ) ),
+				'id'       => 'wcj_shipping_description_options',
+			),
+			array(
+				'title'    => __( 'Shipping Descriptions', 'woocommerce-jetpack' ),
+				'desc'     => __( 'Enable Section', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_shipping_description_enabled',
+				'default'  => 'no',
+				'type'     => 'checkbox',
+			),
+		) );
+		foreach ( WC()->shipping->get_shipping_methods() as $method ) {
+			$settings = array_merge( $settings, array(
+				array(
+					'title'    => $method->method_title,
+					'id'       => 'wcj_shipping_description_' . $method->id,
+					'default'  => '',
+					'type'     => 'textarea',
+					'css'      => 'width:30%;min-width:300px;',
+				),
+			) );
+		}
+		$settings = array_merge( $settings, array(
+			array(
+				'type'     => 'sectionend',
+				'id'       => 'wcj_shipping_description_options',
+			),
+		) );
+		$settings = array_merge( $settings, array(
+			array(
+				'title'    => __( 'Shipping Icons', 'woocommerce-jetpack' ),
+				'type'     => 'title',
+				'desc'     => __( 'This section will allow you to add icons for shipping method. Icons will be visible on cart and checkout pages.', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_shipping_icons_options',
+			),
+			array(
+				'title'    => __( 'Shipping Icons', 'woocommerce-jetpack' ),
+				'desc'     => __( 'Enable Section', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_shipping_icons_enabled',
+				'default'  => 'no',
+				'type'     => 'checkbox',
+			),
+			array(
+				'title'    => __( 'Icon Position', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_shipping_icons_position',
+				'default'  => 'before',
+				'type'     => 'select',
+				'options'  => array(
+					'before' => __( 'Before label', 'woocommerce-jetpack' ),
+					'after'  => __( 'After label', 'woocommerce-jetpack' ),
+				),
+			),
+			array(
+				'title'    => __( 'Icon Style', 'woocommerce-jetpack' ),
+				'desc_tip' => __( 'You can also style icons with CSS class "wcj_shipping_icon", or id "wcj_shipping_icon_method_id"', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_shipping_icons_style',
+				'default'  => 'display:inline;',
+				'type'     => 'text',
+				'css'      => 'width:20%;min-width:300px;',
+			),
+		) );
+		foreach ( WC()->shipping->get_shipping_methods() as $method ) {
+			$settings = array_merge( $settings, array(
+				array(
+					'title'    => $method->method_title,
+					'desc_tip' => __( 'Image URL', 'woocommerce-jetpack' ),
+					'id'       => 'wcj_shipping_icon_' . $method->id,
+					'default'  => '',
+					'type'     => 'text',
+					'css'      => 'width:30%;min-width:300px;',
+				),
+			) );
+		}
+		$settings = array_merge( $settings, array(
+			array(
+				'type'     => 'sectionend',
+				'id'       => 'wcj_shipping_icons_options',
+			),
+		) );
+		return $settings;
 	}
 }
 

@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Orders Shortcodes class.
  *
- * @version 2.5.5
+ * @version 2.5.6
  * @author  Algoritmika Ltd.
  */
 
@@ -17,11 +17,12 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.5.4
+	 * @version 2.5.6
 	 */
 	public function __construct() {
 
 		$this->the_shortcodes = array(
+			'wcj_order_status',
 			'wcj_order_date',
 			'wcj_order_time',
 			'wcj_order_number',
@@ -45,6 +46,7 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 			'wcj_order_total_tax',
 			'wcj_order_total_tax_percent',
 			'wcj_order_total',
+			'wcj_order_total_excl_shipping',
 			'wcj_order_total_by_tax_class',
 			'wcj_order_subtotal_by_tax_class',
 			'wcj_order_currency',
@@ -58,10 +60,12 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 			'wcj_order_fee',
 			'wcj_order_fees_html',
 			'wcj_order_payment_method',
+			'wcj_order_payment_method_transaction_id',
 			'wcj_order_shipping_method',
 			'wcj_order_items_total_weight',
 			'wcj_order_items_total_quantity',
 			'wcj_order_items_total_number',
+			'wcj_order_function',
 		);
 
 		parent::__construct();
@@ -70,7 +74,7 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 	/**
 	 * add_extra_atts.
 	 *
-	 * @version 2.5.5
+	 * @version 2.5.6
 	 */
 	function add_extra_atts( $atts ) {
 		$modified_atts = array_merge( array(
@@ -88,6 +92,7 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 			'precision'     => get_option( 'woocommerce_price_num_decimals', 2 ),
 			'lang'          => 'EN',
 			'unique_only'   => 'no',
+			'function_name' => '',
 		), $atts );
 
 		return $modified_atts;
@@ -118,6 +123,20 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 	 */
 	private function wcj_price_shortcode( $raw_price, $atts ) {
 		return ( 'yes' === $atts['hide_if_zero'] && 0 == $raw_price ) ? '' : wcj_price( $raw_price, $this->the_order->get_order_currency(), $atts['hide_currency'] );
+	}
+
+	/**
+	 * wcj_order_function.
+	 *
+	 * @version 2.5.6
+	 * @since   2.5.6
+	 * @todo    add function_params attribute.
+	 */
+	function wcj_order_function( $atts ) {
+		$function_name = $atts['function_name'];
+		if ( '' != $function_name && method_exists( $this->the_order, $function_name ) ) {
+			return $this->the_order->$function_name();
+		}
 	}
 
 	/**
@@ -218,6 +237,16 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 	 */
 	function wcj_order_shipping_method( $atts ) {
 		return $this->the_order->get_shipping_method();
+	}
+
+	/**
+	 * wcj_order_payment_method_transaction_id.
+	 *
+	 * @version 2.5.6
+	 * @since   2.5.6
+	 */
+	function wcj_order_payment_method_transaction_id( $atts ) {
+		return $this->the_order->get_transaction_id();
 	}
 
 	/**
@@ -356,6 +385,16 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 	}
 
 	/**
+	 * wcj_order_status.
+	 *
+	 * @version 2.5.6
+	 * @since   2.5.6
+	 */
+	function wcj_order_status( $atts ) {
+		return $this->the_order->get_status();
+	}
+
+	/**
 	 * wcj_order_date.
 	 */
 	function wcj_order_date( $atts ) {
@@ -385,10 +424,11 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 
 	/**
 	 * wcj_order_shipping_price.
+	 *
+	 * @version 2.5.6
 	 */
 	function wcj_order_shipping_price( $atts ) {
-		$the_result = $this->the_order->get_total_shipping();
-		if ( false === $atts['excl_tax'] ) $the_result = $the_result + $this->the_order->get_shipping_tax();
+		$the_result = ( $atts['excl_tax'] ) ? $this->the_order->get_total_shipping() : $this->the_order->get_total_shipping() + $this->the_order->get_shipping_tax();
 		return $this->wcj_price_shortcode( $the_result, $atts );
 	}
 
@@ -589,11 +629,11 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 
 	/**
 	 * wcj_order_total_excl_tax.
+	 *
+	 * @version 2.5.6
 	 */
 	function wcj_order_total_excl_tax( $atts ) {
-		//$order_total_tax = $this->the_order->get_total() - $this->the_order->get_subtotal() + $this->the_order->get_total_discount( true );
-		$order_total_tax = $this->the_order->get_total_tax();
-		$order_total = $this->the_order->get_total() - $order_total_tax;
+		$order_total = $this->the_order->get_total() - $this->the_order->get_total_tax();
 		$order_total = apply_filters( 'wcj_order_total_excl_tax', $order_total, $this->the_order );
 		return $this->wcj_price_shortcode( $order_total, $atts );
 	}
@@ -603,6 +643,19 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 	 */
 	function wcj_order_currency( $atts ) {
 		return $this->the_order->get_order_currency();
+	}
+
+	/**
+	 * wcj_order_total_excl_shipping.
+	 *
+	 * @version 2.5.6
+	 * @since   2.5.6
+	 */
+	function wcj_order_total_excl_shipping( $atts ) {
+		$order_total_excl_shipping = ( true === $atts['excl_tax'] ) ?
+			$this->the_order->get_total() - $this->the_order->get_total_shipping() - $this->the_order->get_total_tax() :
+			$this->the_order->get_total() - $this->the_order->get_total_shipping() - $this->the_order->get_shipping_tax();
+		return $this->wcj_price_shortcode( $order_total_excl_shipping, $atts );
 	}
 
 	/**

@@ -144,17 +144,12 @@ function wppb_add_ons_content() {
 
                                 // If we're on a multisite don't add the wpp-add-on-download class to the button so we don't fire the js that
                                 // handles the in-page download
-                                if (is_multisite()) {
-                                    ($wppb_add_on['paid']) ? $wppb_paid_link_class = 'button-primary' : $wppb_paid_link_class = 'button-secondary';
-                                    ($wppb_add_on['paid']) ? $wppb_paid_link_text = __('Learn More', 'profile-builder') : $wppb_paid_link_text = __('Download Now', 'profile-builder');
-                                } else {
-                                    ($wppb_add_on['paid']) ? $wppb_paid_link_class = 'button-primary' : $wppb_paid_link_class = 'button-secondary wppb-add-on-download';
-                                    ($wppb_add_on['paid']) ? $wppb_paid_link_text = __('Learn More', 'profile-builder') : $wppb_paid_link_text = __('Install Now', 'profile-builder');
-                                }
+                                ($wppb_add_on['paid']) ? $wppb_paid_link_class = 'button-primary' : $wppb_paid_link_class = 'button-secondary';
+                                ($wppb_add_on['paid']) ? $wppb_paid_link_text = __('Learn More', 'profile-builder') : $wppb_paid_link_text = __('Download Now', 'profile-builder');
 
-                                ($wppb_add_on['paid']) ? $wppb_paid_href_utm_text = '?utm_source=wpbackend&utm_medium=clientsite&utm_content=add-on-page-buy-button&utm_campaign=PB' . $version : $wppb_paid_href_utm_text = '&utm_source=wpbackend&utm_medium=clientsite&utm_content=add-on-page&utm_campaign=PB' . $version;
+                                ($wppb_add_on['paid']) ? $wppb_paid_href_utm_text = '?utm_source=wpbackend&utm_medium=clientsite&utm_content=add-on-page-buy-button&utm_campaign=PB' . $version : $wppb_paid_href_utm_text = '?utm_source=wpbackend&utm_medium=clientsite&utm_content=add-on-page&utm_campaign=PB' . $version;
 
-                                echo '<a target="_blank" class="right button ' . $wppb_paid_link_class . '" href="' . $wppb_add_on['download_url'] . $wppb_paid_href_utm_text . '" data-add-on-slug="profile-builder-' . $wppb_add_on['slug'] . '" data-add-on-name="' . $wppb_add_on['name'] . '" data-nonce="' . $ajax_nonce . '">' . $wppb_paid_link_text . '</a>';
+                                echo '<a target="_blank" class="right button ' . $wppb_paid_link_class . '" href="' . $wppb_add_on['url'] . $wppb_paid_href_utm_text . '" data-add-on-slug="profile-builder-' . $wppb_add_on['slug'] . '" data-add-on-name="' . $wppb_add_on['name'] . '" data-nonce="' . $ajax_nonce . '">' . $wppb_paid_link_text . '</a>';
                                 echo '<span class="dashicons dashicons-yes"></span><span class="wppb-add-on-message">' . __('Compatible with your version of Profile Builder.', 'profile-builder') . '</span>';
 
                             }
@@ -248,16 +243,9 @@ function wppb_add_ons_content() {
                        }
 
                    } else {
-
-                       // If we're on a multisite don't add the wpp-add-on-download class to the button so we don't fire the js that
                        // handles the in-page download
-                       if (is_multisite()) {
-                           $wppb_paid_link_class = 'button-secondary';
-                           $wppb_paid_link_text = __('Download Now', 'profile-builder' );
-                       } else {
-                           $wppb_paid_link_class = 'button-secondary wppb-add-on-download';
-                           $wppb_paid_link_text = __('Install Now', 'profile-builder');
-                       }
+                       $wppb_paid_link_class = 'button-secondary';
+                       $wppb_paid_link_text = __('Download Now', 'profile-builder');
 
                        echo '<a target="_blank" class="right button ' . $wppb_paid_link_class . '" href="https://downloads.wordpress.org/plugin/paid-member-subscriptions.zip" data-add-on-slug="paid-member-subscriptions" data-add-on-name="Paid Member Subscriptions" data-nonce="' . $ajax_nonce . '">' . $wppb_paid_link_text . '</a>';
                        echo '<span class="dashicons dashicons-yes"></span><span class="wppb-add-on-message">' . __('Compatible with your version of Profile Builder.', 'profile-builder') . '</span>';

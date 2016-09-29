@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Product by User Role class.
  *
- * @version 2.5.5
+ * @version 2.5.6
  * @since   2.5.5
  * @author  Algoritmika Ltd.
  */
@@ -18,15 +18,15 @@ class WCJ_Product_By_User_Role extends WCJ_Module {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.5.5
+	 * @version 2.5.6
 	 * @since   2.5.5
 	 */
 	function __construct() {
 
 		$this->id         = 'product_by_user_role';
 		$this->short_desc = __( 'Product Visibility by User Role', 'woocommerce-jetpack' );
-		$this->desc       = __( 'Display WooCommerce products by customers user role.', 'woocommerce-jetpack' );
-		$this->link       = 'http://booster.io/features/woocommerce-visibility-product-by-user-role/';
+		$this->desc       = __( 'Display WooCommerce products by customer\'s user role.', 'woocommerce-jetpack' );
+		$this->link       = 'http://booster.io/features/woocommerce-product-visibility-by-user-role/';
 		parent::__construct();
 
 		if ( $this->is_enabled() ) {
@@ -41,14 +41,17 @@ class WCJ_Product_By_User_Role extends WCJ_Module {
 	/**
 	 * product_by_user_role.
 	 *
-	 * @version 2.5.5
+	 * @version 2.5.6
 	 * @since   2.5.5
 	 */
 	function product_by_user_role( $visible, $product_id ) {
-		$current_user_role = wcj_get_current_user_first_role();
 		$visible_user_roles = get_post_meta( $product_id, '_' . 'wcj_product_by_user_role_visible', true );
-		if ( is_array( $visible_user_roles ) && ! in_array( $current_user_role, $visible_user_roles ) ) {
-			return false;
+		if ( is_array( $visible_user_roles ) && ! empty( $visible_user_roles ) ) {
+			$current_user_roles = wcj_get_current_user_all_roles();
+			$the_intersect = array_intersect( $visible_user_roles, $current_user_roles );
+			if ( empty( $the_intersect ) ) {
+				return false;
+			}
 		}
 		return $visible;
 	}
@@ -56,7 +59,7 @@ class WCJ_Product_By_User_Role extends WCJ_Module {
 	/**
 	 * get_meta_box_options.
 	 *
-	 * @version 2.5.5
+	 * @version 2.5.6
 	 * @since   2.5.5
 	 */
 	function get_meta_box_options() {
@@ -68,6 +71,7 @@ class WCJ_Product_By_User_Role extends WCJ_Module {
 				'options'    => wcj_get_user_roles_options(),
 				'multiple'   => true,
 				'title'      => __( 'Visible for User Roles', 'woocommerce-jetpack' ),
+				'tooltip'    => __( 'Hold Control (Ctrl) key to select multiple roles.', 'woocommerce-jetpack' ),
 			),
 		);
 		return $options;
@@ -76,12 +80,12 @@ class WCJ_Product_By_User_Role extends WCJ_Module {
 	/**
 	 * get_settings.
 	 *
-	 * @version 2.5.5
+	 * @version 2.5.6
 	 * @since   2.5.5
 	 */
 	function get_settings() {
 		$settings = array();
-		return $this->add_standard_settings( $settings, __( 'When enabled, module will add new "Booster: Product by User Role" meta box to each product\'s edit page.', 'woocommerce-jetpack' ) );
+		return $this->add_standard_settings( $settings, __( 'When enabled, module will add new "Booster: Product Visibility by User Role" meta box to each product\'s edit page.', 'woocommerce-jetpack' ) );
 	}
 }
 

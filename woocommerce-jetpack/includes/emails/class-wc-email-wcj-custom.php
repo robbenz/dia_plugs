@@ -11,7 +11,7 @@ if ( ! class_exists( 'WC_Email_WCJ_Custom' ) ) :
  *
  * An email sent to recipient list when selected triggers are called.
  *
- * @version 2.5.5
+ * @version 2.5.6
  * @since   2.3.9
  * @author  Algoritmika Ltd.
  * @extends WC_Email
@@ -63,6 +63,41 @@ class WC_Email_WCJ_Custom extends WC_Email {
 	}
 
 	/**
+	 * Validate Custom Textarea Field.
+	 *
+	 * @param   string $key
+	 * @param   string|null $value Posted Value
+	 * @version 2.5.6
+	 * @since   2.5.6
+	 * @return  string
+	 */
+	public function validate_custom_textarea_field( $key, $value ) {
+		$value = is_null( $value ) ? '' : $value;
+		/* return wp_kses( trim( stripslashes( $value ) ),
+			array_merge(
+				array(
+					'iframe' => array( 'src' => true, 'style' => true, 'id' => true, 'class' => true )
+				),
+				wp_kses_allowed_html( 'post' )
+			)
+		); */
+		return stripslashes( $value );
+	}
+
+	/**
+	 * Generate Custom Textarea HTML.
+	 *
+	 * @param   mixed $key
+	 * @param   mixed $data
+	 * @version 2.5.6
+	 * @since   2.5.6
+	 * @return  string
+	 */
+	public function generate_custom_textarea_html( $key, $data ) {
+		return $this->generate_textarea_html( $key, $data );
+	}
+
+	/**
 	 * Proxy to parent's get_option and attempt to localize the result using gettext.
 	 *
 	 * @version 2.4.1
@@ -80,7 +115,7 @@ class WC_Email_WCJ_Custom extends WC_Email {
 	/**
 	 * Trigger.
 	 *
-	 * @version 2.5.5
+	 * @version 2.5.6
 	 */
 	function trigger( $order_id ) {
 
@@ -134,7 +169,7 @@ class WC_Email_WCJ_Custom extends WC_Email {
 			return;
 		}
 
-		$this->send( $this->get_recipient(), $this->get_subject(), do_shortcode( $this->get_content() ), $this->get_headers(), $this->get_attachments() );
+		$this->send( $this->get_recipient(), do_shortcode( $this->get_subject() ), do_shortcode( $this->get_content() ), $this->get_headers(), $this->get_attachments() );
 
 		if ( $order_id ) {
 			wp_reset_postdata();
@@ -197,7 +232,7 @@ class WC_Email_WCJ_Custom extends WC_Email {
 	/**
 	 * Initialise settings form fields
 	 *
-	 * @version 2.4.5
+	 * @version 2.5.6
 	 */
 	function init_form_fields() {
 
@@ -246,6 +281,10 @@ class WC_Email_WCJ_Custom extends WC_Email {
 						'woocommerce_order_fully_refunded_notification'               => __( 'Order fully refunded notification', 'woocommerce-jetpack' ),
 						'woocommerce_order_partially_refunded_notification'           => __( 'Order partially refunded notification', 'woocommerce-jetpack' ),
 						'woocommerce_new_customer_note_notification'                  => __( 'New customer note notification', 'woocommerce-jetpack' ),
+						'woocommerce_low_stock_notification'                          => __( 'Low stock notification', 'woocommerce-jetpack' ),
+						'woocommerce_no_stock_notification'                           => __( 'No stock notification', 'woocommerce-jetpack' ),
+						'woocommerce_product_on_backorder_notification'               => __( 'Product on backorder notification', 'woocommerce-jetpack' ),
+						'woocommerce_created_customer_notification'                   => __( 'Created customer notification', 'woocommerce-jetpack' ),
 					),
 					$status_change_triggers
 				),
@@ -283,7 +322,7 @@ class WC_Email_WCJ_Custom extends WC_Email {
 			),
 			'content_html_template' => array(
 				'title'         => __( 'HTML template', 'woocommerce' ),
-				'type'          => 'textarea',
+				'type'          => 'custom_textarea',
 				'desc_tip'      => __( 'You can use shortcodes here. E.g. Booster\'s order shortcodes.', 'woocommerce' ),
 				'description'   => '',
 				'placeholder'   => '',

@@ -29,6 +29,13 @@ class WpWalker extends \Walker_Nav_Menu {
         endswitch;
       endforeach;
 
+      /* Clear child class if we are at the final depth level */
+      if(isset($responsive_menu_classes)):
+        if($depth + 1 == $this->options['menu_depth']->getValue() && ($key = array_search('responsive-menu-item-has-children', $responsive_menu_classes)) !== false) {
+          unset($responsive_menu_classes[$key]);
+        }
+      endif;
+
   		$class_names = join(' ', array_unique($responsive_menu_classes));
   		$class_names = $class_names ? ' class="' . esc_attr( $class_names ) . '"' : '';
 
@@ -42,7 +49,6 @@ class WpWalker extends \Walker_Nav_Menu {
   		$atts['rel']    = ! empty( $item->xfn )        ? $item->xfn        : '';
   		$atts['href']   = ! empty( $item->url )        ? $item->url        : '';
   		$atts['class']   = 'responsive-menu-item-link';
-
 
   		$atts = apply_filters( 'nav_menu_link_attributes', $atts, $item, $args, $depth );
 

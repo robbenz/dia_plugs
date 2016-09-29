@@ -5,7 +5,7 @@
  * Description: Soliloquy is best responsive WordPress slider plugin. This is the lite version.
  * Author:      Soliloquy Team
  * Author URI:  https://soliloquywp.com
- * Version:     2.5.0.6
+ * Version:     2.5.0.7
  * Text Domain: soliloquy
  * Domain Path: languages
  *
@@ -54,7 +54,7 @@ class Soliloquy_Lite {
      *
      * @var string
      */
-    public $version = '2.5.0.6';
+    public $version = '2.5.0.7';
 
     /**
      * The name of the plugin.
@@ -252,27 +252,29 @@ class Soliloquy_Lite {
      */
     public function _get_slider_by_slug( $slug ) {
 
-        $sliders = get_posts(
-            array(
-                'post_type'     => 'any',
-                'no_found_rows' => true,
-                'cache_results' => false,
-                'nopaging'      => true,
-                'fields'        => 'ids',
-                'meta_query'    => array(
-                    array(
-                        'key'     => '_sol_slider_data',
-                        'value'   => maybe_serialize( strval( $slug ) ),
-                        'compare' => 'LIKE'
-                    )
-                )
-            )
-        );
-        if ( empty( $sliders ) ) {
+        $sliders = $this->get_sliders();
+        if ( ! $sliders ) {
             return false;
-        } else {
-            return get_post_meta( $sliders[0], '_sol_slider_data', true );
         }
+
+        // Loop through the sliders to find a match by slug.
+        $ret = false;
+        foreach ( $sliders as $data ) {
+
+        	if ( empty( $data['config']['slug'] ) ) {
+				continue;
+        	}
+
+            if ( $data['config']['slug'] == $slug ) {
+
+                $ret = $data;
+
+                break;
+            }
+        }
+
+        // Return the slider data.
+        return $ret;
 
     }
 
@@ -287,6 +289,7 @@ class Soliloquy_Lite {
 
         // Attempt to return the transient first, otherwise generate the new query to retrieve the data.
         if ( false === ( $sliders = get_transient( '_sol_cache_all' ) ) ) {
+	        
             $sliders = $this->_get_sliders();
             if ( $sliders ) {
                 set_transient( '_sol_cache_all', $sliders, DAY_IN_SECONDS );
@@ -308,13 +311,13 @@ class Soliloquy_Lite {
     public function _get_sliders() {
 
         $sliders = new WP_Query( array(
-            'post_type'     => 'any',
-            'post_status'   => 'publish',
-            'posts_per_page'=> -1,
-            'fields'        => 'ids',
-            'meta_query'    => array(
+            'post_type' => 'soliloquy',
+            'post_status' => 'publish',
+            'posts_per_page' => apply_filters('soliloquy_get_limit', 99 ),
+            'fields' => 'ids',
+            'meta_query' => array(
                 array(
-                    'key'     => '_sol_slider_data',
+                    'key' => '_sol_slider_data',
                     'compare' => 'EXISTS',
                 ),
             ),
@@ -327,6 +330,7 @@ class Soliloquy_Lite {
         // Now loop through all the sliders found and only use sliders that have images in them.
         $ret = array();
         foreach ( $sliders->posts as $id ) {
+	        
             $data = get_post_meta( $id, '_sol_slider_data', true );
             if ( empty( $data['slider'] ) && 'default' == Soliloquy_Shortcode_Lite::get_instance()->get_config( 'type', $data ) || 'dynamic' == Soliloquy_Shortcode_Lite::get_instance()->get_config( 'type', $data ) ) {
                 continue;

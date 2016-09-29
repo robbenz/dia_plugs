@@ -83,22 +83,8 @@ class Profile_Builder_Form_Creator{
 		$this->args['redirect_activated'] = apply_filters( 'wppb_redirect_default_setting', '-' );
 		$this->args['redirect_url'] = apply_filters( 'wppb_redirect_default_location', ($this->args['redirect_url'] != '') ? $this->args['redirect_url'] : wppb_curpageurl() );
         /* for register forms check to see if we have a custom redirect "Redirect After Register" */
-        if( PROFILE_BUILDER == 'Profile Builder Pro' ) {
-            if( ( $this->args['form_type'] == 'register' || $this->args['form_type'] == 'edit_profile' ) && ( ! current_user_can( 'manage_options' ) ) ) {
-				$wppb_module_settings = get_option( 'wppb_module_settings' );
-                if( isset( $_POST['username'] ) )
-                    $username = $_POST['username'];
-                else
-                    $username = null;
+        $this->wppb_custom_redirect_check();
 
-				if( isset( $wppb_module_settings['wppb_customRedirect'] ) && $wppb_module_settings['wppb_customRedirect'] == 'show' && $this->args['redirect_priority'] != 'top' && function_exists( 'wppb_custom_redirect_url' ) ) {
-					if( $this->args['form_type'] == 'register' )
-                        $this->args['redirect_url'] = $this->args['custom_redirect_after_register_url'] = wppb_custom_redirect_url( 'after_registration', $this->args['redirect_url'], $username );
-                    else if( $this->args['form_type'] == 'edit_profile' )
-                        $this->args['redirect_url'] = $this->args['custom_redirect_after_edit_profile_url'] = wppb_custom_redirect_url( 'after_edit_profile', $this->args['redirect_url'], $username );
-				}
-            }
-        }
 		$this->args['redirect_url'] = apply_filters( 'wppb_after_'.$this->args['form_type'].'_redirect_url', $this->args['redirect_url'] );
 		$this->args['redirect_delay'] = apply_filters( 'wppb_redirect_default_duration', 3 );
 
@@ -120,6 +106,10 @@ class Profile_Builder_Form_Creator{
             $this->args['redirect_activated'] = ( isset( $page_settings[0]['redirect'] ) ? $page_settings[0]['redirect'] : $this->args['redirect_activated'] );
             $this->args['redirect_url'] = ( isset( $page_settings[0]['url'] ) ? $page_settings[0]['url'] : $this->args['redirect_url'] );
             $this->args['redirect_delay'] = ( isset( $page_settings[0]['display-messages'] ) ? $page_settings[0]['display-messages'] : $this->args['redirect_delay'] );
+
+            if( $this->args['redirect_activated'] == '-' ) {
+                $this->wppb_custom_redirect_check();
+            }
 		}
 
         if( !empty( $this->args['role'] ) ){
@@ -132,6 +122,26 @@ class Profile_Builder_Form_Creator{
             }
         }
 	}
+
+	function wppb_custom_redirect_check() {
+        if( PROFILE_BUILDER == 'Profile Builder Pro' ) {
+            if( ( $this->args['form_type'] == 'register' || $this->args['form_type'] == 'edit_profile' ) && ( ! current_user_can( 'manage_options' ) ) ) {
+                $wppb_module_settings = get_option( 'wppb_module_settings' );
+
+                if( isset( $_POST['username'] ) )
+                    $username = $_POST['username'];
+                else
+                    $username = null;
+
+                if( isset( $wppb_module_settings['wppb_customRedirect'] ) && $wppb_module_settings['wppb_customRedirect'] == 'show' && $this->args['redirect_priority'] != 'top' && function_exists( 'wppb_custom_redirect_url' ) ) {
+                    if( $this->args['form_type'] == 'register' )
+                        $this->args['redirect_url'] = $this->args['custom_redirect_after_register_url'] = wppb_custom_redirect_url( 'after_registration', $this->args['redirect_url'], $username, $this->args['role'] );
+                    else if( $this->args['form_type'] == 'edit_profile' )
+                        $this->args['redirect_url'] = $this->args['custom_redirect_after_edit_profile_url'] = wppb_custom_redirect_url( 'after_edit_profile', $this->args['redirect_url'], $username, $this->args['role'] );
+                }
+            }
+        }
+    }
 
     function wppb_form_logic() {
         if( $this->args['form_type'] == 'register' ){
@@ -212,7 +222,7 @@ class Profile_Builder_Form_Creator{
 		$redirect_location = ( wppb_check_missing_http( $this->args['redirect_url'] ) ? 'http://'.$this->args['redirect_url'] : $this->args['redirect_url'] );
 		$redirect_url = apply_filters( 'wppb_redirect_url', '<a href="'.$redirect_location.'">'.__( 'here', 'profile-builder' ).'</a>' );
 		
-		return apply_filters ( 'wppb_redirect_message_before_returning', '<p class="redirect_message">'.sprintf( __( 'You will soon be redirected automatically. If you see this page for more than %1$d seconds, please click %2$s.%3$s', 'profile-builder' ), $this->args['redirect_delay'], $redirect_url, '<meta http-equiv="Refresh" content="'.$this->args['redirect_delay'].';url='.$redirect_location.'" />' ).'</p>', $this->args );
+		return apply_filters ( 'wppb_redirect_message_before_returning', '<p class="redirect_message">'.sprintf( wp_slash( __( 'You will soon be redirected automatically. If you see this page for more than %1$d seconds, please click %2$s.%3$s', 'profile-builder' ) ), $this->args['redirect_delay'], $redirect_url, '<meta http-equiv="Refresh" content="'.$this->args['redirect_delay'].';url='.$redirect_location.'" />' ).'</p>', $this->args );
 	}
 	
 	
@@ -259,9 +269,9 @@ class Profile_Builder_Form_Creator{
 
         $location = add_query_arg( array( 'autologin' => 'true', 'uid' => $user->ID, '_wpnonce' => $nonce ), $location );
 
-		$redirect_message = '<p class="redirect_message">'. sprintf( __( 'You will soon be redirected automatically. If you see this page for more than %1$d seconds, please click %2$s.%3$s', 'profile-builder' ), $this->args['redirect_delay'], '<a href="'. esc_url( $location ) .'">'. __( 'here', 'profile-builder' ) .'</a>', '<meta http-equiv="Refresh" content="'. esc_attr( $this->args['redirect_delay'] ) .';url='. esc_attr( $location ) .'" />' ) .'</p>';
+		$redirect_message = '<p class="redirect_message">'. sprintf( wp_slash( __( 'You will soon be redirected automatically. If you see this page for more than %1$d seconds, please click %2$s.%3$s', 'profile-builder' ) ), $this->args['redirect_delay'], '<a href="'. esc_url( $location ) .'">'. __( 'here', 'profile-builder' ) .'</a>', '<meta http-equiv="Refresh" content="'. esc_attr( $this->args['redirect_delay'] ) .';url='. esc_attr( $location ) .'" />' ) .'</p>';
 
-		if ( $this->args['redirect_activated'] == 'No' ) {
+		if ( $this->args['redirect_activated'] == 'No' || ( empty( $this->args['redirect_delay'] ) || $this->args['redirect_delay'] == '0' ) ) {
 			return "<script> window.location.replace( '". $location ."' ); </script>";
 		} else {
 			return "<script> jQuery( '#wppb_form_success_message' ).after( '". $redirect_message ."' ); </script>";

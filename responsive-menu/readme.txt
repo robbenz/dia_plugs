@@ -4,111 +4,73 @@ Donate link: https://responsive.menu/donate
 Tags: responsive, menu, responsive menu, mobile menu, wordpress responsive menu, wp responsive menu, tablet menu, mobile, tablet, 3 lines, 3 line, three line, three lines
 Requires at least: 3.5.0
 Tested up to: 4.6
-Stable tag: 3.0.11
+Stable tag: 3.0.13
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-This is a Highly Customisable Responsive Menu Plugin for WordPress
+Highly customisable Responsive Menu plugin with 150+ options. No coding knowledge needed to design it exactly as you want.
 
 == Description ==
-
-This is a Highly Customisable Responsive Menu Plugin for WordPress, with over 120 customisable options giving you a combination of 14,000 options!
+**Description:**
 <br /><br />
-**Requires PHP 5.4+**, please ensure you have this installed before upgrading.
+Highly customisable Responsive Menu Plugin for WordPress. With over 150 customisable options you get a combination of 22,500 options! No coding experience or knowledge is needed with an easy to use interface you can get it looking exactly as you want with minimal fuss.
 <br /><br />
-With this plugin, you can edit the following and more:
+**See it in action:**
+<br /><br />
+<a href="https://responsive.menu">https://responsive.menu</a>
+<br /><br />
+**Requirements:**
+<br /><br />
+PHP 5.4+
+<br /><br />
+**Fully documented:**
+<br /><br />
+<a href="https://responsive.menu/docs/">https://responsive.menu/docs/</a>
+<br /><br />
+**Fully unit tested:**
+<br /><br />
+100% unit test coverage with tests included in the plugin so you can run them yourself for peace of mind.
+<br /><br />
+**Basic Functionality:**
 <ul>
-<li>Menu Title</li>
-<li>Menu Title Image</li>
-<li>Button Title</li>
-<li>Button Title Image</li>
-<li>Menu To Responsify</li>
-<li>Media Query Breakpoint Width</li>
-<li>CSS Options For Hiding Specific Elements</li>
-<li>Menu Depth To Display</li>
-<li>Top Location</li>
-<li>Right Percentage Location</li>
-<li>Line & Text Colour</li>
-<li>Menu Button Background Colour</li>
-<li>Absolute and Fixed Positioning</li>
-<li>Menu Font</li>
-<li>Menu Title Colour</li>
-<li>Menu Title Hover Colour</li>
-<li>Menu Title Background Colour</li>
-<li>Menu Text Colour</li>
-<li>Menu Text Hover Colour</li>
-<li>Menu Background Colour</li>
-<li>Menu Link Background Hover Colour</li>
-<li>Menu Text Size</li>
-<li>Menu Button Text Size</li>
-<li>Menu Links Text Size</li>
-<li>Choose Overlay or Push Animations</li>
-<li>Slide Animation Speed</li>
-<li>Ability to auto expand/hide sub-menus</li>
-<li>Inclusion/Exclusion of Search Box</li>
-<li>Choice of Positioning of Search Box</li>
-<li>Transition speed</li>
-<li>Slide Animation Speed</li>
-<li>Menu Link Heights</li>
-<li>Text Alignment</li>
-<li>Choice of side to slide in from (left, right, top, bottom)</li>
-<li>Choice to use inline/external stylesheets and scripts</li>
-<li>Option to include JavaScript in footer</li>
-<li>Option to remove CSS !important tags</li>
-<li>Choice to Minify created CSS and JS files (saves up to 50% file space)</li>
-<li>Choice to auto-close menu items on click (for single page sites)</li>
-<li>Choice to replace 3 lines with an x on click</li>
-<li>Minimum width of menu</li>
-<li>Maximum width of menu</li>
-<li>Choice to Auto Expand Parent Links</li>
-<li>Choice to Ignore Clicks on Ancestor Links</li>
-<li>Choice to Close Menu Automatically on Page Clicks</li>
-<li>Choice to Specify Title Menu Link</li>
-<li>Choice to Specify Title Menu Link Location</li>
-<li>Ability to add custom HTML snippet inside the menu</li>
-<li>Choice of location for custom HTML snippet inside the menu</li>
-<li>Choice of using shortode or not</li>
-<li>Ability to change the 3 lines height</li>
-<li>Ability to change the 3 lines width</li>
-<li>Ability to Export Options</li>
-<li>Ability to Import Options</li>
-<li>Ability to set sub menu arrow shape/image Options</li>
-<li>Ability to set custom click trigger</li>
-<li>Ability to push menu button with animation</li>
-<li>Ability to change Current Page background hover colour</li>
-<li>Ability to change Current Page Link hover colour</li>
-<li>Ability to provide a custom walker option</li>
-<li>Ability to choose to use transient caching or not</li>
-<li>Ability to choose if menu is shown on left or right of screen</li>
-<li>Ability to set theme location menu</li>
-<li>Ability to reset to default</li>
-<li>Ability to set menu text location</li>
-<li>Ability to set menu text line height</li>
-<li>Plus more...</li>
-</ul>
-The plugin creates a nice three-lined mobile menu button (or custom image if you choose) that users can click on to bring a slide out menu (from the left, right, top or bottom - again your choice), which is easily navigated.
-<br /><br />
-It is fully responsive if you have the viewport meta tag on your site, using media queries with the widths defined by you. It can be used as a responsive menu, mobile menu, tablet menu or full dedicated menu for your main site.
-<br /><br />
-It requires no shortcodes (although you can use them) or fancy php code to be inserted by yourself making it very easy to install and you can design it to look exactly as you want to or leave it with its default values to have it looking amazing in just a matter of seconds.
-<br /><br />
-You have the choice to include the stylesheets and scripts inline to avoid adding any extra HTTP requests to your site or through external stylesheets created by the plug-in. Either way, the code added is extremely small (only a little jQuery and CSS) and there is even an option to minify the output if you wish saving a further 50% on file space.
-<br /><br />
-It also includes the following functionality:
-<ul>
+<li>Change every colour</li>
+<li>Set the fonts, font sizes and text alignment you want to use</li>
+<li>Set which side and where you want the button to show</li>
+<li>Set which side the menu appears from (left, right, top or bottom)</li>
+<li>Use background image for the menu</li>
+<li>Choice of menu animations (slide over the top or push the content)</li>
+<li>Choice of which Menu to use</li>
+<li>Choice of screen size at which the menu will be shown</li>
+<li>Choice of CSS elements to hide when menu is showing</li>
+<li>Choice of Sub-menu depth to display down to</li>
+<li>Choice of Animation Types & Speeds for the Menu & Button</li>
+<li>Integrated search (fully customisable)</li>
+<li>Ability to disable and re-order the different components</li>
+<li>Ability to fix the button to the top or to let it scroll with the page</li>
+<li>Ability to upload logos, sub-arrow images etc.</li>
+<li>Ability to include Scripts externally, minified and in footer</li>
+<li>Ability to import and export options in a click of a button</li>
+<li>Ability to add custom HTML components</li>
+<li>Ability to choose custom menu triggers</li>
 <li>WPML/Polylang Support</li>
+<li>RTL Support</li>
+<li>Plus much, much more!</li>
 </ul>
-If you decide to go Pro then you will also get the following functionality:
+
+**Advanced & Pro Functionality:**
 <ul>
+<li>Preview your changes before implementing</li>
 <li>FontIcon Support for individual menu items</li>
-<li>Button Animation Effects</li>
-<li>Colour Opacity option</li>
-<li>Header Bar</li>
-<li>Single Menu Option</li>
+<li>15 button animation effects</li>
+<li>Colour opacity for all colours</li>
+<li>Custom overlay colour and opacity</li>
+<li>Integrated header bar</li>
+<li>Let the plugin provide and style your main menu as well as hamburger menu</li>
 </ul>
+
 For more reasons to go Pro, please visit <a target="_blank" href="https://responsive.menu/why-go-pro/">this page</a>.
-If you would like to see any other options added to the plugin or would like to help with translating the plugin into various languages then please email me or place them in a support ticket.
-<br />
+
+[youtube https://www.youtube.com/watch?v=aj6ba0tGKPg]
 
 == Installation ==
 
@@ -138,16 +100,36 @@ To view our whole FAQ, please go to https://responsive.menu/faq/
 
 == Screenshots ==
 
-1. Fully customisable Admin Screen
+1. Animated Screencast
 
 2. Example Front End Menu Button
 
-3. Example Front End Expanded Menu
+3. Front End Expanded Menu with Background Image
+
+4. Alternative Example Front End Expanded Menu with Background Image
+
+5. Alternative Example Front End Expanded Menu with Background Image
+
+6. Alternative Example Front End Expanded Menu with Background Image
+
+7. Fully customisable Admin Screen
 
 == Changelog ==
 
+= 3.0.13 (22nd September 2016) =
+* **Requires PHP 5.4**
+* Made menu background image option free (feeling generous today!)
+
+= 3.0.12 (22nd September 2016) =
+* **Requires PHP 5.4**
+* Fixed close menu on link click bug with single header (Pro only)
+* Fixed conflict bug with "close on link clicks" and "disable parent click" options
+* Added header bar title link to WPML/Polylang
+* Added alt tag option for every image
+* Link target now taken into account with "Close Menu on Link Clicks"
+
 = 3.0.11 (29th August 2016) =
-** Requires PHP 5.4**
+* **Requires PHP 5.4**
 * Fixed export options bug (Pro only)
 * Fixed shortcode attributes bug
 

@@ -683,7 +683,6 @@ class Soliloquy_Metaboxes_Lite {
 				$slide_view = get_option( 'soliloquy_slide_view' );
 
 			}
-
 			//Get View from settings
 			$default_view =  $slide_view === 'grid' ? 'soliloquy-grid' : 'soliloquy-list';
 			//Show/Hide stuff
@@ -717,7 +716,7 @@ class Soliloquy_Metaboxes_Lite {
 				</label>
 
 	        </div>
-
+	        	
        		<div class="soliloquy-bulk-actions">
 
 				<a href="#" class="button button-soliloquy-delete soliloquy-slides-delete"><?php _e( 'Delete selected files from slider', 'soliloquy' ); ?></a>
