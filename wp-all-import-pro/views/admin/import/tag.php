@@ -16,7 +16,7 @@
 					if ( PMXI_Plugin::$session->options['delimiter'] ):
 						PMXI_Render::render_csv_element($elements->item(0), true);
 					else:
-						PMXI_Render::render_xml_element($elements->item(0), true);
+						PMXI_Render::render_xml_element($elements->item($elements->length > 1 ? $tagno : 0), true);
 					endif;
 
 				endif;

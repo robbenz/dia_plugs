@@ -49,5 +49,5 @@ function wp_all_import_get_image_from_gallery($image_name, $targetDir = false, $
 		}
 	}
 
-	return $attch;
+	return apply_filters('wp_all_import_get_image_from_gallery', $attch, $image_name, $targetDir);
 } 

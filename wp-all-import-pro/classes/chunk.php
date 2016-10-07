@@ -86,6 +86,8 @@ class PMXI_Chunk {
     // set the filename
     $this->file = $file;   
 
+    $this->parser_type = empty($parser_type) ? 'xmlreader' : $parser_type;
+
     $is_html = false;
     $f = @fopen($file, "rb");       
     while (!@feof($f)) {
@@ -107,25 +109,32 @@ class PMXI_Chunk {
       return;
     } 
 
-    $input  = new PMXI_Input();     
-
-    $import_id = $input->get('id', 0);
-
-    if ( empty($import_id)) $import_id = $input->get('import_id', 0);    
-
-    if ( ! empty($import_id) )
+    if ( PMXI_Plugin::getInstance()->getOption('force_stream_reader') )
     {
-      $this->parser_type = empty($parser_type) ? 'xmlreader' : $parser_type;
-      $import = new PMXI_Import_Record();
-      $import->getById($import_id);
-      if ( ! $import->isEmpty() ){
-        $this->parser_type = empty($import->options['xml_reader_engine']) ? 'xmlreader' : 'xmlstreamer';
-      }
-    }    
+      $this->parser_type = 'xmlstreamer';
+    }
     else
     {
-      $this->parser_type = empty($parser_type) ? get_option('wpai_parser_type', 'xmlreader') : $parser_type;
-    }    
+      $input  = new PMXI_Input();         
+
+      $import_id = $input->get('id', 0);
+
+      if ( empty($import_id)) $import_id = $input->get('import_id', 0);    
+
+      if ( ! empty($import_id) )
+      {
+        $this->parser_type = empty($parser_type) ? 'xmlreader' : $parser_type;
+        $import = new PMXI_Import_Record();
+        $import->getById($import_id);
+        if ( ! $import->isEmpty() ){
+          $this->parser_type = empty($import->options['xml_reader_engine']) ? 'xmlreader' : 'xmlstreamer';
+        }
+      }    
+      else
+      {
+        $this->parser_type = empty($parser_type) ? get_option('wpai_parser_type', 'xmlreader') : $parser_type;
+      }
+    }        
 
     if (empty($this->options['element']) or $this->options['get_cloud'])
     {      
@@ -169,6 +178,7 @@ class PMXI_Chunk {
         }
 
         $this->cloud = $parser->cloud;
+
       }
      
       if ( ! empty($this->cloud) and empty($this->options['element']) ){

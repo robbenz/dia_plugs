@@ -222,7 +222,7 @@ if ( ! class_exists('PMXI_Render')){
 
 		protected static function render_element_xpaths(DOMElement $el, $path = '/', $ind = 1, $lvl = 0){						
 			?>
-			<ul id="menu-<?php echo sanitize_title(esc_attr($path)); ?>" class="ui-helper-hidden">
+			<ul id="menu-<?php echo str_replace('/', '-', esc_attr($path)); ?>" class="ui-helper-hidden">
 				<?php foreach ($el->attributes as $attr) : if ( empty($attr->value) ) continue; ?>
 			    <li data-command="action1" title="<?php echo esc_attr($path . '[@'. $attr->nodeName .' = "' . esc_attr($attr->value) . '"]'); ?>">
 			    	<a href="#"><?php echo $path . '[@'. $attr->nodeName .' = "' . esc_attr($attr->value) . '"]'; ?></a>

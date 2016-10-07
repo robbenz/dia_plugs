@@ -1887,7 +1887,7 @@ class XmlImportWooCommerceProduct extends XmlImportWooCommerce{
 		//$this->executeSQL();			
 
 		// Find children elements by XPath and create variations
-		if ( "variable" == $product_type and "xml" == $this->import->options['matching_parent'] and "" != $this->import->options['variations_xpath'] and "" != $this->import->options['variable_sku'] and ! $this->import->options['link_all_variations']) {
+		if ( "variable" == $product_type and "xml" == $this->import->options['matching_parent'] and "" != $this->import->options['variations_xpath'] and ! $this->import->options['link_all_variations'] and ( "" != $this->import->options['variable_sku'] or empty($this->import->options['disable_auto_sku_generation']))) {
 			
 			$logger and call_user_func($logger, __('- Importing Variations', 'wpai_woocommerce_addon_plugin'));
 
@@ -1895,51 +1895,60 @@ class XmlImportWooCommerceProduct extends XmlImportWooCommerce{
 			
 			$records = array();
 
-			$variation_sku = XmlImportParser::factory($xml, $variation_xpath, $this->import->options['variable_sku'], $file)->parse($records); $tmp_files[] = $file;
-			$count_variations = count($variation_sku);			
+            $variations = XmlImportParser::factory($xml, $variation_xpath, '/', $file)->parse($records); $tmp_files[] = $file;
 
-			if ( $count_variations > 0 ){				
+			$count_variations = count($variations);			
+
+			if ( $count_variations > 0 ){
+
+                // Variation SKUs
+                if ($this->import->options['variable_sku'] != ""){
+                    $variation_sku = XmlImportParser::factory($xml, $variation_xpath, $this->import->options['variable_sku'], $file)->parse($records); $tmp_files[] = $file;
+                }
+                else{
+                    $count_variations and $variation_sku = array_fill(0, $count_variations, '');
+                }
 
 				// Composing product is Manage stock									
 				if ($this->import->options['is_variable_product_manage_stock'] == 'xpath' and "" != $this->import->options['single_variable_product_manage_stock']){
 					if ($this->import->options['single_variable_product_manage_stock_use_parent']){
 						$parent_variable_product_manage_stock = XmlImportParser::factory($xml, $cxpath, $this->import->options['single_variable_product_manage_stock'], $file)->parse($records); $tmp_files[] = $file;
-						count($variation_sku) and $variation_product_manage_stock = array_fill(0, count($variation_sku), $parent_variable_product_manage_stock[$i]);						
+                        $count_variations and $variation_product_manage_stock = array_fill(0, $count_variations, $parent_variable_product_manage_stock[$i]);						
 					}
 					else {
 						$variation_product_manage_stock = XmlImportParser::factory($xml, $variation_xpath, $this->import->options['single_variable_product_manage_stock'], $file)->parse($records); $tmp_files[] = $file;						
 					}
 				}
 				else{
-					count($variation_sku) and $variation_product_manage_stock = array_fill(0, count($variation_sku), $this->import->options['is_variable_product_manage_stock']);
+                    $count_variations and $variation_product_manage_stock = array_fill(0, $count_variations, $this->import->options['is_variable_product_manage_stock']);
 				}
 
 				// Variation Description
 				if ($this->import->options['variable_description'] != ""){
 					if ($this->import->options['variable_description_use_parent']){
 						$parent_variation_description = XmlImportParser::factory($xml, $cxpath, $this->import->options['variable_description'], $file)->parse($records); $tmp_files[] = $file;
-						count($variation_sku) and $variation_description = array_fill(0, count($variation_sku), $parent_variation_description[$i]);						
+                        $count_variations and $variation_description = array_fill(0, $count_variations, $parent_variation_description[$i]);						
 					}
 					else {
 						$variation_description = XmlImportParser::factory($xml, $variation_xpath, $this->import->options['variable_description'], $file)->parse($records); $tmp_files[] = $file;
 					}
 				}
 				else{
-					count($variation_sku) and $variation_description = array_fill(0, count($variation_sku), '');
+					$count_variations and $variation_description = array_fill(0, $count_variations, '');
 				}
 
 				// Stock Qty
 				if ($this->import->options['variable_stock'] != ""){
 					if ($this->import->options['variable_stock_use_parent']){
 						$parent_variation_stock = XmlImportParser::factory($xml, $cxpath, $this->import->options['variable_stock'], $file)->parse($records); $tmp_files[] = $file;
-						count($variation_sku) and $variation_stock = array_fill(0, count($variation_sku), $parent_variation_stock[$i]);						
+						$count_variations and $variation_stock = array_fill(0, $count_variations, $parent_variation_stock[$i]);						
 					}
 					else {
 						$variation_stock = XmlImportParser::factory($xml, $variation_xpath, $this->import->options['variable_stock'], $file)->parse($records); $tmp_files[] = $file;
 					}
 				}
 				else{
-					count($variation_sku) and $variation_stock = array_fill(0, count($variation_sku), '');
+					$count_variations and $variation_stock = array_fill(0, $count_variations, '');
 				}				
 
 				// Stock Status
@@ -1947,13 +1956,13 @@ class XmlImportWooCommerceProduct extends XmlImportWooCommerce{
 					$variable_stock_status = XmlImportParser::factory($xml, $variation_xpath, $this->import->options['single_variable_stock_status'], $file)->parse($records); $tmp_files[] = $file;						
 				}
 				elseif($this->import->options['variable_stock_status'] == 'auto'){
-					count($variation_sku) and $variable_stock_status = array_fill(0, count($variation_sku), $this->import->options['variable_stock_status']);
+					$count_variations and $variable_stock_status = array_fill(0, $count_variations, $this->import->options['variable_stock_status']);
 					foreach ($variation_stock as $key => $value) {
 						$variable_stock_status[$key] = ( (int) $value <= 0) ? 'outofstock' : 'instock';
 					}
 				}
 				else{
-					count($variation_sku) and $variable_stock_status = array_fill(0, count($variation_sku), $this->import->options['variable_stock_status']);
+					$count_variations and $variable_stock_status = array_fill(0, $count_variations, $this->import->options['variable_stock_status']);
 				}
 
 				// Composing product Allow Backorders?
@@ -1961,7 +1970,7 @@ class XmlImportWooCommerceProduct extends XmlImportWooCommerce{
 					$variable_allow_backorders =  XmlImportParser::factory($xml, $variation_xpath, $import->options['single_variable_allow_backorders'], $file)->parse($records); $tmp_files[] = $file;						
 				}
 				else{					
-					count($variation_sku) and $variable_allow_backorders = array_fill(0, count($variation_sku), $import->options['variable_allow_backorders']);
+					$count_variations and $variable_allow_backorders = array_fill(0, $count_variations, $import->options['variable_allow_backorders']);
 				}
 
 				// Image			
@@ -1970,56 +1979,56 @@ class XmlImportWooCommerceProduct extends XmlImportWooCommerce{
 					
 					if ($this->import->options['variable_image_use_parent']){
 						$parent_image = XmlImportParser::factory($xml, $cxpath, $this->import->options['variable_image'], $file)->parse($records); $tmp_files[] = $file;						
-						count($variation_sku) and $variation_image = array_fill(0, count($variation_sku), $parent_image[$i]);						
+						$count_variations and $variation_image = array_fill(0, $count_variations, $parent_image[$i]);						
 					}
 					else {
 						$variation_image = XmlImportParser::factory($xml, $variation_xpath, $this->import->options['variable_image'], $file)->parse($records); $tmp_files[] = $file;	
 					}					
 					
 				} else {
-					count($variation_sku) and $variation_image = array_fill(0, count($variation_sku), '');
+					$count_variations and $variation_image = array_fill(0, $count_variations, '');
 				}
 
 				// Regular Price
 				if (!empty($this->import->options['variable_regular_price'])){
 					if ($this->import->options['variable_regular_price_use_parent']){						
-						$parent_regular_price = array_map(array($this, 'adjust_price'), array_map(array($this, 'prepare_price'), XmlImportParser::factory($xml, $cxpath, $this->import->options['variable_regular_price'], $file)->parse($records)),  array_fill(0, count($variation_sku), "variable_regular_price")); $tmp_files[] = $file;
-						count($variation_sku) and $variation_regular_price = array_fill(0, count($variation_sku), $parent_regular_price[$i]);						
+						$parent_regular_price = array_map(array($this, 'adjust_price'), array_map(array($this, 'prepare_price'), XmlImportParser::factory($xml, $cxpath, $this->import->options['variable_regular_price'], $file)->parse($records)),  array_fill(0, $count_variations, "variable_regular_price")); $tmp_files[] = $file;
+						$count_variations and $variation_regular_price = array_fill(0, $count_variations, $parent_regular_price[$i]);						
 					}
 					else {
 						$variation_regular_price = array_map(array($this, 'prepare_price'), XmlImportParser::factory($xml, $variation_xpath, $this->import->options['variable_regular_price'], $file)->parse($records)); $tmp_files[] = $file;
 					}
 				}
 				else{
-					count($variation_sku) and $variation_regular_price = array_fill(0, count($variation_sku), '');
+					$count_variations and $variation_regular_price = array_fill(0, $count_variations, '');
 				}
 
 				// Sale Price
 				if (!empty($this->import->options['variable_sale_price'])){
 					if ($this->import->options['variable_sale_price_use_parent']){
-						$parent_sale_price = array_map(array($this, 'adjust_price'), array_map(array($this, 'prepare_price'), XmlImportParser::factory($xml, $cxpath, $this->import->options['variable_sale_price'], $file)->parse($records)),  array_fill(0, count($variation_sku), "variable_sale_price")); $tmp_files[] = $file;
-						count($variation_sku) and $variation_sale_price = array_fill(0, count($variation_sku), $parent_sale_price[$i]);						
+						$parent_sale_price = array_map(array($this, 'adjust_price'), array_map(array($this, 'prepare_price'), XmlImportParser::factory($xml, $cxpath, $this->import->options['variable_sale_price'], $file)->parse($records)),  array_fill(0, $count_variations, "variable_sale_price")); $tmp_files[] = $file;
+						$count_variations and $variation_sale_price = array_fill(0, $count_variations, $parent_sale_price[$i]);						
 					}
 					else {
 						$variation_sale_price = array_map(array($this, 'prepare_price'), XmlImportParser::factory($xml, $variation_xpath, $this->import->options['variable_sale_price'], $file)->parse($records)); $tmp_files[] = $file;
 					}
 				}
 				else{
-					count($variation_sku) and $variation_sale_price = array_fill(0, count($variation_sku), '');
+					$count_variations and $variation_sale_price = array_fill(0, $count_variations, '');
 				}	
 
 				// Who Sale Price
 				if (!empty($this->import->options['variable_whosale_price'])){
 					if ($this->import->options['variable_whosale_price_use_parent']){
 						$parent_whosale_price = array_map(array($this, 'prepare_price'), XmlImportParser::factory($xml, $cxpath, $this->import->options['variable_whosale_price'], $file)->parse($records)); $tmp_files[] = $file;
-						count($variation_sku) and $variation_whosale_price = array_fill(0, count($variation_sku), $parent_whosale_price[$i]);						
+						$count_variations and $variation_whosale_price = array_fill(0, $count_variations, $parent_whosale_price[$i]);						
 					}
 					else {
 						$variation_whosale_price = array_map(array($this, 'prepare_price'), XmlImportParser::factory($xml, $variation_xpath, $this->import->options['variable_whosale_price'], $file)->parse($records)); $tmp_files[] = $file;
 					}
 				}
 				else{
-					count($variation_sku) and $variation_whosale_price = array_fill(0, count($variation_sku), '');
+					$count_variations and $variation_whosale_price = array_fill(0, $count_variations, '');
 				}	
 
 				if ( $this->import->options['is_variable_sale_price_shedule']){
@@ -2028,14 +2037,14 @@ class XmlImportWooCommerceProduct extends XmlImportWooCommerce{
 
 						if ($this->import->options['variable_sale_dates_use_parent']){
 							$parent_sale_date_start = XmlImportParser::factory($xml, $cxpath, $this->import->options['variable_sale_price_dates_from'], $file)->parse($records); $tmp_files[] = $file;
-							count($variation_sku) and $variation_sale_price_dates_from = array_fill(0, count($variation_sku), $parent_sale_date_start[$i]);							
+							$count_variations and $variation_sale_price_dates_from = array_fill(0, $count_variations, $parent_sale_date_start[$i]);							
 						}
 						else {
 							$variation_sale_price_dates_from = XmlImportParser::factory($xml, $variation_xpath, $this->import->options['variable_sale_price_dates_from'], $file)->parse($records); $tmp_files[] = $file;
 						}
 					}
 					else{
-						count($variation_sku) and $variation_sale_price_dates_from = array_fill(0, count($variation_sku), '');
+						$count_variations and $variation_sale_price_dates_from = array_fill(0, $count_variations, '');
 					}
 
 					// Sale price dates to
@@ -2043,14 +2052,14 @@ class XmlImportWooCommerceProduct extends XmlImportWooCommerce{
 						
 						if ($this->import->options['variable_sale_dates_use_parent']){
 							$parent_sale_date_end = XmlImportParser::factory($xml, $cxpath, $this->import->options['variable_sale_price_dates_to'], $file)->parse($records); $tmp_files[] = $file;
-							count($variation_sku) and $variation_sale_price_dates_to = array_fill(0, count($variation_sku), $parent_sale_date_end[$i]);							
+							$count_variations and $variation_sale_price_dates_to = array_fill(0, $count_variations, $parent_sale_date_end[$i]);							
 						}
 						else {
 							$variation_sale_price_dates_to = XmlImportParser::factory($xml, $variation_xpath, $this->import->options['variable_sale_price_dates_to'], $file)->parse($records); $tmp_files[] = $file;
 						}						
 					}
 					else{
-						count($variation_sku) and $variation_sale_price_dates_to = array_fill(0, count($variation_sku), '');
+						$count_variations and $variation_sale_price_dates_to = array_fill(0, $count_variations, '');
 					}
 				}			
 
@@ -2058,140 +2067,140 @@ class XmlImportWooCommerceProduct extends XmlImportWooCommerce{
 				if ($this->import->options['is_variable_product_virtual'] == 'xpath' and "" != $this->import->options['single_variable_product_virtual']){
 					if ($this->import->options['single_variable_product_virtual_use_parent']){
 						$parent_variable_product_virtual = XmlImportParser::factory($xml, $cxpath, $this->import->options['single_variable_product_virtual'], $file)->parse($records); $tmp_files[] = $file;
-						count($variation_sku) and $variation_product_virtual = array_fill(0, count($variation_sku), $parent_variable_product_virtual[$i]);						
+						$count_variations and $variation_product_virtual = array_fill(0, $count_variations, $parent_variable_product_virtual[$i]);						
 					}
 					else {
 						$variation_product_virtual = XmlImportParser::factory($xml, $variation_xpath, $this->import->options['single_variable_product_virtual'], $file)->parse($records); $tmp_files[] = $file;						
 					}
 				}
 				else{
-					count($variation_sku) and $variation_product_virtual = array_fill(0, count($variation_sku), $this->import->options['is_variable_product_virtual']);
+					$count_variations and $variation_product_virtual = array_fill(0, $count_variations, $this->import->options['is_variable_product_virtual']);
 				}				
 
 				// Composing product is Downloadable									
 				if ($this->import->options['is_variable_product_downloadable'] == 'xpath' and "" != $this->import->options['single_variable_product_downloadable']){
 					if ($this->import->options['single_variable_product_downloadable_use_parent']){
 						$parent_variable_product_downloadable = XmlImportParser::factory($xml, $cxpath, $this->import->options['single_variable_product_downloadable'], $file)->parse($records); $tmp_files[] = $file;
-						count($variation_sku) and $variation_product_downloadable = array_fill(0, count($variation_sku), $parent_variable_product_downloadable[$i]);						
+						$count_variations and $variation_product_downloadable = array_fill(0, $count_variations, $parent_variable_product_downloadable[$i]);						
 					}
 					else {
 						$variation_product_downloadable = XmlImportParser::factory($xml, $variation_xpath, $this->import->options['single_variable_product_downloadable'], $file)->parse($records); $tmp_files[] = $file;						
 					}
 				}
 				else{
-					count($variation_sku) and $variation_product_downloadable = array_fill(0, count($variation_sku), $this->import->options['is_variable_product_downloadable']);
+					$count_variations and $variation_product_downloadable = array_fill(0, $count_variations, $this->import->options['is_variable_product_downloadable']);
 				}
 
 				// Weigth										
 				if (!empty($this->import->options['variable_weight'])){
 					if ($this->import->options['variable_weight_use_parent']){
 						$parent_weight = XmlImportParser::factory($xml, $cxpath, $this->import->options['variable_weight'], $file)->parse($records); $tmp_files[] = $file;
-						count($variation_sku) and $variation_weight = array_fill(0, count($variation_sku), $parent_weight[$i]);						
+						$count_variations and $variation_weight = array_fill(0, $count_variations, $parent_weight[$i]);						
 					}
 					else {
 						$variation_weight = XmlImportParser::factory($xml, $variation_xpath, $this->import->options['variable_weight'], $file)->parse($records); $tmp_files[] = $file;
 					}
 				}
 				else{
-					count($variation_sku) and $variation_weight = array_fill(0, count($variation_sku), '');
+					$count_variations and $variation_weight = array_fill(0, $count_variations, '');
 				}
 
 				// Length										
 				if (!empty($this->import->options['variable_length'])){
 					if ($this->import->options['variable_dimensions_use_parent']){
 						$parent_length = XmlImportParser::factory($xml, $cxpath, $this->import->options['variable_length'], $file)->parse($records); $tmp_files[] = $file;
-						count($variation_sku) and $variation_length = array_fill(0, count($variation_sku), $parent_length[$i]);						
+						$count_variations and $variation_length = array_fill(0, $count_variations, $parent_length[$i]);						
 					}
 					else {
 						$variation_length = XmlImportParser::factory($xml, $variation_xpath, $this->import->options['variable_length'], $file)->parse($records); $tmp_files[] = $file;
 					}
 				}
 				else{
-					count($variation_sku) and $variation_length = array_fill(0, count($variation_sku), '');
+					$count_variations and $variation_length = array_fill(0, $count_variations, '');
 				}
 
 				// Width
 				if (!empty($this->import->options['variable_width'])){
 					if ($this->import->options['variable_dimensions_use_parent']){
 						$parent_width = XmlImportParser::factory($xml, $cxpath, $this->import->options['variable_width'], $file)->parse($records); $tmp_files[] = $file;
-						count($variation_sku) and $variation_width = array_fill(0, count($variation_sku), $parent_width[$i]);						
+						$count_variations and $variation_width = array_fill(0, $count_variations, $parent_width[$i]);						
 					}
 					else {
 						$variation_width = XmlImportParser::factory($xml, $variation_xpath, $this->import->options['variable_width'], $file)->parse($records); $tmp_files[] = $file;
 					}
 				}
 				else{
-					count($variation_sku) and $variation_width = array_fill(0, count($variation_sku), '');
+					$count_variations and $variation_width = array_fill(0, $count_variations, '');
 				}
 
 				// Heigth										
 				if (!empty($this->import->options['variable_height'])){
 					if ($this->import->options['variable_dimensions_use_parent']){
 						$parent_heigth = XmlImportParser::factory($xml, $cxpath, $this->import->options['variable_height'], $file)->parse($records); $tmp_files[] = $file;
-						count($variation_sku) and $variation_height = array_fill(0, count($variation_sku), $parent_heigth[$i]);						
+						$count_variations and $variation_height = array_fill(0, $count_variations, $parent_heigth[$i]);						
 					}
 					else {
 						$variation_height = XmlImportParser::factory($xml, $variation_xpath, $this->import->options['variable_height'], $file)->parse($records); $tmp_files[] = $file;
 					}
 				}
 				else{
-					count($variation_sku) and $variation_height = array_fill(0, count($variation_sku), '');
+					$count_variations and $variation_height = array_fill(0, $count_variations, '');
 				}
 				
 				// Composing product Shipping Class				
 				if ($this->import->options['is_multiple_variable_product_shipping_class'] != 'yes' and "" != $this->import->options['single_variable_product_shipping_class']){
 					if ($this->import->options['single_variable_product_shipping_class_use_parent']){
 						$parent_shipping_class = XmlImportParser::factory($xml, $cxpath, $this->import->options['single_variable_product_shipping_class'], $file)->parse($records); $tmp_files[] = $file;
-						count($variation_sku) and $variation_product_shipping_class = array_fill(0, count($variation_sku), $parent_shipping_class[$i]);						
+						$count_variations and $variation_product_shipping_class = array_fill(0, $count_variations, $parent_shipping_class[$i]);						
 					}
 					else {
 						$variation_product_shipping_class = XmlImportParser::factory($xml, $variation_xpath, $this->import->options['single_variable_product_shipping_class'], $file)->parse($records); $tmp_files[] = $file;						
 					}
 				}
 				else{
-					count($variation_sku) and $variation_product_shipping_class = array_fill(0, count($variation_sku), $this->import->options['multiple_variable_product_shipping_class']);
+					$count_variations and $variation_product_shipping_class = array_fill(0, $count_variations, $this->import->options['multiple_variable_product_shipping_class']);
 				}
 
 				// Composing product Tax Class				
 				if ($this->import->options['is_multiple_variable_product_tax_class'] != 'yes' and "" != $this->import->options['single_variable_product_tax_class']){
 					if ($this->import->options['single_variable_product_tax_class_use_parent']){
 						$parent_tax_class = XmlImportParser::factory($xml, $cxpath, $this->import->options['single_variable_product_tax_class'], $file)->parse($records); $tmp_files[] = $file;
-						count($variation_sku) and $variation_product_tax_class = array_fill(0, count($variation_sku), $parent_tax_class[$i]);						
+						$count_variations and $variation_product_tax_class = array_fill(0, $count_variations, $parent_tax_class[$i]);						
 					}
 					else {
 						$variation_product_tax_class = XmlImportParser::factory($xml, $variation_xpath, $this->import->options['single_variable_product_tax_class'], $file)->parse($records); $tmp_files[] = $file;						
 					}
 				}
 				else{
-					count($variation_sku) and $variation_product_tax_class = array_fill(0, count($variation_sku), $this->import->options['multiple_variable_product_tax_class']);
+					$count_variations and $variation_product_tax_class = array_fill(0, $count_variations, $this->import->options['multiple_variable_product_tax_class']);
 				}
 
 				// Download limit										
 				if (!empty($this->import->options['variable_download_limit'])){
 					if ($this->import->options['variable_download_limit_use_parent']){
 						$parent_download_limit = XmlImportParser::factory($xml, $cxpath, $this->import->options['variable_download_limit'], $file)->parse($records); $tmp_files[] = $file;
-						count($variation_sku) and $variation_download_limit = array_fill(0, count($variation_sku), $parent_download_limit[$i]);						
+						$count_variations and $variation_download_limit = array_fill(0, $count_variations, $parent_download_limit[$i]);						
 					}
 					else {
 						$variation_download_limit = XmlImportParser::factory($xml, $variation_xpath, $this->import->options['variable_download_limit'], $file)->parse($records); $tmp_files[] = $file;
 					}
 				}
 				else{
-					count($variation_sku) and $variation_download_limit = array_fill(0, count($variation_sku), '');
+					$count_variations and $variation_download_limit = array_fill(0, $count_variations, '');
 				}
 
 				// Download expiry										
 				if (!empty($this->import->options['variable_download_expiry'])){
 					if ($this->import->options['variable_download_expiry_use_parent']){
 						$parent_download_expiry = XmlImportParser::factory($xml, $cxpath, $this->import->options['variable_download_expiry'], $file)->parse($records); $tmp_files[] = $file;
-						count($variation_sku) and $variation_download_expiry = array_fill(0, count($variation_sku), $parent_download_expiry[$i]);						
+						$count_variations and $variation_download_expiry = array_fill(0, $count_variations, $parent_download_expiry[$i]);						
 					}
 					else {
 						$variation_download_expiry = XmlImportParser::factory($xml, $variation_xpath, $this->import->options['variable_download_expiry'], $file)->parse($records); $tmp_files[] = $file;
 					}
 				}
 				else{
-					count($variation_sku) and $variation_download_expiry = array_fill(0, count($variation_sku), '');
+					$count_variations and $variation_download_expiry = array_fill(0, $count_variations, '');
 				}
 
 				// File paths								
@@ -2199,7 +2208,7 @@ class XmlImportWooCommerceProduct extends XmlImportWooCommerce{
 					$variation_file_paths = XmlImportParser::factory($xml, $variation_xpath, $this->import->options['variable_file_paths'], $file)->parse($records); $tmp_files[] = $file;
 				}
 				else{
-					count($variation_sku) and $variation_file_paths = array_fill(0, count($variation_sku), '');
+					$count_variations and $variation_file_paths = array_fill(0, $count_variations, '');
 				}
 
 				// File names								
@@ -2207,7 +2216,7 @@ class XmlImportWooCommerceProduct extends XmlImportWooCommerce{
 					$variation_file_names = XmlImportParser::factory($xml, $variation_xpath, $this->import->options['variable_file_names'], $file)->parse($records); $tmp_files[] = $file;
 				}
 				else{
-					count($variation_sku) and $variation_file_names = array_fill(0, count($variation_sku), '');
+					$count_variations and $variation_file_names = array_fill(0, $count_variations, '');
 				}
 
 				// Variation enabled								
@@ -2215,7 +2224,7 @@ class XmlImportWooCommerceProduct extends XmlImportWooCommerce{
 					$variation_product_enabled = XmlImportParser::factory($xml, $variation_xpath, $this->import->options['single_variable_product_enabled'], $file)->parse($records); $tmp_files[] = $file;						
 				}
 				else{
-					count($variation_sku) and $variation_product_enabled = array_fill(0, count($variation_sku), $this->import->options['is_variable_product_enabled']);
+					$count_variations and $variation_product_enabled = array_fill(0, $count_variations, $this->import->options['is_variable_product_enabled']);
 				}
 
 				$variation_attribute_keys = array(); 
@@ -2253,9 +2262,24 @@ class XmlImportWooCommerceProduct extends XmlImportWooCommerce{
 				} 
 
 				// Create Variations
-				foreach ($variation_sku as $j => $void) {	if ("" == $variation_sku[$j]) continue;
+				foreach ($variations as $j => $void) {
 
-					if ($this->import->options['variable_sku_add_parent']) $variation_sku[$j] = $product_sku[$i] . '-' . $variation_sku[$j];
+				    $variation_sku_for_title = ("" == $variation_sku[$j]) ? $j : $variation_sku[$j];
+
+                    if ($this->import->options['variable_sku_add_parent']){
+                        $variation_sku[$j] = $product_sku[$i] . '-' . $variation_sku[$j];
+                        $variation_sku_for_title = $product_sku[$i] . '-' . $variation_sku[$j];
+                    }
+
+                    $is_variation_have_attributes = false;
+                    foreach ($variation_serialized_attributes as $attr => $attr_options){
+                        if ($attr_options['in_variation'][$j] && $attr_options['value'][$j] != ''){
+                            $is_variation_have_attributes = true;
+                            break;
+                        }
+                    }
+                    // do not create variation if it doesn't have attributes
+                    if ( ! $is_variation_have_attributes && $this->import->options['make_simple_product']) continue;
 
 					$variable_enabled = ($variation_product_enabled[$j] == "yes") ? 'yes' : 'no'; 					
 
@@ -2266,7 +2290,7 @@ class XmlImportWooCommerceProduct extends XmlImportWooCommerce{
 					$postRecord->clear();																					
 						
 					// Generate a useful post title
-					$variation_post_title = sprintf( __( 'Variation #%s of %s', 'wpai_woocommerce_addon_plugin' ), $variation_sku[$j], $articleData['post_title'] );
+					$variation_post_title = sprintf( __( 'Variation #%s of %s', 'wpai_woocommerce_addon_plugin' ), $variation_sku_for_title, $articleData['post_title'] );
 
 					// handle duplicates according to import settings
 					/*if ($duplicates = pmxi_findDuplicates(array('post_title' => $variation_post_title, 'post_type' => 'product_variation', 'post_parent' => $pid),'','','parent')) {															
@@ -2289,7 +2313,7 @@ class XmlImportWooCommerceProduct extends XmlImportWooCommerce{
 					$variation_just_created = false;
 
 					$postRecord->getBy(array(
-						'unique_key' => 'Variation ' . $variation_sku[$j] . ' of ' . $pid,
+						'unique_key' => 'Variation ' . $variation_sku_for_title . ' of ' . $pid,
 						'import_id' => $this->import->id
 					));
 					if ( ! $postRecord->isEmpty() ){
@@ -2299,13 +2323,13 @@ class XmlImportWooCommerceProduct extends XmlImportWooCommerce{
 
 					if ( ! $variation_to_update_id ) {
 
-						$variation_to_update_id = wp_insert_post( $variation );		
+						$variation_to_update_id = wp_insert_post( $variation );
 
 						// associate variation with import
 						$postRecord->isEmpty() and $postRecord->set(array(
 							'post_id' => $variation_to_update_id,
 							'import_id' => $this->import->id,
-							'unique_key' => 'Variation ' . $variation_sku[$j] . ' of ' . $pid,
+							'unique_key' => 'Variation ' . $variation_sku_for_title . ' of ' . $pid,
 							'product_key' => ''
 						))->insert();	
 
@@ -3660,12 +3684,14 @@ class XmlImportWooCommerceProduct extends XmlImportWooCommerce{
 	}
 
 	function make_simple_product($post_parent){		
-		$product_type_term = is_exists_term('simple', 'product_type', 0);	
-		if ( ! empty($product_type_term) and ! is_wp_error($product_type_term) ){	
-			$this->associate_terms( $post_parent, array( (int) $product_type_term['term_taxonomy_id'] ), 'product_type' );	
-		}
+		if ( empty($this->articleData['ID']) or $this->import->options['is_update_product_type'] ){
+			$product_type_term = is_exists_term('simple', 'product_type', 0);	
+			if ( ! empty($product_type_term) and ! is_wp_error($product_type_term) ){	
+				$this->associate_terms( $post_parent, array( (int) $product_type_term['term_taxonomy_id'] ), 'product_type' );	
+			}
 
-		$this->pmwi_update_prices( $post_parent );
+			$this->pmwi_update_prices( $post_parent );
+		}		
 	}
 
 	function pmwi_buf_prices($pid){

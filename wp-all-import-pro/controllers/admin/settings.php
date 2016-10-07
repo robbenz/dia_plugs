@@ -649,7 +649,7 @@ class PMXI_Admin_Settings extends PMXI_Controller_Admin {
 					// 	$upload_result['root_element'] = $root_element;
 					// }
 
-					// validate XML
+					// validate XML					
 					$file = new PMXI_Chunk($upload_result['filePath'], array('element' => $upload_result['root_element']));										    					    					   												
 
 					$is_valid = true;
@@ -675,7 +675,8 @@ class PMXI_Admin_Settings extends PMXI_Controller_Admin {
 								$xpath = new DOMXPath($dom);									
 								if (($elements = $xpath->query($defaultXpath)) and $elements->length){
 									break;
-								}												
+								}	
+
 						    }
 						    /*else {
 						    	$is_valid = false;

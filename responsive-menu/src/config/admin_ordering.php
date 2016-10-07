@@ -827,8 +827,50 @@ __('Sub-Menus', 'responsive-menu') => [
             'title' => __('Disable Parent Item Clicks', 'responsive-menu'),
             'label' => __('', 'responsive-menu'),
             'type' => 'checkbox'
-
           ],
+          [
+            'option' => 'use_slide_effect',
+            'title' => __('Use slide effect instead of drop-down', 'responsive-menu'),
+            'label' => __('', 'responsive-menu'),
+            'type' => 'checkbox',
+            'pro' => true,
+            'beta' => true
+          ]
+        ],
+        __('Fade Links In', 'responsive-menu') =>
+        [
+          [
+            'option' => 'fade_submenus',
+            'title' => __('Enabled', 'responsive-menu'),
+            'label' => __('', 'responsive-menu'),
+            'type' => 'checkbox',
+            'pro' => true
+          ],
+          [
+            'option' => 'fade_submenus_side',
+            'title' => __('Fade from side', 'responsive-menu'),
+            'label' => __('', 'responsive-menu'),
+            'type' => 'select',
+            'select' => [
+              ['value' => 'left', 'display' => 'Left'],
+              ['value' => 'right', 'display' => 'Right']
+            ],
+            'pro' => true
+          ],
+          [
+            'option' => 'fade_submenus_delay',
+            'title' => __('Delay between items', 'responsive-menu'),
+            'label' => __('', 'responsive-menu'),
+            'unit' => 'ms',
+            'pro' => true
+          ],
+          [
+            'option' => 'fade_submenus_speed',
+            'title' => __('Speed of fade', 'responsive-menu'),
+            'label' => __('', 'responsive-menu'),
+            'unit' => 'ms',
+            'pro' => true
+          ]
         ],
       __('Sizing', 'responsive-menu') =>
         [

@@ -645,7 +645,7 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 			      	{
 			      		//PMXI_Import_Record::preprocessXml($xml);
 			      		$xml = "<?xml version=\"1.0\" encoding=\"". PMXI_Plugin::$session->encoding ."\"?>" . "\n" . $xml;					      		
-				      	
+				    
 				      	$dom = new DOMDocument('1.0', PMXI_Plugin::$session->encoding);
 						$old = libxml_use_internal_errors(true);
 						$dom->loadXML($xml);
@@ -655,8 +655,7 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 						if (($elements = @$xpath->query($post['xpath'])) and $elements->length){
 						
 							if ( $post['show_element'] == 1 ){
-								$this->data['node_list_count'] += $elements->length;
-								PMXI_Plugin::$session->set('count', $this->data['node_list_count']);
+								$this->data['node_list_count'] += $elements->length;								
 								if (!$loop) $this->data['dom'] = $dom;
 							}
 							
@@ -668,16 +667,20 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 							}
 
 							unset($dom, $xpath, $elements);		
-						}
+						}						
 				    }
 				}
-				unset($file);					
+				unset($file);	
+
+				PMXI_Plugin::$session->set('count', $this->data['node_list_count']);				
 			}
 			if ( ! $this->data['node_list_count']) {
 				$this->errors->add('form-validation', __('There are no elements to import based on your XPath.<br/><br/>If you are in Step 2, you probably specified filtering options that don’t match any elements present in your file.<br/>If you are seeing this error elsewhere, it means that while the XPath expression for your initial import matched some elements in your file previously, there are now zero elements in the file that match this expression.<br/>You can edit the XPath for your import by going to the Manage Imports -> Import Settings page.', 'wp_all_import_plugin')); 
 			}					
 		}
-		
+
+		$this->data['show_element'] = $post['show_element'];
+
 		PMXI_Plugin::$session->save_data();
 
 		$this->data['is_csv'] = $post['is_csv'];
@@ -964,9 +967,8 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 				}
 				unset($file);				
 			}
-			//$this->data['tagno'] = $tagno = 1;			
-			
-			$xpath = "(" . PMXI_Plugin::$session->xpath . ")[1]";		
+			//$this->data['tagno'] = $tagno = 1;						
+			$xpath = "(" . PMXI_Plugin::$session->xpath . ")[1]";
 			
 			PMXI_Plugin::$session->set('encoding', $post['import_encoding']);
 			PMXI_Plugin::$session->save_data();
@@ -1951,10 +1953,12 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 						break;				
 				}	
 
+				$is_validate_file = apply_filters('wp_all_import_is_validate_file_options_update', true, $this->data['import']->id);				
+
 				if ($upload_result instanceof WP_Error){
 					$this->errors = $upload_result;
 				}
-				elseif ($upload_result !== false and $this->data['import']['path'] != $filePath) {
+				elseif ($upload_result !== false and $this->data['import']['path'] != $filePath and $is_validate_file) {
 					
 					$file = new PMXI_Chunk($upload_result['filePath'], array('element' => ( ! empty($this->data['import']->root_element)) ? $this->data['import']->root_element : ''));
 					
@@ -2076,7 +2080,7 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 								'xpath' => PMXI_Plugin::$session->xpath,								
 								'options' => PMXI_Plugin::$session->options,								
 								'count' => PMXI_Plugin::$session->count,
-								'friendly_name' => $this->data['post']['friendly_name'],								
+								'friendly_name' => wp_all_import_clear_xss($this->data['post']['friendly_name']),
 							)
 						)->save();
 						
@@ -2097,7 +2101,7 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 					$xpath = $this->input->post('xpath');
 
 					$toUpdate = array( 
-						'friendly_name' => $this->data['post']['friendly_name'],
+						'friendly_name' => wp_all_import_clear_xss($this->data['post']['friendly_name']),
 						'xpath' => $this->input->post('xpath'),
 						'settings_update_on' => date('Y-m-d H:i:s')
 					);
@@ -2318,7 +2322,7 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 					'xpath' => PMXI_Plugin::$session->xpath,					
 					'options' => PMXI_Plugin::$session->options,									
 					'count' => PMXI_Plugin::$session->count,
-					'friendly_name' => PMXI_Plugin::$session->options['friendly_name'],
+					'friendly_name' => wp_all_import_clear_xss(PMXI_Plugin::$session->options['friendly_name']),
 					'feed_type' => PMXI_Plugin::$session->feed_type,
 					'parent_import_id' => ($this->data['update_previous']->isEmpty()) ? PMXI_Plugin::$session->parent_import_id : $this->data['update_previous']->parent_import_id,
 					'queue_chunk_number' => 0,
@@ -2370,6 +2374,10 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 
 			foreach ( get_taxonomies() as $tax ) 
 				delete_transient("pmxi_{$tax}_terms");
+
+			$functions  = $wp_uploads['basedir'] . DIRECTORY_SEPARATOR . WP_ALL_IMPORT_UPLOADS_BASE_DIRECTORY . DIRECTORY_SEPARATOR . 'functions.php';
+			if ( @file_exists($functions) )
+				require_once $functions;
 
 			do_action( 'pmxi_before_xml_import', $import->id );	
 

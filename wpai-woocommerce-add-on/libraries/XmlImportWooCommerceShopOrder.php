@@ -5,7 +5,9 @@ require_once dirname(__FILE__) . '/XmlImportWooCommerce.php';
 class XmlImportWooCommerceShopOrder extends XmlImportWooCommerce{
 	
 	public $payment_gateways;
-	public $shipping_methods;	
+	public $shipping_methods;
+    public $shipping_zone_methods = array();
+    public $prices_include_tax = 0;
 	public $tax_rates = array();
 	public $order_data = array();
 
@@ -20,15 +22,38 @@ class XmlImportWooCommerceShopOrder extends XmlImportWooCommerce{
 		$this->xml    = $options['xml'];
 		$this->logger = $options['logger'];
 		$this->chunk  = $options['chunk'];
-		$this->xpath  = $options['xpath_prefix'];		
+		$this->xpath  = $options['xpath_prefix'];
+
+        $this->prices_include_tax = ('yes' === get_option( 'woocommerce_prices_include_tax', 'no' ));
 
 		$this->payment_gateways = WC_Payment_Gateways::instance()->get_available_payment_gateways();
-		$this->shipping_methods = WC()->shipping->get_shipping_methods();		
+		$this->shipping_methods = WC()->shipping->get_shipping_methods();
+
+        if (class_exists('WC_Shipping_Zones')){
+            $zones = WC_Shipping_Zones::get_zones();
+            if (!empty($zones)){
+                foreach ($zones as $zone_id => $zone){
+                    if (!empty($zone['shipping_methods'])){
+                        foreach ($zone['shipping_methods'] as $method){
+                            $this->shipping_zone_methods[] = $method;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                $zone = new WC_Shipping_Zone( 0 );
+                $this->shipping_zone_methods = $zone->get_shipping_methods();
+            }
+        }
 
 		$tax_classes = array_filter( array_map( 'trim', explode( "\n", get_option( 'woocommerce_tax_classes' ) ) ) );
 				
 		if ( $tax_classes )
 		{
+			// Add Standard tax class
+			if ( ! in_array( '', $tax_classes ) ) $tax_classes[] = '';
+			
 			foreach ( $tax_classes as $class )
 			{
 				foreach ( WC_Tax::get_rates_for_tax_class(sanitize_title( $class )) as $rate_key => $rate)
@@ -36,7 +61,7 @@ class XmlImportWooCommerceShopOrder extends XmlImportWooCommerce{
 					$this->tax_rates[$rate->tax_rate_id] = $rate;
 				}				
 			}
-		}  
+		}
 
 		add_filter('wp_all_import_is_post_to_skip', array( &$this, 'wp_all_import_is_post_to_skip'), 10, 5);
 		add_filter('wp_all_import_combine_article_data', array( &$this, 'wp_all_import_combine_article_data'), 10, 4);
@@ -56,7 +81,7 @@ class XmlImportWooCommerceShopOrder extends XmlImportWooCommerce{
 			switch ($opt) 
 			{			
 				case 'class_xpath':
-				case 'code_xpath':
+				case 'tax_code_xpath':
 				case 'visibility_xpath':
 					// skipp this field(s)
 					break;
@@ -101,6 +126,7 @@ class XmlImportWooCommerceShopOrder extends XmlImportWooCommerce{
 					break;
 
 				case 'class':
+				case 'tax_code':
 				case 'visibility':
 					
 					if ( $value == 'xpath' and $row[$opt . '_xpath'] != '' )
@@ -825,7 +851,24 @@ class XmlImportWooCommerceShopOrder extends XmlImportWooCommerce{
 
 		// Importing product items
 		if ( empty($this->articleData['ID']) or $this->import->options['update_all_data'] == 'yes' or $this->import->options['is_update_products'] )
-		{
+		{			
+			if ( ! empty($this->articleData['ID']) and ( $this->import->options['update_all_data'] == 'yes' or $this->import->options['is_update_products'] and $this->import->options['update_products_logic'] == 'full_update' ) )
+			{
+
+				$previously_updated_order = get_option('wp_all_import_previously_updated_order_' . $this->import->id, false);
+
+				if ( empty($previously_updated_order) or $previously_updated_order != $this->articleData['ID'] ){
+
+					$order->remove_order_items( 'line_item' );
+
+					global $wpdb;				
+
+					$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}pmxi_posts WHERE import_id = %d AND post_id = %d AND unique_key LIKE %s;", $this->import->id, $order_id, '%' . $wpdb->esc_like('line-item') . '%' ) );
+
+				}
+				
+			}
+
 			$this->_import_line_items( $order, $order_id, $index );				
 		}				
 
@@ -1046,7 +1089,8 @@ class XmlImportWooCommerceShopOrder extends XmlImportWooCommerce{
 
 	public function after_save_post( $importData )
 	{
-		// Do something when shop order already imported		
+		// Do something when shop order already imported	
+		update_option('wp_all_import_previously_updated_order_' . $this->import->id, $importData['pid']);	
 	}
 
 	protected function get_order_notes( $order_id ) {
@@ -1125,59 +1169,97 @@ class XmlImportWooCommerceShopOrder extends XmlImportWooCommerce{
 
 						$item_subtotal_tax = 0;
 
+						$line_taxes = array();
+
 						foreach ($productItem['tax_rates'] as $key => $tax_rate) 
 						{		
 							if (empty($tax_rate['code'])) continue;
 
-							switch ($tax_rate['calculate_logic']) 
-							{
-								case 'percentage':
+							$tax_rate_codes   = explode("|", $tax_rate['code']);
+							$percentage_value = explode("|", $tax_rate['percentage_value']);
+							$amount_per_unit  = explode("|", $tax_rate['amount_per_unit']);
 
-									if ( ! empty($tax_rate['percentage_value']) and is_numeric($tax_rate['percentage_value']))
-									{
-										$item_subtotal_tax += WC_Tax::round( ($item_subtotal/100) * $tax_rate['percentage_value'] );
-									}
-									break;
+							foreach ($tax_rate_codes as $rate_key => $tax_rate_code) {
 
-								case 'per_unit';
-									
-									if ( ! empty($tax_rate['amount_per_unit']) and is_numeric($tax_rate['amount_per_unit']))
-									{
-										$item_subtotal_tax += WC_Tax::round( $tax_rate['amount_per_unit'] * $item_qty );
-									}
-									break;
-							
-								// Look up tax rate code
-								default:
-									
-									$found_rates = WC_Tax::get_rates_for_tax_class( $tax_rate['code'] );
+							    if ( $tax_rate_code == 'standard' ) $tax_rate_code = '';
 
-									if ( ! empty($found_rates))
-									{									
-										$matched_tax_rates = array();
-										$found_priority    = array();
+								$line_tax = 0;												
 
-										foreach ( $found_rates as $found_rate ) {
-											if ( in_array( $found_rate->tax_rate_priority, $found_priority ) ) {
-												continue;
-											}
+								switch ($tax_rate['calculate_logic']) 
+								{
+									case 'percentage':										
 
-											$matched_tax_rates[ $found_rate->tax_rate_id ] = array(
-												'rate'     => $found_rate->tax_rate,
-												'label'    => $found_rate->tax_rate_name,
-												'shipping' => $found_rate->tax_rate_shipping ? 'yes' : 'no',
-												'compound' => $found_rate->tax_rate_compound ? 'yes' : 'no'
-											);
-
-											$found_priority[] = $found_rate->tax_rate_priority;
+										if ( ! empty($percentage_value[$rate_key]) and is_numeric($percentage_value[$rate_key]))
+										{
+											$line_tax = WC_Tax::round( ($item_subtotal/100) * $percentage_value[$rate_key] );
+											$item_subtotal_tax += $line_tax;
 										}
 
-										$item_subtotal_tax += array_sum( WC_Tax::calc_tax( $item_subtotal, $matched_tax_rates, true ) );
-									}
+                                        if ( ! empty($this->tax_rates)){
+                                            foreach($this->tax_rates as $rate_id => $rate){
+                                                if ($rate->tax_rate_name == $tax_rate_code){
+                                                    $line_taxes[$rate->tax_rate_id] = $line_tax;
+                                                    break;
+                                                }
+                                            }
+                                        }
 
-									break;
-							}
-						}
+										break;
+
+									case 'per_unit';
+										
+										if ( ! empty($amount_per_unit[$rate_key]) and is_numeric($amount_per_unit[$rate_key]))
+										{
+											$line_tax = WC_Tax::round( $amount_per_unit[$rate_key] * $item_qty );
+											$item_subtotal_tax += $line_tax;
+										}
+
+                                        if ( ! empty($this->tax_rates)){
+                                            foreach($this->tax_rates as $rate_id => $rate){
+                                                if ($rate->tax_rate_name == $tax_rate_code){
+                                                    $line_taxes[$rate->tax_rate_id] = $line_tax;
+                                                    break;
+                                                }
+                                            }
+                                        }
+										break;
+								
+									// Look up tax rate code
+									default:
+										
+										$found_rates = WC_Tax::get_rates_for_tax_class( $tax_rate_code );
+
+										if ( ! empty($found_rates))
+										{
+											$found_priority    = array();
+
+											foreach ( $found_rates as $found_rate ) {
+                                                $matched_tax_rates = array();
+
+												if ( in_array( $found_rate->tax_rate_priority, $found_priority ) ) {
+													continue;
+												}
+
+												$matched_tax_rates[ $found_rate->tax_rate_id ] = array(
+													'rate'     => $found_rate->tax_rate,
+													'label'    => $found_rate->tax_rate_name,
+													'shipping' => $found_rate->tax_rate_shipping ? 'yes' : 'no',
+													'compound' => $found_rate->tax_rate_compound ? 'yes' : 'no'
+												);
+
+                                                $line_tax = array_sum( WC_Tax::calc_tax( $item_subtotal, $matched_tax_rates, $this->prices_include_tax ) );
+
+                                                $item_subtotal_tax += $line_tax;
+                                                $line_taxes[$found_rate->tax_rate_id] = $line_tax;
+
+                                                $found_priority[] = $found_rate->tax_rate_priority;
+											}
+										}
+
+										break;
+								}
+							}							
+						}						
 
 						$variation = array();
 
@@ -1218,10 +1300,10 @@ class XmlImportWooCommerceShopOrder extends XmlImportWooCommerce{
 											'subtotal_tax' => $item_subtotal_tax,
 											'total'        => $item_subtotal,
 											'tax'          => $item_subtotal_tax,
-											// 'tax_data'     => $values['line_tax_data'] // Since 2.2
+											'tax_data'     => array( 'total' => $line_taxes, 'subtotal' => array()) // Since 2.2
 										)
 									)
-								);
+								);								
 							}							
 								
 							if ( ! $item_id ) {
@@ -1252,7 +1334,7 @@ class XmlImportWooCommerceShopOrder extends XmlImportWooCommerce{
 										'subtotal_tax' => $item_subtotal_tax,
 										'total'        => $item_subtotal,
 										'tax'          => $item_subtotal_tax,
-										// 'tax_data'     => $values['line_tax_data'] // Since 2.2
+										'tax_data'     => array( 'total' => $line_taxes, 'subtotal' => array() ) // Since 2.2
 									),
 									'variation' =>  $variation
 								)
@@ -1285,9 +1367,13 @@ class XmlImportWooCommerceShopOrder extends XmlImportWooCommerce{
 
 					$item_subtotal_tax = 0;
 
+					$line_taxes = array();
+
 					foreach ($productItem['tax_rates'] as $key => $tax_rate) 
 					{		
 						if (empty($tax_rate['code'])) continue;
+
+						$line_tax = 0;												
 
 						switch ($tax_rate['calculate_logic']) 
 						{
@@ -1295,7 +1381,8 @@ class XmlImportWooCommerceShopOrder extends XmlImportWooCommerce{
 
 								if ( ! empty($tax_rate['percentage_value']) and is_numeric($tax_rate['percentage_value']))
 								{
-									$item_subtotal_tax += WC_Tax::round( ($item_subtotal/100) * $tax_rate['percentage_value'] );
+									$line_tax = WC_Tax::round( ($item_subtotal/100) * $tax_rate['percentage_value'] );
+									$item_subtotal_tax += $line_tax;
 								}
 								break;
 
@@ -1303,7 +1390,8 @@ class XmlImportWooCommerceShopOrder extends XmlImportWooCommerce{
 								
 								if ( ! empty($tax_rate['amount_per_unit']) and is_numeric($tax_rate['amount_per_unit']))
 								{
-									$item_subtotal_tax += WC_Tax::round( $tax_rate['amount_per_unit'] * $item_qty );
+									$line_tax = WC_Tax::round( $tax_rate['amount_per_unit'] * $item_qty );
+									$item_subtotal_tax += $line_tax;
 								}
 								break;
 						
@@ -1331,11 +1419,18 @@ class XmlImportWooCommerceShopOrder extends XmlImportWooCommerce{
 
 										$found_priority[] = $found_rate->tax_rate_priority;
 									}
-
-									$item_subtotal_tax += array_sum( WC_Tax::calc_tax( $item_subtotal, $matched_tax_rates, true ) );
+									$line_tax = array_sum( WC_Tax::calc_tax( $item_subtotal, $matched_tax_rates, true ) );
+									$item_subtotal_tax += $line_tax;
 								}
 
 								break;
+						}
+
+						if ( ! empty($this->tax_rates)){
+							foreach($this->tax_rates as $rate_id => $rate){
+								$line_taxes[$rate->tax_rate_id] = $line_tax;
+								break;
+							}							
 						}
 					}
 
@@ -1345,7 +1440,7 @@ class XmlImportWooCommerceShopOrder extends XmlImportWooCommerce{
 					$product_item->getBy(array(
 						'import_id'  => $this->import->id,
 						'post_id'    => $order_id,
-						'unique_key' => 'manual-line-item-' . $productIndex
+						'unique_key' => 'manual-line-item-' . $productIndex . '-' . $productItem['sku']
 					));
 					
 					if ( $product_item->isEmpty() )
@@ -1367,6 +1462,7 @@ class XmlImportWooCommerceShopOrder extends XmlImportWooCommerce{
 							wc_add_order_item_meta( $item_id, '_line_total',        wc_format_decimal( $item_subtotal ));
 							wc_add_order_item_meta( $item_id, '_line_subtotal_tax', wc_format_decimal( $item_subtotal_tax ));
 							wc_add_order_item_meta( $item_id, '_line_tax',          wc_format_decimal( $item_subtotal_tax ));
+							wc_add_order_item_meta( $item_id, '_line_tax_data', 	array( 'total' => $line_taxes, 'subtotal' => array() ) );
 
 							if ( ! empty($productItem['meta_name']))
 							{
@@ -1379,7 +1475,7 @@ class XmlImportWooCommerceShopOrder extends XmlImportWooCommerce{
 							$product_item->set(array(
 								'import_id'   => $this->import->id,
 								'post_id'     => $order_id,
-								'unique_key'  => 'manual-line-item-' . $productIndex,
+								'unique_key'  => 'manual-line-item-' . $productIndex . '-' . $productItem['sku'],
 								'product_key' => 'manual-line-item-' . $item_id,
 								'iteration'   => $this->import->iteration
 							))->save();
@@ -1403,6 +1499,7 @@ class XmlImportWooCommerceShopOrder extends XmlImportWooCommerce{
 							wc_update_order_item_meta( $item_id, '_line_total',        wc_format_decimal( $item_subtotal ));
 							wc_update_order_item_meta( $item_id, '_line_subtotal_tax', wc_format_decimal( $item_subtotal_tax ));
 							wc_update_order_item_meta( $item_id, '_line_tax',          wc_format_decimal( $item_subtotal_tax ));
+							wc_update_order_item_meta( $item_id, '_line_tax_data', 	array( 'total' => $line_taxes, 'subtotal' => array() ) );
 
 							if ( ! empty($productItem['meta_name']))
 							{
@@ -1504,6 +1601,7 @@ class XmlImportWooCommerceShopOrder extends XmlImportWooCommerce{
 					}
 				}
 			}
+			$this->_calculate_fee_taxes( $order );
 		}
 	}
 
@@ -1593,7 +1691,9 @@ class XmlImportWooCommerceShopOrder extends XmlImportWooCommerce{
 	{
 		if ( ! empty($this->data['pmwi_order']['shipping'][$index]))
 		{			
-			foreach ($this->data['pmwi_order']['shipping'][$index] as $shippingIndex => $shipping) 
+			$total_shipping = 0;
+
+			foreach ($this->data['pmwi_order']['shipping'][$index] as $shippingIndex => $shipping)
 			{
 				if (empty($shipping['name'])) continue;
 
@@ -1605,7 +1705,8 @@ class XmlImportWooCommerceShopOrder extends XmlImportWooCommerce{
 					{
 						foreach ($this->shipping_methods as $shipping_method_slug => $shipping_method) 
 						{
-							if ( strtolower($shipping_method->method_title) == strtolower(trim($shipping['class'])) )
+
+							if ( $shipping_method_slug == strtolower(trim($shipping['class'])) || $shipping_method->method_title == $shipping['class'])
 							{
 								$method = $shipping_method;
 								break;
@@ -1615,8 +1716,28 @@ class XmlImportWooCommerceShopOrder extends XmlImportWooCommerce{
 					else
 					{
 						$method = $this->shipping_methods[$shipping['class']];
-					}				
-				}								
+					}
+
+                    if ( empty($method) && !empty($this->shipping_zone_methods) ){
+                        foreach ($this->shipping_zone_methods as $shipping_zone_method) {
+                            if ($shipping_zone_method->title == $shipping['class']){
+                                $method = $shipping_zone_method;
+                                break;
+                            }
+                        }
+                    }
+				}	
+				else
+				{
+					foreach ($this->shipping_methods as $shipping_method_slug => $shipping_method) 
+					{						
+						if ( $shipping_method_slug == strtolower(trim($shipping['class'])) || $shipping_method->method_title == $shipping['class'])
+						{
+							$method = $shipping_method;
+							break;
+						}
+					}
+				}
 
 				if ( $method )
 				{					
@@ -1629,6 +1750,8 @@ class XmlImportWooCommerceShopOrder extends XmlImportWooCommerce{
 						'unique_key' => 'shipping-item-' . $shippingIndex
 					));
 					
+					$total_shipping += $shipping['amount'];
+
 					if ( $shipping_item->isEmpty() )
 					{
 						$item_id = false;
@@ -1683,6 +1806,9 @@ class XmlImportWooCommerceShopOrder extends XmlImportWooCommerce{
 					}
 				}				
 			}
+			update_post_meta($order_id, '_order_shipping', $total_shipping);
+
+            $this->_calculate_shipping_taxes( $order );
 		}
 	}
 
@@ -1692,32 +1818,43 @@ class XmlImportWooCommerceShopOrder extends XmlImportWooCommerce{
 		{
 			foreach ($this->data['pmwi_order']['taxes'][$index] as $taxIndex => $tax) 
 			{
-				if (empty($tax['code'])) continue;
+				if (empty($tax['tax_code'])) continue;
 
-				$founded = true;				
+				$founded = true;	
 
-				if ($this->import->options['pmwi_order']['taxes'][0]['code'] == 'xpath')
+				$tax_rate = null;			
+
+				if ($this->import->options['pmwi_order']['taxes'][0]['tax_code'] == 'xpath')
 				{
-					if ( empty($this->tax_rates[$tax['code']])) 
+					if ( empty($this->tax_rates[$tax['tax_code']])) 
 					{
-						$founded = false;					
+						$founded_by_name = false;
+						foreach ($this->tax_rates as $rate_id => $rate) {							
+							if ($rate->tax_rate_name == $tax['tax_code']){
+								$founded_by_name = true;
+								$tax_rate = $rate;
+								break;
+							}
+						}
+						if ( ! $founded_by_name ) $founded = false;			
 					}
 					else
 					{
+						$tax_rate = $this->tax_rates[$tax['tax_code']];
 						$tax['tax_amount'] = 0;
 						$tax['shipping_tax_amount'] = 0;
 					}
-				}								
+				}												
 
 				if ( $founded )
-				{					
+				{
 					$tax_item = new PMXI_Post_Record();
 					$tax_item->getBy(array(
 						'import_id'  => $this->import->id,
 						'post_id'    => $order_id,
 						'unique_key' => 'tax-item-' . $taxIndex
 					));
-					
+
 					if ( $tax_item->isEmpty() )
 					{
 						$item_id = false;
@@ -1728,7 +1865,7 @@ class XmlImportWooCommerceShopOrder extends XmlImportWooCommerce{
 							
 							foreach ($order_items as $order_item_id => $order_item) 
 							{
-								if ( $order_item['name'] == $tax['code'] )
+								if ( $order_item['name'] == $tax['tax_code'] )
 								{
 									$item_id = $order_item_id;
 									break(2);
@@ -1737,12 +1874,12 @@ class XmlImportWooCommerceShopOrder extends XmlImportWooCommerce{
 						}
 
 						if ( ! $item_id )
-						{
-							$item_id = $order->add_tax( $tax['code'], $tax['tax_amount'], $tax['shipping_tax_amount'] );
+						{							
+							$item_id = $order->add_tax( $tax_rate->tax_rate_id, $tax['tax_amount'], $tax['shipping_tax_amount'] );
 						}
 
 						if ( ! $item_id ) {						
-							$this->logger and call_user_func($this->logger, __('- <b>WARNING</b> Unable to create order shipping line.', 'wp_all_import_plugin'));
+							$this->logger and call_user_func($this->logger, __('- <b>WARNING</b> Unable to create order tax line.', 'wp_all_import_plugin'));
 						}
 						else
 						{
@@ -1755,7 +1892,7 @@ class XmlImportWooCommerceShopOrder extends XmlImportWooCommerce{
 							))->save();
 						}
 					}
-					$order->update_taxes();
+//					$order->update_taxes();
 				}				
 			}
 		}
@@ -1955,4 +2092,151 @@ class XmlImportWooCommerceShopOrder extends XmlImportWooCommerce{
 		}
 		return $customer;
 	}
+
+	protected function _calculate_shipping_taxes( & $order ){
+
+        $tax_total          = 0;
+        $shipping_tax_total = 0;
+        $taxes              = array();
+        $shipping_taxes     = array();
+        $tax_based_on       = get_option( 'woocommerce_tax_based_on' );
+
+        // If is_vat_exempt is 'yes', or wc_tax_enabled is false, return and do nothing.
+        if ( 'yes' === $order->is_vat_exempt || ! wc_tax_enabled() ) {
+            return false;
+        }
+
+        if ( 'billing' === $tax_based_on ) {
+            $country  = $order->billing_country;
+            $state    = $order->billing_state;
+            $postcode = $order->billing_postcode;
+            $city     = $order->billing_city;
+        } elseif ( 'shipping' === $tax_based_on ) {
+            $country  = $order->shipping_country;
+            $state    = $order->shipping_state;
+            $postcode = $order->shipping_postcode;
+            $city     = $order->shipping_city;
+        }
+
+	    // Calc taxes for shipping
+        foreach ( $order->get_shipping_methods() as $item_id => $item ) {
+            $shipping_tax_class = get_option( 'woocommerce_shipping_tax_class' );
+
+            // Inherit tax class from items
+            if ( '' === $shipping_tax_class ) {
+                $tax_classes       = WC_Tax::get_tax_classes();
+                $found_tax_classes = $order->get_items_tax_classes();
+
+                foreach ( $tax_classes as $tax_class ) {
+                    $tax_class = sanitize_title( $tax_class );
+                    if ( in_array( $tax_class, $found_tax_classes ) ) {
+                        $tax_rates = WC_Tax::find_shipping_rates( array(
+                          'country'   => $country,
+                          'state'     => $state,
+                          'postcode'  => $postcode,
+                          'city'      => $city,
+                          'tax_class' => $tax_class,
+                        ) );
+                        break;
+                    }
+                }
+            } else {
+                $tax_rates = WC_Tax::find_shipping_rates( array(
+                  'country'   => $country,
+                  'state'     => $state,
+                  'postcode'  => $postcode,
+                  'city'      => $city,
+                  'tax_class' => 'standard' === $shipping_tax_class ? '' : $shipping_tax_class,
+                ) );
+            }
+
+            $line_taxes          = WC_Tax::calc_tax( $item['cost'], $tax_rates, false );
+            $line_tax            = max( 0, array_sum( $line_taxes ) );
+            $shipping_tax_total += $line_tax;
+
+            wc_update_order_item_meta( $item_id, '_line_tax', wc_format_decimal( $line_tax ) );
+            wc_update_order_item_meta( $item_id, '_line_tax_data', array( 'total' => $line_taxes ) );
+
+            // Sum the item taxes
+            foreach ( array_keys( $shipping_taxes + $line_taxes ) as $key ) {
+                $shipping_taxes[ $key ] = ( isset( $line_taxes[ $key ] ) ? $line_taxes[ $key ] : 0 ) + ( isset( $shipping_taxes[ $key ] ) ? $shipping_taxes[ $key ] : 0 );
+            }
+            wc_update_order_item_meta( $item_id, 'taxes', $shipping_taxes );
+        }
+
+        // Save tax totals
+        $order->set_total( $shipping_tax_total, 'shipping_tax' );
+//        $order->set_total( $tax_total, 'tax' );
+    }
+
+    protected function _calculate_fee_taxes( &$order ){
+
+        $tax_total          = 0;
+        $shipping_tax_total = 0;
+        $taxes              = array();
+        $shipping_taxes     = array();
+        $tax_based_on       = get_option( 'woocommerce_tax_based_on' );
+
+        // If is_vat_exempt is 'yes', or wc_tax_enabled is false, return and do nothing.
+        if ( 'yes' === $order->is_vat_exempt || ! wc_tax_enabled() ) {
+            return false;
+        }
+
+        if ( 'billing' === $tax_based_on ) {
+            $country  = $order->billing_country;
+            $state    = $order->billing_state;
+            $postcode = $order->billing_postcode;
+            $city     = $order->billing_city;
+        } elseif ( 'shipping' === $tax_based_on ) {
+            $country  = $order->shipping_country;
+            $state    = $order->shipping_state;
+            $postcode = $order->shipping_postcode;
+            $city     = $order->shipping_city;
+        }
+
+        // Default to base
+        if ( 'base' === $tax_based_on || empty( $country ) ) {
+            $default  = wc_get_base_location();
+            $country  = $default['country'];
+            $state    = $default['state'];
+            $postcode = '';
+            $city     = '';
+        }
+
+        // Get items
+        foreach ( $order->get_items( array( 'fee' ) ) as $item_id => $item ) {
+
+            $product           = $order->get_product_from_item( $item );
+            $line_total        = isset( $item['line_total'] ) ? $item['line_total'] : 0;
+            $line_subtotal     = isset( $item['line_subtotal'] ) ? $item['line_subtotal'] : 0;
+            $tax_class         = $item['tax_class'];
+            $item_tax_status   = $product ? $product->get_tax_status() : 'taxable';
+
+            if ( '0' !== $tax_class && 'taxable' === $item_tax_status ) {
+
+                $tax_rates = WC_Tax::find_rates( array(
+                  'country'   => $country,
+                  'state'     => $state,
+                  'postcode'  => $postcode,
+                  'city'      => $city,
+                  'tax_class' => $tax_class
+                ) );
+
+                $line_subtotal_taxes = WC_Tax::calc_tax( $line_subtotal, $tax_rates, false );
+                $line_taxes          = WC_Tax::calc_tax( $line_total, $tax_rates, false );
+                $line_subtotal_tax   = max( 0, array_sum( $line_subtotal_taxes ) );
+                $line_tax            = max( 0, array_sum( $line_taxes ) );
+                $tax_total           += $line_tax;
+
+                wc_update_order_item_meta( $item_id, '_line_subtotal_tax', wc_format_decimal( $line_subtotal_tax ) );
+                wc_update_order_item_meta( $item_id, '_line_tax', wc_format_decimal( $line_tax ) );
+                wc_update_order_item_meta( $item_id, '_line_tax_data', array( 'total' => $line_taxes, 'subtotal' => $line_subtotal_taxes ) );
+
+                // Sum the item taxes
+                foreach ( array_keys( $taxes + $line_taxes ) as $key ) {
+                    $taxes[ $key ] = ( isset( $line_taxes[ $key ] ) ? $line_taxes[ $key ] : 0 ) + ( isset( $taxes[ $key ] ) ? $taxes[ $key ] : 0 );
+                }
+            }
+        }
+    }
 }

@@ -38,10 +38,12 @@ class Boxes {
               $output .= '<tr class="' . $pro . ' ' . $semi_pro . '" id="' . $option['option'] . '_container">
                       <td>
                         <div class="label">' . $option['title'] . '</div>
-                        <span class="description">' . $option['label'] . '</span>
-                      </td>
+                        <span class="description">' . $option['label'] . '</span>';
+              $output .= isset($option['beta']) ? '<span class="beta">beta</span>' : '';
+              $output .= '</td>
                       <td>';
                       $output .= $this->f($type, $option['option'], $select);
+                $output .= isset($option['pro']) ? '<a href="https://responsive.menu/why-go-pro/?utm_source=free-plugin&utm_medium=option&utm_campaign=free-plugin-option-upgrade" target="_blank" class="responsive-menu-pro-overlay"><div class="responsive-menu-pro-overlay-text">Click to upgrade now to use</div></a>' : '';
                 $output .= $unit . '</td>
                     </tr>';
                 endforeach;

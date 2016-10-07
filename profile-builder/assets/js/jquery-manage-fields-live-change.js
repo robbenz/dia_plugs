@@ -312,6 +312,16 @@ var fields 	=	{
 																						'.row-overwrite-existing'
 																					]
 																},
+						'Select (CPT)':							{	'show_rows'	:	[
+																					'.row-field-title',
+																					'.row-meta-name',
+																					'.row-description',
+																					'.row-default-option',
+																					'.row-cpt',
+																					'.row-required',
+																					'.row-overwrite-existing'
+																				]
+																},
 
 						'Checkbox':								{	'show_rows'	:	[
 																						'.row-field-title',

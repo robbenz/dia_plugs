@@ -39,8 +39,8 @@
 									<select name="pmwi_order[shipping][<?php echo $i;?>][class]" id="order_shipping_class_<?php echo $i; ?>" class="rad4 switcher" style="font-size: 14px !important;">
 										<?php 
 										$shipping_for_tooltip = array();
-										foreach ( WC()->shipping->get_shipping_methods() as $method_key => $method ) {																	
-										    echo '<option value="'. $method_key .'" '. ( ($shipping['class'] == $method_key) ? 'selected="selected"' : '' ) .'>' . $method->title . '</option>';
+										foreach ( WC()->shipping->get_shipping_methods() as $method_key => $method ) {											
+										    echo '<option value="'. $method_key .'" '. ( ($shipping['class'] == $method_key) ? 'selected="selected"' : '' ) .'>' . $method->method_title . '</option>';
 										    $shipping_for_tooltip[] = $method_key;
 										}
 										?>

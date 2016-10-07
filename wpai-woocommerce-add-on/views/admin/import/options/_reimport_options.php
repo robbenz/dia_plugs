@@ -86,61 +86,101 @@
 			</div>
 			<div class="input">
 				<input type="hidden" name="is_update_billing_details" value="0" />
-				<input type="checkbox" id="is_update_billing_details_<?php echo $post_type; ?>" name="is_update_billing_details" value="1" <?php echo $post['is_update_billing_details'] ? 'checked="checked"': '' ?>  class="switcher"/>
-				<label for="is_update_billing_details_<?php echo $post_type; ?>"><?php _e('Billing Details', 'wpai_woocommerce_addon_plugin') ?></label>
+				<input type="checkbox" id="is_update_billing_details" name="is_update_billing_details" value="1" <?php echo $post['is_update_billing_details'] ? 'checked="checked"': '' ?>  class="switcher"/>
+				<label for="is_update_billing_details"><?php _e('Billing Details', 'wpai_woocommerce_addon_plugin') ?></label>
 			</div>
 			<div class="input">
 				<input type="hidden" name="is_update_shipping_details" value="0" />
-				<input type="checkbox" id="is_update_shipping_details_<?php echo $post_type; ?>" name="is_update_shipping_details" value="1" <?php echo $post['is_update_shipping_details'] ? 'checked="checked"': '' ?>  class="switcher"/>
-				<label for="is_update_shipping_details_<?php echo $post_type; ?>"><?php _e('Shipping Details', 'wpai_woocommerce_addon_plugin') ?></label>
+				<input type="checkbox" id="is_update_shipping_details" name="is_update_shipping_details" value="1" <?php echo $post['is_update_shipping_details'] ? 'checked="checked"': '' ?>  class="switcher"/>
+				<label for="is_update_shipping_details"><?php _e('Shipping Details', 'wpai_woocommerce_addon_plugin') ?></label>
 			</div>
 			<div class="input">
 				<input type="hidden" name="is_update_payment" value="0" />
-				<input type="checkbox" id="is_update_payment_<?php echo $post_type; ?>" name="is_update_payment" value="1" <?php echo $post['is_update_payment'] ? 'checked="checked"': '' ?>  class="switcher"/>
-				<label for="is_update_payment_<?php echo $post_type; ?>"><?php _e('Payment Details', 'wpai_woocommerce_addon_plugin') ?></label>
+				<input type="checkbox" id="is_update_payment" name="is_update_payment" value="1" <?php echo $post['is_update_payment'] ? 'checked="checked"': '' ?>  class="switcher"/>
+				<label for="is_update_payment"><?php _e('Payment Details', 'wpai_woocommerce_addon_plugin') ?></label>
 			</div>
 			<div class="input">
 				<input type="hidden" name="is_update_notes" value="0" />
-				<input type="checkbox" id="is_update_notes_<?php echo $post_type; ?>" name="is_update_notes" value="1" <?php echo $post['is_update_notes'] ? 'checked="checked"': '' ?>  class="switcher"/>
-				<label for="is_update_notes_<?php echo $post_type; ?>"><?php _e('Order Notes', 'wpai_woocommerce_addon_plugin') ?></label>
+				<input type="checkbox" id="is_update_notes" name="is_update_notes" value="1" <?php echo $post['is_update_notes'] ? 'checked="checked"': '' ?>  class="switcher"/>
+				<label for="is_update_notes"><?php _e('Order Notes', 'wpai_woocommerce_addon_plugin') ?></label>
 			</div>
 			<div class="input">
 				<input type="hidden" name="is_update_products" value="0" />
-				<input type="checkbox" id="is_update_products_<?php echo $post_type; ?>" name="is_update_products" value="1" <?php echo $post['is_update_products'] ? 'checked="checked"': '' ?>  class="switcher"/>
-				<label for="is_update_products_<?php echo $post_type; ?>"><?php _e('Product Items', 'wpai_woocommerce_addon_plugin') ?></label>
+				<input type="checkbox" id="is_update_products" name="is_update_products" value="1" <?php echo $post['is_update_products'] ? 'checked="checked"': '' ?>  class="switcher"/>
+				<label for="is_update_products"><?php _e('Product Items', 'wpai_woocommerce_addon_plugin') ?></label>
+				<div class="switcher-target-is_update_products" style="padding-left:17px;">
+					<div class="input" style="margin-bottom:3px;">								
+						<input type="radio" id="update_products_logic_full_update" name="update_products_logic" value="full_update" <?php echo ( "full_update" == $post['update_products_logic'] ) ? 'checked="checked"': '' ?> />
+						<label for="update_products_logic_full_update"><?php _e('Update all products', 'wpai_woocommerce_addon_plugin') ?></label>						
+					</div>					
+					<div class="input" style="margin-bottom:3px;">								
+						<input type="radio" id="update_products_logic_add_new" name="update_products_logic" value="add_new" <?php echo ( "add_new" == $post['update_products_logic'] ) ? 'checked="checked"': '' ?> />
+						<label for="update_products_logic_add_new"><?php _e('Don\'t touch existing products, append new products', 'wpai_woocommerce_addon_plugin') ?></label>
+					</div>					
+				</div>
 			</div>			
 			<div class="input">
 				<input type="hidden" name="is_update_fees" value="0" />
-				<input type="checkbox" id="is_update_fees_<?php echo $post_type; ?>" name="is_update_fees" value="1" <?php echo $post['is_update_fees'] ? 'checked="checked"': '' ?>  class="switcher"/>
-				<label for="is_update_fees_<?php echo $post_type; ?>"><?php _e('Fees Items', 'wpai_woocommerce_addon_plugin') ?></label>
+				<input type="checkbox" id="is_update_fees" name="is_update_fees" value="1" <?php echo $post['is_update_fees'] ? 'checked="checked"': '' ?>  class="switcher"/>
+				<label for="is_update_fees"><?php _e('Fees Items', 'wpai_woocommerce_addon_plugin') ?></label>
 			</div>
 			<div class="input">
 				<input type="hidden" name="is_update_coupons" value="0" />
-				<input type="checkbox" id="is_update_coupons_<?php echo $post_type; ?>" name="is_update_coupons" value="1" <?php echo $post['is_update_coupons'] ? 'checked="checked"': '' ?>  class="switcher"/>
-				<label for="is_update_coupons_<?php echo $post_type; ?>"><?php _e('Coupon Items', 'wpai_woocommerce_addon_plugin') ?></label>
+				<input type="checkbox" id="is_update_coupons" name="is_update_coupons" value="1" <?php echo $post['is_update_coupons'] ? 'checked="checked"': '' ?>  class="switcher"/>
+				<label for="is_update_coupons"><?php _e('Coupon Items', 'wpai_woocommerce_addon_plugin') ?></label>
 			</div>
 			<div class="input">
 				<input type="hidden" name="is_update_shipping" value="0" />
-				<input type="checkbox" id="is_update_shipping_<?php echo $post_type; ?>" name="is_update_shipping" value="1" <?php echo $post['is_update_shipping'] ? 'checked="checked"': '' ?>  class="switcher"/>
-				<label for="is_update_shipping_<?php echo $post_type; ?>"><?php _e('Shipping Items', 'wpai_woocommerce_addon_plugin') ?></label>
+				<input type="checkbox" id="is_update_shipping" name="is_update_shipping" value="1" <?php echo $post['is_update_shipping'] ? 'checked="checked"': '' ?>  class="switcher"/>
+				<label for="is_update_shipping"><?php _e('Shipping Items', 'wpai_woocommerce_addon_plugin') ?></label>
 			</div>
 			<div class="input">
 				<input type="hidden" name="is_update_taxes" value="0" />
-				<input type="checkbox" id="is_update_taxes_<?php echo $post_type; ?>" name="is_update_taxes" value="1" <?php echo $post['is_update_taxes'] ? 'checked="checked"': '' ?>  class="switcher"/>
-				<label for="is_update_taxes_<?php echo $post_type; ?>"><?php _e('Tax Items', 'wpai_woocommerce_addon_plugin') ?></label>
+				<input type="checkbox" id="is_update_taxes" name="is_update_taxes" value="1" <?php echo $post['is_update_taxes'] ? 'checked="checked"': '' ?>  class="switcher"/>
+				<label for="is_update_taxes"><?php _e('Tax Items', 'wpai_woocommerce_addon_plugin') ?></label>
 			</div>			
 			<div class="input">
 				<input type="hidden" name="is_update_refunds" value="0" />
-				<input type="checkbox" id="is_update_refunds_<?php echo $post_type; ?>" name="is_update_refunds" value="1" <?php echo $post['is_update_refunds'] ? 'checked="checked"': '' ?>  class="switcher"/>
-				<label for="is_update_refunds_<?php echo $post_type; ?>"><?php _e('Refunds', 'wpai_woocommerce_addon_plugin') ?></label>
+				<input type="checkbox" id="is_update_refunds" name="is_update_refunds" value="1" <?php echo $post['is_update_refunds'] ? 'checked="checked"': '' ?>  class="switcher"/>
+				<label for="is_update_refunds"><?php _e('Refunds', 'wpai_woocommerce_addon_plugin') ?></label>
 			</div>
 			<div class="input">
 				<input type="hidden" name="is_update_total" value="0" />
-				<input type="checkbox" id="is_update_total_<?php echo $post_type; ?>" name="is_update_total" value="1" <?php echo $post['is_update_total'] ? 'checked="checked"': '' ?>  class="switcher"/>
-				<label for="is_update_total_<?php echo $post_type; ?>"><?php _e('Order Total', 'wpai_woocommerce_addon_plugin') ?></label>
+				<input type="checkbox" id="is_update_total" name="is_update_total" value="1" <?php echo $post['is_update_total'] ? 'checked="checked"': '' ?>  class="switcher"/>
+				<label for="is_update_total"><?php _e('Order Total', 'wpai_woocommerce_addon_plugin') ?></label>
 			</div>
 			<!-- Do not update order custom fields -->
-			<input type="hidden" name="is_update_custom_fields" value="0" />
+			<!-- <input type="hidden" name="is_update_custom_fields" value="0" /> -->
+
+			<div class="input">			
+				<input type="hidden" name="custom_fields_list" value="0" />			
+				<input type="hidden" name="is_update_custom_fields" value="0" />
+				<input type="checkbox" id="is_update_custom_fields" name="is_update_custom_fields" value="1" <?php echo $post['is_update_custom_fields'] ? 'checked="checked"': '' ?>  class="switcher"/>
+				<label for="is_update_custom_fields"><?php _e('Custom Fields', 'wp_all_import_plugin') ?></label>
+				<!--a href="#help" class="wpallimport-help" title="<?php _e('If Keep Custom Fields box is checked, it will keep all Custom Fields, and add any new Custom Fields specified in Custom Fields section, as long as they do not overwrite existing fields. If \'Only keep this Custom Fields\' is specified, it will only keep the specified fields.', 'wp_all_import_plugin') ?>">?</a-->
+				<div class="switcher-target-is_update_custom_fields" style="padding-left:17px;">
+					<div class="input">
+						<input type="radio" id="update_custom_fields_logic_full_update" name="update_custom_fields_logic" value="full_update" <?php echo ( "full_update" == $post['update_custom_fields_logic'] ) ? 'checked="checked"': '' ?> class="switcher"/>
+						<label for="update_custom_fields_logic_full_update"><?php _e('Update all Custom Fields', 'wp_all_import_plugin') ?></label>								
+					</div>					
+					<div class="input">
+						<input type="radio" id="update_custom_fields_logic_only" name="update_custom_fields_logic" value="only" <?php echo ( "only" == $post['update_custom_fields_logic'] ) ? 'checked="checked"': '' ?> class="switcher"/>
+						<label for="update_custom_fields_logic_only"><?php _e('Update only these Custom Fields, leave the rest alone', 'wp_all_import_plugin') ?></label>														
+						<div class="switcher-target-update_custom_fields_logic_only pmxi_choosen" style="padding-left:17px;">								
+							<span class="hidden choosen_values"><?php if (!empty($existing_meta_keys)) echo esc_html(implode(',', $existing_meta_keys));?></span>
+							<input class="choosen_input" value="<?php if (!empty($post['custom_fields_list']) and "only" == $post['update_custom_fields_logic']) echo esc_html(implode(',', $post['custom_fields_list'])); ?>" type="hidden" name="custom_fields_only_list"/>										
+						</div>						
+					</div>
+					<div class="input">
+						<input type="radio" id="update_custom_fields_logic_all_except" name="update_custom_fields_logic" value="all_except" <?php echo ( "all_except" == $post['update_custom_fields_logic'] ) ? 'checked="checked"': '' ?> class="switcher"/>
+						<label for="update_custom_fields_logic_all_except"><?php _e('Leave these fields alone, update all other Custom Fields', 'wp_all_import_plugin') ?></label>														
+						<div class="switcher-target-update_custom_fields_logic_all_except pmxi_choosen" style="padding-left:17px;">						
+							<span class="hidden choosen_values"><?php if (!empty($existing_meta_keys)) echo esc_html(implode(',', $existing_meta_keys));?></span>
+							<input class="choosen_input" value="<?php if (!empty($post['custom_fields_list']) and "all_except" == $post['update_custom_fields_logic']) echo esc_html(implode(',', $post['custom_fields_list'])); ?>" type="hidden" name="custom_fields_except_list"/>																				
+						</div>						
+					</div>
+				</div>
+			</div>	
 		</div>
 	</div>
 </div>	

@@ -74,7 +74,7 @@
 					
 					<?php 
 					foreach ($imgs as $img) { 
-						$img_url = home_url() . preg_replace('%.*/wp-content%', '/wp-content', $wp_uploads['basedir']) . DIRECTORY_SEPARATOR . PMXI_Plugin::FILES_DIRECTORY . DIRECTORY_SEPARATOR . trim($img);
+						$img_url = site_url() . preg_replace('%.*/wp-content%', '/wp-content', $wp_uploads['basedir']) . DIRECTORY_SEPARATOR . PMXI_Plugin::FILES_DIRECTORY . DIRECTORY_SEPARATOR . trim($img);
 						?>
 						<img src="<?php echo trim($img_url);?>" style="width:64px; margin:5px; vertical-align:top;"/>
 						<?php

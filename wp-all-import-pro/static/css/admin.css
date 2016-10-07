@@ -433,7 +433,7 @@
 	height:25px;
 	padding-left: 20px;
 	color:#21759B;
-	font-family: "Open Sans",​sans-serif;
+	/*font-family: "Open Sans",​sans-serif;*/
 	padding-top: 2px;
 	text-decoration: underline;
 	display: block;
@@ -2325,7 +2325,7 @@
 }
 .wpallimport-plugin .wpallimport-cf-menu li a{
 	padding: 0;
-	font-family: "Open Sans",​sans-serif;
+	/*font-family: "Open Sans",​sans-serif;*/
 	font-size: 12px;
 	display: inline;
 	color: #777;
@@ -2987,7 +2987,18 @@
 	padding-top: 35px;
 	vertical-align: middle;
 }*/
-
+.wpallimport-plugin .pmxi-admin-imports{
+	table-layout: fixed;
+}
+.wpallimport-plugin .pmxi-admin-imports .column-actions{
+	width: 130px;
+}
+.wpallimport-plugin .pmxi-admin-imports .column-summary{
+	width: 220px;
+}
+.wpallimport-plugin .pmxi-admin-imports .column-info{
+	width: 110px;
+}
 /*--------------------------------------------------------------------------
 *
 *	Setting Page

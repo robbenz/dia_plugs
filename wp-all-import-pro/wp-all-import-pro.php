@@ -3,7 +3,7 @@
 Plugin Name: WP All Import Pro
 Plugin URI: http://www.wpallimport.com/
 Description: The most powerful solution for importing XML and CSV files to WordPress. Import to Posts, Pages, and Custom Post Types. Support for imports that run on a schedule, ability to update existing imports, and much more.
-Version: 4.3.1
+Version: 4.3.2
 Author: Soflyy
 */
 
@@ -31,7 +31,7 @@ if ( is_plugin_active('wp-all-import/plugin.php') ){
 }
 else {
 
-	define('PMXI_VERSION', '4.3.1');
+	define('PMXI_VERSION', '4.3.2');
 
 	define('PMXI_EDITION', 'paid');
 
@@ -1127,7 +1127,7 @@ else {
 				'title' => '',
 				'content' => '',
 				'name' => '',
-				'is_keep_linebreaks' => 0,
+				'is_keep_linebreaks' => 1,
 				'is_leave_html' => 0,
 				'fix_characters' => 0,
 				'pid_xpath' => '',

@@ -4,7 +4,7 @@ Donate link: https://responsive.menu/donate
 Tags: responsive, menu, responsive menu, mobile menu, wordpress responsive menu, wp responsive menu, tablet menu, mobile, tablet, 3 lines, 3 line, three line, three lines
 Requires at least: 3.5.0
 Tested up to: 4.6
-Stable tag: 3.0.13
+Stable tag: 3.0.14
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -19,6 +19,9 @@ Highly customisable Responsive Menu Plugin for WordPress. With over 150 customis
 <br /><br />
 <a href="https://responsive.menu">https://responsive.menu</a>
 <br /><br />
+Demos:
+<a href="https://demo.responsive.menu">https://demo.responsive.menu</a>
+<br /><br />
 **Requirements:**
 <br /><br />
 PHP 5.4+
@@ -29,7 +32,7 @@ PHP 5.4+
 <br /><br />
 **Fully unit tested:**
 <br /><br />
-100% unit test coverage with tests included in the plugin so you can run them yourself for peace of mind.
+100% unit test coverage with tests included in the plugin so you can run them yourself for peace of mind
 <br /><br />
 **Basic Functionality:**
 <ul>
@@ -60,6 +63,7 @@ PHP 5.4+
 **Advanced & Pro Functionality:**
 <ul>
 <li>Preview your changes before implementing</li>
+<li>Animate the menu items when menu is opened</li>
 <li>FontIcon Support for individual menu items</li>
 <li>15 button animation effects</li>
 <li>Colour opacity for all colours</li>
@@ -115,6 +119,15 @@ To view our whole FAQ, please go to https://responsive.menu/faq/
 7. Fully customisable Admin Screen
 
 == Changelog ==
+
+= 3.0.14 (22nd September 2016) =
+* **Requires PHP 5.4**
+* Improved PHP check on pre 5.3 systems
+* Improved width of first and last menu item borders
+* Added animation of menu items when menu opened (Pro only)
+* Added slide effect animation option instead of standard dropdown (Pro only)
+* Removed button from header bar to aid with z-indexing (Pro only)
+* Bug fixes
 
 = 3.0.13 (22nd September 2016) =
 * **Requires PHP 5.4**

@@ -20,9 +20,9 @@
 			
 			foreach ($post['pmwi_order']['taxes'] as $i => $tax): 
 
-				$tax += array('code' => '', 'tax_amount' => '', 'shipping_tax_amount' => '', 'code_xpath' => '');
+				$tax += array('tax_code' => '', 'tax_amount' => '', 'shipping_tax_amount' => '', 'tax_code_xpath' => '');
 				
-				if (empty($tax['code'])) continue;
+				if (empty($tax['tax_code'])) continue;
 
 				?>
 				
@@ -47,22 +47,22 @@
 								<td colspan="2">									
 									<label><?php _e('Tax Rate', 'wp_all_import_plugin'); ?></label>
 									<span class="wpallimport-clear"></span>
-									<select name="pmwi_order[taxes][<?php echo $i;?>][code]" id="order_tax_code_<?php echo $i;?>" class="rad4 switcher" style="font-size: 14px !important;">																		
+									<select name="pmwi_order[taxes][<?php echo $i;?>][tax_code]" id="order_tax_code_<?php echo $i;?>" class="rad4 switcher" style="font-size: 14px !important;">																		
 										<?php 
 										$taxes_for_tooltip = array();
 										foreach ($classes_options as $key => $value):?>
 											<optgroup label="<?php echo $value; ?>">
 												<?php foreach ( WC_Tax::get_rates_for_tax_class($key) as $rate_key => $rate): $taxes_for_tooltip[] = $rate->tax_rate_id . " - " . $rate->tax_rate_name;?>
-												<option value="<?php echo $rate->tax_rate_id;?>" <?php if ($tax['code'] == $rate->tax_rate_id) echo 'selected="selected"';?>><?php echo $rate->tax_rate_name;?></option>											
+												<option value="<?php echo $rate->tax_rate_id;?>" <?php if ($tax['tax_code'] == $rate->tax_rate_id) echo 'selected="selected"';?>><?php echo $rate->tax_rate_name;?></option>											
 												<?php endforeach; ?>																		
 											</optgroup>
 										<?php endforeach; ?>																													
-										<option value="xpath" <?php if ("xpath" == $tax['code']) echo 'selected="selected"';?>><?php _e("Set with XPath", "wp_all_import_plugin"); ?></option>
+										<option value="xpath" <?php if ("xpath" == $tax['tax_code']) echo 'selected="selected"';?>><?php _e("Set with XPath", "wp_all_import_plugin"); ?></option>
 									</select>
 									<span class="wpallimport-clear"></span>
 									<div class="switcher-target-order_tax_code_<?php echo $i; ?>" style="margin-top:10px;">
 										<span class="wpallimport-slide-content" style="padding-left:0;">
-											<input type="text" class="short rad4" name="pmwi_order[taxes][<?php echo $i;?>][code_xpath]" value="<?php echo esc_attr($tax['code_xpath']) ?>"/>
+											<input type="text" class="short rad4" name="pmwi_order[taxes][<?php echo $i;?>][tax_code_xpath]" value="<?php echo esc_attr($tax['tax_code_xpath']) ?>"/>
 											<a href="#help" class="wpallimport-help" title="<?php printf(__('Tax rate method can be matched by ID: %s. If tax method is not found then no tax information will be imported.', 'wp_all_import_plugin'), implode(", ", $taxes_for_tooltip)); ?>" style="position:relative; top:10px;">?</a>	
 										</span>
 									</div>
@@ -96,7 +96,7 @@
 							<td colspan="2">
 								<label><?php _e('Tax Rate', 'wp_all_import_plugin'); ?></label>
 								<span class="wpallimport-clear"></span>								
-								<select name="pmwi_order[taxes][ROWNUMBER][code]" id="order_tax_code_ROWNUMBER" class="rad4 switcher" style="font-size: 14px !important;">																		
+								<select name="pmwi_order[taxes][ROWNUMBER][tax_code]" id="order_tax_code_ROWNUMBER" class="rad4 switcher" style="font-size: 14px !important;">																		
 									<option value=""><?php _e("Select","wp_all_import_plugin");?></option>
 									<?php foreach ($classes_options as $key => $value):?>										
 										<optgroup label="<?php echo $value; ?>">
@@ -110,7 +110,7 @@
 								<span class="wpallimport-clear"></span>
 								<div class="switcher-target-order_tax_code_ROWNUMBER" style="margin-top:10px; display: none;">
 									<span class="wpallimport-slide-content" style="padding-left:0;">
-										<input type="text" class="short rad4" name="pmwi_order[taxes][ROWNUMBER][code_xpath]" value=""/>
+										<input type="text" class="short rad4" name="pmwi_order[taxes][ROWNUMBER][tax_code_xpath]" value=""/>
 										<a href="#help" class="wpallimport-help" title="<?php _e('Tax rate method can be matched by ID. If tax method is not found then no tax information will be imported.', 'wp_all_import_plugin') ?>" style="position:relative; top:0px;">?</a>	
 									</span>
 								</div>

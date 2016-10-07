@@ -1415,7 +1415,7 @@
 
 	    	if ($rule.val() != 'is_empty' && $rule.val() != "is_not_empty" && $val.val() == "") return;
 
-	    	var relunumber = $('.filtering_rules').find('li').length;
+	    	var relunumber = $('.filtering_rules').find('li').length + "_" + $.now();
 
 	    	var html = '<li><div class="drag-element">';
 	    		html += '<input type="hidden" value="'+ $el.val() +'" class="pmxi_xml_element"/>';
@@ -1626,14 +1626,14 @@
 	
 	$('.wpallimport-custom-fields').each(function(){		
 		$(this).find('.wp_all_import_autocomplete').each(function(){
-			if ( ! $(this).parents('tr:first').hasClass('template')){
+			if ( ! $(this).parents('tr:first').hasClass('template')){				
 				$(this).autocomplete({
 					source: eval('__META_KEYS'),
 					minLength: 0
 				}).click(function () {
 					$(this).autocomplete('search', '');
 					$(this).attr('rel', '');
-				});
+				});			
 			}
 		});
 		
@@ -2093,33 +2093,35 @@
     	e.preventDefault();
     	var $ths = $(this);
     	$(this).attr('disabled', 'disabled');
-    	var request = {
-			action: 'delete_import',	
-			data: $(this).parents('form:first').serialize(),				
-			security: wp_all_import_security				
-	    };    	    
 	    var iteration = 1;
+		var request = {
+			action: 'delete_import',
+			data: $(this).parents('form:first').serialize(),
+			security: wp_all_import_security,
+			iteration: iteration
+		};
 		var deleteImport = function(){
+			request.iteration = iteration;
 			$.ajax({
 				type: 'POST',
-				url: ajaxurl + '?iteration=' + iteration,
+				url: ajaxurl,
 				data: request,
-				success: function(response) {		
-					
+				success: function(response) {
+
 					iteration++;
 
 					$ths.parents('form:first').find('.wp_all_import_deletion_log').html('<p>' + response.msg + '</p>');
 
-					if (response.result){																												
+					if (response.result){
 						$('.wp_all_import_functions_preloader').hide();
 						window.location.href = response.redirect;
 					}
 					else
-					{						
+					{
 						deleteImport();
 					}
 				},
-				error: function( jqXHR, textStatus ) {						
+				error: function( jqXHR, textStatus ) {
 					$ths.removeAttr('disabled');
 					$('.wp_all_import_functions_preloader').hide();
 				},

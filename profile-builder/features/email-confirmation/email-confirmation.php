@@ -178,59 +178,39 @@ function wppb_add_meta_to_user_on_activation( $user_id, $password, $meta ){
 	if ( $manage_fields != 'not_set' ){
 		foreach ( $manage_fields as $key => $value){
 			switch ( $value['field'] ) {
-				case 'Input':{
-					if ( isset( $meta[$value['meta-name']] ) )
-						update_user_meta( $user_id, $value['meta-name'], trim( $meta[$value['meta-name']] ) );
-					break;
-				}						
-				case 'Input (Hidden)':{
-					if ( isset( $meta[$value['meta-name']] ) )
-						update_user_meta( $user_id, $value['meta-name'], trim( $meta[$value['meta-name']] ) );
-					break;
-				}
-				case 'Checkbox':{
-					if ( isset( $meta[$value['meta-name']] ) )
-						update_user_meta( $user_id, $value['meta-name'], trim( $meta[$value['meta-name']] ) );
-					break;
-				}
-				case 'Checkbox (Terms and Conditions)':{
-					if ( isset( $meta[$value['meta-name']] ) )
-						update_user_meta( $user_id, $value['meta-name'], trim( $meta[$value['meta-name']] ) );
-					break;
-				}
-				case 'Radio':{
-					if ( isset( $meta[$value['meta-name']] ) )
-						update_user_meta( $user_id, $value['meta-name'], trim( $meta[$value['meta-name']] ) );
-					break;
-				}
-				case 'Select':{
-					if ( isset( $meta[$value['meta-name']] ) )
-						update_user_meta( $user_id, $value['meta-name'], trim( $meta[$value['meta-name']] ) );
-					break;
-				}
-				case 'Select (Country)':{
-					if ( isset( $meta[$value['meta-name']] ) )
-						update_user_meta( $user_id, $value['meta-name'], trim( $meta[$value['meta-name']] ) );
-					break;
-				}
-				case 'Select (Multiple)':{
-					if ( isset( $meta[$value['meta-name']] ) )
-						update_user_meta( $user_id, $value['meta-name'], trim( $meta[$value['meta-name']] ) );
-					break;
-				}
-				case 'Select (Timezone)':{
-					if ( isset( $meta[$value['meta-name']] ) )
-						update_user_meta( $user_id, $value['meta-name'], trim( $meta[$value['meta-name']] ) );
-					break;
-				}
-				case 'Datepicker':{
-					if ( isset( $meta[$value['meta-name']] ) )
-						update_user_meta( $user_id, $value['meta-name'], trim( $meta[$value['meta-name']] ) );
-					break;
-				}
+				case 'Input':
+				case 'Input (Hidden)':
+				case 'Checkbox':
+				case 'Checkbox (Terms and Conditions)':
+				case 'Radio':
+				case 'Select':
+				case 'Select (Country)':
+				case 'Select (Multiple)':
+				case 'Select (Timezone)':
+				case 'Datepicker':
 				case 'Textarea':{
 					if ( isset( $meta[$value['meta-name']] ) )
 						update_user_meta( $user_id, $value['meta-name'], trim( $meta[$value['meta-name']] ) );
+					break;
+				}
+				case 'Timepicker':{
+					if ( isset( $meta[$value['meta-name']] ) ) {
+						$time = $meta[$value['meta-name']];
+						if( !empty( $time['hours'] ) && !empty( $time['minutes'] ) ) {
+							update_user_meta( $user_id, $value['meta-name'], $time['hours'] . ':' . $time['minutes'] );
+						}
+
+					}
+					break;
+				}
+				case 'Map':{
+					if ( isset( $meta[$value['meta-name']] ) ) {
+						// Add new markers
+						if( is_array( $meta[$value['meta-name']] ) ) {
+							foreach( $meta[$value['meta-name']] as $key => $position )
+								update_user_meta( $user_id, $value['meta-name'] . '_' . $key, $position );
+						}
+					}
 					break;
 				}
 				case 'Upload':{
@@ -310,8 +290,12 @@ function wppb_add_meta_to_user_on_activation( $user_id, $password, $meta ){
                         break;
                     }
 				}
-                default:
-                    do_action( 'wppb_add_meta_on_user_activation_'.Wordpress_Creation_Kit_PB::wck_generate_slug( $value['field'] ), $user_id, $password, $meta );
+                default: {
+					if ( isset( $meta[$value['meta-name']] ) ) {
+						update_user_meta($user_id, $value['meta-name'], $meta[$value['meta-name']]);
+					}
+					do_action('wppb_add_meta_on_user_activation_' . Wordpress_Creation_Kit_PB::wck_generate_slug($value['field']), $user_id, $password, $meta);
+				}
 			}
 		}
 	}

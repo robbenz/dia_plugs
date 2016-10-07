@@ -12,7 +12,10 @@
 
         $current_user = get_userdata( get_current_user_id() );
 
-        extract( shortcode_atts( array( 'text' => sprintf( __('You are currently logged in as %s. ','profile-builder') ,$current_user->user_login) , 'redirect' => wppb_curpageurl(), 'redirect_priority' => 'normal', 'link_text' => __('Log out &raquo;','profile-builder')), $atts ) );
+        extract( shortcode_atts( array( 'text' => sprintf( __('You are currently logged in as %s. ','profile-builder') ,$current_user->user_login) , 'redirect' => wppb_curpageurl(), 'redirect_url' => wppb_curpageurl(), 'redirect_priority' => 'normal', 'link_text' => __('Log out &raquo;','profile-builder')), $atts ) );
+
+        if( !empty( $redirect_url ) )
+            $redirect = $redirect_url;
 
 		if( PROFILE_BUILDER == 'Profile Builder Pro' ) {
 			$wppb_module_settings = get_option( 'wppb_module_settings' );

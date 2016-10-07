@@ -79,9 +79,9 @@ $default_options = [
   'menu_current_link_colour' => '#fff',
   'menu_current_link_hover_colour' => '#fff',
   'menu_sub_arrow_border_colour' => '#212121',
-  'menu_sub_arrow_border_hover_colour' => '#fff',
+  'menu_sub_arrow_border_hover_colour' => '#3f3f3f',
   'menu_sub_arrow_border_colour_active' => '#212121',
-  'menu_sub_arrow_border_hover_colour_active' => '#fff',
+  'menu_sub_arrow_border_hover_colour_active' => '#3f3f3f',
   'menu_sub_arrow_background_colour' => '#212121',
   'menu_sub_arrow_background_hover_colour' => '#3f3f3f',
   'menu_sub_arrow_background_colour_active' => '#212121',
@@ -166,6 +166,12 @@ $default_options = [
   'header_bar_position_type' => 'fixed',
 
   'items_order' => '{"title":"on","menu":"on","search":"on","additional content":"on"}',
-  'header_bar_items_order' => '{"logo":"on","title":"on","search":"on","html content":"on","button":"on"}',
+  'header_bar_items_order' => '{"logo":"on","title":"on","search":"on","html content":"on"}',
 
+  'fade_submenus' => 'off',
+  'fade_submenus_side' => 'left',
+  'fade_submenus_delay' => 100,
+  'fade_submenus_speed' => 500,
+
+  'use_slide_effect' => 'off'
 ];

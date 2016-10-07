@@ -5,7 +5,7 @@ Tags: user registration, user registration form, user fields, extra user fields,
 
 Requires at least: 3.1
 Tested up to: 4.6.1
-Stable tag: 2.4.7
+Stable tag: 2.4.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -150,6 +150,12 @@ This plugin adds/removes user fields in the front-end. Both default and extra pr
 10. Profile Builder Login Widget
 
 == Changelog ==
+= 2.4.8 =
+* Now when an administrator registers an user the Register button text has changed to Add User
+* Multiple fixes regarding redirects
+* Fixed issues with redirect_url shortcode parameter and changed the logout shortcode parameter to redirect_url from redirect
+* Added the filter 'wppb_edit_other_users_dropdown_query_args' for changing the user query on the edit other users dropwdown
+
 = 2.4.7 =
 * Fixed an issue with the redirect after registration autologin and string translations
 * Changes to Addons page to meet wp directory requirements

@@ -57,6 +57,7 @@ function wppb_manage_fields_submenu(){
         $manage_field_types[] = 'Select (Timezone)';
         $manage_field_types[] = 'Select (User Role)';
         $manage_field_types[] = 'Select (Currency)';
+        $manage_field_types[] = 'Select (CPT)';
         $manage_field_types[] = 'Checkbox';
         $manage_field_types[] = 'Checkbox (Terms and Conditions)';
         $manage_field_types[] = 'Radio';
@@ -103,6 +104,9 @@ function wppb_manage_fields_submenu(){
         $default_currency_options[]  = $currency_name;
     }
 
+	//cpt select
+	$post_types = get_post_types( array( 'public'   => true ), 'names' );
+
 	// set up the fields array
 	$fields = apply_filters( 'wppb_manage_fields', array(
 
@@ -132,6 +136,7 @@ function wppb_manage_fields_submenu(){
 		array( 'type' => 'select', 'slug' => 'default-option-timezone', 'title' => __( 'Default Option', 'profile-builder' ), 'options' => wppb_timezone_select_options( 'back_end' ), 'description' => __( "Default option of the field", 'profile-builder' ) ),
         array( 'type' => 'select', 'slug' => 'default-option-currency', 'title' => __( 'Default Option', 'profile-builder' ), 'values' => ( isset( $default_currency_values ) ) ? $default_currency_values : '', 'options' => ( isset( $default_currency_options ) ) ? $default_currency_options : '', 'description' => __( "Default option of the field", 'profile-builder' ) ),
         array( 'type' => 'select', 'slug' => 'show-currency-symbol', 'title' => __( 'Show Currency Symbol', 'profile-builder' ), 'options' => array( 'No', 'Yes' ), 'default' => 'No', 'description' => __( 'Whether the currency symbol should be displayed after the currency name in the select option.', 'profile-builder' ) ),
+        array( 'type' => 'select', 'slug' => 'cpt', 'title' => __( 'Show Post Type', 'profile-builder' ), 'options' => $post_types, 'default' => 'post', 'description' => __( 'Posts from what post type will be displayed in the select.', 'profile-builder' ) ),
         array( 'type' => 'text', 'slug' => 'validation-possible-values', 'title' => __( 'Allowable Values', 'profile-builder' ), 'description' => __( "Enter a comma separated list of possible values. Upon registration if the value provided by the user does not match one of these values, the user will not be registered.", 'profile-builder' ) ),
         array( 'type' => 'text', 'slug' => 'custom-error-message', 'title' => __( 'Error Message', 'profile-builder' ), 'description' => __( "Set a custom error message that will be displayed to the user.", 'profile-builder' ) ),
         array( 'type' => 'select', 'slug' => 'time-format', 'title' => __( 'Time Format', 'profile-builder' ), 'options' => array( '%12 Hours%12', '%24 Hours%24' ), 'description' => __( 'Specify the time format.', 'profile-builder' ) ),
@@ -1120,7 +1125,7 @@ function wppb_check_field_on_edit_add( $message, $fields, $required_fields, $met
 			$fields_so_far = get_post_meta ( $post_id, $meta_name, true );
 			
 			foreach ( $fields_so_far as $key => $value ){
-				if ( $value['field'] == $posted_values['field'] )
+				if ( $value['id'] == $posted_values['id'] )
 					$message .= __( "That field is already added in this form\n", 'profile-builder' );
 			}
 		}

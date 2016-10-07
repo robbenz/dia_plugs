@@ -542,17 +542,17 @@ if ( ! class_exists('PMXI_Upload')){
 				} else {
 					
 					if ('gz' == $feed_type or '' == $feed_type and preg_match('%\W(gz|gzip)$%i', trim($this->file))){
-						$fileInfo = wp_all_import_get_gz($this->file, 0, $this->uploadsPath);
+						$fileInfo = wp_all_import_get_gz($this->file, 0, $this->uploadsPath);						
 					}
 					else{
-						$headers = wp_all_import_get_feed_type($this->file);						
-
-						if ($headers['Content-Type'] and in_array($headers['Content-Type'], array('gz', 'gzip')) or $headers['Content-Encoding'] and in_array($headers['Content-Encoding'], array('gz', 'gzip'))){
-							$fileInfo = wp_all_import_get_gz($this->file, 0, $this->uploadsPath);
+						$headers = wp_all_import_get_feed_type($this->file);		
+															
+						if ($headers['Content-Type'] and in_array($headers['Content-Type'], array('gz', 'gzip')) or $headers['Content-Encoding'] and in_array($headers['Content-Encoding'], array('gz', 'gzip'))){							
+							$fileInfo = wp_all_import_get_gz($this->file, 0, $this->uploadsPath, $headers);
 						}
 						else{
 							$fileInfo = wp_all_import_get_url($this->file, $this->uploadsPath, $headers['Content-Type'], $headers['Content-Encoding'], true);
-						}
+						}											
 					}										
 					
 					if ( ! is_wp_error($fileInfo) ){

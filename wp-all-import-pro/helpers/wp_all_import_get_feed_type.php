@@ -3,7 +3,7 @@
 if ( ! function_exists('wp_all_import_get_feed_type')){
 	function wp_all_import_get_feed_type($url){
 		
-		$type = wp_all_import_get_remote_file_name($url);
+		$type = wp_all_import_get_remote_file_name($url);		
 		
 		if ($type !== false) {
 
@@ -52,7 +52,8 @@ if ( ! function_exists('wp_all_import_get_feed_type')){
 	   	}
 	   	return array(
 	   		'Content-Type' => $type,
-	   		'Content-Encoding' => (!empty($headers['Content-Encoding'])) ? $headers['Content-Encoding'] : false
+	   		'Content-Encoding' => (!empty($headers['Content-Encoding'])) ? $headers['Content-Encoding'] : false,
+	   		'Content-Disposition' => (!empty($headers['Content-Disposition'])) ? $headers['Content-Disposition'] : false
 	   	);
 	}
 }

@@ -38,7 +38,7 @@ if ( ! function_exists('wp_all_import_get_url')){
 			 	@fwrite($fp, $chunk);		 	
 			}
 			@fclose($file);
-			@fclose($fp); 	   	
+			@fclose($fp);
 			
 			$chunk = new PMXI_Chunk($localPath);										    					    					   												
 

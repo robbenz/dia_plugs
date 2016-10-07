@@ -33,5 +33,5 @@ $config = array(
 	"google_signature" => "",
 	"licenses" => array(),
 	"statuses" => array(),
-	// "enable_xmlreader" => 1
+	"force_stream_reader" => 0
 );if (!defined('WPALLIMPORT_SIGNATURE')) define('WPALLIMPORT_SIGNATURE', 'ZjhhMjZiYjYzNmRlY2QzYTFjYjQ4MmE0NDRkYWQ0Njc=');

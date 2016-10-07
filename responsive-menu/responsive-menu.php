@@ -4,7 +4,7 @@
 Plugin Name: Responsive Menu
 Plugin URI: https://responsive.menu
 Description: Highly Customisable Responsive Menu Plugin for WordPress
-Version: 3.0.13
+Version: 3.0.14
 Author: Responsive Menu
 Text Domain: responsive-menu
 Author URI: https://responsive.menu
@@ -32,13 +32,9 @@ if(version_compare(PHP_VERSION, '5.4', '<'))
 include dirname(__FILE__) . '/autoload.php';
 include dirname(__FILE__) . '/src/config/services.php';
 
-/*
-* Initial Migration and Version Check synchronisation */
-add_action('init', function() use($container) {
-  $migration = $container['migration'];
-  $migration->setup();
-  $migration->synchronise();
-});
+/* Initial Migration and Version Check synchronisation */
+include dirname(__FILE__) . '/src/config/setup.php';
 
+/* Finally route and initialise the plugin */
 include dirname(__FILE__) . '/src/config/routing.php';
 include dirname(__FILE__) . '/src/config/internationalise.php';

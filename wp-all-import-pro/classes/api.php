@@ -355,9 +355,9 @@ class PMXI_API
 		$bn  = wp_all_import_sanitize_filename(urldecode(basename($img_url)));
 
 		if ($image_name == ""){
-			$img_ext = pmxi_getExtensionFromStr($url);			
+			$img_ext = pmxi_getExtensionFromStr($img_url);			
 			$default_extension = pmxi_getExtension($bn);
-			if ($img_ext == "") $img_ext = pmxi_get_remote_image_ext($url);
+			if ($img_ext == "") $img_ext = pmxi_get_remote_image_ext($img_url);
 			
 			// generate local file name
 			$image_name = apply_filters("wp_all_import_image_filename", urldecode(sanitize_file_name((($img_ext) ? str_replace("." . $default_extension, "", $bn) : $bn))) . (("" != $img_ext) ? '.' . $img_ext : ''));
