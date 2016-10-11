@@ -4,7 +4,7 @@ Donate link: https://responsive.menu/donate
 Tags: responsive, menu, responsive menu, mobile menu, wordpress responsive menu, wp responsive menu, tablet menu, mobile, tablet, 3 lines, 3 line, three line, three lines
 Requires at least: 3.5.0
 Tested up to: 4.6
-Stable tag: 3.0.14
+Stable tag: 3.0.15
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -19,7 +19,6 @@ Highly customisable Responsive Menu Plugin for WordPress. With over 150 customis
 <br /><br />
 <a href="https://responsive.menu">https://responsive.menu</a>
 <br /><br />
-Demos:
 <a href="https://demo.responsive.menu">https://demo.responsive.menu</a>
 <br /><br />
 **Requirements:**
@@ -120,7 +119,15 @@ To view our whole FAQ, please go to https://responsive.menu/faq/
 
 == Changelog ==
 
-= 3.0.14 (22nd September 2016) =
+= 3.0.15 (11th October 2016) =
+* **Requires PHP 5.4**
+* Added border size option
+* Made submenu active colours free
+* Improved FontAwesome Icon check (Pro only)
+* Added sizing unit options (Pro only)
+* Bug fixes
+
+= 3.0.14 (4th October 2016) =
 * **Requires PHP 5.4**
 * Improved PHP check on pre 5.3 systems
 * Improved width of first and last menu item borders
