@@ -16,13 +16,13 @@ add_action( 'wp_enqueue_scripts', 'stylellv_enqueue_scripts', 999 );
 function stylellv_enqueue_scripts() {
 
 	if ( ! wp_style_is( 'style', 'done' ) ) {
-		
+
 		wp_deregister_style( 'style' );
 		wp_dequeue_style( 'style' );
 
 		// if you have a style.css but you don't want to load it
 		// you just dont need this plugin, so deactivate it
-		$style_filepath = get_stylesheet_directory() . '/style.css';
+		$style_filepath = get_stylesheet_directory() . '/bst.css';
 		if ( file_exists($style_filepath) ) {
 			wp_enqueue_style( 'style', get_stylesheet_uri() . '?' . filemtime( $style_filepath ) );
 		}
