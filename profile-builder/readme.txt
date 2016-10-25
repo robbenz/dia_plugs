@@ -5,7 +5,7 @@ Tags: user registration, user registration form, user fields, extra user fields,
 
 Requires at least: 3.1
 Tested up to: 4.6.1
-Stable tag: 2.4.8
+Stable tag: 2.4.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -150,6 +150,13 @@ This plugin adds/removes user fields in the front-end. Both default and extra pr
 10. Profile Builder Login Widget
 
 == Changelog ==
+= 2.4.9 =    
+* Security improvements and fixes
+* Fixed a warning that happened on older WordPress versions regarding the get_user_by() function
+* Login with email uses default functions now for WordPress versions higher thab 4.5 
+* Removed login with email when username is selected from settings
+* Removed sending password from default registration email
+
 = 2.4.8 =
 * Now when an administrator registers an user the Register button text has changed to Add User
 * Multiple fixes regarding redirects

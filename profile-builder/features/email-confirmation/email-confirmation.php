@@ -563,7 +563,13 @@ function wppb_notify_user_registration_email( $bloginfo, $user_name, $email, $se
         if ( $password === NULL ) {
             $password = __( 'Your selected password at signup', 'profile-builder' );
         }
-		$user_message_content = sprintf( __( 'Welcome to %1$s!<br/><br/><br/>Your username is:%2$s and password:%3$s', 'profile-builder' ), $user_message_from, $user_name, $password );
+
+		$send_password = apply_filters( 'wppb_send_password_in_default_email_message', false );
+		if( !$send_password )
+			$user_message_content = sprintf( __( 'Welcome to %1$s!<br/><br/><br/>Your username is:%2$s', 'profile-builder' ), $user_message_from, $user_name );
+		else
+			$user_message_content = sprintf( __( 'Welcome to %1$s!<br/><br/><br/>Your username is:%2$s and password:%3$s', 'profile-builder' ), $user_message_from, $user_name, $password );
+
         if ( $password === __( 'Your selected password at signup', 'profile-builder' ) ) {
             $password = NULL;
         }

@@ -26,9 +26,14 @@ function wppb_change_login_with_email(){
     if( !empty( $_POST['log'] ) ){
 		// only do this for our form
 		if( isset( $_POST['wppb_login'] ) ){
-			global $wpdb, $_POST;
+			global $wpdb, $_POST, $wp_version;
 			// apply filter to allow stripping slashes if necessary
 			$_POST['log'] = apply_filters( 'wppb_before_processing_email_from_forms', $_POST['log'] );
+
+			/* since version 4.5 there is in the core the option to login with email so we don't need the bellow code but for backward compatibility we will keep it */
+			if( version_compare( $wp_version, '4.5.0' ) >= 0 )
+				return;
+
 			$wppb_generalSettings = get_option( 'wppb_general_settings' );
 
 			// if this setting is active, the posted username is, in fact the user's email
@@ -64,6 +69,45 @@ function wppb_change_login_with_email(){
 	}
 }
 add_action( 'login_init', 'wppb_change_login_with_email' );
+
+/**
+ * Remove email login when username login is selected
+ * inspiration from https://wordpress.org/plugins/no-login-by-email-address/
+ */
+$wppb_generalSettings = get_option( 'wppb_general_settings' );
+if( isset( $wppb_generalSettings['loginWith'] ) && ( $wppb_generalSettings['loginWith'] == 'username' ) ) {
+	function wppb_login_username_label()
+	{
+		add_filter('gettext', 'wppb_login_username_label_change', 20, 3);
+		function wppb_login_username_label_change($translated_text, $text, $domain)
+		{
+			if ($text === 'Username or Email') {
+				$translated_text = __( 'Username', 'profile-builder' );
+			}
+			return $translated_text;
+		}
+	}
+
+	add_action('login_head', 'wppb_login_username_label');
+
+	/**
+	 * Filter wp_login_form username default
+	 *
+	 */
+	function wppb_change_login_username_label($defaults)
+	{
+		$defaults['label_username'] = __( 'Username', 'profile-builder' );
+		return $defaults;
+	}
+
+	add_filter('login_form_defaults', 'wppb_change_login_username_label');
+
+	/**
+	 * Remove email/password authentication
+	 *
+	 */
+	remove_filter('authenticate', 'wp_authenticate_email_password', 20);
+}
 
 // login redirect filter. used to redirect from wp-login.php if it errors out
 function wppb_login_redirect( $redirect_to, $redirect_url, $user ){

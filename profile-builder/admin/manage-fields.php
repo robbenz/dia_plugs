@@ -1345,26 +1345,3 @@ function wppb_delete_user_map_markers( $user_id, $meta_name ) {
 
 }
 
-
-/*
- * Save markers upon user activation
- */
-function wppb_activate_user_map_field( $user_id, $password, $meta ) {
-
-    $manage_fields = get_option( 'wppb_manage_fields', array() );
-
-    if( !empty( $manage_fields ) ) {
-        foreach( $manage_fields as $field ) {
-
-            if( $field['field'] == 'Map' && !empty( $meta[wppb_handle_meta_name($field['meta-name'])] ) && is_array( $meta[wppb_handle_meta_name( $field['meta-name'] )] ) ) {
-
-                foreach( $meta[wppb_handle_meta_name( $field['meta-name'] )] as $key => $position )
-                    update_user_meta( $user_id, $field['meta-name'] . '_' . $key, $position );
-
-            }
-
-        }
-    }
-
-}
-add_action( 'wppb_activate_user', 'wppb_activate_user_map_field', 10, 3 );

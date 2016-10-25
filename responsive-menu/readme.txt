@@ -4,7 +4,7 @@ Donate link: https://responsive.menu/donate
 Tags: responsive, menu, responsive menu, mobile menu, wordpress responsive menu, wp responsive menu, tablet menu, mobile, tablet, 3 lines, 3 line, three line, three lines
 Requires at least: 3.5.0
 Tested up to: 4.6
-Stable tag: 3.0.15
+Stable tag: 3.0.16
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -118,6 +118,12 @@ To view our whole FAQ, please go to https://responsive.menu/faq/
 7. Fully customisable Admin Screen
 
 == Changelog ==
+
+= 3.0.16 (21st October 2016) =
+* **Requires PHP 5.4**
+* Added functionality for admin to remember last saved tab
+* Improved local scope of self = this variable in JavaScript
+* Improved slide across animation option (Pro only)
 
 = 3.0.15 (11th October 2016) =
 * **Requires PHP 5.4**
