@@ -18,12 +18,12 @@
     *zoom: 1;
 }
 
-form.checkout{
+form.checkout, .container-coupon-login-form{
     display:none;
 }
 
 .error-msg{
-     color: #8a1f11;
+    color: #8a1f11;
 }
 
 label.error-class{
@@ -31,18 +31,45 @@ label.error-class{
     display: block;
 }
 
+.terms-error{
+    color: #8a1f11 !important;
+    clear: both;
+    display: block;
+}
+
 #s2id_billing_state.invalid-state, #s2id_shipping_state.invalid-state{
     border: 1px solid #a00 !important;
 }
 
-@media(max-width: 767px){
-.wizard.three-steps > .steps > ul > li {
-    width: 100%;
+.wizard > .content > .body input[type="radio"]{
+    display: inline-block
 }
 
-.actions.clearfix li {
-    clear: none !important;
-    display: inline-block;
-    float: left;
+.wizard .coupon-step.current .checkout_coupon{
+    display: block !important
 }
+
+.wmc-loading-img{
+    display: block;
+    margin: 10px auto;
+    text-align: center;
+    border: none;
+    border-radius: 0 !important;
+    box-shadow: none !important
+}
+
+@media(max-width: 767px){
+    .wizard.three-steps > .steps > ul > li {
+        width: 100%;
+    }
+
+    .actions.clearfix li {
+        clear: none !important;
+        display: inline-block;
+        float: left;
+    }
+    #wizard .steps ul li{
+        width: 100% !important;
+
+    }
 }

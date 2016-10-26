@@ -1,4 +1,4 @@
-/****Elegant style of wizard **/
+/****Classic style of wizard **/
 #wizard #place_order, .woocommerce-billing-fields > h3{display:none}
 .woocommerce #payment div.form-row, .woocommerce-page #payment div.form-row{border-top: none;padding:0}
 #ship-to-different-address{margin:0}
@@ -48,7 +48,9 @@
     left: -999em;
 }
 
-
+form.login .button, .woocommerce form.login input[type="submit"]{
+    background: #5d2e78;
+} 
 
 /*
     Wizard
@@ -86,7 +88,6 @@
 .wizard > .steps > ul > li
 {
     width: 25%;
-   
 }
 
 .wizard > .steps > ul > li,
@@ -102,20 +103,19 @@
     width: 100%;
 }
 
-.wizard.vertical .steps a, .wizard.vertical .steps a:hover, .wizard.vertical .steps a:active{
-    text-align: left;
-}
 .wizard > .steps a,
 .wizard > .steps a:hover,
 .wizard > .steps a:active
 {
     display: block;
     width: auto;
-    margin: 0;
+    margin: 0 0.5em 0.5em;
     padding: 1em 1em;
     text-decoration: none;
     text-align: center;
-    font-weight: bold;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 
 .wizard > .steps .disabled a,
@@ -153,20 +153,13 @@
 }
 
 .wizard > .content
-{
+{    
     display: block;
     margin: 0.5em;
     /*    min-height: 35em;*/
     overflow: hidden;
     position: relative;
     width: auto;
-
-}
-
-.login .form-row .button{
-    background: #6d4185;
-    color:#fff;
-    border: none;
 }
 
 .wizard.vertical > .content
@@ -181,13 +174,10 @@
 {
     float: left;
     /*    position: absolute;*/
-
-    height: 100%;
-    padding: 0;
-    width: 100%; /**Just to make each section responsive **/
+    height: 95%;
+    padding: 0%;
+    width: 100%; 
 }
-
-/*.wizard span.number{display: none}*/
 
 .wizard > .content > .body ul
 {
@@ -274,6 +264,7 @@
 .wizard > .actions a:active,
 #wizard .checkout_coupon .button,
 #wizard form.login input.button
+
 {
     background: #5d2e78;
     color: #fff;
@@ -282,8 +273,10 @@
     text-decoration: none;
     border: none;
     font-weight: normal;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }
-
 
 .wizard > .actions .disabled a{
     background: #eee;
@@ -409,10 +402,6 @@
     margin-right: 6px !important;
 }
 
-.woocommerce-checkout .checkout #payment{
-    background: none;
-}
-
 /**********Media qUERIES ***/
 /***For smart phones **/
 @media(max-width: 767px){
@@ -440,8 +429,5 @@
     .wizard.vertical > .content{
         float:left;
         margin-bottom: 10px;
-    }
-    .wizard > .steps a, .wizard > .steps a:hover, .wizard > .steps a:active{
-        text-align: left;
     }
 }

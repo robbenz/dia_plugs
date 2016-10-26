@@ -325,12 +325,14 @@
     margin: 0 0.5em;
 }
 
-.wizard > .actions a, .wizard > .actions a:hover, .wizard > .actions a:active{
+.wizard > .actions a, .wizard > .actions a:hover, .wizard > .actions a:active, #wizard .checkout_coupon .button, #wizard form.login input.button{
     background: none repeat scroll 0 0 #5d2e78;
     color: #fff;
     display: block;
     padding: 0.5em 1em;
-    text-decoration: none;
+    text-decoration: none;    
+    border: none;
+    font-weight: normal;
 }
 form.login .button, .woocommerce form.login input[type="submit"]{
     background: #5d2e78;
