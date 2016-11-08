@@ -19,7 +19,7 @@ function dia_enqueue_scripts() {
 
 		$style_filepath = get_stylesheet_directory() . '/bst.css';
 		if ( file_exists($style_filepath) ) {
-			wp_enqueue_style( 'bst', get_stylesheet_uri() . '?' . filemtime( $style_filepath ) );
+			wp_enqueue_style( 'style', get_stylesheet_uri() . '?' . filemtime( $style_filepath ) );
 		}
 
 	}
