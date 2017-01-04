@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Price by User Role class.
  *
- * @version 2.5.5
+ * @version 2.5.7
  * @since   2.5.0
  * @author  Algoritmika Ltd.
  * @todo    Fix "Make Empty Price" option for variable products
@@ -19,7 +19,7 @@ class WCJ_Price_By_User_Role extends WCJ_Module {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.5.3
+	 * @version 2.5.7
 	 * @since   2.5.0
 	 */
 	function __construct() {
@@ -38,7 +38,9 @@ class WCJ_Price_By_User_Role extends WCJ_Module {
 				add_action( 'save_post_product', array( $this, 'save_meta_box' ), PHP_INT_MAX, 2 );
 			}
 			if ( ! is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
-				$this->add_hooks();
+				if ( 'no' === get_option( 'wcj_price_by_user_role_for_bots_disabled', 'no' ) || ! wcj_is_bot() ) {
+					$this->add_hooks();
+				}
 			}
 			add_filter( 'wcj_save_meta_box_value', array( $this, 'save_meta_box_value' ), PHP_INT_MAX, 3 );
 			add_action( 'admin_notices',           array( $this, 'admin_notices' ) );
@@ -52,7 +54,7 @@ class WCJ_Price_By_User_Role extends WCJ_Module {
 	 * @since   2.5.0
 	 */
 	function save_meta_box_value( $option_value, $option_name, $module_id ) {
-		if ( true === apply_filters( 'wcj_get_option_filter', false, true ) ) {
+		if ( true === apply_filters( 'booster_get_option', false, true ) ) {
 			return $option_value;
 		}
 		if ( 'no' === $option_value ) {
@@ -270,7 +272,7 @@ class WCJ_Price_By_User_Role extends WCJ_Module {
 	/**
 	 * change_price_by_role.
 	 *
-	 * @version 2.5.3
+	 * @version 2.5.7
 	 * @since   2.5.0
 	 */
 	function change_price_by_role( $price, $_product ) {
@@ -291,7 +293,8 @@ class WCJ_Price_By_User_Role extends WCJ_Module {
 						return $_product->$get_price_method();
 					} elseif ( 'woocommerce_get_price' == $the_current_filter || 'woocommerce_variation_prices_price' == $the_current_filter ) {
 						$sale_price_per_product = get_post_meta( $the_product_id, '_' . 'wcj_price_by_user_role_sale_price_' . $current_user_role, true );
-						return ( '' != $sale_price_per_product && $sale_price_per_product < $regular_price_per_product ) ? $sale_price_per_product : $regular_price_per_product;
+						$return = ( '' != $sale_price_per_product && $sale_price_per_product < $regular_price_per_product ) ? $sale_price_per_product : $regular_price_per_product;
+						return apply_filters( 'wcj_price_by_user_role_get_price', $return, $_product );
 					} elseif ( 'woocommerce_get_regular_price' == $the_current_filter || 'wcj_price_by_user_role_regular_price_' == $the_current_filter ) {
 						return $regular_price_per_product;
 					} elseif ( 'woocommerce_get_sale_price' == $the_current_filter || 'woocommerce_variation_prices_sale_price' == $the_current_filter ) {
@@ -357,7 +360,7 @@ class WCJ_Price_By_User_Role extends WCJ_Module {
 	/**
 	 * add_settings.
 	 *
-	 * @version 2.5.5
+	 * @version 2.5.7
 	 * @since   2.5.0
 	 */
 	function add_settings() {
@@ -392,6 +395,13 @@ class WCJ_Price_By_User_Role extends WCJ_Module {
 				'type'     => 'checkbox',
 				'id'       => 'wcj_price_by_user_role_shipping_enabled',
 				'default'  => 'no',
+			),
+			array(
+				'title'    => __( 'Search Engine Bots', 'woocommerce-jetpack' ),
+				'desc'     => __( 'Disable Price by User Role for Bots', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_price_by_user_role_for_bots_disabled',
+				'default'  => 'no',
+				'type'     => 'checkbox',
 			),
 			array(
 				'type'         => 'sectionend',

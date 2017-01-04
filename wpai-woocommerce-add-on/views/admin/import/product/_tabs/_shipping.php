@@ -46,7 +46,7 @@
 			<div class="switcher-target-multiple_product_shipping_class_no set_with_xpath">
 				<span class="wpallimport-slide-content" style="padding-left:0;">
 					<input type="text" class="smaller-text" name="single_product_shipping_class" style="width:300px;" value="<?php echo esc_attr($post['single_product_shipping_class']) ?>"/>
-					<a href="#help" class="wpallimport-help" title="<?php _e('Value should be the slug for the shipping class - \'taxable\', \'shipping\' and \'none\' are the default slugs.', 'wpai_woocommerce_addon_plugin') ?>">?</a>
+					<a href="#help" class="wpallimport-help" title="<?php _e('Value should be the name, ID, or slug for the shipping class. Default slugs are \'taxable\', \'shipping\' and \'none\'.', 'wpai_woocommerce_addon_plugin') ?>">?</a>
 				</span>
 			</div>
 		</div>

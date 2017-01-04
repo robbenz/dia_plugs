@@ -261,15 +261,19 @@
             function wppb_remove_siteorigin_panels_content_filter()
             {
                 global $post;
-                if( has_shortcode( $post->post_content, 'wppb-register' ) || has_shortcode( $post->post_content, 'wppb-edit-profile' ) || has_shortcode( $post->post_content, 'wppb-login' ) || has_shortcode( $post->post_content, 'wppb-list-users' ) )
-                    remove_filter( 'the_content', 'siteorigin_panels_filter_content' );
+                if( !empty( $post->post_content ) ) {
+                    if (has_shortcode($post->post_content, 'wppb-register') || has_shortcode($post->post_content, 'wppb-edit-profile') || has_shortcode($post->post_content, 'wppb-login') || has_shortcode($post->post_content, 'wppb-list-users'))
+                        remove_filter('the_content', 'siteorigin_panels_filter_content');
+                }
             }
 
             add_filter( 'wpseo_head', 'wppb_add_back_siteorigin_panels_content_filter', 50 );
             function wppb_add_back_siteorigin_panels_content_filter()
             {
                 global $post;
-                if( has_shortcode( $post->post_content, 'wppb-register' ) || has_shortcode( $post->post_content, 'wppb-edit-profile' ) || has_shortcode( $post->post_content, 'wppb-login' ) || has_shortcode( $post->post_content, 'wppb-list-users' ) )
-                    add_filter( 'the_content', 'siteorigin_panels_filter_content' );
+                if( !empty( $post->post_content ) ) {
+                    if (has_shortcode($post->post_content, 'wppb-register') || has_shortcode($post->post_content, 'wppb-edit-profile') || has_shortcode($post->post_content, 'wppb-login') || has_shortcode($post->post_content, 'wppb-list-users'))
+                        add_filter('the_content', 'siteorigin_panels_filter_content');
+                }
             }
         }

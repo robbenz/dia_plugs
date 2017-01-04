@@ -59,7 +59,7 @@ function wppb_general_settings_content() {
 					<option value="no" <?php if ( $wppb_generalSettings['emailConfirmation'] == 'no' ) echo 'selected'; ?>><?php _e( 'No', 'profile-builder' ); ?></option>
 				</select>
 				<ul>
-				    <li class="description"><?php _e( 'This works with front-end forms only. Recommended to redirect WP default registration to a Profile Builder one using "Custom Redirects" addon.', 'profile-builder' ); ?></li>
+				    <li class="description"><?php _e( 'This works with front-end forms only. Recommended to redirect WP default registration to a Profile Builder one using "Custom Redirects" module.', 'profile-builder' ); ?></li>
 				    <?php if ( $wppb_generalSettings['emailConfirmation'] == 'yes' ) { ?>
 					    <li class="description dynamic1"><?php printf( __( 'You can find a list of unconfirmed email addresses %1$sUsers > All Users > Email Confirmation%2$s.', 'profile-builder' ), '<a href="'.get_bloginfo( 'url' ).'/wp-admin/users.php?page=unconfirmed_emails">', '</a>' )?></li>
                     <?php } ?>

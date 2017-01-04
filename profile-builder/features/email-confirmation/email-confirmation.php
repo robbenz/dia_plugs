@@ -163,7 +163,7 @@ function wppb_add_meta_to_user_on_activation( $user_id, $password, $meta ){
 		update_user_meta( $user_id, 'jabber', $meta['jabber'] );
 	if( !empty( $meta['description'] ) )
 		update_user_meta( $user_id, 'description', $meta['description'] );
-	
+
 	if( !empty( $meta['role'] ) )
 		$user->set_role( $meta['role'] ); //update the users role (s)he registered for
 
@@ -172,9 +172,8 @@ function wppb_add_meta_to_user_on_activation( $user_id, $password, $meta ){
     else if( !empty( $meta['nickname'] ) )
         wp_update_user(array('ID' => $user_id, 'display_name' => $meta['nickname'] ));
 
-	
 	//copy the data from the meta fields (custom fields)
-	$manage_fields = get_option( 'wppb_manage_fields', 'not_set' );
+	$manage_fields = apply_filters( 'wppb_form_fields', get_option( 'wppb_manage_fields', 'not_set' ), array( 'meta' => $meta, 'user_id' => $user_id, 'context' => 'user_activation' ) );
 	if ( $manage_fields != 'not_set' ){
 		foreach ( $manage_fields as $key => $value){
 			switch ( $value['field'] ) {
@@ -294,7 +293,7 @@ function wppb_add_meta_to_user_on_activation( $user_id, $password, $meta ){
 					if ( isset( $meta[$value['meta-name']] ) ) {
 						update_user_meta($user_id, $value['meta-name'], $meta[$value['meta-name']]);
 					}
-					do_action('wppb_add_meta_on_user_activation_' . Wordpress_Creation_Kit_PB::wck_generate_slug($value['field']), $user_id, $password, $meta);
+					do_action('wppb_add_meta_on_user_activation_' . Wordpress_Creation_Kit_PB::wck_generate_slug($value['field']), $user_id, $password, $meta, $value);
 				}
 			}
 		}
@@ -450,6 +449,8 @@ function wppb_manual_activate_signup( $activation_key ) {
                     $meta['user_pass'] = wp_hash_password( $meta['user_pass'] );
 
                 $wpdb->update( $wpdb->users, array('user_pass' => $meta['user_pass'] ), array('ID' => $user_id) );
+				//This is required so that the APC cached data is updated with the new password. Thanks to @foliovision
+				wp_cache_delete( $user_id, 'users' );
             }
 			
 			wppb_notify_user_registration_email( get_bloginfo( 'name' ), $user_login, $user_email, 'sending', $password, ( isset( $wppb_general_settings['adminApproval'] ) ? $wppb_general_settings['adminApproval'] : 'no' ) );

@@ -4,7 +4,7 @@
  *
  * The WooCommerce Modules Array.
  *
- * @version 2.5.5
+ * @version 2.5.9
  * @since   2.2.0
  * @author  Algoritmika Ltd.
  */
@@ -37,6 +37,7 @@ return array(
 			'product_open_pricing',
 			'price_by_user_role',
 			'product_price_by_formula',
+			'global_discount',
 			'currency_exchange_rates',
 			'price_formats',
 		),
@@ -48,6 +49,7 @@ return array(
 		'all_cat_ids'    => array(
 			'price_labels',
 			'call_for_price',
+			'free_price',
 			'add_to_cart',
 			'more_button_labels',
 		),
@@ -110,9 +112,11 @@ return array(
 		'default_cat_id' => 'shipping',
 		'all_cat_ids'    => array(
 			'shipping',
+			'left_to_free_shipping',
 			'shipping_calculator',
 			'address_formats',
 			'orders',
+			'order_min_amount',
 			'order_numbers',
 			'order_custom_statuses',
 		),
@@ -139,6 +143,7 @@ return array(
 		'default_cat_id' => 'general',
 		'all_cat_ids'    => array(
 			'general',
+			'products_xml',
 			'export',
 //			'shortcodes',
 			'eu_vat_number',

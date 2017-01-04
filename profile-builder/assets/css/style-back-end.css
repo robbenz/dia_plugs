@@ -400,8 +400,8 @@
     font-size: 13px;
 	margin-top:20px;
 }
-#wppb_manage_fields .mb-list-entry-fields .row-field .field-label{
-	width: 177px;
+#wppb_manage_fields .mb-list-entry-fields .field-label{
+	max-width: 179px;
 }
 
 #container_wppb_epf_fields .row-id,

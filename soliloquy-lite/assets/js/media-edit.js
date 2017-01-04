@@ -528,10 +528,14 @@ var SoliloquyContentViews = [];
 
 			        // Open the modal window
 			        SoliloquyModalWindow.open();
+					
+					$( document ).trigger('soliloquyEditOpen');
 
 					$('.CodeMirror').each(function(i, el){
 						el.CodeMirror.refresh();
 					});
+					
+					
 
 			    } );
 

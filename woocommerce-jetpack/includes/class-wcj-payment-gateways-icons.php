@@ -36,9 +36,9 @@ class WCJ_Payment_Gateways_Icons extends WCJ_Module {
 			// compatibility with 2.3.0 or below
 			$default_gateways = array( 'cod', 'cheque', 'bacs', 'mijireh_checkout', 'paypal' );
 			foreach ( $default_gateways as $key ) {
-				$depreciated_option = get_option( 'wcj_payment_gateways_icons_' . 'woocommerce_' . $key . '_icon', '' );
-				if ( '' != $depreciated_option ) {
-					update_option( 'wcj_gateways_icons_' . $key . '_icon', $depreciated_option );
+				$deprecated_option = get_option( 'wcj_payment_gateways_icons_' . 'woocommerce_' . $key . '_icon', '' );
+				if ( '' != $deprecated_option ) {
+					update_option( 'wcj_gateways_icons_' . $key . '_icon', $deprecated_option );
 					delete_option( 'wcj_payment_gateways_icons_' . 'woocommerce_' . $key . '_icon' );
 				}
 			}
@@ -72,7 +72,7 @@ class WCJ_Payment_Gateways_Icons extends WCJ_Module {
 	 * @version 2.3.1
 	 */
 	function set_icon( $icon, $key ) {
-		$default_gateways = apply_filters( 'wcj_get_option_filter', array( 'cod', 'cheque', 'bacs', 'mijireh_checkout', 'paypal' ), array() );
+		$default_gateways = apply_filters( 'booster_get_option', array( 'cod', 'cheque', 'bacs', 'mijireh_checkout', 'paypal' ), array() );
 		if ( ! empty( $default_gateways ) && ! in_array( $key, $default_gateways ) ) {
 			return $icon;
 		}
@@ -101,8 +101,8 @@ class WCJ_Payment_Gateways_Icons extends WCJ_Module {
 		foreach ( $available_gateways as $key => $gateway ) {
 			$default_gateways = array( 'cod', 'cheque', 'bacs', 'mijireh_checkout', 'paypal' );
 			if ( ! empty( $default_gateways ) && ! in_array( $key, $default_gateways ) ) {
-				$custom_attributes = apply_filters( 'get_wc_jetpack_plus_message', '', 'disabled' );
-				$desc_tip = apply_filters( 'get_wc_jetpack_plus_message', '', 'desc' );
+				$custom_attributes = apply_filters( 'booster_get_message', '', 'disabled' );
+				$desc_tip = apply_filters( 'booster_get_message', '', 'desc' );
 			} else {
 				$custom_attributes = array();
 				$desc_tip = '';

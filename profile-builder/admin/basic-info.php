@@ -158,6 +158,10 @@ function wppb_basic_info_content() {
 				<h3><?php _e( 'Multiple Edit-profile Forms', 'profile-builder' ); ?></h3>
 				<p><?php _e( 'Allow different user roles to edit their specific information. Set up multiple edit-profile forms with different fields for certain user roles.', 'profile-builder' ); ?></p>
 			</div>
+			<div>
+				<h3><?php _e( 'Repeater Fields', 'profile-builder' ); ?></h3>
+				<p><?php _e( 'Set up a repeating group of fields on register and edit profile forms. Limit the number of repeated groups for each user role.', 'profile-builder' ); ?></p>
+			</div>
 		</div>
 
 		<?php

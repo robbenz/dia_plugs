@@ -30,54 +30,102 @@
 /* ==========================================================================
    Metabox Styles
    ========================================================================== */
-.post-type-soliloquy{
-	#wp-link-wrap{
-		z-index: 180105 !important;
-	}
-	#wp-link-backdrop{
-		z-index: 160105 !important;
-		
-	}
-	#wpbody-content h1{
+ .branch-4-7{
+	.wrap h1.wp-heading-inline{
+		display: block;
 		margin: 0;
+		width: 100%;
 		padding-left: 20px;
+		padding-right: 20px;
 		line-height: 45px;
 		font-size: 20px;
 		font-weight: 400;
 		background-color: $white;
 		height: 45px;
 		margin-left: -20px;
-		margin-right: -20px;
 		margin-bottom: 20px;
-		.page-title-action{
-			margin-left: 4px;
-			padding: 4px 8px;
-			position: relative;
-			top: -3px;
-			text-decoration: none;
-			border: none;
-			color: $primary-color;
-			border-radius: 0;
+
+	}
+	.page-title-action{
+		margin-left: 4px;
+		padding: 4px 8px;
+		position: relative;
+		top: -55px;
+		left: 180px;
+		text-decoration: none;
+		border: none;
+		color: $primary-color;
+		border-radius: 0;
+		background: none;
+		text-shadow: none;
+		font-weight: 600;
+		font-size: 13px;
+		&:hover{
 			background: none;
-			text-shadow: none;
-			font-weight: 600;
-			font-size: 13px;
-			&:hover{
-				background: none;
-				color: $mid-grey;
-			}
-			&:before{
-				display: inline-block;
-				font-family: 'soliloquy';
-				content:'\0050';
-				margin-top: -3px;
-				margin-right: 8px;
-				vertical-align: middle;
-			}
+			color: $mid-grey;
+		}
+		&:before{
+			display: inline-block;
+			font-family: 'soliloquy';
+			content:'\0050';
+			margin-top: -3px;
+			margin-right: 8px;
+			vertical-align: middle;
 		}
 	}
+ }
+.post-type-soliloquy{
+	#wp-link-wrap{
+		z-index: 180105 !important;
+	}
+	#wp-link-backdrop{
+		z-index: 160105 !important;
+
+	}
+
+	#wpbody-content h1{
+ 		display: block;
+  		margin: 0;
+  		padding-left: 20px;
+ 		padding-right: 20px;
+  		line-height: 45px;
+  		font-size: 20px;
+  		font-weight: 400;
+  		background-color: $white;
+  		height: 45px;
+  		margin-left: -20px;
+ 		margin-right: -20px;
+  		margin-bottom: 20px;
+ 		.page-title-action{
+ 			margin-left: 4px;
+ 			padding: 4px 8px;
+ 			position: relative;
+ 			top: -3px;
+ 			text-decoration: none;
+ 			border: none;
+ 			color: $primary-color;
+ 			border-radius: 0;
+ 			background: none;
+ 			text-shadow: none;
+ 			font-weight: 600;
+ 			font-size: 13px;
+ 			&:hover{
+ 				background: none;
+ 				color: $mid-grey;
+ 			}
+ 			&:before{
+ 				display: inline-block;
+ 				font-family: 'soliloquy';
+ 				content:'\0050';
+ 				margin-top: -3px;
+ 				margin-right: 8px;
+ 				vertical-align: middle;
+ 			}
+ 		}
+ 	}
 	.wrap{
 		margin-top: 0px !important;
+
 	}
 }
 .soliloquy-spinner {
@@ -85,7 +133,6 @@
     display: inline-block;
     margin-top: 0;
 }
-
 /* ==========================================================================
 	Soliloquy Uploader
 ========================================================================== */
@@ -102,25 +149,7 @@
 		    content: "";
 		    display: table;
 		    clear: both;
-		}
 	}
-	#soliloquy-external{
-		text-align: center;
-		ul li a{
-			color: rgb(0,0,0);
-			&:hover{
-				color: rgb(0,0,0);
-			}
-		}
-		a.button{
-			padding: 0 32px 1px;
-			line-height: 48px;
-			height: 50px;
-			font-size: 18px;
-			text-transform: uppercase;
-			margin: 15px 0;
-		
-		}
 	}
 	.soliloquy-type-tab{
 		position: relative;
@@ -138,7 +167,7 @@
 		background-color: $almost-white;
 		border: 1px solid #e5e5e5;
 		box-sizing: border-box;
-		border-top-left-radius: 3px;		
+		border-top-left-radius: 3px;
 		border-top-right-radius: 3px;
 		input {
 		    display: none;
@@ -265,9 +294,7 @@
 		* Hide the uploader until the drag-drop class is added to it i.e. it has initialised
 		* This stops the user seeing a flash as the drag/drop area repositions itself on load
 		*/
-		display: none;
-		
-		&.drag-drop {
+		display: block;
 		    /**
 		    * Now the uploader is ready, display it
 		    */
@@ -280,15 +307,15 @@
 				font-size: 24px;
 				color: $dark;
 			}
-			
+
 		    .drag-drop-inside {
 		        width: 520px;
 		        margin-top: 40px;
-		
+
 		        p.drag-drop-buttons {
 		            text-align: left;
 		        }
-		
+
 		        .soliloquy-progress-bar {
 		            display: none;
 		            width: 100%;
@@ -299,7 +326,7 @@
 		            border-radius: 10px;
 		            background: #dfdfdf;
 		            background: rgba(0,0,0,.1);
-		        
+
 		            div {
 		                height: 10px;
 		                min-width: 20px;
@@ -316,7 +343,6 @@
 		        }
 		    }
 
-		}
 		.button{
 			background: $almost-white;
 			border: 1px solid;
@@ -348,14 +374,14 @@
 		    top: 110px;
 		    text-align: center;
 		}
-		
+
 		p.upload-flash-bypass {
 		    display: none;
 		}
 	}
     p.max-upload-size{
 	    margin-bottom: 0;
-    }         
+    }
 }
 #soliloquy-codepanel{
 	.soliloquy-clipboard{
@@ -392,7 +418,7 @@
 			float: left;
 			width: 100%;
 			margin: 0;
-			padding: 0;			
+			padding: 0;
 			a{
 				float: left;
 				width: 110px;
@@ -444,13 +470,13 @@
 		}
 		#soliloquy-tab-nav-slider a:before{ content:'\0042'; }
 		#soliloquy-tab-nav-config a:before{ content:'\0041'; }
-		#soliloquy-tab-nav-mobile_lite a:before{ content:'\0046'; }
-		#soliloquy-tab-nav-pinterest_lite a:before{ content:'\0043'; }
-		#soliloquy-tab-nav-thumbnails_lite a:before{ content:'\004b'; }
-		#soliloquy-tab-nav-schedule_lite a:before{ content:'\0058'; }
+		#soliloquy-tab-nav-mobile a:before{ content:'\0046'; }
+		#soliloquy-tab-nav-pinterest a:before{ content:'\0043'; }
+		#soliloquy-tab-nav-thumbnails a:before{ content:'\004b'; }
+		#soliloquy-tab-nav-schedule a:before{ content:'\0058'; }
 		#soliloquy-tab-nav-misc a:before{ content:'\0045'; }
-		#soliloquy-tab-nav-lightbox_lite a:before{ content:'\0044'; }
-		#soliloquy-tab-nav-carousel_lite a:before{ content:'\0059'; }
+		#soliloquy-tab-nav-lightbox a:before{ content:'\0044'; }
+		#soliloquy-tab-nav-carousel a:before{ content:'\0059'; }
 	}
 	#soliloquy-settings-content{
     	margin: 0 0 0 $tab-width;
@@ -473,11 +499,11 @@
 				position: absolute;
 				top: 0; left: 0; bottom: 0; right: 0;
 
-			}	   
+			}
 			img{
 				max-width: 336px;
-			}     
-        
+			}
+
         }
         .soliloquy-external-req{
 	        border: 1px solid $primary-color;
@@ -501,14 +527,14 @@
         .soliloquy-help{
 	        font-size: 14px;
 	        a{
-		        margin-left: 5px; 
+		        margin-left: 5px;
 	        }
         }
         .soliloquy-bulk-actions{
 	        display: none;
 	        margin-bottom: 20px;
         }
-        
+
         table.form-table {
         	clear: none;
         }
@@ -534,7 +560,44 @@
 	        position: absolute;
 			right: 20px;
 			top: 20px;
-			li{
+			/* Position tooltip above the element */
+			[data-soliloquy-tooltip]:before {
+			  position: absolute;
+			  bottom: 120%;
+			  left: 50%;
+			  margin-bottom: 5px;
+			  margin-left: -35px;
+			  padding: 7px;
+			  width: 120px;
+			  -webkit-border-radius: 3px;
+			  -moz-border-radius: 3px;
+			  border-radius: 3px;
+			  background-color: #000;
+			  color: #fff;
+			  content: attr(data-soliloquy-tooltip);
+			  text-align: center;
+			  font-size: 12px;
+			  line-height: 1.2;
+			}
+			li.helper{
+				.dashicons{
+					font-size: 24px;
+					margin-top: -5px;
+					color: $light-grey;
+					&:hover{
+						color: $dark;
+
+					}
+				}
+			}
+			li.soliloquy-select{
+				width: 200px;
+				margin-right: 15px;
+				.chosen-container{
+					margin-top: -10px;
+				}
+			}
+			li:not(.soliloquy-select){
 				a{
 					color: $light-grey;
 					i:before{
@@ -579,7 +642,7 @@
 			height: $input-height;
 			outline: none;
 			-webkit-transition: 0.05s border-color ease-in-out;
-			transition: 0.05s border-color ease-in-out;			
+			transition: 0.05s border-color ease-in-out;
 	    	min-width: 210px;
 	    	max-width: 350px;
 			width: 92%;
@@ -592,11 +655,11 @@
 		#soliloquy-config-slider-width{
 			max-width: 166px;
 	    	min-width: 75px;
-			
+
 		}
 		th{
-	    	min-width: 210px;
-			max-width: 100%;
+	    	//min-width: 210px;
+			//max-width: 100%;
 	    	padding-right: 0;
 		}
 		.description{
@@ -783,7 +846,7 @@
 				          //  background-image: url('../../../../../wp-includes/images/uploader-icons-2x.png');
 				            margin: 5px 0 0 5px;
 				            background-position: -21px 0;
-				            
+
 				        }
 					}
 				    /**
@@ -805,7 +868,7 @@
 					.soliloquy-active-slide.list-status,
 					.soliloquy-draft-slide.list-status{
 						display: none;
-					}				
+					}
 					.soliloquy-remove-slide {
 					    left: 5px;
 					    top: 5px;
@@ -855,7 +918,7 @@
 							height: 30px;
 
 						h3{
-							
+
 						}
 						img{
 							margin-top: -20px;
@@ -912,7 +975,7 @@
 							text-decoration: none;
 							color: black;
 						}
-						
+
 					}
 					.soliloquy-active-slide.list-status{
 						span{
@@ -922,7 +985,7 @@
 							background-color: #74b445;
 							color: white;
 						}
-					}			
+					}
 					.soliloquy-draft-slide.list-status{
 						span{
 							margin-left: 5px;
@@ -931,7 +994,7 @@
 							background-color: #ffa93b;
 							color: white;
 						}
-					}	
+					}
 					.soliloquy-remove-slide {
 					    right: 8px;
 					    top: 8px;
@@ -1061,7 +1124,7 @@
 		}
 		.button-soliloquy-delete{
 			color: $white;
-		}	
+		}
 		.soliloquy-item-setting  {
 			clear: both;
 			text-align: left !important;
@@ -1073,7 +1136,7 @@
 				clear: both;
 				width: 100%;
 				text-align: left;
-		
+
 				strong {
 					text-align: left;
 				}
@@ -1094,7 +1157,7 @@
 				textarea {
 					width: 87%;
 					clear: both;
-				}				
+				}
 			}
 		}
 		.soliloquy-item-footer{
@@ -1102,7 +1165,7 @@
 			margin-top: 20px;
 			a{
 				float: right;
-				
+
 			}
 			}
 	}
@@ -1115,7 +1178,7 @@
 					margin-top: 10px;
 				}
 			}
-		}		
+		}
 		.soliloquy-video-items{
 			position: relative;
 			margin-right: 300px;
@@ -1138,25 +1201,25 @@
 				padding: 20px;
 				margin-bottom: 2em;
 				padding-top: 2em;
-	
-			
-	
+
+
+
 			}
 		}
-	
+
 		/**
 		* Sidebar
 		*/
 		.soliloquy-gallery-accepted-urls {
 			clear: both;
 			overflow: hidden;
-	
+
 			span {
 				display: block;
 			}
 		}
 	}
-	
+
 	&.soliloquy-html {
 		div.media-toolbar {
 			border-bottom: 1px solid $light-grey;
@@ -1166,7 +1229,7 @@
 					margin-top: 10px;
 				}
 			}
-		}		
+		}
 		.soliloquy-html-items{
 			position: relative;
 			margin-right: 300px;
@@ -1197,7 +1260,7 @@
 
 
 }
-	
+
 	/**
 	* Sidebar
 	*/
@@ -1211,7 +1274,7 @@
 			display: block;
 		}
 	}
-}   
+}
 #soliloquy-meta-edit{
 	.right{
 		border-right: 1px solid #ccc !important;
@@ -1390,16 +1453,18 @@ body.rtl {
 #soliloquy-uploader{
 
 	   #plupload-upload-ui {
-	       &.drag-drop {
+		   #drag-drop-area{
+			   height: 208px;
+	           }
 	           .drag-drop-inside {
 	               width: 100%;
 	               margin-top: 20px;
-	   
+
 	               p.drag-drop-buttons {
+		               margin-top: 10px;
 	                   text-align: center;
 	               }
 	           }
-	       }
 	       a.soliloquy-media-library.button {
 	           left: 0;
 	           right: 0;
@@ -1411,17 +1476,21 @@ body.rtl {
 }
 
 @media screen and (max-width: 768px) {
+     .media-sidebar{
+	  display: none;
+	  }
 	#soliloquy-slider-settings{
 	#soliloquy-settings-content{
     	margin: 0 0 0 50px;
 		padding: 20px;
       }
+
 	#soliloquy-settings-tabs{
         width: 50px;
         margin: 0;
         padding: 0;
         border-right: 1px solid #ddd;
-		.soliloquy-setting-tab{	
+		.soliloquy-setting-tab{
 			a{
 				width: 30px;
 				margin: 0 10px;
@@ -1437,11 +1506,10 @@ body.rtl {
 /* ==========================================================================
    Retina Styles
    ========================================================================== */
-@media (-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dpi) { 
+@media (-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dpi) {
      a.check .media-modal-icon {
          background-image: url('../../../../../wp-includes/images/uploader-icons-2x.png') !important;
          -webkit-background-size: 134px 15px;
          background-size: 134px 15px;
      }
  }
- 

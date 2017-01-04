@@ -149,7 +149,7 @@ function wppb_rf_epf_delete_all_fields(event, delete_all_button_id, nonce) {
         jQuery.post( ajaxurl, { action: "wppb_rf_epf_delete_all_fields", meta: meta, id: post_id, _ajax_nonce: nonce }, function(response) {
 
             /* refresh the list */
-            jQuery.post( wckAjaxurl, { action: "wck_refresh_list"+meta, meta: meta, id: post_id}, function(response) {
+            jQuery.post( wppbWckAjaxurl, { action: "wck_refresh_list"+meta, meta: meta, id: post_id}, function(response) {
                 jQuery('#container_'+meta).replaceWith(response);
                 $tableParent = jQuery('#container_'+meta);
 

@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Orders Shortcodes class.
  *
- * @version 2.5.6
+ * @version 2.5.9
  * @author  Algoritmika Ltd.
  */
 
@@ -17,7 +17,7 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.5.6
+	 * @version 2.5.8
 	 */
 	public function __construct() {
 
@@ -36,6 +36,7 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 			'wcj_order_custom_meta_field',
 			'wcj_order_meta',
 			'wcj_order_items_meta',
+			'wcj_order_items',
 			'wcj_order_subtotal',
 			'wcj_order_subtotal_plus_shipping',
 			'wcj_order_total_discount',
@@ -62,10 +63,15 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 			'wcj_order_payment_method',
 			'wcj_order_payment_method_transaction_id',
 			'wcj_order_shipping_method',
-			'wcj_order_items_total_weight',
+			'wcj_order_items_total_weight', // deprecated - use 'wcj_order_total_weight' instead
 			'wcj_order_items_total_quantity',
 			'wcj_order_items_total_number',
 			'wcj_order_function',
+			'wcj_order_total_width',
+			'wcj_order_total_height',
+			'wcj_order_total_length',
+			'wcj_order_total_weight',
+			'wcj_order_coupons',
 		);
 
 		parent::__construct();
@@ -74,7 +80,7 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 	/**
 	 * add_extra_atts.
 	 *
-	 * @version 2.5.6
+	 * @version 2.5.7
 	 */
 	function add_extra_atts( $atts ) {
 		$modified_atts = array_merge( array(
@@ -93,6 +99,9 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 			'lang'          => 'EN',
 			'unique_only'   => 'no',
 			'function_name' => '',
+			'sep'           => ', ',
+			'item_number'   => 'all',
+			'field'         => 'name',
 		), $atts );
 
 		return $modified_atts;
@@ -126,16 +135,28 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 	}
 
 	/**
+	 * wcj_order_coupons.
+	 *
+	 * @version 2.5.8
+	 * @since   2.5.8
+	 */
+	function wcj_order_coupons( $atts ) {
+		return implode( ', ', $this->the_order->get_used_coupons() );
+	}
+
+	/**
 	 * wcj_order_function.
 	 *
-	 * @version 2.5.6
+	 * @version 2.5.8
 	 * @since   2.5.6
 	 * @todo    add function_params attribute.
+	 * @todo    fix when returning array of arrays or object etc.
 	 */
 	function wcj_order_function( $atts ) {
 		$function_name = $atts['function_name'];
 		if ( '' != $function_name && method_exists( $this->the_order, $function_name ) ) {
-			return $this->the_order->$function_name();
+			$return = $this->the_order->$function_name();
+			return ( is_array( $return ) ) ? implode( ', ', $return ) : $return;
 		}
 	}
 
@@ -258,16 +279,85 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 	}
 
 	/**
+	 * wcj_order_total_width
+	 *
+	 * @version 2.5.7
+	 * @since   2.5.7
+	 */
+	function wcj_order_total_width( $atts ) {
+		return $this->get_order_total( $atts, 'width' );
+	}
+
+	/**
+	 * wcj_order_total_height
+	 *
+	 * @version 2.5.7
+	 * @since   2.5.7
+	 */
+	function wcj_order_total_height( $atts ) {
+		return $this->get_order_total( $atts, 'height' );
+	}
+
+	/**
+	 * wcj_order_total_length
+	 *
+	 * @version 2.5.7
+	 * @since   2.5.7
+	 */
+	function wcj_order_total_length( $atts ) {
+		return $this->get_order_total( $atts, 'length' );
+	}
+
+	/**
+	 * wcj_order_total_weight
+	 *
+	 * @version 2.5.7
+	 * @since   2.5.7
+	 */
+	function wcj_order_total_weight( $atts ) {
+		return $this->get_order_total( $atts, 'weight' );
+	}
+
+	/**
+	 * get_order_total
+	 *
+	 * @version 2.5.7
+	 * @since   2.5.7
+	 */
+	function get_order_total( $atts, $param ) {
+		$total = 0;
+		$the_items = $this->the_order->get_items();
+		foreach ( $the_items as $item_id => $item ) {
+			$product_id = ( 0 != $item['variation_id'] ) ? $item['variation_id'] : $item['product_id'];
+			$_product = wc_get_product( $product_id );
+			if ( $_product ) {
+				switch ( $param ) {
+					case 'width':
+						$total += ( $item['qty'] * $_product->get_width() );
+						break;
+					case 'height':
+						$total += ( $item['qty'] * $_product->get_height() );
+						break;
+					case 'length':
+						$total += ( $item['qty'] * $_product->get_length() );
+						break;
+					case 'weight':
+						$total += ( $item['qty'] * $_product->get_weight() );
+						break;
+				}
+			}
+		}
+		return ( 0 == $total && 'yes' === $atts['hide_if_zero'] ) ? '' : $total;
+	}
+
+	/**
 	 * wcj_order_items_total_weight.
+	 *
+	 * @version    2.5.7
+	 * @deprecated 2.5.7
 	 */
 	function wcj_order_items_total_weight( $atts ) {
-		$total_weight = 0;
-		$the_items = $this->the_order->get_items();
-		foreach( $the_items as $the_item ) {
-			$the_product = wc_get_product( $the_item['product_id'] );
-			$total_weight += $the_item['qty'] * $the_product->get_weight();
-		}
-		return ( 0 == $total_weight && 'yes' === $atts['hide_if_zero'] ) ? '' : $total_weight;
+		return $this->get_order_total( $atts, 'weight' );
 	}
 
 	/**
@@ -314,6 +404,48 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 	}
 
 	/**
+	 * wcj_order_items
+	 *
+	 * @version 2.5.7
+	 * @since   2.5.7
+	 */
+	function wcj_order_items( $atts ) {
+		$items = array();
+		$the_items = $this->the_order->get_items();
+		foreach ( $the_items as $item_id => $item ) {
+			switch ( $atts['field'] ) {
+				case 'debug':
+					$items[] = '<pre>' . print_r( $item, true ) . '</pre>';
+					break;
+				default: // case 'name' etc.
+					$items[] = ( isset( $item[ $atts['field'] ] ) ) ? $item[ $atts['field'] ] : '';
+					break;
+			}
+		}
+		if ( empty( $items ) ) {
+			return '';
+		}
+		if ( 'all' === $atts['item_number'] ) {
+			return implode( $atts['sep'], $items );
+		} else {
+			switch ( $atts['item_number'] ) {
+				case 'first':
+					return current( $items );
+				case 'last':
+					return end( $items );
+				default:
+					$item_number = intval( $atts['item_number'] ) - 1;
+					if ( $item_number < 0 ) {
+						$item_number = 0;
+					} elseif ( $item_number >= count( $items ) ) {
+						$item_number = count( $items ) - 1;
+					}
+					return $items[ $item_number ];
+			}
+		}
+	}
+
+	/**
 	 * wcj_order_items_meta.
 	 *
 	 * @version 2.5.5
@@ -354,7 +486,7 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 	 *
 	 * @version 2.3.0
 	 * @since   2.2.9
-	 * @depreciated
+	 * @deprecated
 	 */
 	function wcj_order_custom_meta_field( $atts ) {
 		return $this->wcj_order_checkout_field( $atts );
@@ -667,9 +799,19 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 	}
 
 	/**
+	 * mb_ucfirst - for wcj_order_total_in_words.
+	 *
+	 * @version 2.5.9
+	 * @since   2.5.9
+	 */
+	function mb_ucfirst( $string ) {
+		return mb_strtoupper( mb_substr( $string, 0, 1 ) ) . mb_substr( $string, 1 );
+	}
+
+	/**
 	 * wcj_order_total_in_words.
 	 *
-	 * @version 2.5.0
+	 * @version 2.5.9
 	 */
 	function wcj_order_total_in_words( $atts ) {
 
@@ -684,8 +826,18 @@ class WCJ_Orders_Shortcodes extends WCJ_Shortcodes {
 		$cents = $atts['decimal'];
 
 		switch ( $atts['lang'] ) {
+			case 'LT':
+				return sprintf( $the_number_in_words,
+					$this->mb_ucfirst( convert_number_to_words_lt( $order_total_whole ) ),
+					$dollars,
+					$this->mb_ucfirst( convert_number_to_words_lt( $order_total_decimal ) ),
+					$cents );
 			case 'BG':
-				return convert_number_to_words_bg( $order_total );
+				return sprintf( $the_number_in_words,
+					$this->mb_ucfirst( trim( convert_number_to_words_bg( $order_total_whole ) ) ),
+					$dollars,
+					$this->mb_ucfirst( trim( convert_number_to_words_bg( $order_total_decimal ) ) ),
+					$cents );
 			default: // 'EN'
 				return sprintf( $the_number_in_words,
 					ucfirst( convert_number_to_words( $order_total_whole ) ),

@@ -12,7 +12,7 @@
 
 		<div id="export-type" class="postbox">
 			<h3 class="hndle">
-				<?php _e( 'Export Type', 'woocommerce-exporter' ); ?>
+				<?php _e( 'Export Types', 'woocommerce-exporter' ); ?>
 				<a href="<?php echo esc_url( add_query_arg( array( 'action' => 'refresh_export_type_counts', '_wpnonce' => wp_create_nonce( 'woo_ce_refresh_export_type_counts' ) ) ) ); ?>" style="float:right;"><?php _e( 'Refresh counts', 'woocommerce-exporter' ); ?></a>
 			</h3>
 			<div class="inside">

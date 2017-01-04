@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Settings class.
  *
- * @version 2.5.5
+ * @version 2.5.7
  * @since   1.0.0
  * @author  Algoritmika Ltd.
  */
@@ -18,7 +18,7 @@ class WC_Settings_Jetpack extends WC_Settings_Page {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.2.8
+	 * @version 2.5.7
 	 */
 	function __construct() {
 
@@ -38,6 +38,17 @@ class WC_Settings_Jetpack extends WC_Settings_Page {
 		add_action( 'woocommerce_admin_field_custom_link',     array( $this, 'output_custom_link' ) );
 		add_action( 'woocommerce_admin_field_module_tools',    array( $this, 'output_module_tools' ) );
 		add_action( 'woocommerce_admin_field_custom_textarea', array( $this, 'output_custom_textarea' ) );
+		add_filter( 'woocommerce_admin_settings_sanitize_option', array( $this, 'unclean_custom_textarea' ), PHP_INT_MAX, 3 );
+	}
+
+	/**
+	 * unclean_custom_textarea.
+	 *
+	 * @version 2.5.7
+	 * @since   2.5.7
+	 */
+	function unclean_custom_textarea( $value, $option, $raw_value ) {
+		return ( 'custom_textarea' === $option['type'] ) ? $raw_value : $value;
 	}
 
 	/**
@@ -136,7 +147,7 @@ class WC_Settings_Jetpack extends WC_Settings_Page {
 		$tooltip_html = ( isset( $value['desc_tip'] ) && '' != $value['desc_tip'] ) ? '<span class="woocommerce-help-tip" data-tip="' . $value['desc_tip'] . '"></span>' : '';
 //		$custom_attributes = ( is_array( $value['custom_attributes'] ) ) ? $value['custom_attributes'] : array();
 		$description = ' <span class="description">' . $value['desc'] . '</span>';
-		$save_button = apply_filters( 'wcj_get_option_filter', '', ' <input name="save" class="button-primary" type="submit" value="' . __( 'Save changes', 'woocommerce' ) . '">' );
+		$save_button = apply_filters( 'booster_get_option', '', ' <input name="save" class="button-primary" type="submit" value="' . __( 'Save changes', 'woocommerce' ) . '">' );
 
 		// Custom attribute handling
 		$custom_attributes = array();
@@ -267,15 +278,15 @@ class WC_Settings_Jetpack extends WC_Settings_Page {
 		$is_dashboard = ( '' != $current_section && 'alphabetically' != $current_section && 'by_category' != $current_section && 'active' != $current_section && 'manager' != $current_section )
 			? false : true;
 
-		// Depreciated message
-		$depreciated_modules_and_links = array(
+		// Deprecated message
+		$deprecated_modules_and_links = array(
 			'product_info' => '<a href="' . admin_url( 'admin.php?page=wc-settings&tab=jetpack&wcj-cat=products&section=product_custom_info' ) . '">' . __( 'Product Info', 'woocommerce-jetpack' ) . '</a>',
 		);
-		if ( array_key_exists( $current_section, $depreciated_modules_and_links ) ) {
+		if ( array_key_exists( $current_section, $deprecated_modules_and_links ) ) {
 			echo '<div id="wcj_message" class="error">';
 			echo '<p>';
 			echo '<strong>';
-			echo sprintf( __( 'Please note that current <em>%s</em> module is depreciated and will be removed in future updates. Please use <em>%s</em> module instead.', 'woocommerce-jetpack' ), WCJ()->modules[ $current_section ]->short_desc, $depreciated_modules_and_links[ $current_section ] );
+			echo sprintf( __( 'Please note that current <em>%s</em> module is deprecated and will be removed in future updates. Please use <em>%s</em> module instead.', 'woocommerce-jetpack' ), WCJ()->modules[ $current_section ]->short_desc, $deprecated_modules_and_links[ $current_section ] );
 			echo '</strong>';
 			echo '</p>';
 			echo '</div>';
@@ -514,7 +525,7 @@ class WC_Settings_Jetpack extends WC_Settings_Page {
 		global $current_section;
 		$settings = $this->get_settings( $current_section );
 		WC_Admin_Settings::save_fields( $settings );
-		echo apply_filters('get_wc_jetpack_plus_message', '', 'global' );
+		echo apply_filters('booster_get_message', '', 'global' );
 		do_action( 'woojetpack_after_settings_save', $this->get_sections(), $current_section );
 	}
 

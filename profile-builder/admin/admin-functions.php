@@ -81,7 +81,7 @@ add_filter( 'wck_element_class_wppb_manage_fields', 'wppb_manage_fields_display_
 function wppb_update_container_class( $update_container_class, $meta, $results, $element_id ) {
 	$wppb_element_type = Wordpress_Creation_Kit_PB::wck_generate_slug( $results[$element_id]["field"] );
 	
-	return "class='update_container_$meta update_container_$wppb_element_type element_type_$wppb_element_type'";
+	return "class='wck_update_container update_container_$meta update_container_$wppb_element_type element_type_$wppb_element_type'";
 }
 add_filter( 'wck_update_container_class_wppb_manage_fields', 'wppb_update_container_class', 10, 4 );
 

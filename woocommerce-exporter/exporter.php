@@ -3,11 +3,14 @@
 Plugin Name: WooCommerce - Store Exporter
 Plugin URI: http://www.visser.com.au/woocommerce/plugins/exporter/
 Description: Export store details out of WooCommerce into simple formatted files (e.g. CSV, XML, Excel formats including XLS and XLSX, etc.)
-Version: 1.8.6
+Version: 1.8.8
 Author: Visser Labs
 Author URI: http://www.visser.com.au/about/
 Text Domain: woocommerce-exporter
 License: GPL2
+
+Text Domain: woocommerce-exporter
+Domain Path: /languages/
 */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
@@ -25,13 +28,15 @@ include_once( WOO_CE_PATH . 'common/common.php' );
 if( defined( 'WOO_CD_PREFIX' ) == false )
 	include_once( WOO_CE_PATH . 'includes/functions.php' );
 
+// Plugin language support
 function woo_ce_i18n() {
 
 	$locale = apply_filters( 'plugin_locale', get_locale(), 'woocommerce-exporter' );
-	load_plugin_textdomain( 'woocommerce-exporter', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+	load_textdomain( 'woocommerce-exporter', WP_LANG_DIR . '/woocommerce-exporter/woocommerce-exporter-' . $locale . '.mo' );
+	load_plugin_textdomain( 'woocommerce-exporter', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
 
 }
-add_action( 'init', 'woo_ce_i18n' );
+add_action( 'init', 'woo_ce_i18n', 11 );
 
 if( is_admin() ) {
 
@@ -270,6 +275,19 @@ if( is_admin() ) {
 
 				check_admin_referer( 'manual_export', 'woo_ce_export' );
 
+				// Welcome in the age of GZIP compression and Object caching
+				if( !defined( 'DONOTCACHEPAGE' ) )
+					define( 'DONOTCACHEPAGE', true );
+				if( !defined( 'DONOTCACHCEOBJECT' ) )
+					define( 'DONOTCACHCEOBJECT', true );
+
+				$timeout = woo_ce_get_option( 'timeout', 0 );
+				if( !ini_get( 'safe_mode' ) ) {
+					@set_time_limit( $timeout );
+					@ini_set( 'max_execution_time', $timeout );
+				}
+				@ini_set( 'memory_limit', WP_MAX_MEMORY_LIMIT );
+
 				// Set up the basic export options
 				$export = new stdClass();
 				$export->cron = 0;
@@ -301,7 +319,7 @@ if( is_admin() ) {
 				$export->escape_formatting = woo_ce_get_option( 'escape_formatting', 'all' );
 				// Reset the Escape Formatting if corrupted
 				if( $export->escape_formatting == '' || $export->escape_formatting == false ) {
-					woo_ce_error_log( sprintf( 'Warning: %s', __( 'Escape Formatting export option was corrupted, defaulted to all', 'woocommerce-exporter' ) ) );
+					woo_ce_error_log( sprintf( 'Warning: %s', __( 'Escape Formatting export option was corrupted, defaulted to all.', 'woocommerce-exporter' ) ) );
 					$export->escape_formatting = 'all';
 					woo_ce_update_option( 'escape_formatting', 'all' );
 				}
@@ -316,12 +334,17 @@ if( is_admin() ) {
 				// Save export option changes made on the Export screen
 				$export->limit_volume = ( isset( $_POST['limit_volume'] ) ? sanitize_text_field( $_POST['limit_volume'] ) : '' );
 				woo_ce_update_option( 'limit_volume', $export->limit_volume );
-				if( $export->limit_volume == '' )
+				if( in_array( $export->limit_volume, array( '', '0', '-1' ) ) ) {
+					woo_ce_update_option( 'limit_volume', '' );
 					$export->limit_volume = -1;
+				}
 				$export->offset = ( isset( $_POST['offset'] ) ? sanitize_text_field( $_POST['offset'] ) : '' );
 				woo_ce_update_option( 'offset', $export->offset );
-				if( $export->offset == '' )
+				if( in_array( $export->offset, array( '', '0' ) ) ) {
+					woo_ce_update_option( 'offset', '' );
 					$export->offset = 0;
+				}
+				$export->type = ( isset( $_POST['dataset'] ) ? sanitize_text_field( $_POST['dataset'] ) : false );
 
 				// Set default values for all export options to be later passed onto the export process
 				$export->fields = array();
@@ -351,8 +374,7 @@ if( is_admin() ) {
 				$export->user_orderby = false;
 				$export->user_order = false;
 
-				$export->type = ( isset( $_POST['dataset'] ) ? sanitize_text_field( $_POST['dataset'] ) : false );
-				if( $export->type ) {
+				if( !empty( $export->type ) ) {
 					$export->fields = ( isset( $_POST[$export->type . '_fields'] ) ? array_map( 'sanitize_text_field', $_POST[$export->type . '_fields'] ) : false );
 					$export->fields_order = ( isset( $_POST[$export->type . '_fields_order'] ) ? array_map( 'absint', $_POST[$export->type . '_fields_order'] ) : false );
 					woo_ce_update_option( 'last_export', $export->type );
@@ -486,7 +508,7 @@ if( is_admin() ) {
 							}
 							if( woo_ce_get_option( 'delete_file', 1 ) ) {
 
-								// Print to browser
+								// Print directly to browser
 								if( $export->export_format == 'csv' )
 									woo_ce_generate_csv_header( $export->type );
 								echo $bits;
@@ -593,7 +615,7 @@ if( is_admin() ) {
 		}
 
 	}
-	add_action( 'admin_init', 'woo_ce_admin_init', 10 );
+	add_action( 'admin_init', 'woo_ce_admin_init', 11 );
 
 	// HTML templates and form processor for Store Exporter screen
 	function woo_ce_html_page() {
@@ -610,7 +632,7 @@ if( is_admin() ) {
 				if( WOO_CE_DEBUG ) {
 					$output = '';
 					if( false === ( $export_log = get_transient( WOO_CE_PREFIX . '_debug_log' ) ) ) {
-						$export_log = __( 'No export entries were found, please try again with different export filters.', 'woocommerce-exporter' );
+						$export_log = __( 'No export entries were found within the debug Transient, please try again with different export filters.', 'woocommerce-exporter' );
 					} else {
 						// We take the contents of our WordPress Transient and de-base64 it back to CSV format
 						$export_log = base64_decode( $export_log );
@@ -653,12 +675,17 @@ if( is_admin() ) {
 				if( isset( $_POST['custom_products'] ) ) {
 					$custom_products = $_POST['custom_products'];
 					$custom_products = explode( "\n", trim( $custom_products ) );
-					$size = count( $custom_products );
-					if( !empty( $size ) ) {
-						for( $i = 0; $i < $size; $i++ )
-							$custom_products[$i] = sanitize_text_field( trim( stripslashes( $custom_products[$i] ) ) );
-						woo_ce_update_option( 'custom_products', $custom_products );
+					if( !empty( $custom_products ) ) {
+						$size = count( $custom_products );
+						if( !empty( $size ) ) {
+							for( $i = 0; $i < $size; $i++ )
+								$custom_products[$i] = sanitize_text_field( trim( stripslashes( $custom_products[$i] ) ) );
+							woo_ce_update_option( 'custom_products', $custom_products );
+						}
+					} else {
+						woo_ce_update_option( 'custom_products', '' );
 					}
+					unset( $custom_products );
 				}
 
 				$message = __( 'Custom Fields saved. You can now select those additional fields from the Export Fields list.', 'woocommerce-exporter' );
@@ -682,6 +709,13 @@ if( is_admin() ) {
 		// If Skip Overview is set then jump to Export screen
 		if( $tab == false && woo_ce_get_option( 'skip_overview', false ) )
 			$tab = 'export';
+
+		// Check that WC() is available
+		if( !function_exists( 'WC' ) ) {
+			$message = __( 'We couldn\'t load the WooCommerce resource WC(), check that WooCommerce is installed and active. If this persists get in touch with us.', 'woocommerce-exporter' );
+			woo_cd_admin_notice_html( $message, 'error' );
+			return;
+		}
 
 		woo_ce_admin_fail_notices();
 

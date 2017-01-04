@@ -14,7 +14,7 @@
 }
 
 .field-label{
-	/* width:190px; */
+	max-width:200px;
 	float:left;
 	min-height:30px;
 	font-weight:bold;
@@ -28,6 +28,10 @@
 .field-label .required{
 	color:#ff0000;
 	padding:0 2px;
+}
+
+.mb-table-container strong{
+	max-width:200px;
 }
 
 .mb-right-column label{

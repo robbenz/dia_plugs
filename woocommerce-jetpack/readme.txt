@@ -2,8 +2,8 @@
 Contributors: algoritmika,anbinder
 Tags: woocommerce,booster for woocommerce,woocommerce jetpack
 Requires at least: 4.4
-Tested up to: 4.6
-Stable tag: 2.5.6
+Tested up to: 4.7
+Stable tag: 2.5.9
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -22,6 +22,7 @@ Booster for WooCommerce is a WordPress plugin that supercharges your site with a
 * *Currency Exchange Rates* - Automatic currency exchange rates for WooCommerce.
 * *Currency for External Products* - Set different currency for external WooCommerce products.
 * *Currency per Product* - Display prices for WooCommerce products in different currencies.
+* *Global Discount* - Add global discount to all WooCommerce products.
 * *Multicurrency (Currency Switcher)* - Add multiple currencies (currency switcher) to WooCommerce.
 * *Multicurrency Product Base Price* - Enter prices for WooCommerce products in different currencies.
 * *Price Formats* - Set different WooCommerce price formats for different currencies.
@@ -36,6 +37,7 @@ Booster for WooCommerce is a WordPress plugin that supercharges your site with a
 * *Add to Cart Labels* - Change text for Add to Cart button by WooCommerce product type, by product category or for individual products.
 * *Call for Price* - Create any custom price label for all WooCommerce products with empty price.
 * *Custom Price Labels* - Create any custom price label for any WooCommerce product.
+* *Free Price Labels* - WooCommerce free price labels.
 * *More Button Labels* - Set WooCommerce "Place order" button label.
 
 **Products**
@@ -64,7 +66,7 @@ Booster for WooCommerce is a WordPress plugin that supercharges your site with a
 * *Checkout Custom Fields* - Add custom fields to WooCommerce checkout page.
 * *Checkout Custom Info* - Add custom info to WooCommerce checkout page.
 * *Checkout Files Upload* - Let customers upload files on (or after) WooCommerce checkout.
-* *Empty Cart Button* - Add and customize "Empty Cart" button to cart page.
+* *Empty Cart Button* - Add and customize "Empty Cart" button to WooCommerce cart page.
 * *Mini Cart* - Customize WooCommerce mini cart widget.
 
 **Payment Gateways**
@@ -81,10 +83,12 @@ Booster for WooCommerce is a WordPress plugin that supercharges your site with a
 **Shipping & Orders**
 
 * *Address Formats* - Set address format in WooCommerce orders on per country basis. Force base country display.
+* *Left to Free Shipping* - Display "left to free shipping" info in WooCommerce.
 * *Order Custom Statuses* - Custom statuses for WooCommerce orders.
+* *Order Minimum Amount* - Minimum WooCommerce order amount (optionally by user role).
 * *Order Numbers* - WooCommerce sequential order numbering, custom order number prefix, suffix and number width.
-* *Orders* - Minimum WooCommerce order amount (optionally by user role); orders auto-complete; custom admin order list columns; admin order currency.
-* *Shipping* - Add multiple custom shipping methods to WooCommerce. Add descriptions and icons to shipping methods on frontend. Hide WooCommerce shipping when free is available. Display "left to free shipping" info.
+* *Orders* - Orders auto-complete. Custom admin order list columns. Admin order currency. Admin order list multiple status filtering.
+* *Shipping* - Add multiple custom shipping methods to WooCommerce. Add descriptions and icons to shipping methods on frontend. Hide WooCommerce shipping when free is available.
 * *Shipping Calculator* - Customize WooCommerce shipping calculator on cart page.
 
 **PDF Invoicing & Packing Slips**
@@ -96,10 +100,11 @@ Booster for WooCommerce is a WordPress plugin that supercharges your site with a
 * *Admin Tools* - Booster for WooCommerce debug and log tools.
 * *Booster WPML* - Booster for WooCommerce basic WPML support.
 * *EU VAT Number* - Collect and validate EU VAT numbers on WooCommerce checkout. Automatically disable VAT for valid numbers. Add all EU countries VAT standard rates to WooCommerce.
-* *Export* - WooCommerce export tools.
 * *Emails* - Add custom emails. Add another email recipient(s) to all WooCommerce emails.
-* *General* - Separate custom CSS for front and back end. Shortcodes in Wordpress text widgets. Custom roles tool.
+* *Export* - WooCommerce export tools.
+* *General* - Separate custom CSS for front and back end. Shortcodes in WordPress text widgets. Custom roles tool.
 * *Old Slugs* - Remove old WooCommerce products slugs.
+* *Products XML* - WooCommerce products XML feed.
 * *Reports* - WooCommerce stock, sales, customers etc. reports.
 
 = Feedback =
@@ -108,13 +113,14 @@ Booster for WooCommerce is a WordPress plugin that supercharges your site with a
 * For support visit the [contact page](http://booster.io/contact-us/).
 
 = More =
-* Visit the [Booster for WooCommerce plugin page](http://booster.io/)
+* Visit the [Booster for WooCommerce plugin page](http://booster.io/).
+* [Compare free and Plus version](http://booster.io/booster-woocommerce-free-vs-plus/).
 
 == Installation ==
 
-1. Upload the entire `woocommerce-jetpack` folder to the `/wp-content/plugins/` directory
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Go to WooCommerce > Settings > Booster
+1. Upload the entire `woocommerce-jetpack` folder to the `/wp-content/plugins/` directory.
+2. Activate the plugin through the 'Plugins' menu in WordPress.
+3. Go to WooCommerce > Settings > Booster.
 
 == Frequently Asked Questions ==
 
@@ -122,11 +128,148 @@ Booster for WooCommerce is a WordPress plugin that supercharges your site with a
 
 To unlock all Booster for WooCommerce features, please install additional [Booster for WooCommerce Plus](http://booster.io/plus/) plugin.
 
+= What features are in free and what are in Plus version? =
+
+You can see the differences between versions in this [table](http://booster.io/booster-woocommerce-free-vs-plus/).
+
 == Screenshots ==
 
 1. Plugin admin area.
 
 == Changelog ==
+
+= 2.5.9 - 19/12/2016 =
+* Dev - `WCJ_Module` - "Reset settings" button now uses JS confirmation; `wp_safe_redirect` added.
+* Dev - Shortcodes - Orders - `[wcj_order_items_table]` - `columns` - `item_meta` column added.
+* Dev - Shortcodes - Orders - `[wcj_order_items_table]` - `quantity_prefix` attribute added.
+* Dev - Shortcodes - Orders - `[wcj_order_total_in_words]` - `LT` - Lithuanian language function added.
+* Fix - Shortcodes - Orders - `[wcj_order_total_in_words]` - `BG` - not including national currency; Upper-case for first letter.
+* Fix - PRICES & CURRENCIES - Prices and Currencies by Country - Add Countries Flags Images to Select Drop-Down Box - Flag image missing bug fixed.
+* Dev - BUTTON & PRICE LABELS - Free Price Labels - Initial module release.
+* Fix - PRODUCTS - Product Cost Price - Checking if order prices included taxes, when calculating "Profit" column.
+* Dev - PDF INVOICING & PACKING SLIPS - General - "Do not create if order total equals zero" option added.
+* Dev - EMAILS & MISC. - Export - "Export Orders Items" tool added.
+* Dev - EMAILS & MISC. - Export - "Filter by All Fields" added.
+* Dev - EMAILS & MISC. - Export - "Download XML" button added.
+* Dev - EMAILS & MISC. - Export - Code refactoring.
+* Dev - EMAILS & MISC. - Export - Customers - New customer fields added: "Login", "Nicename", "URL", "Registered", "Display Name".
+* Dev - EMAILS & MISC. - Export - Customers - "Export Customers Fields" option added.
+* Dev - EMAILS & MISC. - Export - Customers from Orders - `WP_Query` optimized to return `ids` only.
+* Dev - EMAILS & MISC. - Export - Customers from Orders - "Export Customers from Orders Fields" option added.
+* Dev - EMAILS & MISC. - Export - Customers from Orders - New fields added: "Billing Company", "Billing Address 1", "Billing Address 2", "Billing City", "Billing State", "Billing Postcode", "Billing Country", "Billing Phone".
+* Dev - EMAILS & MISC. - Export - Orders - "Additional Export Orders Fields" options added.
+* Dev - EMAILS & MISC. - Export - Orders - Corresponding data is gathered only if "Order Items" or "Order Items Product Input Fields" columns are enabled.
+* Dev - EMAILS & MISC. - Export - Orders - Item meta info added to "Order Items" column.
+* Dev - EMAILS & MISC. - Export - Products - New product fields added: "Price Including Tax", "Price Excluding Tax", "Display Price", "Average Rating", "Rating Count", "Review Count", "Categories", "Tags", "Dimensions", "Formatted Name", "Availability", "Availability Class".
+* Tweak - Shortcodes - Orders - `[wcj_order_items_table]` - `get_meta_info` - replaced with `wcj_get_order_item_meta_info()`.
+* Tweak - SHIPPING & ORDERS - Left to Free Shipping - Description updated.
+* Tweak - EMAILS & MISC. - Export - Divided settings into separate sections.
+* Tweak - Filters renamed.
+
+= 2.5.8 - 09/12/2016 =
+* Fix - `wcj_current_filter_priority()` modified for compatibility with WordPress since v4.7.
+* Dev - Shortcodes - General - `[wcj_get_left_to_free_shipping]` - `multiply_by` attribute added (and to `wcj_get_left_to_free_shipping()` function).
+* Dev - Shortcodes - General - `[wcj_customer_billing_country]`, `[wcj_customer_shipping_country]`, `[wcj_customer_meta]` shortcodes added.
+* Dev - Shortcodes - Orders - `[wcj_order_function]` - `implode()` added in case if returned value is an array.
+* Dev - Shortcodes - Orders - `[wcj_order_coupons]` shortcode added.
+* Dev - Shortcodes - Orders - `[wcj_order_items_table]` - `item_name` and `item_variation` - `variation_as_metadata` attribute added.
+* Dev - Shortcodes - Orders - `[wcj_order_items_table]` - `item_name` and `item_variation` - Using `get_formatted_variation_attributes` instead of `wc_get_formatted_variation`.
+* Dev - Shortcodes - Orders - `[wcj_order_items_table]` - Compatibility - "WooCommerce TM Extra Product Options" plugin.
+* Fix - Shortcodes - Products - `[wcj_product_excerpt]` - Function simplified by using `get_the_excerpt( $post_id )` directly (available since WordPress v4.5). However there is reported bug (see https://core.trac.wordpress.org/ticket/36934).
+* Dev - PRICES & CURRENCIES - Multicurrency (Currency Switcher) - "Rounding" and "Rounding Precision" options added.
+* Dev - PRICES & CURRENCIES - Price Formats - "WPML Language Code" option added.
+* Dev - CART & CHECKOUT - Checkout Files Upload - "PRODUCTS to hide this field", "CATEGORIES to hide this field" and "TAGS to hide this field" options added.
+* Dev - CART & CHECKOUT - Checkout Files Upload - Functionality to always return `true` in `is_visible` on empty cart (`wcj_checkout_files_always_visible_on_empty_cart` filter) added.
+* Dev - SHIPPING & ORDERS - Left to Free Shipping - Initial module release (moved from Shipping module).
+* Dev - PDF INVOICING & PACKING SLIPS - Email Options - Attach PDF to emails - "Admin - Failed Order", "Customer - On-Hold Order", "Customer - Note", "Customer - New Account", "Customer - Reset Password" options added.
+* Dev - PDF INVOICING & PACKING SLIPS - Display & Misc. - Admin order list columns are sortable now.
+* Dev - EMAILS & MISC. - Admin Tools - "Show Order Meta" and "Show Product Meta" options added.
+* Dev - EMAILS & MISC. - Reports - Booster: Product Sales - "Last Sale" and "Total Sum" columns added.
+* Tweak - Language (POT) file updated.
+* Tweak - PRICES & CURRENCIES - Prices and Currencies by Country - Price by Country on per Product Basis - Description updated.
+* Tweak - BUTTON & PRICE LABELS - Custom Price Labels - `wcj_price_labels_check_on_applying_label` filter added.
+* Tweak - BUTTON & PRICE LABELS - Custom Price Labels - `wcj_price_labels_woocommerce_get_price_html_allowed_post_types` filter added.
+* Tweak - EMAILS & MISC. - General - Typo fixed in description.
+* Tweak - EMAILS & MISC. - Reports - Booster: Product Sales - "No sales data for current period" message added.
+* Tweak - EMAILS & MISC. - Reports - Booster: Product Sales - Link to two years back added.
+* Tweak - EMAILS & MISC. - Reports - Booster: Product Sales - "Filter" button renamed to "Filter products".
+
+= 2.5.7 - 27/11/2016 =
+* Fix - `load_plugin_textdomain` moved from `init` hook to constructor (fixes the issue with module titles, descriptions not translating).
+* Fix - `class-wcj-currency-reports.php` - `filter_reports` is now applied on `wc-reports` page only.
+* Dev - `unclean_custom_textarea()` added.
+* Dev - Made "Booster Tools" accessible to shop manager.
+* Dev - Shortcodes - `find` and `replace` attributes added to all shortcodes.
+* Dev - Shortcodes - General - `[wcj_wholesale_price_table]` - `%level_max_qty%` replace value added to `heading_format` attribute. `%level_qty%` marked as deprecated (`%level_min_qty%` should be used instead).
+* Dev - Shortcodes - Orders - `[wcj_order_items_total_weight]` replaced with `[wcj_order_total_weight]`.
+* Dev - Shortcodes - Orders - `[wcj_order_total_width]`, `[wcj_order_total_height]` and `[wcj_order_total_length]` shortcodes added.
+* Dev - Shortcodes - Orders - `[wcj_order_items]` shortcode added.
+* Dev - Shortcodes - Orders - `[wcj_order_items_table]` - `item_image_width` and `item_image_height` replaced with `product_image_width` and `product_image_height`.
+* Dev - Shortcodes - Orders - `[wcj_order_items_table]` - `columns` - Added to all appropriate `item_` columns: `product_name`, `product_attribute`, `product_excerpt`, `product_short_description`, `product_variation`, `product_thumbnail`, `product_sku`, `product_weight`.
+* Dev - Shortcodes - Orders - `[wcj_order_items_table]` - `columns` - `product_length`, `product_width` and `product_height` columns added.
+* Dev - Shortcodes - Orders - `[wcj_order_items_table]` - `item_short_description` - now displays item's short description (may be different from `item_excerpt`). `item_description` attribute removed.
+* Dev - Shortcodes - Orders - `[wcj_order_items_table]` - `columns` - `product_regular_price` and `product_sale_price` columns added.
+* Dev - Shortcodes - Orders - `[wcj_order_items_table]` - `columns` - `item_tax_class` column added.
+* Dev - Shortcodes - Products - `[wcj_product_price_excluding_tax]` and `[wcj_product_price_including_tax]` - `multiply_by` attribute added. And both functions code refactored.
+* Fix - Shortcodes - Products - `[wcj_product_excerpt]` - Manually checking for short description first (so `length` can be applied).
+* Dev - Shortcodes - Products - `[wcj_product_excerpt]` - `excerpt_length` attribute deprecated (replaced with `length`).
+* Dev - Shortcodes - Products - `[wcj_product_short_description]` shortcode added.
+* Dev - Shortcodes - Products - `[wcj_product_url]` shortcode added.
+* Dev - Shortcodes - Products - `[wcj_product_image_url]` shortcode added.
+* Dev - Shortcodes - Products - `[wcj_product_categories_names]` shortcode added.
+* Dev - Shortcodes - Products - `[wcj_product_categories_urls]` shortcode added.
+* Dev - Shortcodes - Products - `[wcj_product_meta]` shortcode added.
+* Dev - Shortcodes - Products - `[wcj_product_wholesale_price_table]` - `%level_max_qty%` replace value added to `heading_format` attribute. `%level_qty%` marked as deprecated (`%level_min_qty%` should be used instead).
+* Dev - PRICES & CURRENCIES - Global Discount - Initial module release.
+* Dev - PRICES & CURRENCIES - Multicurrency (Currency Switcher) - Compatibility - "WooCommerce TM Extra Product Options" plugin.
+* Dev - PRICES & CURRENCIES - Price by User Role - "Search Engine Bots" option added.
+* Dev - PRICES & CURRENCIES - Wholesale Price - Global settings discount now can be negative.
+* Dev - PRICES & CURRENCIES - Wholesale Price - Per product - "Price directly" option added (for non variable products only).
+* Dev - BUTTON & PRICE LABELS - Call for Price - "Make All Products Call for Price" option added.
+* Fix - PRODUCTS - User Products - "My Account > Products" fixed.
+* Fix - PAYMENT GATEWAYS - Custom Gateways - Enable for shipping methods - Empty method title bug fixed.
+* Fix - SHIPPING & ORDERS - Order Custom Statuses - Custom Statuses tool - Empty array passed on apply `wc_order_statuses` filter (produced PHP warning).
+* Dev - SHIPPING & ORDERS - Order Minimum Amount - Initial module release (moved from Orders module).
+* Dev - SHIPPING & ORDERS - Orders - "Admin Orders List Columns Order" section added. Priorities in all Booster's added `manage_edit-shop_order_columns` filters changed.
+* Dev - SHIPPING & ORDERS - Orders - "Admin Orders List Multiple Status" section added.
+* Dev - SHIPPING & ORDERS - Shipping - Custom Shipping with Zones - "Min Weight" and "Max Weight" options added.
+* Dev - SHIPPING & ORDERS - Shipping Calculator - "Labels" settings section added.
+* Dev - PDF INVOICING & PACKING SLIPS - "Generate" and "Download" bulk actions added to admin orders list.
+* Dev - PDF INVOICING & PACKING SLIPS - Invoices Report tool - `get_invoices_report_data()` - `WP_Query` optimized to return `ids` only.
+* Dev - PDF INVOICING & PACKING SLIPS - Invoices Report tool - "Download monthly documents CSV" added.
+* Dev - EMAILS & MISC. - Admin Tools - "System Info" table added.
+* Dev - EMAILS & MISC. - Admin Tools - "PHP Memory Limit" option added.
+* Fix - EMAILS & MISC. - EU VAT Number - Preserve VAT in Base Country - `EL` replaced with `GR` for Greece when checking location.
+* Dev - EMAILS & MISC. - EU VAT Number - Validate VAT without SOAP fallback added (`validate_vat_no_soap` function).
+* Dev - EMAILS & MISC. - Export - "UTF-8 BOM" option added.
+* Fix - EMAILS & MISC. - Export - Export Orders - "Order Date" column fixed.
+* Dev - EMAILS & MISC. - Export - Export Orders - "Order Time" column added.
+* Dev - EMAILS & MISC. - Export - Export Products - Stock - `get_stock_quantity()` replaced with `get_total_stock()`. Separate "Stock Quantity" export field added.
+* Dev - EMAILS & MISC. - Export - Export Products - Variable and grouped products price, regular price, sale price, stock quantity and total stock for each variation added.
+* Dev - EMAILS & MISC. - Export - Export Products - "Additional Export Products Fields" section added.
+* Dev - EMAILS & MISC. - Export - Export Products - "Export Products Fields" option added.
+* Dev - EMAILS & MISC. - Export - Export Products - "Image URL", "Short Description", "Description", "Status", "URL", "Shipping Class", "Shipping Class Id", "Width", "Length", "Height", "Weight", "Downloadable", "Virtual", "Sold Individually", "Tax Status", "Tax Class", "Manage Stock", "Stock Status", "Backorders", "Featured" and "Visibility" export fields added.
+* Dev - EMAILS & MISC. - Export - Export Products - `WP_Query` optimized to return `ids` only.
+* Dev - EMAILS & MISC. - General - "Session Expiration Options" section added.
+* Dev - EMAILS & MISC. - Products XML - Initial module release.
+* Dev - EMAILS & MISC. - Reports - Booster: Product Sales - Variations added in report.
+* Tweak - Deprecated typo fixed.
+* Tweak - `WCJ_Module` - `create_meta_box()` - `wcj_get_meta_box_options_type_price_step` filter added.
+* Tweak - `wcj_get_table_html()` - "row_styles" parameter added.
+* Tweak - Language (POT) file updated.
+* Tweak - Shortcodes - Products - `[wcj_product_excerpt]` - Using `product_excerpt_length` object property instead of global variable.
+* Tweak - Shortcodes - Products - `[wcj_product_wholesale_price_table]` - `wcj_product_wholesale_price_table_price_before` and `wcj_product_wholesale_price_table_price_after` filters added.
+* Tweak - PRICES & CURRENCIES - Price by User Role - `change_price_by_role()` - `wcj_price_by_user_role_get_price` filter added.
+* Tweak - PRICES & CURRENCIES - Wholesale Price - `get_wholesale_price()` - `price_directly` - `wcj_get_wholesale_price` filter added.
+* Tweak - CART & CHECKOUT - Empty Cart Button - Description updated.
+* Tweak - SHIPPING & ORDERS - Order Custom Statuses - Custom Statuses tool - User messages updated.
+* Tweak - SHIPPING & ORDERS - Order Custom Statuses - Custom Statuses tool - "Add new custom status" button label added to translation.
+* Tweak - SHIPPING & ORDERS - Shipping - Custom Shipping - "Weight Table Total Rows" option description updated.
+* Tweak - PDF INVOICING & PACKING SLIPS - Invoices Report tool - `get_invoices_report_zip()` - Headers cleaned up.
+* Tweak - PDF INVOICING & PACKING SLIPS - Invoices Report tool - Calling `get_tool_header_html()` instead of directly outputting header.
+* Tweak - EMAILS & MISC. - Export - Tool header added to all export tools.
+* Tweak - EMAILS & MISC. - Export - Headers cleaned up.
+* Tweak - EMAILS & MISC. - Reports - Button restyled in admin settings.
 
 = 2.5.6 - 29/09/2016 =
 * Dev - Functions - `wcj_get_product_input_fields()` - `unserialize()` added for serialized values.
@@ -291,7 +434,7 @@ To unlock all Booster for WooCommerce features, please install additional [Boost
 * Dev - EMAILS & MISC. - Reports - Monthly Sales - Major code refactoring. New data added.
 * Tweak - Rating message added.
 * Tweak - Module's documentation button on new line.
-* Tweak - Depreciated module message updated.
+* Tweak - Deprecated module message updated.
 * Tweak - PRODUCTS - Product Add to Cart - Module description updated.
 * Tweak - PRODUCTS - Product by User - Module and admin settings descriptions updated.
 * Tweak - PRODUCTS - Product Info - Moved to EMAILS & MISC. Renamed to "Product Info V1". "Product Info V2" renamed to "Product Info".
@@ -600,8 +743,8 @@ To unlock all Booster for WooCommerce features, please install additional [Boost
 * Fix - PRICES & CURRENCIES - Currency Exchange Rates - `no_changes` currency bug fixed.
 * Fix - PRICES & CURRENCIES - Multicurrency and Currency Exchange Rates - Currency pairs added to Currency Exchange Rates module.
 * Dev - BUTTON & PRICE LABELS - Custom Price Labels - WooCommerce Subscription products support added.
-* Dev - PRODUCTS - Product Tabs - "CATEGORIES to HIDE this tab" and "CATEGORIES to SHOW this tab" options added, instead of depreciated "Comma separated CATEGORY IDs..." options.
-* Dev - PRODUCTS - Product Tabs - "PRODUCTS to HIDE this tab" and "PRODUCTS to SHOW this tab" options added, instead of depreciated "Comma separated PRODUCT IDs..." options.
+* Dev - PRODUCTS - Product Tabs - "CATEGORIES to HIDE this tab" and "CATEGORIES to SHOW this tab" options added, instead of deprecated "Comma separated CATEGORY IDs..." options.
+* Dev - PRODUCTS - Product Tabs - "PRODUCTS to HIDE this tab" and "PRODUCTS to SHOW this tab" options added, instead of deprecated "Comma separated PRODUCT IDs..." options.
 * Dev - PRODUCTS - Product Tabs - "TAGS to HIDE this tab" and "TAGS to SHOW this tab" options added.
 * Dev - PRODUCTS - Product Tabs - "Reset settings" button added.
 * Dev - PAYMENT GATEWAYS - Gateways by Country or State - "Include States (Base Country)" and "Exclude States (Base Country)" options added.
@@ -643,7 +786,7 @@ To unlock all Booster for WooCommerce features, please install additional [Boost
 * Dev - Functions - General - `wcj_is_module_enabled()` function added.
 * Dev - Shortcodes - General - `[wcj_country_select_drop_down_list]` - manual sorting when `countries` attribute is used.
 * Fix - Shortcodes - Orders - `[wcj_order_total_tax_percent]` fixed. `precision` attribute added.
-* Fix - Shortcodes - Orders - `get_cart_discount()` (depreciated since WooCommerce 2.3) removed from `[wcj_order_items_table]` shortcode (affected if `discount_as_item` option was used); removed from `[wcj_order_total_discount]` shortcode; `[wcj_order_cart_discount]` shortcode removed.
+* Fix - Shortcodes - Orders - `get_cart_discount()` (deprecated since WooCommerce 2.3) removed from `[wcj_order_items_table]` shortcode (affected if `discount_as_item` option was used); removed from `[wcj_order_total_discount]` shortcode; `[wcj_order_cart_discount]` shortcode removed.
 * Fix - Shortcodes - Orders - `[wcj_order_total_in_words]` - decimal part rounding bug fixed.
 * Dev - Shortcodes - Orders - `[wcj_order_total_in_words]` - `whole` and `decimal` attributes added.
 * Dev - Shortcodes - Orders - `[wcj_order_items_table]` - `item_short_description` option added.
@@ -660,7 +803,7 @@ To unlock all Booster for WooCommerce features, please install additional [Boost
 * Dev - PRICES & CURRENCIES - Bulk Price Converter - Code refactoring.
 * Dev - PRICES & CURRENCIES - Bulk Price Converter - Option to convert prices by *product category* added.
 * Dev - PRODUCTS - Product Info - Code refactoring.
-* Dev - PRODUCTS - Product Info V2 - Initial module release. Product Info marked as depreciated.
+* Dev - PRODUCTS - Product Info V2 - Initial module release. Product Info marked as deprecated.
 * Dev - PRODUCTS - Product Input Fields - Code refactoring.
 * Dev - PRODUCTS - Product Input Fields - Required field sign option added.
 * Dev - PRODUCTS - Product Input Fields - "time format", "interval" options for Timepicker added.
@@ -704,7 +847,7 @@ To unlock all Booster for WooCommerce features, please install additional [Boost
 * Dev - PDF Invoicing - Display - Admin's "Orders" Page - "Column Title", "Create Button" and "Delete Button" options added.
 * Dev - PDF Invoicing - Display - "Misc." menu renamed to "Display & Misc.".
 * Dev - PDF Invoicing - Display - Customer's "My Account" Page - "Add link" and "Link text" options unlocked.
-* Dev - PDF Invoices (v1) marked as "Depreciated".
+* Dev - PDF Invoices (v1) marked as "Deprecated".
 * Fix - EMAILS & MISC. - General - Tabs on "Booster Tools" page fixed (caused other module's tools tabs disappear). Info on "Booster Tools Dashboard" page fixed.
 * Dev - EMAILS & MISC. - EU VAT Number - "EU Countries VAT Rates" tool added.
 * Dev - Donate link removed.
@@ -784,7 +927,7 @@ To unlock all Booster for WooCommerce features, please install additional [Boost
 = 2.3.0 - 01/10/2015 =
 * Fix - `time` function calls replaced with `current_time` in: crowdfunding module and shortcode, invoicing, stock report.
 * Dev - `WCJ_Module` code refactoring.
-* Dev - Shortcodes - Orders - `[wcj_order_checkout_field]` shortcode modified. `[wcj_order_custom_meta_field]` depreciated (now duplicates `[wcj_order_checkout_field]`).
+* Dev - Shortcodes - Orders - `[wcj_order_checkout_field]` shortcode modified. `[wcj_order_custom_meta_field]` deprecated (now duplicates `[wcj_order_checkout_field]`).
 * Dev - PAYMENT GATEWAYS category added and modules renamed.
 * Dev - PAYMENT GATEWAYS - Gateways Currency - Initial module release.
 * Dev - PAYMENT GATEWAYS - Gateways Fees and Discounts - "Fee (or discount) type" option unlocked.
@@ -901,7 +1044,7 @@ To unlock all Booster for WooCommerce features, please install additional [Boost
 * Dev - Tools (SKU and Admin) moved to each module's settings.
 
 = 2.2.2 - 24/07/2015 =
-* Fix - DASHBOARD - White screen on dashboard issue, fixed. `wcj_features_status` filter depreciated.
+* Fix - DASHBOARD - White screen on dashboard issue, fixed. `wcj_features_status` filter deprecated.
 * Fix - PRICES & CURRENCIES - Price by Country - Variable onsale old price bug fixed.
 * Dev - PRICES & CURRENCIES - Wholesale Price Table Shortcode (`[wcj_product_wholesale_price_table]`) - Discount percent row added to the table.
 * Dev - PRICES & CURRENCIES - Wholesale Price - "Show discount info on cart page" and "Discount info on cart page format" options added.
@@ -912,7 +1055,7 @@ To unlock all Booster for WooCommerce features, please install additional [Boost
 * Dev - CART & CHECKOUT - Payment Gateways - Code refactoring, new modules created:
   Custom Payment Gateways, Payment Gateways Icons, Payment Gateways Fees, Payment Gateways per Category.
   Attaching PDF Invoice V1 to emails - code moved to PDF Invoice V1 module.
-  All settings (except depreciated "attaching PDF Invoice V1") moved from WooCommerce Checkout settings to module's settings.
+  All settings (except deprecated "attaching PDF Invoice V1") moved from WooCommerce Checkout settings to module's settings.
 * Fix - SHIPPING & ORDERS - Orders - Step in min order amount changed.
 * Fix - PDF Invoicing - Numbering - `[wcj_invoice_date]` in invoice number bug fixed.
 * Fix - PDF Invoicing - In TCPDF lib, `symlink` call changed to calling with variable function name to prevent autodeleting tcpdf_fonts.php file from some servers bug.
@@ -996,7 +1139,7 @@ To unlock all Booster for WooCommerce features, please install additional [Boost
 * Dev - PDF Invoicing - Option for `item_variation` column added to `[wcj_order_items_table]` shortcode. Suggested by Brad.
 * Dev - PDF Invoicing - Shop manager (not only admin) now is also allowed to see the invoices (`is_shop_manager` function). Also added to PDF Invoices (V1).
 * Dev - PDF Invoicing - Extra check on `fopen`. Also added to PDF Invoices (V1).
-* Dev - EMAILS & MISC. - PDF Invoices (V1) moved to "EMAILS & MISC." submenu and marked as "depreciated".
+* Dev - EMAILS & MISC. - PDF Invoices (V1) moved to "EMAILS & MISC." submenu and marked as "deprecated".
 * Dev - EMAILS & MISC. - PDF Invoices (V1) - `get_item_total` replaced with `get_item_subtotal`.
 * Dev - EMAILS & MISC. - Reports - Customers by Country - Total spent by country added.
 * Dev - EMAILS & MISC. - WPML - New module added. Support for some options added to wpml-config.xml file.
@@ -1117,9 +1260,9 @@ To unlock all Booster for WooCommerce features, please install additional [Boost
 * Dev - PRODUCTS - **Product Input Fields** - Fields to fill before adding product to cart. Idea by Mangesh.
   Fields can be added globally (i.e. for all products), or on per product basis.
   Currently only fields of `text` type are available.
-* Dev - PRODUCTS - **Product Info** - Wordpress shortcodes added for every WooJetpack shortcode.
-  WooJetpack shortcodes are now depreciated and will be removed in future releases. See v.1.9.0 changelog for more details.
-  This covers Wordpress.org Support Forum thread by dudemcpek - https://wordpress.org/support/topic/not-displaying-shortcodes.
+* Dev - PRODUCTS - **Product Info** - WordPress shortcodes added for every WooJetpack shortcode.
+  WooJetpack shortcodes are now deprecated and will be removed in future releases. See v.1.9.0 changelog for more details.
+  This covers WordPress.org Support Forum thread by dudemcpek - https://wordpress.org/support/topic/not-displaying-shortcodes.
 * Dev - CART - **Add to Cart per Category** - Add to cart button text on *per category* basis (single or category view). Idea by Craig.
 * Dev - CART - **Add to Cart per Product** - Custom add to cart button text on *per product* basis (single or category view). Idea by Craig.
 * Dev - CART - **Cart** - Option to change position of `Empty cart` button. Suggested by Patryk.
@@ -1167,7 +1310,7 @@ To unlock all Booster for WooCommerce features, please install additional [Boost
   Products with *empty price* only for archives (single view does not contain add to cart button at all, so nothing to cover).
 * Feature Upgraded - **Product Info** - Added `[wcjp_list_attribute]` shortcode.
   Now it is possible to display product's attribute values list (e.g. to list the different colour variations of a product). Idea by Tony.
-  This is the right way to display product info, so WooJetpack shortcodes (introduced in v.1.8.2) are depreciated and will be removed in feature releases.
+  This is the right way to display product info, so WooJetpack shortcodes (introduced in v.1.8.2) are deprecated and will be removed in feature releases.
   Shortcode has `visibility` parameter which gives the possibility to show shortcode's product info to admin only.
 * Feature Upgraded - **Product Info** - `%stock_quantity%` WooJetpack Shortcode added.
 * Dev - **Product Info** - `the_content` filter added to result. Now shortcodes will be displayed properly.

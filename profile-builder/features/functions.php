@@ -259,7 +259,8 @@ function wppb_print_cpt_script( $hook ){
 		( $hook == 'profile-builder_page_profile-builder-wppb_emailCustomizer' ) ||
 		( $hook == 'profile-builder_page_profile-builder-wppb_emailCustomizerAdmin' ) ||
 		( $hook == 'profile-builder_page_profile-builder-add-ons' ) ||
-		( $hook == 'profile-builder_page_profile-builder-woocommerce-sync') ||
+		( $hook == 'profile-builder_page_profile-builder-woocommerce-sync' ) ||
+        ( $hook == 'profile-builder_page_profile-builder-bbpress') ||
 		( $hook == 'admin_page_profile-builder-pms-promo') ) {
 			wp_enqueue_style( 'wppb-back-end-style', WPPB_PLUGIN_URL . 'assets/css/style-back-end.css', false, PROFILE_BUILDER_VERSION );
 	}
@@ -327,48 +328,70 @@ add_action( 'wp_ajax_hook_wppb_delete', 'wppb_delete' );
 
 //the function used to overwrite the avatar across the wp installation
 function wppb_changeDefaultAvatar( $avatar, $id_or_email, $size, $default, $alt ){
-	/* Get user info. */ 
+	/* Get user info. */
 	if(is_object($id_or_email)){
 		$my_user_id = $id_or_email->user_id;
-		
+
 	}elseif(is_numeric($id_or_email)){
-		$my_user_id = $id_or_email; 
-		
+		$my_user_id = $id_or_email;
+
 	}elseif(!is_integer($id_or_email)){
 		$user_info = get_user_by( 'email', $id_or_email );
 		$my_user_id = ( is_object( $user_info ) ? $user_info->ID : '' );
-	}else  
-		$my_user_id = $id_or_email; 
+	}else
+		$my_user_id = $id_or_email;
 
 	$wppb_manage_fields = get_option( 'wppb_manage_fields', 'not_found' );
-	
 	if ( $wppb_manage_fields != 'not_found' ){
 		foreach( $wppb_manage_fields as $value ){
 			if ( $value['field'] == 'Avatar'){
-
-                $customUserAvatar = get_user_meta( $my_user_id, $value['meta-name'], true );
-                if( !empty( $customUserAvatar ) ){
-                    if( is_numeric( $customUserAvatar ) ){
-                        $img_attr = wp_get_attachment_image_src( $customUserAvatar, 'wppb-avatar-size-'.$size );
-                        if( $img_attr[3] === false ){
-                            $img_attr = wp_get_attachment_image_src( $customUserAvatar, 'thumbnail' );
-                            $avatar = "<img alt='{$alt}' src='{$img_attr[0]}' class='avatar avatar-{$size} photo avatar-default' height='{$size}' width='{$size}' />";
-                        }
-                        else
-                            $avatar = "<img alt='{$alt}' src='{$img_attr[0]}' class='avatar avatar-{$size} photo avatar-default' height='{$img_attr[2]}' width='{$img_attr[1]}' />";
-                    }
-                    else {
-                        $customUserAvatar = get_user_meta($my_user_id, 'resized_avatar_' . $value['id'], true);
-                        $customUserAvatarRelativePath = get_user_meta($my_user_id, 'resized_avatar_' . $value['id'] . '_relative_path', true);
-
-                        if ((($customUserAvatar != '') || ($customUserAvatar != null)) && file_exists($customUserAvatarRelativePath)) {
-                            $avatar = "<img alt='{$alt}' src='{$customUserAvatar}' class='avatar avatar-{$size} photo avatar-default' height='{$size}' width='{$size}' />";
-                        }
-                    }
-                }
+				$avatar_field = $value;
 			}
 		}
 	}
+
+	/* for multisite if we don't have an avatar try to get it from the main blog */
+	if( is_multisite() && empty( $avatar_field ) ){
+		switch_to_blog(1);
+		$wppb_switched_blog = true;
+		$wppb_manage_fields = get_option( 'wppb_manage_fields', 'not_found' );
+		if ( $wppb_manage_fields != 'not_found' ){
+			foreach( $wppb_manage_fields as $value ){
+				if ( $value['field'] == 'Avatar'){
+					$avatar_field = $value;
+				}
+			}
+		}
+	}
+
+	if ( !empty( $avatar_field ) ){
+
+		$customUserAvatar = get_user_meta( $my_user_id, $avatar_field['meta-name'], true );
+		if( !empty( $customUserAvatar ) ){
+			if( is_numeric( $customUserAvatar ) ){
+				$img_attr = wp_get_attachment_image_src( $customUserAvatar, 'wppb-avatar-size-'.$size );
+				if( $img_attr[3] === false ){
+					$img_attr = wp_get_attachment_image_src( $customUserAvatar, 'thumbnail' );
+					$avatar = "<img alt='{$alt}' src='{$img_attr[0]}' class='avatar avatar-{$size} photo avatar-default' height='{$size}' width='{$size}' />";
+				}
+				else
+					$avatar = "<img alt='{$alt}' src='{$img_attr[0]}' class='avatar avatar-{$size} photo avatar-default' height='{$img_attr[2]}' width='{$img_attr[1]}' />";
+			}
+			else {
+				$customUserAvatar = get_user_meta($my_user_id, 'resized_avatar_' . $avatar_field['id'], true);
+				$customUserAvatarRelativePath = get_user_meta($my_user_id, 'resized_avatar_' . $avatar_field['id'] . '_relative_path', true);
+
+				if ((($customUserAvatar != '') || ($customUserAvatar != null)) && file_exists($customUserAvatarRelativePath)) {
+					$avatar = "<img alt='{$alt}' src='{$customUserAvatar}' class='avatar avatar-{$size} photo avatar-default' height='{$size}' width='{$size}' />";
+				}
+			}
+		}
+
+	}
+
+	/* if we switched the blog restore it */
+	if( is_multisite() && !empty( $wppb_switched_blog ) && $wppb_switched_blog )
+		restore_current_blog();
 
 	return $avatar;
 }
@@ -379,78 +402,103 @@ add_filter( 'get_avatar', 'wppb_changeDefaultAvatar', 21, 5 );
 function wppb_resize_avatar( $userID, $userlisting_size = null, $userlisting_crop = null ){
 	// include the admin image API
 	require_once( ABSPATH . '/wp-admin/includes/image.php' );
-	
+
 	// retrieve first a list of all the current custom fields
-	$wppb_manage_fields = get_option( 'wppb_manage_fields' );
-	
-	foreach ( $wppb_manage_fields as $key => $value ){
-		if ( $value['field'] == 'Avatar' ){
-				
-			// retrieve width and height of the image
-			$width = $height = '';
-			
-			//this checks if it only has 1 component
-			if ( is_numeric( $value['avatar-size'] ) ){
-				$width = $height = $value['avatar-size'];
-
-			}else{
-				//this checks if the entered value has 2 components
-				$sentValue = explode( ',', $value['avatar-size'] );
-				$width = $sentValue[0];
-				$height = $sentValue[1];
+	$wppb_manage_fields = get_option( 'wppb_manage_fields', 'not_found' );
+	if ( $wppb_manage_fields != 'not_found' ){
+		foreach( $wppb_manage_fields as $value ){
+			if ( $value['field'] == 'Avatar'){
+				$avatar_field = $value;
 			}
-			
-			$width = ( !empty( $userlisting_size ) ? $userlisting_size : $width );
-			$height = ( !empty( $userlisting_size ) ? $userlisting_size : $height );
-
-            if( !strpos( get_user_meta( $userID, 'resized_avatar_'.$value['id'], true ), $width . 'x' . $height ) ) {
-                // retrieve the original image (in original size)
-                $avatar_directory_path = get_user_meta( $userID, 'avatar_directory_path_'.$value['id'], true );
-
-                $image = wp_get_image_editor( $avatar_directory_path );
-                if ( !is_wp_error( $image ) ) {
-                    do_action( 'wppb_before_avatar_resizing', $image, $userID, $value['meta-name'], $value['avatar-size'] );
-
-                    $crop = apply_filters( 'wppb_avatar_crop_resize', ( !empty( $userlisting_crop ) ? $userlisting_crop : false ) );
-
-                    $resize = $image->resize( $width, $height, $crop );
-
-                    if ($resize !== FALSE) {
-                        do_action( 'wppb_avatar_resizing', $image, $resize );
-
-                        $fileType = apply_filters( 'wppb_resized_file_extension', 'png' );
-
-                        $wp_upload_array = wp_upload_dir(); // Array of key => value pairs
-
-                        //create file(name); both with directory and url
-                        $fileName_dir = $image->generate_filename( NULL, $wp_upload_array['basedir'].'/profile_builder/avatars/', $fileType );
-
-                        if ( PHP_OS == "WIN32" || PHP_OS == "WINNT" )
-                            $fileName_dir = str_replace( '\\', '/', $fileName_dir );
-
-                        $fileName_url = str_replace( str_replace( '\\', '/', $wp_upload_array['basedir'] ), $wp_upload_array['baseurl'], $fileName_dir );
-
-                        //save the newly created (resized) avatar on the disc
-                        $saved_image = $image->save( $fileName_dir );
-
-                        /* the image save sometimes doesn't save with the desired extension so we need to see with what extension it saved it with and
-                        if it differs replace the extension	in the path and url that we save as meta */
-                        $validate_saved_image = wp_check_filetype_and_ext( $saved_image['path'], $saved_image['path'] );
-                        $ext = substr( $fileName_dir,strrpos( $fileName_dir, '.', -1 ), strlen($fileName_dir) );
-                        if( !empty( $validate_saved_image['ext'] ) && $validate_saved_image['ext'] != $ext ){
-                            $fileName_url = str_replace( $ext, '.'.$validate_saved_image['ext'], $fileName_url );
-                            $fileName_dir = str_replace( $ext, '.'.$validate_saved_image['ext'], $fileName_dir );
-                        }
-
-                        update_user_meta( $userID, 'resized_avatar_'.$value['id'], $fileName_url );
-                        update_user_meta( $userID, 'resized_avatar_'.$value['id'].'_relative_path', $fileName_dir );
-
-                        do_action( 'wppb_after_avatar_resizing', $image, $fileName_dir, $fileName_url );
-                    }
-                }
-            }
 		}
 	}
+
+	/* for multisite if we don't have an avatar try to get it from the main blog */
+	if( is_multisite() && empty( $avatar_field ) ){
+		switch_to_blog(1);
+		$wppb_switched_blog = true;
+		$wppb_manage_fields = get_option( 'wppb_manage_fields', 'not_found' );
+		if ( $wppb_manage_fields != 'not_found' ){
+			foreach( $wppb_manage_fields as $value ){
+				if ( $value['field'] == 'Avatar'){
+					$avatar_field = $value;
+				}
+			}
+		}
+	}
+
+
+	if ( !empty( $avatar_field ) ){
+
+		// retrieve width and height of the image
+		$width = $height = '';
+
+		//this checks if it only has 1 component
+		if ( is_numeric( $avatar_field['avatar-size'] ) ){
+			$width = $height = $avatar_field['avatar-size'];
+
+		}else{
+			//this checks if the entered value has 2 components
+			$sentValue = explode( ',', $avatar_field['avatar-size'] );
+			$width = $sentValue[0];
+			$height = $sentValue[1];
+		}
+
+		$width = ( !empty( $userlisting_size ) ? $userlisting_size : $width );
+		$height = ( !empty( $userlisting_size ) ? $userlisting_size : $height );
+
+		if( !strpos( get_user_meta( $userID, 'resized_avatar_'.$avatar_field['id'], true ), $width . 'x' . $height ) ) {
+			// retrieve the original image (in original size)
+			$avatar_directory_path = get_user_meta( $userID, 'avatar_directory_path_'.$avatar_field['id'], true );
+
+			$image = wp_get_image_editor( $avatar_directory_path );
+			if ( !is_wp_error( $image ) ) {
+				do_action( 'wppb_before_avatar_resizing', $image, $userID, $avatar_field['meta-name'], $avatar_field['avatar-size'] );
+
+				$crop = apply_filters( 'wppb_avatar_crop_resize', ( !empty( $userlisting_crop ) ? $userlisting_crop : false ) );
+
+				$resize = $image->resize( $width, $height, $crop );
+
+				if ($resize !== FALSE) {
+					do_action( 'wppb_avatar_resizing', $image, $resize );
+
+					$fileType = apply_filters( 'wppb_resized_file_extension', 'png' );
+
+					$wp_upload_array = wp_upload_dir(); // Array of key => value pairs
+
+					//create file(name); both with directory and url
+					$fileName_dir = $image->generate_filename( NULL, $wp_upload_array['basedir'].'/profile_builder/avatars/', $fileType );
+
+					if ( PHP_OS == "WIN32" || PHP_OS == "WINNT" )
+						$fileName_dir = str_replace( '\\', '/', $fileName_dir );
+
+					$fileName_url = str_replace( str_replace( '\\', '/', $wp_upload_array['basedir'] ), $wp_upload_array['baseurl'], $fileName_dir );
+
+					//save the newly created (resized) avatar on the disc
+					$saved_image = $image->save( $fileName_dir );
+
+					/* the image save sometimes doesn't save with the desired extension so we need to see with what extension it saved it with and
+					if it differs replace the extension	in the path and url that we save as meta */
+					$validate_saved_image = wp_check_filetype_and_ext( $saved_image['path'], $saved_image['path'] );
+					$ext = substr( $fileName_dir,strrpos( $fileName_dir, '.', -1 ), strlen($fileName_dir) );
+					if( !empty( $validate_saved_image['ext'] ) && $validate_saved_image['ext'] != $ext ){
+						$fileName_url = str_replace( $ext, '.'.$validate_saved_image['ext'], $fileName_url );
+						$fileName_dir = str_replace( $ext, '.'.$validate_saved_image['ext'], $fileName_dir );
+					}
+
+					update_user_meta( $userID, 'resized_avatar_'.$avatar_field['id'], $fileName_url );
+					update_user_meta( $userID, 'resized_avatar_'.$avatar_field['id'].'_relative_path', $fileName_dir );
+
+					do_action( 'wppb_after_avatar_resizing', $image, $fileName_dir, $fileName_url );
+				}
+			}
+		}
+	}
+
+	/* if we switched the blog restore it */
+	if( is_multisite() && !empty( $wppb_switched_blog ) && $wppb_switched_blog )
+		restore_current_blog();
+
 }
 
 
@@ -739,6 +787,7 @@ add_filter('post_updated_messages','wppb_change_default_post_updated_messages', 
 /* for meta-names with spaces in them PHP converts the space to underline in the $_POST  */
 function wppb_handle_meta_name( $meta_name ){
     $meta_name = str_replace( ' ', '_', $meta_name );
+    $meta_name = str_replace( '.', '_', $meta_name );
     return $meta_name;
 }
 
@@ -819,32 +868,44 @@ function wppb_manage_required_attribute() {
 	if ($wppb_shortcode_on_front) {
 		?>
 		<script type="text/javascript">
-			jQuery("*").on( "wppbAddRequiredAttributeEvent", wppbAddRequired );
+			jQuery(document).on( "wppbAddRequiredAttributeEvent", wppbAddRequired );
 			function wppbAddRequired(event) {
-				if( jQuery( this ).attr( "temprequired" ) ){
-					jQuery( this ).removeAttr( "temprequired" );
-					jQuery( this ).attr( "required", "required" );
+				var element = wppbEventTargetRequiredElement( event.target );
+				if( jQuery( element ).attr( "wppb_cf_temprequired" ) ){
+					jQuery( element  ).removeAttr( "wppb_cf_temprequired" );
+					jQuery( element  ).attr( "required", "required" );
 				}
 			}
 
-			jQuery("*").on( "wppbRemoveRequiredAttributeEvent", wppbRemoveRequired );
+			jQuery(document).on( "wppbRemoveRequiredAttributeEvent", wppbRemoveRequired );
 			function wppbRemoveRequired(event) {
-				if ( jQuery( this ).attr( "required" ) ) {
-					jQuery(this).removeAttr( "required" );
-					jQuery(this).attr( "temprequired", "temprequired" );
+				var element = wppbEventTargetRequiredElement( event.target );
+				if ( jQuery( element ).attr( "required" ) ) {
+					jQuery( element ).removeAttr( "required" );
+					jQuery( element ).attr( "wppb_cf_temprequired", "wppb_cf_temprequired" );
 				}
 			}
 
-			jQuery("*").on( "wppbToggleRequiredAttributeEvent", wppbToggleRequired );
+			jQuery(document).on( "wppbToggleRequiredAttributeEvent", wppbToggleRequired );
 			function wppbToggleRequired(event) {
-				if ( jQuery( this ).attr( "required" ) ) {
-					jQuery(this).removeAttr( "required" );
-					jQuery(this).attr( "temprequired", "temprequired" );
-				}else if( jQuery( this ).attr( "temprequired" ) ){
-					jQuery( this ).removeAttr( "temprequired" );
-					jQuery( this ).attr( "required", "required" );
+				if ( jQuery( event.target ).attr( "required" ) ) {
+					jQuery( event.target ).removeAttr( "required" );
+					jQuery( event.target ).attr( "wppb_cf_temprequired", "wppb_cf_temprequired" );
+				}else if( jQuery( event.target ).attr( "wppb_cf_temprequired" ) ){
+					jQuery( event.target ).removeAttr( "wppb_cf_temprequired" );
+					jQuery( event.target ).attr( "required", "required" );
 				}
 			}
+
+			function wppbEventTargetRequiredElement( htmlElement ){
+				if ( htmlElement.nodeName == "OPTION" ){
+					// <option> is the target element, so we need to get the parent <select>, in order to apply the required attribute
+					return htmlElement.parentElement;
+				}else{
+					return htmlElement;
+				}
+			}
+
 		</script>
 		<?php
 	}

@@ -92,7 +92,7 @@ function wppb_create_recover_password_form( $user, $post_data ){
 		</ul>
 		<p class="form-submit">
 			<?php $button_name = __('Reset Password', 'profile-builder'); ?>
-			<input name="recover_password2" type="submit" id="wppb-recover-password-button" class="submit button" value="<?php echo apply_filters('wppb_recover_password_button_name1', $button_name); ?>" />
+			<input name="recover_password2" type="submit" id="wppb-recover-password-button" class="<?php echo apply_filters( 'wppb_recover_submit_class', "submit button" );?>" value="<?php echo apply_filters('wppb_recover_password_button_name1', $button_name); ?>" />
 			<input name="action2" type="hidden" id="action2" value="recover_password2" />
 		</p><!-- .form-submit -->
 		<?php wp_nonce_field( 'verify_true_password_recovery2_'.$user->ID, 'password_recovery_nonce_field2' ); ?>

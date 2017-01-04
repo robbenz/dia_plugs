@@ -72,6 +72,7 @@ class VFB_Pro_Form_Builder {
 			'enctype'      => 'multipart/form-data',
 			'class'        => array(),
 			'id'           => '',
+			'onSubmit'     => '',
 			'novalidate'   => false,
 			'add_honeypot' => true,
 			'add_submit'   => true
@@ -111,6 +112,10 @@ class VFB_Pro_Form_Builder {
 		// id attribute
 		if ( !empty( $this->form['id'] ) )
 			$output .= sprintf( ' id="%s"', $this->form['id'] );
+
+		// onSubmit attribute
+		if ( !empty( $this->form['onSubmit'] ) )
+			$output .= sprintf( ' onSubmit="%s"', $this->form['onSubmit'] );
 
 		// class attribute
 		if ( !empty( $this->form['class'] ) ) {
@@ -167,6 +172,7 @@ class VFB_Pro_Form_Builder {
 
 			case 'class':
 			case 'id':
+			case 'onSubmit':
 				// validate these?
 				break;
 

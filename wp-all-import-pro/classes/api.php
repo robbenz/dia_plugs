@@ -373,7 +373,7 @@ class PMXI_API
 
 		global $wpdb;		
 
-		$attch = wp_all_import_get_image_from_gallery($image_name, $targetDir, $file_type);		
+		$attch = wp_all_import_get_image_from_gallery($image_name, $targetDir, $file_type);
 
 		if ( $attch != null ){			
 
@@ -382,7 +382,9 @@ class PMXI_API
 		}	
 
 		$image_filename = wp_unique_filename($targetDir, $image_name);
-		$image_filepath = $targetDir . '/' . $image_filename;		
+		$image_filepath = $targetDir . '/' . $image_filename;
+
+		$url = str_replace(" ", "%20", trim(pmxi_convert_encoding($img_url)));
 
 		// do not download images
 		if ( "yes" != $download_images ){					
@@ -401,7 +403,6 @@ class PMXI_API
 				if ($file_type == 'files'){
 					if( ! $wp_filetype = wp_check_filetype(basename($image_filepath), null )) {
 						$logger and call_user_func($logger, sprintf(__('- <b>WARNING</b>: Can\'t detect attachment file type %s', 'wp_all_import_plugin'), trim($image_filepath)));
-						$logger and !$is_cron and PMXI_Plugin::$session->warnings++;
 						@unlink($image_filepath);
 					}
 					else {
@@ -453,7 +454,6 @@ class PMXI_API
 			}																	
 
 			if ( ! $result ){
-				$url = str_replace(" ", "%20", trim(pmxi_convert_encoding($img_url)));
 				
 				$request = get_file_curl($url, $image_filepath);
 

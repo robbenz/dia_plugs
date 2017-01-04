@@ -43,6 +43,7 @@ class VFB_Pro_Forms_Edit_Settings {
 		$status             = isset( $data['status'] ) ? $data['status'] : '';
 		$label_alignment    = isset( $data['data']['label-alignment']    ) ? $data['data']['label-alignment']    : '';
 		$save_state         = isset( $data['data']['save-state']         ) ? $data['data']['save-state']         : '';
+		$on_submit          = isset( $data['data']['on-submit']          ) ? $data['data']['on-submit']          : '';
 		$limit              = isset( $data['data']['limit']              ) ? $data['data']['limit']              : '';
 		$limit_message      = isset( $data['data']['limit-message']      ) ? $data['data']['limit-message']      : '';
 		$expiration         = isset( $data['data']['expiration']         ) ? $data['data']['expiration']         : '';
@@ -110,6 +111,16 @@ class VFB_Pro_Forms_Edit_Settings {
 										<input type="checkbox" name="save-state" id="save-state" value="1"<?php checked( $save_state, 1 ); ?> /> <?php _e( "Saves data entered inside form fields locally and restores it in case the page is refreshed accidentally.", 'vfb-pro' ); ?>
 									</label>
 								</fieldset>
+							</td>
+						</tr>
+
+						<tr valign="top">
+							<th scope="row">
+								<label for="on-submit"><?php _e( 'onSubmit attribute' , 'vfb-pro'); ?></label>
+							</th>
+							<td>
+								<input type="text" class="regular-text" id="on-submit" name="on-submit" value="<?php esc_html_e( $on_submit ); ?>" />
+								<p class="description"><?php _e( 'The onSubmit form attribute will allow you to run a script action, such as recording a hit with Google Analytics, when the form is submitted.' , 'vfb-pro'); ?></p>
 							</td>
 						</tr>
 					</tbody>

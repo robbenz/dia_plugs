@@ -68,6 +68,7 @@ if( is_admin() ) {
 			<h3 class="hndle"><?php _e( 'Custom User Fields', 'woocommerce-exporter' ); ?></h3>
 			<div class="inside">
 				<p class="description"><?php _e( 'To include additional custom User meta in the Export Users table above fill the Users text box then click Save Custom Fields.', 'woocommerce-exporter' ); ?></p>
+				<p class="description"><?php printf( __( 'For more information on exporting custom User meta consult our <a href="%s" target="_blank">online documentation</a>.', 'woocommerce-exporter' ), $troubleshooting_url ); ?></p>
 				<table class="form-table">
 
 					<tr>
@@ -85,7 +86,6 @@ if( is_admin() ) {
 				<p class="submit">
 					<input type="button" class="button button-disabled" value="<?php _e( 'Save Custom Fields', 'woocommerce-exporter' ); ?>" />
 				</p>
-				<p class="description"><?php printf( __( 'For more information on custom User meta consult our <a href="%s" target="_blank">online documentation</a>.', 'woocommerce-exporter' ), $troubleshooting_url ); ?></p>
 			</div>
 			<!-- .inside -->
 		</div>
@@ -144,6 +144,16 @@ function woo_ce_get_user_fields( $format = 'full' ) {
 		'label' => __( 'E-mail', 'woocommerce-exporter' )
 	);
 	$fields[] = array(
+		'name' => 'orders',
+		'label' => __( 'Orders', 'woocommerce-exporter' ),
+		'disabled' => 1
+	);
+	$fields[] = array(
+		'name' => 'money_spent',
+		'label' => __( 'Money Spent', 'woocommerce-exporter' ),
+		'disabled' => 1
+	);
+	$fields[] = array(
 		'name' => 'url',
 		'label' => __( 'Website', 'woocommerce-exporter' )
 	);
@@ -163,17 +173,19 @@ function woo_ce_get_user_fields( $format = 'full' ) {
 	add_filter( 'sanitize_key', 'woo_ce_sanitize_key' );
 
 	// Allow Plugin/Theme authors to add support for additional columns
-	$fields = apply_filters( 'woo_ce_' . $export_type . '_fields', $fields, $export_type );
+	$fields = apply_filters( sprintf( WOO_CE_PREFIX . '_%s_fields', $export_type ), $fields, $export_type );
 
 	// Remove our content filters here to play nice with other Plugins
 	remove_filter( 'sanitize_key', 'woo_ce_sanitize_key' );
 
-	if( $remember = woo_ce_get_option( $export_type . '_fields', array() ) ) {
+	$remember = woo_ce_get_option( $export_type . '_fields', array() );
+	if( !empty( $remember ) ) {
 		$remember = maybe_unserialize( $remember );
 		$size = count( $fields );
 		for( $i = 0; $i < $size; $i++ ) {
 			$fields[$i]['disabled'] = ( isset( $fields[$i]['disabled'] ) ? $fields[$i]['disabled'] : 0 );
 			$fields[$i]['default'] = 1;
+			// If not found turn off default
 			if( !array_key_exists( $fields[$i]['name'], $remember ) )
 				$fields[$i]['default'] = 0;
 		}
@@ -209,6 +221,7 @@ function woo_ce_get_user_fields( $format = 'full' ) {
 
 }
 
+// Check if we should override field labels from the Field Editor
 function woo_ce_override_user_field_labels( $fields = array() ) {
 
 	$labels = woo_ce_get_option( 'user_labels', array() );
@@ -250,47 +263,6 @@ function woo_ce_get_user_field( $name = null, $format = 'name' ) {
 	return $output;
 
 }
-
-// Adds custom User columns to the User fields list
-function woo_ce_extend_user_fields( $fields = array() ) {
-
-	// WooCommerce User fields
-	if( class_exists( 'WC_Admin_Profile' ) ) {
-		$admin_profile = new WC_Admin_Profile();
-		if( method_exists( 'WC_Admin_Profile', 'get_customer_meta_fields' ) ) {
-			$show_fields = $admin_profile->get_customer_meta_fields();
-			foreach( $show_fields as $fieldset ) {
-				foreach( $fieldset['fields'] as $key => $field ) {
-					$fields[] = array(
-						'name' => $key,
-						'label' => sprintf( apply_filters( 'woo_ce_extend_user_fields_wc', '%s: %s' ), $fieldset['title'], esc_html( $field['label'] ) ),
-						'disabled' => 1
-					);
-				}
-			}
-			unset( $show_fields, $fieldset, $field );
-		}
-	}
-
-	// Custom User meta
-	$custom_users = woo_ce_get_option( 'custom_users', '' );
-	if( !empty( $custom_users ) ) {
-		foreach( $custom_users as $custom_user ) {
-			if( !empty( $custom_user ) ) {
-				$fields[] = array(
-					'name' => $custom_user,
-					'label' => $custom_user,
-					'disabled' => 1
-				);
-			}
-		}
-	}
-	unset( $custom_users, $custom_user );
-
-	return $fields;
-
-}
-add_filter( 'woo_ce_user_fields', 'woo_ce_extend_user_fields' );
 
 // Returns a list of User IDs
 function woo_ce_get_users( $args = array() ) {
@@ -349,6 +321,8 @@ function woo_ce_get_user_data( $user_id = 0, $args = array() ) {
 		$user->url = $user_data->user_url;
 		$user->date_registered = $user_data->user_registered;
 	}
+
+	// Allow Plugin/Theme authors to add support for additional User columns
 	return apply_filters( 'woo_ce_user', $user );
 	
 }

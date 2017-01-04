@@ -301,7 +301,7 @@ class Wordpress_Creation_Kit_PB{
             if ($this->args['context'] == 'post_meta')
                 $results = get_post_meta($post_id, $meta, true);
             else if ($this->args['context'] == 'option')
-                $results = get_option($meta);
+                $results = get_option( apply_filters( 'wck_option_meta' , $meta ));
 
             /* Filter primary used for CFC/OPC fields in order to show/hide fields based on type */
             $wck_update_container_css_class = apply_filters("wck_add_form_class_{$meta}", '', $meta, $results );
@@ -344,6 +344,7 @@ class Wordpress_Creation_Kit_PB{
                 <?php } ?>
             </ul>
 		</div>
+		<script>wck_set_to_widest( '.field-label', '<?php echo $meta ?>' );</script>
 		<?php
 	}
 	
@@ -364,10 +365,10 @@ class Wordpress_Creation_Kit_PB{
 		if( $this->args['context'] == 'post_meta' )
 			$results = get_post_meta($id, $meta, true);
 		else if ( $this->args['context'] == 'option' )
-			$results = get_option( $meta );		
+			$results = get_option( apply_filters( 'wck_option_meta' , $meta ) );		
 		
 		/* Filter primary used for CFC/OPC fields in order to show/hide fields based on type */
-		$wck_update_container_css_class = " class='update_container_$meta'";
+		$wck_update_container_css_class = " class='wck_update_container update_container_$meta'";
 		$wck_update_container_css_class = apply_filters("wck_update_container_class_{$meta}", $wck_update_container_css_class, $meta, $results, $element_id );
 		
 		$form = '';
@@ -428,9 +429,9 @@ class Wordpress_Creation_Kit_PB{
 		if( $this->args['context'] == 'post_meta' || $this->args['context'] == '' )
 			$results = get_post_meta($id, $meta, true);
 		else if ( $this->args['context'] == 'option' )
-			$results = get_option( $meta );
+			$results = get_option( apply_filters( 'wck_option_meta' , $meta ) );
 		
-		$list = '';	
+		$list = '';
 		$list .= '<table id="container_'.esc_attr($meta).'" class="mb-table-container widefat';
 		
 		if( $this->args['single'] ) $list .= ' single';
@@ -451,7 +452,7 @@ class Wordpress_Creation_Kit_PB{
 		}
 		$list .= apply_filters( 'wck_metabox_content_footer_'.$meta , '', $id );
 		$list .= '</table>';
-		
+
 		$list = apply_filters('wck_metabox_content_'.$meta, $list, $id);
 		return $list;
 	}
@@ -463,12 +464,13 @@ class Wordpress_Creation_Kit_PB{
 
 		$wck_element_class = '';
 		$wck_element_class = apply_filters( "wck_element_class_{$meta}", $wck_element_class, $meta, $results, $element_id );
-		
+
 		$list = '';
-		$list .= '<tr id="element_'.$element_id.'" ' . $wck_element_class . '>'; 
-		$list .= '<td style="text-align:center;vertical-align:middle;" class="wck-number">'. $entry_nr .'</td>'; 
+		$list .= '<tr id="element_'.$element_id.'" ' . $wck_element_class . '>';
+		$list .= apply_filters( 'wck_add_content_before_columns', '', $list, $meta );
+		$list .= '<td style="text-align:center;vertical-align:middle;" class="wck-number">'. $entry_nr .'</td>';
 		$list .= '<td class="wck-content"><ul>' . "\r\n";
-		
+
 		$j = 0;				
 		
 		if( !empty( $fields ) ){
@@ -506,7 +508,7 @@ class Wordpress_Creation_Kit_PB{
 									$details['type'] = 'nested-repeater';
 									
 				$list .= '<li class="row-'. esc_attr( Wordpress_Creation_Kit_PB::wck_generate_slug( $details['title'], $details ) ) .'" data-type="'.$details['type'].'"><strong>'.$details['title'].': </strong>'.$display_value.' </li>' . "\r\n";
-				
+
 				$list = apply_filters( "wck_after_listed_{$meta}_element_{$j}", $list, $element_id, $value );
 
 				$j++;
@@ -529,10 +531,15 @@ class Wordpress_Creation_Kit_PB{
 				$list .= wck_nr_handle_repeaters( $meta, $id, $fields, $results, $element_id );
 			}
 		}
+		
+		if( $element_id === 0 ){
+			$list .= "<script>wck_set_to_widest( 'strong', '". $meta ."' );</script>";
+		}
 
 		$list .= '</td>';				
 		$list .= '<td style="text-align:center;vertical-align:middle;" class="wck-edit"><a href="javascript:void(0)" class="button-secondary"  onclick=\'showUpdateFormMeta("'.esc_js($meta).'", "'.esc_js($id).'", "'.esc_js($element_id).'", "'.esc_js($edit_nonce).'")\' title="'. __( 'Edit this item', 'profile-builder' ) .'">'. apply_filters( 'wck_edit_button', __('Edit','wck'), $meta ) .'</a></td>';
 		$list .= '<td style="text-align:center;vertical-align:middle;" class="wck-delete"><a href="javascript:void(0)" class="mbdelete" onclick=\'removeMeta("'.esc_js($meta).'", "'.esc_js($id).'", "'.esc_js($element_id).'", "'.esc_js($delete_nonce).'")\' title="'. __( 'Delete this item', 'profile-builder' ) .'">'. apply_filters( 'wck_delete_button', __( 'Delete', 'wck' ), $meta) .'</a></td>';
+		$list .= apply_filters( 'wck_add_content_after_columns', '', $list, $meta );
 
 		$list .= "</tr> \r\n";
 
@@ -644,7 +651,7 @@ class Wordpress_Creation_Kit_PB{
 	
 	/* our own ajaxurl */
 	function wck_print_ajax_url(){
-		echo '<script type="text/javascript">var wckAjaxurl = "'. admin_url('admin-ajax.php') .'";</script>';
+		echo '<script type="text/javascript">var wppbWckAjaxurl = "'. apply_filters( 'wck_ajax_url', admin_url('admin-ajax.php') ) .'";</script>';
 	}
 	
 	
@@ -789,7 +796,7 @@ class Wordpress_Creation_Kit_PB{
 		if( $this->args['context'] == 'post_meta' )
 			$results = get_post_meta($id, $meta, true);
 		else if ( $this->args['context'] == 'option' )
-			$results = get_option( $meta );
+			$results = get_option( apply_filters( 'wck_option_meta' , $meta, $values ) );
 
         /* for single metaboxes owerwrite entries each time so we have a maximum of one */
         if( $this->args['single'] )
@@ -802,7 +809,7 @@ class Wordpress_Creation_Kit_PB{
 		if( $this->args['context'] == 'post_meta' )
 			update_post_meta($id, $meta, $results);
 		else if ( $this->args['context'] == 'option' )
-			update_option( $meta, wp_unslash( $results ) );
+			update_option( apply_filters( 'wck_option_meta' , $meta, $results ), wp_unslash( $results ) );
 		
 		/* if unserialize_fields is true add for each entry separate post meta for every element of the form  */
 		if( $this->args['unserialize_fields'] && $this->args['context'] == 'post_meta' ){
@@ -854,7 +861,7 @@ class Wordpress_Creation_Kit_PB{
 		if( $this->args['context'] == 'post_meta' )
 			$results = get_post_meta($id, $meta, true);
 		else if ( $this->args['context'] == 'option' )
-			$results = get_option( $meta );
+			$results = get_option( apply_filters( 'wck_option_meta' , $meta, $values, $element_id ) );
 		
 		$results[$element_id] = $values;
 		
@@ -863,7 +870,7 @@ class Wordpress_Creation_Kit_PB{
 		if( $this->args['context'] == 'post_meta' )
 			update_post_meta($id, $meta, $results);
 		else if ( $this->args['context'] == 'option' )
-			update_option( $meta, wp_unslash( $results ) );
+			update_option( apply_filters( 'wck_option_meta' , $meta, $results, $element_id ), wp_unslash( $results ) );
 		
 		/* if unserialize_fields is true update the coresponding post metas for every element of the form  */
 		if( $this->args['unserialize_fields'] && $this->args['context'] == 'post_meta' ){
@@ -914,7 +921,7 @@ class Wordpress_Creation_Kit_PB{
 		if( $this->args['context'] == 'post_meta' )
 			$results = get_post_meta($id, $meta, true);
 		else if ( $this->args['context'] == 'option' )
-			$results = get_option( $meta );
+			$results = get_option( apply_filters( 'wck_option_meta' , $meta, $element_id ) );
 		
 		echo self::wck_output_entry_content( $meta, $id, $this->args['meta_array'], $results, $element_id );
 		
@@ -983,7 +990,7 @@ class Wordpress_Creation_Kit_PB{
 		if( $this->args['context'] == 'post_meta' )
 			$results = get_post_meta($id, $meta, true);
 		else if ( $this->args['context'] == 'option' )
-			$results = get_option( $meta );
+			$results = get_option( apply_filters( 'wck_option_meta' , $meta, $element_id ) );
 		
 		$old_results = $results;
 		unset($results[$element_id]);
@@ -995,7 +1002,7 @@ class Wordpress_Creation_Kit_PB{
 		if( $this->args['context'] == 'post_meta' )
 			update_post_meta($id, $meta, $results);
 		else if ( $this->args['context'] == 'option' )
-			update_option( $meta, wp_unslash( $results ) );
+			update_option( apply_filters( 'wck_option_meta' , $meta, $results, $element_id ), wp_unslash( $results ) );
 		
 		
 		
@@ -1057,7 +1064,7 @@ class Wordpress_Creation_Kit_PB{
 		if( $this->args['context'] == 'post_meta' )
 			$results = get_post_meta($id, $meta, true);
 		else if ( $this->args['context'] == 'option' )
-			$results = get_option( $meta );
+			$results = get_option( apply_filters( 'wck_option_meta' , $meta ) );
 		
 		$new_results = array();
 		if( !empty( $elements_id ) ){
@@ -1071,7 +1078,7 @@ class Wordpress_Creation_Kit_PB{
 		if( $this->args['context'] == 'post_meta' )
 			update_post_meta($id, $meta, $results);
 		else if ( $this->args['context'] == 'option' )
-			update_option( $meta, wp_unslash( $results ) );
+			update_option( apply_filters( 'wck_option_meta' , $meta, $results, $element_id ), wp_unslash( $results ) );
 		
 		
 		/* if unserialize_fields is true reorder all the coresponding post metas  */

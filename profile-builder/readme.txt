@@ -4,8 +4,8 @@ Donate link: http://www.cozmoslabs.com/wordpress-profile-builder/
 Tags: user registration, user registration form, user fields, extra user fields, edit profile, user custom fields, front-end login, front-end edit profile, front-end user registration, email confirmation, login form
 
 Requires at least: 3.1
-Tested up to: 4.6.1
-Stable tag: 2.4.9
+Tested up to: 4.7
+Stable tag: 2.5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -108,8 +108,8 @@ http://www.cozmoslabs.com/docs/profile-builder-2/
 http://www.cozmoslabs.com/wordpress-profile-builder/
 
 = Profile Builder in your Language =
-We're focusing on translating Profile Builder in as many languages as we can. So far, the translations for 10 languages are almost complete, but we still need help on a lot of other languages, so please join us at [translate.cozmoslabs.com.](http://translate.cozmoslabs.com/projects/profilebuilder)
-You will be able to download all the [available language packs](http://translate.cozmoslabs.com/projects/profilebuilder) as well as help us translate Profile Builder in your language.
+We're focusing on translating Profile Builder in as many languages as we can. So far, the translations for 10 languages are almost complete, but we still need help on a lot of other languages, so please join us at [translate.cozmoslabs.com.](http://translate.cozmoslabs.com/projects/profile-builder)
+You will be able to download all the [available language packs](http://translate.cozmoslabs.com/projects/profile-builder) as well as help us translate Profile Builder in your language.
 
 NOTE:
 This plugin adds/removes user fields in the front-end. Both default and extra profile fields will be visible in the back-end as well.
@@ -150,10 +150,36 @@ This plugin adds/removes user fields in the front-end. Both default and extra pr
 10. Profile Builder Login Widget
 
 == Changelog ==
-= 2.4.9 =    
+= 2.5.3 =
+* Major improvement to loading performance of the Manage Fields admin interface
+* Added actions before and after submit form button:wppb_form_before_submit_button and wppb_form_after_submit_button
+* Added a filter on the forms submit button class
+* Updated Dutch translations
+
+= 2.5.2 =
+* Updated translation files
+* Added a filter to the submit button which can be used to add extra attributes: wppb_form_submit_extra_attr
+* Fixed a warnings inside pb-compatiblities.php file
+* Changed text for Email Confirmation description in admin area
+* Fixed a bug with the "Add field" button in Manage Fields that wasn't disabled after we added a field
+* Reorganized and added filters on form id and form class on hte Profile Builder forms
+* Removed Note message from PMS cross promotion saying that PMS does not work with admin approval / email confirmation
+* Modified multiple filters
+
+= 2.5.1 =
+* Improvements regarding caching plugins and user registration
+* Added a search field in the admin area on the Users with unconfirmed email address screen
+* Improved queries for displaying users in the admin area on the Users with unconfirmed email address screen
+
+= 2.5.0 =
+* We now delete cache when updating a user with email confirmation so solve issues with cache-ing plugins
+* Fixed select2 JS error when select2 addon is inactive but select2 fields are still in front-end.
+* Fixed js issues in manage fields interface when opened multiple fields for editing: sorting was possible and it shouldn't, the first opened field disappeared, a stack limit exceeded error
+
+= 2.4.9 =
 * Security improvements and fixes
 * Fixed a warning that happened on older WordPress versions regarding the get_user_by() function
-* Login with email uses default functions now for WordPress versions higher thab 4.5 
+* Login with email uses default functions now for WordPress versions higher thab 4.5
 * Removed login with email when username is selected from settings
 * Removed sending password from default registration email
 

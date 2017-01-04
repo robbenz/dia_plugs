@@ -4,9 +4,103 @@
  *
  * The WooCommerce Jetpack Functions.
  *
- * @version 2.5.6
+ * @version 2.5.9
  * @author  Algoritmika Ltd.
  */
+
+if ( ! function_exists( 'wcj_get_order_item_meta_info' ) ) {
+	/**
+	 * wcj_get_order_item_meta_info.
+	 *
+	 * from woocommerce\includes\admin\meta-boxes\views\html-order-item-meta.php
+	 *
+	 * @version 2.5.9
+	 * @since   2.5.9
+	 */
+	function wcj_get_order_item_meta_info( $item_id, $item, $_order, $exclude_wcj_meta = false, $_product = null ) {
+		$meta_info = '';
+		if ( $metadata = $_order->has_meta( $item_id ) ) {
+			$meta_info = array();
+			foreach ( $metadata as $meta ) {
+
+				// Skip hidden core fields
+				if ( in_array( $meta['meta_key'], apply_filters( 'woocommerce_hidden_order_itemmeta', array(
+					'_qty',
+					'_tax_class',
+					'_product_id',
+					'_variation_id',
+					'_line_subtotal',
+					'_line_subtotal_tax',
+					'_line_total',
+					'_line_tax',
+					'method_id',
+					'cost'
+				) ) ) ) {
+					continue;
+				}
+
+				if ( $exclude_wcj_meta && ( 'wcj' === substr( $meta['meta_key'], 0, 3 ) || '_wcj' === substr( $meta['meta_key'], 0, 4 ) ) ) {
+					continue;
+				}
+
+				// Skip serialised meta
+				if ( is_serialized( $meta['meta_value'] ) ) {
+					continue;
+				}
+
+				// Get attribute data
+				if ( taxonomy_exists( wc_sanitize_taxonomy_name( $meta['meta_key'] ) ) ) {
+					$term               = get_term_by( 'slug', $meta['meta_value'], wc_sanitize_taxonomy_name( $meta['meta_key'] ) );
+					$meta['meta_key']   = wc_attribute_label( wc_sanitize_taxonomy_name( $meta['meta_key'] ) );
+					$meta['meta_value'] = isset( $term->name ) ? $term->name : $meta['meta_value'];
+				} else {
+					$the_product = null;
+					if ( is_object( $_product ) ) {
+						$the_product = $_product;
+					} elseif ( is_object( $item ) ) {
+						$the_product = $_order->get_product_from_item( $item );
+					}
+					$meta['meta_key']   = ( is_object( $the_product ) ) ? wc_attribute_label( $meta['meta_key'], $the_product ) : $meta['meta_key'];
+				}
+				$meta_info[] = wp_kses_post( rawurldecode( $meta['meta_key'] ) ) . ': ' . wp_kses_post( rawurldecode( $meta['meta_value'] ) );
+			}
+			$meta_info = implode( ', ', $meta_info );
+		}
+		return $meta_info;
+	}
+}
+
+if ( ! function_exists( 'wcj_get_product_image_url' ) ) {
+ 	/**
+	 * wcj_get_product_image_url.
+	 *
+	 * @version 2.5.7
+	 * @since   2.5.7
+	 * @todo    placeholder
+	 */
+	function wcj_get_product_image_url( $product_id, $image_size = 'shop_thumbnail' ) {
+		if ( has_post_thumbnail( $product_id ) ) {
+			$image_url = get_the_post_thumbnail_url( $product_id, $image_size );
+		} elseif ( ( $parent_id = wp_get_post_parent_id( $product_id ) ) && has_post_thumbnail( $parent_id ) ) {
+			$image_url = get_the_post_thumbnail_url( $parent_id, $image_size );
+		} else {
+			$image_url = '';
+		}
+		return $image_url;
+	}
+}
+
+if ( ! function_exists( 'wcj_is_bot' ) ) {
+	/**
+	 * wcj_is_bot.
+	 *
+	 * @version 2.5.7
+	 * @since   2.5.6
+	 */
+	function wcj_is_bot() {
+		return ( isset( $_SERVER['HTTP_USER_AGENT'] ) && preg_match( '/Google-Structured-Data-Testing-Tool|bot|crawl|slurp|spider/i', $_SERVER['HTTP_USER_AGENT'] ) ) ? true : false;
+	}
+}
 
 if ( ! function_exists( 'wcj_get_currency_exchange_rate_product_base_currency' ) ) {
 	/**
@@ -17,7 +111,7 @@ if ( ! function_exists( 'wcj_get_currency_exchange_rate_product_base_currency' )
 	 */
 	function wcj_get_currency_exchange_rate_product_base_currency( $currency_code ) {
 		$currency_exchange_rate = 1;
-		$total_number = apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_multicurrency_base_price_total_number', 1 ) );
+		$total_number = apply_filters( 'booster_get_option', 1, get_option( 'wcj_multicurrency_base_price_total_number', 1 ) );
 		for ( $i = 1; $i <= $total_number; $i++ ) {
 			if ( $currency_code === get_option( 'wcj_multicurrency_base_price_currency_' . $i ) ) {
 				$currency_exchange_rate = get_option( 'wcj_multicurrency_base_price_exchange_rate_' . $i );
@@ -164,7 +258,7 @@ if ( ! function_exists( 'wcj_update_products_price_by_country_for_single_product
 		$_product = wc_get_product( $product_id );
 		if ( $_product->is_type( 'variable' ) ) {
 			$available_variations = $_product->get_available_variations();
-			for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_price_by_country_total_groups_number', 1 ) ); $i++ ) {
+			for ( $i = 1; $i <= apply_filters( 'booster_get_option', 1, get_option( 'wcj_price_by_country_total_groups_number', 1 ) ); $i++ ) {
 				$min_variation_price = PHP_INT_MAX;
 				$max_variation_price = 0;
 				foreach ( $available_variations as $variation ) {
@@ -193,7 +287,7 @@ if ( ! function_exists( 'wcj_update_products_price_by_country_for_single_product
 			if ( wcj_is_module_enabled( 'multicurrency_base_price' ) ) {
 				$_old_price = wcj_price_by_product_base_currency( $_old_price, $product_id );
 			}
-			for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_price_by_country_total_groups_number', 1 ) ); $i++ ) {
+			for ( $i = 1; $i <= apply_filters( 'booster_get_option', 1, get_option( 'wcj_price_by_country_total_groups_number', 1 ) ); $i++ ) {
 				$price_by_country = wcj_price_by_country( $_old_price, $product_id, $i, 'woocommerce_get_price' );
 				update_post_meta( $product_id, '_' . 'wcj_price_by_country_' . $i, $price_by_country );
 			}
@@ -295,7 +389,7 @@ if ( ! function_exists( 'wcj_get_currency_by_country' ) ) {
 	 */
 	function wcj_get_currency_by_country( $country_code ) {
 		$currency_code = '';
-		for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_price_by_country_total_groups_number', 1 ) ); $i++ ) {
+		for ( $i = 1; $i <= apply_filters( 'booster_get_option', 1, get_option( 'wcj_price_by_country_total_groups_number', 1 ) ); $i++ ) {
 			switch ( get_option( 'wcj_price_by_country_selection', 'comma_list' ) ) {
 				case 'comma_list':
 					$country_exchange_rate_group = get_option( 'wcj_price_by_country_exchange_rate_countries_group_' . $i );
@@ -329,7 +423,7 @@ if ( ! function_exists( 'wcj_get_currency_exchange_rate' ) ) {
 		$currency_exchange_rate = 1;
 		if ( wcj_is_module_enabled( $module ) ) {
 			if ( 'multicurrency' === $module ) {
-				$total_number = apply_filters( 'wcj_get_option_filter', 2, get_option( 'wcj_multicurrency_total_number', 2 ) );
+				$total_number = apply_filters( 'booster_get_option', 2, get_option( 'wcj_multicurrency_total_number', 2 ) );
 				for ( $i = 1; $i <= $total_number; $i++ ) {
 					if ( $currency_code === get_option( 'wcj_multicurrency_currency_' . $i ) ) {
 						$currency_exchange_rate = get_option( 'wcj_multicurrency_exchange_rate_' . $i );
@@ -399,14 +493,20 @@ if ( ! function_exists( 'wcj_variation_radio_button' ) ) {
 /*
  * wcj_current_filter_priority.
  *
- * @version 2.4.6
+ * @version 2.5.8
  * @since   2.4.6
  */
 if ( ! function_exists( 'wcj_current_filter_priority' ) ) {
 	function wcj_current_filter_priority() {
 		global $wp_filter;
-		$current_filter_priority = key( $wp_filter[ current_filter() ] );
-		return $current_filter_priority;
+		$current_filter_data = $wp_filter[ current_filter() ];
+		if ( class_exists( 'WP_Hook' ) && is_a( $current_filter_data, 'WP_Hook' ) ) {
+			// since WordPress v4.7
+			return $current_filter_data->current_priority();
+		} else {
+			// before WordPress v4.7
+			return key( $current_filter_data );
+		}
 	}
 }
 
@@ -438,12 +538,12 @@ if ( ! function_exists( 'wcj_get_product_input_fields' ) ) {
 /*
  * wcj_get_left_to_free_shipping.
  *
- * @version 2.5.3
+ * @version 2.5.8
  * @since   2.4.4
  * @return  string
  */
 if ( ! function_exists( 'wcj_get_left_to_free_shipping' ) ) {
-	function wcj_get_left_to_free_shipping( $content ) {
+	function wcj_get_left_to_free_shipping( $content, $multiply_by = 1 ) {
 		if ( '' == $content ) {
 			$content = __( '%left_to_free% left to free shipping', 'woocommerce-jetpack' );
 		}
@@ -487,8 +587,8 @@ if ( ! function_exists( 'wcj_get_left_to_free_shipping' ) ) {
 				if ( $total >= $min_free_shipping_amount ) {
 					return do_shortcode( get_option( 'wcj_shipping_left_to_free_info_content_reached', __( 'You have Free delivery', 'woocommerce-jetpack' ) ) );
 				} else {
-					$content = str_replace( '%left_to_free%',             wc_price( $min_free_shipping_amount - $total ), $content );
-					$content = str_replace( '%free_shipping_min_amount%', wc_price( $min_free_shipping_amount ),          $content );
+					$content = str_replace( '%left_to_free%',             wc_price( ( $min_free_shipping_amount - $total ) * $multiply_by ), $content );
+					$content = str_replace( '%free_shipping_min_amount%', wc_price( ( $min_free_shipping_amount )          * $multiply_by ), $content );
 					return $content;
 				}
 			}
@@ -843,25 +943,51 @@ if ( ! function_exists( 'wcj_is_user_role' ) ) {
 }
 
 /**
+ * validate_vat_no_soap.
+ *
+ * @version 2.5.7
+ * @since   2.5.7
+ * @return  mixed: bool on successful checking (can be true or false), null otherwise
+ */
+if ( ! function_exists( 'validate_vat_no_soap' ) ) {
+	function validate_vat_no_soap( $country_code, $vat_number ) {
+		$api_url = "http://ec.europa.eu/taxation_customs/vies/viesquer.do?ms=" . $country_code . "&vat=" . $vat_number;
+		if ( ini_get( 'allow_url_fopen' ) ) {
+			$response = file_get_contents( $api_url );
+		} elseif ( function_exists( 'curl_version' ) ) {
+			$curl = curl_init( $api_url );
+			curl_setopt( $curl, CURLOPT_RETURNTRANSFER, 1 );
+			$response = curl_exec( $curl );
+			curl_close( $curl );
+		} else {
+			return null;
+		}
+		return ( false !== strpos( $response, '="validStyle"' ) ) ? true : false;
+	}
+}
+
+/**
  * validate_VAT.
  *
- * @return mixed: bool on successful checking (can be true or false), null otherwise
+ * @version 2.5.7
+ * @return  mixed: bool on successful checking (can be true or false), null otherwise
  */
 if ( ! function_exists( 'validate_VAT' ) ) {
 	function validate_VAT( $country_code, $vat_number ) {
 		try {
-			$client = new SoapClient(
-				'http://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl',
-				array( 'exceptions' => true )
-			);
-
-			$result = $client->checkVat( array(
-				'countryCode' => $country_code,
-				'vatNumber'   => $vat_number,
-			) );
-
-			return ( isset( $result->valid ) ) ? $result->valid : null;
-
+			if ( class_exists( 'SoapClient' ) ) {
+				$client = new SoapClient(
+					'http://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl',
+					array( 'exceptions' => true )
+				);
+				$result = $client->checkVat( array(
+					'countryCode' => $country_code,
+					'vatNumber'   => $vat_number,
+				) );
+				return ( isset( $result->valid ) ) ? $result->valid : null;
+			} else {
+				return validate_vat_no_soap( $country_code, $vat_number );
+			}
 		} catch( Exception $exception ) {
 			return null;
 		}
@@ -1081,7 +1207,7 @@ if ( ! function_exists( 'wcj_get_currencies_names_and_symbols' ) ) {
 		}
 		if ( wcj_is_module_enabled( 'currency' ) && ( 'all' === $scope || 'custom_only' === $scope ) ) {
 			// Custom currencies
-			$custom_currency_total_number = apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_currency_custom_currency_total_number', 1 ) );
+			$custom_currency_total_number = apply_filters( 'booster_get_option', 1, get_option( 'wcj_currency_custom_currency_total_number', 1 ) );
 			for ( $i = 1; $i <= $custom_currency_total_number; $i++) {
 				$custom_currency_code   = get_option( 'wcj_currency_custom_currency_code_'   . $i );
 				$custom_currency_name   = get_option( 'wcj_currency_custom_currency_name_'   . $i );
@@ -1116,7 +1242,7 @@ if ( ! function_exists( 'wcj_get_currency_symbol' ) ) {
 		$currencies = wcj_get_currencies_names_and_symbols( 'symbols', 'no_custom' );
 		if ( isset( $currencies[ $currency_code ] ) ) {
 			if ( wcj_is_module_enabled( 'currency' ) ) {
-				$return = apply_filters( 'wcj_get_option_filter', $currencies[ $currency_code ], get_option( 'wcj_currency_' . $currency_code, $currencies[ $currency_code ] ) );
+				$return = apply_filters( 'booster_get_option', $currencies[ $currency_code ], get_option( 'wcj_currency_' . $currency_code, $currencies[ $currency_code ] ) );
 			} else {
 				$return = $currencies[ $currency_code ];
 			}

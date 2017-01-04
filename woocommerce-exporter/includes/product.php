@@ -14,7 +14,7 @@ if( is_admin() ) {
 				'post_type' => $post_type,
 				'posts_per_page' => 1,
 				'fields' => 'ids',
-				'suppress_filters' => 1
+				'suppress_filters' => true
 			);
 			$count_query = new WP_Query( $args );
 			$count = $count_query->found_posts;
@@ -451,7 +451,7 @@ function woo_ce_get_product_fields( $format = 'full' ) {
 	);
 	$fields[] = array(
 		'name' => 'product_url',
-		'label' => __( 'Product URL', 'woocommerce-exporter' )
+		'label' => __( 'Product URI', 'woocommerce-exporter' )
 	);
 	$fields[] = array(
 		'name' => 'description',
@@ -542,6 +542,21 @@ function woo_ce_get_product_fields( $format = 'full' ) {
 		'label' => __( 'Category', 'woocommerce-exporter' )
 	);
 	$fields[] = array(
+		'name' => 'category_level_1',
+		'label' => __( 'Category: Level 1', 'woocommerce-exporter' ),
+		'disabled' => 1
+	);
+	$fields[] = array(
+		'name' => 'category_level_2',
+		'label' => __( 'Category: Level 2', 'woocommerce-exporter' ),
+		'disabled' => 1
+	);
+	$fields[] = array(
+		'name' => 'category_level_3',
+		'label' => __( 'Category: Level 3', 'woocommerce-exporter' ),
+		'disabled' => 1
+	);
+	$fields[] = array(
 		'name' => 'tag',
 		'label' => __( 'Tag', 'woocommerce-exporter' )
 	);
@@ -566,6 +581,11 @@ function woo_ce_get_product_fields( $format = 'full' ) {
 	$fields[] = array(
 		'name' => 'product_gallery_thumbnail',
 		'label' => __( 'Product Gallery Thumbnail', 'woocommerce-exporter' ),
+		'disabled' => 1
+	);
+	$fields[] = array(
+		'name' => 'product_gallery_embed',
+		'label' => __( 'Product Gallery (Embed)', 'woocommerce-exporter' ),
 		'disabled' => 1
 	);
 	$fields[] = array(
@@ -665,7 +685,7 @@ function woo_ce_get_product_fields( $format = 'full' ) {
 	);
 	$fields[] = array(
 		'name' => 'average_rating',
-		'label' => __( 'Average rating', 'woocommerce-exporter' ),
+		'label' => __( 'Average Rating', 'woocommerce-exporter' ),
 		'disabled' => 1
 	);
 	$fields[] = array(
@@ -731,6 +751,7 @@ function woo_ce_get_product_fields( $format = 'full' ) {
 
 }
 
+// Check if we should override field labels from the Field Editor
 function woo_ce_override_product_field_labels( $fields = array() ) {
 
 	$labels = woo_ce_get_option( 'product_labels', array() );
@@ -744,549 +765,6 @@ function woo_ce_override_product_field_labels( $fields = array() ) {
 
 }
 add_filter( 'woo_ce_product_fields', 'woo_ce_override_product_field_labels', 11 );
-
-function woo_ce_extend_product_fields( $fields ) {
-
-/*
-	// Attributes
-	if( $attributes = woo_ce_get_product_attributes() ) {
-		foreach( $attributes as $attribute ) {
-			if( empty( $attribute->attribute_label ) )
-				$attribute->attribute_label = $attribute->attribute_name;
-			$fields[] = array(
-				'name' => sprintf( 'attribute_%s', $attribute->attribute_name ),
-				'label' => sprintf( __( 'Attribute: %s', 'woocommerce-exporter' ), $attribute->attribute_label )
-			);
-		}
-	}
-*/
-
-	// Advanced Google Product Feed - http://www.leewillis.co.uk/wordpress-plugins/
-	if( function_exists( 'woocommerce_gpf_install' ) ) {
-		$fields[] = array(
-			'name' => 'gpf_availability',
-			'label' => __( 'Advanced Google Product Feed - Availability', 'woocommerce-exporter' ),
-			'hover' => __( 'Advanced Google Product Feed', 'woocommerce-exporter' )
-		);
-		$fields[] = array(
-			'name' => 'gpf_condition',
-			'label' => __( 'Advanced Google Product Feed - Condition', 'woocommerce-exporter' ),
-			'hover' => __( 'Advanced Google Product Feed', 'woocommerce-exporter' )
-		);
-		$fields[] = array(
-			'name' => 'gpf_brand',
-			'label' => __( 'Advanced Google Product Feed - Brand', 'woocommerce-exporter' ),
-			'hover' => __( 'Advanced Google Product Feed', 'woocommerce-exporter' )
-		);
-		$fields[] = array(
-			'name' => 'gpf_product_type',
-			'label' => __( 'Advanced Google Product Feed - Product Type', 'woocommerce-exporter' ),
-			'hover' => __( 'Advanced Google Product Feed', 'woocommerce-exporter' )
-		);
-		$fields[] = array(
-			'name' => 'gpf_google_product_category',
-			'label' => __( 'Advanced Google Product Feed - Google Product Category', 'woocommerce-exporter' ),
-			'hover' => __( 'Advanced Google Product Feed', 'woocommerce-exporter' )
-		);
-		$fields[] = array(
-			'name' => 'gpf_gtin',
-			'label' => __( 'Advanced Google Product Feed - Global Trade Item Number (GTIN)', 'woocommerce-exporter' ),
-			'hover' => __( 'Advanced Google Product Feed', 'woocommerce-exporter' )
-		);
-		$fields[] = array(
-			'name' => 'gpf_mpn',
-			'label' => __( 'Advanced Google Product Feed - Manufacturer Part Number (MPN)', 'woocommerce-exporter' ),
-			'hover' => __( 'Advanced Google Product Feed', 'woocommerce-exporter' )
-		);
-		$fields[] = array(
-			'name' => 'gpf_gender',
-			'label' => __( 'Advanced Google Product Feed - Gender', 'woocommerce-exporter' ),
-			'hover' => __( 'Advanced Google Product Feed', 'woocommerce-exporter' )
-		);
-		$fields[] = array(
-			'name' => 'gpf_agegroup',
-			'label' => __( 'Advanced Google Product Feed - Age Group', 'woocommerce-exporter' ),
-			'hover' => __( 'Advanced Google Product Feed', 'woocommerce-exporter' )
-		);
-		$fields[] = array(
-			'name' => 'gpf_colour',
-			'label' => __( 'Advanced Google Product Feed - Colour', 'woocommerce-exporter' ),
-			'hover' => __( 'Advanced Google Product Feed', 'woocommerce-exporter' )
-		);
-		$fields[] = array(
-			'name' => 'gpf_size',
-			'label' => __( 'Advanced Google Product Feed - Size', 'woocommerce-exporter' ),
-			'hover' => __( 'Advanced Google Product Feed', 'woocommerce-exporter' )
-		);
-	}
-
-	// All in One SEO Pack - http://wordpress.org/extend/plugins/all-in-one-seo-pack/
-	if( function_exists( 'aioseop_activate' ) ) {
-		$fields[] = array(
-			'name' => 'aioseop_keywords',
-			'label' => __( 'All in One SEO - Keywords', 'woocommerce-exporter' ),
-			'hover' => __( 'All in One SEO Pack', 'woocommerce-exporter' )
-		);
-		$fields[] = array(
-			'name' => 'aioseop_description',
-			'label' => __( 'All in One SEO - Description', 'woocommerce-exporter' ),
-			'hover' => __( 'All in One SEO Pack', 'woocommerce-exporter' )
-		);
-		$fields[] = array(
-			'name' => 'aioseop_title',
-			'label' => __( 'All in One SEO - Title', 'woocommerce-exporter' ),
-			'hover' => __( 'All in One SEO Pack', 'woocommerce-exporter' )
-		);
-		$fields[] = array(
-			'name' => 'aioseop_title_attributes',
-			'label' => __( 'All in One SEO - Title Attributes', 'woocommerce-exporter' ),
-			'hover' => __( 'All in One SEO Pack', 'woocommerce-exporter' )
-		);
-		$fields[] = array(
-			'name' => 'aioseop_menu_label',
-			'label' => __( 'All in One SEO - Menu Label', 'woocommerce-exporter' ),
-			'hover' => __( 'All in One SEO Pack', 'woocommerce-exporter' )
-		);
-	}
-
-	// WordPress SEO - http://wordpress.org/plugins/wordpress-seo/
-	if( function_exists( 'wpseo_admin_init' ) ) {
-		$fields[] = array(
-			'name' => 'wpseo_focuskw',
-			'label' => __( 'WordPress SEO - Focus Keyword', 'woocommerce-exporter' ),
-			'hover' => __( 'WordPress SEO', 'woocommerce-exporter' )
-		);
-		$fields[] = array(
-			'name' => 'wpseo_metadesc',
-			'label' => __( 'WordPress SEO - Meta Description', 'woocommerce-exporter' ),
-			'hover' => __( 'WordPress SEO', 'woocommerce-exporter' )
-		);
-		$fields[] = array(
-			'name' => 'wpseo_title',
-			'label' => __( 'WordPress SEO - SEO Title', 'woocommerce-exporter' ),
-			'hover' => __( 'WordPress SEO', 'woocommerce-exporter' )
-		);
-		$fields[] = array(
-			'name' => 'wpseo_googleplus_description',
-			'label' => __( 'WordPress SEO - Google+ Description', 'woocommerce-exporter' ),
-			'hover' => __( 'WordPress SEO', 'woocommerce-exporter' )
-		);
-		$fields[] = array(
-			'name' => 'wpseo_opengraph_description',
-			'label' => __( 'WordPress SEO - Facebook Description', 'woocommerce-exporter' ),
-			'hover' => __( 'WordPress SEO', 'woocommerce-exporter' )
-		);
-	}
-
-	// Ultimate SEO - http://wordpress.org/plugins/seo-ultimate/
-	if( function_exists( 'su_wp_incompat_notice' ) ) {
-		$fields[] = array(
-			'name' => 'useo_meta_title',
-			'label' => __( 'Ultimate SEO - Title Tag', 'woocommerce-exporter' ),
-			'hover' => __( 'Ultimate SEO', 'woocommerce-exporter' )
-		);
-		$fields[] = array(
-			'name' => 'useo_meta_description',
-			'label' => __( 'Ultimate SEO - Meta Description', 'woocommerce-exporter' ),
-			'hover' => __( 'Ultimate SEO', 'woocommerce-exporter' )
-		);
-		$fields[] = array(
-			'name' => 'useo_meta_keywords',
-			'label' => __( 'Ultimate SEO - Meta Keywords', 'woocommerce-exporter' ),
-			'hover' => __( 'Ultimate SEO', 'woocommerce-exporter' )
-		);
-		$fields[] = array(
-			'name' => 'useo_social_title',
-			'label' => __( 'Ultimate SEO - Social Title', 'woocommerce-exporter' ),
-			'hover' => __( 'Ultimate SEO', 'woocommerce-exporter' )
-		);
-		$fields[] = array(
-			'name' => 'useo_social_description',
-			'label' => __( 'Ultimate SEO - Social Description', 'woocommerce-exporter' ),
-			'hover' => __( 'Ultimate SEO', 'woocommerce-exporter' )
-		);
-		$fields[] = array(
-			'name' => 'useo_meta_noindex',
-			'label' => __( 'Ultimate SEO - NoIndex', 'woocommerce-exporter' ),
-			'hover' => __( 'Ultimate SEO', 'woocommerce-exporter' )
-		);
-		$fields[] = array(
-			'name' => 'useo_meta_noautolinks',
-			'label' => __( 'Ultimate SEO - Disable Autolinks', 'woocommerce-exporter' ),
-			'hover' => __( 'Ultimate SEO', 'woocommerce-exporter' )
-		);
-	}
-
-	// WooCommerce MSRP Pricing - http://woothemes.com/woocommerce/
-	if( function_exists( 'woocommerce_msrp_activate' ) ) {
-		$fields[] = array(
-			'name' => 'msrp',
-			'label' => __( 'MSRP', 'woocommerce-exporter' ),
-			'hover' => __( 'Manufacturer Suggested Retail Price (MSRP)', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-	}
-
-	// WooCommerce Brands Addon - http://woothemes.com/woocommerce/
-	// WooCommerce Brands - http://proword.net/Woocommerce_Brands/
-	if( woo_ce_detect_product_brands() ) {
-		$fields[] = array(
-			'name' => 'brands',
-			'label' => __( 'Brands', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Brands', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-	}
-
-	// Cost of Goods - http://www.skyverge.com/product/woocommerce-cost-of-goods-tracking/
-	if( class_exists( 'WC_COG' ) ) {
-		$fields[] = array(
-			'name' => 'cost_of_goods',
-			'label' => __( 'Cost of Goods', 'woocommerce-exporter' ),
-			'hover' => __( 'Cost of Goods', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-	}
-
-	// Per-Product Shipping - http://www.woothemes.com/products/per-product-shipping/
-	if( function_exists( 'woocommerce_per_product_shipping_init' ) ) {
-		$fields[] = array(
-			'name' => 'per_product_shipping',
-			'label' => __( 'Per-Product Shipping', 'woocommerce-exporter' ),
-			'hover' => __( 'Per-Product Shipping', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-	}
-
-	// Product Vendors - http://www.woothemes.com/products/product-vendors/
-	if( class_exists( 'WooCommerce_Product_Vendors' ) ) {
-		$fields[] = array(
-			'name' => 'vendors',
-			'label' => __( 'Product Vendors', 'woocommerce-exporter' ),
-			'hover' => __( 'Product Vendors', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'vendor_ids',
-			'label' => __( 'Product Vendor ID\'s', 'woocommerce-exporter' ),
-			'hover' => __( 'Product Vendors', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'vendor_commission',
-			'label' => __( 'Vendor Commission', 'woocommerce-exporter' ),
-			'hover' => __( 'Product Vendors', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-	}
-
-	// WC Vendors - http://wcvendors.com
-	if( class_exists( 'WC_Vendors' ) ) {
-		$fields[] = array(
-			'name' => 'vendor',
-			'label' => __( 'Vendor' ),
-			'hover' => __( 'WC Vendors', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'vendor_commission_rate',
-			'label' => __( 'Commission (%)' ),
-			'hover' => __( 'WC Vendors', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-	}
-
-	// WooCommerce Wholesale Pricing - http://ignitewoo.com/woocommerce-extensions-plugins-themes/woocommerce-wholesale-pricing/
-	if( class_exists( 'woocommerce_wholesale_pricing' ) ) {
-		$fields[] = array(
-			'name' => 'wholesale_price',
-			'label' => __( 'Wholesale Price', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Wholesale Pricing', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'wholesale_price_text',
-			'label' => __( 'Wholesale Text', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Wholesale Pricing', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-	}
-
-	// Advanced Custom Fields - http://www.advancedcustomfields.com
-	if( class_exists( 'acf' ) ) {
-		$custom_fields = woo_ce_get_acf_product_fields();
-		if( !empty( $custom_fields ) ) {
-			foreach( $custom_fields as $custom_field ) {
-				$fields[] = array(
-					'name' => $custom_field['name'],
-					'label' => $custom_field['label'],
-					'hover' => __( 'Advanced Custom Fields', 'woocommerce-exporter' ),
-					'disabled' => 1
-				);
-			}
-			unset( $custom_fields, $custom_field );
-		}
-	}
-
-	// WooCommerce Subscriptions -
-	if( class_exists( 'WC_Subscriptions_Manager' ) ) {
-		$fields[] = array(
-			'name' => 'subscription_price',
-			'label' => __( 'Subscription Price', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Subscriptions', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'subscription_period_interval',
-			'label' => __( 'Subscription Period Interval', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Subscriptions', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'subscription_period',
-			'label' => __( 'Subscription Period', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Subscriptions', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'subscription_length',
-			'label' => __( 'Subscription Length', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Subscriptions', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'subscription_sign_up_fee',
-			'label' => __( 'Subscription Sign-up Fee', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Subscriptions', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'subscription_trial_length',
-			'label' => __( 'Subscription Trial Length', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Subscriptions', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'subscription_trial_period',
-			'label' => __( 'Subscription Trial Period', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Subscriptions', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'subscription_limit',
-			'label' => __( 'Limit Subscription', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Subscriptions', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-	}
-
-	// WooCommerce Bookings - http://www.woothemes.com/products/woocommerce-bookings/
-	if( class_exists( 'WC_Bookings' ) ) {
-		$fields[] = array(
-			'name' => 'booking_has_persons',
-			'label' => __( 'Booking Has Persons', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Bookings', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'booking_has_resources',
-			'label' => __( 'Booking Has Resources', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Bookings', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'booking_base_cost',
-			'label' => __( 'Booking Base Cost', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Bookings', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'booking_block_cost',
-			'label' => __( 'Booking Block Cost', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Bookings', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'booking_display_cost',
-			'label' => __( 'Booking Display Cost', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Bookings', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'booking_requires_confirmation',
-			'label' => __( 'Booking Requires Confirmation', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Bookings', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'booking_user_can_cancel',
-			'label' => __( 'Booking Can Be Cancelled', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Bookings', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-	}
-
-	// Barcodes for WooCommerce - http://www.wolkenkraft.com/produkte/barcodes-fuer-woocommerce/
-	if( function_exists( 'wpps_requirements_met' ) ) {
-		$fields[] = array(
-			'name' => 'barcode_type',
-			'label' => __( 'Barcode Type', 'woocommerce-exporter' ),
-			'hover' => __( 'Barcodes for WooCommerce', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'barcode',
-			'label' => __( 'Barcode', 'woocommerce-exporter' ),
-			'hover' => __( 'Barcodes for WooCommerce', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-	}
-
-	// WooCommerce Pre-Orders - http://www.woothemes.com/products/woocommerce-pre-orders/
-	if( class_exists( 'WC_Pre_Orders' ) ) {
-		$fields[] = array(
-			'name' => 'pre_orders_enabled',
-			'label' => __( 'Pre-Order Enabled', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Pre-Orders', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'pre_orders_availability_date',
-			'label' => __( 'Pre-Order Availability Date', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Pre-Orders', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'pre_orders_fee',
-			'label' => __( 'Pre-Order Fee', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Pre-Orders', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'pre_orders_charge',
-			'label' => __( 'Pre-Order Charge', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Pre-Orders', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-	}
-
-	// WooCommerce Product Fees - https://wordpress.org/plugins/woocommerce-product-fees/
-	if( class_exists( 'WooCommerce_Product_Fees' ) ) {
-		$fields[] = array(
-			'name' => 'fee_name',
-			'label' => __( 'Product Fee Name', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Product Fees', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'fee_amount',
-			'label' => __( 'Product Fee Amount', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Product Fees', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'fee_multiplier',
-			'label' => __( 'Product Fee Multiplier', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Product Fees', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-	}
-
-	// WooCommerce Events - http://www.woocommerceevents.com/
-	if( class_exists( 'WooCommerce_Events' ) ) {
-		$fields[] = array(
-			'name' => 'is_event',
-			'label' => __( 'Is Event', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Events', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'event_date',
-			'label' => __( 'Event Date', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Events', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'event_start_time',
-			'label' => __( 'Event Start Time', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Events', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'event_end_time',
-			'label' => __( 'Event End Time', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Events', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'event_venue',
-			'label' => __( 'Event Venue', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Events', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'event_gps',
-			'label' => __( 'Event GPS Coordinates', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Events', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'event_googlemaps',
-			'label' => __( 'Event Google Maps Coordinates', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Events', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'event_directions',
-			'label' => __( 'Event Directions', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Events', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'event_phone',
-			'label' => __( 'Event Phone', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Events', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'event_email',
-			'label' => __( 'Event E-mail', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Events', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'event_ticket_logo',
-			'label' => __( 'Event Ticket Logo', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Events', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-		$fields[] = array(
-			'name' => 'event_ticket_text',
-			'label' => __( 'Event Ticket Text', 'woocommerce-exporter' ),
-			'hover' => __( 'WooCommerce Events', 'woocommerce-exporter' ),
-			'disabled' => 1
-		);
-	}
-
-	// Custom Product meta
-	$custom_products = woo_ce_get_option( 'custom_products', '' );
-	if( !empty( $custom_products ) ) {
-		foreach( $custom_products as $custom_product ) {
-			if( !empty( $custom_product ) ) {
-				$fields[] = array(
-					'name' => $custom_product,
-					'label' => woo_ce_clean_export_label( $custom_product ),
-					'hover' => sprintf( apply_filters( 'woo_ce_extend_product_fields_custom_product_hover', '%s: %s' ), __( 'Custom Product', 'woocommerce-exporter' ), $custom_product )
-				);
-			}
-		}
-	}
-	unset( $custom_products, $custom_product );
-
-	return $fields;
-
-}
-add_filter( 'woo_ce_product_fields', 'woo_ce_extend_product_fields' );
 
 // Returns the export column header label based on an export column slug
 function woo_ce_get_product_field( $name = null, $format = 'name' ) {
@@ -1316,7 +794,7 @@ function woo_ce_get_product_field( $name = null, $format = 'name' ) {
 
 }
 
-// Returns a list of WooCommerce Product IDs to export process
+// Returns a list of WooCommerce Products
 function woo_ce_get_products( $args = array() ) {
 
 	global $export;
@@ -1356,10 +834,12 @@ function woo_ce_get_products( $args = array() ) {
 		'fields' => 'ids',
 		'suppress_filters' => false
 	);
-	$args['tax_query'] = array();
 	// Filter Products by Product Category
 	if( $product_categories ) {
 		$term_taxonomy = 'product_cat';
+		// Check if tax_query has been created
+		if( !isset( $args['tax_query'] ) )
+			$args['tax_query'] = array();
 		$args['tax_query'][] = array(
 			array(
 				'taxonomy' => $term_taxonomy,
@@ -1371,6 +851,9 @@ function woo_ce_get_products( $args = array() ) {
 	// Filter Products by Product Tag
 	if( $product_tags ) {
 		$term_taxonomy = 'product_tag';
+		// Check if tax_query has been created
+		if( !isset( $args['tax_query'] ) )
+			$args['tax_query'] = array();
 		$args['tax_query'][] = array(
 			array(
 				'taxonomy' => $term_taxonomy,
@@ -1410,11 +893,11 @@ function woo_ce_get_products( $args = array() ) {
 			// Get Product details
 			$product = get_post( $product_id );
 
-			// Filter out variations that don't have a Parent Product that exists
+			// Filter out Variations that don't have a Parent Product that exists
 			if( isset( $product->post_type ) && $product->post_type == 'product_variation' ) {
 				// Check if Parent exists
 				if( $product->post_parent ) {
-					if( !get_post( $product->post_parent ) ) {
+					if( get_post( $product->post_parent ) == false ) {
 						unset( $product_id, $product );
 						continue;
 					}
@@ -1443,6 +926,9 @@ function woo_ce_get_product_data( $product_id = 0, $args = array() ) {
 
 	$product = get_post( $product_id );
 	$_product = ( function_exists( 'wc_get_product' ) ? wc_get_product( $product_id ) : false );
+	// Check for corrupt Products
+	if( $_product == false )
+		return false;
 
 	$product->parent_id = '';
 	$product->parent_sku = '';
@@ -1456,7 +942,8 @@ function woo_ce_get_product_data( $product_id = 0, $args = array() ) {
 	$product->product_id = $product_id;
 	$product->sku = get_post_meta( $product_id, '_sku', true );
 	$product->name = get_the_title( $product_id );
-	$product->permalink = get_permalink( $product_id );
+	if( $product->post_type <> 'product_variation' )
+		$product->permalink = get_permalink( $product_id );
 	$product->product_url = ( method_exists( $_product, 'get_permalink' ) ? $_product->get_permalink() : get_permalink( $product_id ) );
 	$product->slug = $product->post_name;
 	$product->description = $product->post_content;
@@ -1480,8 +967,9 @@ function woo_ce_get_product_data( $product_id = 0, $args = array() ) {
 	$product->post_date = woo_ce_format_date( $product->post_date );
 	$product->post_modified = woo_ce_format_date( $product->post_modified );
 	$product->type = woo_ce_get_product_assoc_type( $product_id );
-	if( $product->post_type == 'product_variation' )
+	if( $product->post_type == 'product_variation' ) {
 		$product->type = __( 'Variation', 'woocommerce-exporter' );
+	}
 	$product->visibility = woo_ce_format_product_visibility( get_post_meta( $product_id, '_visibility', true ) );
 	$product->featured = woo_ce_format_switch( get_post_meta( $product_id, '_featured', true ) );
 	$product->virtual = woo_ce_format_switch( get_post_meta( $product_id, '_virtual', true ) );
@@ -1496,8 +984,8 @@ function woo_ce_get_product_data( $product_id = 0, $args = array() ) {
 	$product->length_unit = ( $product->length != '' ? $length_unit : '' );
 	$product->category = woo_ce_get_product_assoc_categories( $product_id, $product->parent_id );
 	$product->tag = woo_ce_get_product_assoc_tags( $product_id );
-	$product->manage_stock = woo_ce_format_switch( get_post_meta( $product_id, '_manage_stock', true ) );
-	$product->allow_backorders = woo_ce_format_switch( get_post_meta( $product_id, '_backorders', true ) );
+	$product->manage_stock = get_post_meta( $product_id, '_manage_stock', true );
+	$product->allow_backorders = woo_ce_format_product_allow_backorders( get_post_meta( $product_id, '_backorders', true ) );
 	$product->sold_individually = woo_ce_format_switch( get_post_meta( $product_id, '_sold_individually', true ) );
 	$product->upsell_ids = woo_ce_get_product_assoc_upsell_ids( $product_id );
 	$product->crosssell_ids = woo_ce_get_product_assoc_crosssell_ids( $product_id );
@@ -1557,61 +1045,6 @@ function woo_ce_get_product_data( $product_id = 0, $args = array() ) {
 				}
 			}
 		}
-	}
-
-	// Advanced Google Product Feed - http://plugins.leewillis.co.uk/downloads/wp-e-commerce-product-feeds/
-	if( function_exists( 'woocommerce_gpf_install' ) ) {
-		$product->gpf_data = get_post_meta( $product_id, '_woocommerce_gpf_data', true );
-		$product->gpf_availability = ( isset( $product->gpf_data['availability'] ) ? woo_ce_format_gpf_availability( $product->gpf_data['availability'] ) : '' );
-		$product->gpf_condition = ( isset( $product->gpf_data['condition'] ) ? woo_ce_format_gpf_condition( $product->gpf_data['condition'] ) : '' );
-		$product->gpf_brand = ( isset( $product->gpf_data['brand'] ) ? $product->gpf_data['brand'] : '' );
-		$product->gpf_product_type = ( isset( $product->gpf_data['product_type'] ) ? $product->gpf_data['product_type'] : '' );
-		$product->gpf_google_product_category = ( isset( $product->gpf_data['google_product_category'] ) ? $product->gpf_data['google_product_category'] : '' );
-		$product->gpf_gtin = ( isset( $product->gpf_data['gtin'] ) ? $product->gpf_data['gtin'] : '' );
-		$product->gpf_mpn = ( isset( $product->gpf_data['mpn'] ) ? $product->gpf_data['mpn'] : '' );
-		$product->gpf_gender = ( isset( $product->gpf_data['gender'] ) ? $product->gpf_data['gender'] : '' );
-		$product->gpf_age_group = ( isset( $product->gpf_data['age_group'] ) ? $product->gpf_data['age_group'] : '' );
-		$product->gpf_color = ( isset( $product->gpf_data['color'] ) ? $product->gpf_data['color'] : '' );
-		$product->gpf_size = ( isset( $product->gpf_data['size'] ) ? $product->gpf_data['size'] : '' );
-	}
-
-	// All in One SEO Pack - http://wordpress.org/extend/plugins/all-in-one-seo-pack/
-	if( function_exists( 'aioseop_activate' ) ) {
-		$product->aioseop_keywords = get_post_meta( $product_id, '_aioseop_keywords', true );
-		$product->aioseop_description = get_post_meta( $product_id, '_aioseop_description', true );
-		$product->aioseop_title = get_post_meta( $product_id, '_aioseop_title', true );
-		$product->aioseop_titleatr = get_post_meta( $product_id, '_aioseop_titleatr', true );
-		$product->aioseop_menulabel = get_post_meta( $product_id, '_aioseop_menulabel', true );
-	}
-
-	// WordPress SEO - http://wordpress.org/plugins/wordpress-seo/
-	if( function_exists( 'wpseo_admin_init' ) ) {
-		$product->wpseo_focuskw = get_post_meta( $product_id, '_yoast_wpseo_focuskw', true );
-		$product->wpseo_metadesc = get_post_meta( $product_id, '_yoast_wpseo_metadesc', true );
-		$product->wpseo_title = get_post_meta( $product_id, '_yoast_wpseo_title', true );
-		$product->wpseo_googleplus_description = get_post_meta( $product_id, '_yoast_wpseo_google-plus-description', true );
-		$product->wpseo_opengraph_description = get_post_meta( $product_id, '_yoast_wpseo_opengraph-description', true );
-	}
-
-	// Ultimate SEO - http://wordpress.org/plugins/seo-ultimate/
-	if( function_exists( 'su_wp_incompat_notice' ) ) {
-		$product->useo_meta_title = get_post_meta( $product_id, '_su_title', true );
-		$product->useo_meta_description = get_post_meta( $product_id, '_su_description', true );
-		$product->useo_meta_keywords = get_post_meta( $product_id, '_su_keywords', true );
-		$product->useo_social_title = get_post_meta( $product_id, '_su_og_title', true );
-		$product->useo_social_description = get_post_meta( $product_id, '_su_og_description', true );
-		$product->useo_meta_noindex = get_post_meta( $product_id, '_su_meta_robots_noindex', true );
-		$product->useo_meta_noautolinks = get_post_meta( $product_id, '_su_disable_autolinks', true );
-	}
-
-	// WooCommerce MSRP Pricing - http://woothemes.com/woocommerce/
-	if( function_exists( 'woocommerce_msrp_activate' ) ) {
-		$product->msrp = get_post_meta( $product_id, '_msrp_price', true );
-		if( $product->msrp == false && $product->post_type == 'product_variation' )
-			$product->msrp = get_post_meta( $product_id, '_msrp', true );
-			// Check that a valid price has been provided and that wc_format_localized_price() exists
-			if( isset( $product->msrp ) && $product->msrp != '' && function_exists( 'wc_format_localized_price' ) )
-				$product->msrp = wc_format_localized_price( $product->msrp );
 	}
 
 	// Allow Plugin/Theme authors to add support for additional Product columns
@@ -1953,6 +1386,27 @@ function woo_ce_format_product_visibility( $visibility = '' ) {
 
 }
 
+function woo_ce_format_product_allow_backorders( $allow_backorders = '' ) {
+
+	$output = '';
+	if( !empty( $allow_backorders ) ) {
+		switch( $allow_backorders ) {
+
+			case 'yes':
+			case 'no':
+				$output = woo_ce_format_switch( $allow_backorders );
+				break;
+
+			case 'notify':
+				$output = __( 'Notify', 'woocommerce-exporter' );
+				break;
+
+		}
+	}
+	return $output;
+
+}
+
 function woo_ce_format_product_download_type( $download_type = '' ) {
 
 	$output = __( 'Standard', 'woocommerce-exporter' );
@@ -2050,7 +1504,7 @@ function woo_ce_format_product_stock_status( $stock_status = '', $stock = '' ) {
 function woo_ce_format_product_tax_status( $tax_status = null ) {
 
 	$output = '';
-	if( $tax_status ) {
+	if( !empty( $tax_status ) ) {
 		switch( $tax_status ) {
 	
 			case 'taxable':
@@ -2235,23 +1689,6 @@ function woo_ce_get_acf_product_fields() {
 	}
 
 }
-
-function woo_ce_extend_product_item( $product, $product_id ) {
-
-	// Custom Product meta
-	$custom_products = woo_ce_get_option( 'custom_products', '' );
-	if( !empty( $custom_products ) ) {
-		foreach( $custom_products as $custom_product ) {
-			// Check that the custom Product name is filled and it hasn't previously been set
-			if( !empty( $custom_product ) && !isset( $product->{$custom_product} ) )
-				$product->{$custom_product} = get_post_meta( $product_id, $custom_product, true );
-		}
-	}
-
-	return $product;
-
-}
-add_filter( 'woo_ce_product_item', 'woo_ce_extend_product_item', 10, 2 );
 
 function woo_ce_format_product_sale_price_dates( $sale_date = '' ) {
 

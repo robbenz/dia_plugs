@@ -344,6 +344,7 @@ class VFB_Pro_Form_Display {
 		$limit           = isset( $form['data']['limit'] ) ? absint( $form['data']['limit'] ) : '';
 		$limit_msg       = isset( $form['data']['limit-message'] ) ? $form['data']['limit-message'] : '';
 		$save_state      = isset( $form['data']['save-state'] ) ? $form['data']['save-state'] : '';
+		$on_submit       = isset( $form['data']['on-submit'] ) ? $form['data']['on-submit'] : '';
 		$page_title_display = isset( $form['data']['page-title-display'] ) ? $form['data']['page-title-display'] : 'false'; // Use string 'false' due to JS type conversion
 		$page_title_click   = isset( $form['data']['page-title-click']   ) ? $form['data']['page-title-click']   : 'false'; // Use string 'false' due to JS type conversion
 		$page_num_display   = isset( $form['data']['page-num-display']   ) ? $form['data']['page-num-display']   : 'false'; // Use string 'false' due to JS type conversion
@@ -434,9 +435,10 @@ class VFB_Pro_Form_Display {
 		$form_enctype = apply_filters( 'vfbp_form_enctype', 'multipart/form-data', $form_id );
 
 		$form_atts   = array(
-			'class'   => "vfbp-form{$label_alignment}",
-			'id'      => "vfbp-form-$form_id",
-			'enctype' => $form_enctype,
+			'class'    => "vfbp-form{$label_alignment}",
+			'id'       => "vfbp-form-$form_id",
+			'enctype'  => $form_enctype,
+			'onSubmit' => $on_submit,
 		);
 
 		$builder = new VFB_Pro_Form_Builder( $form_id, $form_action, $form_atts );

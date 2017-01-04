@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Purchase Data class.
  *
- * @version 2.5.6
+ * @version 2.5.9
  * @since   2.2.0
  * @author  Algoritmika Ltd.
  */
@@ -18,7 +18,7 @@ class WCJ_Purchase_Data extends WCJ_Module {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.4.8
+	 * @version 2.5.7
 	 */
 	function __construct() {
 
@@ -34,7 +34,7 @@ class WCJ_Purchase_Data extends WCJ_Module {
 			add_action( 'save_post_product', array( $this, 'save_meta_box' ), PHP_INT_MAX, 2 );
 
 			if ( 'yes' === get_option( 'wcj_purchase_data_custom_columns_profit', 'no' ) ) {
-				add_filter( 'manage_edit-shop_order_columns',        array( $this, 'add_order_columns' ),     PHP_INT_MAX );
+				add_filter( 'manage_edit-shop_order_columns',        array( $this, 'add_order_columns' ),    PHP_INT_MAX - 2 );
 				add_action( 'manage_shop_order_posts_custom_column', array( $this, 'render_order_columns' ), PHP_INT_MAX );
 			}
 		}
@@ -54,7 +54,7 @@ class WCJ_Purchase_Data extends WCJ_Module {
 	 * Output custom columns for orders
 	 *
 	 * @param   string $column
-	 * @version 2.5.6
+	 * @version 2.5.9
 	 * @since   2.2.4
 	 * @todo    forecasted profit
 	 */
@@ -68,7 +68,9 @@ class WCJ_Purchase_Data extends WCJ_Module {
 					$the_profit = 0;
 					$product_id = ( isset( $item['variation_id'] ) && 0 != $item['variation_id'] ) ? $item['variation_id'] : $item['product_id'];
 					if ( 0 != ( $purchase_price = wc_get_product_purchase_price( $product_id ) ) ) {
-						$the_profit = ( $item['line_total'] + $item['line_tax'] ) - $purchase_price * $item['qty'];
+//						$line_total = ( 'yes' === get_option('woocommerce_prices_include_tax') ) ? ( $item['line_total'] + $item['line_tax'] ) : $item['line_total'];
+						$line_total = ( $the_order->prices_include_tax ) ? ( $item['line_total'] + $item['line_tax'] ) : $item['line_total'];
+						$the_profit = $line_total - $purchase_price * $item['qty'];
 					} else {
 //						$the_profit = ( $item['line_total'] + $item['line_tax'] ) * $average_profit_margin;
 						$is_forecasted = true;
@@ -138,7 +140,7 @@ class WCJ_Purchase_Data extends WCJ_Module {
 					'enabled'    => get_option( 'wcj_purchase_price_affiliate_commission_enabled', 'no' ),
 				),
 			);
-			$total_number = apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_purchase_data_custom_price_fields_total_number', 1 ) );
+			$total_number = apply_filters( 'booster_get_option', 1, get_option( 'wcj_purchase_data_custom_price_fields_total_number', 1 ) );
 			for ( $i = 1; $i <= $total_number; $i++ ) {
 				$the_title = get_option( 'wcj_purchase_data_custom_price_field_name_' . $i, '' );
 				if ( '' == $the_title ) {
@@ -308,11 +310,11 @@ class WCJ_Purchase_Data extends WCJ_Module {
 				'id'        => 'wcj_purchase_data_custom_price_fields_total_number',
 				'default'   => 1,
 				'type'      => 'custom_number',
-				'desc'      => apply_filters( 'get_wc_jetpack_plus_message', '', 'desc' ),
-				'custom_attributes' => apply_filters( 'get_wc_jetpack_plus_message', '', 'readonly' ),
+				'desc'      => apply_filters( 'booster_get_message', '', 'desc' ),
+				'custom_attributes' => apply_filters( 'booster_get_message', '', 'readonly' ),
 			),
 		);
-		$total_number = apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_purchase_data_custom_price_fields_total_number', 1 ) );
+		$total_number = apply_filters( 'booster_get_option', 1, get_option( 'wcj_purchase_data_custom_price_fields_total_number', 1 ) );
 		for ( $i = 1; $i <= $total_number; $i++ ) {
 			$settings = array_merge( $settings, array(
 				array(

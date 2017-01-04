@@ -236,8 +236,8 @@ function wppb_pms_cross_promo() {
  */
 if ( !isset($_GET['page']) || $_GET['page'] != 'profile-builder-pms-promo'){
 new WPPB_Add_General_Notices('wppb_pms_cross_promo',
-	sprintf(__('Allow your users to have <strong>paid accounts with Profile Builder</strong>. %1$sFind out how >%2$s.<br/><strong>Note:</strong> The "Subscription Plan" field will not work if you have Admin Approval and Email Confirmation set to YES %3$sDismiss%4$s', 'profile-builder'), "<a href='" . admin_url('options.php?page=profile-builder-pms-promo') . "'>", "</a>", "<a class='wppb-dismiss-notification' href='" . esc_url( add_query_arg('wppb_pms_cross_promo_dismiss_notification', '0') ) . "'>", "</a>"),
-	'pms-cross-promo');
+    sprintf(__('Allow your users to have <strong>paid accounts with Profile Builder</strong>. %1$sFind out how >%2$s %3$sDismiss%4$s', 'profile-builder'), "<a href='" . admin_url('options.php?page=profile-builder-pms-promo') . "'>", "</a>", "<a class='wppb-dismiss-notification' href='" . esc_url( add_query_arg('wppb_pms_cross_promo_dismiss_notification', '0') ) . "'>", "</a>"),
+    'pms-cross-promo');
 }
 
 

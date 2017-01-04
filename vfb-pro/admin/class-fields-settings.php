@@ -259,7 +259,7 @@ class VFB_Pro_Admin_Fields_Settings {
 
 			<select name="vfb-field-<?php echo $id; ?>[cols]" class="vfb-form-control" id="vfb-edit-cols-<?php echo $id; ?>">
 				<option value=""<?php selected( $value, '' ); ?>></option>
-				<option value="1"<?php selected( $value, 1 ); ?>>1 (smallest)</option>
+				<option value="1"<?php selected( $value, 1 ); ?>><?php _e( '1 (smallest)', 'vfb-pro' ); ?></option>
 				<option value="2"<?php selected( $value, 2 ); ?>>2</option>
 				<option value="3"<?php selected( $value, 3 ); ?>>3</option>
 				<option value="4"<?php selected( $value, 4 ); ?>>4</option>
@@ -270,7 +270,7 @@ class VFB_Pro_Admin_Fields_Settings {
 				<option value="9"<?php selected( $value, 9 ); ?>>9</option>
 				<option value="10"<?php selected( $value, 10 ); ?>>10</option>
 				<option value="11"<?php selected( $value, 11 ); ?>>11</option>
-				<option value="12"<?php selected( $value, 12 ); ?>>12 (largest)</option>
+				<option value="12"<?php selected( $value, 12 ); ?>><?php _e( '12 (largest)', 'vfb-pro' ); ?></option>
 			</select>
 
 		</div> <!-- .vfb-form-group -->
@@ -988,9 +988,9 @@ class VFB_Pro_Admin_Fields_Settings {
 
 				<select name="vfb-field-<?php echo $id; ?>[date][<?php echo $type; ?>]" class="vfb-form-control" id="vfb-edit-date-<?php echo "{$type}-{$id}"; ?>">
 					<option value=""<?php selected( $value, '' ); ?>></option>
-					<option value="0"<?php selected( $value, 0 ); ?>>0 / month</option>
-					<option value="1"<?php selected( $value, 1 ); ?>>1 / year</option>
-					<option value="2"<?php selected( $value, 2 ); ?>>2 / decade</option>
+					<option value="0"<?php selected( $value, 0 ); ?>><?php _e( '0 / month', 'vfb-pro' ); ?></option>
+					<option value="1"<?php selected( $value, 1 ); ?>><?php _e( '1 / year', 'vfb-pro' ); ?></option>
+					<option value="2"<?php selected( $value, 2 ); ?>><?php _e( '2 / decade', 'vfb-pro' ); ?></option>
 				</select>
 				<?php
 				break;
@@ -1005,9 +1005,9 @@ class VFB_Pro_Admin_Fields_Settings {
 
 				<select name="vfb-field-<?php echo $id; ?>[date][<?php echo $type; ?>]" class="vfb-form-control" id="vfb-edit-date-<?php echo "{$type}-{$id}"; ?>">
 					<option value=""<?php selected( $value, '' ); ?>></option>
-					<option value="0"<?php selected( $value, 0 ); ?>>0 / days</option>
-					<option value="1"<?php selected( $value, 1 ); ?>>1 / months</option>
-					<option value="2"<?php selected( $value, 2 ); ?>>2 / years</option>
+					<option value="0"<?php selected( $value, 0 ); ?>><?php _e( '0 / days', 'vfb-pro' ); ?></option>
+					<option value="1"<?php selected( $value, 1 ); ?>><?php _e( '1 / months', 'vfb-pro' ); ?></option>
+					<option value="2"<?php selected( $value, 2 ); ?>><?php _e( '2 / years', 'vfb-pro' ); ?></option>
 				</select>
 				<?php
 				break;
@@ -1105,15 +1105,15 @@ class VFB_Pro_Admin_Fields_Settings {
 
 				<select name="vfb-field-<?php echo $id; ?>[date][<?php echo $type; ?>]" class="vfb-form-control" id="vfb-edit-date-<?php echo "{$type}-{$id}"; ?>">
 					<option value=""<?php selected( $value, '' ); ?>></option>
-					<option value="auto"<?php selected( $value, 'auto' ); ?>><?php _e('auto', 'vfb-pro' ); ?></option>
-				    <option value="top auto"<?php selected( $value, 'top auto' ); ?>><?php _e('top auto', 'vfb-pro' ); ?></option>
-				    <option value="bottom auto"<?php selected( $value, 'bottom auto' ); ?>><?php _e('bottom auto', 'vfb-pro' ); ?></option>
-				    <option value="auto left"<?php selected( $value, 'auto left' ); ?>><?php _e('auto left', 'vfb-pro' ); ?></option>
-				    <option value="top left"<?php selected( $value, 'top left' ); ?>><?php _e('top left', 'vfb-pro' ); ?></option>
-				    <option value="bottom left"<?php selected( $value, 'bottom left' ); ?>><?php _e('bottom left', 'vfb-pro' ); ?></option>
-				    <option value="auto right"<?php selected( $value, 'auto right' ); ?>><?php _e('auto right', 'vfb-pro' ); ?></option>
-				    <option value="top right"<?php selected( $value, 'top right' ); ?>><?php _e('top right', 'vfb-pro' ); ?></option>
-				    <option value="bottom right"<?php selected( $value, 'bottom right' ); ?>><?php _e('bottom right', 'vfb-pro' ); ?></option>
+					<option value="auto"<?php selected( $value, 'auto' ); ?>><?php _e( 'auto', 'vfb-pro' ); ?></option>
+				    <option value="top auto"<?php selected( $value, 'top auto' ); ?>><?php _e( 'top auto', 'vfb-pro' ); ?></option>
+				    <option value="bottom auto"<?php selected( $value, 'bottom auto' ); ?>><?php _e( 'bottom auto', 'vfb-pro' ); ?></option>
+				    <option value="auto left"<?php selected( $value, 'auto left' ); ?>><?php _e( 'auto left', 'vfb-pro' ); ?></option>
+				    <option value="top left"<?php selected( $value, 'top left' ); ?>><?php _e( 'top left', 'vfb-pro' ); ?></option>
+				    <option value="bottom left"<?php selected( $value, 'bottom left' ); ?>><?php _e( 'bottom left', 'vfb-pro' ); ?></option>
+				    <option value="auto right"<?php selected( $value, 'auto right' ); ?>><?php _e( 'auto right', 'vfb-pro' ); ?></option>
+				    <option value="top right"<?php selected( $value, 'top right' ); ?>><?php _e( 'top right', 'vfb-pro' ); ?></option>
+				    <option value="bottom right"<?php selected( $value, 'bottom right' ); ?>><?php _e( 'bottom right', 'vfb-pro' ); ?></option>
 				</select>
 				<?php
 				break;

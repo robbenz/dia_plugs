@@ -144,12 +144,22 @@
     list-style:none;
 }
 
-.wppb-user-forms ul li,
 #wppb-login-wrap p,
 #select_user_to_edit_form p{
 	overflow:hidden;
 	margin:0;
 	padding-bottom:14px;
+}
+
+.wppb-user-forms ul li{
+    margin:0;
+    padding-bottom:14px;
+}
+
+.wppb-user-forms ul li:after{
+    content: "";
+    clear: both;
+    display: block;
 }
 
 .wppb-user-forms .wppb-input-hidden {

@@ -3,7 +3,7 @@
 Plugin Name: Profile Builder
 Plugin URI: https://www.cozmoslabs.com/wordpress-profile-builder/
 Description: Login, registration and edit profile shortcodes for the front-end. Also you can chose what fields should be displayed or add new (custom) ones both in the front-end and in the dashboard.
-Version: 2.4.9
+Version: 2.5.3
 Author: Cozmoslabs, Madalin Ungureanu, Antohe Cristian, Barina Gabriel, Mihai Iova
 Author URI: https://www.cozmoslabs.com/
 License: GPL2
@@ -73,7 +73,7 @@ function wppb_free_plugin_init() {
          *
          *
          */
-        define('PROFILE_BUILDER_VERSION', '2.4.9' );
+        define('PROFILE_BUILDER_VERSION', '2.5.3' );
         define('WPPB_PLUGIN_DIR', plugin_dir_path(__FILE__));
         define('WPPB_PLUGIN_URL', plugin_dir_url(__FILE__));
         define('WPPB_SERVER_MAX_UPLOAD_SIZE_BYTE', apply_filters('wppb_server_max_upload_size_byte_constant', wppb_return_bytes(ini_get('upload_max_filesize'))));
@@ -145,6 +145,7 @@ function wppb_free_plugin_init() {
 
         if (file_exists(WPPB_PLUGIN_DIR . '/modules/modules.php')) {
             include_once(WPPB_PLUGIN_DIR . '/modules/modules.php');
+            include_once(WPPB_PLUGIN_DIR . '/modules/repeater-field/repeater-module.php');
             include_once(WPPB_PLUGIN_DIR . '/modules/custom-redirects/custom-redirects.php');
             include_once(WPPB_PLUGIN_DIR . '/modules/email-customizer/email-customizer.php');
             include_once(WPPB_PLUGIN_DIR . '/modules/multiple-forms/multiple-forms.php');
@@ -154,13 +155,13 @@ function wppb_free_plugin_init() {
             if (isset($wppb_module_settings['wppb_userListing']) && ($wppb_module_settings['wppb_userListing'] == 'show')) {
                 add_shortcode('wppb-list-users', 'wppb_user_listing_shortcode');
             } else
-                add_shortcode('wppb-list-users', 'wppb_list_all_users_display_error');
+            add_shortcode('wppb-list-users', 'wppb_list_all_users_display_error');
 
             if (isset($wppb_module_settings['wppb_emailCustomizerAdmin']) && ($wppb_module_settings['wppb_emailCustomizerAdmin'] == 'show'))
-                include_once(WPPB_PLUGIN_DIR . '/modules/email-customizer/admin-email-customizer.php');
+            include_once(WPPB_PLUGIN_DIR . '/modules/email-customizer/admin-email-customizer.php');
 
             if (isset($wppb_module_settings['wppb_emailCustomizer']) && ($wppb_module_settings['wppb_emailCustomizer'] == 'show'))
-                include_once(WPPB_PLUGIN_DIR . '/modules/email-customizer/user-email-customizer.php');
+            include_once(WPPB_PLUGIN_DIR . '/modules/email-customizer/user-email-customizer.php');
         }
 
         include_once(WPPB_PLUGIN_DIR . '/admin/add-ons.php');

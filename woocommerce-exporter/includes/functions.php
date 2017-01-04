@@ -1,11 +1,13 @@
 <?php
 include_once( WOO_CE_PATH . 'includes/product.php' );
+include_once( WOO_CE_PATH . 'includes/product-extend.php' );
 include_once( WOO_CE_PATH . 'includes/category.php' );
 include_once( WOO_CE_PATH . 'includes/tag.php' );
 include_once( WOO_CE_PATH . 'includes/brand.php' );
 include_once( WOO_CE_PATH . 'includes/order.php' );
 include_once( WOO_CE_PATH . 'includes/customer.php' );
 include_once( WOO_CE_PATH . 'includes/user.php' );
+include_once( WOO_CE_PATH . 'includes/user-extend.php' );
 include_once( WOO_CE_PATH . 'includes/coupon.php' );
 include_once( WOO_CE_PATH . 'includes/subscription.php' );
 include_once( WOO_CE_PATH . 'includes/product_vendor.php' );
@@ -958,6 +960,524 @@ function woo_ce_detect_product_brands() {
 
 	if( class_exists( 'WC_Brands' ) || class_exists( 'woo_brands' ) || taxonomy_exists( apply_filters( 'woo_ce_brand_term_taxonomy', 'product_brand' ) ) )
 		return true;
+
+}
+
+// List of WordPress Plugins that Store Exporter integrates with
+function woo_ce_admin_modules_list( $module_status = false ) {
+
+	$modules = array();
+	$modules[] = array(
+		'name' => 'aioseop',
+		'title' => __( 'All in One SEO Pack', 'woocommerce-exporter' ),
+		'description' => __( 'Optimize your WooCommerce Products for Search Engines. Requires Store Toolkit for All in One SEO Pack integration.', 'woocommerce-exporter' ),
+		'url' => 'http://wordpress.org/extend/plugins/all-in-one-seo-pack/',
+		'slug' => 'all-in-one-seo-pack',
+		'function' => 'aioseop_activate'
+	);
+	$modules[] = array(
+		'name' => 'store_toolkit',
+		'title' => __( 'Store Toolkit', 'woocommerce-exporter' ),
+		'description' => __( 'Store Toolkit includes a growing set of commonly-used WooCommerce administration tools aimed at web developers and store maintainers.', 'woocommerce-exporter' ),
+		'url' => 'http://wordpress.org/extend/plugins/woocommerce-store-toolkit/',
+		'slug' => 'woocommerce-store-toolkit',
+		'function' => 'woo_st_admin_init'
+	);
+	$modules[] = array(
+		'name' => 'ultimate_seo',
+		'title' => __( 'SEO Ultimate', 'woocommerce-exporter' ),
+		'description' => __( 'This all-in-one SEO plugin gives you control over Product details.', 'woocommerce-exporter' ),
+		'url' => 'http://wordpress.org/extend/plugins/seo-ultimate/',
+		'slug' => 'seo-ultimate',
+		'function' => 'su_wp_incompat_notice'
+	);
+	$modules[] = array(
+		'name' => 'gpf',
+		'title' => __( 'Advanced Google Product Feed', 'woocommerce-exporter' ),
+		'description' => __( 'Easily configure data to be added to your Google Merchant Centre feed.', 'woocommerce-exporter' ),
+		'url' => 'http://www.leewillis.co.uk/wordpress-plugins/',
+		'function' => 'woocommerce_gpf_install'
+	);
+	$modules[] = array(
+		'name' => 'wpseo',
+		'title' => __( 'WordPress SEO by Yoast', 'woocommerce-exporter' ),
+		'description' => __( 'The first true all-in-one SEO solution for WordPress.', 'woocommerce-exporter' ),
+		'url' => 'http://yoast.com/wordpress/seo/#utm_source=wpadmin&utm_medium=plugin&utm_campaign=wpseoplugin',
+		'slug' => 'wordpress-seo',
+		'function' => 'wpseo_admin_init'
+	);
+	$modules[] = array(
+		'name' => 'msrp',
+		'title' => __( 'WooCommerce MSRP Pricing', 'woocommerce-exporter' ),
+		'description' => __( 'Define and display MSRP prices (Manufacturer\'s suggested retail price) to your customers.', 'woocommerce-exporter' ),
+		'url' => 'http://www.woothemes.com/products/msrp-pricing/',
+		'function' => 'woocommerce_msrp_activate'
+	);
+	$modules[] = array(
+		'name' => 'wc_brands',
+		'title' => __( 'WooCommerce Brands Addon', 'woocommerce-exporter' ),
+		'description' => __( 'Create, assign and list brands for products, and allow customers to filter by brand.', 'woocommerce-exporter' ),
+		'url' => 'http://www.woothemes.com/products/brands/',
+		'class' => 'WC_Brands'
+	);
+	$modules[] = array(
+		'name' => 'wc_cog',
+		'title' => __( 'Cost of Goods', 'woocommerce-exporter' ),
+		'description' => __( 'Easily track total profit and cost of goods by adding a Cost of Good field to simple and variable products.', 'woocommerce-exporter' ),
+		'url' => 'http://www.skyverge.com/product/woocommerce-cost-of-goods-tracking/',
+		'class' => 'WC_COG'
+	);
+	$modules[] = array(
+		'name' => 'per_product_shipping',
+		'title' => __( 'Per Product Shipping', 'woocommerce-exporter' ),
+		'description' => __( 'Define separate shipping costs per product which are combined at checkout to provide a total shipping cost.', 'woocommerce-exporter' ),
+		'url' => 'http://www.woothemes.com/products/per-product-shipping/',
+		'class' => 'WC_Shipping_Per_Product_Init'
+	);
+	$modules[] = array(
+		'name' => 'vendors',
+		'title' => __( 'Product Vendors', 'woocommerce-exporter' ),
+		'description' => __( 'Turn your store into a multi-vendor marketplace (such as Etsy or Creative Market).', 'woocommerce-exporter' ),
+		'url' => 'http://www.woothemes.com/products/product-vendors/',
+		'class' => 'WC_Product_Vendors'
+	);
+	$modules[] = array(
+		'name' => 'wc_vendors',
+		'title' => __( 'WC Vendors', 'woocommerce-exporter' ),
+		'description' => __( 'Allow vendors to sell their own products and receive a commission for each sale.', 'woocommerce-exporter' ),
+		'url' => 'http://wcvendors.com',
+		'class' => 'WC_Vendors'
+	);
+	$modules[] = array(
+		'name' => 'acf',
+		'title' => __( 'Advanced Custom Fields', 'woocommerce-exporter' ),
+		'description' => __( 'Powerful fields for WordPress developers.', 'woocommerce-exporter' ),
+		'url' => 'http://www.advancedcustomfields.com',
+		'class' => 'acf'
+	);
+	$modules[] = array(
+		'name' => 'product_addons',
+		'title' => __( 'Product Add-ons', 'woocommerce-exporter' ),
+		'description' => __( 'Allow your customers to customise your products by adding input boxes, dropdowns or a field set of checkboxes.', 'woocommerce-exporter' ),
+		'url' => 'http://www.woothemes.com/products/product-add-ons/',
+		'class' => 'Product_Addon_Admin'
+	);
+	$modules[] = array(
+		'name' => 'seq',
+		'title' => __( 'WooCommerce Sequential Order Numbers', 'woocommerce-exporter' ),
+		'description' => __( 'This plugin extends the WooCommerce e-commerce plugin by setting sequential order numbers for new orders.', 'woocommerce-exporter' ),
+		'url' => 'https://wordpress.org/plugins/woocommerce-sequential-order-numbers/',
+		'slug' => 'woocommerce-sequential-order-numbers',
+		'class' => 'WC_Seq_Order_Number'
+	);
+	$modules[] = array(
+		'name' => 'seq_pro',
+		'title' => __( 'WooCommerce Sequential Order Numbers Pro', 'woocommerce-exporter' ),
+		'description' => __( 'Tame your WooCommerce Order Numbers.', 'woocommerce-exporter' ),
+		'url' => 'http://www.woothemes.com/products/sequential-order-numbers-pro/',
+		'class' => 'WC_Seq_Order_Number_Pro'
+	);
+	$modules[] = array(
+		'name' => 'print_invoice_delivery_note',
+		'title' => __( 'WooCommerce Print Invoice & Delivery Note', 'woocommerce-exporter' ),
+		'description' => __( 'Print invoices and delivery notes for WooCommerce orders.', 'woocommerce-exporter' ),
+		'url' => 'http://wordpress.org/plugins/woocommerce-delivery-notes/',
+		'slug' => 'woocommerce-delivery-notes',
+		'class' => 'WooCommerce_Delivery_Notes'
+	);
+	$modules[] = array(
+		'name' => 'pdf_invoices_packing_slips',
+		'title' => __( 'WooCommerce PDF Invoices & Packing Slips', 'woocommerce-exporter' ),
+		'description' => __( 'Create, print & automatically email PDF invoices & packing slips for WooCommerce orders.', 'woocommerce-exporter' ),
+		'url' => 'https://wordpress.org/plugins/woocommerce-pdf-invoices-packing-slips/',
+		'slug' => 'woocommerce-pdf-invoices-packing-slips',
+		'class' => 'WooCommerce_PDF_Invoices'
+	);
+	$modules[] = array(
+		'name' => 'checkout_manager',
+		'title' => __( 'WooCommerce Checkout Manager & WooCommerce Checkout Manager Pro', 'woocommerce-exporter' ),
+		'description' => __( 'Manages the WooCommerce Checkout page and WooCommerce Checkout processes.', 'woocommerce-exporter' ),
+		'url' => 'http://wordpress.org/plugins/woocommerce-checkout-manager/',
+		'slug' => 'woocommerce-checkout-manager',
+		'function' => array( 'wccs_install', 'wooccm_install', 'wccs_install_pro' )
+	);
+	$modules[] = array(
+		'name' => 'pgsk',
+		'title' => __( 'Poor Guys Swiss Knife', 'woocommerce-exporter' ),
+		'description' => __( 'A Swiss Knife for WooCommerce.', 'woocommerce-exporter' ),
+		'url' => 'http://wordpress.org/plugins/woocommerce-poor-guys-swiss-knife/',
+		'slug' => 'woocommerce-poor-guys-swiss-knife',
+		'function' => 'wcpgsk_init'
+	);
+	$modules[] = array(
+		'name' => 'checkout_field_editor',
+		'title' => __( 'Checkout Field Editor', 'woocommerce-exporter' ),
+		'description' => __( 'Add, edit and remove fields shown on your WooCommerce checkout page.', 'woocommerce-exporter' ),
+		'url' => 'http://www.woothemes.com/products/woocommerce-checkout-field-editor/',
+		'function' => 'woocommerce_init_checkout_field_editor'
+	);
+	$modules[] = array(
+		'name' => 'checkout_field_manager',
+		'title' => __( 'Checkout Field Manager', 'woocommerce-exporter' ),
+		'description' => __( 'Quickly and effortlessly add, remove and re-orders fields in the checkout process.', 'woocommerce-exporter' ),
+		'url' => 'http://61extensions.com/shop/woocommerce-checkout-field-manager/',
+		'function' => 'sod_woocommerce_checkout_manager_settings'
+	);
+	$modules[] = array(
+		'name' => 'checkout_addons',
+		'title' => __( 'WooCommerce Checkout Add-Ons', 'woocommerce-exporter' ),
+		'description' => __( 'Add fields at checkout for add-on products and services while optionally setting a cost for each add-on.', 'woocommerce-exporter' ),
+		'url' => 'http://www.skyverge.com/product/woocommerce-checkout-add-ons/',
+		'function' => 'init_woocommerce_checkout_add_ons'
+	);
+	$modules[] = array(
+		'name' => 'local_pickup_plus',
+		'title' => __( 'Local Pickup Plus', 'woocommerce-exporter' ),
+		'description' => __( 'Let customers pick up products from specific locations.', 'woocommerce-exporter' ),
+		'url' => 'http://www.woothemes.com/products/local-pickup-plus/',
+		'class' => 'WC_Local_Pickup_Plus'
+	);
+	$modules[] = array(
+		'name' => 'gravity_forms',
+		'title' => __( 'Gravity Forms', 'woocommerce-exporter' ),
+		'description' => __( 'Gravity Forms is hands down the best contact form plugin for WordPress powered websites.', 'woocommerce-exporter' ),
+		'url' => 'http://www.gravityforms.com/',
+		'class' => 'RGForms'
+	);
+	$modules[] = array(
+		'name' => 'currency_switcher',
+		'title' => __( 'WooCommerce Currency Switcher', 'woocommerce-exporter' ),
+		'description' => __( 'Currency Switcher for WooCommerce allows your shop to display prices and accept payments in multiple currencies.', 'woocommerce-exporter' ),
+		'url' => 'http://aelia.co/shop/currency-switcher-woocommerce/',
+		'class' => 'WC_Aelia_CurrencySwitcher'
+	);
+	$modules[] = array(
+		'name' => 'subscriptions',
+		'title' => __( 'WooCommerce Subscriptions', 'woocommerce-exporter' ),
+		'description' => __( 'WC Subscriptions makes it easy to create and manage products with recurring payments.', 'woocommerce-exporter' ),
+		'url' => 'http://www.woothemes.com/products/woocommerce-subscriptions/',
+		'class' => 'WC_Subscriptions_Manager'
+	);
+	$modules[] = array(
+		'name' => 'extra_product_options',
+		'title' => __( 'Extra Product Options', 'woocommerce-exporter' ),
+		'description' => __( 'Create extra price fields globally or per-Product', 'woocommerce-exporter' ),
+		'url' => 'http://codecanyon.net/item/woocommerce-extra-product-options/7908619',
+		'class' => 'TM_Extra_Product_Options'
+	);
+	$modules[] = array(
+		'name' => 'woocommerce_jetpack',
+		'title' => __( 'Booster for WooCommerce', 'woocommerce-exporter' ),
+		'description' => __( 'Supercharge your WooCommerce site with these awesome powerful features (formally WooCommerce Jetpack).', 'woocommerce-exporter' ),
+		'url' => 'https://wordpress.org/plugins/woocommerce-jetpack/',
+		'slug' => 'woocommerce-jetpack',
+		'class' => 'WC_Jetpack'
+	);
+	$modules[] = array(
+		'name' => 'woocommerce_jetpack_plus',
+		'title' => __( 'Booster Plus', 'woocommerce-exporter' ),
+		'description' => __( 'Unlock all WooCommerce Booster features and supercharge your WordPress WooCommerce site even more (formally WooCommerce Jetpack Plus).', 'woocommerce-exporter' ),
+		'url' => 'http://woojetpack.com/shop/wordpress-woocommerce-jetpack-plus/',
+		'class' => 'WC_Jetpack_Plus'
+	);
+	$modules[] = array(
+		'name' => 'woocommerce_brands',
+		'title' => __( 'WooCommerce Brands', 'woocommerce-exporter' ),
+		'description' => __( 'Woocommerce Brands Plugin. After Install and active this plugin you\'ll have some shortcode and some widget for display your brands in fornt-end website.', 'woocommerce-exporter' ),
+		'url' => 'http://proword.net/Woocommerce_Brands/',
+		'class' => 'woo_brands'
+	);
+	$modules[] = array(
+		'name' => 'woocommerce_bookings',
+		'title' => __( 'WooCommerce Bookings', 'woocommerce-exporter' ),
+		'description' => __( 'Setup bookable products such as for reservations, services and hires.', 'woocommerce-exporter' ),
+		'url' => 'http://www.woothemes.com/products/woocommerce-bookings/',
+		'class' => 'WC_Bookings'
+	);
+	$modules[] = array(
+		'name' => 'eu_vat',
+		'title' => __( 'WooCommerce EU VAT Number', 'woocommerce-exporter' ),
+		'description' => __( 'The EU VAT Number extension lets you collect and validate EU VAT numbers during checkout to identify B2B transactions verses B2C.', 'woocommerce-exporter' ),
+		'url' => 'https://www.woothemes.com/products/eu-vat-number/',
+		'function' => '__wc_eu_vat_number_init'
+	);
+	$modules[] = array(
+		'name' => 'aelia_eu_vat',
+		'title' => __( 'WooCommerce EU VAT Assistant', 'woocommerce-exporter' ),
+		'description' => __( 'Assists with EU VAT compliance, for the new VAT regime beginning 1st January 2015.', 'woocommerce-exporter' ),
+		'url' => 'https://wordpress.org/plugins/woocommerce-eu-vat-assistant/',
+		'slug' => 'woocommerce-eu-vat-assistant',
+		'class' => 'Aelia_WC_RequirementsChecks'
+	);
+	$modules[] = array(
+		'name' => 'hear_about_us',
+		'title' => __( 'WooCommerce Hear About Us', 'woocommerce-exporter' ),
+		'description' => __( 'Ask where your new customers come from at Checkout.', 'woocommerce-exporter' ),
+		'url' => 'https://wordpress.org/plugins/woocommerce-hear-about-us/',
+		'slug' => 'woocommerce-hear-about-us', // Define this if the Plugin is hosted on the WordPress repo
+		'class' => 'WooCommerce_HearAboutUs'
+	);
+	$modules[] = array(
+		'name' => 'wholesale_pricing',
+		'title' => __( 'WooCommerce Wholesale Pricing', 'woocommerce-exporter' ),
+		'description' => __( 'Allows you to set wholesale prices for products and variations.', 'woocommerce-exporter' ),
+		'url' => 'http://ignitewoo.com/woocommerce-extensions-plugins-themes/woocommerce-wholesale-pricing/',
+		'class' => 'woocommerce_wholesale_pricing'
+	);
+	$modules[] = array(
+		'name' => 'woocommerce_barcodes',
+		'title' => __( 'Barcodes for WooCommerce', 'woocommerce-exporter' ),
+		'description' => __( 'Allows you to add GTIN (former EAN) codes natively to your products.', 'woocommerce-exporter' ),
+		'url' => 'http://www.wolkenkraft.com/produkte/barcodes-fuer-woocommerce/',
+		'function' => 'wpps_requirements_met'
+	);
+	$modules[] = array(
+		'name' => 'woocommerce_smart_coupons',
+		'title' => __( 'WooCommerce Smart Coupons', 'woocommerce-exporter' ),
+		'description' => __( 'WooCommerce Smart Coupons lets customers buy gift certificates, store credits or coupons easily.', 'woocommerce-exporter' ),
+		'url' => 'http://www.woothemes.com/products/smart-coupons/',
+		'class' => 'WC_Smart_Coupons'
+	);
+	$modules[] = array(
+		'name' => 'woocommerce_preorders',
+		'title' => __( 'WooCommerce Pre-Orders', 'woocommerce-exporter' ),
+		'description' => __( 'Sell pre-orders for products in your WooCommerce store.', 'woocommerce-exporter' ),
+		'url' => 'http://www.woothemes.com/products/woocommerce-pre-orders/',
+		'class' => 'WC_Pre_Orders'
+	);
+	$modules[] = array(
+		'name' => 'order_numbers_basic',
+		'title' => __( 'WooCommerce Basic Ordernumbers', 'woocommerce-exporter' ),
+		'description' => __( 'Lets the user freely configure the order numbers in WooCommerce.', 'woocommerce-exporter' ),
+		'url' => 'http://open-tools.net/woocommerce/advanced-ordernumbers-for-woocommerce.html',
+		'class' => 'OpenToolsOrdernumbersBasic'
+	);
+	$modules[] = array(
+		'name' => 'admin_custom_order_fields',
+		'title' => __( 'WooCommerce Admin Custom Order Fields', 'woocommerce-exporter' ),
+		'description' => __( 'Easily add custom fields to your WooCommerce orders and display them in the Orders admin, the My Orders section and order emails.', 'woocommerce-exporter' ),
+		'url' => 'http://www.woothemes.com/products/woocommerce-admin-custom-order-fields/',
+		'function' => 'init_woocommerce_admin_custom_order_fields'
+	);
+	$modules[] = array(
+		'name' => 'table_rate_shipping_plus',
+		'title' => __( 'WooCommerce Table Rate Shipping Plus', 'woocommerce-exporter' ),
+		'description' => __( 'Calculate shipping costs based on destination, weight and price.', 'woocommerce-exporter' ),
+		'url' => 'http://mangohour.com/plugins/woocommerce-table-rate-shipping',
+		'function' => 'mh_wc_table_rate_plus_init'
+	);
+	$modules[] = array(
+		'name' => 'woocommerce-extra-checkout-fields-for-brazil',
+		'title' => __( 'WooCommerce Extra Checkout Fields for Brazil', 'woocommerce-exporter' ),
+		'description' => __( 'Adds Brazilian checkout fields in WooCommerce.', 'woocommerce-exporter' ),
+		'url' => 'https://wordpress.org/plugins/woocommerce-extra-checkout-fields-for-brazil/',
+		'slug' => 'woocommerce-extra-checkout-fields-for-brazil',
+		'class' => 'Extra_Checkout_Fields_For_Brazil'
+	);
+	$modules[] = array(
+		'name' => 'woocommerce_gravityforms',
+		'title' => __( 'WooCommerce Gravity Forms Product Add-Ons', 'woocommerce-exporter' ),
+		'description' => __( 'Allows you to use Gravity Forms on individual WooCommerce products.', 'woocommerce-exporter' ),
+		'url' => 'https://www.woothemes.com/products/gravity-forms-add-ons/',
+		'class' => 'woocommerce_gravityforms'
+	);
+	$modules[] = array(
+		'name' => 'woocommerce_quickdonation',
+		'title' => __( 'WooCommerce Quick Donation', 'woocommerce-exporter' ),
+		'description' => __( 'Turns WooCommerce into online donation.', 'woocommerce-exporter' ),
+		'url' => 'https://wordpress.org/plugins/woocommerce-quick-donation/',
+		'slug' => 'woocommerce-quick-donation',
+		'class' => 'WooCommerce_Quick_Donation'
+	);
+	$modules[] = array(
+		'name' => 'woocommerce_easycheckout',
+		'title' => __( 'Easy Checkout Fields Editor', 'woocommerce-exporter' ),
+		'description' => __( 'WooCommerce Easy Checkout Fields Editor', 'woocommerce-exporter' ),
+		'url' => 'http://codecanyon.net/item/woocommerce-easy-checkout-field-editor/9799777',
+		'function' => 'pcmfe_admin_form_field'
+	);
+	$modules[] = array(
+		'name' => 'woocommerce_productfees',
+		'title' => __( 'Product Fees', 'woocommerce-exporter' ),
+		'description' => __( 'WooCommerce Easy Checkout Fields Editor', 'woocommerce-exporter' ),
+		'url' => 'https://wordpress.org/plugins/woocommerce-product-fees/',
+		'slug' => 'woocommerce-product-fees',
+		'class' => 'WooCommerce_Product_Fees'
+	);
+	$modules[] = array(
+		'name' => 'woocommerce_events',
+		'title' => __( 'WooCommerce Events', 'woocommerce-exporter' ),
+		'description' => __( 'Adds event and ticketing features to WooCommerce.', 'woocommerce-exporter' ),
+		'url' => 'http://www.woocommerceevents.com/',
+		'class' => 'WooCommerce_Events'
+	);
+	$modules[] = array(
+		'name' => 'woocommerce_tabmanager',
+		'title' => __( 'WooCommerce Tab Manager', 'woocommerce-exporter' ),
+		'description' => __( 'A product tab manager for WooCommerce.', 'woocommerce-exporter' ),
+		'url' => 'http://www.woothemes.com/products/woocommerce-tab-manager/',
+		'class' => 'WC_Tab_Manager'
+	);
+	$modules[] = array(
+		'name' => 'woocommerce_customfields',
+		'title' => __( 'WooCommerce Custom Fields', 'woocommerce-exporter' ),
+		'description' => __( 'Create custom fields for WooCommerce product and checkout pages.', 'woocommerce-exporter' ),
+		'url' => 'http://www.rightpress.net/woocommerce-custom-fields',
+		'class' => 'RP_WCCF'
+	);
+	$modules[] = array(
+		'name' => 'barcode_isbn',
+		'title' => __( 'WooCommerce Barcode & ISBN', 'woocommerce-exporter' ),
+		'description' => __( 'A plugin to add a barcode & ISBN to WooCommerce.', 'woocommerce-exporter' ),
+		'url' => 'https://wordpress.org/plugins/woocommerce-barcode-isbn/',
+		'slug' => 'woocommerce-barcode-isbn',
+		'function' => 'woo_add_barcode'
+	);
+	$modules[] = array(
+		'name' => 'video_product_tab',
+		'title' => __( 'WooCommerce Video Product Tab', 'woocommerce-exporter' ),
+		'description' => __( 'Extends WooCommerce to allow you to add a Video to the Product page.', 'woocommerce-exporter' ),
+		'url' => 'https://wordpress.org/plugins/woocommerce-video-product-tab/',
+		'slug' => 'woocommerce-video-product-tab',
+		'class' => 'WooCommerce_Video_Product_Tab'
+	);
+	$modules[] = array(
+		'name' => 'external_featured_image',
+		'title' => __( 'Nelio External Featured Image', 'woocommerce-exporter' ),
+		'description' => __( 'Use external images from anywhere as the featured image of your pages and posts.', 'woocommerce-exporter' ),
+		'url' => 'https://wordpress.org/plugins/external-featured-image/',
+		'slug' => 'external-featured-image', // Define this if the Plugin is hosted on the WordPress repo
+		'function' => '_nelioefi_url'
+	);
+	$modules[] = array(
+		'name' => 'variation_swatches_photos',
+		'title' => __( 'WooCommerce Variation Swatches and Photos', 'woocommerce-exporter' ),
+		'description' => __( 'Configure colors and photos for shoppers on your site to use when picking variations.', 'woocommerce-exporter' ),
+		'url' => 'https://www.woothemes.com/products/variation-swatches-and-photos/',
+		'class' => 'WC_SwatchesPlugin'
+	);
+	$modules[] = array(
+		'name' => 'uploads',
+		'title' => __( 'WooCommerce Uploads', 'woocommerce-exporter' ),
+		'description' => __( 'Upload files in WooCommerce.', 'woocommerce-exporter' ),
+		'url' => 'https://wpfortune.com/shop/plugins/woocommerce-uploads/',
+		'class' => 'WPF_Uploads'
+	);
+	$modules[] = array(
+		'name' => 'posr',
+		'title' => __( 'WooCommerce Profit of Sales Report', 'woocommerce-exporter' ),
+		'description' => __( 'This plugin provides Profit of Sales Report based on Cost of Goods.', 'woocommerce-exporter' ),
+		'url' => 'http://codecanyon.net/item/woocommerce-profit-of-sales-report/9190590',
+		'function' => 'POSRFront' // Define this for function detection, if Class rename attribute to class
+	);
+	$modules[] = array(
+		'name' => 'orddd',
+		'title' => __( 'Order Delivery Date Pro for WooCommerce', 'woocommerce-exporter' ),
+		'description' => __( 'Allows customers to choose their preferred Order Delivery Date & Delivery Time during checkout.', 'woocommerce-exporter' ),
+		'url' => 'https://www.tychesoftwares.com/store/premium-plugins/order-delivery-date-for-woocommerce-pro-21/',
+		'class' => 'order_delivery_date'
+	);
+
+/*
+	$modules[] = array(
+		'name' => '',
+		'title' => __( '', 'woocommerce-exporter' ),
+		'description' => __( '', 'woocommerce-exporter' ),
+		'url' => '',
+		'slug' => '', // Define this if the Plugin is hosted on the WordPress repo
+		'function' => '' // Define this for function detection, if Class rename attribute to class
+	);
+*/
+
+	$modules = apply_filters( 'woo_ce_modules_addons', $modules );
+
+	// Check if the existing Transient exists
+	$modules_all = count( $modules );
+	$cached = get_transient( WOO_CE_PREFIX . '_modules_all_count' );
+	if( $cached == false ) {
+		set_transient( WOO_CE_PREFIX . '_modules_all_count', $modules_all, DAY_IN_SECONDS );
+	}
+
+	$modules_active = 0;
+	$modules_inactive = 0;
+
+	if( !empty( $modules ) ) {
+		$user_capability = 'install_plugins';
+		foreach( $modules as $key => $module ) {
+			$modules[$key]['status'] = 'inactive';
+			// Check if each module is activated
+			if( isset( $module['function'] ) ) {
+				if( is_array( $module['function'] ) ) {
+					$size = count( $module['function'] );
+					for( $i = 0; $i < $size; $i++ ) {
+						if( function_exists( $module['function'][$i] ) ) {
+							$modules[$key]['status'] = 'active';
+							$modules_active++;
+							break;
+						}
+					}
+				} else {
+					if( function_exists( $module['function'] ) ) {
+						$modules[$key]['status'] = 'active';
+						$modules_active++;
+					}
+				}
+			} else if( isset( $module['class'] ) ) {
+				if( is_array( $module['class'] ) ) {
+					$size = count( $module['class'] );
+					for( $i = 0; $i < $size; $i++ ) {
+						if( class_exists( $module['class'][$i] ) ) {
+							$modules[$key]['status'] = 'active';
+							$modules_active++;
+							break;
+						}
+					}
+				} else {
+					if( class_exists( $module['class'] ) ) {
+						$modules[$key]['status'] = 'active';
+						$modules_active++;
+					}
+				}
+			}
+			// Filter Modules by Module Status
+			if( !empty( $module_status ) ) {
+				switch( $module_status ) {
+
+					case 'active':
+						if( $modules[$key]['status'] == 'inactive' )
+							unset( $modules[$key] );
+						break;
+
+					case 'inactive':
+						if( $modules[$key]['status'] == 'active' )
+							unset( $modules[$key] );
+						break;
+
+				}
+			}
+			// Check that we've got these resources available
+			if( isset( $modules[$key] ) && function_exists( 'current_user_can' ) && did_action( 'init' ) ) {
+				// Check if the Plugin has a slug and if User can install Plugins
+				if( current_user_can( $user_capability ) && isset( $module['slug'] ) )
+					$modules[$key]['url'] = admin_url( sprintf( 'plugin-install.php?tab=search&type=term&s=%s', $module['slug'] ) );
+			}
+		}
+	}
+
+	// Check if the existing Transient exists
+	$cached = get_transient( WOO_CE_PREFIX . '_modules_active_count' );
+	if( $cached == false ) {
+		set_transient( WOO_CE_PREFIX . '_modules_active_count', $modules_active, DAY_IN_SECONDS );
+	}
+
+	// Check if the existing Transient exists
+	$cached = get_transient( WOO_CE_PREFIX . '_modules_inactive_count' );
+	if( $cached == false ) {
+		$modules_inactive = $modules_all - $modules_active;
+		set_transient( WOO_CE_PREFIX . '_modules_inactive_count', $modules_inactive, DAY_IN_SECONDS );
+	}
+
+	return $modules;
 
 }
 

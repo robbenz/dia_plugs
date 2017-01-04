@@ -107,7 +107,11 @@ class PMXI_Chunk {
       @$this->reader->open($path);
       @$this->reader->setParserProperty(XMLReader::VALIDATE, false);
       return;
-    } 
+    }
+
+    $input  = new PMXI_Input();
+    $import_id = $input->get('id', 0);
+    if ( empty($import_id)) $import_id = $input->get('import_id', 0);
 
     if ( PMXI_Plugin::getInstance()->getOption('force_stream_reader') )
     {
@@ -115,12 +119,6 @@ class PMXI_Chunk {
     }
     else
     {
-      $input  = new PMXI_Input();         
-
-      $import_id = $input->get('id', 0);
-
-      if ( empty($import_id)) $import_id = $input->get('import_id', 0);    
-
       if ( ! empty($import_id) )
       {
         $this->parser_type = empty($parser_type) ? 'xmlreader' : $parser_type;
@@ -180,7 +178,7 @@ class PMXI_Chunk {
         $this->cloud = $parser->cloud;
 
       }
-     
+
       if ( ! empty($this->cloud) and empty($this->options['element']) ){
         
         arsort($this->cloud);           
@@ -199,9 +197,11 @@ class PMXI_Chunk {
               $this->options['element'] = $el;
               break;            
           }          
-        }          
+        }
+
+        $this->options['element'] = apply_filters('wp_all_import_root_element', $this->options['element'], $import_id, $this->cloud);
       }
-    } 
+    }
 
     $path = $this->get_file_path();                                 
 
@@ -303,9 +303,7 @@ class PMXI_Chunk {
     {    
       $is_preprocess_enabled = apply_filters('is_xml_preprocess_enabled', true);    
 
-      while ($xml = $this->reader->getNode()) {          
-          // $simpleXmlNode = simplexml_load_string($node);
-          // echo (string)$simpleXmlNode->firstName;                    
+      while ($xml = $this->reader->getNode()) {
 
           if ($this->loop < $this->options['pointer']){
             $this->loop++;                              
@@ -322,7 +320,7 @@ class PMXI_Chunk {
           break;       
       }
     }
-    
+
     return ( ! empty($xml) ) ? self::removeColonsFromRSS(preg_replace('%xmlns.*=\s*([\'"&quot;]).*\1%sU', '', $xml)) : false;
 
   }  
@@ -357,6 +355,7 @@ class PMXI_Chunk {
           // replace temporary word _ampersand_ back to & symbol
           $feed = str_replace("_ampersand_", "&", $feed);
         }
+
         // replace all standalone & symbols ( which is not in htmlentities e.q. &nbsp; and not wrapped in CDATA section ) to &amp;
         PMXI_Import_Record::preprocessXml($feed); 
 
@@ -376,9 +375,19 @@ class preprocessXml_filter extends php_user_filter {
         {
           // the & symbol is not valid in XML, so replace it with temporary word _ampersand_
           $bucket->data = str_replace("&", "_ampersand_", $bucket->data);
-          $bucket->data = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', ' ', $this->replace_colons($bucket->data));                  
-        }                
-        $consumed += $bucket->datalen;        
+          $cleanXML = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', ' ', $this->replace_colons($bucket->data));
+          if ($cleanXML == NULL && preg_last_error() == PREG_BAD_UTF8_ERROR){
+              $cleanXML = preg_replace('/[^\x09\x0a\x0d\x20-\xFF]+/', ' ', $this->replace_colons($bucket->data));
+          }
+          if ($cleanXML == NULL && preg_last_error() == PREG_BAD_UTF8_ERROR){
+              if (function_exists('mb_ereg_replace')){
+                  mb_regex_encoding('UTF-8');
+                  $cleanXML = mb_ereg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', ' ', $this->replace_colons($bucket->data));
+              }
+          }
+          $bucket->data = empty($cleanXML) ? $this->replace_colons($bucket->data) : $cleanXML;
+        }
+        $consumed += $bucket->datalen;
         stream_bucket_append($out, $bucket);
       }      
       return PSFS_PASS_ON;

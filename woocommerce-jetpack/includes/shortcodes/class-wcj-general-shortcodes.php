@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack General Shortcodes class.
  *
- * @version 2.5.6
+ * @version 2.5.9
  * @author  Algoritmika Ltd.
  */
 
@@ -17,7 +17,7 @@ class WCJ_General_Shortcodes extends WCJ_Shortcodes {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.5.6
+	 * @version 2.5.8
 	 */
 	public function __construct() {
 
@@ -35,6 +35,9 @@ class WCJ_General_Shortcodes extends WCJ_Shortcodes {
 			'wcj_tcpdf_pagebreak',
 			'wcj_get_left_to_free_shipping',
 			'wcj_wholesale_price_table',
+			'wcj_customer_billing_country',
+			'wcj_customer_shipping_country',
+			'wcj_customer_meta',
 		);
 
 		$this->the_atts = array(
@@ -46,14 +49,67 @@ class WCJ_General_Shortcodes extends WCJ_Shortcodes {
 			'countries'             => '',
 			'currencies'            => '',
 			'content'               => '',
-			'heading_format'        => 'from %level_qty% pcs.',
+			'heading_format'        => 'from %level_min_qty% pcs.',
+			'before_level_max_qty'  => '-',
+			'last_level_max_qty'    => '+',
 			'replace_with_currency' => 'no',
 			'hide_if_zero_quantity' => 'no',
 			'table_format'          => 'horizontal',
+			'key'                   => '',
+			'full_country_name'     => 'yes',
+			'multiply_by'           => 1,
 		);
 
 		parent::__construct();
 
+	}
+
+	/**
+	 * wcj_customer_billing_country.
+	 *
+	 * @version 2.5.8
+	 * @since   2.5.8
+	 */
+	function wcj_customer_billing_country( $atts ) {
+		if ( is_user_logged_in() ) {
+			$current_user = wp_get_current_user();
+			if ( '' != ( $meta = get_user_meta( $current_user->ID, 'billing_country', true ) ) ) {
+				return ( 'yes' === $atts['full_country_name'] ) ? wcj_get_country_name_by_code( $meta ) : $meta;
+			}
+		}
+		return '';
+	}
+
+	/**
+	 * wcj_customer_shipping_country.
+	 *
+	 * @version 2.5.8
+	 * @since   2.5.8
+	 */
+	function wcj_customer_shipping_country( $atts ) {
+		if ( is_user_logged_in() ) {
+			$current_user = wp_get_current_user();
+			if ( '' != ( $meta = get_user_meta( $current_user->ID, 'shipping_country', true ) ) ) {
+				return ( 'yes' === $atts['full_country_name'] ) ? wcj_get_country_name_by_code( $meta ) : $meta;
+			}
+		}
+		return '';
+	}
+
+	/**
+	 * wcj_customer_meta.
+	 *
+	 * @version 2.5.8
+	 * @since   2.5.8
+	 */
+	function wcj_customer_meta( $atts ) {
+		if ( '' != $atts['key'] && is_user_logged_in() ) {
+			$current_user = wp_get_current_user();
+			if ( '' != ( $meta = get_user_meta( $current_user->ID, $atts['key'], true ) ) ) {
+				return $meta;
+			}
+		}
+		return '';
 	}
 
 	/**
@@ -73,7 +129,7 @@ class WCJ_General_Shortcodes extends WCJ_Shortcodes {
 			$shortcode_currencies = explode( ',', $shortcode_currencies );
 		}
 		if ( empty( $shortcode_currencies ) ) {
-			$total_number = apply_filters( 'wcj_get_option_filter', 2, get_option( 'wcj_multicurrency_total_number', 2 ) );
+			$total_number = apply_filters( 'booster_get_option', 2, get_option( 'wcj_multicurrency_total_number', 2 ) );
 			for ( $i = 1; $i <= $total_number; $i++ ) {
 				$shortcode_currencies[] = get_option( 'wcj_multicurrency_currency_' . $i );
 			}
@@ -84,7 +140,7 @@ class WCJ_General_Shortcodes extends WCJ_Shortcodes {
 	/**
 	 * wcj_wholesale_price_table (global only).
 	 *
-	 * @version 2.5.6
+	 * @version 2.5.7
 	 * @since   2.4.8
 	 */
 	function wcj_wholesale_price_table( $atts ) {
@@ -107,7 +163,7 @@ class WCJ_General_Shortcodes extends WCJ_Shortcodes {
 		}
 
 		$wholesale_price_levels = array();
-		for ( $i = 1; $i <= apply_filters( 'wcj_get_option_filter', 1, get_option( 'wcj_wholesale_price_levels_number' . $role_option_name_addon, 1 ) ); $i++ ) {
+		for ( $i = 1; $i <= apply_filters( 'booster_get_option', 1, get_option( 'wcj_wholesale_price_levels_number' . $role_option_name_addon, 1 ) ); $i++ ) {
 			$level_qty                = get_option( 'wcj_wholesale_price_level_min_qty' . $role_option_name_addon . '_' . $i, PHP_INT_MAX );
 			$discount                 = get_option( 'wcj_wholesale_price_level_discount_percent' . $role_option_name_addon . '_' . $i, 0 );
 			$wholesale_price_levels[] = array( 'quantity' => $level_qty, 'discount' => $discount, );
@@ -116,11 +172,18 @@ class WCJ_General_Shortcodes extends WCJ_Shortcodes {
 		$data_qty              = array();
 		$data_discount         = array();
 		$columns_styles        = array();
+		$i = -1;
 		foreach ( $wholesale_price_levels as $wholesale_price_level ) {
+			$i++;
 			if ( 0 == $wholesale_price_level['quantity'] && 'yes' === $atts['hide_if_zero_quantity'] ) {
 				continue;
 			}
-			$data_qty[]              = str_replace( '%level_qty%', $wholesale_price_level['quantity'], $atts['heading_format'] ) ;
+			$level_max_qty = ( isset( $wholesale_price_levels[ $i + 1 ]['quantity'] ) ) ? $atts['before_level_max_qty'] . ( $wholesale_price_levels[ $i + 1 ]['quantity'] - 1 ) : $atts['last_level_max_qty'];
+			$data_qty[] = str_replace(
+				array( '%level_qty%', '%level_min_qty%', '%level_max_qty%' ), // %level_qty% is deprecated
+				array( $wholesale_price_level['quantity'], $wholesale_price_level['quantity'], $level_max_qty ),
+				$atts['heading_format']
+			);
 			$data_discount[]         = ( 'fixed' === get_option( 'wcj_wholesale_price_discount_type', 'percent' ) )
 				? '-' . wc_price( $wholesale_price_level['discount'] ) : '-' . $wholesale_price_level['discount'] . '%';
 			$columns_styles[]        = 'text-align: center;';
@@ -186,11 +249,11 @@ class WCJ_General_Shortcodes extends WCJ_Shortcodes {
 	/**
 	 * wcj_get_left_to_free_shipping.
 	 *
-	 * @version 2.4.5
+	 * @version 2.5.8
 	 * @since   2.4.4
 	 */
 	function wcj_get_left_to_free_shipping( $atts, $content ) {
-		return wcj_get_left_to_free_shipping( $atts['content'] );
+		return wcj_get_left_to_free_shipping( $atts['content'], $atts['multiply_by'] );
 	}
 
 	/**
@@ -277,7 +340,7 @@ class WCJ_General_Shortcodes extends WCJ_Shortcodes {
 	/**
 	 * wcj_country_select_drop_down_list.
 	 *
-	 * @version 2.5.4
+	 * @version 2.5.9
 	 */
 	function wcj_country_select_drop_down_list( $atts, $content ) {
 
@@ -319,7 +382,7 @@ class WCJ_General_Shortcodes extends WCJ_Shortcodes {
 
 				$data_icon = '';
 				if ( 'yes' === get_option( 'wcj_price_by_country_jquery_wselect_enabled', 'no' ) ) {
-					$data_icon = ' data-icon="' . wcj_plugin_url() . '/assets/images/flag-icons/' . $country_code . '.png"';
+					$data_icon = ' data-icon="' . wcj_plugin_url() . '/assets/images/flag-icons/' . strtolower( $country_code ) . '.png"';
 				}
 
 				$option_label = ( 'yes' === $atts['replace_with_currency'] ) ? $currencies_names_and_symbols[ wcj_get_currency_by_country( $country_code ) ] : $country_name;
@@ -332,7 +395,7 @@ class WCJ_General_Shortcodes extends WCJ_Shortcodes {
 
 					$data_icon = '';
 					if ( 'yes' === get_option( 'wcj_price_by_country_jquery_wselect_enabled', 'no' ) ) {
-						$data_icon = ' data-icon="' . wcj_plugin_url() . '/assets/images/flag-icons/' . $country_code . '.png"';
+						$data_icon = ' data-icon="' . wcj_plugin_url() . '/assets/images/flag-icons/' . strtolower( $country_code ) . '.png"';
 					}
 
 					$option_label = ( 'yes' === $atts['replace_with_currency'] ) ? $currencies_names_and_symbols[ wcj_get_currency_by_country( $country_code ) ] : $countries[ $country_code ];

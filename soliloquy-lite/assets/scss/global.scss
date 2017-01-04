@@ -56,7 +56,7 @@
 			background: $red;
 			color: $white;
 			opacity: .8;
-			
+
 		}
 
 	}
@@ -157,7 +157,7 @@
 .soliloquy-yt{
 	iframe{
 		max-width: 100%;
-		height: auto;		
+		height: auto;
 	}
 }
 .soliloquy-hidden{
@@ -249,16 +249,6 @@
 [data-soliloquy-tooltip]:hover:after {
   visibility: visible;
   opacity: 1;
-}
-.soliloquy-alert{
-	position: relative;
-	margin: 0 0 20px 0;
-	padding: 20px;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	-o-border-radius: 2px;
-	border-radius: 2px;
-	background: #fcf8e3;	
 }
 	[class*=soliloquy-grid-]{
 	 float:left;

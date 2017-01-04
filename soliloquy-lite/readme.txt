@@ -91,6 +91,9 @@ Soliloquy has many Addons that extend its default functionality to make it do in
 
 == Changelog ==
 
+= 2.5.0.8 =
+* Fix: Minor Bug fixes
+
 = 2.5.0.7 =
 * Fix: Cases where loading slider by slug failed.
 * Fix: Changed slug name in misc settings failed to load slider.

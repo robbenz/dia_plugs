@@ -333,7 +333,7 @@ class Soliloquy_Ajax{
 	    check_ajax_referer( 'soliloquy-insert-images', 'nonce' );
 
 	    // Prepare variables.
-	    $images  = ! empty( $_POST['images'] ) ? stripslashes_deep( (array) $_POST['images'] ) : array();
+	    $images  = ! empty( $_POST['images'] ) ? json_decode( stripslashes( $_POST['images'] ), true ) : array();
 	    $videos  = ! empty( $_POST['videos'] ) ? stripslashes_deep( (array) $_POST['videos'] ) : array();
 	    $html    = ! empty( $_POST['html'] )   ? stripslashes_deep( (array) $_POST['html'] )   : array();
 	    $post_id = absint( $_POST['post_id'] );

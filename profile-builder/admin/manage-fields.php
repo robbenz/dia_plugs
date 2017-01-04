@@ -112,7 +112,7 @@ function wppb_manage_fields_submenu(){
 
         array( 'type' => 'text', 'slug' => 'field-title', 'title' => __( 'Field Title', 'profile-builder' ), 'description' => __( 'Title of the field', 'profile-builder' ) ),
         array( 'type' => 'select', 'slug' => 'field', 'title' => __( 'Field', 'profile-builder' ), 'options' => apply_filters( 'wppb_manage_fields_types', $manage_field_types ), 'default-option' => true, 'description' => $field_description ),
-        array( 'type' => 'text', 'slug' => 'meta-name', 'title' => __( 'Meta-name', 'profile-builder' ), 'default' => wppb_get_meta_name(), 'description' => __( 'Use this in conjuction with WordPress functions to display the value in the page of your choosing<br/>Auto-completed but in some cases editable (in which case it must be uniqe)<br/>Changing this might take long in case of a very big user-count', 'profile-builder' ) ),
+        array( 'type' => 'text', 'slug' => 'meta-name', 'title' => __( 'Meta-name', 'profile-builder' ), 'default' => wppb_get_meta_name(), 'description' => __( 'Use this in conjunction with WordPress functions to display the value in the page of your choosing<br/>Auto-completed but in some cases editable (in which case it must be unique)<br/>Changing this might take long in case of a very big user-count', 'profile-builder' ) ),
         array( 'type' => 'text', 'slug' => 'id', 'title' => __( 'ID', 'profile-builder' ), 'default' => wppb_get_unique_id(), 'description' => __( "A unique, auto-generated ID for this particular field<br/>You can use this in conjuction with filters to target this element if needed<br/>Can't be edited", 'profile-builder' ), 'readonly' => true ),
         array( 'type' => 'textarea', 'slug' => 'description', 'title' => __( 'Description', 'profile-builder' ), 'description' => __( 'Enter a (detailed) description of the option for end users to read<br/>Optional', 'profile-builder') ),
         array( 'type' => 'text', 'slug' => 'row-count', 'title' => __( 'Row Count', 'profile-builder' ), 'default' => 5, 'description' => __( "Specify the number of rows for a 'Textarea' field<br/>If not specified, defaults to 5", 'profile-builder' ) ),
@@ -223,18 +223,18 @@ function wppb_prepopulate_fields(){
  *
  * @return string
  */
-function wppb_get_meta_name(){
+function wppb_get_meta_name( $option = 'wppb_manage_fields', $prefix = 'custom_field_' ){
 	$id = 1;
 	
-	$wppb_manage_fields = get_option( 'wppb_manage_fields', 'not_found' );
+	$wppb_manage_fields = get_option( $option, 'not_found' );
 
 	if ( ( $wppb_manage_fields === 'not_found' ) || ( empty( $wppb_manage_fields ) ) ){
-		return 'custom_field_' . $id;
+		return $prefix . $id;
 	}
     else{
         $meta_names = array();
 		foreach( $wppb_manage_fields as $value ){
-			if ( strpos( $value['meta-name'], 'custom_field' ) === 0 ){
+			if ( strpos( $value['meta-name'], $prefix ) === 0 ){
                 $meta_names[] = $value['meta-name'];
 			}
 		}
@@ -242,7 +242,7 @@ function wppb_get_meta_name(){
         if( !empty( $meta_names ) ){
             $meta_numbers = array();
             foreach( $meta_names as $meta_name ){
-                $number = str_replace( 'custom_field', '', $meta_name );
+                $number = str_replace( $prefix, '', $meta_name );
                 /* we should have an underscore present in custom_field_# so remove it */
                 $number = str_replace( '_', '', $number );
 
@@ -254,7 +254,7 @@ function wppb_get_meta_name(){
             }
         }
 
-		return 'custom_field_' . $id;
+		return $prefix . $id;
 	}
 }
 
@@ -865,8 +865,7 @@ function wppb_get_currency_symbol( $currency_code ) {
  */
 function wppb_get_unique_id(){
     $id = 1;
-
-    $wppb_manage_fields = get_option( 'wppb_manage_fields', 'not_found' );
+	$wppb_manage_fields = get_option( 'wppb_manage_fields', 'not_found' );
     if ( ( $wppb_manage_fields === 'not_found' ) || ( empty( $wppb_manage_fields ) ) ){
         return $id;
     }
@@ -880,7 +879,7 @@ function wppb_get_unique_id(){
             $id = $ids_array[0] + 1;
         }
     }
-    return $id;
+    return apply_filters( 'wppb_field_unique_id', $id, $ids_array, $wppb_manage_fields );
 }
 
 /**
@@ -906,7 +905,6 @@ function wppb_check_unique_id_on_saving( $values ) {
         }
 
     }
-
     return $values;
 }
 add_filter( 'wck_add_meta_filter_values_wppb_manage_fields', 'wppb_check_unique_id_on_saving' );
@@ -969,7 +967,7 @@ function wppb_check_field_on_edit_add( $message, $fields, $required_fields, $met
 		// END check for a valid field-type (fallback)
 		
 		$unique_field_list = wppb_return_unique_field_list();
-		$all_fields = get_option ( $meta_name, 'not_set' );
+		$all_fields = apply_filters( 'wppb_manage_fields_check_field_on_edit_add', get_option ( $meta_name, 'not_set' ), $posted_values );
 		
 		// check if the unique fields are only added once
 		if( $all_fields != 'not_set' ){
@@ -1318,14 +1316,23 @@ function wppb_get_user_map_markers( $user_id, $meta_name ) {
 
     global $wpdb;
 
-    $meta_name .= '_';
+    $meta_name_underlined = $meta_name . '_';
 
-    $results = $wpdb->get_results( "SELECT meta_value FROM {$wpdb->usermeta} WHERE user_id={$user_id} AND meta_key LIKE '%{$meta_name}%'", ARRAY_N );
+    $results = $wpdb->get_results( "SELECT meta_value, meta_key FROM {$wpdb->usermeta} WHERE user_id={$user_id} AND meta_key LIKE '%{$meta_name_underlined}%'", ARRAY_N );
 
-    foreach( $results as $key => $result )
-        $results[$key] = $result[0];
+	$markers = array();
+	$i = 0;
 
-    return $results;
+    foreach( $results as $key => $result ) {
+		$pattern = '/^' . $meta_name . '_[0-9]+$/';
+		preg_match( $pattern, $result[1], $matches );
+		if ( count ($matches) > 0 ) {
+			$markers[$i] = $result[0];
+			$i++;
+		}
+
+	}
+    return $markers;
 
 }
 
@@ -1345,3 +1352,12 @@ function wppb_delete_user_map_markers( $user_id, $meta_name ) {
 
 }
 
+/**
+ * Disable the add button again after we added a field
+ */
+add_action( 'wck_ajax_add_form_wppb_manage_fields', 'wppb_redisable_the_add_button' );
+function wppb_redisable_the_add_button(){
+	?>
+	<script>wppb_disable_add_entry_button ( '#wppb_manage_fields' );</script>
+	<?php
+}

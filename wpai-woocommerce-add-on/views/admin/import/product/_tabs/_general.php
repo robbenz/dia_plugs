@@ -19,8 +19,6 @@
 	</div>
 	<div class="options_group pricing show_if_simple show_if_external show_if_variable">
 		
-		<p class="form-field"><i><?php _e('Prices should be presented as you would enter them manually in WooCommerce - with no currency symbol.', 'wpai_woocommerce_addon_plugin'); ?></i></p>
-
 		<p class="form-field">
 			<label><?php printf(__("Regular Price (%s)", "wpai_woocommerce_addon_plugin"), get_woocommerce_currency_symbol()); ?></label>
 			<input type="text" class="short" name="single_product_regular_price" value="<?php echo esc_attr($post['single_product_regular_price']) ?>"/> <strong class="options_group show_if_variable" style="position:relative; top:4px; left:4px;">(<?php _e('required', 'wpai_woocommerce_addon_plugin'); ?>)</strong>
@@ -42,8 +40,7 @@
 
 		<!-- AUTOFIX PRICES -->				
 
-		<p class="form-field pmwi_trigger_adjust_prices"> <strong><?php _e('Adjust Prices (mark up, mark down, convert currency)', "wpai_woocommerce_addon_plugin"); ?> <span><?php if (!empty($post['single_product_regular_price_adjust']) or !empty($post['single_product_sale_price_adjust'])):?>-<?php else: ?>+<?php endif; ?></span></strong></p>
-		
+		<p class="form-field pmwi_trigger_adjust_prices" style="color:#5EAAAC;"> <strong><span><?php if (!empty($post['single_product_regular_price_adjust']) or !empty($post['single_product_sale_price_adjust'])):?>-<?php else: ?>+<?php endif; ?></span><?php _e(' Adjust Prices', "wpai_woocommerce_addon_plugin"); ?></strong><a href="#help" class="wpallimport-help" title="<?php _e('Mark prices up and down, convert prices to currencies.', 'wpai_woocommerce_addon_plugin') ?>" style="position:relative; top: -1px; left:4px;;">?</a></p>
 		<div class="pmwi_adjust_prices" <?php if (!empty($post['single_product_regular_price_adjust']) or !empty($post['single_product_sale_price_adjust'])):?>style="display:block;"<?php endif; ?>>
 			<p class="form-field">
 				<label><?php printf(__("Regular Price (%s)", "wpai_woocommerce_addon_plugin"), get_woocommerce_currency_symbol()); ?></label>
@@ -76,7 +73,7 @@
 			<input type="hidden" name="disable_prepare_price" value="0" />
 			<input type="checkbox" id="disable_prepare_price" name="disable_prepare_price" value="1" <?php echo $post['disable_prepare_price'] ? 'checked="checked"' : '' ?> />
 			<label for="disable_prepare_price" style="width:220px;"><?php _e('Remove currency symbols from price', 'wpai_woocommerce_addon_plugin') ?></label>
-			<a href="#help" class="wpallimport-help" title="<?php _e('WP All Import attempt to remove currency symbols from prices.', 'wpai_woocommerce_addon_plugin') ?>" style="position:relative; top:1px;">?</a>
+			<a href="#help" class="wpallimport-help" title="<?php _e('Attempt to remove currency symbols from prices.', 'wpai_woocommerce_addon_plugin') ?>" style="position:relative; top:1px;">?</a>
 		</p>	
 
 		<p class="form-field wpallimport-radio-field">

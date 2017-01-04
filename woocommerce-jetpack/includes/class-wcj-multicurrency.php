@@ -4,7 +4,7 @@
  *
  * The WooCommerce Jetpack Multicurrency class.
  *
- * @version 2.5.5
+ * @version 2.5.8
  * @since   2.4.3
  * @author  Algoritmika Ltd.
  */
@@ -64,7 +64,7 @@ class WCJ_Multicurrency extends WCJ_Module {
 			$products[ $main_product_id ] = '';
 		}
 		$currencies = array();
-		$total_number = apply_filters( 'wcj_get_option_filter', 2, get_option( 'wcj_multicurrency_total_number', 2 ) );
+		$total_number = apply_filters( 'booster_get_option', 2, get_option( 'wcj_multicurrency_total_number', 2 ) );
 		foreach ( $products as $product_id => $desc ) {
 			for ( $i = 1; $i <= $total_number; $i++ ) {
 				$currency_code = get_option( 'wcj_multicurrency_currency_' . $i );
@@ -96,7 +96,7 @@ class WCJ_Multicurrency extends WCJ_Module {
 	/**
 	 * add_hooks.
 	 *
-	 * @version 2.5.0
+	 * @version 2.5.7
 	 */
 	function add_hooks() {
 		// Session
@@ -107,6 +107,12 @@ class WCJ_Multicurrency extends WCJ_Module {
 			$_SESSION['wcj-currency'] = $_REQUEST['wcj-currency'];
 		}
 		if ( ! is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+			// Prices - Compatibility - "WooCommerce TM Extra Product Options" plugin
+			add_filter( 'woocommerce_tm_epo_price_on_cart',           array( $this, 'change_price_by_currency_tm_extra_product_options_plugin_cart' ), PHP_INT_MAX - 1, 1 );
+			add_filter( 'wc_epo_price',                               array( $this, 'change_price_by_currency_tm_extra_product_options_plugin' ),      PHP_INT_MAX - 1, 3 );
+//			add_filter( 'woocommerce_tm_epo_price_per_currency_diff', array( $this, 'change_price_by_currency_tm_extra_product_options_plugin_cart' ), PHP_INT_MAX - 1, 1 );
+//			add_filter( 'woocommerce_tm_epo_price_add_on_cart',       array( $this, 'change_price_by_currency_tm_extra_product_options_plugin_cart' ), PHP_INT_MAX - 1, 1 );
+//			add_filter( 'wc_aelia_cs_enabled_currencies',             array( $this, 'add_currency' ), PHP_INT_MAX - 1, 1 );
 			// Prices
 			add_filter( 'woocommerce_get_price',                      array( $this, 'change_price_by_currency' ), PHP_INT_MAX - 1, 2 );
 			add_filter( 'woocommerce_get_sale_price',                 array( $this, 'change_price_by_currency' ), PHP_INT_MAX - 1, 2 );
@@ -125,6 +131,26 @@ class WCJ_Multicurrency extends WCJ_Module {
 			add_filter( 'woocommerce_get_price_including_tax',        array( $this, 'change_price_by_currency_grouped' ), PHP_INT_MAX - 1, 3 );
 			add_filter( 'woocommerce_get_price_excluding_tax',        array( $this, 'change_price_by_currency_grouped' ), PHP_INT_MAX - 1, 3 );
 		}
+	}
+
+	/**
+	 * change_price_by_currency_tm_extra_product_options_plugin_cart.
+	 *
+	 * @version 2.5.7
+	 * @since   2.5.7
+	 */
+	function change_price_by_currency_tm_extra_product_options_plugin_cart( $price ) {
+		return $this->change_price_by_currency( $price, null );
+	}
+
+	/**
+	 * change_price_by_currency_tm_extra_product_options_plugin.
+	 *
+	 * @version 2.5.7
+	 * @since   2.5.7
+	 */
+	function change_price_by_currency_tm_extra_product_options_plugin( $price, $type, $post_id ) {
+		return $this->change_price_by_currency( $price, null );
 	}
 
 	/**
@@ -175,7 +201,7 @@ class WCJ_Multicurrency extends WCJ_Module {
 	 */
 	function get_currency_exchange_rate( $currency_code ) {
 		$currency_exchange_rate = 1;
-		$total_number = apply_filters( 'wcj_get_option_filter', 2, get_option( 'wcj_multicurrency_total_number', 2 ) );
+		$total_number = apply_filters( 'booster_get_option', 2, get_option( 'wcj_multicurrency_total_number', 2 ) );
 		for ( $i = 1; $i <= $total_number; $i++ ) {
 			if ( $currency_code === get_option( 'wcj_multicurrency_currency_' . $i ) ) {
 				$currency_exchange_rate = get_option( 'wcj_multicurrency_exchange_rate_' . $i );
@@ -198,7 +224,7 @@ class WCJ_Multicurrency extends WCJ_Module {
 	/**
 	 * change_price_by_currency.
 	 *
-	 * @version 2.5.0
+	 * @version 2.5.8
 	 */
 	function change_price_by_currency( $price, $_product ) {
 
@@ -218,6 +244,7 @@ class WCJ_Multicurrency extends WCJ_Module {
 				if ( 'woocommerce_get_price_including_tax' == $the_current_filter || 'woocommerce_get_price_excluding_tax' == $the_current_filter ) {
 					$get_price_method = 'get_price_' . get_option( 'woocommerce_tax_display_shop' ) . 'uding_tax';
 					return $_product->$get_price_method();
+
 				} elseif ( 'woocommerce_get_price' == $the_current_filter || 'woocommerce_variation_prices_price' == $the_current_filter ) {
 					$sale_price_per_product = get_post_meta( $the_product_id, '_' . 'wcj_multicurrency_per_product_sale_price_' . $this->get_current_currency_code(), true );
 					return ( '' != $sale_price_per_product && $sale_price_per_product < $regular_price_per_product ) ? $sale_price_per_product : $regular_price_per_product;
@@ -234,7 +261,19 @@ class WCJ_Multicurrency extends WCJ_Module {
 
 		// Global
 		if ( 1 != ( $currency_exchange_rate = $this->get_currency_exchange_rate( $this->get_current_currency_code() ) ) ) {
-			return $price * $currency_exchange_rate;
+			$price = $price * $currency_exchange_rate;
+			switch ( get_option( 'wcj_multicurrency_rounding', 'no_round' ) ) {
+				case 'round':
+					$price = round( $price, get_option( 'wcj_multicurrency_rounding_precision', absint( get_option( 'woocommerce_price_num_decimals', 2 ) ) ) );
+					break;
+				case 'round_up':
+					$price = ceil( $price );
+					break;
+				case 'round_down':
+					$price = floor( $price );
+					break;
+			}
+			return $price;
 		}
 
 		// No changes
@@ -335,7 +374,7 @@ class WCJ_Multicurrency extends WCJ_Module {
 	/**
 	 * add_settings.
 	 *
-	 * @version 2.5.5
+	 * @version 2.5.8
 	 * @todo    rounding (maybe)
 	 */
 	function add_settings() {
@@ -356,11 +395,11 @@ class WCJ_Multicurrency extends WCJ_Module {
 					'manual' => __( 'Enter Rates Manually', 'woocommerce-jetpack' ),
 					'auto'   => __( 'Automatically via Currency Exchange Rates module', 'woocommerce-jetpack' ),
 				),
-				'desc'     => ( '' == apply_filters( 'get_wc_jetpack_plus_message', '', 'desc' ) ) ?
+				'desc'     => ( '' == apply_filters( 'booster_get_message', '', 'desc' ) ) ?
 					__( 'Visit', 'woocommerce-jetpack' ) . ' <a href="' . admin_url( 'admin.php?page=wc-settings&tab=jetpack&wcj-cat=prices_and_currencies&section=currency_exchange_rates' ) . '">' . __( 'Currency Exchange Rates module', 'woocommerce-jetpack' ) . '</a>'
 					:
-					apply_filters( 'get_wc_jetpack_plus_message', '', 'desc' ),
-				'custom_attributes' => apply_filters( 'get_wc_jetpack_plus_message', '', 'disabled' ),
+					apply_filters( 'booster_get_message', '', 'desc' ),
+				'custom_attributes' => apply_filters( 'booster_get_message', '', 'disabled' ),
 			),
 			array(
 				'title'    => __( 'Multicurrency on per Product Basis', 'woocommerce-jetpack' ),
@@ -378,6 +417,27 @@ class WCJ_Multicurrency extends WCJ_Module {
 				'type'     => 'checkbox',
 			),
 			array(
+				'title'    => __( 'Rounding', 'woocommerce-jetpack' ),
+				'desc'     => __( 'If using exchange rates, choose rounding here.', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_multicurrency_rounding',
+				'default'  => 'no_round',
+				'type'     => 'select',
+				'options'  => array(
+					'no_round'   => __( 'No rounding', 'woocommerce-jetpack' ),
+					'round'      => __( 'Round', 'woocommerce-jetpack' ),
+					'round_up'   => __( 'Round up', 'woocommerce-jetpack' ),
+					'round_down' => __( 'Round down', 'woocommerce-jetpack' ),
+				),
+			),
+			array(
+				'title'    => __( 'Rounding Precision', 'woocommerce-jetpack' ),
+				'desc'     => __( 'If rounding enabled, set precision here.', 'woocommerce-jetpack' ),
+				'id'       => 'wcj_multicurrency_rounding_precision',
+				'default'  => absint( get_option( 'woocommerce_price_num_decimals', 2 ) ),
+				'type'     => 'number',
+				'custom_attributes' => array( 'min' => 0 ),
+			),
+			array(
 				'type'     => 'sectionend',
 				'id'       => 'wcj_multicurrency_options',
 			),
@@ -392,14 +452,14 @@ class WCJ_Multicurrency extends WCJ_Module {
 				'id'       => 'wcj_multicurrency_total_number',
 				'default'  => 2,
 				'type'     => 'custom_number',
-				'desc'     => apply_filters( 'get_wc_jetpack_plus_message', '', 'desc' ),
+				'desc'     => apply_filters( 'booster_get_message', '', 'desc' ),
 				'custom_attributes' => array_merge(
-					is_array( apply_filters( 'get_wc_jetpack_plus_message', '', 'readonly' ) ) ? apply_filters( 'get_wc_jetpack_plus_message', '', 'readonly' ) : array(),
+					is_array( apply_filters( 'booster_get_message', '', 'readonly' ) ) ? apply_filters( 'booster_get_message', '', 'readonly' ) : array(),
 					array( 'step' => '1', 'min'  => '2', )
 				),
 			),
 		);
-		$total_number = apply_filters( 'wcj_get_option_filter', 2, get_option( 'wcj_multicurrency_total_number', 2 ) );
+		$total_number = apply_filters( 'booster_get_option', 2, get_option( 'wcj_multicurrency_total_number', 2 ) );
 		for ( $i = 1; $i <= $total_number; $i++ ) {
 			$currency_to = get_option( 'wcj_multicurrency_currency_' . $i, $currency_from );
 			$custom_attributes = array(

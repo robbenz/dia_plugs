@@ -36,7 +36,7 @@
 								<div class="wpallimport-clear"></div>
 
 								<!-- Product Taxes -->
-								<a class="switcher" id="taxes_existing_products_<?php echo $i; ?>" href="javascript:void(0);" style="display: block;margin: 10px 0 15px;width: 50px;"><span>-</span> <?php _e("Taxes", "wp_all_import_plugin"); ?></a>
+								<!--a class="switcher" id="taxes_existing_products_<?php echo $i; ?>" href="javascript:void(0);" style="display: block;margin: 10px 0 15px;width: 50px;"><span>-</span> <?php _e("Taxes", "wp_all_import_plugin"); ?></a-->
 								<div class="wpallimport-clear"></div>
 								<div class="switcher-target-taxes_existing_products_<?php echo $i; ?>">
 									<span class="wpallimport-slide-content" style="padding-left:0;">
@@ -136,13 +136,13 @@
 												</td>
 												<td class="action remove"><a href="#remove" style="top: 33px;"></a></td>
 											</tr>
-											<tr>
-												<td colspan="2">
-													<div class="form-field">														
-														<a class="add-new-line" title="Add Tax" href="javascript:void(0);"><?php _e("Add Tax", "	wp_all_import_plugin"); ?></a>
-													</div>
-												</td>
-											</tr>
+<!--											<tr>-->
+<!--												<td colspan="2">-->
+<!--													<div class="form-field">														-->
+<!--														<a class="add-new-line" title="Add Tax" href="javascript:void(0);">--><?php //_e("Add Tax", "	wp_all_import_plugin"); ?><!--</a>-->
+<!--													</div>-->
+<!--												</td>-->
+<!--											</tr>-->
 										</table>
 									</span>
 								</div>
@@ -164,7 +164,7 @@
 							<div class="wpallimport-clear"></div>
 
 							<!-- Product Taxes -->
-							<a class="switcher" id="taxes_existing_products_ROWNUMBER" href="javascript:void(0);" style="display: block;margin: 10px 0 15px;width: 50px;"><span>-</span> <?php _e("Taxes", "wp_all_import_plugin"); ?></a>
+							<!--a class="switcher" id="taxes_existing_products_ROWNUMBER" href="javascript:void(0);" style="display: block;margin: 10px 0 15px;width: 50px;"><span>-</span> <?php _e("Taxes", "wp_all_import_plugin"); ?></a-->
 							<div class="wpallimport-clear"></div>
 							<div class="switcher-target-taxes_existing_products_ROWNUMBER">
 								<span class="wpallimport-slide-content" style="padding-left:0;">
@@ -212,13 +212,13 @@
 											</td>
 											<td class="action remove"><a href="#remove" style="top: 33px;"></a></td>
 										</tr>
-										<tr>
-											<td colspan="2">
-												<div class="form-field">													
-													<a class="add-new-line" title="Add Tax" href="javascript:void(0);"><?php _e("Add Tax", "	wp_all_import_plugin"); ?></a>
-												</div>
-											</td>
-										</tr>
+<!--										<tr>-->
+<!--											<td colspan="2">-->
+<!--												<div class="form-field">													-->
+<!--													<a class="add-new-line" title="Add Tax" href="javascript:void(0);">--><?php //_e("Add Tax", "	wp_all_import_plugin"); ?><!--</a>-->
+<!--												</div>-->
+<!--											</td>-->
+<!--										</tr>-->
 									</table>
 								</span>
 							</div>
@@ -315,7 +315,7 @@
 									</tr>																			
 								</table>
 
-								<a class="switcher" id="taxes_manual_products_<?php echo $i; ?>" href="javascript:void(0);" style="display: block;margin: 10px 0 15px;width: 50px;"><span>-</span> <?php _e("Taxes", "wp_all_import_plugin"); ?></a>
+								<!--a class="switcher" id="taxes_manual_products_<?php echo $i; ?>" href="javascript:void(0);" style="display: block;margin: 10px 0 15px;width: 50px;"><span>-</span> <?php _e("Taxes", "wp_all_import_plugin"); ?></a-->
 								<div class="wpallimport-clear"></div>
 								<div class="switcher-target-taxes_manual_products_<?php echo $i; ?>">
 									<span class="wpallimport-slide-content" style="padding-left:0;">
@@ -417,13 +417,13 @@
 												</td>
 												<td class="action remove"><a href="#remove" style="top: 33px;"></a></td>
 											</tr>
-											<tr>
-												<td colspan="2">
-													<div class="form-field">														
-														<a class="add-new-line" title="Add Tax" href="javascript:void(0);"><?php _e("Add Tax", "	wp_all_import_plugin"); ?></a>
-													</div>
-												</td>
-											</tr>
+<!--											<tr>-->
+<!--												<td colspan="2">-->
+<!--													<div class="form-field">														-->
+<!--														<a class="add-new-line" title="Add Tax" href="javascript:void(0);">--><?php //_e("Add Tax", "	wp_all_import_plugin"); ?><!--</a>-->
+<!--													</div>-->
+<!--												</td>-->
+<!--											</tr>-->
 										</table>
 									</span>
 								</div>
@@ -474,7 +474,7 @@
 									</tr>																			
 								</table>
 
-								<a class="switcher" id="taxes_manual_products_ROWNUMBER" href="javascript:void(0);" style="display: block;margin: 10px 0 15px;width: 50px;"><span>-</span> <?php _e("Taxes", "wp_all_import_plugin"); ?></a>
+								<!--a class="switcher" id="taxes_manual_products_ROWNUMBER" href="javascript:void(0);" style="display: block;margin: 10px 0 15px;width: 50px;"><span>-</span> <?php _e("Taxes", "wp_all_import_plugin"); ?></a-->
 								<div class="wpallimport-clear"></div>
 								<div class="switcher-target-taxes_manual_products_ROWNUMBER">
 									<span class="wpallimport-slide-content" style="padding-left:0;">
@@ -522,13 +522,13 @@
 												</td>
 												<td class="action remove"><a href="#remove" style="top: 33px;"></a></td>
 											</tr>
-											<tr>
-												<td colspan="2">
-													<div class="form-field">														
-														<a class="add-new-line" title="Add Tax" href="javascript:void(0);"><?php _e("Add Tax", "	wp_all_import_plugin"); ?></a>
-													</div>
-												</td>
-											</tr>
+<!--											<tr>-->
+<!--												<td colspan="2">-->
+<!--													<div class="form-field">														-->
+<!--														<a class="add-new-line" title="Add Tax" href="javascript:void(0);">--><?php //_e("Add Tax", "	wp_all_import_plugin"); ?><!--</a>-->
+<!--													</div>-->
+<!--												</td>-->
+<!--											</tr>-->
 										</table>
 									</span>
 								</div>		

@@ -1138,8 +1138,8 @@ class Soliloquy_Metaboxes_Lite {
         $settings['config']['slider']        = isset( $_POST['_soliloquy']['slider'] ) ? 1 : 0;
         $settings['config']['aria_live']     = preg_replace( '#[^a-z0-9-_]#', '', $_POST['_soliloquy']['aria_live'] );
         $settings['config']['classes']       = explode( "\n", $_POST['_soliloquy']['classes'] );
-        $settings['config']['title']         = trim( strip_tags( $_POST['_soliloquy']['title'] ) );
-        $settings['config']['slug']          = sanitize_text_field( $_POST['_soliloquy']['slug'] );
+        $settings['config']['title']         = sanitize_text_field( esc_attr(  $_POST['_soliloquy']['title'] ) );
+        $settings['config']['slug']          = sanitize_text_field( esc_attr( $_POST['_soliloquy']['slug'] ) );
         $settings['config']['rtl']           = ( isset( $_POST['_soliloquy']['rtl'] ) ? 1 : 0 );
 
         // If on an soliloquy post type, map the title and slug of the post object to the custom fields if no value exists yet.

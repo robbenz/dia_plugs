@@ -1000,14 +1000,14 @@ class PMXI_CsvParser
                         }
                     }
                     $value = (!empty($value)) ? $value : 'undefined' . $key;
-                    if (empty($headers[$value])) 
+                    if (empty($headers[$value]))
                         $headers[$value] = 1;
                     else
                         $headers[$value]++;
 
                     $keys[$key] = ($headers[$value] === 1) ? $value : $value . '_' . $headers[$value];
                 }            
-                $this->headers = $keys;                                
+                $this->headers = $keys;
                 if ($create_new_headers){ 
                     $this->createHeaders('column');      
                     $keys = $buf_keys;
