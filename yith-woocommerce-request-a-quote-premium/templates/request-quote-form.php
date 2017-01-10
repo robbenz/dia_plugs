@@ -17,7 +17,7 @@ $user_email = ( ! empty( $current_user ) ) ?  $current_user->user_email : '';
 $facility_name = ( ! empty( $current_user ) ) ? $current_user->shipping_company : '';
 $zipcode = ( ! empty( $current_user ) ) ? $current_user->billing_postcode : '';
 $phonenumber = ( ! empty( $current_user ) ) ? $current_user->billing_phone : '';
-$address1 = ( ! empty( $current_user ) ) ? $current_user->billing_address_1 : '';
+$address = ( ! empty( $current_user ) ) ? $current_user->billing_address_1 : '';
 $city = ( ! empty( $current_user ) ) ? $current_user->billing_city : '';
 $state = ( ! empty( $current_user ) ) ? $current_user->billing_state : '';
 
@@ -90,7 +90,7 @@ $force_user_to_register              = ( get_option( 'ywraq_force_user_to_regist
   <div id="cat_mail">
     <p class="form-row form-row-wide" id="rqa_address">
       <label for="rqa-address" class=""><?php _e( 'Address', 'ywraq' ) ?></label>
-      <input type="text" class="input-text " name="rqa_address" id="rqa-address" placeholder="" value="<?php echo esc_attr( wp_unslash( $address1 ) ); ?>" >
+      <input type="text" class="input-text " name="rqa_address" id="rqa-address" placeholder="" value="<?php echo esc_attr( wp_unslash( $address ) ); ?>" >
     </p>
     <p class="form-row form-row-wide" id="rqa_city">
       <label for="rqa-city" class=""><?php _e( 'City', 'ywraq' ) ?></label>
