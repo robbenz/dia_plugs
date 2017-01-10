@@ -256,6 +256,7 @@ input#send_credentials_via_email{
 	min-width:0;
 	padding-left:5px;
     width:auto;
+    display:inline-block;
 }
 
 .wppb-checkbox-terms-and-conditions input,
@@ -488,12 +489,12 @@ ul.wppb-profile li h3:first-child{
     border-top:1px solid #d2d2d2;
 }
 
-.wppb-faceted-list{
+ul.wppb-faceted-list{
     list-style: none;
     margin:0 0 20px;
 }
 
-.wppb-faceted-list:after{
+ul.wppb-faceted-list:after{
     visibility: hidden;
     display: block;
     font-size: 0;
@@ -502,13 +503,13 @@ ul.wppb-profile li h3:first-child{
     height: 0;
 }
 
-.wppb-faceted-list > li{
+ul.wppb-faceted-list > li{
     float:left;
     margin-right: 15px;
     max-width: 300px;
 }
 
-.wppb-faceted-list > li:first-child{
+ul.wppb-faceted-list > li:first-child{
     float:none;
     clear:both;
 }
@@ -518,11 +519,11 @@ ul.wppb-profile li h3:first-child{
     margin-bottom: 5px;
 }
 
-.wppb-faceted-list label > *{
+ul.wppb-faceted-list label > *{
     vertical-align: middle;
 }
 
-.wppb-faceted-list input[type="checkbox"]{
+ul.wppb-faceted-list input[type="checkbox"]{
     margin-right: 5px;
 }
 
@@ -545,7 +546,7 @@ ul.wppb-profile li h3:first-child{
     z-index: 1000;
 }
 
-.wppb-faceted-list .hide-this{
+ul.wppb-faceted-list .hide-this{
     display:none;
 }
 

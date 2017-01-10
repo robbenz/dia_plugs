@@ -5,7 +5,7 @@ Tags: user registration, user registration form, user fields, extra user fields,
 
 Requires at least: 3.1
 Tested up to: 4.7
-Stable tag: 2.5.3
+Stable tag: 2.5.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -46,7 +46,7 @@ Users with administrator rights have access to the following features:
 * customizable user login widget
 * add a custom stylesheet/inherit values from the current theme or use the default one built into this plugin.
 * chose which user roles view the admin bar in the front-end of the website (Admin Bar Settings page).
-* select which profile fields users can see/modify.
+* select which profile fields users can use in frontend.
 * extended functionality available via [Add-ons](http://www.cozmoslabs.com/profile-builder-add-ons/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=PBFree)
 
 **PROFILE BUILDER PRO**
@@ -150,6 +150,11 @@ This plugin adds/removes user fields in the front-end. Both default and extra pr
 10. Profile Builder Login Widget
 
 == Changelog ==
+= 2.5.4 =
+* CSS changes for the Twenty Seventeen theme
+* Fixed a notice caused sometimes by general settings option not setting properly
+* Small changes to readme file
+
 = 2.5.3 =
 * Major improvement to loading performance of the Manage Fields admin interface
 * Added actions before and after submit form button:wppb_form_before_submit_button and wppb_form_after_submit_button

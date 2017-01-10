@@ -63,9 +63,11 @@ function wppb_update_patch(){
 
     if ( version_compare( $wppb_version, '2.2.5', '<=' ) ) {
         if( is_multisite() ){
-            $wppb_general_settings = get_option( 'wppb_general_settings' );
-            $wppb_general_settings['emailConfirmation'] = 'yes';
-            update_option( 'wppb_general_settings', $wppb_general_settings );
+            $wppb_general_settings = get_option( 'wppb_general_settings', 'not_set' );
+			if ( $wppb_general_settings != 'not_set' ) {
+				$wppb_general_settings['emailConfirmation'] = 'yes';
+				update_option('wppb_general_settings', $wppb_general_settings);
+			}
         }
 
     }

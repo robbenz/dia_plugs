@@ -111,7 +111,7 @@ else: ?>
                             }
 
 							$item_data[] = array(
-							//	'key'   => $label,
+								'key'   => $label,
 								'value' => $value
 							);
 						}
@@ -123,7 +123,7 @@ else: ?>
 					// Output flat or in list format
 					if ( sizeof( $item_data ) > 0 ) {
 							foreach ( $item_data as $data ) {
-								echo esc_html( $data['key'] ) . '<br />' . wp_kses_post( $data['value'] ) . "\n";
+								echo '<br />' . wp_kses_post( $data['value'] ) . "\n";
 							}
 						}
 
@@ -148,15 +148,16 @@ else: ?>
 				                <td class="product-unit-price">
 				                    <?php
 
-														$benzy_price = WC()->cart->get_product_price( $_product, $raq['price'] );
-														echo str_replace("$0.00", "Preparing Quote", $benzy_price );
+														$benzy_price = WC()->cart->get_product_price( $_product );
+                            echo str_replace("&#36;0.00", "Preparing Quote", $benzy_price );
+
 				                    ?>
 				                </td>
 
 				<td class="product-subtotal">
 				                    <?php
 														$sub_benzy_price = WC()->cart->get_product_subtotal( $_product, $raq['quantity'] );
-														echo str_replace("$0.00", " ", $sub_benzy_price );
+														echo str_replace("&#36;0.00", " ", $sub_benzy_price );
 				                    ?>
 				                </td>
 				<?php else: ?>
