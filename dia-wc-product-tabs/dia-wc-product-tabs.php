@@ -35,8 +35,24 @@ function custom_meta_box_markup($object) {
     <input name="meta-box-text" type="text" value="<?php echo $dia_tab_title; ?>">
     <br>
     <?php
-}
-?>
+        $dia_tab_content = get_post_meta( $post->ID, "_wcj_custom_product_tabs_content_local_$y", true );
+    //    $dia_tab_content = get_post_meta( $post->ID, "_wcj_custom_product_tabs_content_local_1", true );
+        	if ( ! $dia_tab_content ) {
+        		$dia_tab_content = '';
+        	}
+        	$settings = array( 'textarea_name' => 'wpm-product-cat-details' );
+        	?>
+        	<tr class="form-field">
+        		<th scope="row" valign="top"><label for="wpm-product-cat-details"><?php esc_html_e( 'Details', 'wpm' ); ?></label></th>
+        		<td>
+        			<?php wp_nonce_field( basename( __FILE__ ), 'wpm_product_cat_details_nonce' ); ?>
+        			<?php wp_editor( wp_kses_post( $dia_tab_content ), 'dia_tab_content', $settings ); ?>
+        			<p class="description"><?php esc_html_e( 'Detailed category info to appear below the product list','wpm' ); ?></p>
+        		</td>
+        	</tr>
+
+
+    <?php } // end for loop ?>
 
 
 
@@ -69,21 +85,6 @@ function add_custom_meta_box()
 add_action("add_meta_boxes", "add_custom_meta_box");
 /*** END ***/
 
-
-
-
-add_action( 'woocommerce_product_options_general_product_data', 'wc_custom_add_custom_fields' );
-function wc_custom_add_custom_fields() {
-    // Print a custom text field
-    woocommerce_wp_textarea_input( array(
-        'id' => '_custom_text_field',
-        'label' => 'Custom Text Field',
-        'description' => 'This is a custom field, you can write here anything you want.',
-        'desc_tip' => 'true',
-        'placeholder' => 'Custom text',
-        'options' => array( 'textarea_rows' => 5, )
-    ) );
-}
 
 
 
