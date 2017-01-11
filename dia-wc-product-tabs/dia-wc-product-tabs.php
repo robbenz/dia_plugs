@@ -10,13 +10,22 @@ License: GPL2
 */
 
 
+include( plugin_dir_path( __FILE__ ) . 'dia-tabs-frontend.php');
 
 
-function custom_meta_box_markup($object) {
+
+/*** ADD CUSTOM META BOX ***/
+function add_custom_meta_box() {
+    add_meta_box("demo-meta-box", "DiaMedical Product Tabs", "custom_meta_box_markup", "product", "normal", "low", null);
+}
+add_action("add_meta_boxes", "add_custom_meta_box");
+/*** END ***/
+
+
+/*** ADD CUSTOM META BOX MARKUP FOR ADMIN ***/
+function custom_meta_box_markup() {
   wp_nonce_field(basename(__FILE__), "meta-box-nonce");
   	global $post;
-    // _wcj_custom_product_tabs_local_total_number
-
     $dia_tab_count = get_post_meta( $post->ID, '_wcj_custom_product_tabs_local_total_number', true );
   ?>
 
@@ -31,98 +40,32 @@ function custom_meta_box_markup($object) {
 //  echo $x+1;
 ?>
   <div>
-    <label for="meta-box-text">Tab <?php echo $x+1 ;?> Heading: </label>
+    <label for="meta-box-text">Tab <?php echo $y ;?> Heading: </label>
     <input name="meta-box-text" type="text" value="<?php echo $dia_tab_title; ?>">
     <br>
     <?php
         $dia_tab_content = get_post_meta( $post->ID, "_wcj_custom_product_tabs_content_local_$y", true );
-    //    $dia_tab_content = get_post_meta( $post->ID, "_wcj_custom_product_tabs_content_local_1", true );
         	if ( ! $dia_tab_content ) {
         		$dia_tab_content = '';
         	}
-        	$settings = array( 'textarea_name' => 'wpm-product-cat-details' );
+        	$settings = array( 'textarea_name' => 'dia-product-tabs-details' );
         	?>
         	<tr class="form-field">
-        		<th scope="row" valign="top"><label for="wpm-product-cat-details"><?php esc_html_e( 'Details', 'wpm' ); ?></label></th>
+        		<th scope="row" valign="top"><label for="dia-product-tabs-details">Tab <?php echo $y ;?> Content: </label></th>
         		<td>
-        			<?php wp_nonce_field( basename( __FILE__ ), 'wpm_product_cat_details_nonce' ); ?>
+        			<?php wp_nonce_field( basename( __FILE__ ), 'dia_product_tabs_details_nonce' ); ?>
         			<?php wp_editor( wp_kses_post( $dia_tab_content ), 'dia_tab_content', $settings ); ?>
         			<p class="description"><?php esc_html_e( 'Detailed category info to appear below the product list','wpm' ); ?></p>
         		</td>
         	</tr>
+          <br><hr><br>
 
-
-    <?php } // end for loop ?>
-
-
-
-
-
-
-
-
-
-      <label for="meta-box-checkbox">Check Box</label>
-      <?php
-      $checkbox_value = get_post_meta($object->ID, "meta-box-checkbox", true);
-      if($checkbox_value == "") { ?>
-        <input name="meta-box-checkbox" type="checkbox" value="true">
-        <?php }
-        else if($checkbox_value == "true") {
-          ?>
-          <input name="meta-box-checkbox" type="checkbox" value="true" checked>
-          <?php } ?>
-        </div>
     <?php
-}
-
-/*** ADD CUSTOM META BOX ***/
-function add_custom_meta_box()
-{
-    add_meta_box("demo-meta-box", "DiaMedical Product Tabs", "custom_meta_box_markup", "product", "normal", "low", null);
-}
-
-add_action("add_meta_boxes", "add_custom_meta_box");
+  } // end for loop
+} //custom_meta_box_markup
 /*** END ***/
 
 
-
-
-
-
-
-add_filter( 'woocommerce_product_tabs', 'wpb_new_product_tab0' );
-function wpb_new_product_tab0( $tabs ) {
-    // Add the new tab
-    global $post;
-    $dia_title0   = get_post_meta( $post->ID, '_wcj_custom_product_tabs_title_local_2', true );
-    if (strlen($dia_title0) > 0 ) {
-      $tabs['test_tab'] = array(
-        //'title'       => __( 'Discount', 'text-domain' ),
-          'title'       => $dia_title0,
-          'priority'    => 50,
-          'callback'    => 'wpb_new_product_tab_content0'
-      );
-    } else {
-      $tabs['test_tab'] = array(
-        // 'title'       => __( 'Discount', 'text-domain' ),
-        //  'title'       => $dia_title0,
-          // 'priority'    => 50,
-          // 'callback'    => 'wpb_new_product_tab_content0'
-      );
-    }
-
-
-    return $tabs;
-
-}
-
-function wpb_new_product_tab_content0() {
-    // The new tab content
-  global $post;
-  $dia_content0   = get_post_meta( $post->ID, '_wcj_custom_product_tabs_content_local_2', true );
-  echo $dia_content0;
-}
 
 
 
