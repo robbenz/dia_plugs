@@ -2,6 +2,8 @@
 
 
 add_filter( 'woocommerce_product_tabs', 'dia_new_product_tabs' );
+
+/*** ADD TABS ***/
 function dia_new_product_tabs( $tabs ) {
   global $post;
   $dia_tab_count = get_post_meta( $post->ID, '_wcj_custom_product_tabs_local_total_number', true );
@@ -20,32 +22,48 @@ function dia_new_product_tabs( $tabs ) {
     } // end foreach
   }
   return $tabs;
-
 }
+/*** END ***/
 
-
+/*** CALL BACK FOR TAB CONTENT PER DB ***/
+/*** MAKE THIS SMARTER ***/
 function dia_new_product_tab_content1() {
   global $post;
    $dia_tab_content = get_post_meta( $post->ID, "_wcj_custom_product_tabs_content_local_1", true );
-   echo $dia_tab_content;
+   if (strlen($dia_tab_content) > 0) {
+     echo $dia_tab_content;
+   }
 }
+
 function dia_new_product_tab_content2() {
   global $post;
    $dia_tab_content = get_post_meta( $post->ID, "_wcj_custom_product_tabs_content_local_2", true );
-   echo $dia_tab_content;
+   if (strlen($dia_tab_content) > 0) {
+     echo $dia_tab_content;
+   }
 }
+
 function dia_new_product_tab_content3() {
   global $post;
    $dia_tab_content = get_post_meta( $post->ID, "_wcj_custom_product_tabs_content_local_3", true );
-   echo $dia_tab_content;
+   if (strlen($dia_tab_content) > 0) {
+     echo $dia_tab_content;
+   }
 }
+
 function dia_new_product_tab_content4() {
   global $post;
    $dia_tab_content = get_post_meta( $post->ID, "_wcj_custom_product_tabs_content_local_4", true );
-   echo $dia_tab_content;
+   if (strlen($dia_tab_content) > 0) {
+     echo $dia_tab_content;
+   }
 }
+
 function dia_new_product_tab_content5() {
   global $post;
    $dia_tab_content = get_post_meta( $post->ID, "_wcj_custom_product_tabs_content_local_5", true );
-   echo $dia_tab_content;
+   if (strlen($dia_tab_content) > 0) {
+     echo $dia_tab_content;
+   }
 }
+/*** END ***/
