@@ -11,5 +11,4 @@ License: GPL2
 
 
 include( plugin_dir_path( __FILE__ ) . 'dia-tabs-admin.php');
-include( plugin_dir_path( __FILE__ ) . 'dia-tabs-save-stuff.php');
 include( plugin_dir_path( __FILE__ ) . 'dia-tabs-frontend.php');
