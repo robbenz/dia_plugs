@@ -70,38 +70,17 @@ function save_custom_meta_box($post_id, $post, $update) {
     }
     update_post_meta($post_id, "_wcj_custom_product_tabs_local_total_number", $meta_box_tab_count_value);
 
-/*** SAVE THE TAB TITLES ***/ /*** MAKE THIS SMARTER ***/
-/* Tab 1 */
-    $meta_box_tab_tab_value1 = "";
-    if(isset($_POST["_wcj_custom_product_tabs_title_local_1"])) {
-        $meta_box_tab_tab_value1 = $_POST["_wcj_custom_product_tabs_title_local_1"];
+/*** DYNAMICALLY SAVE TAB TITLES - PER TAB COUNT ***/
+    global $post;
+    $dia_tab_count = get_post_meta( $post->ID, '_wcj_custom_product_tabs_local_total_number', true );
+    for ( $x = 0; $x < $dia_tab_count; $x++ ) {
+      $y=$x+1;
+      $meta_box_tab_tab_value = "";
+      if(isset($_POST["_wcj_custom_product_tabs_title_local_$y"])) {
+        $meta_box_tab_tab_value = $_POST["_wcj_custom_product_tabs_title_local_$y"];
+      }
+      update_post_meta($post_id, "_wcj_custom_product_tabs_title_local_$y", $meta_box_tab_tab_value);
     }
-    update_post_meta($post_id, "_wcj_custom_product_tabs_title_local_1", $meta_box_tab_tab_value1);
-/* Tab 2 */
-    $meta_box_tab_tab_value2 = "";
-    if(isset($_POST["_wcj_custom_product_tabs_title_local_2"])) {
-        $meta_box_tab_tab_value2 = $_POST["_wcj_custom_product_tabs_title_local_2"];
-    }
-    update_post_meta($post_id, "_wcj_custom_product_tabs_title_local_2", $meta_box_tab_tab_value2);
-/* Tab 3 */
-    $meta_box_tab_tab_value3 = "";
-    if(isset($_POST["_wcj_custom_product_tabs_title_local_3"])) {
-        $meta_box_tab_tab_value3 = $_POST["_wcj_custom_product_tabs_title_local_3"];
-    }
-    update_post_meta($post_id, "_wcj_custom_product_tabs_title_local_3", $meta_box_tab_tab_value3);
-/* Tab 4 */
-    $meta_box_tab_tab_value4 = "";
-    if(isset($_POST["_wcj_custom_product_tabs_title_local_4"])) {
-        $meta_box_tab_tab_value4 = $_POST["_wcj_custom_product_tabs_title_local_4"];
-    }
-    update_post_meta($post_id, "_wcj_custom_product_tabs_title_local_4", $meta_box_tab_tab_value4);
-/* Tab 5 */
-    $meta_box_tab_tab_value5 = "";
-    if(isset($_POST["_wcj_custom_product_tabs_title_local_5"])) {
-        $meta_box_tab_tab_value5 = $_POST["_wcj_custom_product_tabs_title_local_5"];
-    }
-    update_post_meta($post_id, "_wcj_custom_product_tabs_title_local_5", $meta_box_tab_tab_value5);
-/*** END ***/
 
 /*** SAVE THE STUFF IN THE TAB CONTENTS BOX ***/ /*** MAKE THIS SMARTER ***/
 /* Tab 1 */
