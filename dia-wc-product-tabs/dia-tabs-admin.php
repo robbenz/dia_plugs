@@ -14,6 +14,7 @@ function dia_meta_box_markup($object) {
     $dia_tab_count = get_post_meta( $post->ID, '_wcj_custom_product_tabs_local_total_number', true );
   ?>
 
+
   <label for="_wcj_custom_product_tabs_local_total_number"><?php echo __( 'How Many Tabs', 'woocommerce' ); ?></label>
   <input name="_wcj_custom_product_tabs_local_total_number" class="" type="number" name=" " value="<?php echo $dia_tab_count; ?>" step="any" min="0" max="5" style="width: 50px;" />
   <br />
@@ -38,14 +39,14 @@ function dia_meta_box_markup($object) {
         		<th scope="row" valign="top"><label for="dia-product-tabs-details_<?php echo $y ;?>">Tab <?php echo $y ;?> Content: </label></th>
         		<td>
         			<?php wp_nonce_field( basename( __FILE__ ), "dia_product_tabs_details_nonce_$y" ); ?>
-        			<?php wp_editor( wp_kses_post( $dia_tab_content ), 'dia_tab_content', $settings ); ?>
+        			<?php wp_editor( wp_kses_post( $dia_tab_content ), "dia_tab_content_$y", $settings ); ?>
         		</td>
         	</tr>
           <br><hr><br>
 
     <?php
   } // end for loop
-} //custom_meta_box_markup
+} // dia_meta_box_markup
 /*** END ***/
 
 /*** SAVE THAT SHIT ***/
@@ -63,27 +64,26 @@ function save_custom_meta_box($post_id, $post, $update) {
     if($slug != $post->post_type)
         return $post_id;
 
-/* Tab Count */
+    // Tab Count
     $meta_box_tab_count_value = "";
     if(isset($_POST["_wcj_custom_product_tabs_local_total_number"])) {
         $meta_box_tab_count_value = $_POST["_wcj_custom_product_tabs_local_total_number"];
     }
     update_post_meta($post_id, "_wcj_custom_product_tabs_local_total_number", $meta_box_tab_count_value);
 
-
     global $post;
     $dia_tab_count = get_post_meta( $post->ID, '_wcj_custom_product_tabs_local_total_number', true );
     for ( $x = 0; $x < $dia_tab_count; $x++ ) {
       $y=$x+1;
 
-      /*** DYNAMICALLY SAVE TAB TITLES - PER TAB COUNT ***/
+      // DYNAMICALLY SAVE TAB TITLES - PER TAB COUNT
       $meta_box_tab_tab_value = "";
       if(isset($_POST["_wcj_custom_product_tabs_title_local_$y"])) {
         $meta_box_tab_tab_value = $_POST["_wcj_custom_product_tabs_title_local_$y"];
       }
       update_post_meta($post_id, "_wcj_custom_product_tabs_title_local_$y", $meta_box_tab_tab_value);
 
-      /*** DYNAMICALLY SAVE THE STUFF IN THE TAB CONTENTS BOX ***/
+      // DYNAMICALLY SAVE THE STUFF IN THE TAB CONTENTS BOX
       if ( ! isset( $_POST["dia_product_tabs_details_nonce_$y"] ) || ! wp_verify_nonce( $_POST["dia_product_tabs_details_nonce_$y"], basename( __FILE__ ) ) ) {
         return;
       }
@@ -95,7 +95,6 @@ function save_custom_meta_box($post_id, $post, $update) {
         update_post_meta( $post_id, "_wcj_custom_product_tabs_content_local_$y", wp_kses_post( $new_details ) );
       }
     } // end for loop
-
 
 } // end save_custom_meta_box
 

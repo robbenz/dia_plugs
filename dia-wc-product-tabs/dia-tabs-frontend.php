@@ -26,6 +26,7 @@ function dia_new_product_tabs( $tabs ) {
 }
 /*** END ***/
 
+
 /*** DYNAMICALLY LOAD TAB CONTENT ***/
 function dia_new_product_tab_content($param, $args) {
   global $post;
