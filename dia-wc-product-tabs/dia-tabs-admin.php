@@ -14,7 +14,6 @@ function dia_meta_box_markup($object) {
     $dia_tab_count = get_post_meta( $post->ID, '_wcj_custom_product_tabs_local_total_number', true );
   ?>
 
-
   <label for="_wcj_custom_product_tabs_local_total_number"><?php echo __( 'How Many Tabs', 'woocommerce' ); ?></label>
   <input name="_wcj_custom_product_tabs_local_total_number" class="" type="number" name=" " value="<?php echo $dia_tab_count; ?>" step="any" min="0" max="5" style="width: 50px;" />
   <br />
