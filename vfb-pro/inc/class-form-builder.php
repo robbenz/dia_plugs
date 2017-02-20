@@ -25,6 +25,14 @@ class VFB_Pro_Form_Builder {
 	protected $form_id;
 
 	/**
+	 * The CSRF token used by the form builder.
+	 *
+	 * @var mixed
+	 * @access protected
+	 */
+	protected $csrf_token;
+
+	/**
 	 * The session store
 	 *
 	 * @var mixed
@@ -64,6 +72,8 @@ class VFB_Pro_Form_Builder {
 
 		// Set the form ID
 		$this->form_id = (int) $form_id;
+
+		$this->csrf_token = VFB_Pro_NoCSRF::generate( '_vfb-token-' . $form_id );
 
 		// Default form attributes
 		$defaults = array(
@@ -285,6 +295,15 @@ class VFB_Pro_Form_Builder {
 
 		if ( !is_null( $value ) )
 			return $key . '="' . htmlentities( $value, ENT_QUOTES, 'UTF-8', false ) . '"';
+	}
+
+	/**
+	 * Generate a hidden field with the current CSRF token.
+	 *
+	 * @return string
+	 */
+	public function token() {
+		return $this->input( 'hidden', '_vfb-token-' . $this->form_id, $this->csrf_token );
 	}
 
 	/**

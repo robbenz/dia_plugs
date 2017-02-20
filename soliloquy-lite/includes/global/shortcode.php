@@ -99,6 +99,7 @@ class Soliloquy_Shortcode_Lite {
      */
     public $html = false;
 
+	public $slider_data;
     /**
      * Primary class constructor.
      *
@@ -158,26 +159,26 @@ class Soliloquy_Shortcode_Lite {
         }
 
         // Allow the data to be filtered before it is stored and used to create the slider output.
-        $data = apply_filters( 'soliloquy_pre_data', $data, $slider_id );
+        $this->slider_data = apply_filters( 'soliloquy_pre_data', $data, $slider_id );
 
         // If there is no data to output or the slider is inactive, do nothing.
-        if ( ! $data || empty( $data['slider'] ) || isset( $data['status'] ) && 'inactive' == $data['status'] && ! is_preview() ) {
+        if ( ! $this->slider_data || empty( $this->slider_data['slider'] ) || isset( $this->slider_data['status'] ) && 'inactive' == $this->slider_data['status'] && ! is_preview() ) {
             return false;
         }
 
         // If the data is to be randomized, do it now.
-        if ( $this->get_config( 'random', $data ) ) {
-            $data = $this->shuffle( $data );
+        if ( $this->get_config( 'random', $this->slider_data ) ) {
+            $this->slider_data = $this->shuffle( $this->slider_data );
         }
 
         // Prepare variables.
-        $this->data[$data['id']] = $data;
+        $this->data[$this->slider_data['id']] = $this->slider_data;
         $slider                  = '';
         $i                       = 1;
 
         // If this is a feed view, customize the output and return early.
         if ( is_feed() ) {
-            return $this->do_feed_output( $data );
+            return $this->do_feed_output( $this->slider_data );
         }
 
         // Load scripts and styles.
@@ -185,59 +186,59 @@ class Soliloquy_Shortcode_Lite {
         wp_enqueue_script( $this->base->plugin_slug . '-script' );
 
         // Load custom slider themes if necessary.
-        if ( 'base' !== $this->get_config( 'slider_theme', $data ) ) {
-            $this->load_slider_theme( $this->get_config( 'slider_theme', $data ) );
+        if ( 'base' !== $this->get_config( 'slider_theme', $this->slider_data ) ) {
+            $this->load_slider_theme( $this->get_config( 'slider_theme', $this->slider_data ) );
         }
 
         // Load slider init code in the footer.
         add_action( 'wp_footer', array( $this, 'slider_init' ), 1000 );
 
         // Run a hook before the slider output begins but after scripts and inits have been set.
-        do_action( 'soliloquy_before_output', $data );
+        do_action( 'soliloquy_before_output', $this->slider_data );
 
         // Apply a filter before starting the slider HTML.
-        $slider = apply_filters( 'soliloquy_output_start', $slider, $data );
-                
-        // Build out the slider HTML.
-        $slider .= '<div aria-live="' . $this->get_config( 'aria_live', $data ) . '" id="soliloquy-container-' . sanitize_html_class( $data['id'] ) . '" class="' . $this->get_slider_classes( $data ) . '" style="max-width:' . $this->get_config( 'slider_width', $data ) . 'px;max-height:' . $this->get_config( 'slider_height', $data ) . 'px;' . apply_filters( 'soliloquy_output_container_style', '', $data ) . '"' . apply_filters( 'soliloquy_output_container_attr', '', $data ) . '>';
-            $slider .= '<ul id="soliloquy-' . sanitize_html_class( $data['id'] ) . '" class="soliloquy-slider soliloquy-slides soliloquy-wrap soliloquy-clear">';
-                $slider = apply_filters( 'soliloquy_output_before_container', $slider, $data );
+        $slider = apply_filters( 'soliloquy_output_start', $slider, $this->slider_data );
 
-                foreach ( (array) $data['slider'] as $id => $item ) {
+        // Build out the slider HTML.
+        $slider .= '<div aria-live="' . $this->get_config( 'aria_live', $this->slider_data ) . '" id="soliloquy-container-' . sanitize_html_class( $this->slider_data['id'] ) . '" class="' . $this->get_slider_classes( $this->slider_data ) . '" style="max-width:' . $this->get_config( 'slider_width', $data ) . 'px;max-height:' . $this->get_config( 'slider_height', $this->slider_data ) . 'px;' . apply_filters( 'soliloquy_output_container_style', '', $this->slider_data ) . '"' . apply_filters( 'soliloquy_output_container_attr', '', $this->slider_data ) . '>';
+            $slider .= '<ul id="soliloquy-' . sanitize_html_class( $this->slider_data['id'] ) . '" class="soliloquy-slider soliloquy-slides soliloquy-wrap soliloquy-clear">';
+                $slider = apply_filters( 'soliloquy_output_before_container', $slider, $this->slider_data );
+
+                foreach ( (array) $this->slider_data['slider'] as $id => $item ) {
                     // Skip over images that are pending (ignore if in Preview mode).
                     if ( isset( $item['status'] ) && 'pending' == $item['status'] && ! is_preview() ) {
                         continue;
                     }
 
                     // Allow filtering of individual items.
-                    $item     = apply_filters( 'soliloquy_output_item_data', $item, $id, $data, $i );
+                    $item     = apply_filters( 'soliloquy_output_item_data', $item, $id, $this->slider_data, $i );
 
-                    $slider   = apply_filters( 'soliloquy_output_before_item', $slider, $id, $item, $data, $i );
-                    $output   = '<li aria-hidden="true" class="' . $this->get_slider_item_classes( $item, $i, $data ) . '"' . apply_filters( 'soliloquy_output_item_attr', '', $id, $item, $data, $i ) . ' draggable="false" style="list-style:none">';
-                        $output .= $this->get_slide( $id, $item, $data, $i );
+                    $slider   = apply_filters( 'soliloquy_output_before_item', $slider, $id, $item, $this->slider_data, $i );
+                    $output   = '<li aria-hidden="true" class="' . $this->get_slider_item_classes( $item, $i, $this->slider_data ) . '"' . apply_filters( 'soliloquy_output_item_attr', '', $id, $item, $this->slider_data, $i ) . ' draggable="false" style="list-style:none">';
+                        $output .= $this->get_slide( $id, $item, $this->slider_data, $i );
                     $output .= '</li>';
-                    $output  = apply_filters( 'soliloquy_output_single_item', $output, $id, $item, $data, $i );
+                    $output  = apply_filters( 'soliloquy_output_single_item', $output, $id, $item, $this->slider_data, $i );
                     $slider .= $output;
-                    $slider  = apply_filters( 'soliloquy_output_after_item', $slider, $id, $item, $data, $i );
+                    $slider  = apply_filters( 'soliloquy_output_after_item', $slider, $id, $item, $this->slider_data, $i );
 
                     // Increment the iterator.
                     $i++;
                 }
 
-                $slider = apply_filters( 'soliloquy_output_after_container', $slider, $data );
+                $slider = apply_filters( 'soliloquy_output_after_container', $slider, $this->slider_data );
             $slider .= '</ul>';
-            $slider  = apply_filters( 'soliloquy_output_end', $slider, $data );
+            $slider  = apply_filters( 'soliloquy_output_end', $slider, $this->slider_data );
         $slider .= '</div>';
 
         // Increment the counter.
         $this->counter++;
 
         // Add no JS fallback support.
-        $no_js   = apply_filters( 'soliloquy_output_no_js', '<noscript><style type="text/css">#soliloquy-container-' . sanitize_html_class( $data['id'] ) . '{opacity:1}</style></noscript>', $data );
+        $no_js   = apply_filters( 'soliloquy_output_no_js', '<noscript><style type="text/css">#soliloquy-container-' . sanitize_html_class( $this->slider_data['id'] ) . '{opacity:1}</style></noscript>', $this->slider_data );
         $slider .= $no_js;
 
         // Return the slider HTML.
-        return apply_filters( 'soliloquy_output', $slider, $data );
+        return apply_filters( 'soliloquy_output', $slider, $this->slider_data );
 
     }
 

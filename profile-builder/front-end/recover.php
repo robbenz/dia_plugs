@@ -222,14 +222,12 @@ function wppb_front_end_password_recovery(){
                 $recoveruserMailMessage1  = sprintf( __('Someone requested that the password be reset for the following account: <b>%1$s</b><br/>If this was a mistake, just ignore this email and nothing will happen.<br/>To reset your password, visit the following link:%2$s', 'profile-builder'), $display_username_email, '<a href="'.esc_url( add_query_arg( array( 'loginName' => $requestedUserNicename, 'key' => $key ), wppb_curpageurl() ) ).'">'.esc_url( add_query_arg( array( 'loginName' => $requestedUserNicename, 'key' => $key ), wppb_curpageurl() ) ).'</a>');
                 $recoveruserMailMessage1  = apply_filters( 'wppb_recover_password_message_content_sent_to_user1', $recoveruserMailMessage1, $requestedUserID, $requestedUserLogin, $requestedUserEmail );
 
-                $recoveruserMailMessageTitle1 = sprintf(__('Password Reset from "%1$s"', 'profile-builder'), $blogname = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES));
+                $recoveruserMailMessageTitle1 = sprintf(__('Password Reset from "%1$s"', 'profile-builder'), $blogname = get_option('blogname') );
                 $recoveruserMailMessageTitle1 = apply_filters('wppb_recover_password_message_title_sent_to_user1', $recoveruserMailMessageTitle1, $requestedUserLogin);
 
-                //we add this filter to enable html encoding
-                add_filter('wp_mail_content_type',create_function('', 'return "text/html"; '));
                 //send mail to the user notifying him of the reset request
                 if (trim($recoveruserMailMessageTitle1) != ''){
-                    $sent = wp_mail($requestedUserEmail, $recoveruserMailMessageTitle1, $recoveruserMailMessage1);
+                    $sent = wppb_mail($requestedUserEmail, $recoveruserMailMessageTitle1, $recoveruserMailMessage1);
                     if ($sent === false){
                         $message = '<b>'. __( 'ERROR', 'profile-builder' ) .': </b>' . sprintf( __( 'There was an error while trying to send the activation link to %1$s!', 'profile-builder' ), $postedData );
                         $message = apply_filters( 'wppb_recover_password_sent_message_error_sending', $message );
@@ -281,21 +279,18 @@ function wppb_front_end_password_recovery(){
                 $recoveruserMailMessage2  = sprintf( __( 'You have successfully reset your password to: %1$s', 'profile-builder' ), $new_pass );
                 $recoveruserMailMessage2  = apply_filters( 'wppb_recover_password_message_content_sent_to_user2', $recoveruserMailMessage2, $display_username_email, $new_pass, $userID );
 
-                $recoveruserMailMessageTitle2 = sprintf( __('Password Successfully Reset for %1$s on "%2$s"', 'profile-builder' ), $display_username_email, $blogname = wp_specialchars_decode( get_option('blogname'), ENT_QUOTES ) );
+                $recoveruserMailMessageTitle2 = sprintf( __('Password Successfully Reset for %1$s on "%2$s"', 'profile-builder' ), $display_username_email, $blogname = get_option('blogname') );
                 $recoveruserMailMessageTitle2 = apply_filters( 'wppb_recover_password_message_title_sent_to_user2', $recoveruserMailMessageTitle2, $display_username_email );
-
-                //we add this filter to enable html encoding
-                add_filter( 'wp_mail_content_type',create_function( '', 'return "text/html"; ') );
 
                 //send mail to the user notifying him of the reset request
                 if ( trim( $recoveruserMailMessageTitle2 ) != '' )
-                    wp_mail( $user_info->user_email, $recoveruserMailMessageTitle2, $recoveruserMailMessage2 );
+                    wppb_mail( $user_info->user_email, $recoveruserMailMessageTitle2, $recoveruserMailMessage2 );
 
                 //send email to admin
                 $recoveradminMailMessage = sprintf( __( '%1$s has requested a password change via the password reset feature.<br/>His/her new password is:%2$s', 'profile-builder' ), $display_username_email, $_POST['passw1'] );
                 $recoveradminMailMessage = apply_filters( 'wppb_recover_password_message_content_sent_to_admin', $recoveradminMailMessage, $display_username_email, $_POST['passw1'], $userID );
 
-                $recoveradminMailMessageTitle = sprintf( __( 'Password Successfully Reset for %1$s on "%2$s"', 'profile-builder' ), $display_username_email, $blogname = wp_specialchars_decode( get_option('blogname'), ENT_QUOTES ) );
+                $recoveradminMailMessageTitle = sprintf( __( 'Password Successfully Reset for %1$s on "%2$s"', 'profile-builder' ), $display_username_email, $blogname = get_option('blogname'), ENT_QUOTES );
                 $recoveradminMailMessageTitle = apply_filters( 'wppb_recover_password_message_title_sent_to_admin', $recoveradminMailMessageTitle, $display_username_email );
 
 
@@ -303,11 +298,9 @@ function wppb_front_end_password_recovery(){
                 $recoveradminMailMessageTitle = '';
                 $recoveradminMailMessageTitle = apply_filters( 'wppb_recover_password_message_title_sent_to_admin', $recoveradminMailMessageTitle, $display_username_email );
 
-                //we add this filter to enable html encoding
-                add_filter('wp_mail_content_type',create_function('', 'return "text/html"; '));
                 //send mail to the admin notifying him of of a user with a password reset request
                 if (trim($recoveradminMailMessageTitle) != '')
-                    wp_mail(get_option('admin_email'), $recoveradminMailMessageTitle, $recoveradminMailMessage);
+                    wppb_mail(get_option('admin_email'), $recoveradminMailMessageTitle, $recoveradminMailMessage);
             }
 		}
         else{

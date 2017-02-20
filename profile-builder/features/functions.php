@@ -158,7 +158,7 @@ if ( is_admin() ){
  * @param string $message_from
  *
  */
-function wppb_mail( $to, $subject, $message, $message_from, $context = null ) {
+function wppb_mail( $to, $subject, $message, $message_from = null, $context = null ) {
 	$to = apply_filters( 'wppb_send_email_to', $to );
 	$send_email = apply_filters( 'wppb_send_email', true, $to, $subject, $message, $context );
 
@@ -170,7 +170,7 @@ function wppb_mail( $to, $subject, $message, $message_from, $context = null ) {
 		//we add this filter to enable html encoding
 		add_filter( 'wp_mail_content_type', create_function( '', 'return "text/html"; ' ) );
 
-		$sent = wp_mail( $to , $subject, $message );
+		$sent = wp_mail( $to , html_entity_decode( htmlspecialchars_decode( $subject, ENT_QUOTES ), ENT_QUOTES ), $message );
 
 		do_action( 'wppb_after_sending_email', $sent, $to, $subject, $message, $send_email, $context );
 
@@ -911,3 +911,59 @@ function wppb_manage_required_attribute() {
 	}
 }
 add_action( 'wp_footer', 'wppb_manage_required_attribute' );
+
+function wpbb_specify_blog_details_on_signup_email( $message, $user_email, $user, $activation_key, $registration_page_url, $meta, $from_name, $context ){
+	$meta = unserialize($meta);
+
+	if ( is_multisite() && isset( $meta['wppb_create_new_site_checkbox'] ) && $meta['wppb_create_new_site_checkbox'] == 'yes' ) {
+		$blog_details = wpmu_validate_blog_signup( $meta['wppb_blog_url'], $meta['wppb_blog_title'] );
+
+		if ( empty($blog_details['errors']->errors['blogname']) && empty($blog_details['errors']->errors['blog_title'])) {
+			$blog_path = $blog_details['domain'] . $blog_details['path'];
+			$message .= __( '<br><br>Also, you will be able to visit your site at ', 'profile-builder' ) . '<a href="' . $blog_path . '">' . $blog_path . '</a>.';
+		}
+	}
+	return $message;
+}
+add_filter( 'wppb_signup_user_notification_email_content', 'wpbb_specify_blog_details_on_signup_email', 5, 8 );
+
+function wpbb_specify_blog_details_on_registration_email( $user_message_content, $email, $password, $user_message_subject, $context ){
+
+	if ( is_multisite() ) {
+		$user = get_user_by( 'email', $email );
+		$blog_path = wppb_get_blog_url_of_user_id( $user->ID );
+		if ( ! empty ( $blog_path ) ) {
+			$user_message_content .= __( '<br><br>You can visit your site at ', 'profile-builder' ) . '<a href="' . $blog_path . '">' . $blog_path . '</a>.';
+		}
+	}
+	return $user_message_content;
+
+}
+add_filter( 'wppb_register_user_email_message_without_admin_approval', 'wpbb_specify_blog_details_on_registration_email', 5, 5 );
+add_filter( 'wppb_register_user_email_message_with_admin_approval', 'wpbb_specify_blog_details_on_registration_email', 5, 5 );
+
+
+function wppb_get_blog_url_of_user_id( $user_id, $ignore_privacy = true ){
+	$blog_id = get_user_meta( $user_id, 'primary_blog', true );
+	if ( is_multisite() && !empty( $blog_id ) ){
+		$blog_details = get_blog_details( $blog_id );
+		if ( $ignore_privacy || $blog_details->public ) {
+			return $blog_details->domain . $blog_details->path;
+		}
+	}
+	return '';
+}
+
+function wppb_can_users_signup_blog(){
+	if ( ! is_multisite() )
+		return false;
+	global $wpdb;
+	$current_site           = get_current_site();
+	$sitemeta_options_query = $wpdb->prepare( "SELECT meta_value FROM {$wpdb->sitemeta} WHERE meta_key = 'registration' AND site_id = %d", $current_site->id );
+	$network_options_meta   = $wpdb->get_results( $sitemeta_options_query );
+
+	if ( $network_options_meta[0]->meta_value == 'all' ){
+		return true;
+	}
+	return false;
+}

@@ -7,6 +7,7 @@ function add_dia_meta_box() {
 add_action("add_meta_boxes", "add_dia_meta_box");
 /*** END ***/
 
+
 /*** ADD CUSTOM META BOX MARKUP FOR ADMIN ***/
 function dia_meta_box_markup($object) {
   wp_nonce_field(basename(__FILE__), "meta-box-nonce");

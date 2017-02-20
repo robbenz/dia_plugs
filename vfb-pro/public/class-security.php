@@ -17,6 +17,29 @@ class VFB_Pro_Security {
 	}
 
 	/**
+	 * csrf_check function.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function csrf_check() {
+		$form_id = isset( $_POST['_vfb-form-id'] ) ? absint( $_POST['_vfb-form-id'] ) : 0;
+
+		if ( !isset( $_POST['_vfb-token-' . $form_id] ) )
+			return true;
+
+		try {
+			// Run CSRF check, on POST data, in exception mode, for 10 minutes, in one-time mode.
+			VFB_Pro_NoCSRF::check( '_vfb-token-' . $form_id, $_POST, true, 60*10, false );
+			return true;
+		}
+		catch ( Exception $e ) {
+			// CSRF attack detected
+			return $e->getMessage();
+		}
+	}
+
+	/**
 	 * honeypot_check function.
 	 *
 	 * @access public
@@ -42,11 +65,14 @@ class VFB_Pro_Security {
 		$vfb_settings  = get_option( 'vfbp_settings' );
 		$private_key   = $vfb_settings['recaptcha-private-key'];
 
-		if ( !isset( $_POST['g-recaptcha-response'] ) )
+		if ( !isset( $_POST['_vfb_recaptcha_enabled'] ) )
 			return true;
 
-		if ( !isset( $_POST['_vfb_recaptcha_required'] ) )
-			return true;
+		if ( 1 !== absint( $_POST['_vfb_recaptcha_enabled'] ) )
+			return __( 'Security check: reCaptcha verification has been tampered with. If you think this is an error, please email the site owner.', 'vfb-pro' );
+
+		if ( !isset( $_POST['g-recaptcha-response'] ) )
+			return __( 'Security check: reCaptcha verification expects a response and did not see one. Please submit the form again. If you think this is an error, please email the site owner.', 'vfb-pro' );
 
 		$url = add_query_arg(
 			array(

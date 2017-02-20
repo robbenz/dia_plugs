@@ -42,6 +42,9 @@ function wppb_manage_fields_submenu(){
     $manage_field_types[] = 'Default - Repeat Password';
     $manage_field_types[] = 'Default - Biographical Info';
     $manage_field_types[] = 'Default - Display name publicly as';
+	if ( wppb_can_users_signup_blog() ) {
+		$manage_field_types[] = 'Default - Blog Details';
+	}
 
     if( PROFILE_BUILDER != 'Profile Builder Free' ) {
         $manage_field_types[] = 'Heading';
@@ -212,6 +215,9 @@ function wppb_prepopulate_fields(){
 	$prepopulated_fields[] = array( 'field' => 'Default - Biographical Info', 'field-title' => __( 'Biographical Info', 'profile-builder' ), 'meta-name' => 'description', 'overwrite-existing' => 'No', 'id' => '14', 'description' => __( 'Share a little biographical information to fill out your profile. This may be shown publicly.', 'profile-builder' ), 'row-count' => '5', 'allowed-image-extensions' => '.*', 'allowed-upload-extensions' => '.*', 'avatar-size' => '100', 'date-format' => 'mm/dd/yy', 'terms-of-agreement' => '', 'options' => '', 'labels' => '', 'public-key' => '', 'private-key' => '', 'default-value' => '', 'default-option' => '', 'default-options' => '', 'required' => 'No' );
 	$prepopulated_fields[] = array( 'field' => 'Default - Password', 'field-title' => __( 'Password', 'profile-builder' ), 'meta-name' => '', 'overwrite-existing' => 'No', 'id' => '15', 'description' => __( 'Type your password.', 'profile-builder' ), 'row-count' => '5', 'allowed-image-extensions' => '.*', 'allowed-upload-extensions' => '.*', 'avatar-size' => '100', 'date-format' => 'mm/dd/yy', 'terms-of-agreement' => '', 'options' => '', 'labels' => '', 'public-key' => '', 'private-key' => '', 'default-value' => '', 'default-option' => '', 'default-options' => '', 'default-content' => '', 'required' => 'Yes' );
 	$prepopulated_fields[] = array( 'field' => 'Default - Repeat Password', 'field-title' => __( 'Repeat Password', 'profile-builder' ), 'meta-name' => '', 'overwrite-existing' => 'No', 'id' => '16', 'description' => __( 'Type your password again. ', 'profile-builder' ), 'row-count' => '5', 'allowed-image-extensions' => '.*', 'allowed-upload-extensions' => '.*', 'avatar-size' => '100', 'date-format' => 'mm/dd/yy', 'terms-of-agreement' => '', 'options' => '', 'labels' => '', 'public-key' => '', 'private-key' => '', 'default-value' => '', 'default-option' => '', 'default-options' => '', 'default-content' => '', 'required' => 'Yes' );
+	if ( wppb_can_users_signup_blog() ){
+		$prepopulated_fields[] = array( 'field' => 'Default - Blog Details', 'field-title' => __( 'Blog Details', 'profile-builder' ), 'meta-name' => '', 'overwrite-existing' => 'No', 'id' => '17', 'description' => '', 'row-count' => '5', 'allowed-image-extensions' => '.*', 'allowed-upload-extensions' => '.*', 'avatar-size' => '100', 'date-format' => 'mm/dd/yy', 'terms-of-agreement' => '', 'options' => '', 'labels' => '', 'public-key' => '', 'private-key' => '', 'default-value' => '', 'default-option' => '', 'default-options' => '', 'default-content' => '', 'required' => 'No' );
+	}
 
 	add_option ( 'wppb_manage_fields', apply_filters ( 'wppb_prepopulated_fields', $prepopulated_fields ) );
 }
@@ -933,6 +939,11 @@ function wppb_return_unique_field_list( $only_default_fields = false ){
 	$unique_field_list[] = 'Default - Repeat Password';
 	$unique_field_list[] = 'Default - Biographical Info';
 	$unique_field_list[] = 'Default - Display name publicly as';
+
+	if ( wppb_can_users_signup_blog() ) {
+		$unique_field_list[] = 'Default - Blog Details';
+	}
+
     if( !$only_default_fields ){
 	    $unique_field_list[] = 'Avatar';
 	    $unique_field_list[] = 'reCAPTCHA';
@@ -1197,7 +1208,7 @@ function wppb_add_content_before_manage_fields(){
    <p>
        <?php
        if( PROFILE_BUILDER == 'Profile Builder Pro' )
-           _e("If you're interested in displaying different fields in the registration and edit profile forms, please use the Multiple Registration & Edit Profile Forms Addon.", 'profile-builder');
+           _e("If you're interested in displaying different fields in the registration and edit profile forms, please use the Multiple Registration & Edit Profile Forms Modules.", 'profile-builder');
        else
            _e( "With Profile Builder Pro v2 you can display different fields in the registration and edit profile forms, using the Multiple Registration & Edit Profile Forms module.", "profile-builder" )
        ?>
@@ -1246,6 +1257,7 @@ function wppb_wpml_compat_with_fields( $oldvalue, $_newvalue ){
 							'Default - Password',
 							'Default - Repeat Password',
 							'Default - Biographical Info',
+							'Default - Blog Details',
 							'Default - Display name publicly as'
 	);
 

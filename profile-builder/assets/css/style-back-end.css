@@ -431,6 +431,7 @@
 }
 
 .wppb-backend-notice{
+    display: inline-block;
 	line-height: 16px;
 	padding: 11px;
 	font-size: 14px;

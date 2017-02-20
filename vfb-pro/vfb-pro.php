@@ -3,7 +3,7 @@
 Plugin Name:	VFB Pro
 Plugin URI:		http://vfbpro.com
 Description:	VFB Pro is the easiest form builder on the market.
-Version:		3.2
+Version:		3.2.2
 Author:			Matthew Muro
 Author URI:		http://matthewmuro.com
 Text Domain:	vfb-pro
@@ -32,7 +32,7 @@ class VFB_Pro {
 	 * @access   protected
 	 * @var      string    $version    The current version of the plugin.
 	 */
-	protected $version = '3.2';
+	protected $version = '3.2.2';
 
 	/**
 	 * The current DB version. Used if we need to update the DB later.
@@ -106,6 +106,9 @@ class VFB_Pro {
 
 			// Load i18n
 			add_action( 'plugins_loaded', array( self::$instance, 'lang' ) );
+
+			// Start Session
+			add_action( 'init', array( self::$instance, 'start_session' ), 1 );
 
 			$screen_options = new VFB_Pro_Admin_Screen_Options();
 			add_filter( 'set-screen-option', array( $screen_options, 'save_option' ), 10, 3 );
@@ -206,6 +209,7 @@ class VFB_Pro {
 		require_once( VFB_PLUGIN_DIR . 'admin/class-template-tags.php' );			// VFB_Pro_Template_tags class
 		require_once( VFB_PLUGIN_DIR . 'public/class-form-display.php' );			// VFB_Pro_Form_Display class
 		require_once( VFB_PLUGIN_DIR . 'inc/class-form-builder.php' );				// VFB_Pro_Form_Builder class
+		require_once( VFB_PLUGIN_DIR . 'inc/class-csrf.php' );						// VFB_Pro_NoCSRF class
 		require_once( VFB_PLUGIN_DIR . 'inc/class-premailer.php' );					// VFB_Pro_Premailer class
 		require_once( VFB_PLUGIN_DIR . 'public/class-load-css-js.php' );			// VFB_Pro_Scripts_Loader class
 		require_once( VFB_PLUGIN_DIR . 'public/class-confirmation.php' );			// VFB_Pro_Confirmation class
@@ -285,6 +289,39 @@ class VFB_Pro {
 		$diagnostics          = new VFB_Pro_Admin_Diagnostics();
 
 		VFB_Pro_Form_Display::instance();
+	}
+
+	/**
+	 * Start $_SESSION on init
+	 *
+	 * @since 3.2.2
+	 * @access public
+	 * @return void
+	 */
+	public function start_session() {
+		if ( $this->is_session_started() === false ) {
+			session_start();
+		}
+	}
+
+	/**
+     * Utility function to test if PHP Sessions are supported.
+     *
+     * @since 3.2.2
+     * @access protected
+     * @return void
+     */
+    private static function is_session_started() {
+	    if ( php_sapi_name() !== 'cli' ) {
+	        if ( version_compare( phpversion(), '5.4.0', '>=' ) ) {
+	            return session_status() === PHP_SESSION_ACTIVE ? true : false;
+	        }
+	        else {
+	            return session_id() === '' ? false : true;
+	        }
+	    }
+
+	    return false;
 	}
 
 	/**

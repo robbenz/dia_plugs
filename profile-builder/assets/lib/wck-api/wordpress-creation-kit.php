@@ -525,6 +525,7 @@ class Wordpress_Creation_Kit_PB{
 		}
 		$list .= '</ul>';
 
+		$list = apply_filters( 'wck_after_content_element', $list, $meta, $id, $results, $element_id );
 		/* check if we have nested repeaters */
 		if( function_exists( 'wck_nr_check_for_nested_repeaters' ) ){
 			if( wck_nr_check_for_nested_repeaters( $fields ) === true ){

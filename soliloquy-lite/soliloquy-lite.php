@@ -5,7 +5,7 @@
  * Description: Soliloquy is best responsive WordPress slider plugin. This is the lite version.
  * Author:      Soliloquy Team
  * Author URI:  https://soliloquywp.com
- * Version:     2.5.0.8
+ * Version:     2.5.1.3
  * Text Domain: soliloquy
  * Domain Path: languages
  *
@@ -54,7 +54,7 @@ class Soliloquy_Lite {
      *
      * @var string
      */
-    public $version = '2.5.0.8';
+    public $version = '2.5.1.3';
 
     /**
      * The name of the plugin.
@@ -107,7 +107,7 @@ class Soliloquy_Lite {
 
         // Load the plugin.
         add_action( 'init', array( $this, 'init' ), 0 );
-        
+
         add_filter( 'admin_footer_text',     array( $this, 'admin_footer'   ), 1, 2 );
 
 
@@ -166,6 +166,7 @@ class Soliloquy_Lite {
         require plugin_dir_path( __FILE__ ) . 'includes/admin/utils.php';
         require plugin_dir_path( __FILE__ ) . 'includes/admin/addons.php';
         require plugin_dir_path( __FILE__ ) . 'includes/admin/media-view.php';
+        require plugin_dir_path( __FILE__ ) . 'includes/admin/review.php';
 
     }
 
@@ -289,7 +290,7 @@ class Soliloquy_Lite {
 
         // Attempt to return the transient first, otherwise generate the new query to retrieve the data.
         if ( false === ( $sliders = get_transient( '_sol_cache_all' ) ) ) {
-	        
+
             $sliders = $this->_get_sliders();
             if ( $sliders ) {
                 set_transient( '_sol_cache_all', $sliders, DAY_IN_SECONDS );
@@ -330,7 +331,7 @@ class Soliloquy_Lite {
         // Now loop through all the sliders found and only use sliders that have images in them.
         $ret = array();
         foreach ( $sliders->posts as $id ) {
-	        
+
             $data = get_post_meta( $id, '_sol_slider_data', true );
             if ( empty( $data['slider'] ) && 'default' == Soliloquy_Shortcode_Lite::get_instance()->get_config( 'type', $data ) || 'dynamic' == Soliloquy_Shortcode_Lite::get_instance()->get_config( 'type', $data ) ) {
                 continue;
@@ -412,7 +413,7 @@ class Soliloquy_Lite {
 		global $current_screen;
 		if ( !empty( $current_screen->id ) && strpos( $current_screen->id, 'soliloquy' ) !== false ) {
 			$url  = 'https://wordpress.org/support/view/plugin-reviews/soliloquy-lite?filter=5';
-			$text = sprintf( __( 'Please rate <strong>SoliloquyWP</strong> <a href="%s" target="_blank">&#9733;&#9733;&#9733;&#9733;&#9733;</a> on <a href="%s" target="_blank">WordPress.org</a> to help us spread the word. Thank you from the WPForms team!', 'wpforms' ), $url, $url );
+			$text = sprintf( __( 'Please rate <strong>SoliloquyWP</strong> <a href="%s" target="_blank">&#9733;&#9733;&#9733;&#9733;&#9733;</a> on <a href="%s" target="_blank">WordPress.org</a> to help us spread the word. Thank you from the Soliloquy team!', 'wpforms' ), $url, $url );
 		}
 		return $text;
 	}

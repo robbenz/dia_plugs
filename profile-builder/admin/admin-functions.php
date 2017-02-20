@@ -26,25 +26,29 @@ function wppb_field_format ( $field_title, $field ){
  *
  * @return string $form
  */
-function wppb_manage_fields_display_field_title_slug( $form, $i, $value ){
-	$wppb_generalSettings = get_option( 'wppb_general_settings', 'not_found' );
-	if ( $wppb_generalSettings != 'not_found' ){
-		if ( $wppb_generalSettings['loginWith'] == 'email' )
-			if ( ( $value == 'Username ( Default - Username )' ) || ( $value == 'Username' ) )
-				$form .= '<div id="wppb-login-email-nag" class="wppb-backend-notice">' . sprintf( __( 'Login is set to be done using the E-mail. This field will NOT appear in the front-end! ( you can change these settings under the "%s" tab )', 'profile-builder' ), '<a href="'.admin_url( 'admin.php?page=profile-builder-general-settings' ).'" target="_blank">' . __('General Settings', 'profile-builder') . '</a>' ) . '</div>';
-	}
 
-	// add a notice to 'Default - Display name publicly as' field
+function wppb_manage_fields_display_field_title_slug( $form ){
+    // add a notice to fields
 	global $wppb_results_field;
-	if ( $wppb_results_field == 'Default - Display name publicly as' )
-		$form .= '<div id="wppb-display-name-nag" class="wppb-backend-notice">' . __( 'Display name publicly as - only appears on the Edit Profile page!', 'profile-builder' ) . '</div>';
+    switch ($wppb_results_field){
+        case 'Default - Username':
+            $wppb_generalSettings = get_option( 'wppb_general_settings', 'not_found' );
+            if ( $wppb_generalSettings != 'not_found' && $wppb_generalSettings['loginWith'] == 'email' ) {
+                $form .= '<div id="wppb-login-email-nag" class="wppb-backend-notice">' . sprintf(__('Login is set to be done using the E-mail. This field will NOT appear in the front-end! ( you can change these settings under the "%s" tab )', 'profile-builder'), '<a href="' . admin_url('admin.php?page=profile-builder-general-settings') . '" target="_blank">' . __('General Settings', 'profile-builder') . '</a>') . '</div>';
+            }
+            break;
+        case 'Default - Display name publicly as':
+            $form .= '<div id="wppb-display-name-nag" class="wppb-backend-notice">' . __( 'Display name publicly as - only appears on the Edit Profile page!', 'profile-builder' ) . '</div>';
+            break;
+        case 'Default - Blog Details':
+            $form .= '<div id="wppb-blog-details-nag" class="wppb-backend-notice">' . __( 'Blog Details - only appears on the Registration page!', 'profile-builder' ) . '</div>';
+            break;
+    }
 
-	return $form;
+    return $form;
 }
-add_filter( "wck_before_listed_wppb_manage_fields_element_0", 'wppb_manage_fields_display_field_title_slug', 10, 3 );
-add_filter( "wck_before_listed_wppb_epf_fields_element_0", 'wppb_manage_fields_display_field_title_slug', 10, 3 );
-add_filter( "wck_before_listed_wppb_rf_fields_element_0", 'wppb_manage_fields_display_field_title_slug', 10, 3 );
 
+add_filter( 'wck_after_content_element', 'wppb_manage_fields_display_field_title_slug' );
 
 /**
  * Check if field type is 'Default - Display name publicly as' so we can add a notification for it

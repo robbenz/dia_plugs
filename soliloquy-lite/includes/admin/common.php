@@ -298,7 +298,7 @@ class Soliloquy_Common_Admin_Lite {
 
         // Whether we have an ID or not, filter the ID.
         $shareasale_id = apply_filters( 'soliloquy_shareasale_id', $shareasale_id );
-        
+
         // If at this point we still don't have an ID, we really don't have one!
         // Just return the standard upgrade URL.
         if ( empty( $shareasale_id ) ) {
@@ -307,7 +307,7 @@ class Soliloquy_Common_Admin_Lite {
 
         // If here, we have a ShareASale ID
         // Return ShareASale URL with redirect.
-        return 'http://www.shareasale.com/r.cfm?u=' . $shareasale_id . '&b=566240&m=51693&afftrack=&urllink=soliloquywp%2Ecom%2Flite%2F';
+        return 'http://www.shareasale.com/r.cfm?u=' . $shareasale_id . '&b=380096&m=40286&afftrack=&urllink=soliloquywp%2Ecom%2Flite%2F';
 
     }
 

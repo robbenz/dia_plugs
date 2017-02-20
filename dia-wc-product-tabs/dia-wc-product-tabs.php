@@ -9,6 +9,33 @@ Author URI: robbenz.com
 License: GPL2
 */
 
+// check to make sure woocommerce is active -- and break if its not
+add_action( 'admin_init', 'dia_check_woo' );
+function dia_check_woo() {
+    if ( is_admin() && current_user_can( 'activate_plugins' ) &&  !is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
+        add_action( 'admin_notices', 'dia_woo_notice' );
+        deactivate_plugins( plugin_basename( __FILE__ ) );
+        if ( isset( $_GET['activate'] ) ) {
+            unset( $_GET['activate'] );
+        }
+    }
+}
 
-include( plugin_dir_path( __FILE__ ) . 'dia-tabs-admin.php');
-include( plugin_dir_path( __FILE__ ) . 'dia-tabs-frontend.php');
+// throw error code if its not active
+function dia_woo_notice(){
+    ?><div class="error"><p>Sorry, but this plugin requires Woocommerce to be installed and active, you idiot.</p></div><?php
+}
+
+// include the respective php files after successful activation
+add_action( 'init', 'dia_woo_include_files' );
+function dia_woo_include_files() {
+  if ( is_plugin_active( plugin_basename( __FILE__ ) ) ) {
+    $mypluginrequires = array(
+      'dia-tabs-admin.php',
+      'dia-tabs-frontend.php'
+    );
+    foreach ( $mypluginrequires as $need ) {
+      include_once( plugin_dir_path( __FILE__ ) . $need );
+    }
+  }
+}

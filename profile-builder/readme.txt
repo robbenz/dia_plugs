@@ -1,11 +1,11 @@
 ﻿=== User registration & user profile - Profile Builder ===
 Contributors: cozmoslabs, reflectionmedia, sareiodata, adispiac, madalin.ungureanu, iova.mihai, barinagabriel
 Donate link: http://www.cozmoslabs.com/wordpress-profile-builder/
-Tags: user registration, user registration form, user fields, extra user fields, edit profile, user custom fields, front-end login, front-end edit profile, front-end user registration, email confirmation, login form
+Tags: user registration, user profile, user registration form, user fields, extra user fields, edit profile, user custom fields, front-end login, front-end edit profile, front-end user registration, email confirmation, login form
 
 Requires at least: 3.1
-Tested up to: 4.7
-Stable tag: 2.5.4
+Tested up to: 4.7.1
+Stable tag: 2.5.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -150,6 +150,12 @@ This plugin adds/removes user fields in the front-end. Both default and extra pr
 10. Profile Builder Login Widget
 
 == Changelog ==
+= 2.5.5 =
+* Added Blog Details field type
+* Email From Name and Subject should now display proper special characters in all cases
+* Fix css issue with notice image on forms taking an inherit width instead of auto
+* Fixed an issue with automatic login with redirect on Firefox
+
 = 2.5.4 =
 * CSS changes for the Twenty Seventeen theme
 * Fixed a notice caused sometimes by general settings option not setting properly

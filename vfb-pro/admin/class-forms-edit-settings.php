@@ -43,6 +43,7 @@ class VFB_Pro_Forms_Edit_Settings {
 		$status             = isset( $data['status'] ) ? $data['status'] : '';
 		$label_alignment    = isset( $data['data']['label-alignment']    ) ? $data['data']['label-alignment']    : '';
 		$save_state         = isset( $data['data']['save-state']         ) ? $data['data']['save-state']         : '';
+		$csrf_protection    = isset( $data['data']['csrf-protection']    ) ? $data['data']['csrf-protection']    : '';
 		$on_submit          = isset( $data['data']['on-submit']          ) ? $data['data']['on-submit']          : '';
 		$limit              = isset( $data['data']['limit']              ) ? $data['data']['limit']              : '';
 		$limit_message      = isset( $data['data']['limit-message']      ) ? $data['data']['limit-message']      : '';
@@ -111,6 +112,21 @@ class VFB_Pro_Forms_Edit_Settings {
 										<input type="checkbox" name="save-state" id="save-state" value="1"<?php checked( $save_state, 1 ); ?> /> <?php _e( "Saves data entered inside form fields locally and restores it in case the page is refreshed accidentally.", 'vfb-pro' ); ?>
 									</label>
 								</fieldset>
+							</td>
+						</tr>
+
+						<tr valign="top">
+							<th scope="row">
+								<label for="csrf-protection"><?php esc_html_e( 'CSRF Protection', 'vfb-pro' ); ?></label>
+							</th>
+							<td>
+								<fieldset>
+									<label>
+										<input type="hidden" name="csrf-protection" value="0" /> <!-- This sends an unchecked value to the meta table -->
+										<input type="checkbox" name="csrf-protection" id="csrf-protection" value="1"<?php checked( $csrf_protection, 1 ); ?> /> <?php _e( "Protects your forms from CSRF (Cross-Site Request Forgery) attacks.", 'vfb-pro' ); ?>
+									</label>
+								</fieldset>
+								<p class="description"><?php _e( 'Your server is required have PHP Sessions enabled and properly configured for this setting to function correctly.' , 'vfb-pro'); ?></p>
 							</td>
 						</tr>
 

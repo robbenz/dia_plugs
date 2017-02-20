@@ -40,7 +40,7 @@ class VFB_Pro_Admin_Fields {
 		);
 
 		$required          = isset( $field['data']['required'] ) ? $field['data']['required'] : '';
-		$required_asterisk = !empty( $required ) ? ' *' : '';
+		$required_asterisk = !empty( $required ) || 'captcha' == $field['field_type'] ? ' *' : '';
 	?>
 	<li id="vfb-field-item-<?php echo $field['id']; ?>" class="vfb-field-item">
     	<dl class="vfb-field-item-bar vfb-field-item-inactive">
@@ -2275,15 +2275,11 @@ class VFB_Pro_Admin_Fields {
 			</div> <!-- .vfb-col-3 -->
 
 			<div class="vfb-col-3">
-				<?php $setting->required( $field ); ?>
+				<?php $setting->layout( $field ); ?>
 			</div> <!-- .vfb-col-3 -->
 		</div> <!-- .vfb-row -->
 
 		<div class="vfb-row">
-			<div class="vfb-col-3">
-				<?php $setting->layout( $field ); ?>
-			</div> <!-- .vfb-col-3 -->
-
 			<div class="vfb-col-3">
 				<?php $setting->captcha_settings( $field, 'theme' ); ?>
 			</div> <!-- .vfb-col-3 -->
@@ -2292,9 +2288,9 @@ class VFB_Pro_Admin_Fields {
 				<?php $setting->captcha_settings( $field, 'type' ); ?>
 			</div> <!-- .vfb-col-3 -->
 
-			<div class="vfb-col-3">
+			<div class="vfb-col-6">
 				<?php $setting->captcha_settings( $field, 'lang' ); ?>
-			</div> <!-- .vfb-col-3 -->
+			</div> <!-- .vfb-col-6 -->
 		</div> <!-- .vfb-row -->
 	<?php
 	}

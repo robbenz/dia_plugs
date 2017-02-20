@@ -289,6 +289,18 @@ function wppb_add_meta_to_user_on_activation( $user_id, $password, $meta ){
                         break;
                     }
 				}
+				case 'Default - Blog Details':{
+					if ( is_multisite() && isset( $meta['wppb_create_new_site_checkbox'] ) && $meta['wppb_create_new_site_checkbox'] == 'yes' ) {
+						$blog_url = $meta['wppb_blog_url'];
+						$blog_title = $meta['wppb_blog_title'];
+
+						$privacy['public'] = ( isset( $meta['wppb_blog_privacy'] ) && 'Yes' == $meta['wppb_blog_privacy'] ) ? true : false;
+						$blog_details = wpmu_validate_blog_signup( $blog_url, $blog_title );
+						if ( empty($blog_details['errors']->errors['blogname']) && empty($blog_details['errors']->errors['blog_title'])) {
+							wpmu_create_blog( $blog_details['domain'], $blog_details['path'], $blog_details['blog_title'], $user_id, $privacy );
+						}
+					}
+				}
                 default: {
 					if ( isset( $meta[$value['meta-name']] ) ) {
 						update_user_meta($user_id, $value['meta-name'], $meta[$value['meta-name']]);
@@ -298,7 +310,6 @@ function wppb_add_meta_to_user_on_activation( $user_id, $password, $meta ){
 			}
 		}
 	}
-
     do_action( 'wppb_add_other_meta_on_user_activation', $user_id, $meta );
 }
 

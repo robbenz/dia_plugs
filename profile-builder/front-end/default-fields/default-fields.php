@@ -34,5 +34,8 @@ function wppb_include_default_fields_files() {
     include_once( WPPB_PLUGIN_DIR.'/front-end/default-fields/headings/name.php' );
     include_once( WPPB_PLUGIN_DIR.'/front-end/default-fields/headings/contact-info.php' );
     include_once( WPPB_PLUGIN_DIR.'/front-end/default-fields/headings/about-yourself.php' );
+    if ( wppb_can_users_signup_blog() ) {
+        include_once(WPPB_PLUGIN_DIR . '/front-end/default-fields/blog-details/blog-details.php');
+    }
 }
 wppb_include_default_fields_files();

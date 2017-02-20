@@ -121,6 +121,10 @@ class VFB_Pro_Form_Display {
 		// Honeypot check
 		if ( true !== $security->honeypot_check() )
 			wp_die( $security->honeypot_check() );
+
+		// CSRF check
+		if ( true !== $security->csrf_check() )
+			wp_die( $security->csrf_check() );
 	}
 
 	/**
@@ -348,11 +352,20 @@ class VFB_Pro_Form_Display {
 		$page_title_display = isset( $form['data']['page-title-display'] ) ? $form['data']['page-title-display'] : 'false'; // Use string 'false' due to JS type conversion
 		$page_title_click   = isset( $form['data']['page-title-click']   ) ? $form['data']['page-title-click']   : 'false'; // Use string 'false' due to JS type conversion
 		$page_num_display   = isset( $form['data']['page-num-display']   ) ? $form['data']['page-num-display']   : 'false'; // Use string 'false' due to JS type conversion
+		//$csrf_protection    = isset( $form['data']['csrf-setting'] ) ? $form['data']['csrf-setting'] : ''; use this after testing!
+		$csrf_protection    = isset( $form['data']['csrf-protection'] ) ? $form['data']['csrf-protection'] : ''; // delete this after testing!
 		$open_page       = false;
 		$open_background = false;
 		$page            = 1;
 		$background      = 1;
 		$cols_total      = 0;
+
+		// Hide the form if not set to 'publish'
+		if ( isset( $form['status'] ) && 'draft' == $form['status'] ) {
+			// Don't hide drafts when previewing
+			if ( !isset( $_GET['vfb-form-id'] ) && !isset( $_GET['preview'] ) )
+				return;
+		}
 
 		// Load jQuery Cookie script
 		if ( !empty( $save_state ) ) {
@@ -444,6 +457,11 @@ class VFB_Pro_Form_Display {
 		$builder = new VFB_Pro_Form_Builder( $form_id, $form_action, $form_atts );
 
 		$output .= $builder->open();
+
+		// Add CSRF token to the form, if setting is enabled
+		if ( !empty( $csrf_protection ) ) {
+			$output .= $builder->token();
+		}
 
 		// Additional output (add-ons)
 		$output .= self::additional_output( $form_id );
@@ -552,7 +570,7 @@ class VFB_Pro_Form_Display {
 				$options['data-mask'] = $input_mask;
 
 			// Required
-			if ( !empty( $required ) ) {
+			if ( !empty( $required ) || 'captcha' == $field_type ) {
 				$label .= ' <span class="vfb-required-asterisk">*</span>';
 				$options['required'] = 'required';
 			}
@@ -2491,9 +2509,8 @@ class VFB_Pro_Form_Display {
 								$output .= $builder->elem_open( $captcha_opts );
 								$output .= $builder->elem_close();
 
-								// If required, set a hidden input that's used when validating reCAPTCHA
-								if ( !empty( $required ) )
-									$output .= $builder->hidden( '_vfb_recaptcha_required', 1 );
+								// Hidden field used during security check
+								$output .= $builder->hidden( '_vfb_recaptcha_enabled', 1 );
 							}
 
 							// Description (after input)

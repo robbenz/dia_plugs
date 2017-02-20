@@ -279,7 +279,7 @@ class Profile_Builder_Form_Creator{
 		if ( $this->args['redirect_activated'] == 'No' || ( empty( $this->args['redirect_delay'] ) || $this->args['redirect_delay'] == '0' ) ) {
 			return "<script> window.location.replace( '". $location ."' ); </script>";
 		} else {
-			return "<script> jQuery( '#wppb_form_success_message' ).after( '". $redirect_message ."' ); </script>";
+			return $redirect_message;
 		}
 	}
 	
