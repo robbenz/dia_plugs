@@ -570,7 +570,7 @@ function wppb_notify_user_registration_email( $bloginfo, $user_name, $email, $se
 		$user_message_from = apply_filters( 'wppb_register_from_email_message_user_email', $bloginfo );
 
 		$user_message_subject = sprintf( __( '[%1$s] Your new account information', 'profile-builder' ), $user_message_from, $user_name, $password );
-		$user_message_subject = apply_filters( 'wppb_register_user_email_subject_without_admin_approval', $user_message_subject, $email, $password, $user_message_subject, 'wppb_user_emailc_default_registration_email_subject' );
+		$user_message_subject = apply_filters( 'wppb_register_user_email_subject_without_admin_approval', $user_message_subject, $email, $password, $user_message_from, 'wppb_user_emailc_default_registration_email_subject' );
 
         if ( $password === NULL ) {
             $password = __( 'Your selected password at signup', 'profile-builder' );

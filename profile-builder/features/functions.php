@@ -477,19 +477,21 @@ function wppb_resize_avatar( $userID, $userlisting_size = null, $userlisting_cro
 					//save the newly created (resized) avatar on the disc
 					$saved_image = $image->save( $fileName_dir );
 
-					/* the image save sometimes doesn't save with the desired extension so we need to see with what extension it saved it with and
-					if it differs replace the extension	in the path and url that we save as meta */
-					$validate_saved_image = wp_check_filetype_and_ext( $saved_image['path'], $saved_image['path'] );
-					$ext = substr( $fileName_dir,strrpos( $fileName_dir, '.', -1 ), strlen($fileName_dir) );
-					if( !empty( $validate_saved_image['ext'] ) && $validate_saved_image['ext'] != $ext ){
-						$fileName_url = str_replace( $ext, '.'.$validate_saved_image['ext'], $fileName_url );
-						$fileName_dir = str_replace( $ext, '.'.$validate_saved_image['ext'], $fileName_dir );
+					if ( !is_wp_error( $saved_image ) ) {
+						/* the image save sometimes doesn't save with the desired extension so we need to see with what extension it saved it with and
+						if it differs replace the extension	in the path and url that we save as meta */
+						$validate_saved_image = wp_check_filetype_and_ext( $saved_image['path'], $saved_image['path'] );
+						$ext = substr( $fileName_dir,strrpos( $fileName_dir, '.', -1 ), strlen($fileName_dir) );
+						if( !empty( $validate_saved_image['ext'] ) && $validate_saved_image['ext'] != $ext ){
+							$fileName_url = str_replace( $ext, '.'.$validate_saved_image['ext'], $fileName_url );
+							$fileName_dir = str_replace( $ext, '.'.$validate_saved_image['ext'], $fileName_dir );
+						}
+
+						update_user_meta( $userID, 'resized_avatar_'.$avatar_field['id'], $fileName_url );
+						update_user_meta( $userID, 'resized_avatar_'.$avatar_field['id'].'_relative_path', $fileName_dir );
+
+						do_action( 'wppb_after_avatar_resizing', $image, $fileName_dir, $fileName_url );
 					}
-
-					update_user_meta( $userID, 'resized_avatar_'.$avatar_field['id'], $fileName_url );
-					update_user_meta( $userID, 'resized_avatar_'.$avatar_field['id'].'_relative_path', $fileName_dir );
-
-					do_action( 'wppb_after_avatar_resizing', $image, $fileName_dir, $fileName_url );
 				}
 			}
 		}
@@ -966,4 +968,62 @@ function wppb_can_users_signup_blog(){
 		return true;
 	}
 	return false;
+}
+
+/**
+ * Function that handle redirect URL
+ *
+ * @param	string				$redirect_priority	- it can be normal or top priority
+ * @param	string				$redirect_type		- type of the redirect
+ * @param	null|string			$redirect_url		- redirect URL if already set
+ * @param	null|string|object	$user				- username, user email or user data
+ * @param	null|string			$user_role			- user role
+ *
+ * @return	null|string	$redirect_url
+ */
+function wppb_get_redirect_url( $redirect_priority = 'normal', $redirect_type, $redirect_url = NULL, $user = NULL, $user_role = NULL ) {
+	if( PROFILE_BUILDER == 'Profile Builder Pro' ) {
+		$wppb_module_settings = get_option( 'wppb_module_settings' );
+
+		if( isset( $wppb_module_settings['wppb_customRedirect'] ) && $wppb_module_settings['wppb_customRedirect'] == 'show' && $redirect_priority != 'top' && function_exists( 'wppb_custom_redirect_url' ) ) {
+			$redirect_url = wppb_custom_redirect_url( $redirect_type, $redirect_url, $user, $user_role );
+		}
+	}
+
+	if( ! empty( $redirect_url ) ) {
+		$redirect_url = ( wppb_check_missing_http( $redirect_url ) ? 'http://'. $redirect_url : $redirect_url );
+	}
+
+	return $redirect_url;
+}
+
+/**
+ * Function that builds the redirect
+ *
+ * @param	string		$redirect_url	- redirect URL
+ * @param	int			$redirect_delay	- redirect delay in seconds
+ * @param	null|string	$redirect_type	- the type of the redirect
+ * @param	null|array	$form_args		- form args if set
+ *
+ * @return	string	$redirect_message
+ */
+function wppb_build_redirect( $redirect_url, $redirect_delay, $redirect_type = NULL, $form_args = NULL ) {
+	if( isset( $redirect_type ) ) {
+		$redirect_url = apply_filters( 'wppb_'. $redirect_type .'_redirect', $redirect_url );
+	}
+
+	$redirect_message = '';
+
+	if( ! empty( $redirect_url ) ) {
+		$redirect_url = ( wppb_check_missing_http( $redirect_url ) ? 'http://'. $redirect_url : $redirect_url );
+
+		if( $redirect_delay == 0 ) {
+			$redirect_message = '<meta http-equiv="Refresh" content="'. $redirect_delay .';url='. $redirect_url .'" />';
+		} else {
+			$redirect_url_href = apply_filters( 'wppb_redirect_url', '<a href="'. $redirect_url .'">'. __( 'here', 'profile-builder' ) .'</a>', $redirect_url, $redirect_type, $form_args );
+			$redirect_message = apply_filters( 'wppb_redirect_message_before_returning', '<p class="redirect_message">'. sprintf( wp_slash( __( 'You will soon be redirected automatically. If you see this page for more than %1$d seconds, please click %2$s.%3$s', 'profile-builder' ) ), $redirect_delay, $redirect_url_href, '<meta http-equiv="Refresh" content="'. $redirect_delay .';url='. $redirect_url .'" />' ) .'</p>', $redirect_url, $redirect_delay, $redirect_url_href, $redirect_type, $form_args );
+		}
+	}
+
+	return $redirect_message;
 }

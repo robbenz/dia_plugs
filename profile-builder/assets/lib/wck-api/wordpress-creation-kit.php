@@ -799,6 +799,10 @@ class Wordpress_Creation_Kit_PB{
 		else if ( $this->args['context'] == 'option' )
 			$results = get_option( apply_filters( 'wck_option_meta' , $meta, $values ) );
 
+		/* we need an array here */
+		if( empty( $results ) && !is_array( $results ) )
+			$results = array();
+
         /* for single metaboxes owerwrite entries each time so we have a maximum of one */
         if( $this->args['single'] )
             $results = array( $values );
