@@ -26,6 +26,7 @@ function dia_woo_notice(){
     ?><div class="error"><p>Sorry, but this plugin requires Woocommerce to be installed and active, you idiot.</p></div><?php
 }
 
+
 // include the respective php files after successful activation
 add_action( 'init', 'dia_woo_include_files' );
 function dia_woo_include_files() {

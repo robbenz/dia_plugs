@@ -49,6 +49,7 @@ function dia_meta_box_markup($object) {
 } // dia_meta_box_markup
 /*** END ***/
 
+
 /*** SAVE THAT SHIT ***/
 function save_custom_meta_box($post_id, $post, $update) {
     if (!isset($_POST["meta-box-nonce"]) || !wp_verify_nonce($_POST["meta-box-nonce"], basename(__FILE__)))
