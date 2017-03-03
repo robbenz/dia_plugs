@@ -45,6 +45,63 @@ function dia_users_CUSTOM_box_markup($object) {
       echo '</div><hr>';
 
 
+echo'<div id="dia_stuff" class="options_group">';
+      woocommerce_wp_text_input(
+      	array(
+      		'id'          => 'dia_product_list_price',
+      		'label'       => __( 'MFT List Price', 'woocommerce' )
+      //    'max-width' => '300px;',
+      	//	'placeholder' => 'Probably an Infusion Pump',
+      	//	'desc_tip'    => 'true',
+      //		'description' => __( 'Enter in the list price ', 'woocommerce' )
+      	)
+      );
+
+      woocommerce_wp_text_input(
+        array(
+          'id'          => 'dia_product_cost',
+          'label'       => __( 'DiaMedical Cost', 'woocommerce' )
+      //    'max-width' => '300px;',
+        //	'placeholder' => 'Probably an Infusion Pump',
+        //  'desc_tip'    => 'true',
+      //    'description' => __( 'Enter in the list price ', 'woocommerce' )
+        )
+      );
+
+      woocommerce_wp_text_input(
+        array(
+          'id'          => 'dia_product_supplier',
+          'label'       => __( 'DiaMedical Supplier', 'woocommerce' )
+      //    'max-width' => '300px;',
+        //	'placeholder' => 'Probably an Infusion Pump',
+        //  'desc_tip'    => 'true',
+      //    'description' => __( 'Enter in the list price ', 'woocommerce' )
+        )
+      );
+
+      woocommerce_wp_text_input(
+        array(
+          'id'          => 'dia_product_mft',
+          'label'       => __( 'Manufacturer', 'woocommerce' )
+      //    'max-width' => '300px;',
+        //	'placeholder' => 'Probably an Infusion Pump',
+        //  'desc_tip'    => 'true',
+      //    'description' => __( 'Enter in the list price ', 'woocommerce' )
+        )
+      );
+            woocommerce_wp_text_input(
+              array(
+                'id'          => 'dia_product_price_check',
+                'label'       => __( 'Date Verified', 'woocommerce' )
+            //    'max-width' => '300px;',
+              //	'placeholder' => 'Probably an Infusion Pump',
+              //  'desc_tip'    => 'true',
+            //    'description' => __( 'Enter in the list price ', 'woocommerce' )
+              )
+            );
+
+
+  echo '</div>';
 
 } // dia_meta_box_markup
 /*** END ***/
