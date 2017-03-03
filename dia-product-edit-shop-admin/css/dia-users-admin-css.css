@@ -1,0 +1,55 @@
+@media (min-width: 1200px) {
+  .single-product .favimg_topleft {top: -398px; left: -13px; }
+  .single-product .favimg_bottomleft {top: -120px; left: -13px; }
+  .single-product .favimg_topright {top: -398px; left: 313px; }
+  .single-product .favimg_bottomright {top: -120px; left: 313px; }
+  .tax-product_cat .favimg_topleft {top: -374px; left: -13px;}
+  .tax-product_cat .favimg_bottomleft {top: -184px; left: -13px;}
+  .tax-product_cat .favimg_topright {top: -374px; left: 132px;}
+  .tax-product_cat .favimg_bottomright {top: -184px; left: 132px;}
+
+}
+
+@media (min-width: 992px) {
+  .single-product .favimg_topleft {top: -328px; left: -13px; }
+  .single-product .favimg_bottomleft {top: -78px; left: -13px; }
+  .single-product .favimg_topright {top: -328px; left: 242px;}
+  .single-product .favimg_bottomright {top: -78px; left: 242px; }
+  .tax-product_cat .favimg_topleft {top: -327px; left: -13px;}
+  .tax-product_cat .favimg_bottomleft {top: -160px; left: -13px;}
+  .tax-product_cat .favimg_topright {top: -327px; left: 132px;}
+  .tax-product_cat .favimg_bottomright {top: -160px; left: 132px;}
+}
+
+@media (min-width: 768px) {
+  .single-product .favimg_topleft {}
+  .single-product .favimg_bottomleft {}
+  .single-product .favimg_topright {}
+  .single-product .favimg_bottomright {}
+  .tax-product_cat .favimg_topleft {}
+  .tax-product_cat .favimg_bottomleft {}
+  .tax-product_cat .favimg_topright {}
+  .tax-product_cat .favimg_bottomright {}
+}
+
+@media (min-width: 657px) {
+  .single-product .favimg_topleft {}
+  .single-product .favimg_bottomleft {}
+  .single-product .favimg_topright {}
+  .single-product .favimg_bottomright {}
+  .tax-product_cat .favimg_topleft {}
+  .tax-product_cat .favimg_bottomleft {}
+  .tax-product_cat .favimg_topright {}
+  .tax-product_cat .favimg_bottomright {}
+}
+
+@media (min-width: 320px) {
+  .single-product .favimg_topleft {}
+  .single-product .favimg_bottomleft {}
+  .single-product .favimg_topright {}
+  .single-product .favimg_bottomright {}
+  .tax-product_cat .favimg_topleft {}
+  .tax-product_cat .favimg_bottomleft {}
+  .tax-product_cat .favimg_topright {}
+  .tax-product_cat .favimg_bottomright {}
+}

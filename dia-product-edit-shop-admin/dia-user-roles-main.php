@@ -47,3 +47,12 @@ add_action( 'admin_enqueue_scripts', 'dia_users_admin_js_script' );
 function dia_users_admin_js_script() {
     wp_enqueue_script('dia-users-admin-js', plugins_url( '/js/dia-users-admin-js.js', __FILE__ ), array('jquery'));
 }
+
+add_action( 'wp_enqueue_scripts', 'dia_users_admin_css' );
+function dia_users_admin_css() {
+  //  wp_enqueue_style( 'dia-users-admin-css', plugins_url( '/css/dia-users-admin-css.css', __FILE__ ) );
+  //  wp_enqueue_style( 'superfish', get_template_directory_uri() . '/css/superfish.css', false, false, 'all' );
+    wp_register_style( 'dia-users-admin-css', plugins_url('/css/dia-users-admin-css.css', __FILE__) );
+    wp_enqueue_style( 'dia-users-admin-css' );
+
+}
