@@ -10,10 +10,10 @@ License: GPL2
 */
 
 // check to make sure woocommerce is active -- and break if its not
-add_action( 'admin_init', 'dia_users_check_woocommerce' );
-function dia_users_check_woocommerce() {
+add_action( 'admin_init', 'dia_cust_fav_check_woocommerce' );
+function dia_cust_fav_check_woocommerce() {
     if ( is_admin() && current_user_can( 'activate_plugins' ) &&  !is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
-        add_action( 'admin_notices', 'dia_users_woo_fail_notice' );
+        add_action( 'admin_notices', 'dia_cust_fav_woo_fail_notice' );
         deactivate_plugins( plugin_basename( __FILE__ ) );
         if ( isset( $_GET['activate'] ) ) {
             unset( $_GET['activate'] );
@@ -22,17 +22,17 @@ function dia_users_check_woocommerce() {
 }
 
 // throw error code if its not active
-function dia_users_woo_fail_notice(){
+function dia_cust_fav_woo_fail_notice(){
     ?><div class="error"><p>Sorry, but this plugin requires Woocommerce to be installed and active, you idiot.</p></div><?php
 }
 
 // include the respective php files after successful activation
-add_action( 'init', 'dia_users_include_files' );
-function dia_users_include_files() {
+add_action( 'init', 'dia_cust_fav_include_files' );
+function dia_cust_fav_include_files() {
   if ( is_plugin_active( plugin_basename( __FILE__ ) ) ) {
     $mypluginrequires = array(
-      'dia-custom-users-admin.php',
-      'dia-custom-users-frontend.php'
+      'dia-customer-favorite-admin.php',
+      'dia-customer-favorite-frontend.php'
     );
     foreach ( $mypluginrequires as $need ) {
       include_once( plugin_dir_path( __FILE__ ) . $need );
@@ -41,14 +41,14 @@ function dia_users_include_files() {
 }
 
 // include JS for admin stuff
-add_action( 'admin_enqueue_scripts', 'dia_users_admin_js_script' );
-function dia_users_admin_js_script() {
-    wp_enqueue_script('dia-users-admin-js', plugins_url( '/js/dia-users-admin-js.js', __FILE__ ), array('jquery'));
+add_action( 'admin_enqueue_scripts', 'dia_cust_fav_admin_js_script' );
+function dia_cust_fav_admin_js_script() {
+    wp_enqueue_script('dia-cust-fav-admin-js', plugins_url( '/js/dia-customer-fav-admin-js.js', __FILE__ ), array('jquery'));
 }
 
-add_action( 'wp_enqueue_scripts', 'dia_users_admin_css' );
-function dia_users_admin_css() {
-    wp_register_style( 'dia-users-admin-css', plugins_url('/css/dia-users-admin-css.css', __FILE__) );
-    wp_enqueue_style( 'dia-users-admin-css' );
+add_action( 'wp_enqueue_scripts', 'dia_cust_fav_admin_css' );
+function dia_cust_fav_admin_css() {
+    wp_register_style( 'dia-cust-fav-admin-css', plugins_url('/css/dia-customer-fav-admin-css.css', __FILE__) );
+    wp_enqueue_style( 'dia-cust-fav-admin-css' );
 
 }

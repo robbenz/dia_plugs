@@ -1,15 +1,15 @@
 <?php
 
 /*** ADD CUSTOM META BOX ***/
-function add_dia_users_meta_box() {
-    add_meta_box("dia-user-role-meta-box", "DiaMedical USA Customer Favorite", "dia_users_CUSTOM_box_markup", "product", "normal", "high", null);
+function add_dia_cust_fav_meta_box() {
+    add_meta_box("dia-cust-fav-role-meta-box", "DiaMedical USA Customer Favorite", "dia_cust_fav_CUSTOM_box_markup", "product", "normal", "high", null);
 }
-add_action("add_meta_boxes", "add_dia_users_meta_box");
+add_action("add_meta_boxes", "add_dia_cust_fav_meta_box");
 /*** END ***/
 
 /*** ADD CUSTOM META BOX MARKUP FOR ADMIN ***/
-function dia_users_CUSTOM_box_markup($object) {
-  wp_nonce_field(basename(__FILE__), "dia-users-meta-box-nonce");
+function dia_cust_fav_CUSTOM_box_markup($object) {
+  wp_nonce_field(basename(__FILE__), "dia-cust-fav-meta-box-nonce");
   	global $post;
 
 
@@ -26,7 +26,7 @@ function dia_users_CUSTOM_box_markup($object) {
     );
     echo '</div>';
 
-    echo '<div id="dia_users_fav_pos_drop">';
+    echo '<div id="dia_cust_fav_fav_pos_drop">';
     woocommerce_wp_select(
     	array(
     		'id'          => 'dia_customer_favorite_position',
@@ -49,8 +49,8 @@ function dia_users_CUSTOM_box_markup($object) {
 /*** END ***/
 
 /*** SAVE THAT SHIT ***/
-function dia_users_save_custom_stuff($post_id, $post, $update) {
-    if (!isset($_POST["dia-users-meta-box-nonce"]) || !wp_verify_nonce($_POST["dia-users-meta-box-nonce"], basename(__FILE__)))
+function dia_cust_fav_save_custom_stuff($post_id, $post, $update) {
+    if (!isset($_POST["dia-cust-fav-meta-box-nonce"]) || !wp_verify_nonce($_POST["dia-cust-fav-meta-box-nonce"], basename(__FILE__)))
         return $post_id;
 
     if(!current_user_can("edit_post", $post_id))
@@ -64,20 +64,20 @@ function dia_users_save_custom_stuff($post_id, $post, $update) {
         return $post_id;
 
         // dia_customer_favorite
-        $dia_users_cust_fav_checkbox = isset( $_POST['dia_customer_favorite'] ) ? 'yes' : 'no';
-        update_post_meta( $post_id, 'dia_customer_favorite', $dia_users_cust_fav_checkbox );
+        $dia_cust_fav_cust_fav_checkbox = isset( $_POST['dia_customer_favorite'] ) ? 'yes' : 'no';
+        update_post_meta( $post_id, 'dia_customer_favorite', $dia_cust_fav_cust_fav_checkbox );
 
         // dia_customer_favorite_position
-        $dia_users_cust_fav_check_position = $_POST['dia_customer_favorite_position'];
-        if( !empty( $dia_users_cust_fav_check_position ) ) {
-          update_post_meta( $post_id, 'dia_customer_favorite_position', esc_attr( $dia_users_cust_fav_check_position ) );
+        $dia_cust_fav_cust_fav_check_position = $_POST['dia_customer_favorite_position'];
+        if( !empty( $dia_cust_fav_cust_fav_check_position ) ) {
+          update_post_meta( $post_id, 'dia_customer_favorite_position', esc_attr( $dia_cust_fav_cust_fav_check_position ) );
         }
         else {
-          update_post_meta( $post_id, 'dia_customer_favorite_position', esc_attr( $dia_users_cust_fav_check_position ) );
+          update_post_meta( $post_id, 'dia_customer_favorite_position', esc_attr( $dia_cust_fav_cust_fav_check_position ) );
         }
 
 
 
 } // end save_custom_meta_box
 
-add_action("save_post", "dia_users_save_custom_stuff", 10, 3);
+add_action("save_post", "dia_cust_fav_save_custom_stuff", 10, 3);
