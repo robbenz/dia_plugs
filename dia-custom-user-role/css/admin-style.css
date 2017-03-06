@@ -1,0 +1,33 @@
+#dia-user-roles-meta-box h2 {
+  background-color: #00426a;
+  color:#fff;
+}
+
+#dia-user-roles-meta-box .dia_product_mft_field,
+#dia-user-roles-meta-box .dia_product_list_price_field,
+#dia-user-roles-meta-box .dia_product_mft_part_number_field,
+#dia-user-roles-meta-box .dia_product_supplier_1_field,
+#dia-user-roles-meta-box .dia_product_supplier_2_field{
+  width: 33%;
+  display:inline-block;
+}
+
+#dia-user-roles-meta-box .dia_product_cost_1_field,
+#dia-user-roles-meta-box .dia_product_cost_2_field,
+#dia-user-roles-meta-box .dia_product_price_check_1_field,
+#dia-user-roles-meta-box .dia_product_price_check_2_field {
+  width:20%;
+  display:inline-block;
+}
+
+#dia-user-roles-meta-box .dia_product_price_check_person_1_field,
+#dia-user-roles-meta-box .dia_product_price_check_person_2_field {
+  width:27%;
+  display:inline-block;
+}
+
+#dia-user-roles-meta-box .dia_product_mft_field,
+#dia-user-roles-meta-box .dia_product_supplier_1_field,
+#dia-user-roles-meta-box .dia_product_supplier_2_field {
+  clear:both;
+}
