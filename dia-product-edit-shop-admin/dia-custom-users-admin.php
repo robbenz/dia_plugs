@@ -39,7 +39,7 @@ function dia_users_CUSTOM_box_markup($object) {
                             'Bottom Right' => __( 'Bottom Right', 'woocommerce' )
                             ),
     		'desc_tip'    => 'true',
-    		'description' => __( 'Where should the badge go?' )
+    		'description' => __( 'What\'s your favorite posish? That\'s cool with me, it\'s not my favorite but I\'ll do it for you.' )
     	)
     );
       echo '</div>';
