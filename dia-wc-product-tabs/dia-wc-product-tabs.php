@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: DiaMedical WooCommerce Product Tabs
+Plugin Name: DiaMedical USA WooCommerce Product Tabs
 Plugin URI: robbenz.com
 Description: This plugin will replace the custom tabs created by woocommerce jetpack because woocommerce jetpack is no longer free -- and does a bunch of shit we dont need
 Version: 1.0

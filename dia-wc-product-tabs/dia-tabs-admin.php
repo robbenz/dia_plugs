@@ -2,7 +2,7 @@
 
 /*** ADD CUSTOM META BOX ***/
 function add_dia_meta_box() {
-    add_meta_box("dia-tab-meta-box", "DiaMedical Product Tabs", "dia_meta_box_markup", "product", "normal", "low", null);
+    add_meta_box("dia-tab-meta-box", "DiaMedical USA Product Tabs", "dia_meta_box_markup", "product", "normal", "high", null);
 }
 add_action("add_meta_boxes", "add_dia_meta_box");
 /*** END ***/
@@ -42,8 +42,7 @@ function dia_meta_box_markup($object) {
         			<?php wp_editor( wp_kses_post( $dia_tab_content ), "dia_tab_content_$y", $settings ); ?>
         		</td>
         	</tr>
-          <br><hr><br>
-
+          <br><hr><br></div>
     <?php
   } // end for loop
 } // dia_meta_box_markup
