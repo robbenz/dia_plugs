@@ -2,7 +2,7 @@
 
 /*** ADD CUSTOM META BOX ***/
 function add_dia_users_meta_box() {
-    add_meta_box("dia-user-role-meta-box", "DiaMedical USA CUSTOM STUFF", "dia_users_CUSTOM_box_markup", "product", "normal", "high", null);
+    add_meta_box("dia-user-role-meta-box", "DiaMedical USA Customer Favorite", "dia_users_CUSTOM_box_markup", "product", "normal", "high", null);
 }
 add_action("add_meta_boxes", "add_dia_users_meta_box");
 /*** END ***/
@@ -42,66 +42,8 @@ function dia_users_CUSTOM_box_markup($object) {
     		'description' => __( 'Where should the badge go?' )
     	)
     );
-      echo '</div><hr>';
+      echo '</div>';
 
-
-echo'<div id="dia_stuff" class="options_group">';
-      woocommerce_wp_text_input(
-      	array(
-      		'id'          => 'dia_product_list_price',
-      		'label'       => __( 'MFT List Price', 'woocommerce' )
-      //    'max-width' => '300px;',
-      	//	'placeholder' => 'Probably an Infusion Pump',
-      	//	'desc_tip'    => 'true',
-      //		'description' => __( 'Enter in the list price ', 'woocommerce' )
-      	)
-      );
-
-      woocommerce_wp_text_input(
-        array(
-          'id'          => 'dia_product_cost',
-          'label'       => __( 'DiaMedical Cost', 'woocommerce' )
-      //    'max-width' => '300px;',
-        //	'placeholder' => 'Probably an Infusion Pump',
-        //  'desc_tip'    => 'true',
-      //    'description' => __( 'Enter in the list price ', 'woocommerce' )
-        )
-      );
-
-      woocommerce_wp_text_input(
-        array(
-          'id'          => 'dia_product_supplier',
-          'label'       => __( 'DiaMedical Supplier', 'woocommerce' )
-      //    'max-width' => '300px;',
-        //	'placeholder' => 'Probably an Infusion Pump',
-        //  'desc_tip'    => 'true',
-      //    'description' => __( 'Enter in the list price ', 'woocommerce' )
-        )
-      );
-
-      woocommerce_wp_text_input(
-        array(
-          'id'          => 'dia_product_mft',
-          'label'       => __( 'Manufacturer', 'woocommerce' )
-      //    'max-width' => '300px;',
-        //	'placeholder' => 'Probably an Infusion Pump',
-        //  'desc_tip'    => 'true',
-      //    'description' => __( 'Enter in the list price ', 'woocommerce' )
-        )
-      );
-            woocommerce_wp_text_input(
-              array(
-                'id'          => 'dia_product_price_check',
-                'label'       => __( 'Date Verified', 'woocommerce' )
-            //    'max-width' => '300px;',
-              //	'placeholder' => 'Probably an Infusion Pump',
-              //  'desc_tip'    => 'true',
-            //    'description' => __( 'Enter in the list price ', 'woocommerce' )
-              )
-            );
-
-
-  echo '</div>';
 
 } // dia_meta_box_markup
 /*** END ***/

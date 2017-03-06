@@ -1,8 +1,8 @@
 <?php
 /*
-Plugin Name: DiaMedical Shop Admin Editing
+Plugin Name: DiaMedical USA Customer Favorite
 Plugin URI: robbenz.com
-Description: This plugin will allow for a custom user role that can only edit certain things about our products, it will allow create custom product meta that our shop admins will need to use such as cost, supplier, and list price
+Description: This plugin will allow for a Shop admin to Add a customer favorite button to the gallery & product page
 Version: 1.0
 Author: Rob Benz
 Author URI: robbenz.com
