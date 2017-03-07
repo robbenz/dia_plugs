@@ -40,10 +40,9 @@ function dia_user_roles_box_markup($object) {
       'dia_product_vendor_pn'          => 'Vendor Part Number',
       'dia_product_price_check'        => 'Vendor Date Verified',
       'dia_product_price_check_person' => 'Vendor Verified By:'
-      // add vendor part number
     );
 
-    for ( $x = 1 ; $x < 3; $x++ ) {
+    for ( $x = 1; $x < 3; $x++ ) {
       if ($x == 1) { $ZZ = "Primary "; }
       elseif ($x == 2) { $ZZ = "Secondary ";
         woocommerce_wp_checkbox(
@@ -66,7 +65,6 @@ function dia_user_roles_box_markup($object) {
           } // end foreach
           if ($x == 2) { echo '</div>'; }
         } // end for loop
-
   } // dia_meta_box_markup
 /*** END ***/
 
@@ -86,19 +84,42 @@ function dia_user_roles_save_that_shit($post_id, $post, $update) {
     if($slug != $post->post_type)
         return $post_id;
 
-        // dia_multiple supplier checkbox
-        $dia_user_role_chex = isset( $_POST['dia_product_multiple_suppliers'] ) ? 'yes' : 'no';
-        update_post_meta( $post_id, 'dia_product_multiple_suppliers', $dia_user_role_chex );
+    // dia_multiple supplier checkbox
+    $dia_user_role_chex = isset( $_POST['dia_product_multiple_suppliers'] ) ? 'yes' : 'no';
+    update_post_meta( $post_id, 'dia_product_multiple_suppliers', $dia_user_role_chex );
 
+    $dia_text_inputs = array (
+      'dia_product_mft',
+      'dia_product_mft_part_number',
+      'dia_product_list_price',
+      'dia_product_supplier_1',
+      'dia_product_cost_1',
+      'dia_product_vendor_pn_1',
+      'dia_product_price_check_1',
+      'dia_product_price_check_person_1',
+      'dia_product_supplier_2',
+      'dia_product_cost_2',
+      'dia_product_vendor_pn_2',
+      'dia_product_price_check_2',
+      'dia_product_price_check_person_2'
+    );
+    foreach ($dia_text_inputs as $inputt) {
+      $dia_users_meta_value = "";
+      if(isset($_POST[$inputt])) {
+        $dia_users_meta_value = $_POST[$inputt];
+      }
+      update_post_meta($post_id, $inputt, $dia_users_meta_value);
+    }
 
         // dia_customer_favorite_position
+        /*
         $dia_cust_fav_cust_fav_check_position = $_POST['dia_customer_favorite_position'];
         if( !empty( $dia_cust_fav_cust_fav_check_position ) ) {
           update_post_meta( $post_id, 'dia_customer_favorite_position', esc_attr( $dia_cust_fav_cust_fav_check_position ) );
         }
         else {
           update_post_meta( $post_id, 'dia_customer_favorite_position', esc_attr( $dia_cust_fav_cust_fav_check_position ) );
-        }
+        }*/
 
 } // end save_custom_meta_box
 
