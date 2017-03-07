@@ -7,18 +7,6 @@ function add_dia_user_roles_meta_box() {
 add_action("add_meta_boxes", "add_dia_user_roles_meta_box");
 /*** END ***/
 
-/*** LOAD JQERY DATE PICKER ***/
-function add_e2_date_picker(){
-//jQuery UI date picker file
-wp_enqueue_script('jquery-ui-datepicker');
-//jQuery UI theme css file
-wp_enqueue_style('e2b-admin-ui-css','http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/base/jquery-ui.css',false,"1.9.0",false);
-}
-add_action('admin_enqueue_scripts', 'add_e2_date_picker');
-/*** END ***/
-
-
-
 /*** ADD CUSTOM META BOX MARKUP FOR ADMIN ***/
 function dia_user_roles_box_markup($object) {
   wp_nonce_field(basename(__FILE__), "dia-user-roles-meta-box-nonce");
@@ -109,18 +97,8 @@ function dia_user_roles_save_that_shit($post_id, $post, $update) {
         $dia_users_meta_value = $_POST[$inputt];
       }
       update_post_meta($post_id, $inputt, $dia_users_meta_value);
-    }
+    } // end foreach
 
-        // dia_customer_favorite_position
-        /*
-        $dia_cust_fav_cust_fav_check_position = $_POST['dia_customer_favorite_position'];
-        if( !empty( $dia_cust_fav_cust_fav_check_position ) ) {
-          update_post_meta( $post_id, 'dia_customer_favorite_position', esc_attr( $dia_cust_fav_cust_fav_check_position ) );
-        }
-        else {
-          update_post_meta( $post_id, 'dia_customer_favorite_position', esc_attr( $dia_cust_fav_cust_fav_check_position ) );
-        }*/
-
-} // end save_custom_meta_box
+} // end dia_user_roles_save_that_shit
 
 add_action("save_post", "dia_user_roles_save_that_shit", 10, 3);
