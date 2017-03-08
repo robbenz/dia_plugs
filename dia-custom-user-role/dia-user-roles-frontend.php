@@ -8,30 +8,29 @@ function dia_product_meta_display_product() {
   global $product;
   $current_user = wp_get_current_user();
   $allowed_roles = array('shop_manger', 'administrator');
-  if( array_intersect($allowed_roles, $current_user->roles ) ) {
-  $current_user_name = $current_user->user_firstname ." ".$current_user->user_lastname;
-  $_mft = get_post_meta( get_the_ID(), 'dia_product_mft', true );
-  $_mft_part_number = get_post_meta( get_the_ID(), 'dia_product_mft_part_number', true );
-  $_list_price = get_post_meta( get_the_ID(), 'dia_product_list_price', true );
-  $_supplier_1 = get_post_meta( get_the_ID(), 'dia_product_supplier_1', true );
-  $_cost_1 = get_post_meta( get_the_ID(), 'dia_product_cost_1', true );
-  $_vendor_pn_1 = get_post_meta( get_the_ID(), 'dia_product_vendor_pn_1', true );
-  $_price_check_1 = get_post_meta( get_the_ID(), 'dia_product_price_check_1', true );
-  $_price_check_person_1 = get_post_meta( get_the_ID(), 'dia_product_price_check_person_1', true );
-  $_supplier_2 = get_post_meta( get_the_ID(), 'dia_product_supplier_2', true );
-  $_cost_2 = get_post_meta( get_the_ID(), 'dia_product_cost_2', true );
-  $_vendor_pn_2 = get_post_meta( get_the_ID(), 'dia_product_vendor_pn_2', true );
-  $_price_check_2 = get_post_meta( get_the_ID(), 'dia_product_price_check_2', true );
-  $_price_check_person_2 = get_post_meta( get_the_ID(), 'dia_product_price_check_person_2', true );
-
-  if ( 'yes' == get_post_meta( get_the_ID(), 'dia_customer_favorite', true ) ) {
-    echo 'yes';
-  }
+//  if( array_intersect($allowed_roles, $current_user->roles ) ) {
+    $current_user_name = $current_user->user_firstname ." ".$current_user->user_lastname;
+    $_mft = get_post_meta( get_the_ID(), 'dia_product_mft', true );
+    $_mft_part_number = get_post_meta( get_the_ID(), 'dia_product_mft_part_number', true );
+    $_list_price = get_post_meta( get_the_ID(), 'dia_product_list_price', true );
+    $_supplier_1 = get_post_meta( get_the_ID(), 'dia_product_supplier_1', true );
+    $_cost_1 = get_post_meta( get_the_ID(), 'dia_product_cost_1', true );
+    $_vendor_pn_1 = get_post_meta( get_the_ID(), 'dia_product_vendor_pn_1', true );
+    $_price_check_1 = get_post_meta( get_the_ID(), 'dia_product_price_check_1', true );
+    $_price_check_person_1 = get_post_meta( get_the_ID(), 'dia_product_price_check_person_1', true );
+    $_supplier_2 = get_post_meta( get_the_ID(), 'dia_product_supplier_2', true );
+    $_cost_2 = get_post_meta( get_the_ID(), 'dia_product_cost_2', true );
+    $_vendor_pn_2 = get_post_meta( get_the_ID(), 'dia_product_vendor_pn_2', true );
+    $_price_check_2 = get_post_meta( get_the_ID(), 'dia_product_price_check_2', true );
+    $_price_check_person_2 = get_post_meta( get_the_ID(), 'dia_product_price_check_person_2', true );
 
 ?>
-<div style="clear:both; float:left; width:100%;">
+
+  <input type="checkbox" id="show_specs_product" value="first_checkbox">
+  <label for="show_specs_product">Show Specs</label>
 <h4 style="background-color:#00426a; margin:0; width:100%; text-align:center; color:#fff; padding: 0.25em 0; ">Greetings <?php echo $current_user_name; ?> </h4>
-<div style="border:3px solid #00426a; padding: 10px;margin:0 auto;">
+
+<div id="specs_wrap_p_page" style="border:3px solid #00426a; padding: 10px;margin:0 auto;">
 <style type="text/css">
 .dia_tg  {border-collapse:collapse;border-spacing:0;}
 .dia_tg td{font-family:Arial, sans-serif;font-size:12px;padding:4px 20px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
@@ -79,11 +78,11 @@ function dia_product_meta_display_product() {
 </table>
 
 
-</div>
+
 
 </div>
 <?php
-} else {
-  return;
-}
+//} else {
+//  return;
+//}
 }

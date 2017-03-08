@@ -54,4 +54,6 @@ add_action( 'wp_enqueue_scripts', 'dia_user_roles_admin_css' );
 function dia_user_roles_admin_css() {
     wp_register_style( 'dia-user-roles-admin-css', plugins_url('/css/dia-user-roles-css.css', __FILE__) );
     wp_enqueue_style( 'dia-user-roles-admin-css' );
+    wp_register_script('front-end-js', plugins_url( '/js/front-end-js.js', __FILE__ ), array('jquery'));
+    wp_enqueue_script('front-end-js');
 }
