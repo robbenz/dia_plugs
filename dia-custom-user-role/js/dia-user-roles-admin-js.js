@@ -20,9 +20,9 @@ jQuery(document).ready(function() {
 // add date picker and shit
 jQuery(document).ready(function($) {
   $('.dia_product_price_check_1_field input').datepicker({
-    dateFormat : 'mm-dd-yy'
+    dateFormat : 'mm/dd/yy'
   });
   $('.dia_product_price_check_2_field input').datepicker({
-    dateFormat : 'mm-dd-yy'
+    dateFormat : 'mm/dd/yy'
   });
 });

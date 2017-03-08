@@ -56,7 +56,6 @@ function dia_user_roles_box_markup($object) {
   } // dia_meta_box_markup
 /*** END ***/
 
-
 /*** SAVE THAT SHIT ***/
 function dia_user_roles_save_that_shit($post_id, $post, $update) {
     if (!isset($_POST["dia-user-roles-meta-box-nonce"]) || !wp_verify_nonce($_POST["dia-user-roles-meta-box-nonce"], basename(__FILE__)))
