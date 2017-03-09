@@ -33,11 +33,13 @@ function dia_user_roles_include_files() {
   if ( is_plugin_active( plugin_basename( __FILE__ ) ) ) {
     $mypluginrequires = array(
       'dia-user-roles-admin.php',
+      'dia-user-roles-users.php',
       'dia-user-roles-frontend.php'
     );
     foreach ( $mypluginrequires as $need ) {
       include_once( plugin_dir_path( __FILE__ ) . $need );
     }
+
   }
 }
 

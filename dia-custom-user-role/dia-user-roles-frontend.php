@@ -122,42 +122,15 @@ function dia_product_meta_display_archive() {
 
       <div id="show_spec_div_wrap_<?php echo $_id; ?>" class="show_spec_div_wrap">
         <table class="dia_tg" id="imfuckingsweetatcoding">
-          <tr>
-            <td>Manufacturer: </td>
-            <td><?php echo $_mft; ?></td>
-          </tr>
-          <tr>
-            <td>MFT Part #: </td>
-            <td><?php echo $_mft_part_number;?></td>
-          </tr>
-          <tr>
-            <td>MFT List Price: </td>
-            <td><?php echo '$'.$_list_price;?></td>
-          </tr>
-          <tr>
-            <td>Vendor 1: </td>
-            <td><?php echo $_supplier_1;?></td>
-          </tr>
-          <tr>
-            <td>Cost: </td>
-            <td><?php echo '$'.$_cost_1;?></td>
-          </tr>
-          <tr>
-            <td>Verified on: </td>
-            <td><?php echo $_price_check_1;?></td>
-          </tr>
-          <tr>
-            <td>Vendor 2: </td>
-            <td><?php echo $_supplier_2;?></td>
-          </tr>
-          <tr>
-            <td>Cost: </td>
-            <td><?php echo '$'.$_cost_2;?></td>
-          </tr>
-          <tr>
-            <td>Verified on: </td>
-            <td><?php echo $_price_check_2;?></td>
-          </tr>
+          <tr><td>Manufacturer: </td><td><?php echo $_mft; ?></td></tr>
+          <tr><td>MFT Part #: </td><td><?php echo $_mft_part_number;?></td></tr>
+          <tr><td>MFT List Price: </td><td><?php echo '$'.$_list_price;?></td></tr>
+          <tr><td>Vendor 1: </td><td><?php echo $_supplier_1;?></td></tr>
+          <tr><td>Cost: </td><td><?php echo '$'.$_cost_1;?></td></tr>
+          <tr><td>Verified on: </td><td><?php echo $_price_check_1;?></td></tr>
+          <tr><td>Vendor 2: </td><td><?php echo $_supplier_2;?></td></tr>
+          <tr><td>Cost: </td><td><?php echo '$'.$_cost_2;?></td></tr>
+          <tr><td>Verified on: </td><td><?php echo $_price_check_2;?></td></tr>
         </table>
       </div>
 
