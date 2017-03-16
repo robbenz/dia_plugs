@@ -1,27 +1,8 @@
-/*
-@media (min-width: 992px) {
-  .single-product .favimg_topleft {top: -328px; left: -13px; }
-  .single-product .favimg_bottomleft {top: -78px; left: -13px; }
-  .single-product .favimg_topright {top: -328px; left: 242px;}
-  .single-product .favimg_bottomright {top: -78px; left: 242px; }
-  .tax-product_cat .favimg_topleft {top: -327px; left: -13px;}
-  .tax-product_cat .favimg_bottomleft {top: -200px; left: -13px;}
-  .tax-product_cat .favimg_topright {top: -327px; left: 132px;}
-  .tax-product_cat .favimg_bottomright {top: -200px; left: 132px;}
-}
-
-@media (min-width: 1200px) {
-  .single-product .favimg_topleft {top: -398px; left: -13px; }
-  .single-product .favimg_bottomleft {top: -120px; left: -13px; }
-  .single-product .favimg_topright {top: -398px; left: 313px; }
-  .single-product .favimg_bottomright {top: -120px; left: 313px; }
-  .tax-product_cat .favimg_topleft {top: -374px; left: -13px; }
-  .tax-product_cat .favimg_bottomleft {top: -204px; left: -13px; }
-  .tax-product_cat .favimg_topright {top: -374px; left: 132px; }
-  .tax-product_cat .favimg_bottomright {top: -204px; left: 132px; }
-
-}
-*/
+.single-product .favimg_topleft { top: -17px; left: -25px; }
+.single-product .favimg_topright { top: -17px; left:34%; }
+.tax-product_cat .favimg_topleft {top: -31px; left: -16px; }
+.woocommerce div.product .woocommerce-main-image { position:relative; }
+.woocommerce ul.products li.product a { position:relative; }
 
 @media (min-width: 320px) {
   #customer_fav_img { display:none; }
@@ -42,21 +23,4 @@
   .tax-product_cat .favimg_topright {left: 164px; }
   .tax-product_cat .favimg_bottomleft {top: 165px; }
   .tax-product_cat .favimg_bottomright {top: 165px;  left: 164px;  }
-}
-
-.single-product .favimg_topleft { top: -17px; left: -25px; }
-.single-product .favimg_topright { top: -17px; left:34%; }
-
-
-.tax-product_cat .favimg_topleft {top: -31px; left: -16px; }
-
-
-
-
-
-.woocommerce div.product .woocommerce-main-image {
-  position:relative;
-}
-.woocommerce ul.products li.product a {
-  position:relative;
 }
