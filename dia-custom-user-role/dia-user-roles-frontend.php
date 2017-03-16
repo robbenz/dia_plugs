@@ -6,7 +6,7 @@ function dia_product_meta_display_product() {
   if (is_user_logged_in() ) {
     global $product;
     $current_user = wp_get_current_user();
-    $allowed_roles = array('shop_manager', 'administrator');
+    $allowed_roles = array('shop_managers', 'administrator');
     if( array_intersect($allowed_roles, $current_user->roles ) ) {
       $current_user_name = $current_user->user_firstname ." ".$current_user->user_lastname;
       $_mft = get_post_meta( get_the_ID(), 'dia_product_mft', true );
@@ -101,7 +101,7 @@ function dia_product_meta_display_archive() {
     $_vendor_pn_2 = get_post_meta( get_the_ID(), 'dia_product_vendor_pn_2', true );
     $_price_check_2 = get_post_meta( get_the_ID(), 'dia_product_price_check_2', true );
     $_price_check_person_2 = get_post_meta( get_the_ID(), 'dia_product_price_check_person_2', true );
-    $allowed_roles = array('shop_manager', 'administrator');
+    $allowed_roles = array('shop_managers', 'administrator');
     if( array_intersect($allowed_roles, $current_user->roles ) ) {
       ?>
       <input id="show_spec_chex_<?php echo $_id; ?>" type="checkbox" class="show_specs_archive_each">

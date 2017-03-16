@@ -12,7 +12,6 @@ function dia_cust_fav_CUSTOM_box_markup($object) {
   wp_nonce_field(basename(__FILE__), "dia-cust-fav-meta-box-nonce");
   	global $post;
 
-
     echo '<div>';
     woocommerce_wp_checkbox(
     array(
@@ -43,9 +42,8 @@ function dia_cust_fav_CUSTOM_box_markup($object) {
     	)
     );
       echo '</div>';
-
-
-} // dia_meta_box_markup
+}
+// dia_meta_box_markup
 /*** END ***/
 
 /*** SAVE THAT SHIT ***/
