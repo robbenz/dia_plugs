@@ -36,7 +36,3 @@ function dia_new_product_tab_content($param, $args) {
   print_r ($dia_tab_content);
 }
 /*** END ***/
-/*
-add_filter('dia_new_product_tabs', array($GLOBALS['wp_embed'], 'autoembed'), 9);
-add_filter('dia_new_product_tab_content', array($GLOBALS['wp_embed'], 'autoembed'), 9);
-*/
