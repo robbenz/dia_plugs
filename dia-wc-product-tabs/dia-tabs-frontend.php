@@ -1,6 +1,5 @@
 <?php
 
-
 add_filter( 'woocommerce_product_tabs', 'dia_new_product_tabs' );
 
 /*** ADD TABS & TAB TITLES ***/
@@ -31,6 +30,13 @@ function dia_new_product_tab_content($param, $args) {
   global $post;
   $table = end($args);
   $dia_tab_content = get_post_meta( $post->ID, $table, true );
-     echo $dia_tab_content;
+  if(isset($GLOBALS['wp_embed'])) {
+    $dia_tab_content = $GLOBALS['wp_embed']->autoembed($dia_tab_content);
+  }
+  print_r ($dia_tab_content);
 }
 /*** END ***/
+/*
+add_filter('dia_new_product_tabs', array($GLOBALS['wp_embed'], 'autoembed'), 9);
+add_filter('dia_new_product_tab_content', array($GLOBALS['wp_embed'], 'autoembed'), 9);
+*/
