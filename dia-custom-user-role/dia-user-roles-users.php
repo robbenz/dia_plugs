@@ -17,6 +17,11 @@ $SEOresult = add_role( 'seo_specialist', __(
     'update_core' => false
   )
 );
+
+remove_role( 'subscriber' );
+remove_role( 'editor' );
+remove_role( 'contributor' );
+remove_role( 'author' );
 /*** END ***/
 
 /*** ADD / REMOVE CAPS FOR THESE USERS  ***/
@@ -200,6 +205,8 @@ function dia_users_remove_row_actions( $actions ) {
       }
       return $actions;
     }
+  } elseif ( current_user_can( 'administrator' ) ) {
+    return $actions;
   }
 }
 /*** END ***/
