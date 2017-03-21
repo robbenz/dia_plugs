@@ -2,6 +2,7 @@
 
 /*** TWO NEW CUSTOM USER ROLES  ***/
 $result = add_role( 'shop_observer', __( 'Shop Observer' ), array( 'read' => true ) );
+
 $SEOresult = add_role( 'seo_specialist', __(
   'SEO Specialist' ), array(
     'read' => true,
@@ -120,6 +121,11 @@ function dia_users_remove_menu_pages() {
     unset( $submenu['edit.php?post_type=product'][10] ); // add new product
     unset( $submenu['edit.php?post_type=product'][16] ); // Tags page
     unset( $submenu['edit.php?post_type=product'][17] ); // shipping class page
+
+    if ($user_ID == '1844') {
+      add_menu_page( 'Iv Bag Waivers', 'Services', 'manage_woocommerce', 'wp-admin/edit.php?post_status=all&post_type=vfb_entry&form-id=1&submit=Select', '', 'dashicons-media-document', 'low' );
+    }
+    
   }
 }
 /*** END ***/
