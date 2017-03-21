@@ -9,7 +9,6 @@ Author URI: robbenz.com
 License: GPL2
 */
 
-
 // check to make sure woocommerce is active -- and break if its not
 add_action( 'admin_init', 'dia_user_roles_check_woocommerce' );
 function dia_user_roles_check_woocommerce() {
@@ -59,3 +58,33 @@ function dia_user_roles_admin_css() {
     wp_register_script('front-end-js', plugins_url( '/js/front-end-js.js', __FILE__ ), array('jquery'));
     wp_enqueue_script('front-end-js');
 }
+
+/* Really nice clean admin menu debugging
+if (!function_exists('debug_admin_menus')):
+  function debug_admin_menus() {
+    if ( !is_admin())
+    return;
+    global $submenu, $menu, $pagenow;
+    if ( current_user_can('manage_options') ) { // ONLY DO THIS FOR ADMIN
+      if( $pagenow == 'index.php' ) {  // PRINTS ON DASHBOARD
+            echo '<pre>'; print_r( $menu ); echo '</pre>'; // TOP LEVEL MENUS
+            echo '<pre>'; print_r( $submenu ); echo '</pre>'; // SUBMENUS
+        }
+    }
+}
+add_action( 'admin_notices', 'debug_admin_menus' );
+endif;
+*/
+
+/* Debug user role caps
+add_action( 'admin_notices', 'debug_user_roles' );
+function debug_user_roles() {
+  global $pagenow;
+  if( $pagenow == 'index.php' ) {
+    $MYrole = get_role("shop_manager");
+    echo '<pre>';
+    print_r($MYrole->capabilities);
+    echo '</pre>';
+  }
+}
+*/
