@@ -187,7 +187,6 @@ function remove_admin_bar_links() {
     $wp_admin_bar->remove_menu('comments');
     $wp_admin_bar->remove_menu('new-content');
   }
-
 }
 /*** END ***/
 
@@ -199,7 +198,7 @@ function dia_users_remove_row_actions( $actions ) {
     if ( get_post_type() === 'product' ) {
       unset( $actions['duplicate'] );
       if ($user_ID == '217' || $user_ID == '1290' ) {
-        echo ' ';
+        echo '';
       } else {
         unset( $actions['inline hide-if-no-js'] );   // QUICK EDIT
       }
