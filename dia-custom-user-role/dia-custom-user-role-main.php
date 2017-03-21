@@ -81,10 +81,16 @@ add_action( 'admin_notices', 'debug_user_roles' );
 function debug_user_roles() {
   global $pagenow;
   if( $pagenow == 'index.php' ) {
-    $MYrole = get_role("shop_manager");
+    $MYrole = get_role("editor");
     echo '<pre>';
     print_r($MYrole->capabilities);
     echo '</pre>';
+
+    $MY_other_role = get_role("shop_manager");
+    echo '<pre>';
+    print_r($MY_other_role->capabilities);
+    echo '</pre>';
+
   }
 }
-*/
+ end */

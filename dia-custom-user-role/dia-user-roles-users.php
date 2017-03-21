@@ -22,8 +22,8 @@ $SEOresult = add_role( 'seo_specialist', __(
 /*** ADD / REMOVE CAPS FOR THESE USERS  ***/
 add_action( 'admin_init', 'dia_seo_special_add_caps' );
 function dia_seo_special_add_caps() {
-  $role = get_role("seo_specialist");
-
+  global $user_ID;
+  $role = get_role( "seo_specialist" );
 
   $SEO_add_caps = array (  // Add these to SEO role
     "manage_woocommerce",
@@ -85,11 +85,30 @@ function dia_seo_special_add_caps() {
     "delete_product_terms",
     "manage_product_terms",
     "delete_private_products",
-    "publish_products",
+    "publish_products"
   );
   foreach ( $SEO_deny_caps as $dcap ) {
     $role->remove_cap( $dcap );
   }
+
+    $ivroles = get_role( "shop_manager" );
+
+    $ivroles->add_cap( 'vfb_view_entries');
+    $ivroles->add_cap( 'vfb_read');
+    $ivroles->add_cap( 'vfb_edit_entries');
+    $ivroles->add_cap( 'vfb_delete_entries');
+
+    $ivroles->remove_cap( 'vfb_create_forms');
+    $ivroles->remove_cap( 'vfb_edit_forms');
+    $ivroles->remove_cap( 'vfb_copy_forms');
+    $ivroles->remove_cap( 'vfb_delete_forms');
+    $ivroles->remove_cap( 'vfb_import_forms');
+    $ivroles->remove_cap( 'vfb_export_forms');
+    $ivroles->remove_cap( 'vfb_edit_email_design');
+    $ivroles->remove_cap( 'vfb_view_analytics');
+
+
+
 
 }
 /*** END ***/
@@ -115,6 +134,7 @@ function dia_users_remove_menu_pages() {
     remove_menu_page('tools.php');
     remove_menu_page('options-general.php');
     remove_menu_page('easy-modal');
+    remove_menu_page('vfb-pro');
     remove_menu_page('woocommerce');
     remove_submenu_page('edit.php?post_type=product', 'product_attributes' );
     remove_submenu_page('edit.php?post_type=product', 'global_addons');
@@ -184,11 +204,8 @@ function dia_users_remove_row_actions( $actions ) {
 function wpse_203917_admin_bar_menu( $wp_admin_bar ) {
     if ( ! $node = $wp_admin_bar->get_node( 'my-account' ) )
         return;
-
     $roles = wp_get_current_user()->roles;
-
     $node->title .= sprintf( '  | (%s)', implode( ', ', $roles ) );
-
     $wp_admin_bar->add_node( $node );
 }
 
