@@ -35,7 +35,9 @@ function dia_seo_special_add_caps() {
     "edit_private_products",
     "edit_published_products",
     "edit_product_terms",
-    "assign_product_terms"
+    "assign_product_terms",
+    "delete_product_terms",
+    "manage_product_terms"
   );
   foreach ( $SEO_add_caps as $cap ) {
     $role->add_cap( $cap );
@@ -82,8 +84,6 @@ function dia_seo_special_add_caps() {
     "delete_shop_coupon_terms",
     "assign_shop_coupon_terms",
     "view_woocommerce_reports",
-    "delete_product_terms",
-    "manage_product_terms",
     "delete_private_products",
     "publish_products"
   );
@@ -91,24 +91,11 @@ function dia_seo_special_add_caps() {
     $role->remove_cap( $dcap );
   }
 
-    $ivroles = get_role( "shop_manager" );
-
-    $ivroles->add_cap( 'vfb_view_entries');
-    $ivroles->add_cap( 'vfb_read');
-    $ivroles->add_cap( 'vfb_edit_entries');
-    $ivroles->add_cap( 'vfb_delete_entries');
-
-    $ivroles->remove_cap( 'vfb_create_forms');
-    $ivroles->remove_cap( 'vfb_edit_forms');
-    $ivroles->remove_cap( 'vfb_copy_forms');
-    $ivroles->remove_cap( 'vfb_delete_forms');
-    $ivroles->remove_cap( 'vfb_import_forms');
-    $ivroles->remove_cap( 'vfb_export_forms');
-    $ivroles->remove_cap( 'vfb_edit_email_design');
-    $ivroles->remove_cap( 'vfb_view_analytics');
-
-
-
+  $ivroles = get_role( "shop_manager" );
+  $ivroles->add_cap( 'vfb_view_entries');
+  $ivroles->add_cap( 'vfb_read');
+  $ivroles->add_cap( 'vfb_edit_entries');
+  $ivroles->add_cap( 'vfb_delete_entries');
 
 }
 /*** END ***/
@@ -130,7 +117,6 @@ function dia_users_remove_menu_pages() {
     remove_menu_page('plugins.php');
     remove_menu_page('themes.php');
     remove_menu_page('users.php');
-    remove_menu_page('edit.php');
     remove_menu_page('tools.php');
     remove_menu_page('options-general.php');
     remove_menu_page('easy-modal');
@@ -141,12 +127,25 @@ function dia_users_remove_menu_pages() {
     unset( $submenu['edit.php?post_type=product'][10] ); // add new product
     unset( $submenu['edit.php?post_type=product'][16] ); // Tags page
     unset( $submenu['edit.php?post_type=product'][17] ); // shipping class page
+  }
 
-    if ( $user_ID == '1844' || $user_ID == '1290' ) {
+  $special_ids = array (
+    '1844',  // 1844 Stephanie
+    '1607',  // 1607 April
+             // 217 mike
+    '1290'   // benz_rob@yahoo
+  );
+  foreach ( $special_ids as $sID ) {
+    if ($user_ID == $sID ) {
       add_menu_page( 'Iv Bag Waivers', 'Iv Bag Waivers', 'manage_woocommerce', 'edit.php?post_status=all&post_type=vfb_entry&form-id=1&submit=Select', '', 'dashicons-media-document', 'low' );
     }
-
   }
+
+  if ( current_user_can( 'shop_manager' ) ){
+    remove_menu_page('edit.php');
+    add_menu_page( 'Profile', 'Profile', 'manage_woocommerce', 'profile.php', '', 'dashicons-admin-users', 100 );
+  }
+
 }
 /*** END ***/
 
@@ -190,23 +189,28 @@ function remove_admin_bar_links() {
 /*** REMOVE DUPLICATE AND QUICK EDIT LINKS ***/
 add_filter( 'post_row_actions', 'dia_users_remove_row_actions', 15, 2 );
 function dia_users_remove_row_actions( $actions ) {
+  global $user_ID;
   if ( current_user_can( 'shop_manager' ) || current_user_can( 'seo_specialist' ) ) {
     if ( get_post_type() === 'product' ) {
-      unset( $actions['inline hide-if-no-js'] );   // QUICK EDIT
       unset( $actions['duplicate'] );
+      if ($user_ID == '217' || $user_ID == '1290' ) {
+        echo ' ';
+      } else {
+        unset( $actions['inline hide-if-no-js'] );   // QUICK EDIT
+      }
       return $actions;
     }
   }
 }
 /*** END ***/
 
-
-function wpse_203917_admin_bar_menu( $wp_admin_bar ) {
+/*** ADD PRINT OUT OF USER ROLE ON TOP RIGHT ADMIN MENU ***/
+add_action( 'admin_bar_menu', 'dia_users_admin_bar_menu' );
+function dia_users_admin_bar_menu( $wp_admin_bar ) {
     if ( ! $node = $wp_admin_bar->get_node( 'my-account' ) )
         return;
     $roles = wp_get_current_user()->roles;
     $node->title .= sprintf( '  | (%s)', implode( ', ', $roles ) );
     $wp_admin_bar->add_node( $node );
 }
-
-add_action( 'admin_bar_menu', 'wpse_203917_admin_bar_menu' );
+/*** END ***/
