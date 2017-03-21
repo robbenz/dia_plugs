@@ -122,8 +122,8 @@ function dia_users_remove_menu_pages() {
     unset( $submenu['edit.php?post_type=product'][16] ); // Tags page
     unset( $submenu['edit.php?post_type=product'][17] ); // shipping class page
 
-    if ($user_ID == '1844') {
-      add_menu_page( 'Iv Bag Waivers', 'Iv Bag Waivers', 'manage_woocommerce', 'https://www.diamedicalusa.com/wp-admin/edit.php?post_status=all&post_type=vfb_entry&form-id=1&submit=Select', '', 'dashicons-media-document', 'low' );
+    if ( $user_ID == '1844' || $user_ID == '1290' ) {
+      add_menu_page( 'Iv Bag Waivers', 'Iv Bag Waivers', 'manage_woocommerce', 'edit.php?post_status=all&post_type=vfb_entry&form-id=1&submit=Select', '', 'dashicons-media-document', 'low' );
     }
 
   }
