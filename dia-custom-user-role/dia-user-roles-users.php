@@ -142,11 +142,11 @@ function dia_users_remove_menu_pages() {
   );
   foreach ( $special_ids as $sID ) {
     if ($user_ID == $sID ) {
-      add_menu_page( 'Iv Bag Waivers', 'Iv Bag Waivers', 'manage_woocommerce', 'edit.php?post_status=all&post_type=vfb_entry&form-id=1&submit=Select', '', 'dashicons-media-document', 'low' );
+      add_menu_page( 'IV Bag Waivers', 'IV Bag Waivers', 'manage_woocommerce', 'edit.php?post_status=all&post_type=vfb_entry&form-id=1&submit=Select', '', 'dashicons-media-document', 'low' );
     }
   }
 
-  if ( current_user_can( 'shop_manager' ) ){
+  if ( current_user_can( 'shop_manager' ) ) {
     remove_menu_page('edit.php');
     add_menu_page( 'Profile', 'Profile', 'manage_woocommerce', 'profile.php', '', 'dashicons-admin-users', 100 );
   }
@@ -170,9 +170,8 @@ function dia_users_remove_metaboxes() {
     remove_meta_box( 'woocommerce-product-data' , 'product' , 'normal' );
     remove_meta_box( 'woocommerce-product-images' , 'product' , 'side' );
   }
-  if ( current_user_can( 'shop_manager' ) ) {
-    remove_meta_box( 'wpseo_meta' , 'product' , 'normal' );
-  }
+  //    remove_meta_box( 'wpseo_meta' , 'product' , 'normal' );
+
 }
 /*** END ***/
 
