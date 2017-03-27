@@ -38,7 +38,7 @@ function wppb_change_login_with_email(){
 
 			// if this setting is active, the posted username is, in fact the user's email
 			if( isset( $wppb_generalSettings['loginWith'] ) && ( $wppb_generalSettings['loginWith'] == 'email' ) ){
-				$username = $wpdb->get_var( $wpdb->prepare( "SELECT user_login FROM $wpdb->users WHERE user_email= %s LIMIT 1", trim( $_POST['log'] ) ) );
+				$username = $wpdb->get_var( $wpdb->prepare( "SELECT user_login FROM $wpdb->users WHERE user_email= %s LIMIT 1", sanitize_email( $_POST['log'] ) ) );
 				
 				if( !empty( $username ) )
 					$_POST['log'] = $username;
@@ -52,7 +52,7 @@ function wppb_change_login_with_email(){
 			// if this setting is active, the posted username is, in fact the user's email or username
 			if( isset( $wppb_generalSettings['loginWith'] ) && ( $wppb_generalSettings['loginWith'] == 'usernameemail' ) ) {
 				if( is_email( $_POST['log'] ) ) {
-					$username = $wpdb->get_var( $wpdb->prepare( "SELECT user_login FROM $wpdb->users WHERE user_email= %s LIMIT 1", trim( $_POST['log'] ) ) );
+					$username = $wpdb->get_var( $wpdb->prepare( "SELECT user_login FROM $wpdb->users WHERE user_email= %s LIMIT 1", sanitize_email( $_POST['log'] ) ) );
 				} else {
 					$username = $_POST['log'];
 				}
@@ -115,8 +115,8 @@ function wppb_login_redirect( $redirect_to, $requested_redirect_to, $user ){
     if( isset( $_POST['wppb_login'] ) ){
 		if( is_wp_error( $user ) ) {
             // if we don't have a successful login we must redirect to the url of the form, so make sure this happens
-            $redirect_to = $_POST['wppb_request_url'];
-            $request_form_location = $_POST['wppb_form_location'];
+            $redirect_to = esc_url_raw( $_POST['wppb_request_url'] );
+            $request_form_location = sanitize_text_field( $_POST['wppb_form_location'] );
             $error_string = $user->get_error_message();
 
             $wppb_generalSettings = get_option('wppb_general_settings');
@@ -135,14 +135,14 @@ function wppb_login_redirect( $redirect_to, $requested_redirect_to, $user ){
 
                 if ($user->get_error_code() == 'incorrect_password') {
                     $error_string = '<strong>' . __('ERROR', 'profile-builder') . '</strong>: ' . __('The password you entered is incorrect.', 'profile-builder') . ' ';
-                    $error_string .= '<a href="' . $LostPassURL . '" title="' . __('Password Lost and Found.', 'profile-builder') . '">' . __('Lost your password', 'profile-builder') . '</a>?';
+                    $error_string .= '<a href="' . esc_url( $LostPassURL ) . '" title="' . __('Password Lost and Found.', 'profile-builder') . '">' . __('Lost your password', 'profile-builder') . '</a>?';
 
                     // change the recover password link
                     $error_string = str_replace(site_url('/wp-login.php?action=lostpassword'), $LostPassURL, $error_string);
                 }
                 if ($user->get_error_code() == 'invalid_username') {
                     $error_string = '<strong>' . __('ERROR', 'profile-builder') . '</strong>: ' . __('Invalid username.', 'profile-builder') . ' ';
-                    $error_string .= '<a href="' . $LostPassURL . '" title="' . __('Password Lost and Found.', 'profile-builder') . '">' . __('Lost your password', 'profile-builder') . '</a>?';
+                    $error_string .= '<a href="' . esc_url( $LostPassURL ) . '" title="' . __('Password Lost and Found.', 'profile-builder') . '">' . __('Lost your password', 'profile-builder') . '</a>?';
                 }
                 // if login with email is enabled change the word username with email
                 if ($wppb_generalSettings['loginWith'] == 'email')
@@ -171,7 +171,7 @@ function wppb_login_redirect( $redirect_to, $requested_redirect_to, $user ){
 			$redirect_to = remove_query_arg( 'loginerror', $redirect_to );
 
             // CHECK FOR REDIRECT
-            $redirect_to = wppb_get_redirect_url( $_POST['wppb_redirect_priority'], 'after_login', $redirect_to, $user );
+            $redirect_to = wppb_get_redirect_url( sanitize_text_field( $_POST['wppb_redirect_priority'] ), 'after_login', $redirect_to, $user );
             $redirect_to = apply_filters( 'wppb_after_login_redirect_url', $redirect_to );
 		}
 	}

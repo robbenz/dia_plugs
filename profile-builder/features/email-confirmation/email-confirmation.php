@@ -93,13 +93,10 @@ function wppb_get_unconfirmed_email_number(){
 	
 
 function wppb_handle_email_confirmation_cases() {
-	global $current_user;
 	global $wpdb;
-	
-	//die($current_user);
-	$url = trim($_POST['URL']);
-	$todo = trim($_POST['todo']);
-	$user_email = trim($_POST['user_email']);
+
+	$todo = sanitize_text_field($_POST['todo']);
+	$user_email = sanitize_email($_POST['user_email']);
 	
 	if ( current_user_can( 'delete_users' ) )
 		if ( ( $todo != '' ) && ( $user_email != '' ) ){

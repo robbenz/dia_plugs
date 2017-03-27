@@ -4,8 +4,8 @@ Donate link: http://www.cozmoslabs.com/wordpress-profile-builder/
 Tags: user registration, user profile, user registration form, user fields, extra user fields, edit profile, user custom fields, front-end login, front-end edit profile, front-end user registration, email confirmation, login form
 
 Requires at least: 3.1
-Tested up to: 4.7.2
-Stable tag: 2.5.7
+Tested up to: 4.7.3
+Stable tag: 2.5.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -150,6 +150,13 @@ This plugin adds/removes user fields in the front-end. Both default and extra pr
 10. Profile Builder Login Widget
 
 == Changelog ==
+= 2.5.9 =
+* Fixed a issue with a database error that happened in certain conditions
+* Compatibility with Captcha by BestWebSoft latest version
+
+= 2.5.8 =
+* Fixed security issues and performed a security audit
+
 = 2.5.7 =
 * Fixed an issue with "Display name as" field on register forms
 * Recover password form now doesn't appear for logged in users

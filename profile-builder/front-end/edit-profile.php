@@ -18,7 +18,7 @@ function wppb_autologin_after_password_changed(){
                 require_once( WPPB_PLUGIN_DIR.'/front-end/extra-fields/extra-fields.php' );
 
             /* we get the form_name through $_POST so we can apply correctly the filter so we generate the correct fields in the current form  */
-            $form_fields = apply_filters( 'wppb_change_form_fields', get_option( 'wppb_manage_fields' ), array( 'form_type'=> 'edit_profile', 'form_fields' => array(), 'form_name' => $_POST['form_name'], 'role' => '', 'ID' => Profile_Builder_Form_Creator::wppb_get_form_id_from_form_name( $_POST['form_name'], 'edit_profile' ), 'context' => 'edit_profile_auto_login_after_password_change' ) );
+            $form_fields = apply_filters( 'wppb_change_form_fields', get_option( 'wppb_manage_fields' ), array( 'form_type'=> 'edit_profile', 'form_fields' => array(), 'form_name' => sanitize_text_field( $_POST['form_name'] ), 'role' => '', 'ID' => Profile_Builder_Form_Creator::wppb_get_form_id_from_form_name( sanitize_text_field( $_POST['form_name'] ), 'edit_profile' ), 'context' => 'edit_profile_auto_login_after_password_change' ) );
             if( !empty( $form_fields ) ){
 
                 /* check for errors in the form through the filters */
@@ -35,7 +35,7 @@ function wppb_autologin_after_password_changed(){
                     $user_id = get_current_user_id();
                     if( ( !is_multisite() && current_user_can( 'edit_users' ) ) || ( is_multisite() && current_user_can( 'manage_network' ) ) ) {
                         if( isset( $_GET['edit_user'] ) && ! empty( $_GET['edit_user'] ) ){
-                            $user_id = $_GET['edit_user'];
+                            $user_id = absint( $_GET['edit_user'] );
                         }
                     }
 

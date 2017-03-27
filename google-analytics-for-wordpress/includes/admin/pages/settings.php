@@ -53,25 +53,26 @@ function monsterinsights_settings_page() {
      */
     do_action( 'monsterinsights_head' );
     ?>
+    <?php echo monsterinsights_ublock_notice(); ?>
 
     <!-- Tabs -->
     <h1 id="monsterinsights-settings-page-main-nav" class="monsterinsights-main-nav-container monsterinsights-nav-container" data-container="#monsterinsights-settings-pages">
         <a class="monsterinsights-main-nav-item monsterinsights-nav-item monsterinsights-spacing-item" href="#">&nbsp;</a>
 
         <a class="monsterinsights-main-nav-item monsterinsights-nav-item monsterinsights-active" href="#monsterinsights-main-tab-general" title="<?php echo esc_attr( __( 'General', 'google-analytics-for-wordpress' ) ); ?>">
-            <?php _e( 'General', 'google-analytics-for-wordpress' ); ?>
+            <?php echo esc_html__( 'General', 'google-analytics-for-wordpress' ); ?>
         </a>
 
         <a class="monsterinsights-main-nav-item monsterinsights-nav-item" href="#monsterinsights-main-tab-tracking" title="<?php echo esc_attr( __( 'Tracking', 'google-analytics-for-wordpress' ) ); ?>">
-            <?php _e( 'Tracking', 'google-analytics-for-wordpress' ); ?>
+            <?php echo esc_html__( 'Tracking', 'google-analytics-for-wordpress' ); ?>
         </a>
         <!--
         <a class="monsterinsights-main-nav-item monsterinsights-nav-item" href="#monsterinsights-main-tab-status" title="<?php //echo esc_attr( __( 'Status', 'google-analytics-for-wordpress' ) ); ?>">
-            <?php //_e( 'Status', 'google-analytics-for-wordpress' ); ?>
+            <?php //echo esc_html__( 'Status', 'google-analytics-for-wordpress' ); ?>
         </a>
 
         <a class="monsterinsights-main-nav-item monsterinsights-nav-item" href="#monsterinsights-main-tab-support" title="<?php //echo esc_attr( __( 'Support', 'google-analytics-for-wordpress' ) ); ?>">
-            <?php //_e( 'Support', 'google-analytics-for-wordpress' ); ?>
+            <?php //echo esc_html__( 'Support', 'google-analytics-for-wordpress' ); ?>
         </a>
          -->
     </h1>
@@ -148,6 +149,18 @@ add_action( 'current_screen', 'monsterinsights_save_general_settings_page' );
  */
 function monsterinsights_updated_settings() {
     echo monsterinsights_get_message( 'success', esc_html__( 'Settings saved successfully.', 'google-analytics-for-wordpress' ) );   
+}
+
+/**
+ * Outputs a WordPress style notification to tell the user their UA code was bad.
+ *
+ * @since 6.0.3
+ * @access public
+ *
+ * @return void
+ */
+function monsterinsights_invalid_ua_code() {
+    echo monsterinsights_get_message( 'error', esc_html__( 'Invalid UA code.', 'google-analytics-for-wordpress' ) );   
 }
 
 /**

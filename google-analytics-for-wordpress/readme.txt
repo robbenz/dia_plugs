@@ -3,8 +3,8 @@ Contributors: chriscct7, smub
 Donate link: http://www.wpbeginner.com/wpbeginner-needs-your-help/
 Tags: analytics, analytics dashboard, google analytics, google analytics dashboard, google analytics widget, universal google analytics, statistics, tracking, stats, google, yoast, google analytics by yoast, ga, monster insights, monsterinsights, universal analytics, web stats, ecommerce, ecommerce tracking
 Requires at least: 3.9
-Tested up to: 4.7.2
-Stable tag: 6.0.4
+Tested up to: 4.7.4
+Stable tag: 6.1.5
 License: GPL v3
 
 The best Google Analytics plugin for WordPress. See how visitors find and use your website, so you can keep them coming back.
@@ -136,6 +136,86 @@ You can also learn about other <a href="http://www.wpbeginner.com/category/plugi
 4. Want more features? <a href="https://www.monsterinsights.com/?utm_source=wprepo&utm_medium=link&utm_campaign=liteversion">Purchase MonsterInsights Pro</a>!
 
 == Changelog ==
+= 6.1.5, March 24, 2017 =
+* New: Added some functions to prepare for upcoming new addon (Google AMP) and updates (eCommerce, Performance, Dimensions).
+* Tweak: Ks events tracking for click events.
+
+= 6.1.4, March 23, 2017 =
+* Tweak: JS events tracking for click events.
+* Bugfix: Edge case where JS events tracking won't turn on if the main tracking setting was disabled (such as faulty import).
+
+= 6.1.1 - 6.1.3 (depending on which version of MI you have), March 22, 2017 =
+* Bugfix: (pro users) Issue with JS events throwing an error for array on non-set settings.
+
+= 6.1.0, March 22, 2017 =
+* New: Campaign URL building tool with shortlink capability.
+* New: Settings import/export tool.
+* New: Experimental (beta) hash tracking for single-page style themes. Note, as the description for the setting says, this feature is a beta feature, and can be tweaked or removed in upcoming versions.
+* New: Manual default subsite UA's can now be set from the network settings panel for MonsterInsights.
+* New: Optout of GA tracking is now enabled per Google standard. See https://github.com/awesomemotive/google-analytics-for-wordpress/issues/488 for more information.
+* Tweak: Notices about JS conflicts now include the JS error when possible.
+* Tweak: Some tweaking to when the "Connection error with Google" error is displayed during oAuth.
+* Tweak: Notice now shown when too early to display statistics from Google.
+* Tweak: Inbound as outbound links may now have a period in them.
+* Tweak: Removed duplicate option checking on frontend.
+* Tweak: oAuth dialog now only programically closes when the select profile view is shown or when a new one is opened.
+* Tweak: Mailto links are now handled as an externally opening link, allowing to bypass issues with the Safari browser not following standards.
+* Tweak: WP-Admin Login page tracking has been removed.
+* Tweak: More countries now shown in the country map in the overview report.
+* Tweak: License key field is no longer shown on lite installs.
+* Tweak: Frontend JS file has been refactored to make it more unit testable.
+* Bugfix: Download events now correctly include data in all cases not just some.
+* Bugfix: A syntax error involving the manual UA code input has been resolved that could have affected some users under a rare circumstance.
+
+= 6.0.16, March 7, 2017 =
+* Fixed: Issues related to link tracking.
+
+= 6.0.15, March 7, 2017 =
+* Fixed: Issue with translation string numbering in the disabled user group frontend template.
+* Fixed: Resolved issue that caused issue with lightbox-style redirects.
+* Fixed: Issue where admin pages had JS issues from mis-ordered JS files.
+
+= 6.0.14, March 1, 2017 =
+* Tweak: Allow for invalid license to be removed if debug turned on.
+* Fixed: Issues with internal links being tracked as internal-as-outbound
+* Fixed: Issues with tracking of downloads
+* Fixed: Issue where optin tracking would opt-out on settings panel save
+
+= 6.0.13, February 28, 2017 =
+* Tweak: Better detection of issues with authentication due to an outdate WP version.
+* Fixed: Issue where JS tracking inadvertantly turned on debug mode due to a bad string to boolean conversion.
+
+= 6.0.12, February 27, 2017 =
+* New: The JS events tracking has been moved to a new JS file instead of inline. This will offer the same performance as inlining under HTTP/2, but with the benefit of better cache bursting.
+* New: Expanded admin adblock detection.
+* Tweak: Select2 is now bundled as Select300 in MonsterInsights. We're pulling down the latest copy of Selct2 and then on-the-fly renaming it. This should end any conflicts between our select2 boxes and other plugins/themes.
+* Tweak: We've implemented better error detection on the authentication flow. Some users may have previously seen "No profile errors", due to issues with their server setup will now see more accurate errors.
+* Tweak: For servers that use PHP Object caching, the cache will now be flushed during the uninstall routines. This should solve a very rare uninstall error.
+* Fixed: A "Invalid UA code" error was displayed whenever someone used oAuth2 and then saved the settings panel, despite having a valid UA code.
+* Fixed: An issue with the lazyloading of the Google Client for frontend use has been fixed.
+
+= 6.0.11, February 24, 2017 =
+* Notice: Version numbers 6.0.5 - 6.0.10 were not used, as we're synching the version numbers of the Lite and Pro versions of our plugin. You didn't miss any updates.
+* Notice: As of this release, we no longer backport changes to the old `yst_ga` option. If you need to access MonsterInsights's settings programically, please use our helper functions. Do not directly access a option.
+* New: Redesigned authentication dropdown that shows the site urls to make it easier to find a profile when the users have many accounts.
+* New: Tracking is now enabled for the WordPress admin login page (wp-login.php).
+* Tweak: The Google class in the admin now only checks for blocking when the reauth is attempted. Expect to save a ton of external calls in the admin, and maybe a performance boost.
+* Tweak: The GA client object is now lazyloaded on the frontend, so it's loaded only when something (like another plugin) attempts to use it. In plain English, this will make a alot of sites load times significantly improve.
+* Tweak: The analytics.js output has been tweaked to be slightly more asthetically pleasing (its aligned correctly). We realize no one probably cares but we look at this code for every user we support, so it help us. 
+* Tweak: The config expired notice has been updated to reflect that it can also be shown if the server is blocking MonsterInsights's ability to connect to Google Analytics.
+* Tweak: The cron jobs for opt-in tracking and statistics have been combined into a single cron.
+* Tweak: Various performance improvements in the frontend output class.
+* Tweak: A notice is now shown when MonsterInsights rejects a manual UA code from being saved for being an invalid format.
+* Fixed: Issue where the plugin TweetShare would prevent users from being able to see their properties in the authentication dropdown.
+* Fixed: Issue where the manual UA code might not be ported as we were backporting changes to the monsterinsights_settings option to the yst_ga option for backwards compatibility. This lead to a situation where the new settings would override the old ones before the routine to fix the manual UA code issue had run.
+* Fixed: Issue where a fatal error from a reference to a class called "Yoast_Frontend_GA" which our plugin doesn't have or use, would be shown caused by the previous Yoast usage of object caching via an autoloader. This is solved by doing a 1 time object cache flush on upgrade.
+* Fixed: Issue where if you had more than 1000 profiles on your Google account, not all would be shown.
+* Fixed: App analytics properties are now excluded from the dropdown of properties you can authenticate to.
+* Fixed: The readme suggested a filter to use for filtering the UA to use, but the filter name was typo'd. This has been fixed.
+* Fixed: Issue where the tracking cron would add a new unique cron each day.
+* Fixed: We implemented a routine to cleanup those extra crons as well as the old yoast one we no longer use.
+* Fixed: Issue where the .org theme Schema would prevent users from being able to see their properties in the authentication dropdown.
+* Fixed: Issue where JS based events tracking might not correctly track a mailto: link.
 
 = 6.0.4, February 20, 2017 =
 * Tweak: monsterinsights_delete_options now checks to ensure an array is passed in

@@ -183,6 +183,7 @@ function wppb_mail( $to, $subject, $message, $message_from = null, $context = nu
 function wppb_activate_account_check(){
 	if ( ( isset( $_GET['activation_key'] ) ) && ( trim( $_GET['activation_key'] ) != '' ) ){
 		global $post;
+		$activation_key = sanitize_text_field( $_GET['activation_key'] );
 
 		$wppb_generalSettings = get_option( 'wppb_general_settings' );
 		$activation_landing_page_id = ( ( isset( $wppb_generalSettings['activationLandingPage'] ) && ( trim( $wppb_generalSettings['activationLandingPage'] ) != '' ) ) ? $wppb_generalSettings['activationLandingPage'] : 'not_set' );
@@ -194,7 +195,7 @@ function wppb_activate_account_check(){
 
 		}elseif ( strpos( $post->post_content, '[wppb-register' ) === false ){
 			//no activation page was selected, and the sent link pointed to the home url
-			wp_redirect( apply_filters( 'wppb_activatate_account_redirect_url', WPPB_PLUGIN_URL.'assets/misc/fallback-page.php?activation_key='.urlencode( $_GET['activation_key'] ).'&site_name='.urlencode( get_bloginfo( 'name' ) ).'&site_url='.urlencode( get_bloginfo( 'url' ) ).'&message='.urlencode( $activation_message = wppb_activate_signup( $_GET['activation_key'] ) ), $_GET['activation_key'], $activation_message ) ); 
+			wp_redirect( apply_filters( 'wppb_activatate_account_redirect_url', WPPB_PLUGIN_URL.'assets/misc/fallback-page.php?activation_key='.urlencode( $activation_key ).'&site_name='.urlencode( get_bloginfo( 'name' ) ).'&site_url='.urlencode( get_bloginfo( 'url' ) ).'&message='.urlencode( $activation_message = wppb_activate_signup( $activation_key ) ), $activation_key, $activation_message ) );
 			exit;
 		}
 	}
@@ -204,7 +205,7 @@ add_action( 'template_redirect', 'wppb_activate_account_check' );
 
 function wppb_add_activation_message( $content ){
 
-	return wppb_activate_signup( $_GET['activation_key'] ) . $content;
+	return wppb_activate_signup( sanitize_text_field( $_GET['activation_key'] ) ) . $content;
 }
 
 
@@ -277,10 +278,10 @@ function wppb_print_cpt_script( $hook ){
 
 	if ( isset( $_GET['post_type'] ) || isset( $_GET['post'] ) ){
 		if ( isset( $_GET['post_type'] ) )
-			$post_type = $_GET['post_type'];
+			$post_type = sanitize_text_field( $_GET['post_type'] );
 		
 		elseif ( isset( $_GET['post'] ) )
-			$post_type = get_post_type( $_GET['post'] );
+			$post_type = get_post_type( absint( $_GET['post'] ) );
 		
 		if ( ( 'wppb-epf-cpt' == $post_type ) || ( 'wppb-rf-cpt' == $post_type ) || ( 'wppb-ul-cpt' == $post_type ) ){
 			wp_enqueue_style( 'wppb-back-end-style', WPPB_PLUGIN_URL . 'assets/css/style-back-end.css', false, PROFILE_BUILDER_VERSION );
@@ -293,37 +294,6 @@ function wppb_print_cpt_script( $hook ){
     wp_enqueue_style( 'wppb-serial-notice-css', WPPB_PLUGIN_URL . 'assets/css/serial-notice.css', false, PROFILE_BUILDER_VERSION );
 }
 add_action( 'admin_enqueue_scripts', 'wppb_print_cpt_script' );
-
-
-// Set up the AJAX hooks
-function wppb_delete(){
-	if ( isset( $_POST['_ajax_nonce'] ) ){
-		
-		if ( ( isset( $_POST['what'] ) ) && ( $_POST['what'] == 'avatar' ) ){
-			if ( !wp_verify_nonce( $_POST['_ajax_nonce'], 'user'.base64_decode( $_POST['currentUser'] ).'_nonce_avatar' ) ){
-				echo __( 'The user-validation has failed - the avatar was not deleted!', 'profile-builder' );
-				die();
-				
-			}else{
-				update_user_meta( base64_decode( $_POST['currentUser'] ), base64_decode( $_POST['customFieldName'] ), '');
-				update_user_meta( base64_decode( $_POST['currentUser'] ), 'resized_avatar_'.base64_decode(  $_POST['customFieldID'] ), '' );
-				echo 'done';
-				die();
-			}
-		}elseif ( ( isset( $_POST['what'] ) ) && ( $_POST['what'] == 'attachment' ) ){
-			if ( !wp_verify_nonce( $_POST['_ajax_nonce'], 'user'.base64_decode( $_POST['currentUser'] ).'_nonce_upload' ) ){
-				echo __( 'The user-validation has failed - the attachment was not deleted!', 'profile-builder' );
-				die();
-				
-			}else{
-				update_user_meta( base64_decode( $_POST['currentUser'] ), base64_decode( $_POST['customFieldName'] ), '');
-				echo 'done';
-				die();
-			}
-		}
-	}
-} 
-add_action( 'wp_ajax_hook_wppb_delete', 'wppb_delete' );
 
 
 //the function used to overwrite the avatar across the wp installation
@@ -577,9 +547,10 @@ function wppb_check_password_length( $password ){
 function wppb_check_password_strength(){
     $wppb_generalSettings = get_option( 'wppb_general_settings' );
     if( isset( $_POST['wppb_password_strength'] ) && !empty( $wppb_generalSettings['minimum_password_strength'] ) ){
+		$wppb_password_strength = sanitize_text_field( $_POST['wppb_password_strength'] );
         $password_strength_array = array( 'short' => 0, 'bad' => 1, 'good' => 2, 'strong' => 3 );
         $password_strength_text = array( 'short' => __( 'Very Weak', 'profile-builder' ), 'bad' => __( 'Weak', 'profile-builder' ), 'good' => __( 'Medium', 'profile-builder' ), 'strong' => __( 'Strong', 'profile-builder' ) );
-        if( $password_strength_array[$_POST['wppb_password_strength']] < $password_strength_array[$wppb_generalSettings['minimum_password_strength']] ){
+        if( $password_strength_array[$wppb_password_strength] < $password_strength_array[$wppb_generalSettings['minimum_password_strength']] ){
             return $password_strength_text[$wppb_generalSettings['minimum_password_strength']];
         }
         else
@@ -1026,4 +997,13 @@ function wppb_build_redirect( $redirect_url, $redirect_delay, $redirect_type = N
 	}
 
 	return $redirect_message;
+}
+
+/**
+ * Function that strips the script tags from an input
+ * @param $string
+ * @return mixed
+ */
+function wppb_sanitize_value( $string ){
+	return preg_replace( '/<script\b[^>]*>(.*?)<\/script>/is', '', $string );
 }

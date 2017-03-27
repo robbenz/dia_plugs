@@ -23,8 +23,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return void
  */
 function monsterinsights_settings_general_tab() {
-    add_action( 'admin_print_footer_scripts', 'monsterinsights_settings_ublock_error_js', 9999999 );
-
     // Get settings
     $manual_ua_code              = monsterinsights_get_option( 'manual_ua_code', '' );
     $manual_ua_code              = esc_html( $manual_ua_code );
@@ -47,10 +45,6 @@ function monsterinsights_settings_general_tab() {
     ?>
     <div id="monsterinsights-settings-general">
         <div class="monsterinsights-tab-settings-notices">
-            <div id="monsterinsights-ublock-origin-error" class="error" style="display:none;">
-                <?php echo sprintf( esc_html__( 'MonsterInsights has detected that it\'s files are being blocked. This is usually caused by a adblock browser plugin (particularly uBlock Origin), or a conflicting WordPress theme or plugin. This issue only affects the admin side of MonsterInsights. To solve this, ensure MonsterInsights is whitelisted for your website URL in any adblock browser plugin you use. For step by step directions on how to do this, %1$sclick here%2$s. If this doesn\'t solve the issue (rare), send us a ticket %3$shere%2$s and we\'ll be happy to help diagnose the issue.', 'google-analytics-for-wordpress'), '<a href="https://monsterinsights.com/docs/monsterinsights-asset-files-blocked/" target="_blank" rel="noopener noreferrer" referrer="no-referrer">', '</a>', '<a href="https://monsterinsights.com/contact/" target="_blank" rel="noopener noreferrer" referrer="no-referrer">');
-                ?>
-            </div>
         <?php 
         // Output any notices now
         /** 
@@ -65,7 +59,7 @@ function monsterinsights_settings_general_tab() {
         </div>
         <table class="form-table">
             <tbody>
-                <?php if ( ! monsterinsights_is_network_active() || ( monsterinsights_is_network_active() && empty ( $network_license ) ) ) { ?>
+                <?php if ( ( ! monsterinsights_is_network_active() || ( monsterinsights_is_network_active() && empty ( $network_license ) ) ) && monsterinsights_is_pro_version() ) { ?>
                     <tr id="monsterinsights-settings-key-box">
                         <th scope="row">
                             <label for="monsterinsights-settings-key"><?php esc_html_e( 'License Key', 'google-analytics-for-wordpress' ); ?></label>
@@ -80,7 +74,7 @@ function monsterinsights_settings_general_tab() {
                             </form>
                         </td>
                     </tr>
-                    <?php if ( ! empty( $license_key_type ) ) : ?>
+                    <?php if ( ! empty( $license_key_type ) && monsterinsights_is_pro_version() ) : ?>
                     <tr id="monsterinsights-settings-key-type-box">
                         <th scope="row">
                             <label for="monsterinsights-settings-key-type"><?php esc_html_e( 'License Key Type', 'google-analytics-for-wordpress' ); ?></label>
@@ -150,7 +144,7 @@ function monsterinsights_settings_general_tab() {
                     echo monsterinsights_make_checkbox( 'dashboards_disabled', $title, $description );
                     ?>
 
-                    <?php if ( $tracking_mode === 'ga' ){  ?>
+                    <?php if ( $tracking_mode === 'ga' || monsterinsights_is_debug_mode() ){  ?>
                     <tr id="monsterinsights-tracking-mode">
                         <th scope="row">
                             <label for="monsterinsights-tracking-mode"><?php esc_html_e( 'Pick Tracking Mode', 'google-analytics-for-wordpress' ); ?></label>
@@ -221,14 +215,15 @@ add_action( 'monsterinsights_tab_settings_general', 'monsterinsights_settings_ge
  * @return void
  */
 function monsterinsights_settings_save_general() {
+    $throw_notice    = false;
     $manual_ua_code = isset( $_POST['manual_ua_code'] ) ? $_POST['manual_ua_code'] : '';
     $manual_ua_code = monsterinsights_is_valid_ua( $manual_ua_code ); // also sanitizes the string
     
     if ( $manual_ua_code ) {
         monsterinsights_update_option( 'manual_ua_code', $manual_ua_code );
     } else {
-        if ( empty ( $_POST['manual_ua_code'] ) ) {
-            // @todo: throw alert?
+        if ( empty ( $manual_ua_code ) && isset( $_POST['manual_ua_code'] ) ) {
+             $throw_notice = true;
         }
         monsterinsights_update_option( 'manual_ua_code', '' );
     }
@@ -239,7 +234,7 @@ function monsterinsights_settings_save_general() {
     $old_tracking_mode = monsterinsights_get_option( 'tracking_mode', 'analytics' );
     $tracking_mode     = isset( $_POST['tracking_mode'] ) ? $_POST['tracking_mode'] : 'analytics';
 
-    if ( $old_tracking_mode === 'ga' ) {
+    if ( $old_tracking_mode === 'ga' || monsterinsights_is_debug_mode() ) {
         if ( $tracking_mode !== 'analytics' && $tracking_mode !== 'ga' ) {
             /** 
              * Developer Alert:
@@ -266,7 +261,9 @@ function monsterinsights_settings_save_general() {
     }
 
     $anonymous_data = isset( $_POST['anonymous_data'] ) ? 1 : 0;
-    monsterinsights_update_option( 'anonymous_data', $anonymous_data );
+    if ( $anonymous_data ) {
+        monsterinsights_update_option( 'anonymous_data', $anonymous_data );
+    }
 
     /** 
      * Developer Alert:
@@ -278,18 +275,10 @@ function monsterinsights_settings_save_general() {
     do_action( 'monsterinsights_settings_save_general_end' );
 
     // Output an admin notice so the user knows what happened
-    add_action( 'monsterinsights_settings_general_tab_notice', 'monsterinsights_updated_settings' );
+    if ( $throw_notice ) {
+        add_action( 'monsterinsights_settings_general_tab_notice', 'monsterinsights_invalid_ua_code' );
+    } else {
+        add_action( 'monsterinsights_settings_general_tab_notice', 'monsterinsights_updated_settings' );
+    }
 }
 add_action( 'monsterinsights_settings_save_general', 'monsterinsights_settings_save_general', 11 );
-
-function monsterinsights_settings_ublock_error_js(){
-    echo "<script type='text/javascript'>\n";
-    echo "jQuery( document ).ready( function( $ ) {
-            if ( window.uorigindetected == null){
-               $('#monsterinsights-ublock-origin-error').show();
-               $('.monsterinsights-nav-tabs').hide();
-               $('.monsterinsights-nav-container').hide();
-            }
-        });";
-    echo "\n</script>";
-}

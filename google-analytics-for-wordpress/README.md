@@ -162,13 +162,11 @@ User defined:
 - `MONSTERINSIGHTS_AIRPLANE_MODE`
 	- For future use. Currently does nothing. Useful for local site testing.
 - `MONSTERINSIGHTS_GA_UA`
-	- Don't use oAuth or the wizard, but hardcode to use UA. Note, this will not allow backend reports to work. You can also use the filter `monsterinsights_ga_ua`.
+	- Don't use oAuth or the wizard, but hardcode to use UA. Note, this will not allow backend reports to work. You can also use the filter `monsterinsights_get_ua`.
 - `MONSTERINSIGHTS_MULTISITE_GA_UA`. See UA priority rules below.
 	- You can use this constant to force the same the same UA for all subsites of an MS install. Note, this will not allow backend reports to work. See UA priority rules below.
 - `MONSTERINSIGHTS_DEBUG_MODE`
 	- Enables analytics.js and events tracking debug mode. Sets asset version to time(). In future, turns on logging to file for logging class. Available to turn on in backend via debug_mode setting.
-- `MONSTERINSIGHTS_SHAREASALE_ID`
-	- If you want to bundle MonsterInsights with a theme, you can use this constant to ensure you get affiliate credit for any conversions.
 
 ### Lite Only ###
 - `MONSTERINSIGHTS_LITE_VERSION`
@@ -198,7 +196,7 @@ We declare these for code that relies on old constants. Please upgrade your code
 These rules dictate which Google Analytics UA code is used. 
 The order of priority is as follows (top of list has most priority):
 
-- `monsterinsights_ga_ua` filter
+- `monsterinsights_get_ua` filter
 - MonsterInsights per site settings for manual UA or oAuth retrieved UA
 	- Note, these settings are hidden when MONSTERINSIGHTS_GA_UA is defined
 - `MONSTERINSIGHTS_GA_UA` constant
@@ -207,7 +205,7 @@ The order of priority is as follows (top of list has most priority):
 
 As a result of this order of priority, on MS installs you can use the `MONSTERINSIGHTS_MS_GA_UA` constant to 
 set the default UA for all of the subsites of an MS install, and then override that on a subsite basis using either
-the UI in the settings panel, the `MONSTERINSIGHTS_GA_UA` constant or the `monsterinsights_ga_ua` filter. 
+the UI in the settings panel, the `MONSTERINSIGHTS_GA_UA` constant or the `monsterinsights_get_ua` filter. 
 
 Let's say you run a really large MS install, like for a university, and all of your sites are {sitename}.mysite.com or 
 mysite.com/{example}/. In this case, you can quickly deploy MI for your entire network by network activating MonsterInsights

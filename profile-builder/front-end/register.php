@@ -7,10 +7,11 @@ function wppb_signup_password_random_password_filter( $password ) {
 
 	$key = ( !empty( $_GET['key'] ) ? $_GET['key'] : null );
 	$key = ( !empty( $_POST['key'] ) ? $_POST['key'] : $key );
+	if( !empty( $key ) )
+		$key = sanitize_text_field( $key );
 
 	if ( !empty( $_POST['user_pass'] ) )
 		$password = $_POST['user_pass'];
-		
 	elseif ( !is_null( $key ) ) {
 		$signup = ( is_multisite() ? $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . $wpdb->signups . " WHERE activation_key = %s", $key ) ) : $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . $wpdb->base_prefix . "signups WHERE activation_key = %s", $key ) ) );
 		
@@ -168,7 +169,7 @@ function wppb_front_end_register( $atts ){
 // function to choose whether to display the registration page or the validation message
 function wppb_front_end_register_handler( $atts ){
 
-	return ( isset( $_GET['activation_key'] ) ? wppb_activate_signup ( $_GET['activation_key'] ) : wppb_front_end_register( $atts ) );
+	return ( isset( $_GET['activation_key'] ) ? wppb_activate_signup ( sanitize_text_field( $_GET['activation_key'] ) ) : wppb_front_end_register( $atts ) );
 }
 
 add_action( 'user_register', 'wppbc_disable_admin_approval_for_user_role', 99, 1 );

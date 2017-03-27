@@ -5,7 +5,6 @@ $path_to_wp_install_dir = '';
 include_once ( $path_to_wp_install_dir.'wp-load.php' );
 */
 
-$activation_key = ( isset( $_GET['activation_key'] ) ? urldecode( $_GET['activation_key'] ) : '' );
 $site_name = ( isset( $_GET['site_name'] ) ? urldecode( $_GET['site_name'] ) : '' );
 $site_url = ( isset( $_GET['site_url'] ) ? urldecode( $_GET['site_url'] ) : '' );
 $message = ( isset( $_GET['message'] ) ? urldecode( $_GET['message'] ) : '' );

@@ -83,7 +83,7 @@ function wppb_check_email_value( $message, $field, $request_data, $form_location
             }
 
             if( isset( $_GET['edit_user'] ) && ! empty( $_GET['edit_user'] ) ) {
-                $current_user_id = $_GET['edit_user'];
+                $current_user_id = absint( $_GET['edit_user'] );
             } elseif( defined( 'DOING_AJAX' ) && DOING_AJAX && isset( $query['edit_user'] ) && ! empty( $query['edit_user'] ) ) {
                 $current_user_id = $query['edit_user'];
             } else {

@@ -297,8 +297,8 @@ function wppb_add_on_activate() {
     check_ajax_referer( 'wppb-activate-addon', 'nonce' );
     if( current_user_can( 'manage_options' ) ){
         // Setup variables from POST
-        $wppb_add_on_to_activate = $_POST['wppb_add_on_to_activate'];
-        $response = $_POST['wppb_add_on_index'];
+        $wppb_add_on_to_activate = sanitize_text_field( $_POST['wppb_add_on_to_activate'] );
+        $response = filter_var( $_POST['wppb_add_on_index'], FILTER_SANITIZE_NUMBER_INT );
 
         if( !empty( $wppb_add_on_to_activate ) && !is_plugin_active( $wppb_add_on_to_activate )) {
             activate_plugin( $wppb_add_on_to_activate );
@@ -321,8 +321,8 @@ function wppb_add_on_deactivate() {
     check_ajax_referer( 'wppb-activate-addon', 'nonce' );
     if( current_user_can( 'manage_options' ) ){
         // Setup variables from POST
-        $wppb_add_on_to_deactivate = $_POST['wppb_add_on_to_deactivate'];
-        $response = $_POST['wppb_add_on_index'];
+        $wppb_add_on_to_deactivate = sanitize_text_field( $_POST['wppb_add_on_to_deactivate'] );
+        $response = filter_var( $_POST['wppb_add_on_index'], FILTER_SANITIZE_NUMBER_INT );
 
         if( !empty( $wppb_add_on_to_deactivate ))
             deactivate_plugins( $wppb_add_on_to_deactivate );
@@ -337,66 +337,14 @@ add_action( 'wp_ajax_wppb_add_on_deactivate', 'wppb_add_on_deactivate' );
 
 
 /*
- * Function that downloads and unzips the .zip file returned from Cozmoslabs
- *
- * @since v.2.1.0
- */
-function wppb_add_on_download_zip_file() {
-
-    check_ajax_referer( 'wppb-activate-addon', 'nonce' );
-
-    // Set the response to success and change it later if needed
-    $response = $_POST['wppb_add_on_index'];
-    $add_on_index = $response;
-
-    // Setup variables from POST
-    $wppb_add_on_download_url = $_POST['wppb_add_on_download_url'];
-    $wppb_add_on_zip_name = $_POST['wppb_add_on_zip_name'];
-
-    if( strpos( $wppb_add_on_download_url, 'https://www.cozmoslabs.com/' ) === false && strpos( $wppb_add_on_download_url, 'https://downloads.wordpress.org/' )  === false )
-        wp_die();
-
-    // Get .zip file
-    $remote_response = wp_remote_get( $wppb_add_on_download_url, array( 'timeout' => 500000) );
-    if( is_wp_error( $remote_response ) ) {
-        $response = 'error-' . $add_on_index;
-    } else {
-        $file_contents = $remote_response['body'];
-    }
-
-
-    // Put the file in the plugins directory
-    if( isset( $file_contents ) ) {
-        if( file_put_contents( WP_PLUGIN_DIR . '/' . $wppb_add_on_zip_name, $file_contents ) === false ) {
-            $response = 'error-' . $add_on_index;
-        }
-    }
-
-
-    // Unzip the file
-    if( $response != 'error' ) {
-        WP_Filesystem();
-        if( unzip_file( WP_PLUGIN_DIR . '/' . $wppb_add_on_zip_name , WP_PLUGIN_DIR ) ) {
-            // Remove the zip file after we are all done
-            unlink( WP_PLUGIN_DIR . '/' . $wppb_add_on_zip_name );
-        } else {
-            $response = 'error-' . $add_on_index;
-        }
-    }
-
-    echo $response;
-    wp_die();
-}
-add_action( 'wp_ajax_wppb_add_on_download_zip_file', 'wppb_add_on_download_zip_file' );
-
-
-/*
  * Function that retrieves the data of the newly added plugin
  *
  * @since v.2.1.0
  */
 function wppb_add_on_get_new_plugin_data() {
-    $wppb_add_on_name = $_POST['wppb_add_on_name'];
+	if(isset( $_POST['wppb_add_on_name'] ) ){
+    	$wppb_add_on_name = sanitize_text_field( $_POST['wppb_add_on_name'] );
+	}
 
     $wppb_get_all_plugins = get_plugins();
     foreach( $wppb_get_all_plugins as $wppb_plugin_key => $wppb_plugin ) {

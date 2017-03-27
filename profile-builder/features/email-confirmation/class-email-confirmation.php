@@ -243,7 +243,7 @@ class wpp_list_unfonfirmed_email_table extends PB_WP_List_Table {
 		if ( current_user_can( 'delete_users' ) ){
 			if( 'delete' === $this->current_action() ) {
 				foreach ( $_GET['user'] as $user ){
-					$sql_result = $wpdb->query( $wpdb->prepare( "DELETE FROM ".$wpdb->base_prefix."signups WHERE user_email = %s", $user ) );
+					$sql_result = $wpdb->query( $wpdb->prepare( "DELETE FROM ".$wpdb->base_prefix."signups WHERE user_email = %s", sanitize_email( $user ) ) );
 					
 					if ( !$sql_result )
 						$this->wppb_process_bulk_action_message( sprintf( __( "%s couldn't be deleted", "profile-builder" ), $result->user_login ), get_bloginfo('url').'/wp-admin/users.php?page=unconfirmed_emails' );
@@ -254,7 +254,7 @@ class wpp_list_unfonfirmed_email_table extends PB_WP_List_Table {
 			
 			}elseif( 'confirm' === $this->current_action() ) {
 				foreach ( $_GET['user'] as $user ){
-					$sql_result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . $wpdb->base_prefix . "signups WHERE user_email = %s", $user ), ARRAY_A );
+					$sql_result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . $wpdb->base_prefix . "signups WHERE user_email = %s", sanitize_email( $user ) ), ARRAY_A );
 
 					if ( $sql_result )
 						wppb_manual_activate_signup( $sql_result['activation_key'] );
@@ -264,7 +264,7 @@ class wpp_list_unfonfirmed_email_table extends PB_WP_List_Table {
 				
 			}elseif( 'resend' === $this->current_action() ) {
 				foreach ( $_GET['user'] as $user ){
-					$sql_result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . $wpdb->base_prefix . "signups WHERE user_email = %s", $user ), ARRAY_A );
+					$sql_result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . $wpdb->base_prefix . "signups WHERE user_email = %s", sanitize_email( $user ) ), ARRAY_A );
 					
 					if ( $sql_result )
 						wppb_signup_user_notification( esc_sql( $sql_result['user_login'] ), esc_sql( $sql_result['user_email'] ), $sql_result['activation_key'], $sql_result['meta'] );
@@ -312,7 +312,7 @@ class wpp_list_unfonfirmed_email_table extends PB_WP_List_Table {
 
         /* handle order and orderby attr */
         if( !empty( $_REQUEST['orderby'] ) ){
-            $orderby = esc_attr( $_REQUEST['orderby'] );
+            $orderby = sanitize_text_field( $_REQUEST['orderby'] );
             if( $orderby == 'username' )
                 $orderby = 'user_login';
             elseif ( $orderby == 'email' )
@@ -328,7 +328,7 @@ class wpp_list_unfonfirmed_email_table extends PB_WP_List_Table {
         /* handle the WHERE clause */
         $where = "active = 0";
         if( isset( $_REQUEST['s'] ) && !empty( $_REQUEST['s'] ) ){
-            $where .= " AND ( user_login LIKE '%".esc_attr($_REQUEST['s'])."%' OR user_email LIKE '%".esc_attr($_REQUEST['s'])."%' OR registered LIKE '%".esc_attr($_REQUEST['s'])."%' )";
+            $where .= " AND ( user_login LIKE '%".sanitize_text_field($_REQUEST['s'])."%' OR user_email LIKE '%".sanitize_text_field($_REQUEST['s'])."%' OR registered LIKE '%".sanitize_text_field($_REQUEST['s'])."%' )";
         }
         /* since version 2.0.7 for multisite we add a 'registered_for_blog_id' meta in the registration process
             so we can display only the users registered on that blog. Also for backwards compatibility we display the users that don't have that meta at all */

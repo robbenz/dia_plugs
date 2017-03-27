@@ -6,9 +6,9 @@
  * Author:              MonsterInsights
  * Author URI:          https://www.monsterinsights.com/
  *
- * Version:             6.0.4
+ * Version:             6.1.5
  * Requires at least:   3.9.0
- * Tested up to:        4.7.2
+ * Tested up to:        4.7.4
  *
  * License:             GPL v3
  * 
@@ -32,7 +32,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @category            Plugin
- * @copyright           Copyright © 2016 Chris Christoff
+ * @copyright           Copyright © 2017 Chris Christoff
  * @author              Chris Christoff
  * @package             MonsterInsights
  */
@@ -69,7 +69,7 @@ final class MonsterInsights_Lite {
 	 * @access public
 	 * @var string $version Plugin version.
 	 */
-	public $version = '6.0.4';
+	public $version = '6.1.5';
 
 	/**
 	 * Plugin file.
@@ -123,7 +123,7 @@ final class MonsterInsights_Lite {
 	 * @access public
 	 * @var MonsterInsights_GA $ga Instance of GA class.
 	 */
-	public $ga;
+	protected $ga;
 
 	/**
 	 * Primary class constructor.
@@ -177,15 +177,17 @@ final class MonsterInsights_Lite {
 
 			// This does the version to version background upgrade routines and initial install
 			$mi_version = get_option( 'monsterinsights_current_version', '5.5.3' );
-			if ( version_compare( $mi_version, '6.0.2', '<' ) ) {
+			if ( version_compare( $mi_version, '6.0.11', '<' ) ) {
 				monsterinsights_lite_call_install_and_upgrade();
 			}
 
 			// Load the plugin textdomain.
 			add_action( 'plugins_loaded', array( self::$instance, 'load_plugin_textdomain' ) );
 
-			// Load global components
-			self::$instance->ga    		    = new MonsterInsights_GA();
+			// Load GA for admin, lazyload for frontend
+			if ( is_admin() ) {
+				self::$instance->ga    		= new MonsterInsights_GA();
+			}
 
 			// Load admin only components.
 			if ( is_admin() ) {
@@ -230,6 +232,31 @@ final class MonsterInsights_Lite {
 	 */
 	public function __wakeup() {
 		_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin&#8217; huh?', 'google-analytics-for-wordpress' ), '6.0.0' );
+	}
+
+	/**
+	 * Magic get function.
+	 *
+	 * We use this to lazy load certain functionality. Right now used to lazyload
+	 * the Google Object for frontend, so it's only loaded if user is using a plugin
+	 * that requires it.
+	 *
+	 * @since 6.0.10
+	 * @access public
+	 *
+	 * @return void
+	 */
+	public function __get( $key ) {
+		if ( $key === 'ga' ) {
+			if ( empty( self::$instance->ga ) ) {
+				// LazyLoad GA for Frontend
+				require_once MONSTERINSIGHTS_PLUGIN_DIR . 'includes/admin/google.php';
+				self::$instance->ga = new MonsterInsights_GA();
+			}
+			return self::$instance->$key;
+		} else {
+			return self::$instance->$key;
+		}
 	}
 
 	/**
@@ -459,8 +486,13 @@ final class MonsterInsights_Lite {
 			require_once MONSTERINSIGHTS_PLUGIN_DIR . 'includes/admin/abstract-report.php';
 		}
 
-		require_once MONSTERINSIGHTS_PLUGIN_DIR . 'includes/admin/google.php';
+		// Load Google Config
 		require_once MONSTERINSIGHTS_PLUGIN_DIR . 'lite/includes/google.php';
+
+		// Lazy Load for Frontend. Load for Admin.
+		if ( is_admin() ) {
+			require_once MONSTERINSIGHTS_PLUGIN_DIR . 'includes/admin/google.php';
+		}
 
 		if ( is_admin() ) {
 			require_once MONSTERINSIGHTS_PLUGIN_DIR . 'includes/admin/googleauth.php';
@@ -584,7 +616,7 @@ register_deactivation_hook( __FILE__, 'monsterinsights_lite_deactivation_hook' )
  * @return 	void
  */
 function monsterinsights_lite_uninstall_hook( $network_wide ) {
-
+	wp_cache_flush();
 	$instance = MonsterInsights();
 	// Note, if both MI Pro and Lite are active, this is an MI Pro instance
 	// Therefore MI Lite can only use functions of the instance common to

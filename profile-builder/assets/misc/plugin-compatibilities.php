@@ -18,10 +18,10 @@
         function wppb_captcha_add_form_login($form_part, $args) {
 
             $cptch_options = get_option('cptch_options');
-
-            if (1 == $cptch_options['cptch_login_form'])
+            if( !empty( $cptch_options['cptch_login_form'] ) && 1 == $cptch_options['cptch_login_form'] )
                 $form_part .= cptch_display_captcha_custom();
-
+            elseif( !empty( $cptch_options['forms']['wp_login']['enable'] ) && $cptch_options['forms']['wp_login']['enable'] )
+                $form_part .= cptch_display_captcha_custom();
 
             return $form_part;
         }
@@ -41,9 +41,11 @@
             if ( $form_location == 'register' ) {
                 $cptch_options = get_option('cptch_options');
 
-                if (1 == $cptch_options['cptch_register_form']) {
+                if (!empty( $cptch_options['cptch_register_form'] ) && 1 == $cptch_options['cptch_register_form']) {
                     $output = '<li>' . cptch_display_captcha_custom() . '</li>' . $output;
                 }
+                elseif( !empty( $cptch_options['forms']['wp_register']['enable'] ) && $cptch_options['forms']['wp_register']['enable'] )
+                    $output = '<li>' . cptch_display_captcha_custom() . '</li>' . $output;
             }
 
 
@@ -58,21 +60,18 @@
      * Function that displays the Captcha error on register form
      *
      */
-    if( function_exists('cptch_register_post') ) {
+    if( function_exists('cptch_register_check') ) {
 
         function wppb_captcha_register_form_display_error() {
 
             $cptch_options = get_option('cptch_options');
 
-            if ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'register' && (1 == $cptch_options['cptch_register_form']) ) {
+            if ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'register' && ( ( !empty( $cptch_options['cptch_register_form'] ) && 1 == $cptch_options['cptch_register_form'] ) || ( !empty( $cptch_options['forms']['wp_register']['enable'] ) && $cptch_options['forms']['wp_register']['enable'] ) ) ) {
 
-                $result = cptch_register_post('', '', new WP_Error());
+                $result = cptch_register_check(new WP_Error());
 
-                if ($result->get_error_message('captcha_wrong'))
-                    echo '<p class="wppb-error">' . $result->get_error_message('captcha_wrong') . '</p>';
-
-                if ($result->get_error_message('captcha_blank'))
-                    echo '<p class="wppb-error">' . $result->get_error_message('captcha_blank') . '</p>';
+                if ($result->get_error_message('captcha_error'))
+                    echo '<p class="wppb-error">' . $result->get_error_message('captcha_error') . '</p>';                
 
             }
 
@@ -85,21 +84,18 @@
      * Function that validates captcha value on register form
      *
      */
-    if( function_exists('cptch_register_post') ) {
+    if( function_exists('cptch_register_check') ) {
 
         function wppb_captcha_register_form_check_value($output_field_errors) {
 
             $cptch_options = get_option('cptch_options');
 
-            if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'register' && (1 == $cptch_options['cptch_register_form']) ) {
+            if ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'register' && ( ( !empty( $cptch_options['cptch_register_form'] ) && 1 == $cptch_options['cptch_register_form'] ) || ( !empty( $cptch_options['forms']['wp_register']['enable'] ) && $cptch_options['forms']['wp_register']['enable'] ) ) ) {
 
-                $result = cptch_register_post('', '', new WP_Error());
+                $result = cptch_register_check(new WP_Error() );
 
-                if ($result->get_error_message('captcha_wrong'))
-                    $output_field_errors[] = $result->get_error_message('captcha_wrong');
-
-                if ($result->get_error_message('captcha_blank'))
-                    $output_field_errors[] = $result->get_error_message('captcha_blank');
+                if ($result->get_error_message('captcha_error'))
+                    $output_field_errors[] = $result->get_error_message('captcha_error');
             }
 
 
@@ -120,7 +116,10 @@
 
             $cptch_options = get_option('cptch_options');
 
-            if (1 == $cptch_options['cptch_lost_password_form']) {
+            if (!empty( $cptch_options['cptch_lost_password_form'] ) && 1 == $cptch_options['cptch_lost_password_form']) {
+                $output = str_replace('</ul>', '<li>' . cptch_display_captcha_custom() . '</li>' . '</ul>', $output);
+            }
+            elseif( !empty( $cptch_options['forms']['wp_lost_password']['enable'] ) && $cptch_options['forms']['wp_lost_password']['enable'] ){
                 $output = str_replace('</ul>', '<li>' . cptch_display_captcha_custom() . '</li>' . '</ul>', $output);
             }
 
@@ -135,17 +134,17 @@
      * Function that changes the messageNo from the Recover Password form
      *
      */
-    if( function_exists('cptch_register_post') ) {
+    if( function_exists('cptch_register_check') ) {
 
         function wppb_captcha_recover_password_message_no($messageNo) {
 
             $cptch_options = get_option('cptch_options');
 
-            if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'recover_password' && (1 == $cptch_options['cptch_lost_password_form']) ) {
+            if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'recover_password' && ( ( !empty( $cptch_options['cptch_lost_password_form'] ) && 1 == $cptch_options['cptch_lost_password_form'] ) || ( !empty( $cptch_options['forms']['wp_lost_password']['enable'] ) && $cptch_options['forms']['wp_lost_password']['enable'] ) ) ) {
 
-                $result = cptch_register_post('', '', new WP_Error());
+                $result = cptch_register_check(new WP_Error());
 
-                if ($result->get_error_message('captcha_wrong') || $result->get_error_message('captcha_blank'))
+                if ($result->get_error_message('captcha_error') || $result->get_error_message('captcha_error'))
                     $messageNo = '';
 
             }
@@ -160,22 +159,19 @@
      * Function that adds the captcha error message on Recover Password form
      *
      */
-    if( function_exists('cptch_register_post') ) {
+    if( function_exists('cptch_register_check') ) {
 
         function wppb_captcha_recover_password_displayed_message1($message) {
 
             $cptch_options = get_option('cptch_options');
 
-            if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'recover_password' && (1 == $cptch_options['cptch_lost_password_form']) ) {
+            if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'recover_password' && ( ( !empty( $cptch_options['cptch_lost_password_form'] ) && 1 == $cptch_options['cptch_lost_password_form'] ) || ( !empty( $cptch_options['forms']['wp_lost_password']['enable'] ) && $cptch_options['forms']['wp_lost_password']['enable'] ) ) ) {
 
-                $result = cptch_register_post('', '', new WP_Error());
+                $result = cptch_register_check(new WP_Error());
                 $error_message = '';
 
-                if ($result->get_error_message('captcha_wrong'))
-                    $error_message = $result->get_error_message('captcha_wrong');
-
-                if ($result->get_error_message('captcha_blank'))
-                    $error_message = $result->get_error_message('captcha_blank');
+                if ($result->get_error_message('captcha_error'))
+                    $error_message = $result->get_error_message('captcha_error');
 
                 if( empty($error_message) )
                     return $message;
@@ -200,17 +196,17 @@
      * wppb_recover_password_displayed_message1 filter
      *
      */
-    if( function_exists('cptch_register_post') ) {
+    if( function_exists('cptch_register_check') ) {
 
         function wppb_captcha_recover_password_sent_message_1($message) {
 
             $cptch_options = get_option('cptch_options');
 
-            if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'recover_password' && (1 == $cptch_options['cptch_lost_password_form']) ) {
+            if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'recover_password' && ( ( !empty( $cptch_options['cptch_lost_password_form'] ) && 1 == $cptch_options['cptch_lost_password_form'] ) || ( !empty( $cptch_options['forms']['wp_lost_password']['enable'] ) && $cptch_options['forms']['wp_lost_password']['enable'] ) ) ) {
 
-                $result = cptch_register_post('', '', new WP_Error());
+                $result = cptch_register_check( new WP_Error() );
 
-                if ($result->get_error_message('captcha_wrong') || $result->get_error_message('captcha_blank'))
+                if ($result->get_error_message('captcha_error') )
                     $message = 'wppb_captcha_error';
 
             }
@@ -237,7 +233,7 @@
 					if( isset( $_REQUEST['edd_login_nonce'] ) ) {
 						if( wp_get_object_terms( $user_id, 'user_status' ) ) {
 							if( isset( $_REQUEST['edd_redirect'] ) ) {
-								wp_redirect( $_REQUEST['edd_redirect'] );
+								wp_redirect( esc_url_raw( $_REQUEST['edd_redirect'] ) );
 								edd_set_error( 'user_unapproved', __('Your account has to be confirmed by an administrator before you can log in.', 'profile-builder') );
 								edd_get_errors();
 								edd_die();

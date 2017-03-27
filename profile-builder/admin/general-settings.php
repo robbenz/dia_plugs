@@ -124,7 +124,7 @@ function wppb_general_settings_content() {
 
 					if( ! empty( $wppb_userRoles ) ) {
 						foreach( $wppb_userRoles as $role => $role_name ) {
-							echo '<label><input type="checkbox" id="adminApprovalOnUserRoleCheckbox" name="wppb_general_settings[adminApprovalOnUserRole][]" class="wppb-checkboxes" value="' . $role . '"';
+							echo '<label><input type="checkbox" id="adminApprovalOnUserRoleCheckbox" name="wppb_general_settings[adminApprovalOnUserRole][]" class="wppb-checkboxes" value="' . esc_attr( $role ) . '"';
 							if( ! empty( $wppb_generalSettings['adminApprovalOnUserRole'] ) && in_array( $role, $wppb_generalSettings['adminApprovalOnUserRole'] ) )	echo ' checked';
 							if( empty( $wppb_generalSettings['adminApprovalOnUserRole'] ) )		echo ' checked';
 							echo '>';
@@ -177,7 +177,7 @@ function wppb_general_settings_content() {
                 <?php _e( 'Minimum Password Length:', 'profile-builder' ); ?>
             </th>
             <td>
-                <input type="text" name="wppb_general_settings[minimum_password_length]" class="wppb-text" value="<?php if( !empty( $wppb_generalSettings['minimum_password_length'] ) ) echo $wppb_generalSettings['minimum_password_length']; ?>"/>
+                <input type="text" name="wppb_general_settings[minimum_password_length]" class="wppb-text" value="<?php if( !empty( $wppb_generalSettings['minimum_password_length'] ) ) echo esc_attr( $wppb_generalSettings['minimum_password_length'] ); ?>"/>
                 <ul>
                     <li class="description"><?php _e( 'Enter the minimum characters the password should have. Leave empty for no minimum limit', 'profile-builder' ); ?> </li>
                 </ul>
@@ -221,8 +221,23 @@ function wppb_general_settings_content() {
  * @since v.2.0.7
  */
 function wppb_general_settings_sanitize( $wppb_generalSettings ) {
-
     $wppb_generalSettings = apply_filters( 'wppb_general_settings_sanitize_extra', $wppb_generalSettings );
+
+	if( !empty( $wppb_generalSettings ) ){
+		foreach( $wppb_generalSettings as $settings_name => $settings_value ){
+			if( $settings_name == "minimum_password_length" || $settings_name == "activationLandingPage" )
+				$wppb_generalSettings[$settings_name] = filter_var( $settings_value, FILTER_SANITIZE_NUMBER_INT );
+			elseif( $settings_name == "extraFieldsLayout" || $settings_name == "emailConfirmation" || $settings_name == "adminApproval" || $settings_name == "loginWith" || $settings_name == "minimum_password_strength" )
+				$wppb_generalSettings[$settings_name] = filter_var( $settings_value, FILTER_SANITIZE_STRING );
+			elseif( $settings_name == "adminApprovalOnUserRole" ){
+				if( is_array( $settings_value ) && !empty( $settings_value ) ){
+					foreach( $settings_value as $key => $value ){
+						$wppb_generalSettings[$settings_name][$key] = filter_var( $value, FILTER_SANITIZE_STRING );
+					}
+				}
+			}
+		}
+	}
 
     return $wppb_generalSettings;
 }

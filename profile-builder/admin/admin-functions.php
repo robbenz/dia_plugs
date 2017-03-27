@@ -133,12 +133,11 @@ function wppb_password_check_extra_conditions( $errors, $user ){
         }
 
         if( isset( $_POST['wppb_password_strength'] ) && !empty( $wppb_generalSettings['minimum_password_strength'] ) ){
-
             $password_strength_array = array( 'short' => 0, 'bad' => 1, 'good' => 2, 'strong' => 3 );
             $password_strength_text = array( 'short' => __( 'Very weak', 'profile-builder' ), 'bad' => __( 'Weak', 'profile-builder' ), 'good' => __( 'Medium', 'profile-builder' ), 'strong' => __( 'Strong', 'profile-builder' ) );
 
             foreach( $password_strength_text as $psr_key => $psr_text ){
-                if( $psr_text == $_POST['wppb_password_strength'] ){
+                if( $psr_text == sanitize_text_field( $_POST['wppb_password_strength'] ) ){
                     $password_strength_result_slug = $psr_key;
                     break;
                 }

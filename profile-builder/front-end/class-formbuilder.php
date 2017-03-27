@@ -37,7 +37,6 @@ class Profile_Builder_Form_Creator{
 
 		$this->wppb_retrieve_custom_settings();
 
-		add_action( 'wp_footer', array( &$this, 'wppb_print_script' ) ); //print scripts
         if( ( !is_multisite() && current_user_can( 'edit_users' ) ) || ( is_multisite() && current_user_can( 'manage_network' ) ) )
             add_action( 'wppb_before_edit_profile_fields', array( &$this, 'wppb_edit_profile_select_user_to_edit' ) );
 	}
@@ -187,13 +186,13 @@ class Profile_Builder_Form_Creator{
         }
 
         /* get user id */
-        $user = get_user_by( 'email', trim( $_POST['email'] ) );
+        $user = get_user_by( 'email', trim( sanitize_email( $_POST['email'] ) ) );
         $nonce = wp_create_nonce( 'autologin-'. $user->ID .'-'. (int)( time() / 60 ) );
 
         /* define redirect location */
         if( $this->args['redirect_activated'] == 'No' ) {
             if( isset( $_POST['_wp_http_referer'] ) ) {
-                $redirect = $_POST['_wp_http_referer'];
+                $redirect = esc_url_raw($_POST['_wp_http_referer']);
 			} else {
                 $redirect = home_url();
 			}
@@ -254,7 +253,7 @@ class Profile_Builder_Form_Creator{
                     $form_message_tpl_end = apply_filters( 'wppb_form_message_tpl_end', '</p>' );
 
                     if( isset( $_POST['custom_field_user_role'] ) ) {
-                        $user_role = $_POST['custom_field_user_role'];
+                        $user_role = sanitize_text_field($_POST['custom_field_user_role']);
                     } elseif( isset( $this->args['role'] ) ) {
                         $user_role = $this->args['role'];
                     } else {
@@ -262,9 +261,9 @@ class Profile_Builder_Form_Creator{
                     }
 
                     if( isset( $_POST['username'] ) && ( trim( $_POST['username'] ) != '' ) ) {
-                        $account_name = trim( $_POST['username'] );
+                        $account_name = sanitize_user( $_POST['username'] );
                     } elseif( isset( $_POST['email'] ) && ( trim( $_POST['email'] ) != '' ) ) {
-                        $account_name = trim( $_POST['email'] );
+                        $account_name = sanitize_email( $_POST['email'] );
                     }
 
                     if( $this->args['form_type'] == 'register' ) {
@@ -447,17 +446,7 @@ class Profile_Builder_Form_Creator{
 
 		return apply_filters( 'wppb_output_fields_filter', $output_fields );
 	}
-		
-	function wppb_print_script(){
-		if( $this->args['form_type'] == 'edit_profile' ){
-			wp_register_script( 'wppb-edit-profile-scripts', WPPB_PLUGIN_URL . 'assets/js/jquery-edit-profile.js', array( 'jquery' ), PROFILE_BUILDER_VERSION );
-			
-			$translation_array = array( 'avatar' => __( 'The avatar was successfully deleted!', 'profile-builder' ), 'attachment' => __( 'The following attachment was successfully deleted:', 'profile-builder' ) );
-			wp_localize_script( 'wppb-edit-profile-scripts', 'ep', $translation_array );
-			
-			wp_print_scripts( 'wppb-edit-profile-scripts' );
-		}
-	}
+
 	
 	function wppb_add_send_credentials_checkbox ( $request_data, $form ){
 		if ( $form == 'edit_profile' )
@@ -611,7 +600,7 @@ class Profile_Builder_Form_Creator{
 			//only admins
 			if( ( !is_multisite() && current_user_can( 'edit_users' ) ) || ( is_multisite() && current_user_can( 'manage_network' ) ) ) {
 				if( isset( $_GET['edit_user'] ) && ! empty( $_GET['edit_user'] ) ){
-					return $_GET['edit_user'];
+					return absint( $_GET['edit_user'] );
 				}
 			}
 		}
@@ -631,7 +620,7 @@ class Profile_Builder_Form_Creator{
             return;
 
         if( isset( $_GET['edit_user'] ) && ! empty( $_GET['edit_user'] ) )
-            $selected = $_GET['edit_user'];
+            $selected = absint( $_GET['edit_user'] );
         else
             $selected = get_current_user_id();
 
@@ -680,7 +669,7 @@ class Profile_Builder_Form_Creator{
 add_action( 'init', 'wppb_autologin_after_registration' );
 function wppb_autologin_after_registration(){
     if( isset( $_GET['autologin'] ) && isset( $_GET['uid'] ) ){
-        $uid = $_GET['uid'];
+        $uid = absint( $_GET['uid'] );
         $nonce  = $_REQUEST['_wpnonce'];
 
         $arr_params = array( 'autologin', 'uid', '_wpnonce' );
