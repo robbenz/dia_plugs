@@ -30,7 +30,6 @@ function dia_user_roles_box_markup($object) {
       'dia_product_price_check_person' => 'Vendor Verified By:'
     );
 
-
     for ( $x = 1; $x < 3; $x++ ) {
       if ($x == 1) { $ZZ = "Primary "; }
       elseif ($x == 2) { $ZZ = "Secondary ";
