@@ -32,7 +32,6 @@ function dia_user_roles_include_files() {
   if ( is_plugin_active( plugin_basename( __FILE__ ) ) ) {
     $mypluginrequires = array(
       'dia-user-roles-admin.php',
-      'dia-user-roles-shipping.php',
       'dia-user-roles-users.php',
       'dia-user-roles-frontend.php'
     );
@@ -46,9 +45,12 @@ function dia_user_roles_include_files() {
 // include JS for admin stuff
 add_action( 'admin_enqueue_scripts', 'dia_user_roles_admin_js_script' );
 function dia_user_roles_admin_js_script() {
+  global $pagenow;
+  if( $pagenow == 'post.php' ) {
     wp_enqueue_script('dia-user-roles-admin-js', plugins_url( '/js/dia-user-roles-admin-js.js', __FILE__ ), array('jquery'));
     wp_register_style( 'custom_wp_admin_css', plugins_url('/css/admin-style.css', __FILE__) );
     wp_enqueue_style( 'custom_wp_admin_css' );
+  }
 }
 
 // include front end css

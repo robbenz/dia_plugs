@@ -18,11 +18,11 @@ jQuery(document).ready(function() {
 });
 
 // add date picker and shit
-jQuery(document).ready(function($) {
-  $('.dia_product_price_check_1_field input').datepicker({
+jQuery(document).ready(function() {
+  jQuery('.dia_product_price_check_1_field input').datepicker({
     dateFormat : 'mm/dd/yy'
   });
-  $('.dia_product_price_check_2_field input').datepicker({
+  jQuery('.dia_product_price_check_2_field input').datepicker({
     dateFormat : 'mm/dd/yy'
   });
 });

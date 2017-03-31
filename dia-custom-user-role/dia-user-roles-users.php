@@ -157,18 +157,22 @@ function dia_users_remove_menu_pages() {
 /*** EDIT PRODUCT META BOXES ***/
 add_action( 'add_meta_boxes' , 'dia_users_remove_metaboxes', 50 );
 function dia_users_remove_metaboxes() {
-  if ( current_user_can( 'shop_manager' ) || current_user_can( 'seo_specialist' ) ) {
+  if ( current_user_can( 'shop_manager' ) ) {
     remove_meta_box( 'postexcerpt' , 'product' , 'normal' );
     remove_meta_box( 'commentsdiv' , 'product' , 'normal' );
     remove_meta_box( 'tagsdiv-product_tag' , 'product' , 'side' );
     remove_meta_box( 'product_catdiv' , 'product' , 'side' );
     remove_meta_box( 'yith-ywraq-metabox' , 'product' , 'normal' );
-  }
-  if ( current_user_can( 'seo_specialist' ) ) {
+  } elseif ( current_user_can( 'seo_specialist' ) ) {
     remove_meta_box( 'dia-user-roles-meta-box' , 'product' , 'normal' );
     remove_meta_box( 'dia-cust-fav-role-meta-box' , 'product' , 'normal' );
     remove_meta_box( 'woocommerce-product-data' , 'product' , 'normal' );
     remove_meta_box( 'woocommerce-product-images' , 'product' , 'side' );
+    remove_meta_box( 'postexcerpt' , 'product' , 'normal' );
+    remove_meta_box( 'commentsdiv' , 'product' , 'normal' );
+    remove_meta_box( 'tagsdiv-product_tag' , 'product' , 'side' );
+    remove_meta_box( 'product_catdiv' , 'product' , 'side' );
+    remove_meta_box( 'yith-ywraq-metabox' , 'product' , 'normal' );
   }
   //    remove_meta_box( 'wpseo_meta' , 'product' , 'normal' );
 
