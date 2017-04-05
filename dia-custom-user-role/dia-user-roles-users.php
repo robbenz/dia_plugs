@@ -8,9 +8,6 @@ $SEOresult = add_role( 'seo_specialist', __(
     'read' => true,
     'edit_posts' => true,
     'edit_pages' => true,
-    'edit_others_posts' => true,
-    'create_posts' => false,
-    'publish_posts' => true,
     'edit_themes' => false,
     'install_plugins' => false,
     'update_plugin' => false,
@@ -42,6 +39,12 @@ function dia_seo_special_add_caps() {
     "edit_product_terms",
     "assign_product_terms",
     "delete_product_terms",
+    "edit_published_posts",
+    "edit_others_posts",
+    "upload_files",
+    "edit_posts",
+    "create_posts",
+    "publish_posts",
     "manage_product_terms"
   );
   foreach ( $SEO_add_caps as $cap ) {
@@ -89,8 +92,7 @@ function dia_seo_special_add_caps() {
     "delete_shop_coupon_terms",
     "assign_shop_coupon_terms",
     "view_woocommerce_reports",
-    "delete_private_products",
-    "publish_products"
+    "delete_private_products"
   );
   foreach ( $SEO_deny_caps as $dcap ) {
     $role->remove_cap( $dcap );
@@ -173,9 +175,10 @@ function dia_users_remove_metaboxes() {
     remove_meta_box( 'tagsdiv-product_tag' , 'product' , 'side' );
     remove_meta_box( 'product_catdiv' , 'product' , 'side' );
     remove_meta_box( 'yith-ywraq-metabox' , 'product' , 'normal' );
+    remove_meta_box( 'commentsdiv' , 'post' , 'normal' );
+    remove_meta_box( 'easy-modal' , 'post' , 'normal' );
+    remove_meta_box( 'tagsdiv-post_tag' , 'post' , 'side' );
   }
-  //    remove_meta_box( 'wpseo_meta' , 'product' , 'normal' );
-
 }
 /*** END ***/
 

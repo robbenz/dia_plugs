@@ -84,7 +84,7 @@ add_action( 'admin_notices', 'debug_user_roles' );
 function debug_user_roles() {
   global $pagenow;
   if( $pagenow == 'index.php' ) {
-    $MYrole = get_role("editor");
+    $MYrole = get_role("seo_specialist");
     echo '<pre>';
     print_r($MYrole->capabilities);
     echo '</pre>';
