@@ -178,6 +178,7 @@ function dia_users_remove_metaboxes() {
     remove_meta_box( 'commentsdiv' , 'post' , 'normal' );
     remove_meta_box( 'easy-modal' , 'post' , 'normal' );
     remove_meta_box( 'tagsdiv-post_tag' , 'post' , 'side' );
+    remove_meta_box( 'wc_predictive_search_metabox' , 'post' , 'side' );
   }
 }
 /*** END ***/
