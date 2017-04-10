@@ -277,7 +277,16 @@ $columns = apply_filters('pmxi_manage_imports_columns', $columns);
 									}
 									else{
 										if (!empty($item['options']['custom_type'])){
-											$custom_type = get_post_type_object( $item['options']['custom_type'] );
+											switch ($item['options']['custom_type']){
+												case 'taxonomies':
+													$tx = get_taxonomy($item['options']['taxonomy_type']);
+													$custom_type = new stdClass();
+													$custom_type->label = empty($tx->labels->name) ? __('Taxonomy Terms', 'wp_all_import_plugin') : $tx->labels->name;
+													break;
+												default:
+													$custom_type = get_post_type_object( $item['options']['custom_type'] );
+													break;
+											}
 											$cpt_name = ( ! empty($custom_type)) ? $custom_type->label : '';
 										}
 										else{
@@ -306,7 +315,7 @@ $columns = apply_filters('pmxi_manage_imports_columns', $columns);
 									
 									<a href="<?php echo add_query_arg(array('id' => $item['id'], 'action' => 'scheduling'), $this->baseUrl)?>"><?php _e('Cron Scheduling', 'wp_all_import_plugin'); ?></a> <br>
 									
-									<a href="<?php echo add_query_arg(array('page' => 'pmxi-admin-history', 'id' => $item['id']), $this->baseUrl)?>"><?php _e('History Logs', 'wp_all_import_plugin'); ?></a>
+									<a href="<?php echo add_query_arg(array('page' => 'pmxi-admin-history', 'id' => $item['id']), remove_query_arg('pagenum', $this->baseUrl))?>"><?php _e('History Logs', 'wp_all_import_plugin'); ?></a>
 
 								</td>
 								<?php

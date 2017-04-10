@@ -45,6 +45,8 @@ $.fn.wplupload  = function($options) {
 
 			//$('.auto-generate-template').removeAttr('rel').hide();
 			
+			$('.wpallimport-upload-type-container[rel=upload_type]').find('.wpallimport-note').hide();
+
 			$up.start();
 		});
 		
@@ -109,7 +111,14 @@ $.fn.wplupload  = function($options) {
 						if (index != -1)
 						{
 							$('#custom_type_selector').ddslick('select', {index: index });
-							
+
+							if (r.taxonomy_type){
+								var tindex = $('#taxonomy_to_import li:has(input[value="'+ r.taxonomy_type +'"])').index();
+								if (tindex != -1){
+									$('#taxonomy_to_import').ddslick('select', {index: tindex });
+								}
+							}
+
 							if (typeof r.url_bundle != "undefined")
 							{								
 								$('.auto-generate-template').css({'display':'inline-block'}).attr('rel', 'url_type');
@@ -137,11 +146,22 @@ $.fn.wplupload  = function($options) {
 
 					$('#progressbar').html('<span>Upload Complete</span> - ' + file.name + ' (' + ( (file.size / (1024*1024) >= 1) ? (file.size / (1024*1024)).toFixed(2) + 'mb' : (file.size / (1024)).toFixed(2) + 'kb') + ')');					
 
-					setTimeout(function() {					
-						
-						$('.wpallimport-choose-file').find('.wpallimport-upload-resource-step-two').slideDown();	
+					setTimeout(function() {																	
 
-						$('.wpallimport-choose-file').find('.wpallimport-submit-buttons').show();		
+						if (r.post_type && r.notice !== false)
+						{
+							var $note = $('.wpallimport-upload-type-container[rel=upload_type]').find('.wpallimport-note');
+							$note.find('span').html("<div class='wpallimport-free-edition-notice'>" + r.notice + "</div>");
+							$note.show();						
+							$('.wpallimport-choose-file').find('.wpallimport-submit-buttons').hide();
+							$('.wpallimport-choose-file').find('.wpallimport-upload-resource-step-two').slideUp();
+							$('input[name=filepath]').val('');
+						}
+						else
+						{
+							$('.wpallimport-choose-file').find('.wpallimport-upload-resource-step-two').slideDown();
+							$('.wpallimport-choose-file').find('.wpallimport-submit-buttons').show();		
+						}						
 
 						if (r.OK) {					
 
@@ -150,7 +170,7 @@ $.fn.wplupload  = function($options) {
 							$('.error-upload-rejected').show();
 						}
 
-					}, 1000);			 			
+					}, 1000);				 			
 				}
 			}					
 		});

@@ -22,7 +22,8 @@ function pmxi_wp_ajax_upload_resource(){
 		'success' => true,
 		'errors' => false,		
 		'upload_result' => '',
-		'filesize' => 0
+		'filesize' => 0,
+		'notice' => false
 	);
 
 	if ($post['type'] == 'url'){
@@ -70,6 +71,13 @@ function pmxi_wp_ajax_upload_resource(){
 		}
 		else {
 
+			// $root_element = wp_all_import_get_reader_engine( array($upload_result['filePath']), array('root_element' => $upload_result['root_element']) );	
+				
+			// if ( ! empty($root_element) and empty($upload_result['root_element']))
+			// {
+			// 	$upload_result['root_element'] = $root_element;
+			// }
+
 			// validate XML
 			$file = new PMXI_Chunk($upload_result['filePath'], array('element' => $upload_result['root_element']));										    					    					   												
 
@@ -95,7 +103,7 @@ function pmxi_wp_ajax_upload_resource(){
 						$xpath = new DOMXPath($dom);									
 						if (($elements = $xpath->query($defaultXpath)) and $elements->length){
 							break;
-						}												
+						}																		
 				    }
 				    /*else {
 				    	$is_valid = false;
@@ -120,6 +128,47 @@ function pmxi_wp_ajax_upload_resource(){
 				$response['upload_result'] = $upload_result;			
 				$response['filesize'] = filesize($upload_result['filePath']);
 				$response['post_type'] = $upload_result['post_type'];
+				$response['taxonomy_type'] = $upload_result['taxonomy_type'];
+
+				if ( ! empty($response['post_type']) ) 
+				{
+					switch ( $response['post_type'] ) {
+
+						case 'product':
+						case 'shop_order':
+							
+							if ( ! class_exists('WooCommerce') ) {
+								$response['notice'] = __('<p class="wpallimport-bundle-notice">The import bundle you are using requires WooCommerce.</p><a class="upgrade_link" href="https://wordpress.org/plugins/woocommerce/" target="_blank">Get WooCommerce</a>.', 'wp_all_import_plugin');							
+							}
+							else {
+
+								if ( ! defined('PMWI_EDITION') ) {
+
+									$response['notice'] = __('<p class="wpallimport-bundle-notice">The import bundle you are using requires the Pro version of the WooCommerce Add-On.</p><a href="http://www.wpallimport.com/checkout/?edd_action=add_to_cart&download_id=1529&edd_options%5Bprice_id%5D=1" class="upgrade_link" target="_blank">Purchase the WooCommerce Add-On</a>.', 'wp_all_import_plugin');
+
+								}
+								elseif ( PMWI_EDITION != 'paid' ) {
+
+									$response['notice'] = __('<p class="wpallimport-bundle-notice">The import bundle you are using requires the Pro version of the WooCommerce Add-On, but you have the free version installed.</p><a href="http://www.wpallimport.com/checkout/?edd_action=add_to_cart&download_id=1529&edd_options%5Bprice_id%5D=1" target="_blank" class="upgrade_link">Purchase the WooCommerce Add-On</a>.', 'wp_all_import_plugin');
+
+								}							
+							}
+
+							break;
+
+						case 'import_users':
+
+							if ( ! class_exists('PMUI_Plugin') ) {
+								$response['notice'] = __('<p class="wpallimport-bundle-notice">The import bundle you are using requires the User Import Add-On.</p><a href="http://www.wpallimport.com/checkout/?edd_action=add_to_cart&download_id=1921&edd_options%5Bprice_id%5D=1" target="_blank" class="upgrade_link">Purchase the User Import Add-On</a>.', 'wp_all_import_plugin');
+							}
+
+							break;
+						
+						default:
+							# code...
+							break;
+					}
+				}
 			}
 		}
 	} 	

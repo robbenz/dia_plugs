@@ -36,7 +36,7 @@ function pmxi_admin_notices() {
 		?>
 		<div class="error"><p>
 			<?php printf(
-					__('<b>%s Plugin</b>: Please update your WP All Import ACF add-on to the latest version', 'pmwi_plugin'),
+					__('<b>%s Plugin</b>: Please update your WP All Import ACF add-on to the latest version', 'wp_all_import_plugin'),
 					PMAI_Plugin::getInstance()->getName()
 			) ?>
 		</p></div>
@@ -53,7 +53,7 @@ function pmxi_admin_notices() {
 		?>
 		<div class="error"><p>
 			<?php printf(
-					__('<b>%s Plugin</b>: Please update your WP All Import Linkcloak add-on to the latest version', 'pmwi_plugin'),
+					__('<b>%s Plugin</b>: Please update your WP All Import Linkcloak add-on to the latest version', 'wp_all_import_plugin'),
 					PMLCA_Plugin::getInstance()->getName()
 			) ?>
 		</p></div>
@@ -70,7 +70,7 @@ function pmxi_admin_notices() {
 		?>
 		<div class="error"><p>
 			<?php printf(
-					__('<b>%s Plugin</b>: Please update your WP All Import User add-on to the latest version', 'pmwi_plugin'),
+					__('<b>%s Plugin</b>: Please update your WP All Import User add-on to the latest version', 'wp_all_import_plugin'),
 					PMUI_Plugin::getInstance()->getName()
 			) ?>
 		</p></div>
@@ -87,7 +87,7 @@ function pmxi_admin_notices() {
 		?>
 		<div class="error"><p>
 			<?php printf(
-					__('<b>%s Plugin</b>: The WPML Add-On Plugin is no longer compatible with this version of WP All Import - please contact support@wpallimport.com and we will supply the latest version of WP All Import that is compatible with the WPML Add-On.', 'pmwi_plugin'),
+					__('<b>%s Plugin</b>: The WPML Add-On Plugin is no longer compatible with this version of WP All Import - please contact support@wpallimport.com and we will supply the latest version of WP All Import that is compatible with the WPML Add-On.', 'wp_all_import_plugin'),
 					PMLI_Plugin::getInstance()->getName()
 			) ?>
 		</p></div>
@@ -97,7 +97,7 @@ function pmxi_admin_notices() {
 		{
 			deactivate_plugins( PMLI_ROOT_DIR . '/plugin.php');
 		}				
-	}
+	}	
 
 	$input = new PMXI_Input();
 	$messages = $input->get('pmxi_nt', array());

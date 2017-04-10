@@ -47,6 +47,26 @@ if( ! class_exists('PMWI_Updater') ) {
             add_filter( 'plugins_api', array( $this, 'plugins_api_filter' ), 10, 3 );
 
             add_action( 'after_plugin_row_' . $this->name, array( $this, 'show_update_notification' ), 10, 2 );
+            add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
+        }
+
+        /**
+         * Show row meta on the plugin screen.
+         *
+         * @param	mixed $links Plugin Row Meta
+         * @param	mixed $file  Plugin Base file
+         * @return	array
+         */
+        public function plugin_row_meta( $links, $file ) {
+            if ( $file == $this->name ) {
+                $row_meta = array(
+                    'changelog'    => '<a href="' . admin_url( 'plugin-install.php?tab=plugin-information&plugin=wpai-woocommerce-add-on&section=changelog&TB_iframe=true&width=600&height=800' ) . '" class="thickbox open-plugin-details-modal" title="' . esc_attr( __( 'View WP All Import - WooCommerce Add-On Pro Changelog', 'wp_all_import_plugin' ) ) . '">' . __( 'Changelog', 'wp_all_import_plugin' ) . '</a>',
+                );
+
+                return array_merge( $links, $row_meta );
+            }
+
+            return (array) $links;
         }
 
         /**
@@ -106,7 +126,7 @@ if( ! class_exists('PMWI_Updater') ) {
                         $wpdb->query( $wpdb->prepare("DELETE FROM $wpdb->options WHERE option_name = %s", $this->slug . '_' . $cache_key) );
                         $wpdb->query( $wpdb->prepare("DELETE FROM $wpdb->options WHERE option_name = %s", $this->slug . '_timeout_' . $cache_key) );
                                          
-                        $wpdb->query( $wpdb->prepare("INSERT INTO $wpdb->options ( option_value, option_name ) VALUES ( %s, %s )", maybe_serialize( $version_info ), $this->slug . '_' . $cache_key) );                        
+                        $wpdb->query( $wpdb->prepare("INSERT INTO $wpdb->options ( option_value, option_name, autoload ) VALUES ( %s, %s, 'no' )", maybe_serialize( $version_info ), $this->slug . '_' . $cache_key) );
                         $wpdb->query( $wpdb->prepare("INSERT INTO $wpdb->options ( option_value, option_name ) VALUES ( %s, %s )", strtotime("+1 hour"), $this->slug . '_timeout_' . $cache_key) );
                         
                     }
@@ -195,7 +215,7 @@ if( ! class_exists('PMWI_Updater') ) {
                         $wpdb->query( $wpdb->prepare("DELETE FROM $wpdb->options WHERE option_name = %s", $this->slug . '_' . $cache_key) );
                         $wpdb->query( $wpdb->prepare("DELETE FROM $wpdb->options WHERE option_name = %s", $this->slug . '_timeout_' . $cache_key) );
                                          
-                        $wpdb->query( $wpdb->prepare("INSERT INTO $wpdb->options ( option_value, option_name ) VALUES ( %s, %s )", maybe_serialize( $version_info ), $this->slug . '_' . $cache_key) );                        
+                        $wpdb->query( $wpdb->prepare("INSERT INTO $wpdb->options ( option_value, option_name, autoload ) VALUES ( %s, %s, 'no' )", maybe_serialize( $version_info ), $this->slug . '_' . $cache_key) );
                         $wpdb->query( $wpdb->prepare("INSERT INTO $wpdb->options ( option_value, option_name ) VALUES ( %s, %s )", strtotime("+1 hour"), $this->slug . '_timeout_' . $cache_key) );                       
                         
                     }
@@ -320,7 +340,7 @@ if( ! class_exists('PMWI_Updater') ) {
                         $wpdb->query( $wpdb->prepare("DELETE FROM $wpdb->options WHERE option_name = %s", $this->slug . '_' . $cache_key) );
                         $wpdb->query( $wpdb->prepare("DELETE FROM $wpdb->options WHERE option_name = %s", $this->slug . '_timeout_' . $cache_key) );
                                          
-                        $wpdb->query( $wpdb->prepare("INSERT INTO $wpdb->options ( option_value, option_name ) VALUES ( %s, %s )", maybe_serialize( $_data ), $this->slug . '_' . $cache_key) );                        
+                        $wpdb->query( $wpdb->prepare("INSERT INTO $wpdb->options ( option_value, option_name, autoload ) VALUES ( %s, %s, 'no' )", maybe_serialize( $_data ), $this->slug . '_' . $cache_key) );
                         $wpdb->query( $wpdb->prepare("INSERT INTO $wpdb->options ( option_value, option_name ) VALUES ( %s, %s )", strtotime("+1 hour"), $this->slug . '_timeout_' . $cache_key) );
                                                                       
                     }   

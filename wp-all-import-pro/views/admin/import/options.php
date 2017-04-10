@@ -34,8 +34,9 @@
 				<?php do_action('pmxi_options_header', $isWizard, $post); ?>
 				
 				<?php
-				$is_valid_root_element = true;				
-				if ($this->warnings->get_error_codes('root-element-validation'))
+				$is_valid_root_element = true;		
+				$error_codes = $this->warnings->get_error_codes();		
+				if ( ! empty($error_codes) and is_array($error_codes) and in_array('root-element-validation', $error_codes))
 				{
 					$is_valid_root_element = false;
 				}				
@@ -82,7 +83,14 @@
 					<div class="options">
 						<?php
 													
-							if ( in_array('reimport', $visible_sections)) include( 'options/_reimport_template.php' );
+							if ( in_array('reimport', $visible_sections)){
+								if ($post_type == 'taxonomies'){
+									include( 'options/_reimport_taxonomies_template.php' );
+								}
+								else{
+									include( 'options/_reimport_template.php' );
+								}
+							}
 							do_action('pmxi_options_tab', $isWizard, $post);
 							if ( in_array('settings', $visible_sections)) include( 'options/_settings_template.php' );
 							

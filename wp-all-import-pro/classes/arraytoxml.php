@@ -15,17 +15,12 @@ class PMXI_ArrayToXML
     {                
 
     	$data = apply_filters('wp_all_import_json_to_xml', $data);
-
-        // turn off compatibility mode as simple xml throws a wobbly if you don't.
-        if (ini_get('zend.ze1_compatibility_mode') == 1)
-        {
-            ini_set ('zend.ze1_compatibility_mode', 0);
-        }
      
-        if ($xml == null)
-        {
-            $xml = simplexml_load_string('<?xml version="1.0" encoding="utf-8"?><'.$rootNodeName .'/>');
-        }
+      if ($xml == null)
+      {
+          $xml = simplexml_load_string('<?xml version="1.0" encoding="utf-8"?><'.$rootNodeName .'/>');
+      }
+
      	if ( !empty($data)){
 	        // loop through the data passed in.
 	        foreach($data as $key => $value)
@@ -52,7 +47,7 @@ class PMXI_ArrayToXML
 	            else
 	            {                
 	                // add single node.
-	                $value =  htmlspecialchars($value);
+	                $value =  htmlspecialchars(preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', ' ', $value));
 	                $xml->addChild($key, $value);
 
 	            }

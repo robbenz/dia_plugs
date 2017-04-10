@@ -15,9 +15,9 @@ function pmxi_wp_ajax_delete_import(){
 		'data' => ''
 	));		
 
-	$get  = $input->get(array(		
-		'iteration' => 1
-	));	
+//	$get  = $input->get(array(
+//		'iteration' => 1
+//	));
 
 	$params = array();
 	parse_str($post['data'], $params);
@@ -53,7 +53,7 @@ function pmxi_wp_ajax_delete_import(){
 			$import->getById($id);			
 			if ( ! $import->isEmpty() )
 			{
-				if ((int) $get['iteration'] === 1)
+				if ((int) $params['iteration'] === 1)
 				{
 					$import->set(array(
 						'deleted' => 0						

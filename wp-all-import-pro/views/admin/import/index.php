@@ -71,7 +71,7 @@ $l10n = array(
 							<h2 style="margin-bottom: 10px;"><?php _e('First, specify previously exported file', 'wp_all_import_plugin'); ?></h2>
 							<h2 class="wp_all_import_subheadline"><?php _e('The data in this file can be modified, but the structure of the file (column/element names) should not change.', 'wp_all_import_plugin'); ?></h2>
 							<?php endif; ?>
-							<a class="wpallimport-import-from wpallimport-upload-type <?php echo ('upload' == $post['type'] and ! empty($_POST)) ? 'selected' : '' ?>" rel="upload_type" href="javascript:void(0);">
+							<a class="wpallimport-import-from wpallimport-upload-type <?php echo ('upload' == $post['type']) ? 'selected' : '' ?>" rel="upload_type" href="javascript:void(0);">
 								<span class="wpallimport-icon"></span>
 								<span class="wpallimport-icon-label"><?php _e('Upload a file', 'wp_all_import_plugin'); ?></span>
 							</a>
@@ -91,15 +91,22 @@ $l10n = array(
 							<div id="plupload-ui" class="wpallimport-file-type-options">
 					            <div>				                
 					                <input type="hidden" name="filepath" value="<?php echo $post['filepath'] ?>" id="filepath"/>
-					                <a id="select-files" href="javascript:void(0);"/><?php _e('Click here to select file from your computer...', 'wp_all_import_plugin'); ?></a>
+					                <a id="select-files" href="javascript:void(0);" <?php if (empty($post['filepath'])):?>style="display:none;"<?php endif; ?> /><?php _e('Click here to select file from your computer...', 'wp_all_import_plugin'); ?></a>
 					                <div id="progressbar" class="wpallimport-progressbar">
-					                	
+					                	<?php if (!empty($post['filepath'])):?>
+					                	<span><?php _e('Upload Complete', 'wp_all_import_plugin');?></span> - <?php echo basename($post['filepath']); ?>
+					                	<?php endif; ?>
 					                </div>
-					                <div id="progress" class="wpallimport-progress">
+					                <div id="progress" class="wpallimport-progress" <?php if (!empty($post['filepath'])):?>style="visibility: visible; display: block;"<?php endif; ?>>
+					                	<?php if (!empty($post['filepath'])):?>
+					                	<div class="wpallimport-upload-process ui-progressbar ui-widget ui-widget-content ui-corner-all" id="upload_process" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><div class="ui-progressbar-value ui-widget-header ui-corner-left ui-corner-right" style="width: 100%;"></div></div>
+					                	<?php else: ?>
 					                	<div id="upload_process" class="wpallimport-upload-process"></div>				                	
+					                	<?php endif; ?>
 					                </div>
 					            </div>
 					        </div>
+					        <div class="wpallimport-note" style="margin: 0 auto; font-size: 13px;"><span></span></div>		
 						</div>
 						<div class="wpallimport-upload-type-container" rel="url_type">						
 							<div class="wpallimport-file-type-options">
@@ -110,9 +117,10 @@ $l10n = array(
 							</div>
 							<div class="wpallimport-note" style="margin: 20px auto 0; font-size: 13px;">
 								<?php _e('<strong>Hint:</strong> After you create this import, you can schedule it to run automatically, on a pre-defined schedule, with cron jobs. If anything in your file has changed, WP All Import can update your site with the changed data automatically.', 'wp_all_import_plugin'); ?>
+								<span></span>
 							</div>
-							<input type="hidden" name="downloaded" value="<?php echo $post['downloaded']; ?>"/>
-							<input type="hidden" name="template" value="<?php echo $post['template']; ?>"/>
+							<input type="hidden" name="downloaded" value="<?php echo esc_attr($post['downloaded']); ?>"/>
+							<input type="hidden" name="template" value="<?php echo esc_attr($post['template']); ?>"/>
 						</div>
 						<div class="wpallimport-upload-type-container" rel="file_type">			
 							<?php $upload_dir = wp_upload_dir(); ?>					
@@ -158,6 +166,7 @@ $l10n = array(
 								
 								<div class="wpallimport-note" style="margin: 0 auto; font-size: 13px;">
 									<?php printf(__('Upload files to <strong>%s</strong> and they will appear in this list', 'wp_all_import_plugin'), $upload_dir['basedir'] . $files_directory) ?>
+									<span></span>
 								</div>
 							</div>
 						</div>		
@@ -169,7 +178,7 @@ $l10n = array(
 						
 							<div class="wpallimport-choose-post-type">
 
-								<input type="hidden" name="wizard_type" value="<?php echo $post['wizard_type']; ?>"/>
+								<input type="hidden" name="wizard_type" value="<?php echo $post['wizard_type']; ?>"/>								
 
 								<h2 style="margin-top:0;"><?php _e('Import data from this file into...', 'wp_all_import_plugin'); ?></h2>
 								
@@ -188,9 +197,40 @@ $l10n = array(
 									
 									$custom_types = get_post_types(array('_builtin' => true), 'objects') + get_post_types(array('_builtin' => false, 'show_ui' => true), 'objects'); 
 									foreach ($custom_types as $key => $ct) {
-										if (in_array($key, array('attachment', 'revision', 'nav_menu_item'))) unset($custom_types[$key]);
+										if (in_array($key, array('attachment', 'revision', 'nav_menu_item', 'shop_webhook', 'import_users'))) unset($custom_types[$key]);
 									}
 									$custom_types = apply_filters( 'pmxi_custom_types', $custom_types );
+
+									$sorted_cpt = array();
+									foreach ($custom_types as $key => $cpt){
+
+										$sorted_cpt[$key] = $cpt;
+
+										// Put users & comments & taxonomies after Pages
+										if ( ! empty($custom_types['page']) && $key == 'page' || empty($custom_types['page']) && $key == 'post' ){
+
+											$sorted_cpt['taxonomies'] = new stdClass();
+											$sorted_cpt['taxonomies']->labels = new stdClass();
+											$sorted_cpt['taxonomies']->labels->name = __('Taxonomies','wp_all_export_plugin');
+
+											$sorted_cpt['import_users'] = new stdClass();
+											$sorted_cpt['import_users']->labels = new stdClass();
+											$sorted_cpt['import_users']->labels->name = __('Users','wp_all_export_plugin');
+											break;
+										}
+									}
+									$order = array('shop_order', 'shop_coupon', 'shop_customer', 'product');
+									foreach ($order as $cpt){
+										if (!empty($custom_types[$cpt])) $sorted_cpt[$cpt] = $custom_types[$cpt];
+									}
+
+									uasort($custom_types, "wp_all_import_cmp_custom_types");
+
+									foreach ($custom_types as $key => $cpt) {
+										if (empty($sorted_cpt[$key])){
+											$sorted_cpt[$key] = $cpt;
+										}
+									}
 
 									$hidden_post_types = get_post_types(array('_builtin' => false, 'show_ui' => false), 'objects');
 									foreach ($hidden_post_types as $key => $ct) {
@@ -211,15 +251,36 @@ $l10n = array(
 										</div>
 									</div>
 									<select name="custom_type_selector" id="custom_type_selector" class="wpallimport-post-types">								
-										<?php if ( ! empty($custom_types)): ?>							
-											<?php foreach ($custom_types as $key => $cpt) :?>	
+										<?php if ( ! empty($sorted_cpt)): $unknown_cpt = array(); ?>
+											<?php foreach ($sorted_cpt as $key => $ct) :?>
 												<?php 
 													$image_src = 'dashicon-cpt';
-													if (  in_array($key, array('post', 'page', 'product', 'import_users') ) )
-														$image_src = 'dashicon-' . $key;										
+
+													$cpt = $key;
+													$cpt_label = $ct->labels->name;
+
+													if (  in_array($key, array('post', 'page', 'product', 'import_users', 'shop_order', 'shop_coupon', 'shop_customer', 'users', 'comments', 'taxonomies') ) )
+													{
+														$image_src = 'dashicon-' . $cpt;										
+													}
+													else
+													{
+														$unknown_cpt[$key] = $ct;
+														continue;
+													}														
 												?>
-											<option value="<?php echo $key; ?>" data-imagesrc="dashicon <?php echo $image_src; ?>"><?php echo $cpt->labels->name; ?></option>
+											<option value="<?php echo $cpt; ?>" data-imagesrc="dashicon <?php echo $image_src; ?>" <?php if ( $cpt == $post['custom_type'] ):?>selected="selected"<?php endif; ?>><?php echo $cpt_label; ?></option>
 											<?php endforeach; ?>
+											<?php if ( ! empty($unknown_cpt)):  ?>
+												<?php foreach ($unknown_cpt as $key => $ct):?>
+													<?php
+													$image_src = 'dashicon-cpt';
+													$cpt_label = $ct->labels->name;												
+													?>
+													<option value="<?php echo $key;?>" data-imagesrc="dashicon <?php echo $image_src; ?>" <?php if ($key == $post['custom_type']) echo 'selected="selected"'; ?>><?php echo $cpt_label; ?></option>
+												<?php endforeach ?>
+											<?php endif;?>
+
 										<?php endif; ?>
 										<?php if ( ! empty($hidden_post_types)): ?>							
 											<?php foreach ($hidden_post_types as $key => $cpt) :?>	
@@ -231,7 +292,48 @@ $l10n = array(
 											<option value="<?php echo $key; ?>" data-imagesrc="dashicon <?php echo $image_src; ?>"><?php echo $cpt->labels->name; ?></option>								
 											<?php endforeach; ?>
 										<?php endif; ?>			
-									</select>							
+									</select>
+									<div class="taxonomy_to_import_wrapper">
+										<input type="hidden" name="taxonomy_type" value="<?php echo $post['taxonomy_type'];?>">
+										<h2 style="margin: 30px 0 -10px 0;"><?php _e('Select taxonomy to import into...');?></h2>
+										<select id="taxonomy_to_import">
+											<option value=""><?php _e('Select Taxonomy', 'wp_all_export_plugin'); ?></option>
+											<?php $options = wp_all_import_get_taxonomies(); ?>
+											<?php foreach ($options as $slug => $name):?>
+												<option value="<?php echo $slug;?>" <?php if ($post['taxonomy_type'] == $slug):?>selected="selected"<?php endif;?>><?php echo $name;?></option>
+											<?php endforeach;?>
+										</select>
+									</div>
+									<?php if ( ! class_exists('PMUI_Plugin') ): ?>
+									<div class="wpallimport-upgrade-notice" rel="import_users">
+										<p><?php _e('The User Import Add-On is Required to Import Users', 'wp_all_import_plugin'); ?></p>
+										<a href="http://www.wpallimport.com/checkout/?edd_action=add_to_cart&download_id=1921&edd_options%5Bprice_id%5D=1" target="_blank" class="upgrade_link"><?php _e('Purchase the User Import Add-On', 'wp_all_import_plugin');?></a>
+									</div>
+									<?php endif; ?>
+									<?php if ( class_exists('WooCommerce') && ! class_exists('PMWI_Plugin') ): ?>
+									<div class="wpallimport-upgrade-notice" rel="product">
+										<p><?php _e('The WooCommerce Add-On is Required to Import Products', 'wp_all_import_plugin'); ?></p>
+										<a href="http://www.wpallimport.com/checkout/?edd_action=add_to_cart&download_id=1529&edd_options%5Bprice_id%5D=1" target="_blank" class="upgrade_link"><?php _e('Purchase the WooCommerce Add-On Pro', 'wp_all_import_plugin');?></a>
+									</div>
+									<?php endif; ?>
+									<?php if ( class_exists('WooCommerce') &&  ( ! class_exists('PMWI_Plugin') || class_exists('PMWI_Plugin') && PMWI_EDITION == 'free') ): ?>
+										<div class="wpallimport-upgrade-notice" rel="shop_order">
+											<?php if (class_exists('PMWI_Plugin') && PMWI_EDITION == 'free'): ?>
+												<p><?php _e('The Pro version of the WooCommerce Add-On is required to Import Orders, but you have the free version installed', 'wp_all_import_plugin'); ?></p>
+											<?php else: ?>
+												<p><?php _e('The WooCommerce Add-On Pro is Required to Import Orders', 'wp_all_import_plugin'); ?></p>
+											<?php endif; ?>
+											<a href="http://www.wpallimport.com/checkout/?edd_action=add_to_cart&download_id=1529&edd_options%5Bprice_id%5D=1" target="_blank" class="upgrade_link"><?php _e('Purchase the WooCommerce Add-On Pro', 'wp_all_import_plugin');?></a>
+										</div>
+										<div class="wpallimport-upgrade-notice" rel="shop_coupon">
+											<?php if (class_exists('PMWI_Plugin') && PMWI_EDITION == 'free'): ?>
+												<p><?php _e('The Pro version of the WooCommerce Add-On is required to Import Coupons, but you have the free version installed', 'wp_all_import_plugin'); ?></p>
+											<?php else: ?>
+												<p><?php _e('The WooCommerce Add-On Pro is Required to Import Coupons', 'wp_all_import_plugin'); ?></p>
+											<?php endif; ?>
+											<a href="http://www.wpallimport.com/checkout/?edd_action=add_to_cart&download_id=1529&edd_options%5Bprice_id%5D=1" target="_blank" class="upgrade_link"><?php _e('Purchase the WooCommerce Add-On Pro', 'wp_all_import_plugin');?></a>
+										</div>
+									<?php endif; ?>
 								</div>
 								<div class="clear wpallimport-extra-text-below">
 									<!--div class="wpallimport-existing-records">

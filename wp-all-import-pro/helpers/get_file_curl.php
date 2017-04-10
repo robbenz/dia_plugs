@@ -2,37 +2,41 @@
 
 if ( ! function_exists('get_file_curl') ):
 
-	function get_file_curl($url, $fullpath, $to_variable = false, $iteration = 0) {				
+	function get_file_curl($url, $fullpath, $to_variable = false, $iteration = false) {				
 		
 		if ( ! preg_match('%^(http|ftp)s?://%i', $url) ) return;
 
-		$request = wp_remote_get($url);				
+		$response = wp_remote_get($url);
 
-		if ( ! is_wp_error($request) and ( ! isset($request['response']['code']) or isset($request['response']['code']) and ! in_array($request['response']['code'], array(401, 403, 404))) ) {
-
-			$rawdata = wp_remote_retrieve_body( $request );				
+		if ( ! is_wp_error($response) and ( ! isset($response['response']['code']) or isset($response['response']['code']) and ! in_array($response['response']['code'], array(401, 403, 404))) ) 
+		{
+			$rawdata = wp_remote_retrieve_body( $response );							
 			
-			if (empty($rawdata)){
-				$result =  pmxi_curl_download($url, $fullpath, $to_variable);					
-				if ( ! $result and ! $iteration){					
-					$url = wp_all_import_translate_uri($url);
-					return get_file_curl($url, $fullpath, $to_variable, 1);
+			if (empty($rawdata))
+			{
+				$result = pmxi_curl_download($url, $fullpath, $to_variable);					
+				if ( ! $result and $iteration === false)
+				{
+					$new_url = wp_all_import_translate_uri($url);
+					return ($new_url !== $url) ? get_file_curl($new_url, $fullpath, $to_variable, true) : $result;
 				}
 				return $result;
 			}
 
-			if ( ! @file_put_contents($fullpath, $rawdata) ) {
+			if ( ! @file_put_contents($fullpath, $rawdata) ) 
+			{
 				$fp = fopen($fullpath,'w');
 			    fwrite($fp, $rawdata);
 			    fclose($fp);
 			}													
 			
-		    if ( preg_match('%\W(jpg|jpeg|gif|png)$%i', basename($fullpath)) and ( ! ($image_info = @getimagesize($fullpath)) or ! in_array($image_info[2], array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG)) ) )
+		    if ( preg_match('%\W(svg)$%i', basename($fullpath)) or preg_match('%\W(jpg|jpeg|gif|png)$%i', basename($fullpath)) and ( ! ($image_info = apply_filters('pmxi_getimagesize', @getimagesize($fullpath), $fullpath)) or ! in_array($image_info[2], array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG)) ) )
 			{			
-				$result =  pmxi_curl_download($url, $fullpath, $to_variable);	
-				if ( ! $result and ! $iteration){
-					$url = wp_all_import_translate_uri($url);
-					return get_file_curl($url, $fullpath, $to_variable, 1);
+				$result = pmxi_curl_download($url, $fullpath, $to_variable);	
+				if ( ! $result and $iteration === false)
+				{
+					$new_url = wp_all_import_translate_uri($url);
+					return ($new_url !== $url) ? get_file_curl($new_url, $fullpath, $to_variable, true) : $result;
 				}
 				return $result;
 			}
@@ -40,17 +44,17 @@ if ( ! function_exists('get_file_curl') ):
 		    return ($to_variable) ? $rawdata : true;
 
 		}
-		else{ 			
-			
+		else
+		{ 						
 			$curl = pmxi_curl_download($url, $fullpath, $to_variable);							
 
-			if ($curl === false and ! $iteration){				
-				$url = wp_all_import_translate_uri($url);
-				return get_file_curl($url, $fullpath, $to_variable, 1);
-								
+			if ($curl === false and $iteration === false)
+			{
+				$new_url = wp_all_import_translate_uri($url);
+				return ($new_url !== $url) ? get_file_curl($new_url, $fullpath, $to_variable, true) : ( is_wp_error($response) ? $response : false );								
 			}
 
-			return ($curl === false) ? $request : $curl;			
+			return ($curl === false) ? ( is_wp_error($response) ? $response : false ) : $curl;			
 
 		}
 		
@@ -66,6 +70,7 @@ if ( ! function_exists('pmxi_curl_download') ) {
 		
 		$ch = curl_init($url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
 		$rawdata = curl_exec_follow($ch);	    	    
 
 	    $result = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -124,6 +129,7 @@ if ( ! function_exists('curl_exec_follow') ):
 	      curl_setopt($rch, CURLOPT_HEADER, true);
 	      curl_setopt($rch, CURLOPT_NOBODY, true);
 	      curl_setopt($rch, CURLOPT_FORBID_REUSE, false);
+	      curl_setopt($rch, CURLOPT_CONNECTTIMEOUT, 5);
 	      do
 	      {
 	        curl_setopt($rch, CURLOPT_URL, $newurl);

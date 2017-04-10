@@ -65,7 +65,11 @@ if ( ! function_exists('wp_all_import_template_notifications') )
 			}
 			// WP Job Manager Add-On
 			elseif ( ! empty($post['wpjm_addon']) 					
-					and ! is_plugin_active('wp-job-manager-xml-csv-listings-import/wp-job-manager-add-on.php') )
+					and ! is_plugin_active('wp-job-manager-xml-csv-listings-import/wp-job-manager-add-on.php')
+					and ! is_plugin_active('listify-xml-csv-listings-import/listify-add-on.php')
+					and ! is_plugin_active('import-xml-csv-listings-to-listable-theme/listable-add-on.php')
+					and ! is_plugin_active('jobify-xml-csv-listings-import/jobify-add-on.php')
+			)
 			{
 				$notifications[] = __('The import template you are using requires the WP Job Manager Add-On. If you continue without it your data may import incorrectly.<br/><br/><a href="https://wordpress.org/plugins/wp-job-manager-xml-csv-listings-import/" target="_blank">Download the WP Job Manager Add-On</a>.', 'wp_all_import_plugin');
 			}
@@ -74,6 +78,12 @@ if ( ! function_exists('wp_all_import_template_notifications') )
 					and ! is_plugin_active('yoast-seo-settings-xml-csv-import/yoast-addon.php') )
 			{
 				$notifications[] = __('The import template you are using requires the Yoast SEO Add-On. If you continue without it your data may import incorrectly.<br/><br/><a href="https://wordpress.org/plugins/yoast-seo-settings-xml-csv-import/" target="_blank">Download the Yoast SEO Add-On</a>.', 'wp_all_import_plugin');
+			}
+			// Listable SEO Add-On
+			elseif ( ! empty($post['listable_addon'])
+				and ! is_plugin_active('import-xml-csv-listings-to-listable-theme/listable-add-on.php') )
+			{
+				$notifications[] = __('The import template you are using requires the Listable Add-On. If you continue without it your data may import incorrectly.<br/><br/><a href="https://wordpress.org/plugins/import-xml-csv-listings-to-listable-theme/" target="_blank">Download the Listable Add-On</a>.', 'wp_all_import_plugin');
 			}
 			// 3rd party Add-On
 			elseif( ! empty($post['rapid_addon']) and ! is_plugin_active($post['rapid_addon']) )

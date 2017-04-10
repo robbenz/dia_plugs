@@ -3,7 +3,7 @@
 Plugin Name: WP All Import - WooCommerce Add-On Pro
 Plugin URI: http://www.wpallimport.com/
 Description: Import to WooCommerce. Adds a section to WP All Import that looks just like WooCommerce. Requires WP All Import.
-Version: 2.2.6
+Version: 2.3.5
 Author: Soflyy
 */
 /**
@@ -24,7 +24,7 @@ define('PMWI_ROOT_URL', rtrim(plugin_dir_url(__FILE__), '/'));
  */
 define('PMWI_PREFIX', 'pmwi_');
 
-define('PMWI_VERSION', '2.2.6');
+define('PMWI_VERSION', '2.3.5');
 
 if ( class_exists('PMWI_Plugin') and PMWI_EDITION == "free"){
 
@@ -179,11 +179,8 @@ else {
 			
 			// create/update required database tables
 
-			// regirster autoloading method
-			if (function_exists('__autoload') and ! in_array('__autoload', spl_autoload_functions())) { // make sure old way of autoloading classes is not broken
-				spl_autoload_register('__autoload');
-			}
-			spl_autoload_register(array($this, '__autoload'));		
+			// register autoloading method
+			spl_autoload_register(array($this, 'autoload'));
 
 			// register helpers
 			if (is_dir(self::ROOT_DIR . '/helpers')) foreach (PMWI_Helper::safe_glob(self::ROOT_DIR . '/helpers/*.php', PMWI_Helper::GLOB_RECURSE | PMWI_Helper::GLOB_PATH) as $filePath) {
@@ -199,7 +196,7 @@ else {
 			update_option($option_name, $this->options);
 			$this->options = get_option(get_class($this) . '_Options');
 
-			register_activation_hook(self::FILE, array($this, '__activation'));
+			register_activation_hook(self::FILE, array($this, 'activation'));
 
 			// register action handlers
 			if (is_dir(self::ROOT_DIR . '/actions')) if (is_dir(self::ROOT_DIR . '/actions')) foreach (PMWI_Helper::safe_glob(self::ROOT_DIR . '/actions/*.php', PMWI_Helper::GLOB_RECURSE | PMWI_Helper::GLOB_PATH) as $filePath) {
@@ -234,7 +231,7 @@ else {
 			}
 
 			// register admin page pre-dispatcher
-			add_action('admin_init', array($this, '__adminInit'));		
+			add_action('admin_init', array($this, 'adminInit'));
 			add_action('init', array($this, 'init'));
 		}
 
@@ -261,7 +258,7 @@ else {
 		/**
 		 * pre-dispatching logic for admin page controllers
 		 */
-		public function __adminInit() {
+		public function adminInit() {
 			$input = new PMWI_Input();
 			$page = strtolower($input->getpost('page', ''));
 			if (preg_match('%^' . preg_quote(str_replace('_', '-', self::PREFIX), '%') . '([\w-]+)$%', $page)) {
@@ -278,7 +275,7 @@ else {
 		 */
 		public function shortcodeDispatcher($args, $content, $tag) {
 
-			$controllerName = self::PREFIX . preg_replace('%(^|_).%e', 'strtoupper("$0")', $tag); // capitalize first letters of class name parts and add prefix
+			$controllerName = self::PREFIX . preg_replace_callback('%(^|_).%', array($this, "replace_callback"), $tag);// capitalize first letters of class name parts and add prefix
 			$controller = new $controllerName();
 			if ( ! $controller instanceof PMWI_Controller) {
 				throw new Exception("Shortcode `$tag` matches to a wrong controller type.");
@@ -286,6 +283,10 @@ else {
 			ob_start();
 			$controller->index($args, $content);
 			return ob_get_clean();
+		}
+
+		public function replace_callback($matches){
+			return strtoupper($matches[0]);
 		}
 
 		/**
@@ -311,7 +312,7 @@ else {
 					throw new Exception('There is no previousely buffered content to display.');
 				}
 			} else {
-				$controllerName =  preg_replace('%(^' . preg_quote(self::PREFIX, '%') . '|_).%e', 'strtoupper("$0")', str_replace('-', '_', $page)); // capitalize prefix and first letters of class name parts
+				$controllerName = preg_replace_callback('%(^' . preg_quote(self::PREFIX, '%') . '|_).%', array($this, "replace_callback"),str_replace('-', '_', $page));
 				$actionName = str_replace('-', '_', $action);
 				if (method_exists($controllerName, $actionName)) {
 
@@ -373,13 +374,13 @@ else {
 		 * @param string $className
 		 * @return bool
 		 */
-		public function __autoload($className) {
+		public function autoload($className) {
 			$is_prefix = false;
 			$filePath = str_replace('_', '/', preg_replace('%^' . preg_quote(self::PREFIX, '%') . '%', '', strtolower($className), 1, $is_prefix)) . '.php';
 			if ( ! $is_prefix) { // also check file with original letter case
 				$filePathAlt = $className . '.php';
 			}
-			foreach ($is_prefix ? array('models', 'controllers', 'shortcodes', 'classes') : array() as $subdir) {
+			foreach ($is_prefix ? array('models', 'controllers', 'shortcodes', 'classes') : array('libraries') as $subdir) {
 				$path = self::ROOT_DIR . '/' . $subdir . '/' . $filePath;
 				if (is_file($path)) {
 					require $path;
@@ -431,7 +432,7 @@ else {
 		/**
 		 * Plugin activation logic
 		 */
-		public function __activation() {		
+		public function activation() {
 
 			// uncaught exception doesn't prevent plugin from being activated, therefore replace it with fatal error so it does
 			set_exception_handler(create_function('$e', 'trigger_error($e->getMessage(), E_USER_ERROR);'));
@@ -567,7 +568,9 @@ else {
 				'multiple_variable_product_tax_class' => 'parent',
 				'single_variable_product_tax_class' => '',
 				'variable_stock_status' => 'instock',
-				'single_variable_stock_status' => '',				
+				'single_variable_stock_status' => '',		
+				'variable_allow_backorders' => 'no',
+				'single_variable_allow_backorders' => '',
 				'is_variable_product_downloadable' => 'no',
 				'single_variable_product_downloadable' => '',
 				'variable_attribute_name' => array(),
@@ -638,7 +641,110 @@ else {
 				'variation_stock' => '',
 				'variation_stock_status' => 'auto',
 				'put_variation_image_to_gallery' => 0,
-				'single_variation_stock_status' => ''
+				'single_variation_stock_status' => '',
+				'pmwi_order' => array(										
+					'status' => 'wc-pending',
+					'status_xpath' => '',
+					'date' => 'now',
+					'billing_source' => 'existing',
+					'billing_source_match_by' => 'username',
+					'billing_source_username' => '',
+					'billing_source_email' => '',
+					'billing_source_id' => '',
+					'billing_source_cf_name' => '',
+					'billing_source_cf_value' => '',
+					'billing_first_name' => '',
+					'billing_last_name' => '',
+					'billing_company' => '',
+					'billing_address_1' => '',
+					'billing_address_2' => '',
+					'billing_city' => '',
+					'billing_postcode' => '',
+					'billing_country' => '',
+					'billing_state' => '',
+					'billing_email' => '',
+					'billing_phone' => '',
+					'guest_billing_first_name' => '',
+					'guest_billing_last_name' => '',
+					'guest_billing_company' => '',
+					'guest_billing_address_1' => '',
+					'guest_billing_address_2' => '',
+					'guest_billing_city' => '',
+					'guest_billing_postcode' => '',
+					'guest_billing_country' => '',
+					'guest_billing_state' => '',
+					'guest_billing_email' => '',
+					'guest_billing_phone' => '',
+					'is_guest_matching' => 0,
+					'shipping_source' => 'copy',
+					'shipping_first_name' => '',
+					'shipping_last_name' => '',
+					'shipping_company' => '',
+					'shipping_address_1' => '',
+					'shipping_address_2' => '',
+					'shipping_city' => '',
+					'shipping_postcode' => '',
+					'shipping_country' => '',
+					'shipping_state' => '',
+					'shipping_email' => '',
+					'shipping_phone' => '',
+					'copy_from_billing' => 0,
+					'customer_provided_note' => '',
+					'payment_method' => '',
+					'payment_method_xpath' => '',
+					'transaction_id' => '',
+					'products_repeater_mode' => 'csv',
+					'products_repeater_mode_separator' => '|',
+					'products_repeater_mode_foreach' => '',
+					'products_source' => 'existing',
+					'products' => array(),							
+					'manual_products' => array(),
+					'fees_repeater_mode' => 'csv',
+					'fees_repeater_mode_separator' => '|',
+					'fees_repeater_mode_foreach' => '',		
+					'fees' => array(),
+					'coupons_repeater_mode' => 'csv',
+					'coupons_repeater_mode_separator' => '|',
+					'coupons_repeater_mode_foreach' => '',
+					'coupons' => array(),
+					'shipping_repeater_mode' => 'csv',
+					'shipping_repeater_mode_separator' => '|',
+					'shipping_repeater_mode_foreach' => '',
+					'shipping' => array(),					
+					'taxes_repeater_mode' => 'csv',
+					'taxes_repeater_mode_separator' => '|',
+					'taxes_repeater_mode_foreach' => '',
+					'taxes' => array(),					
+					'order_total_logic' => 'auto',
+					'order_total_xpath' => '',															
+					'order_refund_amount' => '',
+					'order_refund_reason' => '',
+					'order_refund_date' => 'now',
+					'order_refund_issued_source' => 'existing',
+					'order_refund_issued_match_by' => 'username',
+					'order_refund_issued_username' => '',
+					'order_refund_issued_email' => '',
+					'order_refund_issued_cf_name' => '',
+					'order_refund_issued_cf_value' => '',
+					'order_refund_issued_id' => '',
+					'notes_repeater_mode' => 'csv',
+					'notes_repeater_mode_separator' => '|',
+					'notes_repeater_mode_foreach' => '',		
+					'notes' => array(),					
+				),
+				'is_update_billing_details' => 1,
+				'is_update_shipping_details' => 1,
+				'is_update_payment' => 1,
+				'is_update_notes' => 1,					
+				'is_update_products' => 1,
+				'update_products_logic' => 'full_update',
+				'is_update_fees' => 1,
+				'is_update_coupons' => 1,
+				'is_update_shipping' => 1,
+				'is_update_taxes' => 1,
+				'is_update_refunds' => 1,
+				'is_update_total' => 1,
+				'do_not_send_order_notifications' => 1
 			);
 		}	
 	}

@@ -1,6 +1,6 @@
 <?php
 
-function pmxi_wp_loaded() {					
+function pmxi_wp_loaded() {						
 
 	$table = PMXI_Plugin::getInstance()->getTablePrefix() . 'imports';
 	global $wpdb;
@@ -23,9 +23,28 @@ function pmxi_wp_loaded() {
 	/* Check if cron is manualy, then execute import */
 	$cron_job_key = PMXI_Plugin::getInstance()->getOption('cron_job_key');
 	
-	if (!empty($cron_job_key) and !empty($_GET['import_id']) and !empty($_GET['import_key']) and $_GET['import_key'] == $cron_job_key and !empty($_GET['action']) and in_array($_GET['action'], array('processing','trigger','pipe','cancel'))) {		
+	if (!empty($cron_job_key) and !empty($_GET['import_key']) and $_GET['import_key'] == $cron_job_key and !empty($_GET['action']) and in_array($_GET['action'], array('processing','trigger','pipe','cancel','cleanup'))) {		
 		
 		$logger = create_function('$m', 'echo "<p>$m</p>\\n";');								
+
+		if (empty($_GET['import_id']))
+		{
+			if ($_GET['action'] == 'cleanup')
+			{
+				$settings = new PMXI_Admin_Settings();				
+				$settings->cleanup( true );
+				wp_send_json(array(
+					'status'     => 200,
+					'message'    => __('Cleanup completed.', 'wp_all_import_plugin')
+				));				
+				return;
+			}		
+			wp_send_json(array(
+				'status'     => 403,
+				'message'    => __('Missing import ID.', 'wp_all_import_plugin')
+			));				
+			return;
+		}
 
 		$import = new PMXI_Import_Record();
 		
@@ -154,36 +173,39 @@ function pmxi_wp_loaded() {
 								$log_storage = (int) PMXI_Plugin::getInstance()->getOption('log_storage');
 
 								// unlink previous logs
-								$by = array();
-								$by[] = array(array('import_id' => $id, 'type NOT LIKE' => 'trigger'), 'AND');
-								$historyLogs = new PMXI_History_List();
-								$historyLogs->setColumns('id', 'import_id', 'type', 'date')->getBy($by, 'id ASC');
-								if ($historyLogs->count() and $historyLogs->count() >= $log_storage ){
-									$logsToRemove = $historyLogs->count() - $log_storage;
-									foreach ($historyLogs as $i => $file){																					
-										$historyRecord = new PMXI_History_Record();
-										$historyRecord->getBy('id', $file['id']);
-										if ( ! $historyRecord->isEmpty()) $historyRecord->delete(); // unlink history file only
-										if ($i == $logsToRemove)
-											break;
+								if ( (int) $import->queue_chunk_number < (int) $import->count )
+								{
+									$by = array();
+									$by[] = array(array('import_id' => $id, 'type NOT LIKE' => 'trigger'), 'AND');
+									$historyLogs = new PMXI_History_List();
+									$historyLogs->setColumns('id', 'import_id', 'type', 'date')->getBy($by, 'id ASC');
+									if ($historyLogs->count() and $historyLogs->count() >= $log_storage ){
+										$logsToRemove = $historyLogs->count() - $log_storage;
+										foreach ($historyLogs as $i => $file){																					
+											$historyRecord = new PMXI_History_Record();
+											$historyRecord->getBy('id', $file['id']);
+											if ( ! $historyRecord->isEmpty()) $historyRecord->delete(); // unlink history file only
+											if ($i == $logsToRemove)
+												break;
+										}
+									}	
+
+									$history_log = new PMXI_History_Record();						
+									$history_log->set(array(
+										'import_id' => $import->id,
+										'date' => date('Y-m-d H:i:s'),
+										'type' => 'processing',
+										'summary' => __("cron processing", "wp_all_import_plugin")
+									))->save();	
+
+									if ($log_storage){
+										$wp_uploads = wp_upload_dir();	
+										$log_file = wp_all_import_secure_file( $wp_uploads['basedir'] . DIRECTORY_SEPARATOR . PMXI_Plugin::LOGS_DIRECTORY, $history_log->id ) . DIRECTORY_SEPARATOR . $history_log->id . '.html';
+										if ( @file_exists($log_file) ) wp_all_import_remove_source($log_file, false);	
+
+										//@file_put_contents($log_file, sprintf(__('<p>Source path `%s`</p>', 'wp_all_import_plugin'), $import->path));
+										
 									}
-								}	
-
-								$history_log = new PMXI_History_Record();						
-								$history_log->set(array(
-									'import_id' => $import->id,
-									'date' => date('Y-m-d H:i:s'),
-									'type' => 'processing',
-									'summary' => __("cron processing", "wp_all_import_plugin")
-								))->save();	
-
-								if ($log_storage){
-									$wp_uploads = wp_upload_dir();	
-									$log_file = wp_all_import_secure_file( $wp_uploads['basedir'] . DIRECTORY_SEPARATOR . PMXI_Plugin::LOGS_DIRECTORY, $history_log->id ) . DIRECTORY_SEPARATOR . $history_log->id . '.html';
-									if ( @file_exists($log_file) ) wp_all_import_remove_source($log_file, false);	
-
-									//@file_put_contents($log_file, sprintf(__('<p>Source path `%s`</p>', 'wp_all_import_plugin'), $import->path));
-									
 								}
 
 								ob_start();

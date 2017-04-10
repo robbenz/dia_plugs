@@ -113,7 +113,7 @@ function pmxi_wp_ajax_test_images(){
 				
 				$start = time();
 				if ( ! empty($post['imgs']) )
-				{
+				{								
 					foreach ($post['imgs'] as $img) 
 					{	
 						if ( ! preg_match('%^(http|https|ftp|ftps)%i', $img)){
@@ -122,15 +122,18 @@ function pmxi_wp_ajax_test_images(){
 						}
 						
 						$image_name = wp_unique_filename($targetDir, 'test');
+
 						$image_filepath = $targetDir . '/' . $image_name;
 
-						$url = str_replace(" ", "%20", trim($img));
+						$url = trim($img);
 
 						$request = get_file_curl($url, $image_filepath);
 
-						if ( (is_wp_error($request) or $request === false) and ! @file_put_contents($image_filepath, @file_get_contents($img))) {
+						$get_ctx = stream_context_create(array('http' => array('timeout' => 5)));
+
+						if ( (is_wp_error($request) or $request === false) and ! @file_put_contents($image_filepath, @file_get_contents($img, false, $get_ctx))) {
 							$failed_msgs[] = (is_wp_error($request)) ? $request->get_error_message() : sprintf(__('File `%s` cannot be saved locally', 'wp_all_import_plugin'), $img);										
-						} elseif( ! ($image_info = @getimagesize($image_filepath)) or ! in_array($image_info[2], array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG))) {
+						} elseif( ! ($image_info = apply_filters('pmxi_getimagesize', @getimagesize($image_filepath), $image_filepath)) or ! in_array($image_info[2], array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG))) {
 							$failed_msgs[] = sprintf(__('File `%s` is not a valid image.', 'wp_all_import_plugin'), $img);										
 						} else {
 							$success_images++;											

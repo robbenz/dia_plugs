@@ -34,7 +34,7 @@ if (!class_exists('XmlImportConfig'))
 		private function init()
 		{
 			$this->setCacheDirectory(dirname(__FILE__) . '/cache');
-			$this->setMultiGlue(', ');
+			$this->setMultiGlue( apply_filters('wp_all_import_multi_glue', ', ') );
 		}
 
 		/**
