@@ -29,7 +29,7 @@ function dia_new_product_tabs( $tabs ) {
 function dia_new_product_tab_content($param, $args) {
   global $post;
   $table = end($args);
-  $dia_tab_content = get_post_meta( $post->ID, $table, true );
+  $dia_tab_content = apply_filters('the_content', get_post_meta( $post->ID, $table, true ) );
   if(isset($GLOBALS['wp_embed'])) {
     $dia_tab_content = $GLOBALS['wp_embed']->autoembed($dia_tab_content);
   }

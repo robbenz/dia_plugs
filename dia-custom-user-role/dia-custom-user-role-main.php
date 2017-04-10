@@ -80,6 +80,7 @@ endif;
 */
 
 // Debug user role caps
+/*
 add_action( 'admin_notices', 'debug_user_roles' );
 function debug_user_roles() {
   global $pagenow;
@@ -96,3 +97,4 @@ function debug_user_roles() {
 
   }
 }
+*/
