@@ -9,7 +9,7 @@ function dia_cust_fav_admin_galpage() {
 
   if ( 'yes' == get_post_meta( get_the_ID(), 'dia_customer_favorite', true ) ) {
    $your_favorite_position = get_post_meta( get_the_ID(), 'dia_customer_favorite_position', true );
-   echo '<img id="customer_fav_img" src="'.site_url().'/wp-content/imgs/dia-customer-favorite.png" style="width:125px; z-index:999; position:absolute;" class="';
+   echo '<img id="customer_fav_img" src="'.site_url().'/wp-content/imgs/dia-customer-favorite.png" style="width:125px; z-index:89; position:absolute;" class="';
    if ($your_favorite_position == 'Top Left'){
      echo 'favimg_topleft';
    }
