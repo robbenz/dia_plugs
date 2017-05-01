@@ -163,7 +163,7 @@ function dia_users_remove_metaboxes() {
     remove_meta_box( 'postexcerpt' , 'product' , 'normal' );
     remove_meta_box( 'commentsdiv' , 'product' , 'normal' );
     remove_meta_box( 'tagsdiv-product_tag' , 'product' , 'side' );
-    remove_meta_box( 'product_catdiv' , 'product' , 'side' );
+  //  remove_meta_box( 'product_catdiv' , 'product' , 'side' );
     remove_meta_box( 'yith-ywraq-metabox' , 'product' , 'normal' );
   } elseif ( current_user_can( 'seo_specialist' ) ) {
     remove_meta_box( 'dia-user-roles-meta-box' , 'product' , 'normal' );
