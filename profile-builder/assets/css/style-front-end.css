@@ -556,12 +556,12 @@ ul.wppb-faceted-list input[type="checkbox"]{
     margin-right: 5px;
 }
 
-.wppb-userlisting-container.spinner{
+.wppb-userlisting-container.wppb-spinner{
     position:relative;
     opacity: 0.5
 }
 
-.wppb-userlisting-container.spinner:after{
+.wppb-userlisting-container.wppb-spinner:after{
     content: '';
     position: absolute;
     top: 50%;

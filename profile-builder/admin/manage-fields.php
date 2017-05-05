@@ -122,7 +122,7 @@ function wppb_manage_fields_submenu(){
         array( 'type' => 'text', 'slug' => 'allowed-image-extensions', 'title' => __( 'Allowed Image Extensions', 'profile-builder' ), 'default' => '.*', 'description' => __( 'Specify the extension(s) you want to limit to upload<br/>Example: .ext1,.ext2,.ext3<br/>If not specified, defaults to: .jpg,.jpeg,.gif,.png (.*)', 'profile-builder' ) ),
         array( 'type' => 'text', 'slug' => 'allowed-upload-extensions', 'title' => __( 'Allowed Upload Extensions', 'profile-builder' ), 'default' => '.*', 'description' => __( 'Specify the extension(s) you want to limit to upload<br/>Example: .ext1,.ext2,.ext3<br/>If not specified, defaults to all WordPress allowed file extensions (.*)', 'profile-builder' ) ),
         array( 'type' => 'text', 'slug' => 'avatar-size', 'title' => __( 'Avatar Size', 'profile-builder' ), 'default' => 100, 'description' => __( "Enter a value (between 20 and 200) for the size of the 'Avatar'<br/>If not specified, defaults to 100", 'profile-builder' ) ),
-        array( 'type' => 'text', 'slug' => 'date-format', 'title' => __( 'Date-format', 'profile-builder' ), 'default' => 'mm/dd/yy', 'description' => __( 'Specify the format of the date when using Datepicker<br/>Valid options: mm/dd/yy, mm/yy/dd, dd/yy/mm, dd/mm/yy, yy/dd/mm, yy/mm/dd<br/>If not specified, defaults to mm/dd/yy', 'profile-builder' ) ),
+        array( 'type' => 'text', 'slug' => 'date-format', 'title' => __( 'Date-format', 'profile-builder' ), 'default' => 'mm/dd/yy', 'description' => __( 'Specify the format of the date when using Datepicker<br/>Valid options: mm/dd/yy, mm/yy/dd, dd/yy/mm, dd/mm/yy, yy/dd/mm, yy/mm/dd, mm-dd-yy, yy-mm-dd, D, dd M yy, D, d M y, DD, dd-M-y, D, d M yy, @<br/>If not specified, defaults to mm/dd/yy', 'profile-builder' ) ),
         array( 'type' => 'textarea', 'slug' => 'terms-of-agreement', 'title' => __( 'Terms of Agreement', 'profile-builder' ), 'description' => __( 'Enter a detailed description of the temrs of agreement for the user to read.<br/>Links can be inserted by using standard HTML syntax: &lt;a href="custom_url"&gt;custom_text&lt;/a&gt;', 'profile-builder' ) ),
         array( 'type' => 'text', 'slug' => 'options', 'title' => __( 'Options', 'profile-builder' ), 'description' => __( "Enter a comma separated list of values<br/>This can be anything, as it is hidden from the user, but should not contain special characters or apostrophes", 'profile-builder' ) ),
         array( 'type' => 'text', 'slug' => 'labels', 'title' => __( 'Labels', 'profile-builder' ), 'description' => __( "Enter a comma separated list of labels<br/>Visible for the user", 'profile-builder' ) ),
@@ -256,7 +256,7 @@ function wppb_get_meta_name( $option = 'wppb_manage_fields', $prefix = 'custom_f
             }
             if( !empty( $meta_numbers ) ){
                 rsort( $meta_numbers );
-                $id = $meta_numbers[0]+1;
+                $id = $meta_numbers[0]++;
             }
         }
 
@@ -1026,7 +1026,10 @@ function wppb_check_field_on_edit_add( $message, $fields, $required_fields, $met
 		// check for the correct the date-format
 		if ( $posted_values['field'] == 'Datepicker' ){
 			$date_format = strtolower( $posted_values['date-format'] );			
-			if ( ( trim( $date_format ) != 'mm/dd/yy' ) && ( trim( $date_format ) != 'mm/yy/dd' ) && ( trim( $date_format ) != 'dd/yy/mm' ) && ( trim( $date_format ) != 'dd/mm/yy' ) && ( trim( $date_format ) != 'yy/dd/mm' ) && ( trim( $date_format ) != 'yy/mm/dd' ) )
+			if ( trim( $date_format ) != 'mm/dd/yy' && trim( $date_format ) != 'mm/yy/dd' && trim( $date_format ) != 'dd/yy/mm' &&
+				trim( $date_format ) != 'dd/mm/yy' && trim( $date_format ) != 'yy/dd/mm' && trim( $date_format ) != 'yy/mm/dd' &&
+				trim( $date_format ) != 'yy-mm-dd' && trim( $date_format ) != 'DD, dd-M-y' && trim( $date_format ) != 'D, dd M yy' &&
+				trim( $date_format ) != 'D, d M y' && trim( $date_format ) != 'D, d M yy' && trim( $date_format ) != 'mm-dd-yy' && trim( $date_format ) != '@' )
 				$message .= __( "The entered value for the Datepicker is not a valid date-format\n", 'profile-builder' );
 			
 			elseif ( trim( $date_format ) == '' )

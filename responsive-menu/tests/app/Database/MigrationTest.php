@@ -1,114 +1,82 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use ResponsiveMenu\Collections\OptionsCollection;
 use ResponsiveMenu\Database\Migration;
-use ResponsiveMenu\Models\Option;
+use ResponsiveMenu\Collections\OptionsCollection;
+use ResponsiveMenu\Management\OptionManager;
 
 class MigrationTest extends TestCase {
 
+    private $manager;
+    private $defaults = [
+        'foo' => 'bar',
+        'baz' => 'qux'
+    ];
+
     public function setUp() {
-      $this->database = $this->createMock('ResponsiveMenu\Database\WpDatabase');
-      $this->service = $this->createMock('ResponsiveMenu\Services\OptionService');
-      $this->defaults = ['default_one' => 1, 'default_two' => 'string', 'default_three' => 4.5, 'default_four' => 'new'];
-      $this->current_version = '3.0.8';
-      $this->old_version = '3.0.7';
-      $this->old_options = ['default_one' => 4, 'default_two' => 'old string', 'default_three' => 4.5, 'RM' => 'old RM value', 'RMDepth' => 'old RMDepth value'];
-
-      $this->base_migration = new Migration($this->database, $this->service, $this->defaults, $this->current_version, $this->old_version, $this->old_options);
-
-      $this->options_collection = new OptionsCollection;
-      $this->options_collection->add(new Option('default_one', 5));
-      $this->options_collection->add(new Option('default_two', 'string'));
-      $this->options_collection->add(new Option('default_three', 7.5));
-
-      /*
-      * Mock the repository all() function to return controlled options collection
-      */
-      $service_options = new OptionsCollection;
-      $service_options->add(new Option('default_one', 5));
-      $service_options->add(new Option('default_two', 'new option'));
-      $service_options->add(new Option('to_delete', 'delete me!'));
-      $service_options->add(new Option('to_delete_also', 'delete me too!'));
-      $this->service->method('all')->willReturn($service_options);
-
+        $db = $this->createMock('ResponsiveMenu\Database\Database');
+        $db->method('all')->willReturn(['moon' => 'rise']);
+        $this->manager = new OptionManager($db, ['foo' => 'bar', 'river' => 'run']);
     }
 
-    public function testVersionCompareNeedsUpdate() {
-      $this->assertTrue($this->base_migration->needsUpdate());
+    public function tableVersions() {
+        return [
+
+            // These don't require a table
+            ['3.0.1', false],
+            ['3.1.2', false],
+            ['4.5.1', false],
+            ['3.0.0', false],
+
+            // These do require a table
+            ['2.0.0', true],
+            ['2.0.1', true],
+            ['2.8.9', true],
+            ['1.2.0', true],
+            ['2.9.5', true],
+
+        ];
+    }
+    /**
+     * @dataProvider tableVersions
+     */
+    public function testNeedsTable($version, $expected) {
+        $migration = new Migration($this->manager, $version, '3.0.1', $this->defaults);
+        $this->assertEquals($expected, $migration->needsTable());
     }
 
-    public function testVersionCompareDoesntNeedUpdate() {
-      $migration = new Migration($this->database, $this->service, $this->defaults, $this->current_version, '3.0.9', $this->old_options);
-      $this->assertFalse($migration->needsUpdate());
+    public function updateVersions() {
+        return [
+            ['3.0.1', '3.1.0', true],
+            ['2.8.9', '3.0.0', true],
+            ['1.6.4', '4.1.0', true],
+            ['3.1.1', '4.5.3', true],
+            ['3.0.1', '3.0.2', true],
+            ['3.1.1', '3.1.2', true],
+
+            ['3.3.1', '3.1.2', false],
+            ['2.8.1', '1.3.2', false],
+            ['1.4.1', '1.1.2', false],
+            ['4.1.2', '3.1.2', false]
+        ];
+    }
+    /**
+     * @dataProvider updateVersions
+     */
+    public function testNeedsUpdate($old_version, $new_version, $expected) {
+        $migration = new Migration($this->manager, $old_version, $new_version, $this->defaults);
+        $this->assertEquals($expected, $migration->needsUpdate());
     }
 
-    public function testVersionCompareNeedUpdateWithDoubleEndPoint() {
-      $migration = new Migration($this->database, $this->service, $this->defaults, '3.0.10', $this->old_version, $this->old_options);
-      $this->assertTrue($migration->needsUpdate());
+    public function testAddingNewOptions() {
+        $migration = new Migration($this->manager, '3.0.0', '3.0.0', $this->defaults);
+        $collection = new OptionsCollection(['foo' => 'bar', 'river' => 'run', 'baz' => 'qux']);
+        $this->assertEquals($collection, $migration->addNewOptions());
     }
 
-    public function testVersionCompareDoesntNeedUpdateWithDoubleEndPoint() {
-      $migration = new Migration($this->database, $this->service, $this->defaults, '3.0.10', '3.1.0', $this->old_options);
-      $this->assertFalse($migration->needsUpdate());
+    public function testRemoveOldOptions() {
+        $migration = new Migration($this->manager, '3.0.0', '3.0.0', $this->defaults);
+        $collection = new OptionsCollection(['foo' => 'bar', 'river' => 'run']);
+        $this->assertEquals($collection, $migration->tidyUpOptions());
     }
-
-    public function testVersionCompareDoesNeedUpdateWithTenComparedToOne() {
-      $migration = new Migration($this->database, $this->service, $this->defaults, '3.0.10', '3.0.1', $this->old_options);
-      $this->assertTrue($migration->needsUpdate());
-    }
-
-    public function testVersionCompareDoesntNeedUpdateWithOneComparedToTen() {
-      $migration = new Migration($this->database, $this->service, $this->defaults, '3.0.1', '3.0.10', $this->old_options);
-      $this->assertFalse($migration->needsUpdate());
-    }
-
-    public function testVersionCompareDoesntNeedUpdateWithDoubleEndPointWithVersionHigher() {
-      $migration = new Migration($this->database, $this->service, $this->defaults, '3.0.10', '3.2.0', $this->old_options);
-      $this->assertFalse($migration->needsUpdate());
-    }
-
-    public function testVersionCompareDoesNeedUpdateWithDoubleEndPointWithVersionHigher() {
-      $migration = new Migration($this->database, $this->service, $this->defaults, '3.2.0', '3.0.10', $this->old_options);
-      $this->assertTrue($migration->needsUpdate());
-    }
-
-    public function testNewOptionsReturnedAreCorrect() {
-      $this->assertSame(['default_four' => 'new'], $this->base_migration->getNewOptions($this->options_collection));
-    }
-
-    public function testIsVersion3CheckReturnsFalse() {
-      $migration = new Migration($this->database, $this->service, $this->defaults, $this->current_version, '2.8.0', $this->old_options);
-      $this->assertFalse($migration->isVersion3());
-    }
-
-    public function testIsVersion3CheckReturnsTrue() {
-      $this->assertTrue($this->base_migration->isVersion3());
-    }
-
-    public function testDeletableOptions() {
-      $this->assertSame(['to_delete' => 'to_delete', 'to_delete_also' => 'to_delete_also'], $this->base_migration->getOptionsToDelete());
-    }
-
-    public function testOptionsToMigrate() {
-      $this->assertSame(['menu_to_use' => 'old RM value', 'menu_depth' => 'old RMDepth value'], $this->base_migration->getMigratedOptions());
-    }
-
-    public function testSetup() {
-      $this->database->method('createTable')->willReturn(true);
-      $migration = new Migration($this->database, $this->service, $this->defaults, '3.0.10', '2.8.9', $this->old_options);
-      $this->assertEquals(null, $migration->setUp());
-    }
-
-    public function testSynchronise() {
-      $this->assertEquals(null, $this->base_migration->synchronise());
-    }
-
-    public function testAddNewOptionsEmpty() {
-      $service = $this->createMock('ResponsiveMenu\Services\OptionService');
-      $service->method('all')->willReturn(new ResponsiveMenu\Collections\OptionsCollection);
-      $migration = new Migration($this->database, $service, $this->defaults, $this->current_version, $this->old_version, $this->old_options);
-      $this->assertEquals(null, $migration->addNewOptions());
-    }
-
 }

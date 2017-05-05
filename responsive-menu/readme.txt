@@ -1,10 +1,10 @@
 === Responsive Menu ===
 Contributors: ResponsiveMenu, peterfeatherstone
 Donate link: https://responsive.menu/donate
-Tags: responsive, menu, responsive menu, mobile menu, wordpress responsive menu, wp responsive menu, tablet menu, mobile, tablet, 3 lines, 3 line, three line, three lines
+Tags: responsive, menu, responsive menu, mobile menu, wordpress responsive menu, wp responsive menu, tablet menu, hamburger menu, hamburger, mobile, tablet, 3 lines, 3 line, three line, three lines
 Requires at least: 3.5.0
-Tested up to: 4.7.1
-Stable tag: 3.0.18
+Tested up to: 4.7.3
+Stable tag: 3.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -35,7 +35,7 @@ PHP 5.4+
 <br /><br />
 **Basic Functionality:**
 <ul>
-<li>Change every colour</li>
+<li>Change every text, background and border colour</li>
 <li>Set the fonts, font sizes and text alignment you want to use</li>
 <li>Set which side and where you want the button to show</li>
 <li>Set which side the menu appears from (left, right, top or bottom)</li>
@@ -91,15 +91,7 @@ Alternatively:
 
 == Frequently Asked Questions ==
 
-1. Why do I get the error `Parse error: syntax error, unexpected '[' in /home/..../wp-content/plugins/responsive-menu/src/app/Routing/WpRouting.php on line 19`?
-
-This is due to your PHP version not being high enough, you need at least PHP 5.4 for the plugin to work.
-
-2. I am getting a message similar to `Fatal error: Uncaught exception 'Exception' with message 'parse error: failed at $hamburger-layer-color: ;`, why?
-
-All you need to do is login to your WordPress admin, go to my plugin page and hit 'Update Options' to fix this.
-
-To view our whole FAQ, please go to https://responsive.menu/faq/
+To view our FAQ, please go to <a href="https://responsive.menu/faq">https://responsive.menu/faq</a>
 
 == Screenshots ==
 
@@ -118,6 +110,19 @@ To view our whole FAQ, please go to https://responsive.menu/faq/
 7. Fully customisable Admin Screen
 
 == Changelog ==
+
+= 3.1.0 (25th April 2017) =
+* **Requires PHP 5.4**
+* Massive overhaul of codebase
+* Speed improvements to front and back end
+* Admin now uses BootStrap
+* Twig templating engine implemented
+* Added admin form validation to help catch data errors
+* Added a rebuild database option
+* Done away with SASS on the fly compilation
+* Back to on slide effect now customisable - Pro only
+* Added option to adjust for WP Admin bar - Pro only
+* Bug fixes and compatibility fixes
 
 = 3.0.18 (2nd February 2017) =
 * **Requires PHP 5.4**

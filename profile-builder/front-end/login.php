@@ -183,6 +183,9 @@ add_filter( 'login_redirect', 'wppb_login_redirect', 10, 3 );
 
 /* shortcode function */
 function wppb_front_end_login( $atts ){
+	/* define a global so we now we have the shortcode login present */
+	global $wppb_login_shortcode;
+	$wppb_login_shortcode = true;
 
     extract( shortcode_atts( array( 'display' => true, 'redirect' => '', 'redirect_url' => '', 'logout_redirect_url' => wppb_curpageurl(), 'register_url' => '', 'lostpassword_url' => '', 'redirect_priority' => 'normal' ), $atts ) );
 

@@ -148,7 +148,7 @@ function wppb_front_end_password_recovery(){
 	global $wpdb;
 
 	if( is_user_logged_in() )
-		return __( 'You are already logged in. You can change your password on the edit profile form.', 'profile-builder' );
+		return apply_filters( 'wppb_recover_password_already_logged_in', __( 'You are already logged in. You can change your password on the edit profile form.', 'profile-builder' ) );
 
 	ob_start();
 
@@ -215,7 +215,7 @@ function wppb_front_end_password_recovery(){
                 $requestedUserEmail = $query[0]->user_email;
                 $requestedUserNicename = $query[0]->user_nicename;
 
-                if( $wppb_generalSettings['loginWith'] == 'username' )
+                if( $wppb_generalSettings['loginWith'] == 'username' || $wppb_generalSettings['loginWith'] == 'usernameemail' )
                     $display_username_email = $query[0]->user_login;
                 else
                     $display_username_email = $query[0]->user_email;
@@ -275,7 +275,7 @@ function wppb_front_end_password_recovery(){
 
                 $user_info = get_userdata( $userID );
 
-                if( $wppb_generalSettings['loginWith'] == 'username' )
+                if( $wppb_generalSettings['loginWith'] == 'username' || $wppb_generalSettings['loginWith'] == 'usernameemail' )
                     $display_username_email = $user_info->user_login;
                 else
                     $display_username_email = $user_info->user_email;

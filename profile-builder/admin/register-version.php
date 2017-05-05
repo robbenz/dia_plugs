@@ -70,7 +70,7 @@ function wppb_serial_form($version, $fullname){
         <p><?php _e( "If you register this version of Profile Builder, you'll receive information regarding upgrades, patches, and technical support.", 'profile-builder' );?></p>
         <p class="wppb-serial-wrap">
             <label for="wppb_profile_builder_<?php echo $version; ?>_serial"><?php _e(' Serial Number:', 'profile-builder' );?></label>
-                <input type="text" size="50" name="wppb_profile_builder_<?php echo $version; ?>_serial" id="wppb_profile_builder_<?php echo $version; ?>_serial" class="regular-text" <?php if ( $wppb_profile_builder_serial != ''){ echo ' value="'.$wppb_profile_builder_serial.'"';} ?>/>
+                <input type="password" size="50" name="wppb_profile_builder_<?php echo $version; ?>_serial" id="wppb_profile_builder_<?php echo $version; ?>_serial" class="regular-text" <?php if ( $wppb_profile_builder_serial != ''){ echo ' value="'.$wppb_profile_builder_serial.'"';} ?>/>
 
                 <?php
                 if( $wppb_profile_builder_serial_status == 'found' )

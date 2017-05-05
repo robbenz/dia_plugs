@@ -4,7 +4,7 @@
  * Plugin URI: https://wpbean.com/wpb-woocommarce-product-slider/
  * Description: WPB WooCommerce Product slider is a nice and cool carousel product slider. It has lots of cool feature like shortcode control, widget,custom settings etc. Shortcodes: For latest product slider &nbsp;&nbsp;&nbsp;&nbsp;[wpb-latest-product title="Latest Product"]&nbsp;&nbsp;&nbsp;&nbsp; & &nbsp;&nbsp; For feature product slider &nbsp;&nbsp;&nbsp;&nbsp; [wpb-feature-product title="Feature Products"]
  * Author: wpbean
- * Version: 2.0
+ * Version: 2.0.2
  * Author URI: https://wpbean.com
  * Text Domain: wpb-wps
  * Domain Path: /languages

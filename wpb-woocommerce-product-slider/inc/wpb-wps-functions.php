@@ -163,7 +163,6 @@ if( !function_exists('wpb_wps_socail_info') ){
 			<a href="https://plus.google.com/u/0/+WpBean/posts" title="Follow us on Google+" class="wpb_googleplus" target="_blank"><?php _e( 'Follow Us On Google Plus', 'wpb-wps' );?></a>
 			<a href="https://www.facebook.com/wpbean" title="Follow us on Facebook" class="wpb_facebook" target="_blank"><?php _e( 'Like Us On FaceBook', 'wpb-wps' );?></a>
 			<a href="https://www.youtube.com/user/wpbean/videos" title="Follow us on Youtube" class="wpb_youtube" target="_blank"><?php _e( 'Subscribe Us on YouTube', 'wpb-wps' );?></a>
-			<a href="http://mangotheme.com/doc/woo_pro_slider/" title="This plugin documentation" class="wpb_doc" target="_blank"><?php _e( 'Documentation', 'wpb-wps' );?></a>
 		</div>
 		<?php
 	}

@@ -5,7 +5,7 @@ Tags: user registration, user profile, user registration form, user fields, extr
 
 Requires at least: 3.1
 Tested up to: 4.7.3
-Stable tag: 2.5.9
+Stable tag: 2.6.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -150,6 +150,16 @@ This plugin adds/removes user fields in the front-end. Both default and extra pr
 10. Profile Builder Login Widget
 
 == Changelog ==
+= 2.6.1 =
+* Updated translation files
+* Added a filter for already logged in message on recover password form: wppb_recover_password_already_logged_in
+* We now process only the submitted form so we can have multiple forms on the same page
+
+= 2.6.0 =
+* Compatibility with WPML for login widget/shortcode error messages
+* Small change to meta name generation function that could eliminate a notice on some setups
+* Updated translation files
+
 = 2.5.9 =
 * Fixed a issue with a database error that happened in certain conditions
 * Compatibility with Captcha by BestWebSoft latest version

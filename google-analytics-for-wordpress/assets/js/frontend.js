@@ -85,8 +85,12 @@ var MonsterInsights = function(){
 		extension = extension.substring( 0, (extension.indexOf( "#" ) == -1 ) ? extension.length : extension.indexOf( "#" ) ); /* Remove the anchor at the end, if there is one */
 		extension = extension.substring( 0, (extension.indexOf( "?" ) == -1 ) ? extension.length : extension.indexOf( "?" ) ); /* Remove the query after the file name, if there is one */
 		extension = extension.substring( extension.lastIndexOf( "/" ) + 1, extension.length ); /* Remove everything before the last slash in the path */
-		extension = extension.substring( extension.indexOf( "." ) + 1 ); /* Remove everything but what's after the first period */
-		return extension;
+		if ( extension.length > 0 && extension.indexOf('.') !== -1 ) { // If there's a period left in the URL, then there's a extension. Else it is not a extension.
+			extension = extension.substring( extension.indexOf( "." ) + 1 ); /* Remove everything but what's after the first period */
+			return extension;
+		} else {
+			return "";
+		}
 	}
 
 	function __gaTrackerLoaded() {
@@ -113,7 +117,7 @@ var MonsterInsights = function(){
 		return inbound_paths;
 	}
 
-	function __gaTrackerTrackedClickType() {
+	function __gaTrackerTrackedClickType( event ) {
 		if ( event.which == 1 ) {
 			return 'event.which=1';
 		} else if ( event.which == 2 ) {
@@ -134,7 +138,7 @@ var MonsterInsights = function(){
 	function __gaTrackerLinkType( el ) {
 		var download_extensions = __gaTrackerGetDownloadExtensions();
 		var inbound_paths       = __gaTrackerGetInboundPaths();
-		var type                = 'internal'; /* By default, we assume all links are internal ones, which we don't track by default */
+		var type                = 'unknown';
 		var link 				= el.href;
 		var extension           = __gaTrackerGetExtension( el.href );
 		var currentdomain       = __gaTrackerGetDomain();
@@ -147,22 +151,28 @@ var MonsterInsights = function(){
 			type = 'internal'; // if it's a JS link, it's internal
 		} else if ( __gaTrackerStringTrim( protocol ) == 'mailto' ||  __gaTrackerStringTrim( protocol ) == 'mailto:' ) { /* If it's an email */
 			type = "mailto"; 
-		} else if ( download_extensions.length > 0 && extension.length > 0 ) { /* If it's a download */
-			for ( index = 0, len = download_extensions.length; index < len; ++index ) {
-				if ( download_extensions[ index ].length > 0 && link.endsWith( download_extensions[ index ] ) ) {
-					type = "download";
-					break;
-				}
-			}
 		} else if ( hostname.length > 0 && currentdomain.length > 0 && ! hostname.endsWith( currentdomain ) ) { /* If it's a outbound */
 			type = "external"; 
-		} else {
+		} else if ( inbound_paths.length > 0 && pathname.length > 0 ) { /* If it's a internal as outbound */
 			for ( index = 0, len = inbound_paths.length; index < len; ++index ) {
 				if ( inbound_paths[ index ].length > 0 && pathname.startsWith( inbound_paths[ index ] ) ) {
 					type = "internal-as-outbound";
 					break;
 				}
 			}
+		} 
+
+		if ( type === 'unknown' && download_extensions.length > 0 && extension.length > 0 ) { /* If it's a download */
+			for ( index = 0, len = download_extensions.length; index < len; ++index ) {
+				if ( download_extensions[ index ].length > 0 && link.endsWith( download_extensions[ index ] ) ) {
+					type = "download";
+					break;
+				}
+			}
+		} 
+
+		if ( type === 'unknown' ) {
+			type = 'internal';
 		}
 		return type;
 	}
@@ -186,7 +196,7 @@ var MonsterInsights = function(){
 		// Start Values Array
 		valuesArray.el         = el;
 		valuesArray.ga_loaded  = __gaTrackerLoaded();
-		valuesArray.click_type = __gaTrackerTrackedClickType();
+		valuesArray.click_type = __gaTrackerTrackedClickType( event );
 
 		/* If GA is blocked or not loaded, or not main|middle|touch click then don't track */
 		if ( ! __gaTrackerLoaded() || ! __gaTrackerTrackedClick() ) {
@@ -412,6 +422,9 @@ var MonsterInsights = function(){
 						}
 					}
 				}
+			} else {
+				valuesArray.exit = 'internal';
+				__gaTrackerNotSend( valuesArray );
 			}
 		} else {
 			valuesArray.exit = 'notlink';

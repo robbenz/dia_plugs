@@ -273,3 +273,21 @@
                 }
             }
         }
+
+        /****************************************************
+         * Plugin Name: WPML 
+         * Compatibility with wp_login_form() that wasn't getting the language code in the site url
+         ****************************************************/
+        add_filter( 'site_url', 'wppb_wpml_login_form_compatibility', 10, 4 );
+        function wppb_wpml_login_form_compatibility( $url, $path, $scheme, $blog_id ){
+            global $wppb_login_shortcode;
+            if( defined( 'ICL_LANGUAGE_CODE' ) && $wppb_login_shortcode ){
+                if( $path == 'wp-login.php' ) {
+                    if( !empty( $_GET['lang'] ) )
+                        $url = add_query_arg('lang', ICL_LANGUAGE_CODE, $url);
+                    else
+                        $url = get_home_url() . '/' . $path;
+                }
+            }
+            return $url;
+        }

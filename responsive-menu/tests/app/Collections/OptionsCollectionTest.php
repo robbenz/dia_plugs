@@ -1,138 +1,134 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
+use ResponsiveMenu\Collections\OptionsCollection;
 
 class OptionsCollectionTest extends TestCase {
 
-  public function setUp() {
-    $this->collection = new ResponsiveMenu\Collections\OptionsCollection;
-  }
+    private $options = [
+        'foo' => 'bar',
+        'baz' => 'moo'
+    ];
 
-  public function testAddingOptionReturnTypes() {
-    $this->collection->add(new ResponsiveMenu\Models\Option('a', 'a'));
-    $all_options = $this->collection->all();
-    $this->assertInternalType('array', $all_options);
-    $this->assertInstanceOf('ResponsiveMenu\Models\Option', $all_options['a']);
-  }
+    public function testCreationFromConstructor() {
+        $collection = new OptionsCollection($this->options);
+        $this->assertCount(2, $collection);
+    }
 
-  public function testAddingMultipleOptionReturnTypes() {
-    $this->collection->add(new ResponsiveMenu\Models\Option('a', 'a'));
-    $this->collection->add(new ResponsiveMenu\Models\Option('b', 'b'));
-    $all_options = $this->collection->all();
-    $this->assertInternalType('array', $all_options);
-    $this->assertInstanceOf('ResponsiveMenu\Models\Option', $all_options['a']);
-    $this->assertInstanceOf('ResponsiveMenu\Models\Option', $all_options['b']);
-  }
+    public function testAddingOptions() {
+        $collection = new OptionsCollection($this->options);
+        $this->assertCount(2, $collection);
 
-  public function testAddingOptionGetOptionReturnTypes() {
-    $this->collection->add(new ResponsiveMenu\Models\Option('a', 'a'));
-    $this->assertInstanceOf('ResponsiveMenu\Models\Option', $this->collection->get('a'));
-  }
+        $collection->add(['moon' => 'rise']);
+        $this->assertCount(3, $collection);
+    }
 
-  public function testAddingMultipleOptionGetOptionReturnTypes() {
-    $this->collection->add(new ResponsiveMenu\Models\Option('a', 'a'));
-    $this->collection->add(new ResponsiveMenu\Models\Option('b', 'b'));
+    public function testAccessViaArray() {
+        $collection = new OptionsCollection($this->options);
+        $this->assertEquals('bar', $collection['foo']);
+        $this->assertEquals('moo', $collection['baz']);
+    }
 
-    $this->assertInstanceOf('ResponsiveMenu\Models\Option', $this->collection->get('a'));
-    $this->assertInstanceOf('ResponsiveMenu\Models\Option', $this->collection->get('b'));
-  }
+    public function testRemoveViaArray() {
+        $collection = new OptionsCollection($this->options);
+        $this->assertCount(2, $collection);
 
-  public function testUsesFontAwesomeIcons() {
-    $this->assertFalse($this->collection->usesFontIcons());
-  }
+        unset($collection['foo']);
 
-  public function testGetActiveArrow() {
-    $this->collection->add(new ResponsiveMenu\Models\Option('active_arrow_image', 'test.jpg'));
-    $this->collection->add(new ResponsiveMenu\Models\Option('active_arrow_image_alt', 'test-alt'));
-    $this->assertEquals('<img alt="test-alt" src="test.jpg" />', $this->collection->getActiveArrow());
-  }
+        $this->assertCount(1, $collection);
+        $this->assertNull($collection['foo']);
+    }
 
-  public function testGetActiveArrowDoesntExist() {
-    $this->collection->add(new ResponsiveMenu\Models\Option('active_arrow_image', ''));
-    $this->collection->add(new ResponsiveMenu\Models\Option('active_arrow_shape', 'arrow'));
-    $this->assertEquals('arrow', $this->collection->getActiveArrow());
-  }
+    public function testSetViaArray() {
+        $collection = new OptionsCollection($this->options);
+        $this->assertCount(2, $collection);
 
-  public function testGetInactiveArrow() {
-    $this->collection->add(new ResponsiveMenu\Models\Option('inactive_arrow_image', 'test.jpg'));
-    $this->collection->add(new ResponsiveMenu\Models\Option('inactive_arrow_image_alt', 'test-alt'));
-    $this->assertEquals('<img alt="test-alt" src="test.jpg" />', $this->collection->getInActiveArrow());
-  }
+        $collection['moon'] = 'rise';
 
-  public function testGetInactiveArrowDoesntExist() {
-    $this->collection->add(new ResponsiveMenu\Models\Option('inactive_arrow_image', ''));
-    $this->collection->add(new ResponsiveMenu\Models\Option('inactive_arrow_shape', 'arrow'));
-    $this->assertEquals('arrow', $this->collection->getInActiveArrow());
-  }
+        $this->assertCount(3, $collection);
+        $this->assertEquals('rise', $collection['moon']);
+    }
 
-  public function testGetInactiveTitleImage() {
-    $this->collection->add(new ResponsiveMenu\Models\Option('menu_title_image', 'test.jpg'));
-    $this->collection->add(new ResponsiveMenu\Models\Option('menu_title_image_alt', 'test-alt'));
-    $this->assertEquals('<img alt="test-alt" src="test.jpg" />', $this->collection->getTitleImage());
-  }
+    public function testReturnArrayWhenAsked() {
+        $collection = new OptionsCollection($this->options);
+        $this->assertInternalType('array', $collection->toArray());
+        $this->assertEquals($this->options, $collection->toArray());
+    }
 
-  public function testGetInactiveTitleImageDoesntExist() {
-    $this->collection->add(new ResponsiveMenu\Models\Option('menu_title_image', ''));
-    $this->collection->add(new ResponsiveMenu\Models\Option('menu_title_image_alt', ''));
-    $this->assertEquals(null, $this->collection->getTitleImage());
-  }
+    public function testStringIsAlwaysReturnedFromConstructor() {
+        $array = ['array' => ['moon' => 'rise']];
+        $collection = new OptionsCollection($array);
 
-  public function testGetButtonIcon() {
-    $this->collection->add(new ResponsiveMenu\Models\Option('button_image', 'test.jpg'));
-    $this->collection->add(new ResponsiveMenu\Models\Option('button_image_alt', 'test-alt'));
-    $this->assertEquals('<img alt="test-alt" src="test.jpg" class="responsive-menu-button-icon responsive-menu-button-icon-active" />', $this->collection->getButtonIcon());
-  }
+        $this->assertEquals(json_encode($array['array']), $collection['array']);
+    }
 
-  public function testGetButtonIconDoesntExist() {
-    $this->collection->add(new ResponsiveMenu\Models\Option('button_image', ''));
-    $this->assertEquals('<span class="responsive-menu-inner"></span>', $this->collection->getButtonIcon());
-  }
+    public function testStringIsAlwaysReturned() {
+        $collection = new OptionsCollection($this->options);
+        $array = ['array' => ['moon' => 'rise']];
+        $collection->add($array);
 
-  public function testGetButtonIconActive() {
-    $this->collection->add(new ResponsiveMenu\Models\Option('button_image', 'test2.jpg'));
-    $this->collection->add(new ResponsiveMenu\Models\Option('button_image_alt', 'alt-a'));
-    $this->collection->add(new ResponsiveMenu\Models\Option('button_image_when_clicked', 'test.jpg'));
-    $this->collection->add(new ResponsiveMenu\Models\Option('button_image_alt_when_clicked', 'alt-b'));
-    $this->assertEquals('<img alt="alt-b" src="test.jpg" class="responsive-menu-button-icon responsive-menu-button-icon-inactive" />', $this->collection->getButtonIconActive());
-  }
+        $this->assertEquals(json_encode($array['array']), $collection['array']);
+        $this->assertEquals('bar', $collection['foo']);
+    }
 
-  public function testGetButtonIconActiveDoesntExist() {
-    $this->collection->add(new ResponsiveMenu\Models\Option('button_image', ''));
-    $this->collection->add(new ResponsiveMenu\Models\Option('button_image_alt', ''));
-    $this->collection->add(new ResponsiveMenu\Models\Option('button_image_when_clicked', 'test.jpg'));
-    $this->collection->add(new ResponsiveMenu\Models\Option('button_image_alt_when_clicked', 'test.jpg'));
-    $this->assertEquals(null, $this->collection->getButtonIconActive());
-  }
+    public function testCorrectActiveArrowIsReturned() {
+        $collection = new OptionsCollection($this->options);
+        $collection->add(['active_arrow_image' => '']);
+        $collection->add(['active_arrow_image_alt' => '']);
+        $collection->add(['active_arrow_shape' => 'foo']);
 
-  public function testIsCollectionEmpty() {
-    $this->assertTrue($this->collection->isEmpty());
-  }
+        $this->assertEquals('foo', $collection->getActiveArrow());
 
-  public function testIsCollectionEmptyNotEmpty() {
-    $this->collection->add(new ResponsiveMenu\Models\Option('button_image', 'test.jpg'));
-    $this->collection->add(new ResponsiveMenu\Models\Option('button_image_alt', 'test.jpg'));
-    $this->assertFalse($this->collection->isEmpty());
-  }
+        $collection->add(['active_arrow_image' => 'bar']);
+        $collection->add(['active_arrow_image_alt' => 'baz']);
+        $this->assertEquals('<img alt="baz" src="bar" />', $collection->getActiveArrow());
+    }
 
-  public function testArrayAccessGetFunctions() {
-    $this->collection->add(new ResponsiveMenu\Models\Option('a', 'a'));
-    $this->collection->add(new ResponsiveMenu\Models\Option('b', 'b'));
-    $this->assertInstanceOf('ResponsiveMenu\Models\Option', $this->collection['a']);
-    $this->assertInstanceOf('ResponsiveMenu\Models\Option', $this->collection['b']);
-  }
+    public function testCorrectInActiveArrowIsReturned() {
+        $collection = new OptionsCollection($this->options);
+        $collection->add(['inactive_arrow_image' => '']);
+        $collection->add(['inactive_arrow_image_alt' => '']);
+        $collection->add(['inactive_arrow_shape' => 'foo']);
 
-  public function testArrayAccessSetFunctions() {
-    $this->collection['a'] = new ResponsiveMenu\Models\Option('a', 'a');
-    $this->collection['b'] = new ResponsiveMenu\Models\Option('b', 'b');
-    $this->assertInstanceOf('ResponsiveMenu\Models\Option', $this->collection->get('a'));
-    $this->assertInstanceOf('ResponsiveMenu\Models\Option', $this->collection->get('b'));
-  }
+        $this->assertEquals('foo', $collection->getInActiveArrow());
 
-  public function testArrayAccessUnSetFunctions() {
-    $this->collection['a'] = new ResponsiveMenu\Models\Option('a', 'a');
-    $this->collection['b'] = new ResponsiveMenu\Models\Option('b', 'b');
-    unset($this->collection['b']);
-    $this->assertArrayNotHasKey('b', $this->collection);
-  }
+        $collection->add(['inactive_arrow_image' => 'bar']);
+        $collection->add(['inactive_arrow_image_alt' => 'baz']);
+        $this->assertEquals('<img alt="baz" src="bar" />', $collection->getInActiveArrow());
+    }
+
+    public function testCorrectTitleImageReturned() {
+        $collection = new OptionsCollection($this->options);
+        $collection->add(['menu_title_image' => '']);
+
+        $this->assertNull($collection->getTitleImage());
+
+        $collection->add(['menu_title_image' => 'bar']);
+        $collection->add(['menu_title_image_alt' => 'baz']);
+        $this->assertEquals('<img alt="baz" src="bar" />', $collection->getTitleImage());
+    }
+
+    public function testCorrectButtonIconReturned() {
+        $collection = new OptionsCollection($this->options);
+        $collection->add(['button_image' => '']);
+
+        $this->assertEquals('<span class="responsive-menu-inner"></span>', $collection->getButtonIcon());
+
+        $collection->add(['button_image' => 'foo']);
+        $collection->add(['button_image_alt' => 'bar']);
+        $this->assertEquals('<img alt="bar" src="foo" class="responsive-menu-button-icon responsive-menu-button-icon-active" />', $collection->getButtonIcon());
+    }
+
+    public function testCorrectActiveButtonIconReturned() {
+        $collection = new OptionsCollection($this->options);
+        $collection->add(['button_image' => '']);
+
+        $this->assertNull($collection->getButtonIconActive());
+
+        $collection->add(['button_image' => 'foo']);
+        $collection->add(['button_image_when_clicked' => 'bar']);
+        $collection->add(['button_image_alt_when_clicked' => 'baz']);
+        $this->assertEquals('<img alt="baz" src="bar" class="responsive-menu-button-icon responsive-menu-button-icon-inactive" />', $collection->getButtonIconActive());
+    }
 
 }
