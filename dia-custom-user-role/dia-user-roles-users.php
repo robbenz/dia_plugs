@@ -3,6 +3,8 @@
 /*** TWO NEW CUSTOM USER ROLES  ***/
 $result = add_role( 'shop_observer', __( 'Shop Observer' ), array( 'read' => true ) );
 
+// $tele_result = add_role( 'telemarketer', __( 'Telemarketer' ), array( 'read' => true ) );
+
 $SEOresult = add_role( 'seo_specialist', __(
   'SEO Specialist' ), array(
     'read' => true,
@@ -14,6 +16,8 @@ $SEOresult = add_role( 'seo_specialist', __(
     'update_core' => false
   )
 );
+
+
 
 remove_role( 'subscriber' );
 remove_role( 'editor' );
