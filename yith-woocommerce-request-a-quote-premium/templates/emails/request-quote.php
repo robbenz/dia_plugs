@@ -15,7 +15,7 @@ if(empty( $raq_data['partnumber']) && empty( $raq_data['partdesc']) && empty( $r
 $catalog_header = __( 'Your Catalog Is On The Way!', 'yith-woocommerce-request-a-quote' );
 do_action( 'woocommerce_email_header', $catalog_header );
 ?>
-<p><?php printf( __( 'Thank you for contacting us!<br />Below please find the requested quote; a DiaMedical USA representative will reach out to you shortly with shipping costs. Please feel free to call 877-593-6011 with any changes or questions. We appreciate your business!<br />You received a Catalog request from %s.', 'yith-woocommerce-request-a-quote' ), $raq_data['user_name'] ); ?></p>
+<p><?php printf( __( 'Catalog request from %s.', 'yith-woocommerce-request-a-quote' ), $raq_data['user_name'] ); ?></p>
 
 <?php  elseif( ! empty( $raq_data['address']) ):
   if (!empty( $raq_data['raq_content'] )|| !empty( $raq_data['partqty']) || !empty( $raq_data['partdesc']) || !empty( $raq_data['partnumber']) ) {
