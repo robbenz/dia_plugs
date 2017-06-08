@@ -95,6 +95,7 @@ if (!class_exists('WooCommerce_Quote')) {
             // Intercept download calls
             if (isset($_GET['get_woo_quote'])) {
                 add_action('wp', array($this, 'push_quote'));
+
             }
         }
 
@@ -743,6 +744,51 @@ if (!class_exists('WooCommerce_Quote')) {
             $pdf = new WooQuote($this->get_options(), $current_quote_number, $customer_details, 'P', 'pt', 'A4');
             $pdf->CreateQuote();
             $pdf->Output($this->opt['woo_quote_title_filename_prefix'] . $current_quote_number.'.pdf', 'D');
+
+            $_user = wp_get_current_user();
+            $_name = esc_html( $_user->user_firstname );
+            $_name2 = esc_html( $_user->user_lastname );
+            $_email = esc_html( $_user->user_email );
+            $_add1 = esc_html( $_user->shipping_address_1 );
+            $_add2 = esc_html( $_user->shipping_address_2 );
+            $_city = esc_html( $_user->shipping_city);
+            $_state = esc_html( $_user->shipping_state );
+            $_zip = esc_html( $_user->shipping_postcode );
+
+            $to = 'jambrose@diamedicalusa.com';
+            $subject = "$_name $_name2 Downloaded Quote: #$current_quote_number";
+
+            $headers[] = "From: $_name $_name2 <orders@diamedicalusa.com>" . "\r\n";
+            $headers[] = "Bcc: Rob Benz <rbenz@diamedicalusa.com>" . "\r\n";
+            $headers[] = "Bcc: Gillian Peralta <gperalta@diamedicalusa.com>" . "\r\n";
+
+            $message = "<p style='white-space: pre-wrap;'>Quote Number: ";
+            $message .= $current_quote_number;
+            $message .= "</p>";
+            $message .= $_name.' '.$_name2.'<br>'.$_add1.'<br>'.$_add2.'<br>'.$_city.', '. $_state.'<br>'.$_zip.'<br><br>';
+
+            $message .='<table id="t_BRADY" class="cart" cellspacing="0" border="1">
+                  <thead>
+                    <tr>
+                      <th>Product</th>
+                      <th>Price</th>
+                      <th>Quantity</th>
+                      <th>Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>';
+
+              foreach ( WC()->cart->get_cart() as $brady_cart_item_key => $brady_cart_item ) {
+                $_brad_product = apply_filters( 'woocommerce_cart_item_product', $brady_cart_item['data'], $brady_cart_item, $brady_cart_item_key );
+                $message .= '<tr><td>'.apply_filters( 'woocommerce_cart_item_name', $_brad_product->get_title(), $brady_cart_item, $brady_cart_item_key );
+                $message .= WC()->cart->get_item_data($brady_cart_item).'</td>';
+                $message .= '<td>'.apply_filters( 'woocommerce_cart_item_price', WC()->cart->get_product_price( $_brad_product ), $brady_cart_item, $brady_cart_item_key ).'</td>';
+                $message .= '<td>'.$brady_cart_item['quantity'].'</td>';
+                $message .= '<td>'.apply_filters( 'woocommerce_cart_item_subtotal', WC()->cart->get_product_subtotal( $_brad_product, $brady_cart_item['quantity'] ), $brady_cart_item, $brady_cart_item_key ).'</td></tr>';
+           }
+
+            wp_mail( $to, $subject, $message, $headers ) ;
+
             exit();
         }
 
@@ -814,12 +860,13 @@ if (!class_exists('WooCommerce_Quote')) {
         {
             echo apply_filters(
                     'woo_quote_button',
-                    '<a  href="' . home_url('/?get_woo_quote=1') . '"><button type="button" id="quote-button-id" class="' .
+                    '<a  href="' . home_url('/?get_woo_quote=1') . '"><button type="button" id="quote-button-id" name="quote_down_load_button_press" class="' .
                     join(' ', apply_filters('woocommerce_quote_button_classes', array('button', 'alt', 'woo_quote_button')))
                     . '">' .  $this->opt['woo_quote_title_download_quote'] . '</button></a>',
                     $this->opt['woo_quote_title_download_quote'],
                     home_url('/?get_woo_quote=1')
                 );
+
         }
 
         /**

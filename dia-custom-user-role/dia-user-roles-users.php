@@ -155,6 +155,8 @@ function dia_users_remove_menu_pages() {
   if ( current_user_can( 'shop_manager' ) ) {
     remove_menu_page('edit.php');
     add_menu_page( 'Profile', 'Profile', 'manage_woocommerce', 'profile.php', '', 'dashicons-admin-users', 100 );
+    add_menu_page( 'Quote Requests', 'Quote Requests', 'manage_woocommerce', 'edit.php?post_status=wc-ywraq-new&post_type=shop_order', '', 'dashicons-palmtree', 200 );
+
   }
 
 }
@@ -168,7 +170,8 @@ function dia_users_remove_metaboxes() {
     remove_meta_box( 'commentsdiv' , 'product' , 'normal' );
     remove_meta_box( 'tagsdiv-product_tag' , 'product' , 'side' );
   //  remove_meta_box( 'product_catdiv' , 'product' , 'side' );
-    remove_meta_box( 'yith-ywraq-metabox' , 'product' , 'normal' );
+    remove_meta_box( 'yith-ywraq-metabox-order' , 'product' , 'normal' );
+    remove_meta_box( 'yith-ywraq-metabox-order' , 'order' , 'normal' );
   } elseif ( current_user_can( 'seo_specialist' ) ) {
     remove_meta_box( 'dia-user-roles-meta-box' , 'product' , 'normal' );
     remove_meta_box( 'dia-cust-fav-role-meta-box' , 'product' , 'normal' );
