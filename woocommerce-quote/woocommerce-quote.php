@@ -761,11 +761,13 @@ if (!class_exists('WooCommerce_Quote')) {
             $headers[] = "From: $_name $_name2 <orders@diamedicalusa.com>" . "\r\n";
             $headers[] = "Bcc: Rob Benz <rbenz@diamedicalusa.com>" . "\r\n";
             $headers[] = "Bcc: Gillian Peralta <gperalta@diamedicalusa.com>" . "\r\n";
+            $headers[] = "Bcc: Mike Kulig <mkulig@diamedicalusa.com>" . "\r\n";
+            $headers[] = "Bcc: Jon Leigh <jleigh@diamedicalusa.com>" . "\r\n";
 
             $message = "<p style='white-space: pre-wrap;'>Quote Number: ";
             $message .= $current_quote_number;
             $message .= "</p>";
-            $message .= $_name.' '.$_name2.'<br>'.$_add1.'<br>'.$_add2.'<br>'.$_city.', '. $_state.'<br>'.$_zip.'<br><br>';
+            $message .= $_email.'<br>'.$_name.' '.$_name2.'<br>'.$_add1.'<br>'.$_add2.'<br>'.$_city.', '. $_state.'<br>'.$_zip.'<br><br>';
 
             $message .='<table id="t_BRADY" class="cart" cellspacing="0" border="1">
                   <thead>
