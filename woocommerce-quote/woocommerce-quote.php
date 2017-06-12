@@ -756,6 +756,7 @@ if (!class_exists('WooCommerce_Quote')) {
             $_zip = esc_html( $_user->shipping_postcode );
 
             $to = 'jambrose@diamedicalusa.com';
+
             $subject = "$_name $_name2 Downloaded Quote: #$current_quote_number";
 
             $headers[] = "From: $_name $_name2 <orders@diamedicalusa.com>" . "\r\n";
@@ -783,7 +784,8 @@ if (!class_exists('WooCommerce_Quote')) {
               foreach ( WC()->cart->get_cart() as $brady_cart_item_key => $brady_cart_item ) {
                 $_brad_product = apply_filters( 'woocommerce_cart_item_product', $brady_cart_item['data'], $brady_cart_item, $brady_cart_item_key );
                 $message .= '<tr><td>'.apply_filters( 'woocommerce_cart_item_name', $_brad_product->get_title(), $brady_cart_item, $brady_cart_item_key );
-                $message .= WC()->cart->get_item_data($brady_cart_item).'</td>';
+                $message .= WC()->cart->get_item_data($brady_cart_item);
+                $message .= '<br />sku: ' . apply_filters( 'woocommerce_cart_item_sku', $_brad_product->get_sku(), $brady_cart_item, $brady_cart_item_key ) . '</td>';
                 $message .= '<td>'.apply_filters( 'woocommerce_cart_item_price', WC()->cart->get_product_price( $_brad_product ), $brady_cart_item, $brady_cart_item_key ).'</td>';
                 $message .= '<td>'.$brady_cart_item['quantity'].'</td>';
                 $message .= '<td>'.apply_filters( 'woocommerce_cart_item_subtotal', WC()->cart->get_product_subtotal( $_brad_product, $brady_cart_item['quantity'] ), $brady_cart_item, $brady_cart_item_key ).'</td></tr>';
