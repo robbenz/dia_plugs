@@ -10,7 +10,8 @@ add_action("add_meta_boxes", "add_dia_user_roles_meta_box");
 /*** ADD CUSTOM META BOX MARKUP FOR ADMIN ***/
 function dia_user_roles_box_markup($object) {
   wp_nonce_field(basename(__FILE__), "dia-user-roles-meta-box-nonce");
-  	global $post;
+  	global $post, $product;
+
     $dia_stuff_array = array(
       'dia_product_mft'             => 'Manufacturer',
       'dia_product_mft_part_number' => 'MFT Part Number',
@@ -53,8 +54,119 @@ function dia_user_roles_box_markup($object) {
           } // end foreach
           if ($x == 2) { echo '</div>'; }
         } // end for loop
+
   } // dia_meta_box_markup
+
 /*** END ***/
+
+// Add Variation Settings
+add_action( 'woocommerce_product_after_variable_attributes', 'variation_settings_fields', 10, 3 );
+// Save Variation Settings
+add_action( 'woocommerce_save_product_variation', 'save_variation_settings_fields', 10, 2 );
+/**
+ * Create new fields for variations
+ *
+*/
+function variation_settings_fields( $loop, $variation_data, $variation ) {
+  echo '<hr>';
+	// Text Field
+	woocommerce_wp_text_input(
+		array(
+			'id'          => 'dia_var_vendor_pn[' . $variation->ID . ']',
+      'class'       => 'dia_var_vendor_pn',
+      'wrapper'       => 'dia_var_vendor_pn',
+			'label'       => __( 'Vendor Part Number', 'woocommerce' ),
+			'desc_tip'    => 'true',
+			'description' => __( 'Enter the Vendor Part Number for this variation.', 'woocommerce' ),
+			'value'       => get_post_meta( $variation->ID, 'dia_var_vendor_pn', true )
+		)
+	);
+	// Number Field
+	woocommerce_wp_text_input(
+		array(
+			'id'          => 'dia_var_list_price[' . $variation->ID . ']',
+      'class'       => 'dia_var_list_price',
+			'label'       => __( 'Variation List Price', 'woocommerce' ),
+			'desc_tip'    => 'true',
+			'description' => __( 'Enter the List Price for this variation.', 'woocommerce' ),
+			'value'       => get_post_meta( $variation->ID, 'dia_var_list_price', true ),
+			'custom_attributes' => array(
+							'step' 	=> 'any',
+							'min'	=> '0'
+						)
+		)
+	);
+  woocommerce_wp_text_input(
+    array(
+      'id'          => 'dia_var_cost[' . $variation->ID . ']',
+      'class'       => 'dia_var_cost',
+      'label'       => __( 'Variation Cost', 'woocommerce' ),
+      'desc_tip'    => 'true',
+      'description' => __( 'Enter the Cost for this variation.', 'woocommerce' ),
+      'value'       => get_post_meta( $variation->ID, 'dia_var_cost', true ),
+      'custom_attributes' => array(
+              'step' 	=> 'any',
+              'min'	=> '0'
+            )
+    )
+  );
+
+  woocommerce_wp_text_input(
+    array(
+      'id'          => 'dia_var_date_check[' . $variation->ID . ']',
+      'class'       => 'dia_var_date_check',
+      'label'       => __( 'Date Verified', 'woocommerce' ),
+      'desc_tip'    => 'true',
+      'description' => __( 'Enter the Date you verified the prices for this variation.', 'woocommerce' ),
+      'value'       => get_post_meta( $variation->ID, 'dia_var_date_check', true ),
+    )
+  );
+
+
+
+}
+/**
+ * Save new fields for variations
+ *
+*/
+function save_variation_settings_fields( $post_id ) {
+
+	$dia_var_date_check = $_POST['dia_var_date_check'][ $post_id ];
+	if( ! empty( $dia_var_date_check ) ) {
+		update_post_meta( $post_id, 'dia_var_date_check', esc_attr( $dia_var_date_check ) );
+	}
+	$dia_var_cost = $_POST['dia_var_cost'][ $post_id ];
+	if( ! empty( $dia_var_cost ) ) {
+		update_post_meta( $post_id, 'dia_var_cost', esc_attr( $dia_var_cost ) );
+	}
+  $dia_var_list_price = $_POST['dia_var_list_price'][ $post_id ];
+  if( ! empty( $dia_var_list_price ) ) {
+    update_post_meta( $post_id, 'dia_var_list_price', esc_attr( $dia_var_list_price ) );
+  }
+  $dia_var_vendor_pn = $_POST['dia_var_vendor_pn'][ $post_id ];
+  if( ! empty( $dia_var_vendor_pn ) ) {
+    update_post_meta( $post_id, 'dia_var_vendor_pn', esc_attr( $dia_var_vendor_pn ) );
+  }
+
+}
+
+// Add New Variation Settings
+add_filter( 'woocommerce_available_variation', 'load_variation_settings_fields' );
+/**
+ * Add custom fields for variations
+ *
+*/
+function load_variation_settings_fields( $variations ) {
+
+	// duplicate the line for each field
+  $variations['text_field'] = get_post_meta( $variations[ 'variation_id' ], 'dia_var_date_check', true );
+//  $variations['dia_var_cost'] = get_post_meta( $variations[ 'variation_id' ], 'dia_var_cost', true );
+  //$variations['dia_var_vendor_pn'] = get_post_meta( $variations[ 'variation_id' ], 'dia_var_vendor_pn', true );
+//	$variations['dia_var_list_price'] = get_post_meta( $variations[ 'variation_id' ], 'dia_var_list_price', true );
+
+	return $variations;
+}
+
 
 /*** SAVE THAT SHIT ***/
 function dia_user_roles_save_that_shit($post_id, $post, $update) {
@@ -70,6 +182,7 @@ function dia_user_roles_save_that_shit($post_id, $post, $update) {
     $slug = "product";
     if($slug != $post->post_type)
         return $post_id;
+
 
     // dia_multiple supplier checkbox
     $dia_user_role_chex = isset( $_POST['dia_product_multiple_suppliers'] ) ? 'yes' : 'no';

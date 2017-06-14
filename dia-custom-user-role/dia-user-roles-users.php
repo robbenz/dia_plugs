@@ -18,7 +18,6 @@ $SEOresult = add_role( 'seo_specialist', __(
 );
 
 
-
 remove_role( 'subscriber' );
 remove_role( 'editor' );
 remove_role( 'contributor' );

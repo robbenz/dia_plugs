@@ -5,6 +5,7 @@ add_action( 'woocommerce_before_single_product', 'dia_product_meta_display_produ
 function dia_product_meta_display_product() {
   if (is_user_logged_in() ) {
     global $product;
+
     $current_user = wp_get_current_user();
     $allowed_roles = array('shop_manager', 'administrator', 'shop_observer');
     if( array_intersect($allowed_roles, $current_user->roles ) ) {
@@ -83,7 +84,7 @@ add_action( 'woocommerce_before_shop_loop_item', 'woocommerce_template_loop_prod
 add_action ( 'woocommerce_before_shop_loop_item' , 'dia_product_meta_display_archive', 10 );
 function dia_product_meta_display_archive() {
   if ( is_user_logged_in() ) {
-    global $product;
+    global $product, $woocommerce_loop, $product, $post;
     $_id = $product->id;
     $current_user = wp_get_current_user();
     $_mft = get_post_meta( get_the_ID(), 'dia_product_mft', true );
@@ -119,6 +120,36 @@ function dia_product_meta_display_archive() {
       </script>
 
       <div id="show_spec_div_wrap_<?php echo $_id; ?>" class="show_spec_div_wrap">
+
+        <?php if( $product->is_type( 'variable' ) ): ?>
+
+          <?php
+          $available_variations = $product->get_available_variations();
+          $attributes = $product->get_variation_attributes();
+          $attribute_keys = array_keys( $attributes );
+          $selected_attributes = $product->get_variation_default_attributes();
+          ?>
+
+          <table class="variations" style="display:block !important;" cellspacing="0">
+            <tbody>
+              <?php foreach ( $attributes as $attribute_name => $options ) : ?>
+                <tr>
+                  <td class="value">
+                    <?php
+                    $selected = isset( $_REQUEST[ 'attribute_' . sanitize_title( $attribute_name ) ] ) ? wc_clean( $_REQUEST[ 'attribute_' . sanitize_title( $attribute_name ) ] ) : $product->get_variation_default_attribute( $attribute_name );
+                    wc_dropdown_variation_attribute_options( array( 'options' => $options, 'attribute' => $attribute_name, 'product' => $product, 'selected' => $selected ) );
+                    echo end( $attribute_keys ) === $attribute_name ? apply_filters( 'woocommerce_reset_variations_link', '<a class="reset_variations" href="#">' . __( 'Clear', 'woocommerce' ) . '</a>' ) : '';
+                    ?>
+                  </td>
+                </tr>
+              <?php endforeach;?>
+            </tbody>
+          </table>
+
+
+
+        <?php elseif( $product->is_type( 'simple' ) ): ?>
+
         <table class="dia_tg" id="imfuckingsweetatcoding">
           <tr><td>Manufacturer: </td><td><?php echo $_mft; ?></td></tr>
           <tr><td>MFT Part #: </td><td><?php echo $_mft_part_number;?></td></tr>
@@ -130,6 +161,9 @@ function dia_product_meta_display_archive() {
           <tr><td>Cost: </td><td><?php echo '$'.$_cost_2;?></td></tr>
           <tr><td>Verified on: </td><td><?php echo $_price_check_2;?></td></tr>
         </table>
+
+      <?php endif ; ?>
+
       </div>
 
       <?php

@@ -25,4 +25,10 @@ jQuery(document).ready(function() {
   jQuery('.dia_product_price_check_2_field input').datepicker({
     dateFormat : 'mm/dd/yy'
   });
+//  jQuery("[id^=dia_var_date_check] input").datepicker({
+//    dateFormat : 'mm/dd/yy'
+//  });
+
+
+
 });

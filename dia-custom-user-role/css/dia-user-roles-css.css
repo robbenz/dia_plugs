@@ -56,6 +56,10 @@ h4.disp-user-name-ppage {
   opacity: 0.955;
 }
 
+.show_spec_div_wrap select {
+  margin-bottom:0.25em;
+}
+
 #imfuckingsweetatcoding{
   border:0;
   color:#fff;
