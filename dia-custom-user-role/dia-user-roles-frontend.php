@@ -121,32 +121,41 @@ function dia_product_meta_display_archive() {
 
       <div id="show_spec_div_wrap_<?php echo $_id; ?>" class="show_spec_div_wrap">
 
-        <?php if( $product->is_type( 'variable' ) ): ?>
-
-          <?php
+        <?php
+        if( $product->is_type( 'variable' ) ):
           $available_variations = $product->get_available_variations();
           $attributes = $product->get_variation_attributes();
           $attribute_keys = array_keys( $attributes );
           $selected_attributes = $product->get_variation_default_attributes();
-          ?>
+          $x=0;
+          foreach ( $attributes as $attribute_name => $options ) : ?>
+          <tr>
+            <td class="value">
+              <?php
+              $selected = isset( $_REQUEST[ 'attribute_' . sanitize_title( $attribute_name ) ] ) ? wc_clean( $_REQUEST[ 'attribute_' . sanitize_title( $attribute_name ) ] ) : $product->get_variation_default_attribute( $attribute_name );
+              wc_dropdown_variation_attribute_options( array(
+                'options' => $options,
+                'attribute' => $attribute_name,
+                'product' => $product,
+            //    'class' => 'select_var_specs_'.$available_variations[$x]["variation_id"],
+                'selected' => $selected ) );
+                echo end( $attribute_keys ) === $attribute_name ? apply_filters( 'woocommerce_reset_variations_link', '<a class="reset_variations" href="#">' . __( 'Clear', 'woocommerce' ) . '</a>' ) : '';
+                $x++;
+              ?>
+            </td>
+          </tr>
+        <?php endforeach; ?>
 
-          <table class="variations" style="display:block !important;" cellspacing="0">
-            <tbody>
-              <?php foreach ( $attributes as $attribute_name => $options ) : ?>
-                <tr>
-                  <td class="value">
-                    <?php
-                    $selected = isset( $_REQUEST[ 'attribute_' . sanitize_title( $attribute_name ) ] ) ? wc_clean( $_REQUEST[ 'attribute_' . sanitize_title( $attribute_name ) ] ) : $product->get_variation_default_attribute( $attribute_name );
-                    wc_dropdown_variation_attribute_options( array( 'options' => $options, 'attribute' => $attribute_name, 'product' => $product, 'selected' => $selected ) );
-                    echo end( $attribute_keys ) === $attribute_name ? apply_filters( 'woocommerce_reset_variations_link', '<a class="reset_variations" href="#">' . __( 'Clear', 'woocommerce' ) . '</a>' ) : '';
-                    ?>
-                  </td>
-                </tr>
-              <?php endforeach;?>
-            </tbody>
-          </table>
-
-
+        <?php
+        foreach ($available_variations as $_AV ) {
+          echo '<div style="color:#fff;" id="var_specs_wrap_'. $_AV[ 'variation_id' ] . '">';
+          echo 'Cost: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_cost', true ) .'<br>';
+          echo 'Date Verified: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_date_check', true ) .'<br>';
+          echo 'List Price: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_list_price', true ) .'<br>';
+          echo 'Vendor PN: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_vendor_pn', true ) .'<br>';
+          echo '<br /></div>';
+        }
+        ?>
 
         <?php elseif( $product->is_type( 'simple' ) ): ?>
 

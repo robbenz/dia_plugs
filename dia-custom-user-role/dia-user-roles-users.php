@@ -140,9 +140,9 @@ function dia_users_remove_menu_pages() {
   }
 
   $special_ids = array (
-    '1844',  // 1844 Stephanie
+    '828',   //  jon
     '1607',  // 1607 April
-             // 217 mike
+    '217',   // 217 mike
     '1290'   // benz_rob@yahoo
   );
   foreach ( $special_ids as $sID ) {
