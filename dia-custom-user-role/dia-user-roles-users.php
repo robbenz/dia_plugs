@@ -117,7 +117,7 @@ function dia_users_remove_menu_pages() {
   if ( current_user_can( 'shop_manager' ) || current_user_can( 'seo_specialist' ) ) {
     remove_menu_page('edit.php?post_type=soliloquy');
     remove_menu_page('edit.php?post_type=shop_order');
-    remove_menu_page('edit.php?post_type=scroll-triggered-box');
+    remove_menu_page('edit.php?post_type=boxzilla-box');
     remove_menu_page('authorhreview');
     remove_menu_page('index.php');
     remove_menu_page('upload.php');
