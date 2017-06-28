@@ -15,6 +15,17 @@ class Profile_Builder_Form_Creator{
 	
 	// Constructor method for the class
 	function __construct( $args ) {
+
+        /* we should stop the execution of the forms if they are in the wp_head hook because it should not be there.
+        SEO plugins can execute shortcodes in the auto generated descriptions */
+        global $wp_current_filter;
+        if( !empty( $wp_current_filter ) && is_array( $wp_current_filter ) ){
+            foreach( $wp_current_filter as $filter ){
+                if( $filter == 'wp_head' )
+                    return;
+            }
+        }
+
 		// Merge the input arguments and the defaults
 		$this->args = wp_parse_args( $args, $this->defaults );
 

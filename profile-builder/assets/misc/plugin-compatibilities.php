@@ -284,10 +284,31 @@
             if( defined( 'ICL_LANGUAGE_CODE' ) && $wppb_login_shortcode ){
                 if( $path == 'wp-login.php' ) {
                     if( !empty( $_GET['lang'] ) )
-                        $url = add_query_arg('lang', ICL_LANGUAGE_CODE, $url);
-                    else
-                        $url = get_home_url() . '/' . $path;
+                        return add_query_arg('lang', ICL_LANGUAGE_CODE, $url);
+                    else{
+                        if( function_exists('curl_version') ) {
+                            /* let's see if the directory structure exists for wp-login.php */
+                            $headers = wp_remote_head( trailingslashit( get_home_url() ) . $path, array( 'timeout' => 2 ) );
+                            if (!is_wp_error($headers)) {
+                                if ($headers['response']['code'] == 200) {
+                                    return trailingslashit( get_home_url() ) . $path;
+                                }
+                            }
+                        }
+                        return add_query_arg('lang', ICL_LANGUAGE_CODE, $url);
+                    }
                 }
             }
             return $url;
+        }
+
+        /****************************************************
+         * Plugin Name: ACF
+         * Compatibility with Role Editor where ACF includes it's own select 2 and a bit differently then the standard hooks
+         ****************************************************/
+        add_action( 'admin_enqueue_scripts', 'wppb_acf_and_user_role_select_2_compatibility' );
+        function wppb_acf_and_user_role_select_2_compatibility(){
+            $post_type = get_post_type();
+            if( !empty( $post_type ) && $post_type == 'wppb-roles-editor' )
+                remove_all_actions('acf/input/admin_enqueue_scripts');
         }

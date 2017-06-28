@@ -2,9 +2,9 @@
 Contributors: ResponsiveMenu, peterfeatherstone
 Donate link: https://responsive.menu/donate
 Tags: responsive, menu, responsive menu, mobile menu, wordpress responsive menu, wp responsive menu, tablet menu, hamburger menu, hamburger, mobile, tablet, 3 lines, 3 line, three line, three lines
-Requires at least: 3.5.0
-Tested up to: 4.7.3
-Stable tag: 3.1.0
+Requires at least: 3.6
+Tested up to: 4.8
+Stable tag: 3.1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -110,6 +110,41 @@ To view our FAQ, please go to <a href="https://responsive.menu/faq">https://resp
 7. Fully customisable Admin Screen
 
 == Changelog ==
+
+= 3.1.4 (10th June 2017) =
+* **Requires PHP 5.4**
+* Added CSRF protection using nonces in admin
+* Updated wpdb method to use replace() instead of update() to protect from migration issues
+* Added selectize JS library
+* Allow custom trigger types for button - Pro Only
+* Fixed custom HTML icon bug - Pro Only
+
+= 3.1.3 (19th May 2017) =
+* **Requires PHP 5.4**
+* RTL improvements for admin UI
+* Added options to change the depth level values
+* Fixed twig deprecation notices - thanks to stodorovic for this
+* Fixed bug where having auto-height would break menu scrolling - Pro only
+
+= 3.1.2 (11th May 2017) =
+* **Requires PHP 5.4**
+* Updated badge counts
+* Updated Font Icon area text
+* Fixed bug with single menu breakpoint width - Pro Only
+* Fixed bug with empty Font Icons - Pro Only
+* Fixed bug with WP CLI
+
+= 3.1.1 (5th May 2017) =
+* **Requires PHP 5.4**
+* Added filter box in admin for options
+* Added menu container background colour option
+* Added hover line colour option
+* Added active line colour option
+* Added active button background colour option
+* Added migration scripts to make data upgrades smoother
+* Added option to choose custom Font Icons - Pro Only
+* Removed browser button outline and enabled focus/active states for better accessibility
+* Bug fixes
 
 = 3.1.0 (25th April 2017) =
 * **Requires PHP 5.4**

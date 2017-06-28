@@ -3,7 +3,7 @@
 Plugin Name: Profile Builder
 Plugin URI: https://www.cozmoslabs.com/wordpress-profile-builder/
 Description: Login, registration and edit profile shortcodes for the front-end. Also you can chose what fields should be displayed or add new (custom) ones both in the front-end and in the dashboard.
-Version: 2.6.1
+Version: 2.6.4
 Author: Cozmoslabs, Madalin Ungureanu, Antohe Cristian, Barina Gabriel, Mihai Iova
 Author URI: https://www.cozmoslabs.com/
 License: GPL2
@@ -73,7 +73,7 @@ function wppb_free_plugin_init() {
          *
          *
          */
-        define('PROFILE_BUILDER_VERSION', '2.6.1' );
+        define('PROFILE_BUILDER_VERSION', '2.6.4' );
         define('WPPB_PLUGIN_DIR', plugin_dir_path(__FILE__));
         define('WPPB_PLUGIN_URL', plugin_dir_url(__FILE__));
         define('WPPB_SERVER_MAX_UPLOAD_SIZE_BYTE', apply_filters('wppb_server_max_upload_size_byte_constant', wppb_return_bytes(ini_get('upload_max_filesize'))));
@@ -137,6 +137,7 @@ function wppb_free_plugin_init() {
             include_once(WPPB_PLUGIN_DIR . '/features/conditional-fields/conditional-fields.php');
         }
         include_once(WPPB_PLUGIN_DIR . '/features/login-widget/login-widget.php');
+        include_once(WPPB_PLUGIN_DIR . '/features/roles-editor/roles-editor.php');
 
         if (file_exists(WPPB_PLUGIN_DIR . '/update/update-checker.php')) {
             include_once(WPPB_PLUGIN_DIR . '/update/update-checker.php');
@@ -166,8 +167,9 @@ function wppb_free_plugin_init() {
 
         include_once(WPPB_PLUGIN_DIR . '/admin/add-ons.php');
         include_once(WPPB_PLUGIN_DIR . '/assets/misc/plugin-compatibilities.php');
-        if ( PROFILE_BUILDER != 'Profile Builder Free' )
-            include_once(WPPB_PLUGIN_DIR . '/front-end/extra-fields/recaptcha/recaptcha.php'); //need to load this here for displaying reCAPTCHA on Login and Recover Password forms
+
+        /* added recaptcha and user role field since version 2.6.2 */
+        include_once(WPPB_PLUGIN_DIR . '/front-end/default-fields/recaptcha/recaptcha.php'); //need to load this here for displaying reCAPTCHA on Login and Recover Password forms
 
 
         /**
@@ -188,8 +190,8 @@ function wppb_free_plugin_init() {
 
 
 // these settings are important, so besides running them on page load, we also need to do a check on plugin activation
-        register_activation_hook(__FILE__, 'wppb_generate_default_settings_defaults');    //prepoulate general settings
-        register_activation_hook(__FILE__, 'wppb_prepopulate_fields');                    //prepopulate manage fields list
+        add_action('init', 'wppb_generate_default_settings_defaults');    //prepoulate general settings
+        add_action('init', 'wppb_prepopulate_fields');                    //prepopulate manage fields list
 
     }
 } //end wppb_free_plugin_init

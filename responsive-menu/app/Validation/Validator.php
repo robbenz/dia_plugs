@@ -14,7 +14,7 @@ class Validator {
                     $validator = new $validator_obj($options[$option]);
                     if(!$validator->validate()):
                         $nice_name = str_replace('_', ' ', ucwords($option));
-                        $this->errors[$option][] = 'Validation failed on <a class="validation-error" href="#responsive-menu-' . str_replace('_', '-', $option) . '">'  . $nice_name . '</a>: ' . $validator->getErrorMessage();
+                        $this->errors[$option][] = 'Validation failed on <a class="validation-error scroll-to-option" href="#responsive-menu-' . str_replace('_', '-', $option) . '">'  . $nice_name . '</a>: ' . $validator->getErrorMessage();
                     endif;
                 endif;
             endforeach;
@@ -33,7 +33,7 @@ class Validator {
     private $validation_map = [
 
         // Numeric Validators
-        'Numeric' => [
+        'Number' => [
             'breakpoint',
             'button_line_width',
             'button_line_height',
@@ -58,6 +58,12 @@ class Validator {
             'single_menu_font_size',
             'single_menu_submenu_font_size',
             'single_menu_submenu_height',
+            'menu_depth_0',
+            'menu_depth_1',
+            'menu_depth_2',
+            'menu_depth_3',
+            'menu_depth_4',
+            'menu_depth_5',
         ],
 
         // Positive Digits
@@ -116,6 +122,10 @@ class Validator {
             'single_menu_item_submenu_background_colour_hover',
             'header_bar_background_color',
             'header_bar_text_color',
+            'button_background_colour_active',
+            'button_line_colour_hover',
+            'button_line_colour_active',
+            'menu_container_background_colour'
         ]
 
     ];

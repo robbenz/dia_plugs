@@ -370,8 +370,9 @@ function wppb_signup_user_notification( $user, $user_email, $activation_key, $me
 		$admin_email = 'support@' . $_SERVER['SERVER_NAME'];
 		
 	$from_name = apply_filters ( 'wppb_signup_user_notification_email_from_field', get_bloginfo( 'name' ) );
-	
-	$message_headers = apply_filters ( 'wppb_signup_user_notification_from', "From: \"{$from_name}\" <{$admin_email}>\n" . "Content-Type: text/plain; charset=\"" . get_option('blog_charset') . "\"\n" );
+
+	//we don't use this anymore do we ?
+	/*$message_headers = apply_filters ( 'wppb_signup_user_notification_from', "From: \"{$from_name}\" <{$admin_email}>\n" . "Content-Type: text/plain; charset=\"" . get_option('blog_charset') . "\"\n" );*/
 
 	if( isset( $wppb_general_settings['activationLandingPage'] ) && ( trim( $wppb_general_settings['activationLandingPage'] ) != '' ) ) {
 		$registration_page_url = add_query_arg( array('activation_key' => $activation_key), get_permalink( $wppb_general_settings['activationLandingPage'] ) );

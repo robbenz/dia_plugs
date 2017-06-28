@@ -13,10 +13,7 @@ add_action( 'admin_menu', 'wppb_register_general_settings_submenu_page', 3 );
 
 
 function wppb_generate_default_settings_defaults(){
-	$wppb_general_settings = get_option( 'wppb_general_settings', 'not_found' );
-	
-	if ( $wppb_general_settings == 'not_found' )
-		update_option( 'wppb_general_settings', array( 'extraFieldsLayout' => 'default', 'emailConfirmation' => 'no', 'activationLandingPage' => '', 'adminApproval' => 'no', 'loginWith' => 'usernameemail' ) );
+	add_option( 'wppb_general_settings', array( 'extraFieldsLayout' => 'default', 'emailConfirmation' => 'no', 'activationLandingPage' => '', 'adminApproval' => 'no', 'loginWith' => 'usernameemail', 'rolesEditor' => 'no' ) );
 }
 
 
@@ -139,6 +136,25 @@ function wppb_general_settings_content() {
 			</td>
 		</tr>
 
+	<?php } ?>
+
+	<?php
+		if( file_exists( WPPB_PLUGIN_DIR.'/features/roles-editor/roles-editor.php' ) ) {
+			?>
+			<tr>
+				<th scope="row">
+					<?php _e( '"Roles Editor" Activated:', 'profile-builder' ); ?>
+				</th>
+				<td>
+					<select id="rolesEditorSelect" name="wppb_general_settings[rolesEditor]" class="wppb-select" onchange="wppb_display_page_select_re(this.value)">
+						<option value="no" <?php if( !empty( $wppb_generalSettings['rolesEditor'] ) && $wppb_generalSettings['rolesEditor'] == 'no' ) echo 'selected'; ?>><?php _e( 'No', 'profile-builder' ); ?></option>
+						<option value="yes" <?php if( !empty( $wppb_generalSettings['rolesEditor'] ) && $wppb_generalSettings['rolesEditor'] == 'yes' ) echo 'selected'; ?>><?php _e( 'Yes', 'profile-builder' ); ?></option>
+					</select>
+					<ul>
+						<li class="description dynamic3"><?php printf( __( 'You can add / edit user roles at %1$sUsers > Roles Editor%2$s.', 'profile-builder' ), '<a href="'.get_bloginfo( 'url' ).'/wp-admin/edit.php?post_type=wppb-roles-editor">', '</a>' )?></li>
+					<ul>
+				</td>
+			</tr>
 	<?php } ?>
 
 	<?php

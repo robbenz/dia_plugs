@@ -5,7 +5,7 @@ Plugin URI: http://wordpress.org/extend/plugins/woocommerce-my-account-widget/
 Description: WooCommerce My Account Widget shows order & account data.
 Author: Bart Pluijms
 Author URI: http://www.geev.nl/
-Version: 0.5.0
+Version: 0.6.0
 */
 class WooCommerceMyAccountWidget extends WP_Widget
 {
@@ -173,7 +173,7 @@ function widget($args, $instance)
                     }
     		   
     				//$status = get_term_by('slug', $order->status, 'shop_order_status');
-    				if($order->status!='completed' && $order->status!='cancelled'){ $notcompleted++; }
+    				if(wma_get_order_data($order, 'status')!='completed' && wma_get_order_data($order, 'status')!='cancelled'){ $notcompleted++; }
 
 
     			/* upload files */
@@ -185,7 +185,7 @@ function widget($args, $instance)
     					$i=1;
     					$upload_count=0;
     					while ($i <= $max_upload_count) {
-    						if(get_post_meta( $order->id, '_woo_umf_uploaded_file_name_' . $j, true )!="") {$upload_count++;}
+    						if(get_post_meta(wma_get_order_data($order, 'id'), '_woo_umf_uploaded_file_name_' . $j, true )!="") {$upload_count++;}
     						$i++;
     						$j++;
     					}
@@ -201,7 +201,7 @@ function widget($args, $instance)
 
                 // Uploads needed
                 $uploads_needed = WPF_Uploads::order_needs_upload($order, true);
-                $uploaded_count_new = WPF_Uploads::order_get_upload_count($order->id);
+                $uploaded_count_new = WPF_Uploads::order_get_upload_count(wma_get_order_data($order, 'id'));
 
                 $uploads_needed_left = $uploads_needed - $uploaded_count_new;
 
@@ -209,7 +209,7 @@ function widget($args, $instance)
             }
 
 
-    		if (in_array($order->status, array('on-hold','pending', 'failed'))) { $notpaid++;}
+    		if (in_array(wma_get_order_data($order, 'status'), array('on-hold','pending', 'failed'))) { $notpaid++;}
     		endforeach;
 		}
 		
@@ -326,14 +326,19 @@ add_action('wp_login_failed', 'wma_login_fail');
  
 function wma_login_fail($username){
     // Get the reffering page, where did the post submission come from?
-    $referer = parse_url($_SERVER['HTTP_REFERER']);
-	$referer= '//'.$referer['host'].''.$referer['path'];
- 
-    // if there's a valid referrer, and it's not the default log-in screen
-    if(!empty($referer) && !strstr($referer,'wp-login') && !strstr($referer,'wp-admin')){
-        // let's append some information (login=failed) to the URL for the theme to use
-        wp_redirect($referer . '?login=failed'); 
-    exit;
+
+    if (isset($_SERVER['HTTP_REFERER'])) {
+
+        $referer = parse_url($_SERVER['HTTP_REFERER']);
+    	$referer= '//'.$referer['host'].''.$referer['path'];
+
+        // if there's a valid referrer, and it's not the default log-in screen
+        if(!empty($referer) && !strstr($referer,'wp-login') && !strstr($referer,'wp-admin')){
+            // let's append some information (login=failed) to the URL for the theme to use
+            wp_redirect($referer . '?login=failed');
+        exit;
+        }
+
     }
 }
 
@@ -403,4 +408,46 @@ function wma_lang_id($id){
     return $id;
   }
 }
+
+    /*
+     * Get order data by Order object
+     *
+     * Used for backward compatibility for WC < 3.0
+     * @param WC_Order $order
+     * @param string $data Data to retreive
+     *
+     * @return mixed
+     */
+
+     function wma_get_order_data($order, $data)
+     {
+        if( version_compare( WC_VERSION, '3.0', '<' ) ) {
+
+            switch ($data) {
+
+                case 'user_id':
+                    return $order->user_id;
+                case 'id':
+                    return $order->id;
+                case 'status':
+                    return $order->status;
+
+            }
+
+        } else {
+
+            switch ($data) {
+
+                case 'user_id':
+                    return $order->get_user_id();
+                case 'id':
+                    return $order->get_id();
+                case 'status':
+                    return $order->get_status();
+
+            }
+
+        }
+
+     }
 ?>

@@ -32,11 +32,16 @@
     text-align: center;
 }
 
+.container-fluid form.form-horizontal .selectize-input,
 .container-fluid form.form-horizontal .bootstrap-select,
 .container-fluid form.form-horizontal input,
 .container-fluid form.form-horizontal textarea {
     width: calc(100% - 75px) !important;
     display: inline-block;
+}
+
+.container-fluid form.form-horizontal input#responsive-menu-button-trigger-type-selectized {
+    width: auto !important;
 }
 
 .container-fluid form.form-horizontal .input-group input {
@@ -46,6 +51,14 @@
 .container-fluid form.form-horizontal .bootstrap-filestyle,
 .container-fluid form.form-horizontal input.has-unit {
     width: calc(100% - 179px) !important;
+}
+
+.container-fluid form.form-horizontal input.font-icon-input {
+    width: 70% !important;
+}
+
+.container-fluid form.form-horizontal .font-icon-select {
+    width: calc(30% - 75px) !important;
 }
 
 .container-fluid form.form-horizontal .bootstrap-select.is-unit {
@@ -89,6 +102,18 @@
     font-size: 16px;
 }
 
+.container-fluid form.form-horizontal .panel-body small {
+    display: none;
+    float: right;
+    color: #333;
+    font-weight: normal;
+    line-height: 22px;
+}
+
+.container-fluid form.form-horizontal .delete-font-icon-row {
+    cursor: pointer;
+}
+
 .container-fluid form.form-horizontal .glyphicon.glyphicon-ok {
     color: green;
 }
@@ -98,12 +123,32 @@
     margin-top: 25px;
 }
 
-.container-fluid form.form-horizontal ul.nav-tabs {
-    margin-bottom: 25px;
+.container-fluid form.form-horizontal input#filter-options {
+    padding: 0 15px;
+    width: 100% !important;
+    height: 50px;
+}
+
+.container-fluid form.form-horizontal #filter-options-container {
+    margin: 25px 0;
+    background: #F5F5F5;
+    padding: 15px;
+    border: 1px solid #ddd;
 }
 
 .container-fluid form.form-horizontal ul.nav-tabs .btn-default {
     margin-right: 5px;
+}
+
+.selectize-control.multi .selectize-input > div,
+.selectize-control.multi .selectize-input > div.active {
+    background: #5cb85c;
+    color: white;
+}
+
+.selectize-control.multi .selectize-input > div[data-value="mouseover"],
+.selectize-control.multi .selectize-input > div.active[data-value="mouseover"] {
+    background: #DE4B42;
 }
 
 .pro::before,
@@ -132,7 +177,7 @@
     font-weight: normal;
 }
 
-.example {
+.sub_sub_title {
     padding-top: 2px;
     color: dimgray;
     font-size: 10px;
@@ -145,6 +190,14 @@
     margin-left: 5px;
 }
 
+.option-highlight .well,
+.option-highlight,
+.table-hover > tbody > tr.option-highlight
+.table-hover > tbody > tr.option-highlight:hover,
+.table-hover > tbody > tr.option-highlight td,
+.table-hover > tbody > tr.option-highlight td:hover {
+    background-color: #ffff99 !important;
+}
 
 .draggable {
     border: 1px solid #DADADA;
@@ -320,6 +373,14 @@ li.draggable {
     text-align: left;
 }
 
+.container-fluid form.form-horizontal td.well .sub-text ul {
+    margin: 15px;
+}
+
+.container-fluid form.form-horizontal td.well .sub-text ul li {
+    list-style: disc;
+}
+
 .container-fluid form.form-horizontal td.pro {
     position: relative;
 }
@@ -356,6 +417,62 @@ li.draggable {
 
 #responsive-menu-custom-css {
     height: 500px
+}
+
+.rtl #header-bar-items-order-container .draggable,
+.rtl .container-fluid form.form-horizontal label,
+.rtl .bootstrap-select.btn-group .dropdown-toggle .filter-option,
+.rtl .bootstrap-select.btn-group .dropdown-menu.inner {
+    text-align: right;
+}
+
+.rtl .input-group .form-control:last-child,
+.rtl .input-group-addon:last-child, .input-group-btn:first-child > .btn-group:not(:first-child) > .btn,
+.rtl .input-group-btn:first-child > .btn:not(:first-child),
+.rtl .input-group-btn:last-child > .btn,
+.rtl .input-group-btn:last-child > .btn-group > .btn, .input-group-btn:last-child > .dropdown-toggle {
+    border-radius: 4px 0 0 4px;
+}
+
+.rtl .draggable {
+    padding-right: 25px;
+}
+
+.rtl .btn-group-lg > .btn, .btn-lg,
+.rtl .container-fluid form.form-horizontal .panel-body small {
+    margin-left: 15px;
+}
+
+.rtl .toggle-off {
+    right: -50%;
+    text-align: left !important;
+}
+
+.rtl .pro::before,
+.rtl .semi-pro::before {
+    float: left;
+}
+
+.rtl .minicolors-theme-bootstrap .minicolors-swatch {
+    left: 75px;
+}
+
+.rtl .container-fluid form.form-horizontal .minicolors input {
+    width: calc(100% - 125px) !important;
+}
+
+.rtl .container-fluid #banner-area {
+    margin-left: 0;
+    margin-right: 5%;
+}
+
+.rtl .key-container .key span {
+    margin-left: 10px;
+    margin-right: 0;
+}
+
+.rtl .key-container .key {
+    padding-left: 10px;
 }
 
 @media screen and (max-width: 1200px) {

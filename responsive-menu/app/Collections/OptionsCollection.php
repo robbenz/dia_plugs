@@ -8,44 +8,44 @@ class OptionsCollection implements \ArrayAccess, \Countable {
 
     public function __construct(array $options = []) {
         $this->options = array_map(function($o) {
-            return is_array($o) ? stripslashes(json_encode($o)) : stripslashes($o);
+            return is_array($o) ? json_encode($o) : $o;
         }, $options);
     }
 
     public function add(array $option) {
         $value = $option[key($option)];
-        $this->options[key($option)] = is_array($value) ? stripslashes(json_encode($value)) : stripslashes($value);
+        $this->options[key($option)] = is_array($value) ? json_encode($value) : $value;
     }
 
     public function getActiveArrow() {
         if($this->options['active_arrow_image'])
             return '<img alt="' . $this->options['active_arrow_image_alt'] .'" src="' . $this->options['active_arrow_image'] .'" />';
-        else
-            return $this->options['active_arrow_shape'];
+
+        return $this->options['active_arrow_shape'];
 
     }
 
     public function getInActiveArrow() {
         if($this->options['inactive_arrow_image'])
             return '<img alt="' . $this->options['inactive_arrow_image_alt'] .'" src="' . $this->options['inactive_arrow_image'] .'" />';
-        else
-            return $this->options['inactive_arrow_shape'];
+
+        return $this->options['inactive_arrow_shape'];
 
     }
 
     public function getTitleImage() {
         if($this->options['menu_title_image'])
             return '<img alt="' . $this->options['menu_title_image_alt'] .'" src="' . $this->options['menu_title_image'] .'" />';
-        else
-            return null;
+
+        return null;
 
     }
 
     public function getButtonIcon() {
         if($this->options['button_image'])
             return '<img alt="' . $this->options['button_image_alt'] .'" src="' . $this->options['button_image'] .'" class="responsive-menu-button-icon responsive-menu-button-icon-active" />';
-        else
-            return '<span class="responsive-menu-inner"></span>';
+
+        return '<span class="responsive-menu-inner"></span>';
     }
 
     public function getButtonIconActive() {
@@ -64,7 +64,7 @@ class OptionsCollection implements \ArrayAccess, \Countable {
     }
 
     public function offsetSet($offset, $value) {
-        $this->options[$offset] = $value;
+        $this->add([$offset => $value]);
     }
 
     public function offsetUnset($offset) {

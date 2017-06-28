@@ -37,5 +37,9 @@ function wppb_include_default_fields_files() {
     if ( wppb_can_users_signup_blog() ) {
         include_once(WPPB_PLUGIN_DIR . '/front-end/default-fields/blog-details/blog-details.php');
     }
+    
+    /* added recaptcha and user role field since version 2.6.2 */
+    include_once( WPPB_PLUGIN_DIR.'/front-end/default-fields/recaptcha/recaptcha.php' );
+    include_once( WPPB_PLUGIN_DIR.'/front-end/default-fields/user-role/user-role.php' );
 }
 wppb_include_default_fields_files();

@@ -97,7 +97,7 @@ var MonsterInsights = function(){
 		return __gaTracker.hasOwnProperty( "loaded" ) && __gaTracker.loaded == true; // jshint ignore:line
 	}
 
-	function __gaTrackerTrackedClick() {
+	function __gaTrackerTrackedClick( event ) {
 		return event.which == 1 || event.which == 2 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey;
 	}
 
@@ -149,6 +149,8 @@ var MonsterInsights = function(){
 
 		if ( link.match( /^javascript\:/i ) ) {
 			type = 'internal'; // if it's a JS link, it's internal
+		} else if ( __gaTrackerStringTrim( protocol ) == 'tel' || __gaTrackerStringTrim( protocol ) == 'tel:' ) { /* If it's an telephone */
+			type = "tel"; 
 		} else if ( __gaTrackerStringTrim( protocol ) == 'mailto' ||  __gaTrackerStringTrim( protocol ) == 'mailto:' ) { /* If it's an email */
 			type = "mailto"; 
 		} else if ( hostname.length > 0 && currentdomain.length > 0 && ! hostname.endsWith( currentdomain ) ) { /* If it's a outbound */
@@ -199,7 +201,7 @@ var MonsterInsights = function(){
 		valuesArray.click_type = __gaTrackerTrackedClickType( event );
 
 		/* If GA is blocked or not loaded, or not main|middle|touch click then don't track */
-		if ( ! __gaTrackerLoaded() || ! __gaTrackerTrackedClick() ) {
+		if ( ! __gaTrackerLoaded() || ! __gaTrackerTrackedClick( event ) ) {
 			valuesArray.exit = 'loaded';
 			__gaTrackerNotSend( valuesArray );
 			return;
@@ -274,7 +276,7 @@ var MonsterInsights = function(){
 					__gaTrackerNotSend( valuesArray );
 				};
 				
-				if ( target || type == 'mailto' ) { /* If target opens a new window then just track */
+				if ( target || type == 'mailto' || type == 'tel' ) { /* If target opens a new window then just track */
 					if ( type == 'download' ) {
 						if ( track_download_as == 'pageview' ) {
 							fieldsArray = { 
@@ -293,12 +295,21 @@ var MonsterInsights = function(){
 
 							__gaTrackerSend( valuesArray, fieldsArray );
 						}
+					} else if ( type == 'tel' ) {
+						fieldsArray = {
+							hitType       : 'event',
+							eventCategory : 'tel',
+							eventAction   : link,
+							eventLabel    : valuesArray.title.replace('tel:', ''),
+						};
+
+						__gaTrackerSend( valuesArray, fieldsArray );
 					} else if ( type == 'mailto' ) {
 						fieldsArray = {
 							hitType       : 'event',
 							eventCategory : 'mailto',
 							eventAction   : link,
-							eventLabel    : valuesArray.title,
+							eventLabel    : valuesArray.title.replace('mailto:', ''),
 						};
 
 						__gaTrackerSend( valuesArray, fieldsArray );
@@ -465,14 +476,11 @@ var MonsterInsights = function(){
 				"onload", 
 				function() {
 					document.body.attachEvent( "onclick", __gaTrackerClickEvent);
-				},
-				false
+				}
 			);
 			window.attachEvent( "onhashchange", __gaTrackerHashChangeEvent);
 		}
 	}
-
-
 
 	if (typeof String.prototype.endsWith !== 'function') {
 		String.prototype.endsWith = function(suffix) {

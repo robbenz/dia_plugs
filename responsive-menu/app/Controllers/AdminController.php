@@ -37,10 +37,13 @@ class AdminController {
         );
     }
 
-    public function update($new_options, $nav_menus, $location_menus) {
+    public function update($valid_nonce, $new_options, $nav_menus, $location_menus) {
         $validator = new Validator();
         $errors = [];
-        if($validator->validate($new_options)):
+        if(!$valid_nonce):
+            $alert = ['danger' => 'CSRF token not valid'];
+            $options = new OptionsCollection($new_options);
+        elseif($validator->validate($new_options)):
             try {
                 $options = $this->manager->updateOptions($new_options);
                 $task = new UpdateOptionsTask;
@@ -88,9 +91,9 @@ class AdminController {
     }
 
     public function import($imported_options, $nav_menus, $location_menus) {
+        $errors = [];
         if(!empty($imported_options)):
             $validator = new Validator();
-            $errors = [];
             if($validator->validate($imported_options)):
                 try {
                     unset($imported_options['button_click_trigger']);

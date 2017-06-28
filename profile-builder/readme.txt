@@ -4,12 +4,12 @@ Donate link: http://www.cozmoslabs.com/wordpress-profile-builder/
 Tags: user registration, user profile, user registration form, user fields, extra user fields, edit profile, user custom fields, front-end login, front-end edit profile, front-end user registration, email confirmation, login form
 
 Requires at least: 3.1
-Tested up to: 4.7.3
-Stable tag: 2.6.1
+Tested up to: 4.7.5
+Stable tag: 2.6.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Simple to use profile plugin allowing front-end login, user registration and edit profile by using shortcodes.
+Simple to use profile plugin allowing front-end login, user registration and edit profile by using shortcodes. Also has built in Role Editor which grants you control over roles and capabilities on your site.
  
 == Description ==
 
@@ -48,6 +48,9 @@ Users with administrator rights have access to the following features:
 * chose which user roles view the admin bar in the front-end of the website (Admin Bar Settings page).
 * select which profile fields users can use in frontend.
 * extended functionality available via [Add-ons](http://www.cozmoslabs.com/profile-builder-add-ons/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=PBFree)
+* role editor: add, remove, clone and edit roles and also capabilities for these roles.
+* reacaptcha for Profile Builder forms and WordPress default forms
+* user role select field on register and edit profile forms
 
 **PROFILE BUILDER PRO**
 
@@ -63,7 +66,6 @@ The [Pro version](http://www.cozmoslabs.com/wordpress-profile-builder/?utm_sourc
 * Multiple Edit Profile Forms
 * Admin Approval
 * Email Customizer (Personalize all emails sent to your users or admins; customize default WordPress registration email)
-* reCAPTCHA on user registration form
 * Advanced Modules (e.g. custom redirects, user listing, multiple registration forms etc.)
 * Access to support forums and documentation
 * 1 Year of Updates / Priority Support
@@ -148,8 +150,27 @@ This plugin adds/removes user fields in the front-end. Both default and extra pr
 8. Edit User Profile Page
 9. Recover Password Page
 10. Profile Builder Login Widget
+11. Role Editor Listing
+12. Role Editor
 
 == Changelog ==
+= 2.6.4 =
+* Fixed a bug which was preventing deleting thrashed posts
+* Compatibility fixes with Advanced Custom Fields Plugin
+
+= 2.6.3 =
+* Fixed a small display bug for custom capabilities on Roles Editor
+* Fixed a potential warning with the login form and WPML when cURL was not working properly
+
+= 2.6.2 =
+* Added Role Editor which grants you control over roles and capabilities on your site.
+* Added reacaptcha field for Profile Builder forms and WordPress default forms
+* Added User Role select field
+* We now prevent our forms from executing in the header on the wp_head hook to prevent conflicts with other plugins like Yoast SEO
+* Improved WPML compatibility with login forms
+* Now checkboxes retain their value on edit profile forms if the form errors out
+* Changed the way we set the default settings that was sometimes not adding them properly
+
 = 2.6.1 =
 * Updated translation files
 * Added a filter for already logged in message on recover password form: wppb_recover_password_already_logged_in

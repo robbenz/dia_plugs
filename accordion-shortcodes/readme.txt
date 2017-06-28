@@ -4,8 +4,8 @@ Author URI: http://philbuchanan.com/
 Donate Link: http://philbuchanan.com/
 Tags: accordion, accordions, shortcodes, responsive accordions, accordions plugin, jquery accordions, accordions short-code, accordions plugin wordpress, accordions plugin jquery
 Requires at least: 3.3
-Tested up to: 4.7
-Stable tag: 2.3.2
+Tested up to: 4.8
+Stable tag: 2.3.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,7 +15,7 @@ Shortcodes for creating responsive accordion drop-downs.
 
 Accordion Shortcodes is a simple plugin that adds a few shortcodes for adding accordion drop-downs to your pages.
 
-The accordions should blend seamlessly with your theme. However, you may want to be able to edit your theme's main stylesheet in order to [add some custom styling (CSS)](http://wordpress.org/plugins/accordion-shortcodes/other_notes/#Other-Notes).
+The accordions should blend seamlessly with your theme. However, you may want to edit your theme's main stylesheet in order to add some custom styling (see below for sample CSS).
 
 = Features =
 
@@ -68,15 +68,10 @@ This will output the following HTML:
         </div>
     </div>
 
-= Advanced Settings =
-
-There are a few [advances settings](http://wordpress.org/plugins/accordion-shortcodes/other_notes/) for the plugin.
-
 == Installation ==
 1. Upload the 'accordion-shortcodes' folder to the '/wp-content/plugins/' directory.
 2. Activate the plugin through the Plugins menu in WordPress.
 3. Add the shortcodes to your content.
-4. Add some [CSS](http://wordpress.org/plugins/accordion-shortcodes/other_notes/#Other-Notes) to your theme's stylesheet to make the accordion look the way you want.
 
 == Frequently Asked Questions ==
 
@@ -88,7 +83,17 @@ This is most likely caused by a poorly coded theme. This plugin makes use of the
 
 No CSS is added by default to the accordion. The accordion should look fine with every theme.
 
-That said, you can change the looking of the accordion as long as you are comfortable with editing your theme's stylesheet. If you are familiar with that process, you can add some [CSS](http://wordpress.org/plugins/accordion-shortcodes/other_notes/#Other-Notes) to make the accordion look the way you want.
+That said, you can change the looking of the accordion as long as you are comfortable with editing your theme's stylesheet. If you are familiar with that process, you can add some CSS to make the accordion look the way you want.
+
+= How can I make all accordion content disply when printing the page? =
+
+Add this CSS to your theme's CSS stylesheet:
+
+`@media print {
+	.accordion-content {
+		display: block !important;
+	}
+}`
 
 = Can I use other shortcodes inside each accordion item? =
 
@@ -239,6 +244,10 @@ For bug reports or feature requests or if you'd like to contribute to the plugin
 3. The Accordion Item shortcode insertion dialog box
 
 == Changelog ==
+= 2.3.3 =
+* Now compatible up to WordPress 4.8
+* FIXED: aria-mutliselectable is now on the accordion group instead of each accordion item title
+
 = 2.3.2 =
 * Now compatible up to WordPress 4.7
 * FIXED: Accordion titles now truly accessible via keyboard control
@@ -333,4 +342,4 @@ This update brings the much request support for multiple accordions on a single 
 WordPress 4.0 compatibility.
 
 = 2.0 =
-Big changes for version 2.0! See the [changelog](http://wordpress.org/plugins/accordion-shortcodes/changelog/) for details.
+Big changes for version 2.0!

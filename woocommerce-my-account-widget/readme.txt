@@ -1,18 +1,18 @@
 === WooCommerce My Account Widget ===
 Contributors: bpluijms
-Plugin URI: http://wordpress.org/extend/plugins/woocommerce-my-account-widget/
-Author URI: http://wordpress.geev.nl
+Plugin URI: https://wordpress.org/extend/plugins/woocommerce-my-account-widget/
+Author URI: https://www.geev.nl/
 Tags: woocommerce, file upload
-Requires at least: 3.5
-Tested up to: 4.3
-Stable tag: 0.5.0
+Requires at least: 4.8
+Tested up to: 4.8
+Stable tag: 0.6.0
 License: GPLv2
 
 This plugin adds a widget with customer account information to your WooCommerce shop.
 == Description ==
 The _WooCommerce My Account Widget_ allows shop managers to display customer information in a widget.
 
-This plugin is compatible with Wordpress 4.3 and WooCommerce 2.4
+This plugin is compatible with Wordpress 4.8 and WooCommerce 3.x
 
 **Features**
 
@@ -32,7 +32,7 @@ More information about that plugin on [WP Fortune.com](http://wpfortune.com/shop
 **WooCommerce Upload My File plugin**
 
 This widgets shows also the number of files the customer has to upload, when you use our WooCommerce Upload My File plugin. 
-More information about that plugin on [our website](http://wordpress.geev.nl/product/woocommerce-upload-my-file/).
+More information about that plugin on [WordPress.org plugin repository](https://wordpress.org/plugins/woocommerce-upload-my-file/).
 
 == Installation ==
 
@@ -50,6 +50,10 @@ Please backup first.
 
 == Changelog ==
 ***WooCommerce My Account Widget***
+
+= 2017.05.25 version 0.6.0 =
+* Updated readme.txt
+* Tested and fixed several issues for WooCommerce 3.0
 
 = 2015.08.11 version 0.5.0 =
 * Fixed PHP 4 constructor style in widget
@@ -136,10 +140,3 @@ Please backup first.
 
 = 2013.04.01 - version 0.1 =
 * First release
-
-== Frequently Asked Questions ==
-= Where can I find the icons you used in your screenshot? =
-You can find more information on [our website](http://wordpress.geev.nl/product/woocommerce-my-account-widget/).
-
-= Can I use WPML with WooCommerce My Account Widget? =
-Yes you can, please follow instructions on [our website](http://wordpress.geev.nl/support/documentation/woocommerce-my-account-widget/use-woocommerce-account-widget-wpml/).

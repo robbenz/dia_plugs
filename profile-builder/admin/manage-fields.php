@@ -46,6 +46,10 @@ function wppb_manage_fields_submenu(){
 		$manage_field_types[] = 'Default - Blog Details';
 	}
 
+	/* added recaptcha and user role field since version 2.6.2 */
+	$manage_field_types[] = 'reCAPTCHA';
+	$manage_field_types[] = 'Select (User Role)';
+
     if( PROFILE_BUILDER != 'Profile Builder Free' ) {
         $manage_field_types[] = 'Heading';
         $manage_field_types[] = 'Input';
@@ -58,7 +62,6 @@ function wppb_manage_fields_submenu(){
         $manage_field_types[] = 'Select (Multiple)';
         $manage_field_types[] = 'Select (Country)';
         $manage_field_types[] = 'Select (Timezone)';
-        $manage_field_types[] = 'Select (User Role)';
         $manage_field_types[] = 'Select (Currency)';
         $manage_field_types[] = 'Select (CPT)';
         $manage_field_types[] = 'Checkbox';
@@ -69,7 +72,6 @@ function wppb_manage_fields_submenu(){
         $manage_field_types[] = 'Datepicker';
         $manage_field_types[] = 'Timepicker';
         $manage_field_types[] = 'Colorpicker';
-        $manage_field_types[] = 'reCAPTCHA';
         $manage_field_types[] = 'Validation';
         $manage_field_types[] = 'Map';
         $manage_field_types[] = 'HTML';
@@ -170,6 +172,7 @@ function wppb_manage_fields_submenu(){
 		);
 	new Wordpress_Creation_Kit_PB( $args );
 
+	/* this is redundant but it should have a very low impact and for comfort we leave it here as well  */
     wppb_prepopulate_fields();
 
     // create the info side meta-box

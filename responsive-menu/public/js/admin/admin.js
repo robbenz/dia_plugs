@@ -49,12 +49,13 @@ jQuery(function($) {
         form.attr('target', '');
     });
 
-    $(document).on('click', '.validation-error', function(e) {
+    $(document).on('click', '.scroll-to-option', function(e) {
         e.preventDefault();
         var id_to_scroll_to = $(this).attr('href');
         var parent_panel_id = $(id_to_scroll_to).parents('.tab-pane').attr('id');
         var parent_tab = $('a[href="#' + parent_panel_id + '"]').parent('li');
 
+        $('tr').removeClass('option-highlight');
         $('ul.nav-tabs li').removeClass('active');
         parent_tab.addClass('active');
 
@@ -67,11 +68,66 @@ jQuery(function($) {
         $('html, body').animate({
             scrollTop: $(id_to_scroll_to).offset().top - 50
         }, 1000);
+
+        $(id_to_scroll_to).closest('tr').addClass('option-highlight');
     });
 
     $(document).on('click', '.nav-tabs li a', function() {
         var tab_name = $(this).attr('href').replace('#', '');
         $('#responsive-menu-current-page').val(tab_name);
+    });
+
+    $(document).on('keyup', '#filter-options', function() {
+        var search_query = $(this).val();
+        var current_tab = $('.nav-tabs .active').attr('id');
+        $('#options-area').css('width', '99%');
+        $('.nav-tabs, #banner-area').hide();
+
+        if(search_query) {
+           $('.tab-pane').show().css('opacity', '1');
+           $('.panel-body small').css('display', 'block');
+
+           $('.control-label').closest('tr').hide();
+           $('.control-label').each(function (i) {
+               if ($(this).text().toLowerCase().indexOf(search_query.toLowerCase()) >= 0) {
+                   $(this).closest('tr').show();
+               }
+           });
+
+           $('#options-area .table-bordered').each(function(i) {
+
+               var visible_rows = $(this).children('tbody').children('tr').filter(function() {
+                   return $(this).css('display') == 'table-row';
+               });
+
+              if(visible_rows.length > 0) {
+                  $(this).parents('.panel').show();
+              } else {
+                  $(this).parents('.panel').hide();
+              }
+           });
+
+        } else {
+            $('.tab-pane').css('display', '').css('opacity', '');
+            $('.control-label').closest('tr').show();
+            $('.nav-tabs, #banner-area, .panel').show();
+            $('#options-area').css('width', '');
+            $('.panel-body small').css('display', '');
+        }
+    });
+
+    $('#responsive-menu-button-trigger-type').selectize({
+        plugins: ['remove_button'],
+        options: [
+            {
+                value:'click',
+                text:'Click'
+            },
+            {
+                value:'mouseover',
+                text:'Hover'
+            }
+        ]
     });
 
 });
