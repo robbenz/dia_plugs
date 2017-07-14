@@ -121,41 +121,55 @@ function dia_product_meta_display_archive() {
 
       <div id="show_spec_div_wrap_<?php echo $_id; ?>" class="show_spec_div_wrap">
 
-        <?php
-        if( $product->is_type( 'variable' ) ):
-          $available_variations = $product->get_available_variations();
-          $attributes = $product->get_variation_attributes();
-          $attribute_keys = array_keys( $attributes );
-          $selected_attributes = $product->get_variation_default_attributes();
-          $x=0;
-          foreach ( $attributes as $attribute_name => $options ) : ?>
-          <tr>
-            <td class="value">
-              <?php
-              $selected = isset( $_REQUEST[ 'attribute_' . sanitize_title( $attribute_name ) ] ) ? wc_clean( $_REQUEST[ 'attribute_' . sanitize_title( $attribute_name ) ] ) : $product->get_variation_default_attribute( $attribute_name );
-              wc_dropdown_variation_attribute_options( array(
-                'options' => $options,
-                'attribute' => $attribute_name,
-                'product' => $product,
-            //    'class' => 'select_var_specs_'.$available_variations[$x]["variation_id"],
-                'selected' => $selected ) );
-                echo end( $attribute_keys ) === $attribute_name ? apply_filters( 'woocommerce_reset_variations_link', '<a class="reset_variations" href="#">' . __( 'Clear', 'woocommerce' ) . '</a>' ) : '';
-                $x++;
-              ?>
-            </td>
-          </tr>
-        <?php endforeach; ?>
+        <?php if( $product->is_type( 'variable' ) ): ?>
+          <table style="border 1px solid #fff; color:#fff;">
+            <tr><td>Manufacturer: </td><td><?php echo $_mft; ?></td></tr>
+            <tr><td>Vendor 1: </td><td><?php echo $_supplier_1;?></td></tr>
+          </table>
 
-        <?php
-        foreach ($available_variations as $_AV ) {
-          echo '<div style="color:#fff;" id="var_specs_wrap_'. $_AV[ 'variation_id' ] . '">';
-          echo 'Cost: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_cost', true ) .'<br>';
-          echo 'Date Verified: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_date_check', true ) .'<br>';
-          echo 'List Price: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_list_price', true ) .'<br>';
-          echo 'Vendor PN: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_vendor_pn', true ) .'<br>';
-          echo '<br /></div>';
-        }
-        ?>
+          <select id="var_pro_drop_<?php echo $_id; ?>" >
+            <option class="nothing" value="select-option">Select Option</option>
+            <?php
+            $available_variations = $product->get_available_variations();
+            foreach ( $available_variations as $attribute_name => $options ) :
+
+               foreach ($options["attributes"] as $key => $value ) : ?>
+                  <option class="var_specs_drop_option_<?php echo $options["variation_id"]; ?>"
+                          value="var_product_<?php echo $options["variation_id"]; ?>">
+                          <?php echo $value ;?>
+                  </option>
+                  <?php endforeach; endforeach; ?>
+      </select>
+
+      <?php
+      foreach ($available_variations as $_AV ) {
+        echo '<div style="color:#fff;border: 1px solid #fff;" class="var_specs_wrap" id="var_specs_wrap_'. $_AV[ 'variation_id' ] . '">';
+        echo 'Cost: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_cost', true ) .'<br>';
+        echo 'Date Verified: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_date_check', true ) .'<br>';
+        echo 'List Price: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_list_price', true ) .'<br>';
+        echo 'Vendor PN: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_vendor_pn', true ) .'<br>';
+        echo '<br /></div>';
+      }
+    ?>
+<?php foreach ( $available_variations as $attribute_name => $options ) :?>
+    <script type="text/javascript">
+    jQuery(document).ready(function() {
+
+      jQuery(".var_specs_wrap").hide();
+
+      jQuery("#var_pro_drop_<?php echo $_id; ?>").change(function() {
+          var val = jQuery(this).val();
+          if(val === "var_product_<?php echo $options["variation_id"]; ?>") {
+              jQuery(".var_specs_wrap").hide();
+              jQuery("#var_specs_wrap_<?php echo $options["variation_id"]; ?>").show();
+          }
+        });
+
+    });
+    </script>
+
+  <?php endforeach; ?>
+
 
         <?php elseif( $product->is_type( 'simple' ) ): ?>
 
@@ -181,3 +195,7 @@ function dia_product_meta_display_archive() {
     }
   }
 }
+
+
+//  echo '<pre>';
+//  echo '</pre>';

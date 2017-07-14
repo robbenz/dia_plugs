@@ -148,24 +148,6 @@ function save_variation_settings_fields( $post_id ) {
 
 }
 
-// Add New Variation Settings
-add_filter( 'woocommerce_available_variation', 'load_variation_settings_fields' );
-/**
- * Add custom fields for variations
- **/
-/*
-function load_variation_settings_fields( $variations ) {
-
-	// duplicate the line for each field
-  $variations['text_field'] = get_post_meta( $variations[ 'variation_id' ], 'dia_var_date_check', true );
-//  $variations['dia_var_cost'] = get_post_meta( $variations[ 'variation_id' ], 'dia_var_cost', true );
-//  $variations['dia_var_vendor_pn'] = get_post_meta( $variations[ 'variation_id' ], 'dia_var_vendor_pn', true );
-//	$variations['dia_var_list_price'] = get_post_meta( $variations[ 'variation_id' ], 'dia_var_list_price', true );
-
-	return $variations;
-}
-*/
-
 /*** SAVE THAT SHIT ***/
 function dia_user_roles_save_that_shit($post_id, $post, $update) {
     if (!isset($_POST["dia-user-roles-meta-box-nonce"]) || !wp_verify_nonce($_POST["dia-user-roles-meta-box-nonce"], basename(__FILE__)))
@@ -180,7 +162,6 @@ function dia_user_roles_save_that_shit($post_id, $post, $update) {
     $slug = "product";
     if($slug != $post->post_type)
         return $post_id;
-
 
     // dia_multiple supplier checkbox
     $dia_user_role_chex = isset( $_POST['dia_product_multiple_suppliers'] ) ? 'yes' : 'no';
