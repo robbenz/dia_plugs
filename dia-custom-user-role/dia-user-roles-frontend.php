@@ -121,7 +121,17 @@ function dia_product_meta_display_archive() {
 
       <div id="show_spec_div_wrap_<?php echo $_id; ?>" class="show_spec_div_wrap">
 
-        <?php if( $product->is_type( 'variable' ) ): ?>
+        <?php if( $product->is_type( 'variable' ) ):
+          $available_variations = $product->get_available_variations();
+          $_total_drops = count( $available_variations[0]["attributes"] );
+          if ($_total_drops > 1 ) : ?>
+
+          <p style="color:#fff;">multiple drop downs</p>
+        <?php else : ?>
+
+
+
+
           <table style="border 1px solid #fff; color:#fff;">
             <tr><td>Manufacturer: </td><td><?php echo $_mft; ?></td></tr>
             <tr><td>Vendor 1: </td><td><?php echo $_supplier_1;?></td></tr>
@@ -130,7 +140,7 @@ function dia_product_meta_display_archive() {
           <select id="var_pro_drop_<?php echo $_id; ?>" >
             <option class="nothing" value="select-option">Select Option</option>
             <?php
-            $available_variations = $product->get_available_variations();
+          //  $available_variations = $product->get_available_variations();
             foreach ( $available_variations as $attribute_name => $options ) :
 
                foreach ($options["attributes"] as $key => $value ) : ?>
@@ -169,7 +179,7 @@ function dia_product_meta_display_archive() {
     </script>
 
   <?php endforeach; ?>
-
+<?php endif ; ?>
 
         <?php elseif( $product->is_type( 'simple' ) ): ?>
 
