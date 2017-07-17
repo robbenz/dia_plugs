@@ -130,11 +130,8 @@ function dia_product_meta_display_archive() {
         <?php else : ?>
 
 
-
-
           <table style="border 1px solid #fff; color:#fff;">
             <tr><td>Manufacturer: </td><td><?php echo $_mft; ?></td></tr>
-            <tr><td>Vendor 1: </td><td><?php echo $_supplier_1;?></td></tr>
           </table>
 
           <select id="var_pro_drop_<?php echo $_id; ?>" >
@@ -154,10 +151,15 @@ function dia_product_meta_display_archive() {
       <?php
       foreach ($available_variations as $_AV ) {
         echo '<div style="color:#fff;border: 1px solid #fff;" class="var_specs_wrap" id="var_specs_wrap_'. $_AV[ 'variation_id' ] . '">';
-        echo 'Cost: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_cost', true ) .'<br>';
-        echo 'Date Verified: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_date_check', true ) .'<br>';
         echo 'List Price: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_list_price', true ) .'<br>';
+        echo 'Cost: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_cost', true ) .'<br>';
+
+      // vendor
+
         echo 'Vendor PN: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_vendor_pn', true ) .'<br>';
+        echo 'Date Verified: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_date_check', true ) .'<br>';
+
+          // person verified
         echo '<br /></div>';
       }
     ?>
