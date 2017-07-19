@@ -29,6 +29,23 @@ jQuery(document).ready(function() {
 //    dateFormat : 'mm/dd/yy'
 //  });
 
+});
 
+jQuery(document).ready(function() {
+
+  jQuery("#var_product_alert").hide();
+  jQuery("#all_dia_specs_wrapp").hide();
+
+  jQuery("#product-type").change(function() {
+    var val = jQuery(this).val();
+    if(val === "simple" ) {
+      jQuery("#all_dia_specs_wrapp").show();
+      jQuery("#var_product_alert").hide();
+    }
+    else if(val === "variable" ) {
+      jQuery("#all_dia_specs_wrapp").hide();
+      jQuery("#var_product_alert").show();
+    }
+  });
 
 });

@@ -11,7 +11,10 @@ add_action("add_meta_boxes", "add_dia_user_roles_meta_box");
 function dia_user_roles_box_markup($object) {
   wp_nonce_field(basename(__FILE__), "dia-user-roles-meta-box-nonce");
   	global $post, $product;
+    ?>
+    <div id="all_dia_specs_wrapp">
 
+    <?php
     $dia_stuff_array = array(
       'dia_product_mft'             => 'Manufacturer',
       'dia_product_mft_part_number' => 'MFT Part Number',
@@ -54,6 +57,11 @@ function dia_user_roles_box_markup($object) {
           } // end foreach
           if ($x == 2) { echo '</div>'; }
         } // end for loop
+
+        ?>
+      </div>
+      <div id="var_product_alert">This is a Variable Product. Please input values per variation in the variations tab above</div>
+      <?php
 
   } // dia_meta_box_markup
 
@@ -123,10 +131,8 @@ function variation_settings_fields( $loop, $variation_data, $variation ) {
   );
 
 }
-/**
- * Save new fields for variations
- *
-*/
+
+/**  Save new fields for variations  **/
 function save_variation_settings_fields( $post_id ) {
 
 	$dia_var_date_check = $_POST['dia_var_date_check'][ $post_id ];
