@@ -44,3 +44,6 @@
   color:#fff !important;
   border:0 !important;
 }
+
+.woocommerce_variable_attributes #dia_var_specs_30 .form-field {width:33% !important; display:inline-block !important;}
+.woocommerce_variable_attributes #dia_var_specs_20 .form-field {width:20% !important; display:inline-block !important;}

@@ -60,7 +60,7 @@ function dia_user_roles_box_markup($object) {
 
         ?>
       </div>
-      <div id="var_product_alert">This is a Variable Product. Please input values per variation in the variations tab above</div>
+      <div id="var_product_alert">This is a Variable Product.<br /> Please input dia_specs values in the variations tab above</div>
       <?php
 
   } // dia_meta_box_markup
@@ -71,32 +71,34 @@ function dia_user_roles_box_markup($object) {
 add_action( 'woocommerce_product_after_variable_attributes', 'variation_settings_fields', 10, 3 );
 // Save Variation Settings
 add_action( 'woocommerce_save_product_variation', 'save_variation_settings_fields', 10, 2 );
-/**
- * Create new fields for variations
- *
-*/
+
+/** Create new fields for variations **/
 function variation_settings_fields( $loop, $variation_data, $variation ) {
-  echo '<hr>';
-	// Text Field
+  echo '<hr><div id="all_dia_var_specs_wrapp"><div id="dia_var_specs_30">';
+  // Var Manufacturer
 	woocommerce_wp_text_input(
 		array(
-			'id'          => 'dia_var_vendor_pn[' . $variation->ID . ']',
-      'class'       => 'dia_var_vendor_pn',
-      'wrapper'       => 'dia_var_vendor_pn',
-			'label'       => __( 'Vendor Part Number', 'woocommerce' ),
-			'desc_tip'    => 'true',
-			'description' => __( 'Enter the Vendor Part Number for this variation.', 'woocommerce' ),
-			'value'       => get_post_meta( $variation->ID, 'dia_var_vendor_pn', true )
+			'id'          => 'dia_var_mft[' . $variation->ID . ']',
+      'class'       => 'dia_var_mft',
+			'label'       => __( 'Manufacturer', 'woocommerce' ),
+			'value'       => get_post_meta( $variation->ID, 'dia_var_mft', true )
 		)
 	);
-	// Number Field
+  // Var Manufacturer Part Number
+  woocommerce_wp_text_input(
+    array(
+      'id'          => 'dia_var_mft_pn[' . $variation->ID . ']',
+      'class'       => 'dia_var_mft_pn',
+      'label'       => __( 'Manufacturer Part Number', 'woocommerce' ),
+      'value'       => get_post_meta( $variation->ID, 'dia_var_mft_pn', true )
+    )
+  );
+  // Var List Price
 	woocommerce_wp_text_input(
 		array(
 			'id'          => 'dia_var_list_price[' . $variation->ID . ']',
       'class'       => 'dia_var_list_price',
 			'label'       => __( 'Variation List Price', 'woocommerce' ),
-			'desc_tip'    => 'true',
-			'description' => __( 'Enter the List Price for this variation.', 'woocommerce' ),
 			'value'       => get_post_meta( $variation->ID, 'dia_var_list_price', true ),
 			'custom_attributes' => array(
 							'step' 	=> 'any',
@@ -104,13 +106,22 @@ function variation_settings_fields( $loop, $variation_data, $variation ) {
 						)
 		)
 	);
+  echo '</div><div id="dia_var_specs_20">';
+  // Var Vendor 1
+	woocommerce_wp_text_input(
+		array(
+			'id'          => 'dia_var_vendor1[' . $variation->ID . ']',
+      'class'       => 'dia_var_vendor1',
+			'label'       => __( 'Primary Vendor', 'woocommerce' ),
+			'value'       => get_post_meta( $variation->ID, 'dia_var_vendor1', true )
+		)
+	);
+  // Var cost 1
   woocommerce_wp_text_input(
     array(
       'id'          => 'dia_var_cost[' . $variation->ID . ']',
       'class'       => 'dia_var_cost',
-      'label'       => __( 'Variation Cost', 'woocommerce' ),
-      'desc_tip'    => 'true',
-      'description' => __( 'Enter the Cost for this variation.', 'woocommerce' ),
+      'label'       => __( 'Vendor 1 Cost', 'woocommerce' ),
       'value'       => get_post_meta( $variation->ID, 'dia_var_cost', true ),
       'custom_attributes' => array(
               'step' 	=> 'any',
@@ -118,38 +129,174 @@ function variation_settings_fields( $loop, $variation_data, $variation ) {
             )
     )
   );
-
+	// Var Vendor1 Part Number
+	woocommerce_wp_text_input(
+		array(
+			'id'          => 'dia_var_vendor_pn[' . $variation->ID . ']',
+      'class'       => 'dia_var_vendor_pn',
+			'label'       => __( 'Vendor 1 Part Number', 'woocommerce' ),
+			'value'       => get_post_meta( $variation->ID, 'dia_var_vendor_pn', true )
+		)
+	);
+  // Var Vendor1 date
   woocommerce_wp_text_input(
     array(
       'id'          => 'dia_var_date_check[' . $variation->ID . ']',
       'class'       => 'dia_var_date_check',
       'label'       => __( 'Date Verified', 'woocommerce' ),
-      'desc_tip'    => 'true',
-      'description' => __( 'Enter the Date you verified the prices for this variation.', 'woocommerce' ),
       'value'       => get_post_meta( $variation->ID, 'dia_var_date_check', true ),
     )
   );
+// Var Vendor1 person
+  woocommerce_wp_text_input(
+    array(
+      'id'          => 'dia_var_date_check_person1[' . $variation->ID . ']',
+      'class'       => 'dia_var_date_check_person1',
+      'label'       => __( 'Price Verified By: ', 'woocommerce' ),
+      'value'       => get_post_meta( $variation->ID, 'dia_var_date_check_person1', true ),
+    )
+  );
 
+echo '<div id="var_vendor_2_wrapp">';
+  // Var Vendor 2
+	woocommerce_wp_text_input(
+		array(
+			'id'          => 'dia_var_vendor2[' . $variation->ID . ']',
+      'class'       => 'dia_var_vendor2',
+			'label'       => __( 'Secondary Vendor', 'woocommerce' ),
+			'value'       => get_post_meta( $variation->ID, 'dia_var_vendor2', true )
+		)
+	);
+  // Var cost 2
+  woocommerce_wp_text_input(
+    array(
+      'id'          => 'dia_var_cost2[' . $variation->ID . ']',
+      'class'       => 'dia_var_cost2',
+      'label'       => __( 'Vendor 2 Cost', 'woocommerce' ),
+      'value'       => get_post_meta( $variation->ID, 'dia_var_cost2', true ),
+      'custom_attributes' => array(
+              'step' 	=> 'any',
+              'min'	=> '0'
+            )
+    )
+  );
+	// Var Vendor2 Part Number
+	woocommerce_wp_text_input(
+		array(
+			'id'          => 'dia_var_vendor_pn2[' . $variation->ID . ']',
+      'class'       => 'dia_var_vendor_pn2',
+			'label'       => __( 'Vendor 2 Part Number', 'woocommerce' ),
+			'value'       => get_post_meta( $variation->ID, 'dia_var_vendor_pn2', true )
+		)
+	);
+  // Var Vendor2 date
+  woocommerce_wp_text_input(
+    array(
+      'id'          => 'dia_var_date_check2[' . $variation->ID . ']',
+      'class'       => 'dia_var_date_check2',
+      'label'       => __( 'Date Verified', 'woocommerce' ),
+      'value'       => get_post_meta( $variation->ID, 'dia_var_date_check2', true ),
+    )
+  );
+// Var Vendor2 person
+  woocommerce_wp_text_input(
+    array(
+      'id'          => 'dia_var_date_check_person2[' . $variation->ID . ']',
+      'class'       => 'dia_var_date_check_person2',
+      'label'       => __( 'Price Verified By: ', 'woocommerce' ),
+      'value'       => get_post_meta( $variation->ID, 'dia_var_date_check_person2', true ),
+    )
+  );
+
+echo '</div></div></div>';
 }
 
 /**  Save new fields for variations  **/
 function save_variation_settings_fields( $post_id ) {
 
-	$dia_var_date_check = $_POST['dia_var_date_check'][ $post_id ];
-	if( ! empty( $dia_var_date_check ) ) {
-		update_post_meta( $post_id, 'dia_var_date_check', esc_attr( $dia_var_date_check ) );
-	}
-	$dia_var_cost = $_POST['dia_var_cost'][ $post_id ];
-	if( ! empty( $dia_var_cost ) ) {
-		update_post_meta( $post_id, 'dia_var_cost', esc_attr( $dia_var_cost ) );
-	}
+/*
+  $dia_var_specs_array = array(
+    'dia_var_mft',
+    'dia_var_mft_pn',
+    'dia_var_list_price',
+    'dia_var_vendor1',
+    'dia_var_cost',
+    'dia_var_vendor_pn',
+    'dia_var_date_check',
+    'dia_var_date_check_person1',
+    'dia_var_vendor2',
+    'dia_var_cost2',
+    'dia_var_vendor_pn2',
+    'dia_var_date_check2',
+    'dia_var_date_check_person2'
+  );
+*/
+
+
+  $dia_var_mft = $_POST['dia_var_mft'][ $post_id ];
+  if( ! empty( $dia_var_mft ) ) {
+    update_post_meta( $post_id, 'dia_var_mft', esc_attr( $dia_var_mft) );
+  }
+
+  $dia_var_mft_pn = $_POST['dia_var_mft_pn'][ $post_id ];
+  if( ! empty( $dia_var_mft_pn ) ) {
+    update_post_meta( $post_id, 'dia_var_mft_pn', esc_attr( $dia_var_mft_pn) );
+  }
+
   $dia_var_list_price = $_POST['dia_var_list_price'][ $post_id ];
   if( ! empty( $dia_var_list_price ) ) {
     update_post_meta( $post_id, 'dia_var_list_price', esc_attr( $dia_var_list_price ) );
   }
+
+  $dia_var_vendor1 = $_POST['dia_var_vendor1'][ $post_id ];
+  if( ! empty( $dia_var_vendor1 ) ) {
+    update_post_meta( $post_id, 'dia_var_vendor1', esc_attr( $dia_var_vendor1) );
+  }
+
+  $dia_var_cost = $_POST['dia_var_cost'][ $post_id ];
+	if( ! empty( $dia_var_cost ) ) {
+		update_post_meta( $post_id, 'dia_var_cost', esc_attr( $dia_var_cost ) );
+	}
+
   $dia_var_vendor_pn = $_POST['dia_var_vendor_pn'][ $post_id ];
   if( ! empty( $dia_var_vendor_pn ) ) {
     update_post_meta( $post_id, 'dia_var_vendor_pn', esc_attr( $dia_var_vendor_pn ) );
+  }
+
+  $dia_var_date_check = $_POST['dia_var_date_check'][ $post_id ];
+  if( ! empty( $dia_var_date_check) ) {
+    update_post_meta( $post_id, 'dia_var_date_check', esc_attr( $dia_var_date_check ) );
+  }
+
+
+  $dia_var_date_check_person1 = $_POST['dia_var_date_check_person1'][ $post_id ];
+  if( ! empty( $dia_var_date_check_person1 ) ) {
+    update_post_meta( $post_id, 'dia_var_date_check_person1', esc_attr( $dia_var_date_check_person1 ) );
+  }
+
+  $dia_var_vendor2 = $_POST['dia_var_vendor2'][ $post_id ];
+  if( ! empty( $dia_var_vendor2) ) {
+    update_post_meta( $post_id, 'dia_var_vendor2', esc_attr( $dia_var_vendor2 ) );
+  }
+
+  $dia_var_cost2 = $_POST['dia_var_cost2'][ $post_id ];
+  if( ! empty( $dia_var_cost2) ) {
+    update_post_meta( $post_id, 'dia_var_cost2', esc_attr( $dia_var_cost2) );
+  }
+
+  $dia_var_vendor_pn2 = $_POST['dia_var_vendor_pn2'][ $post_id ];
+  if( ! empty( $dia_var_vendor_pn2) ) {
+    update_post_meta( $post_id, 'dia_var_vendor_pn2', esc_attr( $dia_var_vendor_pn2) );
+  }
+
+  $dia_var_date_check2 = $_POST['dia_var_date_check2'][ $post_id ];
+  if( ! empty( $dia_var_date_check2) ) {
+    update_post_meta( $post_id, 'dia_var_date_check2', esc_attr( $dia_var_date_check2) );
+  }
+
+  $dia_var_date_check_person2 = $_POST['dia_var_date_check_person2'][ $post_id ];
+  if( ! empty( $dia_var_date_check_person2) ) {
+    update_post_meta( $post_id, 'dia_var_date_check_person2', esc_attr( $dia_var_date_check_person2) );
   }
 
 }
