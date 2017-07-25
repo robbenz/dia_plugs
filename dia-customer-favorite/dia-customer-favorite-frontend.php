@@ -25,3 +25,18 @@ function dia_cust_fav_admin_galpage() {
    echo '" />';
  }
 }
+
+// product page hook
+add_action( 'woocommerce_before_single_product', 'dia_mft_img_placement' );
+//add_action( 'woocommerce_product_meta_start', 'dia_mft_img_placement' );
+//add_action( 'woocommerce_single_product_summary', 'dia_mft_img_placement' );
+function dia_mft_img_placement() {
+  global $product;
+  $mft_img_path = get_post_meta( get_the_ID(), 'mft_image', true );
+
+  if ( strlen($mft_img_path) > 0 ) {
+    echo '<div style="width:100%;height:auto;">';
+    echo '<img style="margin-bottom:-10px;width:200px; max-width:200px; " src="'.$mft_img_path.'" />';
+    echo '</div>';
+ }
+}

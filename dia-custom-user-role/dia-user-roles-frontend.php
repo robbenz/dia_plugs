@@ -24,8 +24,10 @@ function dia_product_meta_display_product() {
       $_price_check_2 = get_post_meta( get_the_ID(), 'dia_product_price_check_2', true );
       $_price_check_person_2 = get_post_meta( get_the_ID(), 'dia_product_price_check_person_2', true );
       ?>
+      <div style="width:100%;">
       <input type="checkbox" id="show_specs_product">
       <label for="show_specs_product">Show Specs</label>
+    </div>
       <div id="specs_wrap_p_page">
       <?php if( $product->is_type( 'variable' ) ):
         $available_variations = $product->get_available_variations();

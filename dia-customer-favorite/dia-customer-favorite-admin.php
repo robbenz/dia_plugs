@@ -8,7 +8,7 @@ add_action("add_meta_boxes", "add_dia_cust_fav_meta_box");
 /*** END ***/
 
 /*** ADD CUSTOM META BOX MARKUP FOR ADMIN ***/
-function dia_cust_fav_CUSTOM_box_markup($object) {
+function dia_cust_fav_CUSTOM_box_markup($post) {
   wp_nonce_field(basename(__FILE__), "dia-cust-fav-meta-box-nonce");
   	global $post;
 
@@ -41,10 +41,76 @@ function dia_cust_fav_CUSTOM_box_markup($object) {
     		'description' => __( 'What\'s your favorite posish? That\'s cool with me, it\'s not my favorite but I\'ll do it for you.' )
     	)
     );
-      echo '</div>';
+      echo '</div>'; ?>
+
+      <hr>
+
+      <style type="text/css">
+        .fh-profile-upload-options th,
+        .fh-profile-upload-options td,
+        .fh-profile-upload-options input {
+          vertical-align: top;
+        }
+
+        .user-preview-image {
+          display: block;
+          height: auto;
+          width: 300px;
+        }
+
+      </style>
+
+      <table class="form-table fh-profile-upload-options">
+        <tr>
+          <th>
+            <label for="mft_image">Manufacturer Image</label>
+          </th>
+
+          <td>
+            <img class="user-preview-image" src="<?php echo esc_attr( get_post_meta($post->ID, 'mft_image', true ) ); ?>">
+
+            <input type="text" name="mft_image" id="mft_image" value="<?php echo esc_attr( get_post_meta($post->ID, 'mft_image', true ) ); ?>" class="regular-text" />
+
+            <input type='button' class="button-primary" value="Upload Image" id="uploadimage"/><br />
+
+            <span class="description">Dont fuck this up </span>
+          </td>
+        </tr>
+
+
+      </table>
+
+      <script type="text/javascript">
+        (function( $ ) {
+          $( '#uploadimage' ).on( 'click', function() {
+            tb_show('Sorry Mike, it\'s a little bit jank', 'media-upload.php?type=image&TB_iframe=1');
+
+            window.send_to_editor = function( html )
+            {
+              imgurl = $( 'img',html ).attr( 'src' );
+              $( '#mft_image' ).val(imgurl);
+              tb_remove();
+            }
+
+            return false;
+          });
+
+        })(jQuery);
+      </script>
+<?php
+
 }
 // dia_meta_box_markup
 /*** END ***/
+
+add_action( 'admin_enqueue_scripts', 'enqueue_admin' );
+function enqueue_admin() {
+	wp_enqueue_script( 'thickbox' );
+	wp_enqueue_style('thickbox');
+
+	wp_enqueue_script('media-upload');
+}
+
 
 /*** SAVE THAT SHIT ***/
 function dia_cust_fav_save_custom_stuff($post_id, $post, $update) {
@@ -74,6 +140,7 @@ function dia_cust_fav_save_custom_stuff($post_id, $post, $update) {
           update_post_meta( $post_id, 'dia_customer_favorite_position', esc_attr( $dia_cust_fav_cust_fav_check_position ) );
         }
 
+        update_post_meta( $post_id, 'mft_image', $_POST[ 'mft_image' ] );
 
 
 } // end save_custom_meta_box
