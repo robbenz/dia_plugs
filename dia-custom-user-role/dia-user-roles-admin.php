@@ -232,7 +232,6 @@ function save_variation_settings_fields( $post_id ) {
   );
 */
 
-
   $dia_var_mft = $_POST['dia_var_mft'][ $post_id ];
   if( ! empty( $dia_var_mft ) ) {
     update_post_meta( $post_id, 'dia_var_mft', esc_attr( $dia_var_mft) );
@@ -267,7 +266,6 @@ function save_variation_settings_fields( $post_id ) {
   if( ! empty( $dia_var_date_check) ) {
     update_post_meta( $post_id, 'dia_var_date_check', esc_attr( $dia_var_date_check ) );
   }
-
 
   $dia_var_date_check_person1 = $_POST['dia_var_date_check_person1'][ $post_id ];
   if( ! empty( $dia_var_date_check_person1 ) ) {

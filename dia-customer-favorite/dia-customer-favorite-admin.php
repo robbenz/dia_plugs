@@ -99,6 +99,16 @@ function dia_cust_fav_CUSTOM_box_markup($post) {
       </script>
 <?php
 
+  woocommerce_wp_checkbox(
+  array(
+    'id'            => 'dia_whitespace_adj',
+    'name'          => 'dia_whitespace_adj',
+    'class'         => 'dia_whitespace_adj checkbox',
+    'label'         => __('White Space Adjustment?  ', 'woocommerce' ),
+    'desc_tip'      => 'true',
+    'description'   => __( 'Check this box if the main product image has a bunch of white space at the top', 'woocommerce' )
+    )
+  );
 }
 // dia_meta_box_markup
 /*** END ***/
@@ -141,6 +151,10 @@ function dia_cust_fav_save_custom_stuff($post_id, $post, $update) {
         }
 
         update_post_meta( $post_id, 'mft_image', $_POST[ 'mft_image' ] );
+
+        // dia_customer_favorite
+        $dia_whitespace_adj_checkbox = isset( $_POST['dia_whitespace_adj'] ) ? 'yes' : 'no';
+        update_post_meta( $post_id, 'dia_whitespace_adj', $dia_whitespace_adj_checkbox );
 
 
 } // end save_custom_meta_box
