@@ -12,14 +12,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     // expose Boxzilla object to window
     window.Boxzilla = Boxzilla;
 
-    function ready(fn) {
-        if (document.readyState != 'loading') {
-            fn();
-        } else {
-            document.addEventListener('DOMContentLoaded', fn);
-        }
-    }
-
     // helper function for setting CSS styles
     function css(element, styles) {
         if (styles.background_color) {
@@ -89,13 +81,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             box.element.firstChild.lastChild.className += " last-child";
         }
 
-        /**
-         * If a MailChimp for WordPress form was submitted, open the box containing that form (if any)
-         *
-         * TODO: Just set location hash from MailChimp for WP?
-         */
-        window.addEventListener('load', openMailChimpForWordPressBox);
-
+        // set flag to prevent initialising twice
         options.inited = true;
 
         // trigger "done" event.
@@ -119,8 +105,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
     }
 
-    // create boxes as soon as document.ready fires
-    ready(createBoxesFromConfig);
+    window.addEventListener('load', openMailChimpForWordPressBox);
+    createBoxesFromConfig();
 })();
 
 },{"boxzilla":4}],2:[function(require,module,exports){
@@ -198,6 +184,12 @@ function toggle(element, animation, callbackFn) {
         if (!nowVisible) {
             var computedStyles = window.getComputedStyle(element);
             visibleStyles = copyObjectProperties(["height", "borderTopWidth", "borderBottomWidth", "paddingTop", "paddingBottom"], computedStyles);
+
+            // in some browsers, getComputedStyle returns "auto" value. this falls back to getBoundingClientRect() in those browsers since we need an actual height.
+            if (!isFinite(visibleStyles.height)) {
+                var clientRect = element.getBoundingClientRect();
+                visibleStyles.height = clientRect.height;
+            }
             css(element, hiddenStyles);
         }
 
@@ -550,6 +542,13 @@ Box.prototype.locationHashRefersBox = function () {
     }
 
     var elementId = window.location.hash.substring(1);
+
+    // only attempt on strings looking like an ID or classname
+    var regex = /^[a-zA-Z\-\_0-9]{1,}$/;
+    if (regex.test(elementId)) {
+        return false;
+    }
+
     if (elementId === this.element.id) {
         return true;
     } else if (this.element.querySelector('#' + elementId)) {
@@ -670,8 +669,6 @@ module.exports = function (_Boxzilla) {
 },{"./animator.js":2}],4:[function(require,module,exports){
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var EventEmitter = require('wolfy87-eventemitter'),
     Boxzilla = Object.create(EventEmitter.prototype),
     Box = require('./box.js')(Boxzilla),
@@ -761,7 +758,7 @@ function checkTimeCriteria() {
 function checkHeightCriteria() {
 
     var scrollY = scrollElement.hasOwnProperty('scrollY') ? scrollElement.scrollY : scrollElement.scrollTop;
-    scrollY = scrollY + window.innerHeight * 0.75;
+    scrollY = scrollY + window.innerHeight * 0.9;
 
     boxes.forEach(function (box) {
         if (!box.mayAutoShow() || box.triggerHeight <= 0) {
@@ -973,7 +970,7 @@ Boxzilla.dismiss = function (id) {
         boxes.forEach(function (box) {
             box.dismiss();
         });
-    } else if (_typeof(boxes[id]) === "object") {
+    } else {
         Boxzilla.get(id).dismiss();
     }
 };

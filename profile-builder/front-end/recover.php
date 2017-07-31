@@ -111,13 +111,21 @@ function wppb_create_recover_password_form( $user, $post_data ){
 	?>
 	<form enctype="multipart/form-data" method="post" id="wppb-recover-password" class="wppb-user-forms" action="<?php echo esc_url( add_query_arg( 'submitted', 'yes', wppb_curpageurl() ) ); ?>">
 	<?php
-	$recover_notification = '<p>' . __( 'Please enter your username or email address.', 'profile-builder' );
+	$wppb_generalSettings = get_option( 'wppb_general_settings' );
+
+	if( !empty( $wppb_generalSettings['loginWith'] ) && $wppb_generalSettings['loginWith'] == 'email' ){
+		$recover_notification = '<p>' . __( 'Please enter your email address.', 'profile-builder' );
+		$username_email_label = __( 'E-mail', 'profile-builder' );
+	}
+	else{
+		$recover_notification = '<p>' . __( 'Please enter your username or email address.', 'profile-builder' );
+		$username_email_label = __( 'Username or E-mail', 'profile-builder' );
+	}
+
 	$recover_notification .= '<br/>'.__( 'You will receive a link to create a new password via email.', 'profile-builder' ).'</p>';
 	echo apply_filters( 'wppb_recover_password_message1', $recover_notification );
 
 	$username_email = ( isset( $post_data['username_email'] ) ? $post_data['username_email'] : '' );
-
-	$username_email_label = __( 'Username or E-mail', 'profile-builder' );
 
 	$recover_input = '<ul>
 			<li class="wppb-form-field wppb-username-email">

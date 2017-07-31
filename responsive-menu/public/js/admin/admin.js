@@ -130,4 +130,38 @@ jQuery(function($) {
         ]
     });
 
+    $('.keyboard-shortcuts').selectize({
+        plugins: ['remove_button'],
+        options: [
+            {
+                value:27,
+                text:'Esc'
+            },
+            {
+                value:13,
+                text:'Enter'
+            },
+            {
+                value:32,
+                text:'Space'
+            },
+            {
+                value:37,
+                text:'Left'
+            },
+            {
+                value:38,
+                text:'Up'
+            },
+            {
+                value:39,
+                text:'Right'
+            },
+            {
+                value:40,
+                text:'Down'
+            }
+        ]
+    });
+
 });

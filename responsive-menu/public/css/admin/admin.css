@@ -146,6 +146,7 @@
     color: white;
 }
 
+.selectize-control.multi.keyboard-shortcuts .selectize-input .item,
 .selectize-control.multi .selectize-input > div[data-value="mouseover"],
 .selectize-control.multi .selectize-input > div.active[data-value="mouseover"] {
     background: #DE4B42;
@@ -200,15 +201,14 @@
 }
 
 .draggable {
-    border: 1px solid #DADADA;
     border-radius: 2px;
     background: #EFEFEF;
     padding: 10px 0;
-    margin: 0;
+    margin: 4px 0;
     cursor: move;
-    font-weight: bold;
     padding-left: 65px;
     box-sizing: border-box;
+    border: 1px solid #ccc;
 }
 
 .draggable input {
@@ -232,7 +232,7 @@
 
 .menu-order-option-switch.menu-order-option-switch-on,
 .order-option-switch.order-option-switch-on {
-    background: green;
+    background: #5cb85c;
 }
 
 .menu-order-option-switch:after,
@@ -275,6 +275,10 @@ li.draggable {
     font-size: 18px;
     font-weight: bold;
     line-height: 24px;
+}
+
+#upgrade-banner .glyphicon {
+    margin-right: 5px;
 }
 
 #upgrade-banner li  {

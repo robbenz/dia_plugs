@@ -944,6 +944,14 @@ class VFB_Pro_Entries {
 		// Get Akismet data
 		$data = get_post_meta( $entry_id, '_vfb_akismet-data', true );
 
+		// Sanity check: if no Akismet data, add it
+		if ( empty( $data ) ) {
+			$akismet = new VFB_Pro_Akismet();
+			$akismet->spam_check( $entry_id );
+
+			$data = get_post_meta( $entry_id, '_vfb_akismet-data', true );
+		}
+
 		foreach ( array_keys( $data ) as $k ) {
 			$query_string .= $k . '=' . urlencode( $data[ $k ] ) . '&';
 		}

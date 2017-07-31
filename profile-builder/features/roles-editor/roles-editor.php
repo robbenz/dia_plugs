@@ -235,37 +235,39 @@ class WPPB_Roles_Editor {
 
     function create_roles_editor_cpt(){
 
-        $labels = array(
-            'name' 					=> esc_html__( 'Roles Editor', 'profile-builder' ),
-            'singular_name' 		=> esc_html__( 'Roles Editor', 'profile-builder' ),
-            'add_new' 				=> esc_html__( 'Add New Role', 'profile-builder' ),
-            'add_new_item' 			=> esc_html__( 'Add New Role', 'profile-builder' ),
-            'edit_item' 			=> esc_html__( 'Edit Role', 'profile-builder' ),
-            'new_item' 				=> esc_html__( 'New Role', 'profile-builder' ),
-            'all_items' 			=> esc_html__( 'Roles Editor', 'profile-builder' ),
-            'view_item' 			=> esc_html__( 'View Role', 'profile-builder' ),
-            'search_items' 			=> esc_html__( 'Search the Roles Editor', 'profile-builder' ),
-            'not_found' 			=> esc_html__( 'No roles found', 'profile-builder' ),
-            'not_found_in_trash' 	=> esc_html__( 'No roles found in trash', 'profile-builder' ),
-            'name_admin_bar'        => esc_html__( 'Role', 'profile-builder' ),
-            'parent_item_colon' 	=> '',
-            'menu_name' 			=> esc_html__( 'Roles Editor', 'profile-builder' )
-        );
+        if( is_admin() && current_user_can( 'manage_options' ) ) {
+            $labels = array(
+                'name' => esc_html__( 'Roles Editor', 'profile-builder' ),
+                'singular_name' => esc_html__( 'Roles Editor', 'profile-builder' ),
+                'add_new' => esc_html__( 'Add New Role', 'profile-builder' ),
+                'add_new_item' => esc_html__( 'Add New Role', 'profile-builder' ),
+                'edit_item' => esc_html__( 'Edit Role', 'profile-builder' ),
+                'new_item' => esc_html__( 'New Role', 'profile-builder' ),
+                'all_items' => esc_html__( 'Roles Editor', 'profile-builder' ),
+                'view_item' => esc_html__( 'View Role', 'profile-builder' ),
+                'search_items' => esc_html__( 'Search the Roles Editor', 'profile-builder' ),
+                'not_found' => esc_html__( 'No roles found', 'profile-builder' ),
+                'not_found_in_trash' => esc_html__( 'No roles found in trash', 'profile-builder' ),
+                'name_admin_bar' => esc_html__( 'Role', 'profile-builder' ),
+                'parent_item_colon' => '',
+                'menu_name' => esc_html__( 'Roles Editor', 'profile-builder' )
+            );
 
-        $args = array(
-            'labels' 				=> $labels,
-            'public' 				=> false,
-            'publicly_queryable' 	=> false,
-            'show_ui' 				=> true,
-            'query_var'          	=> true,
-            'show_in_menu' 			=> 'users.php',
-            'has_archive' 			=> false,
-            'hierarchical' 			=> false,
-            'capability_type' 		=> 'post',
-            'supports' 				=> array( 'title' )
-        );
+            $args = array(
+                'labels' => $labels,
+                'public' => false,
+                'publicly_queryable' => false,
+                'show_ui' => true,
+                'query_var' => true,
+                'show_in_menu' => 'users.php',
+                'has_archive' => false,
+                'hierarchical' => false,
+                'capability_type' => 'post',
+                'supports' => array( 'title' )
+            );
 
-        register_post_type( 'wppb-roles-editor', $args );
+            register_post_type( 'wppb-roles-editor', $args );
+        }
 
     }
 

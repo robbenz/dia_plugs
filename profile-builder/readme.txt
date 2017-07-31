@@ -1,11 +1,10 @@
-﻿=== User registration & user profile - Profile Builder ===
+=== User registration & user profile - Profile Builder ===
 Contributors: cozmoslabs, reflectionmedia, sareiodata, adispiac, madalin.ungureanu, iova.mihai, barinagabriel
 Donate link: http://www.cozmoslabs.com/wordpress-profile-builder/
 Tags: user registration, user profile, user registration form, user fields, extra user fields, edit profile, user custom fields, front-end login, front-end edit profile, front-end user registration, email confirmation, login form
-
 Requires at least: 3.1
-Tested up to: 4.7.5
-Stable tag: 2.6.4
+Tested up to: 4.8
+Stable tag: 2.6.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -154,6 +153,10 @@ This plugin adds/removes user fields in the front-end. Both default and extra pr
 12. Role Editor
 
 == Changelog ==
+= 2.6.5 =
+* Fixed an issue where certain users could view the Roles Editor page without permission
+* Changed the strings in Recover Password accordingly with the option set in 'Allow Users to Log in With' setting
+
 = 2.6.4 =
 * Fixed a bug which was preventing deleting thrashed posts
 * Compatibility fixes with Advanced Custom Fields Plugin

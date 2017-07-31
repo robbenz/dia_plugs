@@ -21,9 +21,13 @@ function get_responsive_menu_default_options() {
         'menu_depth_5_unit' => '%',
         'menu_to_use' => '',
         'theme_location_menu' => '',
+        'show_menu_on_page_load' => false,
+        'keyboard_shortcut_close_menu' => '27,37',
+        'keyboard_shortcut_open_menu' => '32,39',
 
         // Button Settings
         'button_title' => null,
+        'button_title_open' => null,
         'button_image' => null,
         'button_image_alt' => null,
         'button_image_when_clicked' => null,
@@ -89,6 +93,7 @@ function get_responsive_menu_default_options() {
         'submenu_arrow_width_unit' => 'px',
         'submenu_arrow_height' => '40',
         'submenu_arrow_height_unit' => 'px',
+        'submenu_descriptions_on' => false,
         'accordion_animation' => 'off',
         'auto_expand_all_submenus' => 'off',
         'auto_expand_current_submenus' => 'off',
@@ -169,6 +174,8 @@ function get_responsive_menu_default_options() {
         'minify_scripts' => 'off',
         'scripts_in_footer' => 'off',
         'external_files' => 'off',
+        'remove_fontawesome' => false,
+        'remove_bootstrap' => false,
 
         'shortcode' => 'off',
         'mobile_only' => 'off',
