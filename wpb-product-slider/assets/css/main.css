@@ -45,44 +45,20 @@
  * All Styles
  */
 
-.wpb-wps-pagination-number .owl-dots {
-    counter-reset: dots;
-}
-.wpb-wps-pagination-number .owl-dot span:before {
-    counter-increment:dots;
-    content: counter(dots);
-}
 body {
 	-webkit-backface-visibility: hidden;
 }
-.wpb-wps-product-title, .wpb-wps-product-title:hover, .wpb-wps-product-title:focus, body .wpb-wps-product-title:visited {
-	text-decoration: none;
-	color: inherit;
+.wpb_slider_area .item { 
+	margin: 3px;
 }
-.alert-danger {
-    color: #a94442;
-    background-color: #f2dede;
-    border-color: #ebccd1;
+.wpb_slider_area .cs-style-3 .item img { 
+	box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
 }
-.alert {
-    padding: 15px;
-    margin-bottom: 20px;
-    border: 1px solid transparent;
-    border-radius: 4px;
-}
-.wpb-alert {
-	margin: 20px 0;
-}
-.wpb-woo-products-slider {
-	-webkit-font-smoothing: antialiased;
-}
-.wpb-woo-products-slider .wpb-wps-slider-item img {
+.wpb-wps-wrapper .item img {
 	display: block;
-    width: 100%;
-    height: auto;
-    max-width: 100%;
-    box-shadow: none;
-    border-radius: 0;
+	width: 100%; 
+	height: auto;
+	max-width:100%
 }
 .wpb_area_title {
 	margin: 0 0 36px 0;
@@ -94,7 +70,7 @@ body {
 }
 .grid figcaption a,
 .wpb_slider_area .owl-theme .owl-controls .owl-buttons > div,
-.wpb_slider_area .owl-theme .owl-dots .owl-dot span,
+.wpb_slider_area .owl-theme .owl-controls .owl-page span.owl-numbers,
 .woocommerce-page .grid_no_animation figcaption a,
 .customNavigation .btn,
 .grid_no_animation figcaption a.button {
@@ -102,13 +78,6 @@ body {
 	-moz-transition: all 0.2s linear;
 	-o-transition: all 0.2s linear;
 	transition: all 0.2s linear;
-}
-.wpb_slider_area .wpb-wps-pagination-number.owl-theme .owl-dots .owl-dot span{
-	width: 35px;
-	height: 27px;
-	border-radius: 0;
-	color: #fff;
-	margin: 0;
 }
 .woocommerce-page .grid figcaption a:active, 
 .woocommerce-page .grid_no_animation figcaption a:active {
@@ -140,13 +109,49 @@ img.wpb_pro_img {
 	background: transparent!important;
 	text-decoration: none;
 }
-.wpb-woo-products-slider.woocommerce .star-rating {
-    float: inherit;
-    margin: 0 auto 10px;
-    font-size: 11px;
+/*style for small lay out*/
+.small_layout .cs-style-6 figcaption a , 
+.small_layout .cs-style-3 figcaption a, 
+.small_layout .cs-style-5 figcaption a {
+	width: 100%;
+	right: 0;
+	padding: 5px 0;
+	bottom: 0;
 }
-.wpb-woo-products-slider.woocommerce.cs-style-3 .star-rating {
-	color: #ffffff;
+.small_layout .cs-style-4 figcaption h3, 
+.small_layout .cs-style-5 figcaption h3 {
+	font-size:14px;
+}
+.small_layout .cs-style-4 figcaption a i {
+	display:none;
+}
+.small_layout .cs-style-4 figcaption a {
+	width: 100%;
+	bottom: 0;
+	font-size: 12px;
+}
+.medium_layout .cs-style-6 figcaption h3 {
+	font-size:14px;
+	bottom: 38%;
+}
+.medium_layout .cs-style-6 figcaption span.p_price {
+	width:26%;
+}
+.medium_layout .cs-style-6 figcaption a { 
+	width: 56%;
+}
+.shopping-cart-icon:before {
+	content: "\f07a";
+	font-family: FontAwesome;
+	font-style: normal;
+	font-weight: normal;
+	text-decoration: inherit;
+	color: #fff;
+	font-size: 18px;
+	padding-right: 0.5em;
+	position: absolute;
+	top: 5px;
+	left: 5px;
 }
 .btn {
 	display: inline-block;
@@ -246,8 +251,15 @@ corresponding value from the list below*/
 
 /*--------- style for dotstyle ----------*/
 
-.wpb_slider_area .owl-theme .owl-dots {
-	margin-top: 20px;
+.wpb_slider_area .owl-theme .owl-controls .owl-page span.owl-numbers {
+    display: block;
+    margin: 0;
+    padding: 5px 0;
+    width: 30px;
+    filter: Alpha(Opacity=50);
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 0px;
 }
 
 /*--------- style for navigation ----------*/
@@ -255,22 +267,17 @@ corresponding value from the list below*/
 .wpb_slider_area {
 	position: relative;
 }
-.wpb_slider_area .owl-theme .owl-nav {
+.wpb_slider_area .owl-buttons {
 	position: absolute;
-	top: -60px;
-    right: 0;
+	top: -33px;
+	right: 3px;
 }
-.wpb_slider_area .owl-theme .owl-nav > div {
-   	border-radius: 0;
+.wpb_sidebar_slider .owl-buttons {
+	right: 3px;
+}
+.wpb_slider_area .owl-theme .owl-controls .owl-buttons > div {
+    border-radius: 0;
     margin-right: 0;
-    margin-top: 0;
-    margin-bottom: 0;
-    padding: 3px 12px;
-    margin-left: 10px;
-    -webkit-transition: all 0.2s linear;
-    -moz-transition: all 0.2s linear;
-    -o-transition: all 0.2s linear;
-    transition: all 0.2s linear;
 }
 /*--------- style for no animation ----------*/
 .grid_no_animation a.wpb_pro_img_url {
@@ -284,10 +291,17 @@ corresponding value from the list below*/
 	overflow: hidden;
 }
 .grid_no_animation figcaption h3.pro_title {
-	margin: 15px 0 10px;
-    padding: 0;
-    font-size: 14px;
-    line-height: normal;
+	margin: 0;
+	font-family: 'Roboto', sans-serif;
+	font-weight: 300;
+	padding: 5px 0;
+	color:#808080;
+	font-size:14px;
+	line-height: 20px;
+	-webkit-transition: color 300ms;
+	-moz-transition: color 300ms;
+	-o-transition: color 300ms;
+	transition: color 300ms;
 }
 .grid_no_animation figcaption del .pro_price_area .amount {
 	text-decoration: none;
@@ -306,11 +320,10 @@ corresponding value from the list below*/
 }
 .grid_no_animation figcaption a.button {
 	display: inline-block;
-    overflow: hidden;
-    padding: 10px 15px;
-    text-decoration: none;
-    margin-bottom: 5px;
-    border-radius: 0;
+	overflow: hidden;
+	padding: 3px 15px;
+	text-decoration: none;
+	margin-bottom:5px;
 }
 .grid_no_animation figcaption a.button:hover {
 	text-decoration:none;
@@ -367,30 +380,26 @@ corresponding value from the list below*/
 	text-align:center;
 }
 .grid figcaption h3 {
-    margin: 0 0 5px!important;
-    padding: 0 10px;
+    margin: 0!important;
+    padding: 0;
     color: #fff;
     text-align: center;
     font-size: 16px;
     font-weight: 100;
     line-height: 20px;
-    font-weight: 700;
 }
 .pro_price_area {
     display: block;
-    line-height: normal;
-    margin-bottom: 5px;
-    font-weight: 700;
+    line-height: 20px;
 }
 .grid figcaption a.button {
     text-align: center!important;
-    padding: 10px 20px!important;
+    padding: 5px 20px!important;
     display: inline-block!important;
     color: #fff!important;
     font-size: 13px!important;
     text-decoration: none;
     text-transform: uppercase;
-    border-radius: 0;
 }
 .wpb_wps_cart_button {
     display: block;
@@ -421,7 +430,7 @@ corresponding value from the list below*/
 	transition: transform 0.4s, opacity 0.1s 0.3s;
 }
 
-.cs-style-3 figure:hover figcaption,
+.no-touch .cs-style-3 figure:hover figcaption,
 .cs-style-3 figure.cs-hover figcaption {
 	opacity: 1;
 	-webkit-transform: translateY(0px);
@@ -431,11 +440,4 @@ corresponding value from the list below*/
 	-webkit-transition: -webkit-transform 0.4s, opacity 0.1s;
 	-moz-transition: -moz-transform 0.4s, opacity 0.1s;
 	transition: transform 0.4s, opacity 0.1s;
-}
-
-/* RTL */
-
-.rtl .wpb_slider_area .owl-theme .owl-nav {
-	left: 0;
-	right: inherit;
 }
