@@ -270,7 +270,7 @@ if (!class_exists('WooCommerce_Quote')) {
         {
             global $current_user;
 
-            get_currentuserinfo();
+            wp_get_current_user();
             $user_roles = $current_user->roles;
             $user_role = array_shift($user_roles);
 
@@ -333,7 +333,7 @@ if (!class_exists('WooCommerce_Quote')) {
         {
             global $current_user;
 
-            get_currentuserinfo();
+            wp_get_current_user();
             $user_roles = $current_user->roles;
             $user_role = array_shift($user_roles);
 
