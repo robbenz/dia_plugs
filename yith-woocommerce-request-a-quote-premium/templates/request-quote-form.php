@@ -74,8 +74,9 @@ $force_user_to_register              = ( get_option( 'ywraq_force_user_to_regist
    <option name="rqa_cat" value="">Both</option>
   </select> -->
 
-  <?php  $selectOption = $_POST['taskOption'];
-  ?>
+  <?php
+  $taskOption ="";
+  $selectOption = $_POST['taskOption'];  ?>
 
   <select style=" width:50%;" name="taskOption">
     <option name="rqa_cat_select" value="">Select One</option>
@@ -84,7 +85,6 @@ $force_user_to_register              = ( get_option( 'ywraq_force_user_to_regist
     <option name="rqa_cat_both" value="Both Mail &amp; Email">Both Mail &amp; Email</option>
   </select>
 
-    <!--  <input style="float:left; clear:both;" type="checkbox" value="<?php //echo $check1 ?>" name="rqa_cat" id="rqa-cat" placeholder="" ><label for="catyesno" class=""><h5 style="margin: 0 5px; font-size:16px; "><?php // _e( 'Please Mail Me A Catalog', 'ywraq' ) ?></h5></label> -->
 
 
   <div id="cat_mail">
