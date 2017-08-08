@@ -48,9 +48,7 @@ if( isset( $raq_data['lang']) ){
             <?php ywraq_get_label( 'accept', true ) ?>&nbsp;This one</a>
         </div>
 
-
     <?php endif;  ?>
-
 
 
 
