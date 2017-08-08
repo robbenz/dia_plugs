@@ -52,7 +52,7 @@ if ( $customer_quotes ) : ?>
 		</thead>
 
 		<tbody><?php
-			
+
 			foreach ( $customer_quotes as $customer_order ) {
                 $order      = wc_get_order( $customer_order->ID );
 				$order->populate( $customer_order );
@@ -78,7 +78,7 @@ if ( $customer_quotes ) : ?>
 							if ( YITH_Request_Quote()->enabled_checkout() && in_array( $order->get_status(), apply_filters( 'ywraq_valid_order_statuses_for_payment', array( 'pending' ), $order ) ) ) {
 								$actions['accept'] = array(
 									'url'  => '#',
-                                    'data' => '',
+									'data' => '',
 									'name' => __( 'Checkout', 'yith-woocommerce-request-a-quote' )
 								);
 							}
@@ -110,12 +110,13 @@ if ( $customer_quotes ) : ?>
 							$actions = apply_filters( 'ywraq_my_account_my_quotes_actions', $actions, $order );
 
 							if ($actions) {
+							//	echo '<pre>';var_dump($actions);echo '</pre>';
 								foreach ( $actions as $key => $action ) {
 									echo '<a href="' . esc_url( $action['url'] ) . '" class="button ' . sanitize_html_class( $key ) . '" '.$action['data'].'">' . esc_html( $action['name'] ) . '</a>';
 								}
 							}
 						?>
-                        
+
 					</td>
 				</tr><?php
 			}

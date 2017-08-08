@@ -31,7 +31,6 @@ if( isset( $raq_data['lang']) ){
 <span style="font-size:14px; font-weight:bolder;">Please Note: </span>
 <span style="font-size:14px;">Shipping has been calculated and added to your total. Shipping will be applied at checkout. </span>
 
-    <p><?php // echo $email_description; ?></p>
 
 <?php if( get_option('ywraq_hide_table_is_pdf_attachment') == 'no'): ?>
     <p><strong><?php _e( 'Request date', 'yith-woocommerce-request-a-quote' ) ?></strong>: <?php echo $raq_data['order-date'] ?></p>
@@ -39,9 +38,21 @@ if( isset( $raq_data['lang']) ){
         <p><strong><?php _e( 'Expiration date', 'yith-woocommerce-request-a-quote' ) ?></strong>: <?php echo $raq_data['expiration_data'] ?></p>
     <?php endif ?>
 
+
+
     <?php if ( get_option( 'ywraq_show_accept_link' ) != 'no' ): ?>
-        <div style="height:26px; width:100%; background-color:#78be20; text-align:center; margin-bottom:8px;"><a style="color:#fff; text-decoration:none; font-weight:700; font-size:15px;" href="<?php echo esc_url( add_query_arg( $args_accept, YITH_Request_Quote()->get_raq_page_url() ) ) ?>"><?php ywraq_get_label( 'accept', true ) ?></a></div>
+
+        <div style="height:26px; width:100%; background-color:#78be20; text-align:center; margin-bottom:8px;">
+          <a style="color:#fff; text-decoration:none; font-weight:700; font-size:15px;"
+            href="<?php echo site_url(); ?>/my-account/view-quote/<?php echo $order->id; ?>">
+            <?php ywraq_get_label( 'accept', true ) ?>&nbsp;This one</a>
+        </div>
+
+
     <?php endif;  ?>
+
+
+
 
     <?php if ( !empty( $raq_data['admin_message'] ) ): ?>
         <p><?php echo $raq_data['admin_message'] ?></p>
@@ -82,11 +93,6 @@ if( isset( $raq_data['lang']) ){
 
 <?php
 
-/* this didnt work
-$billing_phone   = get_post_meta( $order->id, 'ywraq_billing_phone', true );
-$billing_vat     = get_post_meta( $order->id, 'ywraq_billing_vat', true );
-But This Did */
-
 $billing_first_name =  get_post_meta($order->id, '_billing_first_name',true);
 $billing_last_name = get_post_meta($order->id, '_billing_last_name',true);
 $billing_company = get_post_meta($order->id, '_billing_company',true);
@@ -98,7 +104,6 @@ $billing_country = get_post_meta($order->id, '_billing_country',true);
 $billing_state = get_post_meta($order->id, '_billing_state',true);
 $billing_email = get_post_meta($order->id, '_billing_email',true);
 $billing_phone = get_post_meta($order->id, '_billing_phone',true);
-// $billing_paymethod = get_post_meta($order->id, '_payment_method',true);
 
 if( $billing_company != ''): ?>
     <p><strong><?php _e( 'Company:', 'yith-woocommerce-request-a-quote' ); ?></strong> <?php echo $billing_company; ?></p>

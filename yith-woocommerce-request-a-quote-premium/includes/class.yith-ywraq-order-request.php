@@ -1224,6 +1224,7 @@ class YITH_YWRAQ_Order_Request {
 
     /**
      * Check if an order is created from a request quote
+      * BENZ MAYBE THIS IS IT
      *
      * @since   1.0.0
      * @author  Emanuela Castorina
@@ -1242,6 +1243,7 @@ class YITH_YWRAQ_Order_Request {
 
     /**
      * Check if an order is created from a request quote
+     * BENZ MAYBE THIS IS IT
      *
      * @since   1.0.0
      * @author  Emanuela Castorina
