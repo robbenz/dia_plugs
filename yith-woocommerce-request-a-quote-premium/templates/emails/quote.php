@@ -91,6 +91,7 @@ if( isset( $raq_data['lang']) ){
 
 <?php
 
+
 $billing_first_name =  get_post_meta($order->id, '_billing_first_name',true);
 $billing_last_name = get_post_meta($order->id, '_billing_last_name',true);
 $billing_company = get_post_meta($order->id, '_billing_company',true);

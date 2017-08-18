@@ -33,17 +33,17 @@ function dia_mft_img_placement() {
   $mft_img_path = get_post_meta( get_the_ID(), 'mft_image', true );
   if ( strlen($mft_img_path) > 0 ) {
     if ( 'yes' == get_post_meta( get_the_ID(), 'dia_whitespace_adj', true ) ) {
-      echo '<div style="z-index:999;position:relative;width:100%;height:auto;margin-bottom: -30px;">';
+      echo '<div style="z-index:69;position:relative;width:100%;height:auto;margin-bottom: -60px;">';
       echo '<img style="max-width:150px; max-height:69px; margin-left:25px; " src="'.$mft_img_path.'" />';
       echo '</div>';
-      echo '<style type="text/css">.woocommerce #content div.product div.summary{margin-top:-30px !important;}</style>';
+      echo '<style type="text/css">.woocommerce #content div.product div.summary{margin-top:20px !important;}</style>';
 
     } else {
 
-      echo '<div style="width:100%;height:auto;z-index:999;position:relative;">';
+      echo '<div style="width:100%;height:auto;z-index:69;position:relative;">';
       echo '<img style="max-width:150px; max-height:69px; margin-left:25px; " src="'.$mft_img_path.'" />';
       echo '</div>';
-      echo '<style type="text/css">.woocommerce #content div.product div.summary{margin-top:-50px !important;}</style>';
+      echo '<style type="text/css">.woocommerce #content div.product div.summary{margin-top:-20px !important;}</style>';
 
     }
   }

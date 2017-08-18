@@ -210,7 +210,7 @@ function dia_users_remove_row_actions( $actions ) {
   if ( current_user_can( 'shop_manager' ) || current_user_can( 'seo_specialist' ) ) {
     if ( get_post_type() === 'product' ) {
       unset( $actions['duplicate'] );
-      if ($user_ID == '217' || $user_ID == '1290' ) {
+      if ($user_ID == '217' || $user_ID == '1290' || $user_ID == '3199' ) {
         echo '';
       } else {
         unset( $actions['inline hide-if-no-js'] );   // QUICK EDIT
