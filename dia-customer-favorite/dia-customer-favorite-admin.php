@@ -104,9 +104,9 @@ function dia_cust_fav_CUSTOM_box_markup($post) {
     'id'            => 'dia_whitespace_adj',
     'name'          => 'dia_whitespace_adj',
     'class'         => 'dia_whitespace_adj checkbox',
-    'label'         => __('White Space Adjustment?  ', 'woocommerce' ),
+    'label'         => __('Full Height Featured Image?  ', 'woocommerce' ),
     'desc_tip'      => 'true',
-    'description'   => __( 'Check this box if the main product image has a bunch of white space at the top', 'woocommerce' )
+    'description'   => __( 'Check this box if the main product image is full height, and has no whitespace at the top', 'woocommerce' )
     )
   );
 }
