@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Boxzilla
-Version: 3.1.15
+Version: 3.1.18
 Plugin URI: https://boxzillaplugin.com/#utm_source=wp-plugin&utm_medium=boxzilla&utm_campaign=plugins-page
 Description: Call-To-Action Boxes that display after visitors scroll down far enough. Unobtrusive, but highly conversing!
 Author: ibericode
@@ -11,7 +11,7 @@ Domain Path: /languages/
 License: GPL v3
 
 Boxzilla Plugin
-Copyright (C) 2013-2016, Danny van Kooten, hi@dannyvankooten.com
+Copyright (C) 2013-2017, Danny van Kooten, hi@dannyvankooten.com
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function _load_boxzilla() {
 
 	define( 'BOXZILLA_FILE', __FILE__ );
-	define( 'BOXZILLA_VERSION', '3.1.15' );
+	define( 'BOXZILLA_VERSION', '3.1.18' );
 
 	require __DIR__ . '/bootstrap.php';
 }

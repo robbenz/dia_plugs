@@ -3,20 +3,34 @@
 function wppb_user_role_handler( $output, $form_location, $field, $user_id, $field_check_errors, $request_data ){
     if ( $field['field'] == 'Select (User Role)' ){
 
+        $roles_editor_active = false;
+        $wppb_generalSettings = get_option( 'wppb_general_settings', 'not_found' );
+        if( $wppb_generalSettings != 'not_found' ) {
+            if( ! empty( $wppb_generalSettings['rolesEditor'] ) && ( $wppb_generalSettings['rolesEditor'] == 'yes' ) && $form_location == 'edit_profile' ) {
+                $roles_editor_active = true;
+            }
+        }
+
         $user_role = '';
+        $user_roles = '';
         $user_can_manage_options = false;
 
         // Get user data, set user's role and check to see if user can manage options
         if( $user_id != 0 ) {
             $user_data = get_userdata( $user_id );
-            $user_role = $user_data->roles[0];
+
+            if( ! empty( $user_data->roles ) ) {
+                $user_role = $user_data->roles[0];
+                $user_roles = $user_data->roles;
+            }
 
             if( isset( $user_data->allcaps['manage_options'] ) && $user_data->allcaps['manage_options'] == 1 ) {
                 $user_can_manage_options = true;
             }
         }
 
-        $input_value =  isset( $request_data['custom_field_user_role'] ) ? $request_data['custom_field_user_role'] : $user_role;
+        $input_value = isset( $request_data['custom_field_user_role'] ) ? $request_data['custom_field_user_role'] : $user_role;
+        $input_value_multiple = isset( $request_data['custom_field_user_role'] ) ? $request_data['custom_field_user_role'] : $user_roles;
 
         $item_title = apply_filters( 'wppb_'.$form_location.'_user_role_custom_field_'.$field['id'].'_item_title', wppb_icl_t( 'plugin profile-builder-pro', 'custom_field_'.$field['id'].'_title_translation', $field['field-title'] ) );
         $item_description = wppb_icl_t( 'plugin profile-builder-pro', 'custom_field_'.$field['id'].'_description_translation', $field['description'] );
@@ -49,18 +63,24 @@ function wppb_user_role_handler( $output, $form_location, $field, $user_id, $fie
 
             $output = '
 				<label for="custom_field_user_role">'.$item_title.$error_mark.'</label>
-				<select name="custom_field_user_role" id="'.$field['meta-name'].'" class="custom_field_user_role '. apply_filters( 'wppb_fields_extra_css_class', '', $field ) .'" '. $extra_attr .'>';
+				<select name="custom_field_user_role'. ( $roles_editor_active ? '[]' : '' ) .'" id="'.$field['meta-name'].'" class="custom_field_user_role '. apply_filters( 'wppb_fields_extra_css_class', '', $field ) .'" '. $extra_attr . ( $roles_editor_active ? ' multiple="multiple"' : '' ) .'>';
 
 				$extra_select_option = apply_filters( 'wppb_extra_select_option', '', $field, $item_title );
 				if( ! empty( $extra_select_option ) ) {
 					$output .= $extra_select_option;
 				}
 
-                if( !empty( $available_user_roles ) ) {
-                    foreach( $available_user_roles as $user_role ){
+                if( ! empty( $available_user_roles ) ) {
+                    foreach( $available_user_roles as $user_role ) {
                         $output .= '<option value="'. $user_role['slug'] .'"';
 
-						$output .= selected( $input_value, $user_role['slug'], false );
+                        if( $roles_editor_active && is_array( $input_value_multiple ) ) {
+                            if( in_array( $user_role['slug'], $input_value_multiple ) ) {
+                                $output .= ' selected="selected" ';
+                            }
+                        } else {
+                            $output .= selected( $input_value, $user_role['slug'], false );
+                        }
 
                         $output .= '>'. $user_role['name'] .'</option>';
                     }
@@ -89,7 +109,7 @@ function wppb_user_role_handler( $output, $form_location, $field, $user_id, $fie
 
         }
 
-        return apply_filters( 'wppb_'.$form_location.'_user_role_custom_field_'.$field['id'], $output, $form_location, $field, $user_id, $field_check_errors, $request_data, $input_value );
+        return apply_filters( 'wppb_'.$form_location.'_user_role_custom_field_'.$field['id'], $output, $form_location, $field, $user_id, $field_check_errors, $request_data, $input_value, $input_value_multiple );
     }
 }
 add_filter( 'wppb_output_form_field_select-user-role', 'wppb_user_role_handler', 10, 6 );
@@ -100,6 +120,14 @@ function wppb_check_user_role_value( $message, $field, $request_data, $form_loca
 
     if( $form_location == 'back_end' )
         return $message;
+
+    $roles_editor_active = false;
+    $wppb_generalSettings = get_option( 'wppb_general_settings', 'not_found' );
+    if( $wppb_generalSettings != 'not_found' ) {
+        if( ! empty( $wppb_generalSettings['rolesEditor'] ) && ( $wppb_generalSettings['rolesEditor'] == 'yes' ) && $form_location == 'edit_profile' ) {
+            $roles_editor_active = true;
+        }
+    }
 
     $field['meta-name'] = 'custom_field_user_role';
 
@@ -114,8 +142,16 @@ function wppb_check_user_role_value( $message, $field, $request_data, $form_loca
         if( isset( $field['user-roles'] ) && isset( $request_data['custom_field_user_role'] ) ) {
             $available_user_roles = explode(', ', $field['user-roles'] );
 
-            if( !in_array( $request_data['custom_field_user_role'], $available_user_roles ) ) {
-                return __( 'You cannot register this user role', 'profile-builder');
+            if( $roles_editor_active && is_array( $request_data['custom_field_user_role'] ) ) {
+                foreach( $request_data['custom_field_user_role'] as $key => $value ) {
+                    if( ! in_array( $value, $available_user_roles ) ) {
+                        return __( 'You cannot register this user role', 'profile-builder');
+                    }
+                }
+            } else {
+                if( ! in_array( $request_data['custom_field_user_role'], $available_user_roles ) ) {
+                    return __( 'You cannot register this user role', 'profile-builder');
+                }
             }
         }
 
@@ -128,9 +164,23 @@ add_filter( 'wppb_check_form_field_select-user-role', 'wppb_check_user_role_valu
 
 /* handle field save */
 function wppb_userdata_add_user_role( $userdata, $global_request ){
+    $roles_editor_active = false;
+    $wppb_generalSettings = get_option( 'wppb_general_settings', 'not_found' );
+    if( $wppb_generalSettings != 'not_found' ) {
+        if( ! empty( $wppb_generalSettings['rolesEditor'] ) && ( $wppb_generalSettings['rolesEditor'] == 'yes' ) ) {
+            $roles_editor_active = true;
+        }
+    }
 
-    if ( isset( $global_request['custom_field_user_role'] ) )
-        $userdata['role'] = sanitize_text_field( trim( $global_request['custom_field_user_role'] ) );
+    if ( isset( $global_request['custom_field_user_role'] ) ) {
+        if( $roles_editor_active && is_array( $global_request['custom_field_user_role'] ) ) {
+            $user_roles = array_map( 'trim', $global_request['custom_field_user_role'] );
+            $user_roles = array_map( 'sanitize_text_field', $user_roles );
+            $userdata['role'] = $user_roles;
+        } else {
+            $userdata['role'] = sanitize_text_field( trim( $global_request['custom_field_user_role'] ) );
+        }
+    }
 
     return $userdata;
 }

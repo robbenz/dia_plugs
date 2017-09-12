@@ -336,7 +336,7 @@ function wppb_changeDefaultAvatar( $avatar, $id_or_email, $size, $default, $alt 
 
 	if ( !empty( $avatar_field ) ){
 
-		$customUserAvatar = get_user_meta( $my_user_id, $avatar_field['meta-name'], true );
+		$customUserAvatar = get_user_meta( $my_user_id, Wordpress_Creation_Kit_PB::wck_generate_slug( $avatar_field['meta-name'] ), true );
 		if( !empty( $customUserAvatar ) ){
 			if( is_numeric( $customUserAvatar ) ){
 				$img_attr = wp_get_attachment_image_src( $customUserAvatar, 'wppb-avatar-size-'.$size );
@@ -423,7 +423,7 @@ function wppb_resize_avatar( $userID, $userlisting_size = null, $userlisting_cro
 
 			$image = wp_get_image_editor( $avatar_directory_path );
 			if ( !is_wp_error( $image ) ) {
-				do_action( 'wppb_before_avatar_resizing', $image, $userID, $avatar_field['meta-name'], $avatar_field['avatar-size'] );
+				do_action( 'wppb_before_avatar_resizing', $image, $userID, Wordpress_Creation_Kit_PB::wck_generate_slug( $avatar_field['meta-name'] ), $avatar_field['avatar-size'] );
 
 				$crop = apply_filters( 'wppb_avatar_crop_resize', ( !empty( $userlisting_crop ) ? $userlisting_crop : false ) );
 

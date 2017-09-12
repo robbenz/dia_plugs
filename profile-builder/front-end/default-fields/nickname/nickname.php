@@ -22,7 +22,7 @@ function wppb_nickname_handler( $output, $form_location, $field, $user_id, $fiel
 
         $output = '
 			<label for="nickname">'.$item_title.$error_mark.'</label>
-			<input class="text-input default_field_nickname" name="nickname" maxlength="'. apply_filters( 'wppb_maximum_character_length', 70 ) .'" type="text" id="nickname" value="'. esc_attr( wp_unslash( $input_value ) ) .'" '. $extra_attr .'/>';
+			<input class="text-input default_field_nickname '. apply_filters( 'wppb_fields_extra_css_class', '', $field ) .'" name="nickname" maxlength="'. apply_filters( 'wppb_maximum_character_length', 70 ) .'" type="text" id="nickname" value="'. esc_attr( wp_unslash( $input_value ) ) .'" '. $extra_attr .'/>';
         if( !empty( $item_description ) )
             $output .= '<span class="wppb-description-delimiter">'. $item_description .'</span>';
 

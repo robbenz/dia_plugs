@@ -289,7 +289,7 @@ function wppb_front_end_password_recovery(){
                     $display_username_email = $user_info->user_email;
 
                 //send secondary mail to the user containing the username and the new password
-                $recoveruserMailMessage2  = sprintf( __( 'You have successfully reset your password to: %1$s', 'profile-builder' ), $new_pass );
+                $recoveruserMailMessage2  = __( 'You have successfully reset your password.', 'profile-builder' );
                 $recoveruserMailMessage2  = apply_filters( 'wppb_recover_password_message_content_sent_to_user2', $recoveruserMailMessage2, $display_username_email, $new_pass, $userID );
 
                 $recoveruserMailMessageTitle2 = sprintf( __('Password Successfully Reset for %1$s on "%2$s"', 'profile-builder' ), $display_username_email, $blogname = get_option('blogname') );

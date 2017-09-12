@@ -22,7 +22,7 @@ function wppb_username_handler( $output, $form_location, $field, $user_id, $fiel
 
         $output = '
 			<label for="username">'.$item_title.$error_mark.'</label>
-			<input class="text-input default_field_username" name="username" maxlength="'. apply_filters( 'wppb_maximum_character_length', 70 ) .'" type="text" id="username" value="'. esc_attr( $input_value ) .'" '.$readonly.' '. $extra_attr .'/>';
+			<input class="text-input default_field_username '. apply_filters( 'wppb_fields_extra_css_class', '', $field ) .'" name="username" maxlength="'. apply_filters( 'wppb_maximum_character_length', 70 ) .'" type="text" id="username" value="'. esc_attr( $input_value ) .'" '.$readonly.' '. $extra_attr .'/>';
         if( !empty( $item_description ) )
             $output .= '<span class="wppb-description-delimiter">'.$item_description.'</span>';
 	}

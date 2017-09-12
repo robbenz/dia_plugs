@@ -3,10 +3,11 @@ Contributors: Ibericode, DvanKooten, hchouhan, lapzor
 Donate link: https://boxzillaplugin.com/#utm_source=wp-plugin-repo&utm_medium=boxzilla&utm_campaign=donate-link
 Tags: scroll triggered box, cta, social, pop-up, newsletter, call to action, mailchimp, contact form 7, social media, mc4wp, ibericode
 Requires at least: 4.1
-Tested up to: 4.8
-Stable tag: 3.1.15
+Tested up to: 4.8.1
+Stable tag: 3.1.18
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Requires PHP: 5.3
 
 Flexible call to action boxes, popping up or sliding in at just the right time.
 
@@ -147,6 +148,27 @@ Have a look at the [frequently asked questions](https://wordpress.org/plugins/bo
 4. Configuring and customizing your boxes is easy.
 
 == Changelog ==
+
+
+#### 3.1.18 - September 7, 2017
+
+**Additions**
+
+- Added [`[boxzilla_link]` shortcode to generate the correct HTML for a link to show/toggle/hide/dismiss a box](https://kb.boxzillaplugin.com/shortcode-boxzilla-link/). 
+
+
+#### 3.1.17 - August 30, 2017
+
+**Fixes**
+
+- IE11 issue with scroll triggered pop-ups never showing up.
+
+
+#### 3.1.16 - August 2, 2017
+
+**Fixes**
+
+- JavaScript error when clicking `<a>` elements without `href` attributes.
 
 
 #### 3.1.15 - July 26, 2017

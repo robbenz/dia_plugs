@@ -272,9 +272,9 @@ class Profile_Builder_Form_Creator{
                     $form_message_tpl_start = apply_filters( 'wppb_form_message_tpl_start', '<p class="alert" id="wppb_form_success_message">' );
                     $form_message_tpl_end = apply_filters( 'wppb_form_message_tpl_end', '</p>' );
 
-                    if( isset( $_POST['custom_field_user_role'] ) ) {
+                    if( ! current_user_can( 'manage_options' ) && $this->args['form_type'] != 'edit_profile' && isset( $_POST['custom_field_user_role'] ) ) {
                         $user_role = sanitize_text_field($_POST['custom_field_user_role']);
-                    } elseif( isset( $this->args['role'] ) ) {
+                    } elseif( ! current_user_can( 'manage_options' ) && $this->args['form_type'] != 'edit_profile' && isset( $this->args['role'] ) ) {
                         $user_role = $this->args['role'];
                     } else {
                         $user_role = NULL;
@@ -529,6 +529,18 @@ class Profile_Builder_Form_Creator{
             if( isset( $userdata['user_pass'] ) && !empty( $userdata['user_pass'] ) ){
                 unset($userdata['user_pass']);
             }
+            
+            if( current_user_can( 'manage_options' ) && isset( $userdata['role'] ) && is_array( $userdata['role'] ) ) {
+                $user_data = get_userdata( $user_id );
+                $user_data->remove_all_caps();
+
+                foreach( $userdata['role'] as $role ) {
+                    $user_data->add_role( $role );
+                }
+
+                unset( $userdata['role'] );
+            }
+
 			wp_update_user( $userdata );
 		}
 		
@@ -536,7 +548,7 @@ class Profile_Builder_Form_Creator{
 			foreach( $this->args['form_fields'] as $field ){
 				do_action( 'wppb_save_form_field', $field, $user_id, $global_request, $this->args['form_type'] );
 			}
-			
+
 			if ( $this->args['form_type'] == 'register' ){
 				if ( !is_wp_error( $user_id ) ){
 					$wppb_general_settings = get_option( 'wppb_general_settings' );

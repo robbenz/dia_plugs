@@ -14,7 +14,7 @@ function wppb_password_repeat_handler( $output, $form_location, $field, $user_id
 
         $output = '
 			<label for="passw2">' . $item_title.$error_mark . '</label>
-			<input class="text-input" name="passw2" maxlength="'. apply_filters( 'wppb_maximum_character_length', 70 ) .'" type="password" id="passw2" value="" autocomplete="off" '. $extra_attr .'/>';
+			<input class="text-input '. apply_filters( 'wppb_fields_extra_css_class', '', $field ) .'" name="passw2" maxlength="'. apply_filters( 'wppb_maximum_character_length', 70 ) .'" type="password" id="passw2" value="" autocomplete="off" '. $extra_attr .'/>';
         if( !empty( $item_description ) )
             $output .= '<span class="wppb-description-delimiter">'.$item_description.'</span>';
 	}

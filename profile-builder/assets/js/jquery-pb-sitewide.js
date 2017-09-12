@@ -90,6 +90,8 @@ jQuery( function(){
     jQuery( '#wppb-ul-faceted-args').on('change', '#facet-type', function(){
         if( jQuery(this).val() == 'checkboxes' ){
             jQuery( '.row-facet-behaviour, .row-facet-limit', jQuery(this).parent().parent().parent()).show();
+        }else if( jQuery(this).val() == 'select_multiple' ){
+            jQuery( '.row-facet-behaviour, .row-facet-limit', jQuery(this).parent().parent().parent()).show();
         }
         else{
             jQuery( '.row-facet-behaviour, .row-facet-limit', jQuery(this).parent().parent().parent()).hide();

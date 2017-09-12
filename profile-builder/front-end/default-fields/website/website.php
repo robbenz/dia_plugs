@@ -22,7 +22,7 @@ function wppb_website_handler( $output, $form_location, $field, $user_id, $field
 
         $output = '
 			<label for="website">'.$item_title.$error_mark.'</label>
-			<input class="text-input default_field_website" name="website" maxlength="'. apply_filters( 'wppb_maximum_character_length', 70 ) .'" type="text" id="website" value="'.esc_url( wp_unslash( $input_value ) ).'" '. $extra_attr .'/>';
+			<input class="text-input default_field_website '. apply_filters( 'wppb_fields_extra_css_class', '', $field ) .'" name="website" maxlength="'. apply_filters( 'wppb_maximum_character_length', 70 ) .'" type="text" id="website" value="'.esc_url( wp_unslash( $input_value ) ).'" '. $extra_attr .'/>';
         if( !empty( $item_description ) )
             $output .= '<span class="wppb-description-delimiter">'. $item_description .'</span>';
 
