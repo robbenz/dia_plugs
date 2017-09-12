@@ -822,6 +822,100 @@ function woo_ce_extend_product_fields( $fields = array() ) {
 		);
 	}
 
+	// WooCommerce Jetpack - http://woojetpack.com/shop/wordpress-woocommerce-jetpack-plus/
+	if( woo_ce_detect_export_plugin( 'woocommerce_jetpack' ) || woo_ce_detect_export_plugin( 'woocommerce_jetpack_plus' ) ) {
+
+		// @mod - Needs alot of love in 2.4+, JetPack Plus, now Booster is huge
+
+		// Check for Product Cost Price
+		if( get_option( 'wcj_purchase_price_enabled', false ) == 'yes' ) {
+			$fields[] = array(
+				'name' => 'wcj_purchase_price',
+				'label' => __( 'Product cost (purchase) price', 'woocommerce-jetpack' ),
+				'hover' => __( 'WooCommerce Jetpack', 'woocommerce-exporter' ),
+				'disabled' => 1
+			);
+			$fields[] = array(
+				'name' => 'wcj_purchase_price_extra',
+				'label' => __( 'Extra expenses (shipping etc.)', 'woocommerce-jetpack' ),
+				'hover' => __( 'WooCommerce Jetpack', 'woocommerce-exporter' ),
+				'disabled' => 1
+			);
+			$fields[] = array(
+				'name' => 'wcj_purchase_price_affiliate_commission',
+				'label' => __( 'Affiliate commission', 'woocommerce-jetpack' ),
+				'hover' => __( 'WooCommerce Jetpack', 'woocommerce-exporter' ),
+				'disabled' => 1
+			);
+			// @mod - Let's add custom Product Cost Price fields once we get some more Booster modules sorted.
+			$fields[] = array(
+				'name' => 'wcj_purchase_date',
+				'label' => __( '(Last) Purchase date', 'woocommerce-jetpack' ),
+				'hover' => __( 'WooCommerce Jetpack', 'woocommerce-exporter' ),
+				'disabled' => 1
+			);
+			$fields[] = array(
+				'name' => 'wcj_purchase_partner',
+				'label' => __( 'Seller', 'woocommerce-jetpack' ),
+				'hover' => __( 'WooCommerce Jetpack', 'woocommerce-exporter' ),
+				'disabled' => 1
+			);
+			$fields[] = array(
+				'name' => 'wcj_purchase_info',
+				'label' => __( 'Purchase info', 'woocommerce-jetpack' ),
+				'hover' => __( 'WooCommerce Jetpack', 'woocommerce-exporter' ),
+				'disabled' => 1
+			);
+		}
+
+/*
+		// Check if Call for Price is enabled
+		if( get_option( 'wcj_call_for_price_enabled', false ) == 'yes' ) {
+			// Instead of the price
+			$fields[] = array(
+				'name' => 'wcf_price_instead',
+				'label' => __( 'Instead of the ', 'woocommerce-exporter' ),
+				'hover' => __( 'WooCommerce Jetpack', 'woocommerce-exporter' ),
+				'disabled' => 1
+			);
+			// WooCommerce Jetpack Plus fields
+			if( woo_ce_detect_export_plugin( 'woocommerce_jetpack_plus' ) ) {
+				// Do something
+			}
+		}
+*/
+
+	}
+
+	// WooCommerce Ultimate Multi Currency Suite - https://codecanyon.net/item/woocommerce-ultimate-multi-currency-suite/11997014
+	if( woo_ce_detect_export_plugin( 'wc_umcs' ) ) {
+		$currencies = json_decode( get_option( 'wcumcs_available_currencies' ) );
+		if( !empty( $currencies ) ) {
+			$current_currency = ( function_exists( 'get_woocommerce_currency' ) ? get_woocommerce_currency() : false );
+			foreach( $currencies as $currency_code => $currency_data ) {
+				// Skip the base currency
+				if( $currency_code == $current_currency )
+					continue;
+				// Regular Price
+				$fields[] = array(
+					'name' => sprintf( 'wcumcs_regular_price_%s', sanitize_key( $currency_code ) ),
+					'label' => sprintf( __( 'Regular Price (%s)', 'woocommerce-exporter' ), $currency_code ),
+					'hover' => __( 'WooCommerce Ultimate Multi Currency Suite', 'woocommerce-exporter' ),
+					'disabled' => 1
+				);
+				// Sale Price
+				$fields[] = array(
+					'name' => sprintf( 'wcumcs_sale_price_%s', sanitize_key( $currency_code ) ),
+					'label' => sprintf( __( 'Sale Price (%s)', 'woocommerce-exporter' ), $currency_code ),
+					'hover' => __( 'WooCommerce Ultimate Multi Currency Suite', 'woocommerce-exporter' ),
+					'disabled' => 1
+				);
+			}
+			unset( $currency_code, $currency_data, $current_currency );
+		}
+		unset( $currencies );
+	}
+
 	// Products Purchase Price for Woocommerce - https://wordpress.org/plugins/products-purchase-price-for-woocommerce/
 	if( woo_ce_detect_export_plugin( 'wc_products_purchase_price' ) ) {
 		$fields[] = array(
@@ -830,6 +924,22 @@ function woo_ce_extend_product_fields( $fields = array() ) {
 			'hover' => __( 'Products Purchase Price for WooCommerce', 'woocommerce-exporter' ),
 			'disabled' => 1
 		);
+	}
+
+	// WooCommerce Wholesale Prices - https://wordpress.org/plugins/woocommerce-wholesale-prices/
+	if( woo_ce_detect_export_plugin( 'wc_wholesale_prices' ) ) {
+		$wholesale_roles = woo_ce_get_wholesale_prices_roles();
+		if( !empty( $wholesale_roles ) ) {
+			foreach( $wholesale_roles as $key => $wholesale_role ) {
+				$fields[] = array(
+					'name' => sprintf( '%s_wholesale_price', $key ),
+					'label' => sprintf( __( 'Wholesale Price: %s', 'woocommerce-exporter' ), $wholesale_role['roleName'] ),
+					'hover' => __( 'WooCommerce Wholesale Prices', 'woocommerce-exporter' ),
+					'disabled' => 1
+				);
+			}
+		}
+		unset( $wholesale_roles, $wholesale_role, $key );
 	}
 
 	// WooCommerce Currency Switcher - http://dev.pathtoenlightenment.net/shop
@@ -861,6 +971,158 @@ function woo_ce_extend_product_fields( $fields = array() ) {
 			unset( $woocommerce_currency, $currencies, $currency );
 		}
 		unset( $options );
+	}
+
+	// WooCommerce Show Single Variations - https://iconicwp.com/products/woocommerce-show-single-variations/
+	if( woo_ce_detect_export_plugin( 'wc_show_single_variations' ) ) {
+		$fields[] = array(
+			'name' => 'show_search_results',
+			'label' => __( 'Show in Search Results', 'woocommerce-exporter' ),
+			'hover' => __( 'WooCommerce Show Single Variations', 'woocommerce-exporter' ),
+			'disabled' => 1
+		);
+		$fields[] = array(
+			'name' => 'show_filtered_results',
+			'label' => __( 'Show in Filtered Results', 'woocommerce-exporter' ),
+			'hover' => __( 'WooCommerce Show Single Variations', 'woocommerce-exporter' ),
+			'disabled' => 1
+		);
+		$fields[] = array(
+			'name' => 'show_catalog',
+			'label' => __( 'Show in Catalog', 'woocommerce-exporter' ),
+			'hover' => __( 'WooCommerce Show Single Variations', 'woocommerce-exporter' ),
+			'disabled' => 1
+		);
+		$fields[] = array(
+			'name' => 'disable_add_to_cart',
+			'label' => __( 'Disable Add to Cart', 'woocommerce-exporter' ),
+			'hover' => __( 'WooCommerce Show Single Variations', 'woocommerce-exporter' ),
+			'disabled' => 1
+		);
+	}
+
+	// WooCommerce Deposits - https://woocommerce.com/products/woocommerce-deposits/
+	if( woo_ce_detect_export_plugin( 'wc_deposits' ) ) {
+		$fields[] = array(
+			'name' => 'enable_deposit',
+			'label' => __( 'Enable Deposit', 'woocommerce-exporter' ),
+			'hover' => __( 'WooCommerce Deposits', 'woocommerce-exporter' ),
+			'disabled' => 1
+		);
+		$fields[] = array(
+			'name' => 'force_deposit',
+			'label' => __( 'Force Deposit', 'woocommerce-exporter' ),
+			'hover' => __( 'WooCommerce Deposits', 'woocommerce-exporter' ),
+			'disabled' => 1
+		);
+		$fields[] = array(
+			'name' => 'amount_type',
+			'label' => __( 'Deposit Type', 'woocommerce-exporter' ),
+			'hover' => __( 'WooCommerce Deposits', 'woocommerce-exporter' ),
+			'disabled' => 1
+		);
+		$fields[] = array(
+			'name' => 'deposit_amount',
+			'label' => __( 'Deposit Amount', 'woocommerce-exporter' ),
+			'hover' => __( 'WooCommerce Deposits', 'woocommerce-exporter' ),
+			'disabled' => 1
+		);
+	}
+
+	// WooCommerce Unit of Measure - https://wordpress.org/plugins/woocommerce-unit-of-measure/
+	if( woo_ce_detect_export_plugin( 'wc_unitofmeasure' ) ) {
+		$fields[] = array(
+			'name' => 'unit_of_measure',
+			'label' => __( 'Unit of Measure', 'woocommerce-exporter' ),
+			'hover' => __( 'WooCommerce Unit of Measure', 'woocommerce-exporter' ),
+			'disabled' => 1
+		);
+	}
+
+	// WooCommerce Easy Bookings - https://wordpress.org/plugins/woocommerce-easy-booking-system/
+	if( woo_ce_detect_export_plugin( 'wc_easybooking' ) ) {
+		$fields[] = array(
+			'name' => 'bookable',
+			'label' => __( 'Bookable', 'woocommerce-exporter' ),
+			'hover' => __( 'WooCommerce Easy Bookings', 'woocommerce-exporter' ),
+			'disabled' => 1
+		);
+		$fields[] = array(
+			'name' => 'booking_dates',
+			'label' => __( 'Number of Dates to Select', 'woocommerce-exporter' ),
+			'hover' => __( 'WooCommerce Easy Bookings', 'woocommerce-exporter' ),
+			'disabled' => 1
+		);
+		$fields[] = array(
+			'name' => 'booking_duration',
+			'label' => __( 'Booking Duration', 'woocommerce-exporter' ),
+			'hover' => __( 'WooCommerce Easy Bookings', 'woocommerce-exporter' ),
+			'disabled' => 1
+		);
+		$fields[] = array(
+			'name' => 'booking_min',
+			'label' => __( 'Minimum Booking Duration', 'woocommerce-exporter' ),
+			'hover' => __( 'WooCommerce Easy Bookings', 'woocommerce-exporter' ),
+			'disabled' => 1
+		);
+		$fields[] = array(
+			'name' => 'booking_max',
+			'label' => __( 'Maximum Booking Duration', 'woocommerce-exporter' ),
+			'hover' => __( 'WooCommerce Easy Bookings', 'woocommerce-exporter' ),
+			'disabled' => 1
+		);
+		$fields[] = array(
+			'name' => 'first_available_date',
+			'label' => __( 'First Available Date', 'woocommerce-exporter' ),
+			'hover' => __( 'WooCommerce Easy Bookings', 'woocommerce-exporter' ),
+			'disabled' => 1
+		);
+	}
+
+	// WooCommerce Advanced Product Quantities - http://www.wpbackoffice.com/plugins/woocommerce-incremental-product-quantities/
+	if( woo_ce_detect_export_plugin( 'wc_advanced_quantities' ) ) {
+		$fields[] = array(
+			'name' => 'deactivate_quantity_rules',
+			'label' => __( 'De-activate Quantity Rules', 'woocommerce-exporter' ),
+			'hover' => __( 'WooCommerce Advanced Product Quantities', 'woocommerce-exporter' ),
+			'disabled' => 1
+		);
+		$fields[] = array(
+			'name' => 'override_quantity_rules',
+			'label' => __( 'Override Quantity Rules', 'woocommerce-exporter' ),
+			'hover' => __( 'WooCommerce Advanced Product Quantities', 'woocommerce-exporter' ),
+			'disabled' => 1
+		);
+		$fields[] = array(
+			'name' => 'step_value',
+			'label' => __( 'Step Value', 'woocommerce-exporter' ),
+			'hover' => __( 'WooCommerce Advanced Product Quantities', 'woocommerce-exporter' ),
+			'disabled' => 1
+		);
+		$fields[] = array(
+			'name' => 'minimum_quantity',
+			'label' => __( 'Minimum Quantity', 'woocommerce-exporter' ),
+			'hover' => __( 'WooCommerce Advanced Product Quantities', 'woocommerce-exporter' ),
+			'disabled' => 1
+		);
+		$fields[] = array(
+			'name' => 'maximum_quantity',
+			'label' => __( 'Maximum Quantity', 'woocommerce-exporter' ),
+			'hover' => __( 'WooCommerce Advanced Product Quantities', 'woocommerce-exporter' ),
+			'disabled' => 1
+		);
+		$fields[] = array(
+			'name' => 'oos_minimum',
+			'label' => __( 'Out of Stock Minimum', 'woocommerce-exporter' ),
+			'hover' => __( 'WooCommerce Advanced Product Quantities', 'woocommerce-exporter' ),
+			'disabled' => 1
+		);
+		$fields[] = array(
+			'name' => 'oos_maximum',
+			'label' => __( 'Out of Stock Maximum', 'woocommerce-exporter' ),
+			'hover' => __( 'WooCommerce Advanced Product Quantities', 'woocommerce-exporter' ),
+			'disabled' => 1
+		);
 	}
 
 	// Custom Product meta
@@ -1023,6 +1285,19 @@ function woo_ce_format_wpseo_follow( $follow = '' ) {
 
 		}
 	}
+	return $output;
+
+}
+
+// WooCommerce Wholesale Prices - https://wordpress.org/plugins/woocommerce-wholesale-prices/
+function woo_ce_get_wholesale_prices_roles() {
+
+	$output = false;
+	$option_name = ( defined( 'WWP_OPTIONS_REGISTERED_CUSTOM_ROLES' ) ? WWP_OPTIONS_REGISTERED_CUSTOM_ROLES : 'wwp_options_registered_custom_roles' );
+	$wholesale_roles = unserialize( get_option( $option_name ) );
+	if( is_array( $wholesale_roles ) )
+		$output = $wholesale_roles;
+	unset( $wholesale_roles );
 	return $output;
 
 }

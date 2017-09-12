@@ -1,11 +1,12 @@
-=== WooCommerce Print Invoice & Delivery Note ===
+	=== WooCommerce Print Invoice & Delivery Note ===
 
-Contributors: piffpaffpuff
-Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=K2JKYEASQBBSQ&lc=US&item_name=WooCommerce%20Print%20Invoice%20%26%20Delivery%20Note&item_number=WCDN&amount=20%2e00&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHostedGuest
+Contributors: ashokrane, bhavik.kiri, tychesoftwares, chabis
+Donate link: https://www.paypal.me/TycheSoftwares
 Tags: delivery note, packing slip, invoice, delivery, shipping, print, order, woocommerce, woothemes, shop
 Requires at least: 4.0
-Tested up to: 4.2
-Stable tag: trunk
+Tested up to: 4.8.1
+Author URI: https://www.tychesoftwares.com/
+Stable tag: 4.3.2
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -13,9 +14,13 @@ Print invoices and delivery notes for WooCommerce orders.
 
 == Description ==
 
-You can print out invoices and delivery notes for the [WooCommerce](http://wordpress.org/plugins/woocommerce/) orders. You can also edit the Company/Shop name, Company/Shop postal address and also add personal notes, conditions/policies (like a refund policy) and a footer imprint.
+= Announcement: TYCHE SOFTWARES TEAM HAS TAKEN OVER THE OWNERSHIP & DEVELOPMENT OF THIS PLUGIN. THE ORIGINAL AUTHOR OF THIS PLUGIN IS TRIGGVY GUNDERSON. =
+
+
+You can print out invoices and delivery notes for the WooCommerce orders. You can also edit the Company/Shop name, Company/Shop postal address and also add personal notes, conditions/policies (like a refund policy) and a footer imprint.
 
 The plugin adds a new side panel on the order page to allow shop administrators to print out the invoice or delivery note. Registered customers can also print their order with a button that is added to the order screen.
+
 
 = Features =
 
@@ -37,11 +42,48 @@ Support can take place in the [public support forums](http://wordpress.org/suppo
 
 = Contributing =
 
-If you have a patch, or stumbled upon an issue with the source code that isn't a [WooCommerce issue](https://github.com/woothemes/woocommerce/issues?labels=Bug&milestone=22&state=open), you can contribute this back [on GitHub](https://github.com/piffpaffpuff/woocommerce-delivery-notes).
+If you have a patch, or stumbled upon an issue with the source code that isn't a [WooCommerce issue](https://github.com/woothemes/woocommerce/issues?labels=Bug&milestone=22&state=open), you can contribute this back [on GitHub](https://github.com/TycheSoftwares/woocommerce-delivery-notes).
 
 = Translating =
 
-When your language is missing you can contribute a translation to the [GitHub repository](https://github.com/piffpaffpuff/woocommerce-delivery-notes#translating).
+When your language is missing you can contribute a translation to the [GitHub repository](https://github.com/TycheSoftwares/woocommerce-delivery-notes#translating).
+
+**Some of our Pro plugins:**
+
+1. **[Abandoned Cart Pro for WooCommerce](https://www.tychesoftwares.com/store/premium-plugins/woocommerce-abandoned-cart-pro/?utm_source=wprepo&utm_medium=otherprolink&utm_campaign=WCDeliveryNotes "Abandoned Cart Pro for WooCommerce")**
+
+2. **[Booking & Appointment Plugin for WooCommerce](https://www.tychesoftwares.com/store/premium-plugins/woocommerce-booking-plugin/?utm_source=wprepo&utm_medium=link&utm_campaign=WCDeliveryNotes "Booking & Appointment Plugin for WooCommerce")**
+
+3. **[Order Delivery Date Pro for WooCommerce](https://www.tychesoftwares.com/store/premium-plugins/order-delivery-date-for-woocommerce-pro-21/?utm_source=wprepo&utm_medium=link&utm_campaign=WCDeliveryNotes "Order Delivery Date Pro for WooCommerce")**
+
+4. **[Product Delivery Date Pro for WooCommerce](https://www.tychesoftwares.com/store/premium-plugins/product-delivery-date-pro-for-woocommerce/?utm_source=wprepo&utm_medium=link&utm_campaign=WCDeliveryNotes "Product Delivery Date Pro for WooCommerce")**
+
+
+**Some of our other free plugins:**
+
+1. **[Order Delivery Date for WooCommerce - Lite](https://wordpress.org/plugins/order-delivery-date-for-woocommerce/ "Order Delivery Date for WooCommerce - Lite")**
+
+2. **[Abandoned Cart for WooCommerce](https://wordpress.org/plugins/woocommerce-abandoned-cart/ "Abandoned Cart for WooCommerce")**
+
+3. **[Product Delivery Date for WooCommerce – Lite](https://wordpress.org/plugins/product-delivery-date-for-woocommerce-lite/ "Product Delivery Date for WooCommerce – Lite")**
+
+4. **[Order Delivery Date for WP e-Commerce](https://wordpress.org/plugins/order-delivery-date/ "Order Delivery Date for WP e-Commerce")**
+
+5. **[Prevent Customers To Cancel WooCommerce Orders](https://wordpress.org/plugins/woo-prevent-cancel-order/ "Prevent Customers To Cancel WooCommerce Orders")**
+
+6. **[WooCommerce Coupons by Categories and Tags](https://wordpress.org/plugins/woo-coupons-by-categories-and-tags/ "WooCommerce Coupons by Categories and Tags")**
+
+7. **[Arconix FAQ](https://wordpress.org/plugins/arconix-faq/ "Arconix FAQ")**
+
+8. **[Arconix Shortcodes](https://wordpress.org/plugins/arconix-shortcodes/ "Arconix Shortcodes")**
+
+9. **[Arconix Flexslider](https://wordpress.org/plugins/arconix-flexslider/ "Arconix Flexslider")**
+
+10. **[Arconix Portfolio](https://wordpress.org/plugins/arconix-portfolio/ "Arconix Portfolio")**
+
+11. **[Arconix Testimonials](https://wordpress.org/plugins/arconix-testimonials/ "Arconix Testimonials")**
+
+12. **[Export WordPress Menus](https://wordpress.org/plugins/wp-export-menus/ "Export WordPress Menus")**
 
 == Installation ==
 
@@ -89,8 +131,8 @@ An example that changes the font and makes the addresses very large. Paste the c
 `
 function example_serif_font_and_large_address() {
 	?>
-		<style>
-			#page {
+		<style>	
+			`#page {
 				font-size: 1em;
 				font-family: Georgia, serif;
 			}
@@ -101,7 +143,7 @@ function example_serif_font_and_large_address() {
 			}
 		</style>
 	<?php
-}
+`}
 add_action( 'wcdn_head', 'example_serif_font_and_large_address', 20 );
 `
 
@@ -273,7 +315,7 @@ The plugin uses the exact same content as WooCommerce. If the content isn't avai
 
 Upload your language file to `/wp-content/languages/plugins/` (create this folder if it doesn't exist). WordPress will then load the language. Make sure you use the same locale as in your configuration and the correct plugin locale i.e. `woocommerce-delivery-notes-it_IT.mo/.po`. 
 
-Please [contribute your translation](https://github.com/piffpaffpuff/woocommerce-delivery-notes#translating) to include it in the distribution.
+Please [contribute your translation](https://github.com/TycheSoftwares/woocommerce-delivery-notes#translating) to include it in the distribution.
 
 == Screenshots ==
 
@@ -288,6 +330,38 @@ Please [contribute your translation](https://github.com/piffpaffpuff/woocommerce
 
 = Minimum Requirements: WooCommerce 2.2 =
 
+= 4.3.2 (05.09.2017) =
+
+* In this version deprecated functions and classes have been removed. Because of that attributes were missing and attribute slug was getting printed on Invoice page. This has been fixed.
+
+* Fix - There was no line break before SKU element for variable products on Invoice page. This has been fixed.
+
+* Fix - The deprecated function WC_Order::get_order_currency has been removed and replaced with get_currency().
+
+= 4.3.1 (23.08.2017) =
+
+* This version has 1 bug fix.
+
+* Fix - The attributes of variable product were not displayed with the variation name in the Print screen. This has been fixed.
+
+= 4.3 (19.08.2017) =
+
+* This version has 1 bug fix.
+
+* Fix - Warnings were displayed on My Account, Checkout, Orders page with WooCommerce version 3.0.x. This has been fixed.
+
+= 4.2.0 =
+
+* Tweak - Refactored settings screen
+* Fix - Compatibility with latest WooCommerce
+* Fix - Print preview loading indicators
+* Fix - Icon font embed
+* Dev - Load only one instance of the plugin (singleton class)
+* Dev - New settings hooks that work better with WooCommerce
+
+= 4.1.6 =
+
+* Fix - More flexible protocol checks of email permalinks
 
 = 4.1.5 =
 
@@ -422,6 +496,10 @@ Please [contribute your translation](https://github.com/piffpaffpuff/woocommerce
 * New template structure and action hooks
 
 == Upgrade Notice ==
+
+= 4.2.0 =
+
+4.2.0 requires at least WooCommerce 2.2.
 
 = 4.1.5 =
 

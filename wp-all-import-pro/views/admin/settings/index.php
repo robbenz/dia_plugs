@@ -25,7 +25,7 @@
 				<tr>
 					<th scope="row"><label><?php _e('License Key', 'wp_all_import_plugin'); ?></label></th>
 					<td>
-						<input type="text" class="regular-text" name="licenses[<?php echo $class; ?>]" value="<?php if (!empty($post['licenses'][$class])) esc_attr_e( $post['licenses'][$class] ); ?>"/>
+						<input type="password" class="regular-text" name="licenses[<?php echo $class; ?>]" value="<?php if (!empty($post['licenses'][$class])) esc_attr_e( PMXI_Plugin::decode($post['licenses'][$class]) ); ?>"/>
 						<?php if( ! empty($post['licenses'][$class]) ) { ?>
 
 							<?php if( ! empty($post['statuses'][$class]) && $post['statuses'][$class] == 'valid' ) { ?>
@@ -252,7 +252,7 @@
 				<tr>
 					<th scope="row"><label><?php _e('License Key', 'wp_all_import_plugin'); ?></label></th>
 					<td>
-						<input type="text" class="regular-text" name="licenses[<?php echo $class; ?>]" value="<?php if (!empty($post['licenses'][$class])) esc_attr_e( $post['licenses'][$class] ); ?>"/>
+						<input type="password" class="regular-text" name="licenses[<?php echo $class; ?>]" value="<?php if (!empty($post['licenses'][$class])) esc_attr_e( PMXI_Plugin::decode($post['licenses'][$class]) ); ?>"/>
 						<?php if( ! empty($post['licenses'][$class]) ) { ?>
 
 							<?php if( ! empty($post['statuses'][$class]) && $post['statuses'][$class] == 'valid' ) { ?>

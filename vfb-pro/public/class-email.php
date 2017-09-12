@@ -82,6 +82,15 @@ class VFB_Pro_Email {
 		// Save Entry ID to pass to phpmailer()
 		$this->entry_id = $entry_id;
 
+
+		/**
+		 * Filter for email settings
+		 *
+		 * @var string
+		 * @access public
+		 */
+		$email_settings = apply_filters( 'vfbp_email_settings', $email_settings, $entry_id, $form_id );
+
 		// Main Email
 		$this->notification( $email_settings, $vfb_settings, $entry_id, $form_id );
 

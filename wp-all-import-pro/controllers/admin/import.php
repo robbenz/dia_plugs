@@ -1952,10 +1952,7 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 
 							$filesXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<data><node></node></data>";
 
-							if ( strpos($filePath, "dropbox") !== false && preg_match('%\W(dl=0)$%i', $filePath) )
-							{
-								$filePath = str_replace("?dl=0", "?dl=1", $filePath);
-							}
+                            $filePath = apply_filters('wp_all_import_feed_url', wp_all_import_sanitize_url($filePath));
 
 							$filePaths = XmlImportParser::factory($filesXML, '/data/node', $filePath, $file)->parse(); $tmp_files[] = $file;	
 
@@ -2168,10 +2165,9 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 							break;
 						case 'url':
 							$filePath = $this->input->post('url');
-							if ( strpos($filePath, "dropbox") !== false && preg_match('%\W(dl=0)$%i', $filePath) )
-							{
-								$filePath = str_replace("?dl=0", "?dl=1", $filePath);
-							}
+
+                            $filePath = apply_filters('wp_all_import_feed_url', wp_all_import_sanitize_url($filePath));
+
 							$source = array(
 								'name' => basename(parse_url($filePath, PHP_URL_PATH)),
 								'type' => 'url',
@@ -2297,6 +2293,8 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
                         }
                     }
                 }
+
+                $this->data['existing_meta_keys'] = apply_filters('wp_all_import_existing_meta_keys', $this->data['existing_meta_keys'], $post['custom_type']);
 
                 // Get existing product attributes
                 $existing_attributes = $wpdb->get_results("SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = '_product_attributes' LIMIT 0 , 50" );
@@ -2630,8 +2628,9 @@ class PMXI_Admin_Import extends PMXI_Controller_Admin {
 			$pointer = 0;			
 			$records = array();
 
-			if ($import->options['is_import_specified']) {								
-				foreach (preg_split('% *, *%', $import->options['import_specified'], -1, PREG_SPLIT_NO_EMPTY) as $chank) {
+			if ($import->options['is_import_specified']) {
+                $import_specified_option = apply_filters('wp_all_import_specified_records', $import->options['import_specified'], $import->id, false);
+				foreach (preg_split('% *, *%', $import_specified_option, -1, PREG_SPLIT_NO_EMPTY) as $chank) {
 					if (preg_match('%^(\d+)-(\d+)$%', $chank, $mtch)) {
 						$records = array_merge($records, range(intval($mtch[1]), intval($mtch[2])));
 					} else {

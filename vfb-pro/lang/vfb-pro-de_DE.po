@@ -2,13 +2,57 @@
 # This file is distributed under the same license as the VFB Pro package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2016-12-02 10:52:31+0000\n"
+"PO-Revision-Date: 2017-01-31 05:43:23+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: GlotPress/1.0-alpha-1000\n"
 "Project-Id-Version: VFB Pro\n"
+
+#: admin/class-forms-edit-settings.php:120
+msgid "CSRF Protection"
+msgstr "CSRF Schutz"
+
+#: admin/class-forms-edit-settings.php:126
+msgid "Protects your forms from CSRF (Cross-Site Request Forgery) attacks."
+msgstr "Schützt Ihre Formulare vor CSRF Attacken (Cross-Site Request Forgery, Website-übergreifende Anfragenfälschungen)."
+
+#: admin/class-forms-edit-settings.php:129
+msgid "Your server is required have PHP Sessions enabled and properly configured for this setting to function correctly."
+msgstr "Ihr Server benötigt die aktivierte und richtig konfigurierte Einstellung für PHP Sessions damit diese Einstellung funktioniert."
+
+#: inc/class-csrf.php:40
+msgid "PHP Sessions are disabled. This server has not configured PHP sessions correctly. Please contact your hosting provider."
+msgstr "PHP Sessions nicht aktiviert. Ihr Server wurde nicht für PHP Sessions aktiviert. Bitte kontaktieren Sie Ihren Hosting Provider."
+
+#: inc/class-csrf.php:47
+msgid "Missing CSRF session token. The session that has generated this token has already been used and is not available. Please reload the page and submit a new form."
+msgstr "Fehlendes CSRF Session Token. Das generierte Session Token wurde bereits genutzt und ist nicht mehr verfügbar. Bitte laden Sie die Seite neu und senden das Formular erneut ab."
+
+#: inc/class-csrf.php:54
+msgid "Missing CSRF form token. A hidden form field with a special token is supposed to be present but cannot be found."
+msgstr "Fehlendes CSRF Session Token. Ein verborgenes Formularfeld mit einem speziellen Token wird erwartet konnte aber nicht gefunden werden."
+
+#: inc/class-csrf.php:70
+msgid "Form origin does not match token origin. This form submission appears to be taking place from a different site, which typically indicates spammer activity."
+msgstr "Formular und Original Token stimmen nicht überein. Das Absenden des Formulars scheint von einer anderen Seite her ausgeführt worden zu sein und deutet auf Spam-Aktivitäten hin."
+
+#: inc/class-csrf.php:78
+msgid "Invalid CSRF token. The session token does not match the form token."
+msgstr "Fehlendes CSRF Session Token. Das Session Token stimmt nicht mit dem Formular Token überein."
+
+#: inc/class-csrf.php:86
+msgid "CSRF token has expired. The timespan allotted to complete this form has passed. Please try again in a more timely fashion."
+msgstr "Abgelaufenes CSRF Session Token. Die Zeitspanne zum Ausfüllen des Formulars wurde überschritten. Bitte versuchen Sie das Formular in kürzerer Zeit erneut auszufüllen."
+
+#: public/class-security.php:72
+msgid "Security check: reCaptcha verification has been tampered with. If you think this is an error, please email the site owner."
+msgstr "Sicherheitsüberprüfung: reCaptcha Prüfung wurde manipuliert. Falls Sie meinen dies sein ein Fehler kontaktieren Sie bitte den Seiteninhaber."
+
+#: public/class-security.php:75
+msgid "Security check: reCaptcha verification expects a response and did not see one. Please submit the form again. If you think this is an error, please email the site owner."
+msgstr "Sicherheitsüberprüfung: die reCaptcha Prüfung erwartet eine Eingabe die nicht erfolgte. Bitte senden Sie das Formular erneut ab. Falls Sie meinen dies sein ein Fehler kontaktieren Sie bitte den Seiteninhaber."
 
 #: admin/class-fields-settings.php:262
 msgid "1 (smallest)"
@@ -42,11 +86,11 @@ msgstr "1 / Monate"
 msgid "2 / years"
 msgstr "2 / Jahre"
 
-#: admin/class-forms-edit-settings.php:119
+#: admin/class-forms-edit-settings.php:135
 msgid "onSubmit attribute"
 msgstr "onSubmit Attribut"
 
-#: admin/class-forms-edit-settings.php:123
+#: admin/class-forms-edit-settings.php:139
 msgid "The onSubmit form attribute will allow you to run a script action, such as recording a hit with Google Analytics, when the form is submitted."
 msgstr "Das onSubmit Attribut erlaubt es beim Absenden eines Formulars eine Script-Aktion ausführen zu können, dies kann zum Beispiel das verzeichnen eines Klicks über Google Analytics sein."
 
@@ -118,7 +162,7 @@ msgstr "Nächste Seite"
 msgid "Last page"
 msgstr "Letzte Seite"
 
-#: public/class-form-display.php:2433
+#: public/class-form-display.php:2451
 msgid "Reset Signature"
 msgstr "Unterschrift zurücksetzen"
 
@@ -1200,7 +1244,7 @@ msgstr "Über die Optionsspalten"
 msgid "Control the layout of Radio or Checkbox options. By default, options are arranged in a single column."
 msgstr "Erlaubt die Kontrolle des Layouts für Radio oder Check-Boxen. Standardmäßig werden diese in einer einzelnen Spalte (Vertikal) arrangiert, Inline arrangiert diese Horizontal an."
 
-#: admin/class-fields-settings.php:299 admin/class-forms-edit-settings.php:96
+#: admin/class-fields-settings.php:299 admin/class-forms-edit-settings.php:97
 msgid "Vertical"
 msgstr "Vertikal"
 
@@ -2994,104 +3038,104 @@ msgstr "Felder Benutzer erstellen"
 msgid "Create Post fields"
 msgstr "Felder Beitrag erstellen"
 
-#: admin/class-forms-edit-settings.php:64 admin/class-forms-new.php:29
+#: admin/class-forms-edit-settings.php:65 admin/class-forms-new.php:29
 msgid "General Form Settings"
 msgstr "Allgemeine Formular Einstellungen"
 
-#: admin/class-forms-edit-settings.php:70
+#: admin/class-forms-edit-settings.php:71
 msgid "Form Name"
 msgstr "Formular Name"
 
-#: admin/class-forms-edit-settings.php:79 admin/class-forms-new.php:48
+#: admin/class-forms-edit-settings.php:80 admin/class-forms-new.php:48
 msgid "Form Status"
 msgstr "Formularstatus"
 
-#: admin/class-forms-edit-settings.php:83 admin/class-forms-new.php:52
+#: admin/class-forms-edit-settings.php:84 admin/class-forms-new.php:52
 msgid "Published"
 msgstr "Veröffentlicht"
 
-#: admin/class-forms-edit-settings.php:84 admin/class-forms-list.php:99
+#: admin/class-forms-edit-settings.php:85 admin/class-forms-list.php:99
 #: admin/class-forms-new.php:53
 msgid "Draft"
 msgstr "Entwurf"
 
-#: admin/class-forms-edit-settings.php:86
+#: admin/class-forms-edit-settings.php:87
 msgid "Change the status from Published to Draft to prevent form output without removing the shortcode."
 msgstr "Ändern Sie den Status von Veröffentlicht zu Entwurf, um das Formular zu deaktivieren, ohne den Shortcode entfernen zu müssen."
 
-#: admin/class-forms-edit-settings.php:92
+#: admin/class-forms-edit-settings.php:93
 msgid "Label Alignment"
 msgstr "Beschriftungsausrichtung"
 
-#: admin/class-forms-edit-settings.php:97
+#: admin/class-forms-edit-settings.php:98
 msgid "Horizontal"
 msgstr "Horizontal"
 
-#: admin/class-forms-edit-settings.php:99
+#: admin/class-forms-edit-settings.php:100
 msgid "Align labels either on top of the inputs or off to the side."
 msgstr "Feldbeschriftungen Horizontal (seitlich) oder Vertikal (über) den Eingabefeldern platzieren."
 
-#: admin/class-forms-edit-settings.php:105
+#: admin/class-forms-edit-settings.php:106
 msgid "Save Form State"
 msgstr "Formular Zustand speichern"
 
-#: admin/class-forms-edit-settings.php:111
+#: admin/class-forms-edit-settings.php:112
 msgid "Saves data entered inside form fields locally and restores it in case the page is refreshed accidentally."
 msgstr "Speichert den aktuellen Zustand der Formularfelder und stellt diese wieder her sollte die Seite aus versehen neu geladen werden."
 
-#: admin/class-forms-edit-settings.php:133
+#: admin/class-forms-edit-settings.php:149
 msgid "Submission Limits"
 msgstr "Formular Nutzung Limitieren"
 
-#: admin/class-forms-edit-settings.php:139
+#: admin/class-forms-edit-settings.php:155
 msgid "Limit Entries"
 msgstr "Anzahl an Einreichungen"
 
-#: admin/class-forms-edit-settings.php:143
+#: admin/class-forms-edit-settings.php:159
 msgid "Set the total number of entries you want your form to accept. Leave this blank if you want unlimited entries."
 msgstr "Legen Sie die Anzahl an Einträgen fest, die Ihr Formular akzeptieren soll. Lassen Sie dieses Feld leer, wenn Sie unbegrenzte Einträge wollen."
 
-#: admin/class-forms-edit-settings.php:149
+#: admin/class-forms-edit-settings.php:165
 msgid "Limit Message"
 msgstr "Nachricht bei Erreichen der Anzahl"
 
-#: admin/class-forms-edit-settings.php:158
+#: admin/class-forms-edit-settings.php:174
 msgid "Expiration Date"
 msgstr "Ablaufdatum"
 
-#: admin/class-forms-edit-settings.php:162
+#: admin/class-forms-edit-settings.php:178
 msgid "Set a date and time to deactivate your form. Leave this blank if you want your form to always be active."
 msgstr "Legen Sie ein Datum und eine Uhrzeit fest an dem das Formular deaktiviert werden soll. Lassen Sie dieses Feld leer, wenn Ihr Formular nicht ablaufen soll."
 
-#: admin/class-forms-edit-settings.php:168
+#: admin/class-forms-edit-settings.php:184
 msgid "Expiration Message"
 msgstr "Nachricht bei Erreichen des Ablaufdatum"
 
-#: admin/class-forms-edit-settings.php:181
+#: admin/class-forms-edit-settings.php:197
 msgid "Page Break Options"
 msgstr "Seitentrenner Optionen"
 
-#: admin/class-forms-edit-settings.php:187
+#: admin/class-forms-edit-settings.php:203
 msgid "Hide Page Titles"
 msgstr "Seitentitel verbergen"
 
-#: admin/class-forms-edit-settings.php:194
+#: admin/class-forms-edit-settings.php:210
 msgid "Hides the Page Break titles."
 msgstr "Seitentrenner Titel verbergen."
 
-#: admin/class-forms-edit-settings.php:202
+#: admin/class-forms-edit-settings.php:218
 msgid "Prevent Page Title Clicks"
 msgstr "Seitentitel anklickbar"
 
-#: admin/class-forms-edit-settings.php:209
+#: admin/class-forms-edit-settings.php:225
 msgid "Prevents user from clicking on Page Break titles to advance the page."
 msgstr "Verhindert, das durch einen Klick auf den Seitentrenner Titel, auf die jeweilige Seite gewechselt werden kann."
 
-#: admin/class-forms-edit-settings.php:217
+#: admin/class-forms-edit-settings.php:233
 msgid "Hide Page Numbers"
 msgstr "Seitenzahlen verbergen"
 
-#: admin/class-forms-edit-settings.php:224
+#: admin/class-forms-edit-settings.php:240
 msgid "Hides the Page Break numbers."
 msgstr "Seitentrenner Zahlen verbergen."
 
@@ -3955,248 +3999,248 @@ msgstr "Übergeordnete Einträge:"
 msgid "No entries found in Trash."
 msgstr "Keine Einträge im Papierkorb gefunden."
 
-#: inc/class-form-builder.php:307
+#: inc/class-form-builder.php:326
 msgid "If you are human, leave this field blank."
 msgstr "Wenn Sie ein Mensch sind, lassen Sie dieses Feld leer."
 
-#: inc/class-form-builder.php:698
+#: inc/class-form-builder.php:717
 msgid "Alabama"
 msgstr "Alabama"
 
-#: inc/class-form-builder.php:699
+#: inc/class-form-builder.php:718
 msgid "Alaska"
 msgstr "Alaska"
 
-#: inc/class-form-builder.php:700
+#: inc/class-form-builder.php:719
 msgid "Arizona"
 msgstr "Arizona"
 
-#: inc/class-form-builder.php:701
+#: inc/class-form-builder.php:720
 msgid "Arkansas"
 msgstr "Arkansas"
 
-#: inc/class-form-builder.php:702
+#: inc/class-form-builder.php:721
 msgid "California"
 msgstr "Kalifornien"
 
-#: inc/class-form-builder.php:703
+#: inc/class-form-builder.php:722
 msgid "Colorado"
 msgstr "Colorado"
 
-#: inc/class-form-builder.php:704
+#: inc/class-form-builder.php:723
 msgid "Connecticut"
 msgstr "Connecticut"
 
-#: inc/class-form-builder.php:705
+#: inc/class-form-builder.php:724
 msgid "Delaware"
 msgstr "Delaware"
 
-#: inc/class-form-builder.php:706
+#: inc/class-form-builder.php:725
 msgid "District Of Columbia"
 msgstr "District of Columbia"
 
-#: inc/class-form-builder.php:707
+#: inc/class-form-builder.php:726
 msgid "Florida"
 msgstr "Florida"
 
-#: inc/class-form-builder.php:708
+#: inc/class-form-builder.php:727
 msgctxt "US state of Georgia"
 msgid "Georgia"
 msgstr "Georgia (Georgia)"
 
-#: inc/class-form-builder.php:709
+#: inc/class-form-builder.php:728
 msgid "Hawaii"
 msgstr "Hawaii"
 
-#: inc/class-form-builder.php:710
+#: inc/class-form-builder.php:729
 msgid "Idaho"
 msgstr "Idaho"
 
-#: inc/class-form-builder.php:711
+#: inc/class-form-builder.php:730
 msgid "Illinois"
 msgstr "Illinois"
 
-#: inc/class-form-builder.php:712
+#: inc/class-form-builder.php:731
 msgid "Indiana"
 msgstr "Indiana"
 
-#: inc/class-form-builder.php:713
+#: inc/class-form-builder.php:732
 msgid "Iowa"
 msgstr "Iowa"
 
-#: inc/class-form-builder.php:714
+#: inc/class-form-builder.php:733
 msgid "Kansas"
 msgstr "Kansas"
 
-#: inc/class-form-builder.php:715
+#: inc/class-form-builder.php:734
 msgid "Kentucky"
 msgstr "Kentucky"
 
-#: inc/class-form-builder.php:716
+#: inc/class-form-builder.php:735
 msgid "Louisiana"
 msgstr "Louisiana"
 
-#: inc/class-form-builder.php:717
+#: inc/class-form-builder.php:736
 msgid "Maine"
 msgstr "Maine"
 
-#: inc/class-form-builder.php:718
+#: inc/class-form-builder.php:737
 msgid "Maryland"
 msgstr "Maryland"
 
-#: inc/class-form-builder.php:719
+#: inc/class-form-builder.php:738
 msgid "Massachusetts"
 msgstr "Massachusetts"
 
-#: inc/class-form-builder.php:720
+#: inc/class-form-builder.php:739
 msgid "Michigan"
 msgstr "Michigan"
 
-#: inc/class-form-builder.php:721
+#: inc/class-form-builder.php:740
 msgid "Minnesota"
 msgstr "Minnesota"
 
-#: inc/class-form-builder.php:722
+#: inc/class-form-builder.php:741
 msgid "Mississippi"
 msgstr "Mississippi"
 
-#: inc/class-form-builder.php:723
+#: inc/class-form-builder.php:742
 msgid "Missouri"
 msgstr "Missouri"
 
-#: inc/class-form-builder.php:724
+#: inc/class-form-builder.php:743
 msgid "Montana"
 msgstr "Montana"
 
-#: inc/class-form-builder.php:725
+#: inc/class-form-builder.php:744
 msgid "Nebraska"
 msgstr "Nebraska"
 
-#: inc/class-form-builder.php:726
+#: inc/class-form-builder.php:745
 msgid "Nevada"
 msgstr "Nevada"
 
-#: inc/class-form-builder.php:727
+#: inc/class-form-builder.php:746
 msgid "New Hampshire"
 msgstr "New Hampshire"
 
-#: inc/class-form-builder.php:728
+#: inc/class-form-builder.php:747
 msgid "New Jersey"
 msgstr "New Jersey"
 
-#: inc/class-form-builder.php:729
+#: inc/class-form-builder.php:748
 msgid "New Mexico"
 msgstr "New Mexico"
 
-#: inc/class-form-builder.php:730
+#: inc/class-form-builder.php:749
 msgid "New York"
 msgstr "New York"
 
-#: inc/class-form-builder.php:731
+#: inc/class-form-builder.php:750
 msgid "North Carolina"
 msgstr "North Carolina"
 
-#: inc/class-form-builder.php:732
+#: inc/class-form-builder.php:751
 msgid "North Dakota"
 msgstr "North Dakota"
 
-#: inc/class-form-builder.php:733
+#: inc/class-form-builder.php:752
 msgid "Ohio"
 msgstr "Ohio"
 
-#: inc/class-form-builder.php:734
+#: inc/class-form-builder.php:753
 msgid "Oklahoma"
 msgstr "Oklahoma"
 
-#: inc/class-form-builder.php:735
+#: inc/class-form-builder.php:754
 msgid "Oregon"
 msgstr "Oregon"
 
-#: inc/class-form-builder.php:736
+#: inc/class-form-builder.php:755
 msgid "Pennsylvania"
 msgstr "Pennsylvania"
 
-#: inc/class-form-builder.php:737
+#: inc/class-form-builder.php:756
 msgid "Rhode Island"
 msgstr "Rhode Island"
 
-#: inc/class-form-builder.php:738
+#: inc/class-form-builder.php:757
 msgid "South Carolina"
 msgstr "South Carolina"
 
-#: inc/class-form-builder.php:739
+#: inc/class-form-builder.php:758
 msgid "South Dakota"
 msgstr "South Dakota"
 
-#: inc/class-form-builder.php:740
+#: inc/class-form-builder.php:759
 msgid "Tennessee"
 msgstr "Tennessee"
 
-#: inc/class-form-builder.php:741
+#: inc/class-form-builder.php:760
 msgid "Texas"
 msgstr "Texas"
 
-#: inc/class-form-builder.php:742
+#: inc/class-form-builder.php:761
 msgid "Utah"
 msgstr "Utah"
 
-#: inc/class-form-builder.php:743
+#: inc/class-form-builder.php:762
 msgid "Vermont"
 msgstr "Vermont"
 
-#: inc/class-form-builder.php:744
+#: inc/class-form-builder.php:763
 msgid "Virginia"
 msgstr "Virginia"
 
-#: inc/class-form-builder.php:745
+#: inc/class-form-builder.php:764
 msgid "Washington"
 msgstr "Washington"
 
-#: inc/class-form-builder.php:746
+#: inc/class-form-builder.php:765
 msgid "West Virginia"
 msgstr "West Virginia"
 
-#: inc/class-form-builder.php:747
+#: inc/class-form-builder.php:766
 msgid "Wisconsin"
 msgstr "Wisconsin"
 
-#: inc/class-form-builder.php:748
+#: inc/class-form-builder.php:767
 msgid "Wyoming"
 msgstr "Wyoming"
 
-#: inc/class-form-builder.php:749
+#: inc/class-form-builder.php:768
 msgid "Armed Forces (AA)"
 msgstr "Streikräfte (AA)"
 
-#: inc/class-form-builder.php:750
+#: inc/class-form-builder.php:769
 msgid "Armed Forces (AE)"
 msgstr "Streikräfte (AE)"
 
-#: inc/class-form-builder.php:751
+#: inc/class-form-builder.php:770
 msgid "Armed Forces (AP)"
 msgstr "Streikräfte (AP)"
 
-#: inc/class-form-builder.php:752 inc/countries.php:33
+#: inc/class-form-builder.php:771 inc/countries.php:33
 msgid "American Samoa"
 msgstr "Amerikanisch-Samoa"
 
-#: inc/class-form-builder.php:753
+#: inc/class-form-builder.php:772
 msgid "Guam"
 msgstr "Guam"
 
-#: inc/class-form-builder.php:754
+#: inc/class-form-builder.php:773
 msgid "Northern Mariana Islands"
 msgstr "Nördliche Marianen"
 
-#: inc/class-form-builder.php:755
+#: inc/class-form-builder.php:774
 msgid "Puerto Rico"
 msgstr "Puerto Rico"
 
-#: inc/class-form-builder.php:756
+#: inc/class-form-builder.php:775
 msgid "US Minor Outlying Islands"
 msgstr "Kleinere Inselbesitzungen der Vereinigten Staaten"
 
-#: inc/class-form-builder.php:757
+#: inc/class-form-builder.php:776
 msgid "US Virgin Islands"
 msgstr "Amerikanische Jungferninseln"
 
@@ -5253,115 +5297,115 @@ msgstr "Sambia"
 msgid "Zimbabwe"
 msgstr "Simbabwe"
 
-#: public/class-form-display.php:630
+#: public/class-form-display.php:648
 msgid "Previous"
 msgstr "zurück"
 
-#: public/class-form-display.php:631
+#: public/class-form-display.php:649
 msgid "Next"
 msgstr "weiter"
 
-#: public/class-form-display.php:1030
+#: public/class-form-display.php:1048
 msgid "Street Address"
 msgstr "Straße"
 
-#: public/class-form-display.php:1031
+#: public/class-form-display.php:1049
 msgid "Apt, suite, etc."
 msgstr "Adresszusatz, Apartment, Suite, etc."
 
-#: public/class-form-display.php:1032
+#: public/class-form-display.php:1050
 msgid "Country"
 msgstr "Land"
 
-#: public/class-form-display.php:1033
+#: public/class-form-display.php:1051
 msgid "City"
 msgstr "Stadt"
 
-#: public/class-form-display.php:1034
+#: public/class-form-display.php:1052
 msgid "State"
 msgstr "Provinz"
 
-#: public/class-form-display.php:1035
+#: public/class-form-display.php:1053
 msgid "Zip code"
 msgstr "Postleitzahl"
 
-#: public/class-form-display.php:1378
+#: public/class-form-display.php:1396
 msgid "Done"
 msgstr "Fertig"
 
-#: public/class-form-display.php:1539
+#: public/class-form-display.php:1557
 msgid "Browse"
 msgstr "Durchsuchen"
 
-#: public/class-form-display.php:1540
+#: public/class-form-display.php:1558
 msgid "Remove"
 msgstr "Entfernen"
 
-#: public/class-form-display.php:1541
+#: public/class-form-display.php:1559
 msgid "Upload"
 msgstr "Hochladen"
 
-#: public/class-form-display.php:1691
+#: public/class-form-display.php:1709
 msgid "Too Short"
 msgstr "zu kurz"
 
-#: public/class-form-display.php:1692
+#: public/class-form-display.php:1710
 msgid "Very Weak"
 msgstr "sehr schwach"
 
-#: public/class-form-display.php:1693
+#: public/class-form-display.php:1711
 msgid "Weak"
 msgstr "schwach"
 
-#: public/class-form-display.php:1694
+#: public/class-form-display.php:1712
 msgid "Medium"
 msgstr "mittel"
 
-#: public/class-form-display.php:1695
+#: public/class-form-display.php:1713
 msgid "Strong"
 msgstr "stark"
 
-#: public/class-form-display.php:2094
+#: public/class-form-display.php:2112
 msgid "Title"
 msgstr "Titel"
 
-#: public/class-form-display.php:2095
+#: public/class-form-display.php:2113
 msgid "First"
 msgstr "Vorname"
 
-#: public/class-form-display.php:2096
+#: public/class-form-display.php:2114
 msgid "Last"
 msgstr "Nachname"
 
-#: public/class-form-display.php:2097
+#: public/class-form-display.php:2115
 msgid "Suffix"
 msgstr "Suffix"
 
-#: public/class-form-display.php:2487
+#: public/class-form-display.php:2505
 msgid "reCAPTCHA Public Key not found. Both Public and Private keys must be set in order for reCAPTCHA to function."
 msgstr "Öffentlicher reCAPTCHA Schlüssel nicht gefunden. Öffentlicher und privater Schlüssel müssen gesetzt sein, damit reCAPTCHA funktionieren kann."
 
-#: public/class-security.php:30
+#: public/class-security.php:53
 msgid "Security check: you filled out a form field that was created to stop spam bots and should be left blank. If you think this is an error, please email the site owner."
 msgstr "Sicherheits-Check: Sie haben ein Formularfeld ausgefüllt, dass geschaffen wurde, um Spam-Bots zu stoppen, es sollte leer bleiben. Wenn Sie denken, dass dies ein Fehler ist, senden Sie dem Inhaber der Website eine Nachricht."
 
-#: public/class-security.php:61
+#: public/class-security.php:87
 msgid "The private key for reCAPTCHA is missing."
 msgstr "Der private Schlüssel für ReCAPTCHA fehlt."
 
-#: public/class-security.php:62
+#: public/class-security.php:88
 msgid "The private key for reCAPTCHA is invalid or malformed."
 msgstr "Der private Schlüssel für reCAPTCHA ist ungültig oder falsch formatiert."
 
-#: public/class-security.php:63
+#: public/class-security.php:89
 msgid "The reCAPTCHA response is missing."
 msgstr "Die reCAPTCHA Antwort fehlt."
 
-#: public/class-security.php:64
+#: public/class-security.php:90
 msgid "The reCAPTCHA response is invalid or malformed."
 msgstr "Die reCAPTCHA Antwort ist ungültig oder fehlerhaft."
 
-#: public/class-security.php:108
+#: public/class-security.php:134
 msgid "Security check: looks like you are a SPAM bot. If you think this is an error, please email the site owner."
 msgstr "Sicherheits-Check: Sieht aus als seist Du ein Spam-Bot. Wenn Sie der Meinung sind, dies sei ein Fehler, senden Sie dem Inhaber der Website eine Nachricht."
 
@@ -5413,7 +5457,7 @@ msgstr "Zahlungs Einstellungen"
 #: admin/class-forms-edit-confirmation.php:152
 #: admin/class-forms-edit-email.php:335 admin/class-forms-edit-fields.php:170
 #: admin/class-forms-edit-fields.php:213
-#: admin/class-forms-edit-settings.php:236 admin/class-page-settings.php:629
+#: admin/class-forms-edit-settings.php:252 admin/class-page-settings.php:629
 #: admin/class-rules.php:240
 msgid "Save Changes"
 msgstr "Änderungen speichern"
@@ -5457,7 +5501,7 @@ msgstr "Einstellungen"
 msgid "Add-ons"
 msgstr "Erweiterungen"
 
-#: admin/class-admin-menu.php:176 public/class-form-display.php:312
+#: admin/class-admin-menu.php:176 public/class-form-display.php:316
 msgid "Your VFB Pro license is UNVERIFIED. You must <a href=\"%s\">enter your license</a> information before VFB Pro can fully function."
 msgstr "Ihre VFB Pro Lizenz ist nicht VERIFIZIERT. Sie müssen <a href=\"%s\">Ihre Lizenz eingeben</a> bevor VFB Pro vollständig funktionieren kann."
 

@@ -1840,6 +1840,8 @@ class VFB_Pro_Form_Display {
 
 						}
 
+						$hidden_value = apply_filters( 'vfbp_field_default', $hidden_value, $field['id'], $form_id );
+
 						// Output
 						$output .= $builder->hidden( $name, $hidden_value, $options );
 					}

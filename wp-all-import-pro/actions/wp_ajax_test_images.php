@@ -78,7 +78,7 @@ function pmxi_wp_ajax_test_images(){
 
 					foreach ($post['imgs'] as $img) 
 					{
-						$bn      = wp_all_import_sanitize_filename(basename($img));
+						$bn      = wp_all_import_sanitize_filename(wp_all_import_basename($img));
 						$img_ext = pmxi_getExtensionFromStr($img);									
 						$default_extension = pmxi_getExtension($bn);																									
 
