@@ -111,7 +111,7 @@ if ( $customer_quotes ) : ?>
           $actions = apply_filters( 'ywraq_my_account_my_quotes_actions', $actions, $order );
 
           if ($actions) {
-            echo '<pre>';var_dump($actions);echo '</pre>';
+        //    echo '<pre>';var_dump($actions);echo '</pre>';
             foreach ( $actions as $key => $action ) {
               echo '<a href="' . esc_url( $action['url'] ) . '" class="button ' . sanitize_html_class( $key ) . '" '.$action['data'].'">' . esc_html( $action['name'] ) . '</a>';
             }
