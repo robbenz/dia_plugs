@@ -48,36 +48,43 @@ function dia_product_meta_display_product() {
          </select>
 
          <?php
-            foreach ($available_variations as $_AV ) {
-              echo '<div class="var_specs_wrap" id="var_specs_wrap_'. $_AV[ 'variation_id' ] . '">';
-              echo 'Manufacturer: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_mft', true ) .'<br>';
-              echo 'MFT Part #: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_mft_pn', true ) .'<br>';
-              echo 'List Price: <span style="color:#78be20;">$' . number_format(get_post_meta( $_AV[ 'variation_id' ], 'dia_var_list_price', true ), 2) .'</span><br>';
+         foreach ($available_variations as $_AV ) {
 
-              echo 'Vendor 1: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_vendor1', true ) .'<br>';
-              echo 'Vendor PN: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_vendor_pn', true ) .'<br>';
-              echo 'Cost: <span style="color:#78be20;">$' . number_format(get_post_meta( $_AV[ 'variation_id' ], 'dia_var_cost', true ), 2) .'</span><br>';
-              echo 'Date Verified: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_date_check', true ) .'<br>';
-              echo 'Verified by: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_date_check_person1', true ) .'<br>';
+           $dia_varlistprice     = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_list_price', true );
+           $dia_varlistprice_fi  = floatval($dia_varlistprice);
+           $dia_var_cost         = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_cost', true );
+           $dia_var_cost_fi      = floatval($dia_var_cost);
+           $var_vend2cost        = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_cost2', true );
 
-              $var_vend2 = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_vendor2', true );
-              if (strlen($var_vend2) > 0) { echo 'Vendor 2: ' . $var_vend2 .'<br>'; }
+           echo '<div style="color:#fff;border: 1px solid #fff;" class="var_specs_wrap" id="var_specs_wrap_'. $_AV[ 'variation_id' ] . '">';
+           echo 'Manufacturer: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_mft', true ) .'<br>';
+           echo 'MFT Part #: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_mft_pn', true ) .'<br>';
+           echo 'List Price: <span style="color:#78be20;">$' . number_format($dia_varlistprice_fi, 2) .'</span><br>';
 
-              $var_vendpn2 = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_vendor_pn2', true );
-              if (strlen($var_vendpn2) > 0) { echo 'Vender 2 PN: ' . $var_vendpn2 .'<br>'; }
+           echo 'Vendor 1: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_vendor1', true ) .'<br>';
+           echo 'Vendor PN: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_vendor_pn', true ) .'<br>';
+           echo 'Cost: <span style="color:#78be20;">$' . number_format($dia_var_cost_fi, 2) .'</span><br>';
+           echo 'Date Verified: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_date_check', true ) .'<br>';
+           echo 'Verified by: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_date_check_person1', true ) .'<br>';
 
-              $var_vend2cost = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_cost2', true );
-              if (strlen($var_vend2cost) > 0) {
-                echo 'Vender 2 Cost: <span style="color:#78be20;">$' . number_format($var_vend2cost, 2) .'</span><br>';
-              }
+           $var_vend2 = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_vendor2', true );
+           if (strlen($var_vend2) > 0) { echo 'Vendor 2: ' . $var_vend2 .'<br>'; }
 
-              $var_vend2dv = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_date_check2', true );
-              if (strlen($var_vend2dv) > 0) { echo 'Date Verified: ' . $var_vend2dv .'<br>'; }
+           $var_vendpn2 = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_vendor_pn2', true );
+           if (strlen($var_vendpn2) > 0) { echo 'Vender 2 PN: ' . $var_vendpn2 .'<br>'; }
 
-              $var_vend2dvname = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_date_check_person2', true );
-              if (strlen($var_vend2dvname) > 0) { echo 'Verified by: ' . $var_vend2dvname .'<br>'; }
+           if (strlen($var_vend2cost) > 0) {
+             $var_vend2cost_fi = floatval($var_vend2cost);
+             echo 'Vender 2 Cost: <span style="color:#78be20;">$' . number_format($var_vend2cost_fi, 2) .'</span><br>';
+           }
 
-              echo '</div>';
+           $var_vend2dv = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_date_check2', true );
+           if (strlen($var_vend2dv) > 0) { echo 'Date Verified: ' . $var_vend2dv .'<br>'; }
+
+           $var_vend2dvname = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_date_check_person2', true );
+           if (strlen($var_vend2dvname) > 0) { echo 'Verified by: ' . $var_vend2dvname .'<br>'; }
+
+           echo '</div>';
             }
           ?>
 
@@ -219,36 +226,44 @@ function dia_product_meta_display_archive() {
            </select>
 
            <?php
-              foreach ($available_variations as $_AV ) {
-                echo '<div style="color:#fff;border: 1px solid #fff;" class="var_specs_wrap" id="var_specs_wrap_'. $_AV[ 'variation_id' ] . '">';
-                echo 'Manufacturer: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_mft', true ) .'<br>';
-                echo 'MFT Part #: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_mft_pn', true ) .'<br>';
-                echo 'List Price: <span style="color:#78be20;">$' . number_format(get_post_meta( $_AV[ 'variation_id' ], 'dia_var_list_price', true ), 2) .'</span><br>';
 
-                echo 'Vendor 1: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_vendor1', true ) .'<br>';
-                echo 'Vendor PN: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_vendor_pn', true ) .'<br>';
-                echo 'Cost: <span style="color:#78be20;">$' . number_format(get_post_meta( $_AV[ 'variation_id' ], 'dia_var_cost', true ), 2) .'</span><br>';
-                echo 'Date Verified: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_date_check', true ) .'<br>';
-                echo 'Verified by: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_date_check_person1', true ) .'<br>';
+           foreach ($available_variations as $_AV ) {
 
-                $var_vend2 = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_vendor2', true );
-                if (strlen($var_vend2) > 0) { echo 'Vendor 2: ' . $var_vend2 .'<br>'; }
+             $dia_varlistprice     = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_list_price', true );
+             $dia_varlistprice_fi  = floatval($dia_varlistprice);
+             $dia_var_cost         = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_cost', true );
+             $dia_var_cost_fi      = floatval($dia_var_cost);
+             $var_vend2cost        = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_cost2', true );
 
-                $var_vendpn2 = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_vendor_pn2', true );
-                if (strlen($var_vendpn2) > 0) { echo 'Vender 2 PN: ' . $var_vendpn2 .'<br>'; }
+             echo '<div style="color:#fff;border: 1px solid #fff;" class="var_specs_wrap" id="var_specs_wrap_'. $_AV[ 'variation_id' ] . '">';
+             echo 'Manufacturer: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_mft', true ) .'<br>';
+             echo 'MFT Part #: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_mft_pn', true ) .'<br>';
+             echo 'List Price: <span style="color:#78be20;">$' . number_format($dia_varlistprice_fi, 2) .'</span><br>';
 
-                $var_vend2cost = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_cost2', true );
-                if (strlen($var_vend2cost) > 0) {
-                  echo 'Vender 2 Cost: <span style="color:#78be20;">$' . number_format($var_vend2cost, 2) .'</span><br>';
-                }
+             echo 'Vendor 1: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_vendor1', true ) .'<br>';
+             echo 'Vendor PN: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_vendor_pn', true ) .'<br>';
+             echo 'Cost: <span style="color:#78be20;">$' . number_format($dia_var_cost_fi, 2) .'</span><br>';
+             echo 'Date Verified: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_date_check', true ) .'<br>';
+             echo 'Verified by: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_date_check_person1', true ) .'<br>';
 
-                $var_vend2dv = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_date_check2', true );
-                if (strlen($var_vend2dv) > 0) { echo 'Date Verified: ' . $var_vend2dv .'<br>'; }
+             $var_vend2 = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_vendor2', true );
+             if (strlen($var_vend2) > 0) { echo 'Vendor 2: ' . $var_vend2 .'<br>'; }
 
-                $var_vend2dvname = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_date_check_person2', true );
-                if (strlen($var_vend2dvname) > 0) { echo 'Verified by: ' . $var_vend2dvname .'<br>'; }
+             $var_vendpn2 = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_vendor_pn2', true );
+             if (strlen($var_vendpn2) > 0) { echo 'Vender 2 PN: ' . $var_vendpn2 .'<br>'; }
 
-                echo '</div>';
+             if (strlen($var_vend2cost) > 0) {
+               $var_vend2cost_fi = floatval($var_vend2cost);
+               echo 'Vender 2 Cost: <span style="color:#78be20;">$' . number_format($var_vend2cost_fi, 2) .'</span><br>';
+             }
+
+             $var_vend2dv = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_date_check2', true );
+             if (strlen($var_vend2dv) > 0) { echo 'Date Verified: ' . $var_vend2dv .'<br>'; }
+
+             $var_vend2dvname = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_date_check_person2', true );
+             if (strlen($var_vend2dvname) > 0) { echo 'Verified by: ' . $var_vend2dvname .'<br>'; }
+
+             echo '</div>';
               }
             ?>
 

@@ -12,10 +12,8 @@ $colspan = get_option( 'ywraq_hide_total_column', 'yes' ) == 'yes' ? '4' : '5';
 
 if( count($raq_content) === 0 ):
   echo ywraq_get_list_empty_message();
-  // benz change 
 //  include ('request-quote-form.php');
 //  wc_get_template( 'request-quote-form.php', $args, YITH_YWRAQ_DIR, YITH_YWRAQ_DIR );
-
 
 else: ?>
     <form id="yith-ywraq-form" name="yith-ywraq-form" action="<?php echo esc_url( YITH_Request_Quote()->get_raq_page_url() ) ?>" method="post">
