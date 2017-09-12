@@ -56,7 +56,7 @@ function dia_product_meta_display_product() {
            $dia_var_cost_fi      = floatval($dia_var_cost);
            $var_vend2cost        = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_cost2', true );
 
-           echo '<div style="color:#fff;border: 1px solid #fff;" class="var_specs_wrap" id="var_specs_wrap_'. $_AV[ 'variation_id' ] . '">';
+           echo '<div style="color:#000;" class="var_specs_wrap" id="var_specs_wrap_'. $_AV[ 'variation_id' ] . '">';
            echo 'Manufacturer: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_mft', true ) .'<br>';
            echo 'MFT Part #: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_mft_pn', true ) .'<br>';
            echo 'List Price: <span style="color:#78be20;">$' . number_format($dia_varlistprice_fi, 2) .'</span><br>';
