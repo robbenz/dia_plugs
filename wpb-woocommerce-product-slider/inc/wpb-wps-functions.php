@@ -39,9 +39,8 @@ add_filter('widget_text', 'do_shortcode');
 
 if( !function_exists('wpb_wps_cart_button') ){
 	function wpb_wps_cart_button(){
-		echo '<div class="wpb_cart_button">';
-			woocommerce_template_loop_add_to_cart();
-		echo '</div>';
+		global $post;
+		echo '<div class="wpb_cart_button">'. do_shortcode( '[add_to_cart id="'.$post->ID.'" style="" show_price="false"]' ) .'</div>'; 
 	}
 }
 

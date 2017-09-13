@@ -68,10 +68,9 @@ if( !function_exists( 'wpb_wps_shortcode_function' ) ):
 
 		// Woo meta featured post check 
 		if($product_type == 'featured'){
-			$args['tax_query'][] = array(
-				'taxonomy' => 'product_visibility',
-                'field'    => 'name',
-                'terms'    => 'featured',
+			$args['meta_query'][] = array(
+				'key' 		=> '_featured',
+				'value' 	=> 'yes',
 			);
 		}
 
