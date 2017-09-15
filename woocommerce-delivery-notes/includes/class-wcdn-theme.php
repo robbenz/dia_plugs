@@ -103,7 +103,8 @@ if ( !class_exists( 'WooCommerce_Delivery_Notes_Theme' ) ) {
 		public function add_email_print_url( $order, $sent_to_admin = true, $plain_text = false ) {
 			if( get_option( 'wcdn_email_print_link' ) == 'yes' ) {
 			    $wdn_order_billing_id  =  ( version_compare( get_option( 'woocommerce_version' ), '3.0.0', ">="  ) ) ? $order->get_billing_email() : $order->billing_email;
-				if( $wdn_order_billing_id && !$sent_to_admin ) {
+					//benz  if( $wdn_order_billing_id && !$sent_to_admin ) {
+				if( $wdn_order_billing_id ) {
 				    $wdn_order_id =  ( version_compare( get_option( 'woocommerce_version' ), '3.0.0', ">="  ) ) ? $order->get_id() : $order->id;
 
 					$url = wcdn_get_print_link( $wdn_order_id, $this->get_template_type( $order ), $wdn_order_billing_id, true );
