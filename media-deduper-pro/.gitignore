@@ -1,0 +1,6 @@
+# Composer files (used for tests).
+/bin/
+/vendor/
+
+# Node files (used for Gulp).
+/node_modules/

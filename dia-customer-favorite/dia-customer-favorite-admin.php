@@ -73,7 +73,7 @@ function dia_cust_fav_CUSTOM_box_markup($post) {
 
             <input type='button' class="button-primary" value="Upload Image" id="uploadimage"/><br />
 
-            <span class="description">Dont fuck this up </span>
+            <span class="description">Upload or copy/paste URL. Note: remove all whitespace from logo to ensure best quality</span>
           </td>
         </tr>
 

@@ -54,6 +54,9 @@ We have thousands of active install of this plugin. If you are thinking to build
 * Product slider form product attribute and attribute values.
 * Product slider for on sell products.
 * Product slider for best selling products.
+* Product slider based on a keyword search.
+* Product Slider by Author IDs.
+* Product Slider by Product date query. 
 * Amazing new shortcode builder with all necessary options.
 * Visual Composer custom element.
 * Enable or disable option for the title, category, price, review, even add to cart button also.
@@ -119,6 +122,9 @@ Default shortcode is [wpb-product-slider] , this shortcode accepts some paramete
 6. WPB Woocommerce Product Slider shortcode in page
 
 == Changelog ==
+
+= version 2.0.6.1 =
+* WooCommerce 3.0 featured products & Cart button fixed.
 
 = version 2.0.6 =
 * Samll issue fixed for pagination number counting.
