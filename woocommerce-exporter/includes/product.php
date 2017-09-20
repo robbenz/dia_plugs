@@ -612,10 +612,7 @@ function woo_ce_get_product_data( $product_id = 0, $args = array() ) {
 	if( $product->post_type == 'product_variation' ) {
 		$product->type = __( 'Variation', 'woocommerce-exporter' );
 	}
-	if( version_compare( woo_get_woo_version(), '3.0', '>=' ) )
-		$product->visibility = woo_ce_format_product_visibility( $product_id );
-	else
-		$product->visibility = woo_ce_format_product_visibility( $product_id, get_post_meta( $product_id, '_visibility', true ) );
+	$product->visibility = woo_ce_format_product_visibility( get_post_meta( $product_id, '_visibility', true ) );
 	$product->featured = woo_ce_format_switch( get_post_meta( $product_id, '_featured', true ) );
 	$product->virtual = woo_ce_format_switch( get_post_meta( $product_id, '_virtual', true ) );
 	$product->downloadable = woo_ce_format_switch( get_post_meta( $product_id, '_downloadable', true ) );
@@ -1008,58 +1005,33 @@ function woo_ce_get_product_addons() {
 
 }
 
-function woo_ce_format_product_visibility( $product_id = 0, $visibility = '' ) {
+function woo_ce_format_product_visibility( $visibility = '' ) {
 
 	$output = '';
 	// Check for empty default for Visibility
-	if( empty( $visibility ) ) {
+	if( empty( $visibility ) )
 		$visibility = 'visible';
-		if( !empty( $product_id ) ) {
-			// Fall back to checking Term Taxonomy
-			$term_taxonomy = 'product_visibility';
-			$args = array(
-				'fields' => 'names'
-			);
-			$terms = wp_get_object_terms( $product_id, $term_taxonomy, $args );
-			if( !empty( $terms ) && is_wp_error( $terms ) == false ) {
-				// Just for fun we have to combine Terms to decipher the Visibility
-				if( in_array( 'exclude-from-search', $terms ) && in_array( 'exclude-from-catalog', $terms ) )
-					$visibility = 'hidden';
-				else if( in_array( 'exclude-from-search', $terms ) )
-					$visibility = 'catalog';
-				else if( in_array( 'exclude-from-catalog', $terms ) )
-					$visibility = 'search';
-			}
-		}
-	}
-	switch( $visibility ) {
+	if( !empty( $visibility ) ) {
+		switch( $visibility ) {
 
-		default:
-		case 'visible':
-			if( apply_filters( 'woo_ce_format_product_visibility_legacy_labels', false ) )
+			default:
+			case 'visible':
 				$output = __( 'Catalog & Search', 'woocommerce-exporter' );
-			else
-				$output = __( 'Shop and search results', 'woocommerce-exporter' );
-			break;
+				break;
 
-		case 'catalog':
-			if( apply_filters( 'woo_ce_format_product_visibility_legacy_labels', false ) )
+			case 'catalog':
 				$output = __( 'Catalog', 'woocommerce-exporter' );
-			else
-				$output = __( 'Shop only', 'woocommerce-exporter' );
-			break;
+				break;
 
-		case 'search':
-			if( apply_filters( 'woo_ce_format_product_visibility_legacy_labels', false ) )
+			case 'search':
 				$output = __( 'Search', 'woocommerce-exporter' );
-			else
-				$output = __( 'Search results only', 'woocommerce-exporter' );
-			break;
+				break;
 
-		case 'hidden':
-			$output = __( 'Hidden', 'woocommerce-exporter' );
-			break;
+			case 'hidden':
+				$output = __( 'Hidden', 'woocommerce-exporter' );
+				break;
 
+		}
 	}
 	return $output;
 
@@ -1290,7 +1262,7 @@ function woo_ce_get_product_types() {
 			}
 		}
 		$output['variation'] = array(
-			'name' => __( 'Variation', 'woocommerce-exporter' ),
+			'name' => __( 'variation', 'woocommerce-exporter' ),
 			'count' => woo_ce_get_product_type_count( 'product_variation' )
 		);
 

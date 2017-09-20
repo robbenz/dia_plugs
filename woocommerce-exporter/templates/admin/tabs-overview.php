@@ -1,6 +1,6 @@
 <div class="overview-left">
 
-	<h3><div class="dashicons dashicons-migrate"></div>&nbsp;<a href="<?php echo esc_url( add_query_arg( 'tab', 'export' ) ); ?>"><?php _e( 'Quick Export', 'woocommerce-exporter' ); ?></a></h3>
+	<h3><div class="dashicons dashicons-migrate"></div>&nbsp;<a href="<?php echo esc_url( add_query_arg( 'tab', 'export' ) ); ?>"><?php _e( 'Export', 'woocommerce-exporter' ); ?></a></h3>
 	<p><?php _e( 'Export store details out of WooCommerce into common export files (e.g. CSV, XLSX, XML, etc.).', 'woocommerce-exporter' ); ?></p>
 	<ul class="ul-disc">
 		<li>
@@ -28,10 +28,6 @@
 			<a href="<?php echo esc_url( add_query_arg( 'tab', 'export' ) ); ?>#export-user"><?php _e( 'Export Users', 'woocommerce-exporter' ); ?></a>
 		</li>
 		<li>
-			<a href="<?php echo esc_url( add_query_arg( 'tab', 'export' ) ); ?>#export-user"><?php _e( 'Export Reviews', 'woocommerce-exporter' ); ?></a>
-			<span class="description">(<?php printf( __( 'available in %s', 'woocommerce-exporter' ), $woo_cd_link ); ?>)</span>
-		</li>
-		<li>
 			<a href="<?php echo esc_url( add_query_arg( 'tab', 'export' ) ); ?>#export-coupon"><?php _e( 'Export Coupons', 'woocommerce-exporter' ); ?></a>
 			<span class="description">(<?php printf( __( 'available in %s', 'woocommerce-exporter' ), $woo_cd_link ); ?>)</span>
 		</li>
@@ -51,18 +47,12 @@
 			<a href="<?php echo esc_url( add_query_arg( 'tab', 'export' ) ); ?>#export-shipping_class"><?php _e( 'Export Shipping Classes', 'woocommerce-exporter' ); ?></a>
 			<span class="description">(<?php printf( __( 'available in %s', 'woocommerce-exporter' ), $woo_cd_link ); ?>)</span>
 		</li>
-		<li>
-			<a href="<?php echo esc_url( add_query_arg( 'tab', 'export' ) ); ?>#export-ticket"><?php _e( 'Export Tickets', 'woocommerce-exporter' ); ?></a>
-			<span class="description">(<?php printf( __( 'available in %s', 'woocommerce-exporter' ), $woo_cd_link ); ?>)</span>
-		</li>
-		<li>
-			<a href="<?php echo esc_url( add_query_arg( 'tab', 'export' ) ); ?>#export-booking"><?php _e( 'Export Bookings', 'woocommerce-exporter' ); ?></a>
-			<span class="description">(<?php printf( __( 'available in %s', 'woocommerce-exporter' ), $woo_cd_link ); ?>)</span>
-		</li>
+<!--
 		<li>
 			<a href="<?php echo esc_url( add_query_arg( 'tab', 'export' ) ); ?>#export-attribute"><?php _e( 'Export Attributes', 'woocommerce-exporter' ); ?></a>
 			<span class="description">(<?php printf( __( 'available in %s', 'woocommerce-exporter' ), $woo_cd_link ); ?>)</span>
 		</li>
+-->
 	</ul>
 
 	<h3><div class="dashicons dashicons-list-view"></div>&nbsp;<a href="<?php echo esc_url( add_query_arg( 'tab', 'archive' ) ); ?>"><?php _e( 'Archives', 'woocommerce-exporter' ); ?></a></h3>
@@ -125,14 +115,11 @@
 		<li><?php _e( 'Export Subscriptions', 'woocommerce-exporter' ); ?></li>
 		<li><?php _e( 'Export Product Vendors', 'woocommerce-exporter' ); ?></li>
 		<li><?php _e( 'Export Shipping Classes', 'woocommerce-exporter' ); ?></li>
-		<li><?php _e( 'Export Bookings', 'woocommerce-exporter' ); ?></li>
-		<li><?php _e( 'Export Tickets', 'woocommerce-exporter' ); ?></li>
-		<li><?php _e( 'Export Attributes', 'woocommerce-exporter' ); ?></li>
 		<li><?php _e( 'CRON export engine', 'woocommerce-exporter' ); ?></li>
 		<li><?php _e( 'Schedule automatic exports with filtering options', 'woocommerce-exporter' ); ?></li>
 		<li><?php _e( 'Export to remote POST', 'woocommerce-exporter' ); ?></li>
 		<li><?php _e( 'Export to e-mail addresses', 'woocommerce-exporter' ); ?></li>
-		<li><?php _e( 'Export to remote FTP/FTPS/SFTP', 'woocommerce-exporter' ); ?></li>
+		<li><?php _e( 'Export to remote FTP or SFTP', 'woocommerce-exporter' ); ?></li>
 		<li><?php _e( 'Export to XML file', 'woocommerce-exporter' ); ?></li>
 		<li><?php _e( 'Export to RSS file', 'woocommerce-exporter' ); ?></li>
 		<li><?php _e( 'Export to Excel 97-2003 (XLS) file', 'woocommerce-exporter' ); ?></li>

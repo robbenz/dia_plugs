@@ -1819,45 +1819,6 @@ function woo_ce_modules_list( $module_status = false ) {
 		'slug' => 'woocommerce-wholesale-prices',
 		'function' => 'wwp_global_plugin_deactivate'
 	);
-	$modules[] = array(
-		'name' => 'wc_show_single_variations',
-		'title' => __( 'WooCommerce Show Single Variations', 'woocommerce-exporter' ),
-		'description' => __( 'Show product variations in the main product loops.', 'woocommerce-exporter' ),
-		'url' => 'https://codecanyon.net/item/woocommerce-show-single-variations/13523915',
-		'class' => 'JCK_WSSV'
-	);
-	$modules[] = array(
-		'name' => 'wc_deposits',
-		'title' => __( 'WooCommerce Deposits', 'woocommerce-exporter' ),
-		'description' => __( 'Adds deposits support to WooCommerce.', 'woocommerce-exporter' ),
-		'url' => 'https://woocommerce.com/products/woocommerce-deposits/',
-		'class' => 'WC_Deposits'
-	);
-	$modules[] = array(
-		'name' => 'wc_unitofmeasure',
-		'title' => __( 'WooCommerce Unit of Measure', 'woocommerce-exporter' ),
-		'description' => __( 'WooCommerce Unit Of Measure allows the user to add a unit of measure after the price on WooCommerce products.', 'woocommerce-exporter' ),
-		'url' => 'https://wordpress.org/plugins/woocommerce-unit-of-measure/',
-		'slug' => 'woocommerce-unit-of-measure',
-		'class' => 'Woo_UOM'
-	);
-	$modules[] = array(
-		'name' => 'wc_easybooking',
-		'title' => __( 'WooCommerce Easy Bookings', 'woocommerce-exporter' ),
-		'description' => __( 'Easily rent or book your products with WooCommerce.', 'woocommerce-exporter' ),
-		'url' => 'https://wordpress.org/plugins/woocommerce-easy-booking-system/',
-		'slug' => 'woocommerce-easy-booking-system',
-		'class' => 'Easy_booking'
-	);
-	$modules[] = array(
-		'name' => 'wc_advanced_quantities',
-		'title' => __( 'WooCommerce Advanced Product Quantities', 'woocommerce-exporter' ),
-		'description' => __( 'Easily require your customers to buy a minimum/maximum/incremental amount of products to continue with their Checkout.', 'woocommerce-exporter' ),
-		'url' => 'http://www.wpbackoffice.com/plugins/woocommerce-incremental-product-quantities/',
-		'function' => 'IPQ'
-	);
-
-	// Ship to Multiple Addresses - WC_Ship_Multiple
 
 /*
 	$modules[] = array(
@@ -2011,55 +1972,12 @@ function woo_ce_error_log( $message = '', $level = false ) {
 	if( $message == '' )
 		return;
 
-	if( class_exists( 'WC_Logger' ) && apply_filters( 'woo_ce_error_log_use_wc_logger', true ) ) {
+	if( class_exists( 'WC_Logger' ) ) {
 		$logger = new WC_Logger();
-		if( version_compare( woo_get_woo_version(), '2.7', '>=' ) ) {
-			$notice_level = ( !empty( $level ) ? $level : apply_filters( 'woo_ce_error_log_default_level', WC_Log_Levels::NOTICE ) );
-			// Format notice levels to match WC_Log_Levels
-			switch( $notice_level ) {
-
-				// System is unusable.
-				case 'emergency':
-					$notice_level = WC_Log_Levels::EMERGENCY;
-					break;
-
-				// Action must be taken immediately. Example: Entire website down, database unavailable, etc.
-				case 'alert':
-					$notice_level = WC_Log_Levels::ALERT;
-					break;
-
-				// Critical conditions. Example: Application component unavailable, unexpected exception.
-				case 'critical':
-					$notice_level = WC_Log_Levels::CRITICAL;
-					break;
-
-				// Runtime errors that do not require immediate action but should typically be logged and monitored.
-				case 'error':
-					$notice_level = WC_Log_Levels::ERROR;
-					break;
-
-				// Use of deprecated APIs, poor use of an API, undesirable things that are not necessarily wrong.
-				case 'warning':
-					$notice_level = WC_Log_Levels::WARNING;
-					break;
-
-				// Normal but significant events.
-				case 'notice':
-					$notice_level = WC_Log_Levels::NOTICE;
-					break;
-
-				// Interesting events.
-				case 'info':
-					$notice_level = WC_Log_Levels::INFO;
-					break;
-
-				// Detailed debug information.
-				case 'debug':
-					$notice_level = WC_Log_Levels::DEBUG;
-					break;
-
-			}
-			$logger->log( $notice_level, $message, array( 'source' => WOO_CE_PREFIX ) );
+		if( version_compare( WOOCOMMERCE_VERSION, '2.7', '>=' ) ) {
+			$notice_level = ( !empty( $level ) ? $level : apply_filters( 'woo_ce_error_log_default_level', 'notice' ) );
+			// $logger->add( WOO_CE_PREFIX, $message, $notice_level );
+			$logger->log( $notice_level, $message, WOO_CE_PREFIX );
 		} else {
 			$logger->add( WOO_CE_PREFIX, $message );
 		}

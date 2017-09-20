@@ -4,23 +4,23 @@ Contributors: visser, visser.labs
 Donate link: https://www.visser.com.au/donations/
 Tags: e-commerce, woocommerce, shop, cart, ecommerce, export, csv, xml, xls, xlsx, excel, customers, products, sales, orders, coupons, users, attributes, subscriptions
 Requires at least: 2.9.2
-Tested up to: 4.8.1
-Stable tag: 1.9.3
+Tested up to: 4.7.5
+Stable tag: 1.9.1.1
 License: GPLv2 or later
 
 Export store details out of WooCommerce into simple formatted files (e.g. CSV, XML, Excel 2007, XLS, etc.).
 
 == Description ==
 
-**Screen-loads of options and filters let you design advanced exports to suit your store requirements, or simply go with the default and click Export to produce concise, ready to use store exports.**
+Screen-loads of options and filters let you design advanced exports to suit your store requirements, or simply go with the default and click Export to produce concise, ready to use exports.
 
-Store Exporter maintains compatibility with the latest WooCommerce releases through regular feature updates; as trusted by the 20,000+ active users of this Plugin. Happy exporting!
+Store Exporter maintains compatibility with the latest WooCommerce updates receiving regular feature updates trusted by 20,000+ active users. Happy exporting!
 
 = Features =
 
 Features include:
 
-* Export Products
+* Export Products (*)
 * Export Products by Product Category
 * Export Products by Product Status
 * Export Products by Type including Variations
@@ -46,14 +46,13 @@ Features include:
 * Works with WordPress Multisite
 * Export to CSV file
 * Export to TSV file (*)
+* Export to XML file (*)
 * Export to Excel 2007 (XLS) file (*)
 * Export to Excel 2013 (XLSX) file (*)
-* Export to XML file (*)
-* Export to RSS file (*)
 * Export to WordPress Media
 * Export to e-mail addresses (*)
 * Export to remote POST (*)
-* Export to remote FTP/FTPS/SFTP (*)
+* Export to remote FTP (*)
 * Supports external CRON commands (*)
 * Supports scheduled exports (*)
 
@@ -65,7 +64,7 @@ Features include:
 >
 > Full documentation and usage of Store Exporter Deluxe is available from the [support section for Store Exporter Deluxe](http://www.visser.com.au/documentation/store-exporter-deluxe/).
 
-= Native export integration with 90+ WooCommerce Plugins =
+= Native integration with 50+ WooCommerce Plugins =
 
 Just a few of the features unlocked in the Pro upgrade of Store Exporter include:
 
@@ -89,11 +88,13 @@ Just a few of the features unlocked in the Pro upgrade of Store Exporter include
 - Export WooCommerce Jetpack
 - Import fields for Product Importer Deluxe
 
-... and many more free and Premium extensions for WooCommerce and WordPress.
+... and more free and Premium extensions for WooCommerce.
 
-Want regular updates? [Become a fan on Facebook!]http://www.facebook.com/visser.labs/
+Want regular updates? Become a fan on Facebook!
 
-[For more information visit our site.]https://www.visser.com.au/solutions/woocommerce-export/
+http://www.facebook.com/visser.labs/
+
+For more information visit: http://www.visser.com.au/woocommerce/
 
 == Installation ==
 
@@ -131,14 +132,6 @@ http://www.visser.com.au/woocommerce/forums/
 9. Drag-and-drop export fields to your preferred ordering, sorting is saved between screen refreshes.
 
 == Changelog ==
-
-= 1.9.3 =
-* Fixed: Product Visibility not including Search and search results (thanks Triều and spbuckle)
-
-= 1.9.2 =
-* Changed: Product Visibility field matches WooCommerce 3.1 labels (thanks spbuckle)
-* Added: Filter for legacy Product Visibility labels
-* Changed: Updated list of supported Plugin modules
 
 = 1.9.1.1 =
 * Fixed: Visibility field empty for default value
