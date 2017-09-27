@@ -141,6 +141,7 @@ function dia_users_remove_menu_pages() {
 
   $special_ids = array (
     '828',   //  jon
+    '3626',  // a blasco
     '1607',  // 1607 April
     '217',   // 217 mike
     '1290'   // benz_rob@yahoo
