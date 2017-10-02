@@ -235,65 +235,91 @@ function save_variation_settings_fields( $post_id ) {
   $dia_var_mft = $_POST['dia_var_mft'][ $post_id ];
   if( ! empty( $dia_var_mft ) ) {
     update_post_meta( $post_id, 'dia_var_mft', esc_attr( $dia_var_mft) );
+  } else {
+    update_post_meta( $post_id, 'dia_var_mft', esc_attr( $dia_var_mft) );
   }
 
   $dia_var_mft_pn = $_POST['dia_var_mft_pn'][ $post_id ];
   if( ! empty( $dia_var_mft_pn ) ) {
+    update_post_meta( $post_id, 'dia_var_mft_pn', esc_attr( $dia_var_mft_pn) );
+  } else {
     update_post_meta( $post_id, 'dia_var_mft_pn', esc_attr( $dia_var_mft_pn) );
   }
 
   $dia_var_list_price = $_POST['dia_var_list_price'][ $post_id ];
   if( ! empty( $dia_var_list_price ) ) {
     update_post_meta( $post_id, 'dia_var_list_price', esc_attr( $dia_var_list_price ) );
+  } else {
+    update_post_meta( $post_id, 'dia_var_list_price', esc_attr( $dia_var_list_price ) );
   }
 
   $dia_var_vendor1 = $_POST['dia_var_vendor1'][ $post_id ];
   if( ! empty( $dia_var_vendor1 ) ) {
+    update_post_meta( $post_id, 'dia_var_vendor1', esc_attr( $dia_var_vendor1) );
+  } else {
     update_post_meta( $post_id, 'dia_var_vendor1', esc_attr( $dia_var_vendor1) );
   }
 
   $dia_var_cost = $_POST['dia_var_cost'][ $post_id ];
 	if( ! empty( $dia_var_cost ) ) {
 		update_post_meta( $post_id, 'dia_var_cost', esc_attr( $dia_var_cost ) );
-	}
+	} else {
+    update_post_meta( $post_id, 'dia_var_cost', esc_attr( $dia_var_cost ) );
+  }
 
   $dia_var_vendor_pn = $_POST['dia_var_vendor_pn'][ $post_id ];
   if( ! empty( $dia_var_vendor_pn ) ) {
+    update_post_meta( $post_id, 'dia_var_vendor_pn', esc_attr( $dia_var_vendor_pn ) );
+  } else {
     update_post_meta( $post_id, 'dia_var_vendor_pn', esc_attr( $dia_var_vendor_pn ) );
   }
 
   $dia_var_date_check = $_POST['dia_var_date_check'][ $post_id ];
   if( ! empty( $dia_var_date_check) ) {
     update_post_meta( $post_id, 'dia_var_date_check', esc_attr( $dia_var_date_check ) );
+  } else {
+    update_post_meta( $post_id, 'dia_var_date_check', esc_attr( $dia_var_date_check ) );
   }
 
   $dia_var_date_check_person1 = $_POST['dia_var_date_check_person1'][ $post_id ];
   if( ! empty( $dia_var_date_check_person1 ) ) {
+    update_post_meta( $post_id, 'dia_var_date_check_person1', esc_attr( $dia_var_date_check_person1 ) );
+  } else {
     update_post_meta( $post_id, 'dia_var_date_check_person1', esc_attr( $dia_var_date_check_person1 ) );
   }
 
   $dia_var_vendor2 = $_POST['dia_var_vendor2'][ $post_id ];
   if( ! empty( $dia_var_vendor2) ) {
     update_post_meta( $post_id, 'dia_var_vendor2', esc_attr( $dia_var_vendor2 ) );
+  } else {
+    update_post_meta( $post_id, 'dia_var_vendor2', esc_attr( $dia_var_vendor2 ) );
   }
 
   $dia_var_cost2 = $_POST['dia_var_cost2'][ $post_id ];
   if( ! empty( $dia_var_cost2) ) {
+    update_post_meta( $post_id, 'dia_var_cost2', esc_attr( $dia_var_cost2) );
+  } else {
     update_post_meta( $post_id, 'dia_var_cost2', esc_attr( $dia_var_cost2) );
   }
 
   $dia_var_vendor_pn2 = $_POST['dia_var_vendor_pn2'][ $post_id ];
   if( ! empty( $dia_var_vendor_pn2) ) {
     update_post_meta( $post_id, 'dia_var_vendor_pn2', esc_attr( $dia_var_vendor_pn2) );
+  } else {
+    update_post_meta( $post_id, 'dia_var_vendor_pn2', esc_attr( $dia_var_vendor_pn2) );
   }
 
   $dia_var_date_check2 = $_POST['dia_var_date_check2'][ $post_id ];
   if( ! empty( $dia_var_date_check2) ) {
     update_post_meta( $post_id, 'dia_var_date_check2', esc_attr( $dia_var_date_check2) );
+  } else {
+    update_post_meta( $post_id, 'dia_var_date_check2', esc_attr( $dia_var_date_check2) );
   }
 
   $dia_var_date_check_person2 = $_POST['dia_var_date_check_person2'][ $post_id ];
   if( ! empty( $dia_var_date_check_person2) ) {
+    update_post_meta( $post_id, 'dia_var_date_check_person2', esc_attr( $dia_var_date_check_person2) );
+  } else {
     update_post_meta( $post_id, 'dia_var_date_check_person2', esc_attr( $dia_var_date_check_person2) );
   }
 
