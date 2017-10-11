@@ -34,7 +34,7 @@
 	}
 	public function post_meta_boxes()
 	{
-		foreach(apply_filters('emodal_post_types', array('post','page')) as $post_types)
+		foreach(apply_filters('emodal_post_types', array('post','page','product')) as $post_types)
 		{
 			add_meta_box(EMCORE_SLUG, esc_html__(EMCORE_NAME, 'easy-modal' ), array($this, 'post_meta_box'), $post_types);
 		}
