@@ -790,6 +790,7 @@ if (!class_exists('WooCommerce_Quote')) {
                 $message .= '<td>'.$brady_cart_item['quantity'].'</td>';
                 $message .= '<td>'.apply_filters( 'woocommerce_cart_item_subtotal', WC()->cart->get_product_subtotal( $_brad_product, $brady_cart_item['quantity'] ), $brady_cart_item, $brady_cart_item_key ).'</td></tr>';
            }
+           $message .= '<tr><td colspan="3">Quote Total</td><td colspan="1">'.WC()->cart->get_cart_total().'</td></tr></tbody>';
 
             wp_mail( $to, $subject, $message, $headers ) ;
 
