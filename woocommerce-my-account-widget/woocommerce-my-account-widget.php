@@ -1,11 +1,13 @@
 <?php
 /*
-Plugin Name: WooCommerce My Account Widget
-Plugin URI: http://wordpress.org/extend/plugins/woocommerce-my-account-widget/
-Description: WooCommerce My Account Widget shows order & account data.
-Author: Bart Pluijms
-Author URI: http://www.geev.nl/
-Version: 0.6.0
+* Plugin Name: WooCommerce My Account Widget
+* Plugin URI: http://wordpress.org/extend/plugins/woocommerce-my-account-widget/
+* Description: WooCommerce My Account Widget shows order & account data.
+* Author: Bart Pluijms
+* Author URI: http://www.geev.nl/
+* Version: 0.6.1
+* WC requires at least: 3.0.0
+* WC tested up to: 3.2.0
 */
 class WooCommerceMyAccountWidget extends WP_Widget
 {
@@ -25,11 +27,11 @@ function form($instance)
 	$show_pending = isset( $instance['show_pending'] ) ? (bool) $instance['show_pending'] : false;
 	$show_logout_link = isset( $instance['show_logout_link'] ) ? (bool) $instance['show_logout_link'] : false;
 	$login_with_email = isset( $instance['login_with_email'] ) ? (bool) $instance['login_with_email'] : false;
-	
+
 ?>
 	<p><label for="<?php echo $this->get_field_id('logged_out_title'); ?>"><?php _e('Logged out title:', 'woocommerce-my-account-widget') ?></label>
 		<input type="text" class="widefat" id="<?php echo esc_attr( $this->get_field_id('logged_out_title') ); ?>" name="<?php echo esc_attr( $this->get_field_name('logged_out_title') ); ?>" value="<?php if (isset ( $instance['logged_out_title'])) echo esc_attr( $instance['logged_out_title'] ); else echo __('Customer Login', 'woocommerce-my-account-widget'); ?>" /></p>
-	
+
 	<p><label for="<?php echo $this->get_field_id('logged_in_title'); ?>"><?php _e('Logged in title:', 'woocommerce-my-account-widget') ?></label>
 		<input type="text" class="widefat" id="<?php echo esc_attr( $this->get_field_id('logged_in_title') ); ?>" name="<?php echo esc_attr( $this->get_field_name('logged_in_title') ); ?>" value="<?php if (isset ( $instance['logged_in_title'])) echo esc_attr( $instance['logged_in_title'] ); else echo __('Welcome %s', 'woocommerce-my-account-widget'); ?>" /></p>
 
@@ -55,9 +57,9 @@ function form($instance)
 	<p><label for="<?php echo $this->get_field_id('wma_redirect'); ?>"><?php _e('Redirect to page after login:', 'woocommerce-my-account-widget') ?></label>
 		<select name="<?php echo esc_attr( $this->get_field_name('wma_redirect') ); ?>" class="widefat">
 			<option value="">
-				<?php echo esc_attr( __( 'Select page','woocommerce-my-account-widget' ) ); ?></option> 
-				<?php 
-				$pages = get_pages(); 
+				<?php echo esc_attr( __( 'Select page','woocommerce-my-account-widget' ) ); ?></option>
+				<?php
+				$pages = get_pages();
 				foreach ( $pages as $page ) {
 					$option = '<option value="' . $page->ID . '" '.selected($instance['wma_redirect'],$page->ID,false).'>';
 					$option .= $page->post_title;
@@ -73,7 +75,7 @@ function form($instance)
 	</p>
 <?php
 }
- 
+
 function update($new_instance, $old_instance)
 {
     $instance = $old_instance;
@@ -88,17 +90,17 @@ function update($new_instance, $old_instance)
 	$instance['show_logout_link'] = !empty($new_instance['show_logout_link']) ? 1 : 0;
 	$instance['login_with_email'] = !empty($new_instance['login_with_email']) ? 1 : 0;
 	$instance['wma_redirect'] = esc_attr($new_instance['wma_redirect']);
-	
+
 	if($instance['login_with_email']==1) {
 		add_option('wma_login_with_email', $new_instance['login_with_email']);
 	} else {
 		delete_option('wma_login_with_email');
 	}
-	
+
 	return $instance;
 }
 function widget($args, $instance)
-{	
+{
 	extract($args, EXTR_SKIP);
 	global $woocommerce;
 
@@ -109,33 +111,33 @@ function widget($args, $instance)
 	$logged_in_title = apply_filters( 'widget_title', empty($instance['logged_in_title']) ? __('Welcome %s', 'woocommerce-my-account-widget') : $instance['logged_in_title'], $instance );
 
 	echo $before_widget;
-    
+
 	$c = (isset($instance['show_cartlink']) && $instance['show_cartlink']) ? '1' : '0';
 	$cart_page_id = get_option('woocommerce_cart_page_id');
-	
-	//check if user is logged in 
+
+	//check if user is logged in
 	if ( is_user_logged_in() ) {
-		
+
 		$it = (isset($instance['show_items']) && $instance['show_items']) ? '1' : '0';
 		$u = (isset($instance['show_upload']) && $instance['show_upload']) ? '1' : '0';
 		$unew = (isset($instance['show_upload_new']) && $instance['show_upload_new']) ? '1' : '0';
 		$up = (isset($instance['show_unpaid']) && $instance['show_unpaid']) ? '1' : '0';
 		$p = (isset($instance['show_pending']) && $instance['show_pending']) ? '1' : '0';
 		$lo = (isset($instance['show_logout_link']) && $instance['show_logout_link']) ? '1' : '0';
-	
+
 	// redirect url after login / logout
 	if(is_multisite()) { $woo_ma_home=network_home_url(); } else {$woo_ma_home=home_url();}
-	
+
 		$user = get_user_by('id', get_current_user_id());
 		echo '<div class=login>';
 		if($user->first_name!="") { $uname=$user->first_name;} else { $uname=$user->display_name; }
 		if ( $logged_in_title ) echo $before_title . sprintf( $logged_in_title, ucwords($uname) ) . $after_title;
-		
 
-		
-				
+
+
+
 		if($c) {echo '<p><a class="woo-ma-button cart-link woo-ma-cart-link" href="'.get_permalink(wma_lang_id($cart_page_id)) .'" title="'. __('View your shopping cart','woocommerce-my-account-widget').'">'.__('View your shopping cart','woocommerce-my-account-widget').'</a></p>';}
-		
+
 		$notcompleted=0;
 		$uploadfile=0;
 		$uploadfile_new=0;
@@ -171,7 +173,7 @@ function widget($args, $instance)
                     } else {
                         $order = wc_get_order($customer_order->ID);
                     }
-    		   
+
     				//$status = get_term_by('slug', $order->status, 'shop_order_status');
     				if(wma_get_order_data($order, 'status')!='completed' && wma_get_order_data($order, 'status')!='cancelled'){ $notcompleted++; }
 
@@ -212,9 +214,9 @@ function widget($args, $instance)
     		if (in_array(wma_get_order_data($order, 'status'), array('on-hold','pending', 'failed'))) { $notpaid++;}
     		endforeach;
 		}
-		
+
 		$my_account_id=wma_lang_id(get_option('woocommerce_myaccount_page_id'));
-		
+
 		echo '<ul class="clearfix woo-ma-list">';
 			if($it) {
 				//$woocommerce->cart->get_cart_url()
@@ -224,7 +226,7 @@ function widget($args, $instance)
 							._n('product in your shopping cart','products in your shopping cart', $woocommerce->cart->cart_contents_count, 'woocommerce-my-account-widget' ).'
 						</a>
 					</li>';
-			} 
+			}
 			if($u && function_exists('woocommerce_umf_admin_menu')) {
 
 				echo '<li class="woo-ma-link upload">
@@ -258,7 +260,7 @@ function widget($args, $instance)
 							._n('order pending','orders pending', $notcompleted, 'woocommerce-my-account-widget' ).'
 						</a>
 					</li>';
-			} 
+			}
 		echo '</ul>';
 		echo '<p><a class="woo-ma-button woo-ma-myaccount-link myaccount-link" href="'.get_permalink( $my_account_id ).'" title="'. __('My Account','woocommerce-my-account-widget').'">'.__('My Account','woocommerce-my-account-widget').'</a></p>';
 		if($lo==1) { echo '<p><a class="woo-ma-button woo-ma-logout-link logout-link" href="'.wp_logout_url($woo_ma_home).'" title="'. __('Log out','woocommerce-my-account-widget').'">'.__('Log out','woocommerce-my-account-widget').'</a></p>'; }
@@ -287,15 +289,15 @@ function widget($args, $instance)
 			'remember' => true,
 			'value_username' => NULL,
 			'value_remember' => false );
-			
+
 		if(isset($instance['wma_redirect']) && $instance['wma_redirect']!="") {
 			$args['redirect']=get_permalink(wma_lang_id($instance['wma_redirect']));
 		}
-		
+
 		wp_login_form( $args );
 		echo '<a class="woo-ma-link woo-ma-lost-pass" href="'. wp_lostpassword_url().'">'. __('Lost password?', 'woocommerce-my-account-widget').'</a>';
-		
-		if(get_option('users_can_register')) {  
+
+		if(get_option('users_can_register')) {
 			echo ' <a class="woo-ma-button woo-ma-register-link register-link" href="'.get_permalink( get_option('woocommerce_myaccount_page_id') ).'" title="'. __('Register','woocommerce-my-account-widget').'">'.__('Register','woocommerce-my-account-widget').'</a>';
 		}
 		if($c) {
@@ -319,11 +321,11 @@ function wma_load_textdomain() {
 add_action( 'widgets_init', create_function('', 'return register_widget("WooCommerceMyAccountWidget");') );
 
 /**
-* Redirect to homepage after failed login 
+* Redirect to homepage after failed login
 * Since 0.2.3
 */
-add_action('wp_login_failed', 'wma_login_fail'); 
- 
+add_action('wp_login_failed', 'wma_login_fail');
+
 function wma_login_fail($username){
     // Get the reffering page, where did the post submission come from?
 
@@ -397,7 +399,7 @@ function wma_email_login() {
 <?php
 }
 
-/** 
+/**
  * Get WPML ID
  * Since 0.3
  */

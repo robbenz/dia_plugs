@@ -5,7 +5,7 @@ Author URI: https://www.geev.nl/
 Tags: woocommerce, file upload
 Requires at least: 4.8
 Tested up to: 4.8
-Stable tag: 0.6.0
+Stable tag: 0.6.1
 License: GPLv2
 
 This plugin adds a widget with customer account information to your WooCommerce shop.
@@ -26,12 +26,12 @@ This plugin is compatible with Wordpress 4.8 and WooCommerce 3.x
 
 **WooCommerce Uploads**
 
-This widgets shows also the number of files the customer has to upload, when you use the WooCommerce Uploads plugin. 
+This widgets shows also the number of files the customer has to upload, when you use the WooCommerce Uploads plugin.
 More information about that plugin on [WP Fortune.com](http://wpfortune.com/shop/plugins/woocommerce-uploads/).
 
 **WooCommerce Upload My File plugin**
 
-This widgets shows also the number of files the customer has to upload, when you use our WooCommerce Upload My File plugin. 
+This widgets shows also the number of files the customer has to upload, when you use our WooCommerce Upload My File plugin.
 More information about that plugin on [WordPress.org plugin repository](https://wordpress.org/plugins/woocommerce-upload-my-file/).
 
 == Installation ==
@@ -50,6 +50,9 @@ Please backup first.
 
 == Changelog ==
 ***WooCommerce My Account Widget***
+
+= 2017.10.12 version 0.6.1 =
+* Tested for WC 3.2
 
 = 2017.05.25 version 0.6.0 =
 * Updated readme.txt
@@ -122,7 +125,7 @@ Please backup first.
 * Fixed: Show logout link option now working
 
 = 2013.05.28 - version 0.2.4 =
-* Added: Norwegian translations (Thanks to Jan-Ivar Mellingen) 
+* Added: Norwegian translations (Thanks to Jan-Ivar Mellingen)
 
 = 2013.05.23 - version 0.2.3 =
 * Changed: After failed login, redirect to same page instead of normal WP login failed.

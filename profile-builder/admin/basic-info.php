@@ -180,6 +180,18 @@ function wppb_basic_info_content() {
 
 			</div>
 		</div>
+		<div class="wrap wppb-wrap wppb-1-3-col">
+			<div>
+				<a href="https://wordpress.org/plugins/translatepress-multilingual/" target="_blank"><img src="<?php echo plugins_url( '../assets/images/pb-trp-cross-promotion.png', __FILE__ ); ?>" alt="TranslatePress Logo"/></a>
+			</div>
+			<div>
+				<h3>Easily translate your entire WordPress website</h3>
+				<p>Translate your Profile Builder forms with a WordPress translation plugin that anyone can use.</p>
+				<p>It offers a simpler way to translate WordPress sites, with full support for WooCommerce and site builders.</p>
+				<p><a href="https://wordpress.org/plugins/translatepress-multilingual/" class="button" target="_blank">Find out how</a></p>
+
+			</div>
+		</div>
 		<hr/>
 		<div>
 			<h3>Extra Notes</h3>

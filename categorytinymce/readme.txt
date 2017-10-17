@@ -1,11 +1,11 @@
 === CategoryTinymce ===
 Contributors: ypraise
-Donate link: http://wp.ypraise.com/2014/boost-your-categories-with-categorytinymce-4-0/
+Donate link: http://wp.ypraise.com/shop/wordpress-plugins/category-tinymce/
 Tags: category description, wp_editor, tag description
 Requires at least: 3.3
-Tested up to: 4.1
-Stable tag: 3.6.4
-Version: 3.6.4
+Tested up to: 4.8.2
+Stable tag: 3.6.5
+Version: 3.6.5
 
 Provides the ability to add a fully functional tinymce editor to the category and tag editor to style up the introductory information for category archives.
 
@@ -73,6 +73,9 @@ just before the get template part.
 
 
 == Changelog ==
+
+= 3.6.5 =
+* Updated to deal with changes to div id's in latest versiuon of Wordpress to hide the old description box and also to deal with new get screen calls.
 
 = 3.6.4 =
 * added support for Wordpress translate function

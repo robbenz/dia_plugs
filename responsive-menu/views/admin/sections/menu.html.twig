@@ -154,6 +154,7 @@
         {{ macros.row('menu_appear_from', 'Appear From', 'select', options, errors, '', '', 'side', '', 'This determines which side the menu slides in from.') }}
         {{ macros.row('animation_type', 'Type', 'select', options, errors, '', 'semi-pro', 'animation') }}
         {{ macros.row('page_wrapper', 'Push Wrapper', 'input', options, errors, '', '', 'animation', '', 'Only needed if you are using the push animation above.') }}
+        {{ macros.row('enable_touch_gestures', 'Enable Touch Gestures', 'checkbox', options, errors, '', 'pro', '', '', 'This will enable swiping in and out to open and close the menu.') }}
         {{ macros.row('menu_close_on_body_click', 'Close on Body Clicks', 'checkbox', options, errors) }}
         {{ macros.row('menu_close_on_link_click', 'Close on Link Clicks', 'checkbox', options, errors) }}
     </table>
@@ -219,13 +220,14 @@
 <div class='panel panel-default'>
     <div class='panel-body'>Depth<small>Menu</small></div>
     <table class='table table-bordered table-hover'>
-        {{ macros.row('menu_depth', 'Depth', 'select', options, errors, '', '', 'depth') }}
-        {{ macros.row('menu_depth_0', 'Depth Level Zero', 'input', options, errors, 'has-unit', 'semi-pro', '', 'percentage') }}
-        {{ macros.row('menu_depth_1', 'Depth Level One', 'input', options, errors, 'has-unit', 'semi-pro', '', 'percentage') }}
-        {{ macros.row('menu_depth_2', 'Depth Level Two', 'input', options, errors, 'has-unit', 'semi-pro', '', 'percentage') }}
-        {{ macros.row('menu_depth_3', 'Depth Level Three', 'input', options, errors, 'has-unit', 'semi-pro', '', 'percentage') }}
-        {{ macros.row('menu_depth_4', 'Depth Level Four', 'input', options, errors, 'has-unit', 'semi-pro', '', 'percentage') }}
-        {{ macros.row('menu_depth_5', 'Depth Level Five', 'input', options, errors, 'has-unit', 'semi-pro', '', 'percentage') }}
+        {{ macros.row('menu_depth', 'Depth', 'select', options, errors, '', '', 'depth', '', 'This determines how many levels deep your sub-menus will go.') }}
+        {{ macros.row('menu_depth_side', 'Depth Padding Side', 'select', options, errors, '', '', 'left_right') }}
+        {{ macros.row('menu_depth_0', 'Depth Level Zero Padding', 'input', options, errors, 'has-unit', 'semi-pro', '', 'percentage') }}
+        {{ macros.row('menu_depth_1', 'Depth Level One Padding', 'input', options, errors, 'has-unit', 'semi-pro', '', 'percentage') }}
+        {{ macros.row('menu_depth_2', 'Depth Level Two Padding', 'input', options, errors, 'has-unit', 'semi-pro', '', 'percentage') }}
+        {{ macros.row('menu_depth_3', 'Depth Level Three Padding', 'input', options, errors, 'has-unit', 'semi-pro', '', 'percentage') }}
+        {{ macros.row('menu_depth_4', 'Depth Level Four Padding', 'input', options, errors, 'has-unit', 'semi-pro', '', 'percentage') }}
+        {{ macros.row('menu_depth_5', 'Depth Level Five Padding', 'input', options, errors, 'has-unit', 'semi-pro', '', 'percentage') }}
     </table>
 </div>
 

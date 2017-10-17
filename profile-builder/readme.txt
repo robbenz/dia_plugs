@@ -4,7 +4,7 @@ Donate link: http://www.cozmoslabs.com/wordpress-profile-builder/
 Tags: user registration, user profile, user registration form, user fields, extra user fields, edit profile, user custom fields, front-end login, front-end edit profile, front-end user registration, email confirmation, login form
 Requires at least: 3.1
 Tested up to: 4.8.1
-Stable tag: 2.6.7
+Stable tag: 2.6.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,8 @@ For more functionality check out [Profile Builder Add-ons page](http://www.cozmo
 
 **Free Add-ons**
 
+* [Custom Login Page Templates](https://www.cozmoslabs.com/add-ons/custom-login-page-templates/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=PBFree) - customize the default WordPress login page with your own design.
+* [Client Portal](https://www.cozmoslabs.com/add-ons/client-portal/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=PBFree) - create private pages for your website users that only an administrator can edit.
 * [Email Confirmation Field](http://www.cozmoslabs.com/add-ons/email-confirmation-field/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=PBFree) - check if the email address entered matches the first one, making sure a user submits a valid and correct email address
 * [Multiple Admin E-mails](http://www.cozmoslabs.com/add-ons/multiple-admin-e-mails/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=PBFree) - send user notification emails to multiple email addresses
 * [Custom CSS Classes on Fields](http://www.cozmoslabs.com/add-ons/custom-css-classes-fields/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=PBFree) - add custom CSS classes for fields
@@ -98,15 +100,18 @@ For more functionality check out [Profile Builder Add-ons page](http://www.cozmo
 * [Campaign Monitor](http://www.cozmoslabs.com/add-ons/profile-builder-campaign-monitor/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=PBFree) - allow users to subscribe to your Campaign Monitor lists directly from the Register or Edit Profile forms
 * [MailPoet](http://www.cozmoslabs.com/add-ons/mailpoet/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=PBFree) - allow users to subscribe to your MailPoet lists directly from the Register and Edit Profile forms
 * [Field Visibility](http://www.cozmoslabs.com/add-ons/field-visibility/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=PBFree) - allows you to change the visibility options for the extra fields
+* [bbPress](https://www.cozmoslabs.com/add-ons/bbpress/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=PBFree) - allows you to integrate Profile Builder with the popular forums plugin, bbPress.
+* [Multi-Step Forms](https://www.cozmoslabs.com/add-ons/multi-step-forms/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=PBFree) - allow users to build multi-step forms for Registration and Edit Profile forms.
+* [BuddyPress](https://www.cozmoslabs.com/add-ons/buddypress/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=PBFree) - allows extending BuddyPress user profiles with Profile Builder user fields.
 
 
 = Documentation =
 
-http://www.cozmoslabs.com/docs/profile-builder-2/
+Please visit the [documentation page](https://www.cozmoslabs.com/docs/profile-builder-2/) for this plugin
 
 = Website =
 
-http://www.cozmoslabs.com/wordpress-profile-builder/
+For more details visit our [website](http://www.cozmoslabs.com/wordpress-profile-builder/)
 
 = Profile Builder in your Language =
 We're focusing on translating Profile Builder in as many languages as we can. So far, the translations for 10 languages are almost complete, but we still need help on a lot of other languages, so please join us at [translate.cozmoslabs.com.](http://translate.cozmoslabs.com/projects/profile-builder)
@@ -153,6 +158,10 @@ This plugin adds/removes user fields in the front-end. Both default and extra pr
 12. Role Editor
 
 == Changelog ==
+= 2.6.8 =
+* Edit other users dropdown on the frontend Edit Profile form is now a select2
+* Fixed a potential error when submitting the Register form
+
 = 2.6.7 =
 * Added option in backend user new/edit screen to add multiple user roles when user roles module is active
 * Added user role multiple select for admin in front-end edit profile form when roles editor is active and select role field is in the form

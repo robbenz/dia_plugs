@@ -99,5 +99,5 @@
     }
 
     window.addEventListener('load', openMailChimpForWordPressBox);
-    createBoxesFromConfig();
+    window.setTimeout(createBoxesFromConfig, 1);
 })();

@@ -3,8 +3,8 @@ Contributors: Ibericode, DvanKooten, hchouhan, lapzor
 Donate link: https://boxzillaplugin.com/#utm_source=wp-plugin-repo&utm_medium=boxzilla&utm_campaign=donate-link
 Tags: scroll triggered box, cta, social, pop-up, newsletter, call to action, mailchimp, contact form 7, social media, mc4wp, ibericode
 Requires at least: 4.1
-Tested up to: 4.8.1
-Stable tag: 3.1.18
+Tested up to: 4.8.2
+Stable tag: 3.1.21
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Requires PHP: 5.3
@@ -148,6 +148,31 @@ Have a look at the [frequently asked questions](https://wordpress.org/plugins/bo
 4. Configuring and customizing your boxes is easy.
 
 == Changelog ==
+
+
+#### 3.1.21 - October 10, 2017
+
+**Fixes**
+
+- Ensure that administrators can always edit boxes.
+
+
+#### 3.1.20 - October 9, 2017
+
+**Fixes**
+
+- Screen width condition not working when using WordPress in language other than English.
+
+**Improvements**
+
+- Use custom capability type so access to Boxzilla boxes can be modified using a role manager plugin.
+
+
+#### 3.1.19 - September 20, 2017
+
+**Improvements**
+
+- Trigger points based on height (scroll %, element) will now be recalculated when the page height changes.
 
 
 #### 3.1.18 - September 7, 2017

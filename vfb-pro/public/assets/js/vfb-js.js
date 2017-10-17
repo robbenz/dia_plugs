@@ -7,6 +7,9 @@
 /* !Rules */
 // @codekit-prepend "_partials/_rules.js";
 
+/* !Signature Pad */
+// @codekit-prepend "_partials/_signature.js";
+
 /* !Page Break */
 // @codekit-prepend "_partials/_page-breaks.js";
 
@@ -46,5 +49,3 @@
 /* !Knob */
 // @codekit-prepend "_partials/_knob.js";
 
-/* !Signature Pad */
-// @codekit-prepend "_partials/_signature.js";

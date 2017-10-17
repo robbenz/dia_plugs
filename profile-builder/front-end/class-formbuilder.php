@@ -665,11 +665,15 @@ class Profile_Builder_Form_Creator{
         $query_args['role'] = apply_filters( 'wppb_edit_profile_user_dropdown_role', '' );
         $users = get_users( apply_filters( 'wppb_edit_other_users_dropdown_query_args', $query_args ) );
         if( !empty( $users ) ) {
+
+            /* turn it in a select2 */
+            wp_enqueue_script( 'wppb_select2_js', WPPB_PLUGIN_URL .'assets/js/select2/select2.min.js', array( 'jquery' ), PROFILE_BUILDER_VERSION );
+            wp_enqueue_style( 'wppb_select2_css', WPPB_PLUGIN_URL .'assets/css/select2/select2.min.css', array(), PROFILE_BUILDER_VERSION );
             ?>
             <form method="GET" action="" id="select_user_to_edit_form">
                 <p class="wppb-form-field">
                     <label for="edit_user"><?php _e('User to edit:', 'profile-builder') ?></label>
-                    <select id="wppb-user-to-edit" name="edit_user">
+                    <select id="wppb-user-to-edit" class="wppb-user-to-edit" name="edit_user">
                         <?php
                         foreach( $users as $user ){
                             ?>
@@ -681,7 +685,8 @@ class Profile_Builder_Form_Creator{
                 </p>
                 <script type="text/javascript">jQuery('#wppb-user-to-edit').change(function () {
 						window.location.href = "<?php echo htmlspecialchars_decode( esc_js( esc_url_raw( add_query_arg( array( 'edit_user' => '=' ) ) ) ) ) ?>" + jQuery(this).val();
-                    });</script>
+                    });
+                    jQuery(function(){jQuery('.wppb-user-to-edit').select2(); })</script>
             </form>
         <?php
         }
@@ -695,10 +700,14 @@ class Profile_Builder_Form_Creator{
      * @return string $html html for the form.
      */
     public function __toString() {
-        ob_start();
-        $this->wppb_form_logic();
-        $html = ob_get_clean();
-        return "{$html}";
+        try {
+            ob_start();
+            $this->wppb_form_logic();
+            $html = ob_get_clean();
+            return "{$html}";
+        } catch (Exception $exception) {
+            return '';
+        }
     }
 }
 

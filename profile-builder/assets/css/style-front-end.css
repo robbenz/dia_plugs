@@ -230,6 +230,12 @@ input#send_credentials_via_email{
     font-size: 100%;
 }
 
+.wppb-form-field > span.select2-container {
+    font-style: normal;
+    font-size: 100%;
+    clear:none;
+}
+
 .wppb-form-field.wppb-timepicker > span.wppb-timepicker-separator {
     display: inline-block;
     float: left;

@@ -1,9 +1,9 @@
 <?php
 /*
 Plugin Name: CategoryTinymce
-Plugin URI: http://wp.ypraise.com/2014/boost-your-categories-with-categorytinymce-4-0/
+Plugin URI: http://wp.ypraise.com/shop/wordpress-plugins/category-tinymce/
 Description: Adds a tinymce enable box to the category descriptions and taxonomy page.
-Version: 3.6.4
+Version: 3.6.5
 Text Domain: categorytinymce
 Author: Kevin Heath
 Author URI: http://wp.ypraise.com/
@@ -113,7 +113,6 @@ if ( $current_screen->id == 'edit-category' OR 'edit-tag' ) {
 ?>
 <style type="text/css">
   .quicktags-toolbar input{float:left !important; width:auto !important;}
- .taxonomy-category .term-description-wrap [for="description"], .taxonomy-category .term-description-wrap textarea#description, .term-description-wrap p.description {display:none!important;}
   </style>
   
 <?php	} }
@@ -464,4 +463,39 @@ function remove_Category_Extras($term_id) {
     update_option(Category_Extras, $tag_extra_fields);
   endif;
 }
+
+// quick jquery to hide the default cat description box
+
+function hide_category_description() {
+      $screen = get_current_screen();
+if ( $screen->id == 'edit-category' ) { 
+?>
+<script type="text/javascript">
+jQuery(function($) {
+ $('#wp-description-wrap').hide();
+ }); 
+ </script> <?php
+ } 
+	  } 
+	  
+	  // quick jquery to hide the default tag description box
+
+function hide_tag_description() {
+           $screen = get_current_screen();
+if ( $screen->base == 'term' ) {
+?>
+<script type="text/javascript">
+jQuery(function($) {
+ $('.term-description-wrap').hide();
+ }); 
+ </script> <?php
+ } 
+	  } 
+	  
+// lets hide the cat description from the category admin page
+
+add_action('admin_head', 'hide_category_description'); 
+add_action('admin_head', 'hide_tag_description'); 
+
+
 ?>
