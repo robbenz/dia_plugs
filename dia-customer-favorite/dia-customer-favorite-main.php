@@ -27,9 +27,8 @@ function dia_cust_fav_woo_fail_notice(){
 }
 
 // include the respective php files after successful activation
-add_action( 'init', 'dia_cust_fav_include_files' );
+register_activation_hook( __FILE__, 'dia_cust_fav_include_files' );
 function dia_cust_fav_include_files() {
-  if ( is_plugin_active( plugin_basename( __FILE__ ) ) ) {
     $mypluginrequires = array(
       'dia-customer-favorite-admin.php',
       'dia-customer-favorite-frontend.php'
@@ -37,7 +36,6 @@ function dia_cust_fav_include_files() {
     foreach ( $mypluginrequires as $need ) {
       include_once( plugin_dir_path( __FILE__ ) . $need );
     }
-  }
 }
 
 // include JS for admin stuff

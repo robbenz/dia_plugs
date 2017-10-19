@@ -26,10 +26,6 @@ jQuery(document).ready(function() {
     dateFormat : 'mm/dd/yy'
   });
 
-  jQuery("#dia_var_specs_20 .dia_var_date_check").datepicker({
-    dateFormat : 'mm/dd/yy'
-  });
-
 });
 
 jQuery(document).ready(function() {

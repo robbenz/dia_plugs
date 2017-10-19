@@ -1,15 +1,15 @@
 <?php
 /*
-Plugin Name: Brady Thinks Your Cool  
+Plugin Name: Brady Thinks Your Cool
 Plugin URI: http://www.robbenz.com
-Description: If Brady thinks you are cool, this plugin will allow you to approve the purchase order payment gateway, also it should capture the facility name  
+Description: If Brady thinks you are cool, this plugin will allow you to approve the purchase order payment gateway, also it should capture the facility name
 Version: 1.0
 Author: Benz
 Author URI: http://www.robbenz.com
 License: GPL2
  */
 
-//  --   add_actions for extra user profile fields 
+//  --   add_actions for extra user profile fields
 add_action( 'show_user_profile', 'brady_extra_user_profile_fields' );
 add_action( 'edit_user_profile', 'brady_extra_user_profile_fields' );
 add_action( 'personal_options_update', 'brady_save_extra_user_profile_fields' );
@@ -87,7 +87,7 @@ function brady_cool_user_register( $user_id ) {
 function brady_add_user_facility_name_column( $columns ) {
     $columns['facility_name'] = __( 'Facility Name', 'theme' );
     return $columns;
-} 
+}
 add_filter( 'manage_users_columns', 'brady_add_user_facility_name_column' );
 
 //  --  Show Facility Name
@@ -105,9 +105,9 @@ function brady_save_extra_user_profile_fields( $user_id ) {
 }
 
 //  --  Display Facility Name Field on USER edit-post page
-function brady_extra_user_profile_fields( $user ) { 
+function brady_extra_user_profile_fields( $user ) {
 ?>
-<h3>Facility Name</h3> 
+<h3>Facility Name</h3>
 <table class="form-table">
     <tr>
         <th><label for="facility_name">Facility Name</label></th>
@@ -119,36 +119,3 @@ function brady_extra_user_profile_fields( $user ) {
 </table>
 <?php
 }
-
-/*
-//  --  Add Custom Purchase Order Role
-add_role('purchase_order', 'Purchase Order', array(
-    'read'         => true, 
-    'edit_posts'   => false,
-    'delete_posts' => false, 
-));
-
-//  --  Disable Purchase order gateway unless I change User Role to "Purchase Order
-global $woocommerce;
-function brady_disable_po( $available_gateways ) {
-    if ( isset($available_gateways['woocommerce_gateway_purchase_order']) && (current_user_can('customer') ) ) {
-        //remove the woocommerce_gateway_purchase_order payment gateway if user is 'customer' ( all users are customer unless I say otherwise ).
-        unset($available_gateways['woocommerce_gateway_purchase_order']);
-     }
-     return $available_gateways;
-}
-add_filter('woocommerce_available_payment_gateways', 'brady_disable_po', 99, 1);
-
-
- */
-
-
-
-
-
-
-
-
-
-
-

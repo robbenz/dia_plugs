@@ -26,17 +26,14 @@ function dia_woo_notice(){
     ?><div class="error"><p>Sorry, but this plugin requires Woocommerce to be installed and active, you idiot.</p></div><?php
 }
 
-
 // include the respective php files after successful activation
-add_action( 'init', 'dia_woo_include_files' );
+register_activation_hook( __FILE__, 'dia_woo_include_files' );
 function dia_woo_include_files() {
-  if ( is_plugin_active( plugin_basename( __FILE__ ) ) ) {
-    $mypluginrequires = array(
-      'dia-tabs-admin.php',
-      'dia-tabs-frontend.php'
-    );
-    foreach ( $mypluginrequires as $need ) {
-      include_once( plugin_dir_path( __FILE__ ) . $need );
-    }
+  $mypluginrequires = array(
+    'dia-tabs-admin.php',
+    'dia-tabs-frontend.php'
+  );
+  foreach ( $mypluginrequires as $need ) {
+    include_once( plugin_dir_path( __FILE__ ) . $need );
   }
 }
