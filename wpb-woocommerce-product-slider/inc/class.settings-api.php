@@ -3,28 +3,33 @@
 /**
  * weDevs Settings API wrapper class
  *
- * @version 1.3 (27-Sep-2016)
- *
  * @author Tareq Hasan <tareq@weDevs.com>
- * @link https://tareq.co Tareq Hasan
- * @example example/oop-example.php How to use the class
+ * @link http://tareq.weDevs.com Tareq's Planet
+ * @example settings-api.php How to use the class
  */
-if ( !class_exists( 'WeDevs_Settings_API' ) ):
-class WeDevs_Settings_API {
+if ( !class_exists( 'WPB_wps_mother_class' ) ):
+class WPB_wps_mother_class {
 
     /**
      * settings sections array
      *
      * @var array
      */
-    protected $settings_sections = array();
+    private $settings_sections = array();
 
     /**
      * Settings fields array
      *
      * @var array
      */
-    protected $settings_fields = array();
+    private $settings_fields = array();
+
+    /**
+     * Singleton instance
+     *
+     * @var object
+     */
+    private static $_instance;
 
     public function __construct() {
         add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
@@ -35,10 +40,12 @@ class WeDevs_Settings_API {
      */
     function admin_enqueue_scripts() {
         wp_enqueue_style( 'wp-color-picker' );
+        wp_enqueue_style( 'thickbox' );
 
-        wp_enqueue_media();
         wp_enqueue_script( 'wp-color-picker' );
         wp_enqueue_script( 'jquery' );
+        wp_enqueue_script( 'media-upload' );
+        wp_enqueue_script( 'thickbox' );
     }
 
     /**
@@ -76,10 +83,10 @@ class WeDevs_Settings_API {
 
     function add_field( $section, $field ) {
         $defaults = array(
-            'name'  => '',
+            'name' => '',
             'label' => '',
-            'desc'  => '',
-            'type'  => 'text'
+            'desc' => '',
+            'type' => 'text'
         );
 
         $arg = wp_parse_args( $field, $defaults );
@@ -104,12 +111,10 @@ class WeDevs_Settings_API {
             }
 
             if ( isset($section['desc']) && !empty($section['desc']) ) {
-                $section['desc'] = '<div class="inside">' . $section['desc'] . '</div>';
-                $callback = create_function('', 'echo "' . str_replace( '"', '\"', $section['desc'] ) . '";');
-            } else if ( isset( $section['callback'] ) ) {
-                $callback = $section['callback'];
+                $section['desc'] = '<div class="inside">'.$section['desc'].'</div>';
+                $callback = create_function('', 'echo "'.str_replace('"', '\"', $section['desc']).'";');
             } else {
-                $callback = null;
+                $callback = '__return_false';
             }
 
             add_settings_section( $section['id'], $section['title'], $callback, $section['id'] );
@@ -119,30 +124,19 @@ class WeDevs_Settings_API {
         foreach ( $this->settings_fields as $section => $field ) {
             foreach ( $field as $option ) {
 
-                $name = $option['name'];
                 $type = isset( $option['type'] ) ? $option['type'] : 'text';
-                $label = isset( $option['label'] ) ? $option['label'] : '';
-                $callback = isset( $option['callback'] ) ? $option['callback'] : array( $this, 'callback_' . $type );
 
                 $args = array(
-                    'id'                => $name,
-                    'class'             => isset( $option['class'] ) ? $option['class'] : $name,
-                    'label_for'         => "{$section}[{$name}]",
-                    'desc'              => isset( $option['desc'] ) ? $option['desc'] : '',
-                    'name'              => $label,
-                    'section'           => $section,
-                    'size'              => isset( $option['size'] ) ? $option['size'] : null,
-                    'options'           => isset( $option['options'] ) ? $option['options'] : '',
-                    'std'               => isset( $option['default'] ) ? $option['default'] : '',
+                    'id' => $option['name'],
+                    'desc' => isset( $option['desc'] ) ? $option['desc'] : '',
+                    'name' => $option['label'],
+                    'section' => $section,
+                    'size' => isset( $option['size'] ) ? $option['size'] : null,
+                    'options' => isset( $option['options'] ) ? $option['options'] : '',
+                    'std' => isset( $option['default'] ) ? $option['default'] : '',
                     'sanitize_callback' => isset( $option['sanitize_callback'] ) ? $option['sanitize_callback'] : '',
-                    'type'              => $type,
-                    'placeholder'       => isset( $option['placeholder'] ) ? $option['placeholder'] : '',
-                    'min'               => isset( $option['min'] ) ? $option['min'] : '',
-                    'max'               => isset( $option['max'] ) ? $option['max'] : '',
-                    'step'              => isset( $option['step'] ) ? $option['step'] : '',
                 );
-
-                add_settings_field( "{$section}[{$name}]", $label, $callback, $section, $section, $args );
+                add_settings_field( $section . '[' . $option['name'] . ']', $option['label'], array( $this, 'callback_' . $type ), $section, $section, $args );
             }
         }
 
@@ -153,63 +147,33 @@ class WeDevs_Settings_API {
     }
 
     /**
-     * Get field description for display
-     *
-     * @param array   $args settings field args
-     */
-    public function get_field_description( $args ) {
-        if ( ! empty( $args['desc'] ) ) {
-            $desc = sprintf( '<p class="description">%s</p>', $args['desc'] );
-        } else {
-            $desc = '';
-        }
-
-        return $desc;
-    }
-
-    /**
      * Displays a text field for a settings field
      *
      * @param array   $args settings field args
      */
     function callback_text( $args ) {
 
-        $value       = esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'] ) );
-        $size        = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : 'regular';
-        $type        = isset( $args['type'] ) ? $args['type'] : 'text';
-        $placeholder = empty( $args['placeholder'] ) ? '' : ' placeholder="' . $args['placeholder'] . '"';
+        $value = esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'] ) );
+        $size = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : 'regular';
 
-        $html        = sprintf( '<input type="%1$s" class="%2$s-text" id="%3$s[%4$s]" name="%3$s[%4$s]" value="%5$s"%6$s/>', $type, $size, $args['section'], $args['id'], $value, $placeholder );
-        $html       .= $this->get_field_description( $args );
+        $html = sprintf( '<input type="text" class="%1$s-text" id="%2$s[%3$s]" name="%2$s[%3$s]" value="%4$s"/>', $size, $args['section'], $args['id'], $value );
+        $html .= sprintf( '<span class="description"> %s</span>', $args['desc'] );
 
         echo $html;
     }
-
-    /**
-     * Displays a url field for a settings field
+	
+	/**
+     * Displays a text(number valid) field for a settings field
      *
      * @param array   $args settings field args
      */
-    function callback_url( $args ) {
-        $this->callback_text( $args );
-    }
+	function callback_number( $args ) {
 
-    /**
-     * Displays a number field for a settings field
-     *
-     * @param array   $args settings field args
-     */
-    function callback_number( $args ) {
-        $value       = esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'] ) );
-        $size        = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : 'regular';
-        $type        = isset( $args['type'] ) ? $args['type'] : 'number';
-        $placeholder = empty( $args['placeholder'] ) ? '' : ' placeholder="' . $args['placeholder'] . '"';
-        $min         = empty( $args['min'] ) ? '' : ' min="' . $args['min'] . '"';
-        $max         = empty( $args['max'] ) ? '' : ' max="' . $args['max'] . '"';
-        $step        = empty( $args['max'] ) ? '' : ' step="' . $args['step'] . '"';
+        $value = esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'] ) );
+        $size = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : 'regular';
 
-        $html        = sprintf( '<input type="%1$s" class="%2$s-number" id="%3$s[%4$s]" name="%3$s[%4$s]" value="%5$s"%6$s%7$s%8$s%9$s/>', $type, $size, $args['section'], $args['id'], $value, $placeholder, $min, $max, $step );
-        $html       .= $this->get_field_description( $args );
+        $html = sprintf( '<input type="number" class="%1$s-text-number" id="%2$s[%3$s]" name="%2$s[%3$s]" value="%4$s"/>', $size, $args['section'], $args['id'], $value );
+        $html .= sprintf( '<span class="description"> %s</span>', $args['desc'] );
 
         echo $html;
     }
@@ -223,12 +187,9 @@ class WeDevs_Settings_API {
 
         $value = esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'] ) );
 
-        $html  = '<fieldset>';
-        $html  .= sprintf( '<label for="wpuf-%1$s[%2$s]">', $args['section'], $args['id'] );
-        $html  .= sprintf( '<input type="hidden" name="%1$s[%2$s]" value="off" />', $args['section'], $args['id'] );
-        $html  .= sprintf( '<input type="checkbox" class="checkbox" id="wpuf-%1$s[%2$s]" name="%1$s[%2$s]" value="on" %3$s />', $args['section'], $args['id'], checked( $value, 'on', false ) );
-        $html  .= sprintf( '%1$s</label>', $args['desc'] );
-        $html  .= '</fieldset>';
+        $html = sprintf( '<input type="hidden" name="%1$s[%2$s]" value="off" />', $args['section'], $args['id'] );
+        $html .= sprintf( '<input type="checkbox" class="checkbox" id="%1$s[%2$s]" name="%1$s[%2$s]" value="on"%4$s />', $args['section'], $args['id'], $value, checked( $value, 'on', false ) );
+        $html .= sprintf( '<label for="%1$s[%2$s]"> %3$s</label>', $args['section'], $args['id'], $args['desc'] );
 
         echo $html;
     }
@@ -241,17 +202,14 @@ class WeDevs_Settings_API {
     function callback_multicheck( $args ) {
 
         $value = $this->get_option( $args['id'], $args['section'], $args['std'] );
-        $html  = '<fieldset>';
-        $html .= sprintf( '<input type="hidden" name="%1$s[%2$s]" value="" />', $args['section'], $args['id'] );
+
+        $html = '';
         foreach ( $args['options'] as $key => $label ) {
             $checked = isset( $value[$key] ) ? $value[$key] : '0';
-            $html    .= sprintf( '<label for="wpuf-%1$s[%2$s][%3$s]">', $args['section'], $args['id'], $key );
-            $html    .= sprintf( '<input type="checkbox" class="checkbox" id="wpuf-%1$s[%2$s][%3$s]" name="%1$s[%2$s][%3$s]" value="%3$s" %4$s />', $args['section'], $args['id'], $key, checked( $checked, $key, false ) );
-            $html    .= sprintf( '%1$s</label><br>',  $label );
+            $html .= sprintf( '<input type="checkbox" class="checkbox" id="%1$s[%2$s][%3$s]" name="%1$s[%2$s][%3$s]" value="%3$s"%4$s />', $args['section'], $args['id'], $key, checked( $checked, $key, false ) );
+            $html .= sprintf( '<label for="%1$s[%2$s][%4$s]"> %3$s</label><br>', $args['section'], $args['id'], $label, $key );
         }
-
-        $html .= $this->get_field_description( $args );
-        $html .= '</fieldset>';
+        $html .= sprintf( '<span class="description"> %s</label>', $args['desc'] );
 
         echo $html;
     }
@@ -264,16 +222,13 @@ class WeDevs_Settings_API {
     function callback_radio( $args ) {
 
         $value = $this->get_option( $args['id'], $args['section'], $args['std'] );
-        $html  = '<fieldset>';
 
+        $html = '';
         foreach ( $args['options'] as $key => $label ) {
-            $html .= sprintf( '<label for="wpuf-%1$s[%2$s][%3$s]">',  $args['section'], $args['id'], $key );
-            $html .= sprintf( '<input type="radio" class="radio" id="wpuf-%1$s[%2$s][%3$s]" name="%1$s[%2$s]" value="%3$s" %4$s />', $args['section'], $args['id'], $key, checked( $value, $key, false ) );
-            $html .= sprintf( '%1$s</label><br>', $label );
+            $html .= sprintf( '<input type="radio" class="radio" id="%1$s[%2$s][%3$s]" name="%1$s[%2$s]" value="%3$s"%4$s />', $args['section'], $args['id'], $key, checked( $value, $key, false ) );
+            $html .= sprintf( '<label for="%1$s[%2$s][%4$s]"> %3$s</label><br>', $args['section'], $args['id'], $label, $key );
         }
-
-        $html .= $this->get_field_description( $args );
-        $html .= '</fieldset>';
+        $html .= sprintf( '<span class="description"> %s</label>', $args['desc'] );
 
         echo $html;
     }
@@ -286,15 +241,14 @@ class WeDevs_Settings_API {
     function callback_select( $args ) {
 
         $value = esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'] ) );
-        $size  = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : 'regular';
-        $html  = sprintf( '<select class="%1$s" name="%2$s[%3$s]" id="%2$s[%3$s]">', $size, $args['section'], $args['id'] );
+        $size = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : 'regular';
 
+        $html = sprintf( '<select class="%1$s" name="%2$s[%3$s]" id="%2$s[%3$s]">', $size, $args['section'], $args['id'] );
         foreach ( $args['options'] as $key => $label ) {
             $html .= sprintf( '<option value="%s"%s>%s</option>', $key, selected( $value, $key, false ), $label );
         }
-
         $html .= sprintf( '</select>' );
-        $html .= $this->get_field_description( $args );
+        $html .= sprintf( '<span class="description"> %s</span>', $args['desc'] );
 
         echo $html;
     }
@@ -306,12 +260,11 @@ class WeDevs_Settings_API {
      */
     function callback_textarea( $args ) {
 
-        $value       = esc_textarea( $this->get_option( $args['id'], $args['section'], $args['std'] ) );
-        $size        = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : 'regular';
-        $placeholder = empty( $args['placeholder'] ) ? '' : ' placeholder="'.$args['placeholder'].'"';
+        $value = esc_textarea( $this->get_option( $args['id'], $args['section'], $args['std'] ) );
+        $size = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : 'regular';
 
-        $html        = sprintf( '<textarea rows="5" cols="55" class="%1$s-text" id="%2$s[%3$s]" name="%2$s[%3$s]"%4$s>%5$s</textarea>', $size, $args['section'], $args['id'], $placeholder, $value );
-        $html        .= $this->get_field_description( $args );
+        $html = sprintf( '<textarea rows="5" cols="55" class="%1$s-text" id="%2$s[%3$s]" name="%2$s[%3$s]">%4$s</textarea>', $size, $args['section'], $args['id'], $value );
+        $html .= sprintf( '<br><span class="description"> %s</span>', $args['desc'] );
 
         echo $html;
     }
@@ -320,10 +273,9 @@ class WeDevs_Settings_API {
      * Displays a textarea for a settings field
      *
      * @param array   $args settings field args
-     * @return string
      */
     function callback_html( $args ) {
-        echo $this->get_field_description( $args );
+        echo $args['desc'];
     }
 
     /**
@@ -333,26 +285,16 @@ class WeDevs_Settings_API {
      */
     function callback_wysiwyg( $args ) {
 
-        $value = $this->get_option( $args['id'], $args['section'], $args['std'] );
-        $size  = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : '500px';
+        $value = wpautop( $this->get_option( $args['id'], $args['section'], $args['std'] ) );
+        $size = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : '500px';
 
-        echo '<div style="max-width: ' . $size . ';">';
+        echo '<div style="width: ' . $size . ';">';
 
-        $editor_settings = array(
-            'teeny'         => true,
-            'textarea_name' => $args['section'] . '[' . $args['id'] . ']',
-            'textarea_rows' => 10
-        );
-
-        if ( isset( $args['options'] ) && is_array( $args['options'] ) ) {
-            $editor_settings = array_merge( $editor_settings, $args['options'] );
-        }
-
-        wp_editor( $value, $args['section'] . '-' . $args['id'], $editor_settings );
+        wp_editor( $value, $args['section'] . '[' . $args['id'] . ']', array( 'teeny' => true, 'textarea_rows' => 10 ) );
 
         echo '</div>';
 
-        echo $this->get_field_description( $args );
+        echo sprintf( '<br><span class="description"> %s</span>', $args['desc'] );
     }
 
     /**
@@ -363,13 +305,30 @@ class WeDevs_Settings_API {
     function callback_file( $args ) {
 
         $value = esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'] ) );
-        $size  = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : 'regular';
-        $id    = $args['section']  . '[' . $args['id'] . ']';
-        $label = isset( $args['options']['button_label'] ) ? $args['options']['button_label'] : __( 'Choose File' );
-
-        $html  = sprintf( '<input type="text" class="%1$s-text wpsa-url" id="%2$s[%3$s]" name="%2$s[%3$s]" value="%4$s"/>', $size, $args['section'], $args['id'], $value );
-        $html  .= '<input type="button" class="button wpsa-browse" value="' . $label . '" />';
-        $html  .= $this->get_field_description( $args );
+        $size = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : 'regular';
+        $id = $args['section']  . '[' . $args['id'] . ']';
+        $js_id = $args['section']  . '\\\\[' . $args['id'] . '\\\\]';
+        $html = sprintf( '<input type="text" class="%1$s-text" id="%2$s[%3$s]" name="%2$s[%3$s]" value="%4$s"/>', $size, $args['section'], $args['id'], $value );
+        $html .= '<input type="button" class="button wpsf-browse" id="'. $id .'_button" value="Browse" />
+        <script type="text/javascript">
+        jQuery(document).ready(function($){
+            $("#'. $js_id .'_button").click(function() {
+                tb_show("", "media-upload.php?post_id=0&amp;type=image&amp;TB_iframe=true");
+                window.original_send_to_editor = window.send_to_editor;
+                window.send_to_editor = function(html) {
+                    var url = $(html).attr(\'href\');
+                    if ( !url ) {
+                        url = $(html).attr(\'src\');
+                    };
+                    $("#'. $js_id .'").val(url);
+                    tb_remove();
+                    window.send_to_editor = window.original_send_to_editor;
+                };
+                return false;
+            });
+        });
+        </script>';
+        $html .= sprintf( '<span class="description"> %s</span>', $args['desc'] );
 
         echo $html;
     }
@@ -382,10 +341,10 @@ class WeDevs_Settings_API {
     function callback_password( $args ) {
 
         $value = esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'] ) );
-        $size  = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : 'regular';
+        $size = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : 'regular';
 
-        $html  = sprintf( '<input type="password" class="%1$s-text" id="%2$s[%3$s]" name="%2$s[%3$s]" value="%4$s"/>', $size, $args['section'], $args['id'], $value );
-        $html  .= $this->get_field_description( $args );
+        $html = sprintf( '<input type="password" class="%1$s-text" id="%2$s[%3$s]" name="%2$s[%3$s]" value="%4$s"/>', $size, $args['section'], $args['id'], $value );
+        $html .= sprintf( '<span class="description"> %s</span>', $args['desc'] );
 
         echo $html;
     }
@@ -398,25 +357,18 @@ class WeDevs_Settings_API {
     function callback_color( $args ) {
 
         $value = esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'] ) );
-        $size  = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : 'regular';
+        $size = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : 'regular';
 
-        $html  = sprintf( '<input type="text" class="%1$s-text wp-color-picker-field" id="%2$s[%3$s]" name="%2$s[%3$s]" value="%4$s" data-default-color="%5$s" />', $size, $args['section'], $args['id'], $value, $args['std'] );
-        $html  .= $this->get_field_description( $args );
+        $html = sprintf( '<input type="text" class="%1$s-text wp-color-picker-field" id="%2$s[%3$s]" name="%2$s[%3$s]" value="%4$s" data-default-color="%5$s" />', $size, $args['section'], $args['id'], $value, $args['std'] );
+        $html .= sprintf( '<span class="description" style="display:block;"> %s</span>', $args['desc'] );
 
         echo $html;
     }
 
     /**
      * Sanitize callback for Settings API
-     *
-     * @return mixed
      */
     function sanitize_options( $options ) {
-
-        if ( !$options ) {
-            return $options;
-        }
-
         foreach( $options as $option_slug => $option_value ) {
             $sanitize_callback = $this->get_sanitize_callback( $option_slug );
 
@@ -425,8 +377,13 @@ class WeDevs_Settings_API {
                 $options[ $option_slug ] = call_user_func( $sanitize_callback, $option_value );
                 continue;
             }
-        }
 
+            // Treat everything that's not an array as a string
+            if ( !is_array( $option_value ) ) {
+                $options[ $option_slug ] = sanitize_text_field( $option_value );
+                continue;
+            }
+        }
         return $options;
     }
 
@@ -438,22 +395,17 @@ class WeDevs_Settings_API {
      * @return mixed string or bool false
      */
     function get_sanitize_callback( $slug = '' ) {
-        if ( empty( $slug ) ) {
+        if ( empty( $slug ) )
             return false;
-        }
-
         // Iterate over registered fields and see if we can find proper callback
         foreach( $this->settings_fields as $section => $options ) {
             foreach ( $options as $option ) {
-                if ( $option['name'] != $slug ) {
+                if ( $option['name'] != $slug )
                     continue;
-                }
-
                 // Return the callback name
                 return isset( $option['sanitize_callback'] ) && is_callable( $option['sanitize_callback'] ) ? $option['sanitize_callback'] : false;
             }
         }
-
         return false;
     }
 
@@ -484,13 +436,6 @@ class WeDevs_Settings_API {
     function show_navigation() {
         $html = '<h2 class="nav-tab-wrapper">';
 
-        $count = count( $this->settings_sections );
-
-        // don't show the navigation if only one section exists
-        if ( $count === 1 ) {
-            return;
-        }
-
         foreach ( $this->settings_sections as $tab ) {
             $html .= sprintf( '<a href="#%1$s" class="nav-tab" id="%1$s-tab">%2$s</a>', $tab['id'], $tab['title'] );
         }
@@ -509,19 +454,17 @@ class WeDevs_Settings_API {
         ?>
         <div class="metabox-holder">
             <?php foreach ( $this->settings_sections as $form ) { ?>
-                <div id="<?php echo $form['id']; ?>" class="group" style="display: none;">
+                <div id="<?php echo $form['id']; ?>" class="group">
                     <form method="post" action="options.php">
-                        <?php
-                        do_action( 'wsa_form_top_' . $form['id'], $form );
-                        settings_fields( $form['id'] );
-                        do_settings_sections( $form['id'] );
-                        do_action( 'wsa_form_bottom_' . $form['id'], $form );
-                        if ( isset( $this->settings_fields[ $form['id'] ] ) ):
-                        ?>
+
+                        <?php do_action( 'wsa_form_top_' . $form['id'], $form ); ?>
+                        <?php settings_fields( $form['id'] ); ?>
+                        <?php do_settings_sections( $form['id'] ); ?>
+                        <?php do_action( 'wsa_form_bottom_' . $form['id'], $form ); ?>
+
                         <div style="padding-left: 10px">
                             <?php submit_button(); ?>
                         </div>
-                        <?php endif; ?>
                     </form>
                 </div>
             <?php } ?>
@@ -541,7 +484,6 @@ class WeDevs_Settings_API {
             jQuery(document).ready(function($) {
                 //Initiate Color Picker
                 $('.wp-color-picker-field').wpColorPicker();
-
                 // Switches option sections
                 $('.group').hide();
                 var activetab = '';
@@ -581,49 +523,16 @@ class WeDevs_Settings_API {
                     $(clicked_group).fadeIn();
                     evt.preventDefault();
                 });
-
-                $('.wpsa-browse').on('click', function (event) {
-                    event.preventDefault();
-
-                    var self = $(this);
-
-                    // Create the media frame.
-                    var file_frame = wp.media.frames.file_frame = wp.media({
-                        title: self.data('uploader_title'),
-                        button: {
-                            text: self.data('uploader_button_text'),
-                        },
-                        multiple: false
-                    });
-
-                    file_frame.on('select', function () {
-                        attachment = file_frame.state().get('selection').first().toJSON();
-                        self.prev('.wpsa-url').val(attachment.url).change();
-                    });
-
-                    // Finally, open the modal
-                    file_frame.open();
-                });
-        });
+            });
         </script>
-        <?php
-        $this->_style_fix();
-    }
 
-    function _style_fix() {
-        global $wp_version;
-
-        if (version_compare($wp_version, '3.8', '<=')):
-        ?>
         <style type="text/css">
             /** WordPress 3.8 Fix **/
             .form-table th { padding: 20px 10px; }
             #wpbody-content .metabox-holder { padding-top: 5px; }
         </style>
         <?php
-        endif;
     }
 
 }
-
 endif;

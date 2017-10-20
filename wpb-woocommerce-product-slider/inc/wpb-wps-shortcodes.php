@@ -6,181 +6,297 @@
  */
 
 /**
- * Product Slider ShortCode
+ * Ading the shortcodes
  */
 
-add_shortcode('wpb-product-slider', 'wpb_wps_shortcode_function');
+add_shortcode('wpb-latest-product', 'wpb_wps_shortcode');
+add_shortcode('wpb-feature-product', 'wpb_wps_feature_shortcode');
+add_shortcode('wpb-sidebar-latest-product', 'wpb_wps_sideber_shortcode');
+add_shortcode('wpb-sidebar-feature-product', 'wpb_wps_sideber_feature_shortcode');
 
-if( !function_exists( 'wpb_wps_shortcode_function' ) ):
-	function wpb_wps_shortcode_function( $atts ){
+
+/**
+ * Latest product Slider
+ */
+
+if( !function_exists( 'wpb_wps_shortcode' ) ):
+	function wpb_wps_shortcode($atts){
 		extract(shortcode_atts(array(
-			'title' 				=> '',
-			'posts' 				=> wpb_wps_get_option( 'wpb_wps_number', 'wpb_wps_general', 12 ),
-			'product_type' 			=> wpb_wps_get_option( 'wpb_wps_product_type', 'wpb_wps_general', 'latest' ), // latest, featured, category, tags, id
-			'theme' 				=> wpb_wps_get_option( 'wpb_wps_slider_theme', 'wpb_wps_general', 'hover_effect' ), // hover_effect, grid_no_animation
-			'show_reviews'     		=> wpb_wps_get_option( 'wpb_wps_show_reviews', 'wpb_wps_general', 'off' ),
-			'show_price'     		=> wpb_wps_get_option( 'wpb_wps_show_price', 'wpb_wps_general', 'on' ),
-			'show_cart'     		=> wpb_wps_get_option( 'wpb_wps_show_cart', 'wpb_wps_general', 'on' ),
-			'orderby'				=> wpb_wps_get_option( 'wpb_wps_orderby', 'wpb_wps_general', 'date' ),
-			'order'					=> wpb_wps_get_option( 'wpb_wps_order', 'wpb_wps_general', 'DESC' ),
-			'autoplay'				=> ( wpb_wps_get_option( 'wpb_slider_autoplay', 'wpb_wps_slider_settings', 'on' ) == 'on' ? 'true' : 'false' ),
-			'loop'					=> ( wpb_wps_get_option( 'wpb_slider_loop', 'wpb_wps_slider_settings', 'on' ) == 'on' ? 'true' : 'false' ),
-			'nav'					=> ( wpb_wps_get_option( 'wpb_slider_navigation', 'wpb_wps_slider_settings', 'on' ) == 'on' ? 'true' : 'false' ),
-			'slideby'				=> ( wpb_wps_get_option( 'wpb_slider_slideby', 'wpb_wps_slider_settings', 1 ) ),
-			'pagination' 			=> ( wpb_wps_get_option( 'wpb_slider_pagination', 'wpb_wps_slider_settings', 'off' ) == 'on' ? 'true' : 'false' ),
-			'pagination_number' 	=> ( wpb_wps_get_option( 'wpb_slider_pagination_number', 'wpb_wps_slider_settings', 'off' ) == 'on' ? 'true' : 'false' ),
-			'items' 				=> wpb_wps_get_option( 'wpb_wps_items', 'wpb_wps_slider_settings', 4 ), // Number of product on default screen
-			'items_desktop_small'	=> wpb_wps_get_option( 'wpb_wps_items_desktop_small', 'wpb_wps_slider_settings', 3 ), // Number of product on screen size 979px
-			'items_tablet'			=> wpb_wps_get_option( 'wpb_wps_items_tablet', 'wpb_wps_slider_settings', 2 ), // Number of product on screen size 768px
-			'items_mobile'			=> wpb_wps_get_option( 'wpb_wps_items_mobile', 'wpb_wps_slider_settings', 1 ), // Number of product on screen size 479px
-			'category'				=> wpb_wps_get_option( 'wpb_wps_categories', 'wpb_wps_general', '' ), // comma separated categories id
-			'tags'					=> wpb_wps_get_option( 'wpb_wps_tags', 'wpb_wps_general', '' ), // comma separated tags id
-			'id'					=> wpb_wps_get_option( 'wpb_wps_ids', 'wpb_wps_general', '' ), // comma separated products id
+			'title' => __( 'Latest Products','wpb-wps' ),
 		), $atts));
 
-		$slider_data_attr = array(
-	    	'autoplay'			=> $autoplay,
-	    	'loop'				=> $loop,
-	    	'navigation'		=> $nav,
-	    	'slideby'			=> $slideby,
-	    	'pagination'		=> $pagination,
-	    	'items'				=> $items,
-	    	'desktopsmall'		=> $items_desktop_small,
-	    	'tablet'			=> $items_tablet,
-	    	'mobile'			=> $items_mobile,
-	    	'direction'			=> ( is_rtl() ? 'true' : 'false' ),
-	    );
-
-    	$slider_data_attr = apply_filters( 'wpb_wps_data_attributes', $slider_data_attr );
-
-		$args = array(
+		$return_string = '<div class="wpb_slider_area wpb_fix_cart">';
+		$return_string .= '<h3 class="wpb_area_title">'.$title.'</h3>';
+	    $return_string .= '<div id="wpb-wps-latest" class="wpb-wps-wrapper owl-carousel '.wpb_ez_get_option( "wpb_slider_type_gen_lat", "wpb_wps_style", "grid cs-style-3" ).'">';
+		
+	    $args = array(
 			'post_type' 		=> 'product',
-			'posts_per_page' 	=> $posts,
-			'orderby' 			=> $orderby,
-			'order' 			=> $order,
+			'posts_per_page' 	=> wpb_ez_get_option( 'wpb_num_pro', 'wpb_wps_general', 12 )
 		);
-
-		// From selected product ids
-
-		if( $product_type == 'id' ){
-			$args['post__in'] = ( $id ? explode( ',', $id ) : null );
-		}
-
-		// Woo meta featured post check 
-		if($product_type == 'featured'){
-			$args['tax_query'][] = array(
-				'taxonomy' => 'product_visibility',
-                'field'    => 'name',
-                'terms'    => 'featured',
-			);
-		}
-
-		// only selected categories
-		if( $product_type == 'category' && $category != '' ){
-			$category = explode(',', $category);
-			$args['tax_query'][] = array(
-				'taxonomy' 	=> 'product_cat',
-		        'field'    	=> 'term_id',
-				'terms'    	=> $category,
-			);
-		}
-
-		// only selected tags
-		if( $product_type == 'tags' && $tags != '' ){
-			$tags = explode(',', $tags);
-			$args['tax_query'][] = array(
-				'taxonomy' 	=> 'product_tag',
-		        'field'    	=> 'id',
-				'terms'    	=> $tags,
-		        'operator' 	=> 'IN' 
-			);
-		}
-
-		$args = apply_filters( 'wpb_wcs_shortcode_quary_args', $args );
 						
 		$loop = new WP_Query( $args );
 		
-		wp_enqueue_script( 'wpb-wps-owl-carousel' );	
-		wp_enqueue_style( 'wpb_wps_owl_carousel' );	
-		wp_enqueue_script( 'wpb_wps_main_script' );
-		wp_enqueue_style( 'wpb_wps_main_style' );
-
-		if( $theme == 'hover_effect' ){
-			$theme = 'grid cs-style-3';
-		}
-		$classes = array();
-		$classes[] = $theme;
-		$classes[] = 'woocommerce';
-		$classes[] = 'wpb-wps-product-type-' . $product_type;
-		if( $pagination_number == 'true' ){
-			$classes[] = 'wpb-wps-pagination-number';
-		}
-			
-		ob_start();
 		if ( $loop->have_posts() ) {
+			while ( $loop->have_posts() ) : $loop->the_post();
+				global $woocommerce, $post, $product;
 
-			?>
-			<div class="wpb_slider_area wpb_fix_cart">
+				if ( $woocommerce->version >= '3.0' ){
+					$product_id = $product->get_id();
+					$product_type = $product->get_type();
+				}else{
+					$product_id = $product->id;
+					$product_type = $product_type;
+				}
 
-				<?php ( $title ? printf( '<h3 class="wpb_slider_title">%s</h3>', esc_html( $title ) ) : '' ); ?>
-
-				<div class="wpb-woo-products-slider owl-carousel owl-theme <?php echo esc_attr( implode(' ', $classes) )?>" <?php wpb_wps_data_attributes( $slider_data_attr ); ?>>
-
-					<?php
-						while ( $loop->have_posts() ) : $loop->the_post();
-							global $woocommerce, $post, $product;
-
-								?>
-								<div <?php post_class( 'wpb-wps-slider-item' ) ?>>
-									<figure>
-										<a href="<?php the_permalink(); ?>" class="wpb_pro_img_url">
-											<?php 
-												if( has_post_thumbnail() ){
-													the_post_thumbnail( apply_filters( 'single_product_archive_thumbnail_size', 'shop_catalog' ) );
-												}else{
-													printf( '<img src="%s" alt="%s" />', esc_url( wc_placeholder_img_src() ), esc_html__( 'Awaiting product image', WPB_WPS_TEXTDOMAIN ) );
-												}
-											?>
-										</a>
-										<figcaption>
-											<a href="<?php the_permalink(); ?>" class="wpb-wps-product-title">
-												<?php the_title( '<h3 class="pro_title">', '</h3>' ) ?>
-											</a>
-
-											<?php 
-												if( $show_price == 'on' && $price_html = $product->get_price_html() ){
-													printf( '<div class="pro_price_area">%s</div>', $price_html );
-												}
-											?>
-
-											<?php 
-												if( $show_reviews == 'on' ){
-													wpb_wps_show_product_review();
-												}
-											?>
-
-											<?php 
-												if( $show_cart == 'on' ){
-													wpb_wps_cart_button();
-												}
-											?>
-
-										</figcaption>
-									</figure>
-								</div>
-								<?php
-
-							wp_reset_postdata();
-				    	endwhile;
-			  		?>
-		  		</div>
-		  	</div>
-		  	<?php  	
-
+				$return_string .= '<div class="item">';
+				$return_string .= '<figure>';			
+				$return_string .= '<a href="'.get_permalink().'" class="wpb_pro_img_url">';
+				if (has_post_thumbnail( $loop->post->ID )){
+					$return_string .= get_the_post_thumbnail($loop->post->ID, 'shop_catalog', array('class' => "wpb_pro_img"));
+				}else{
+				    $return_string .= '<img id="place_holder_thm" src="'.woocommerce_placeholder_img_src().'" alt="Placeholder" />';
+				}
+				$return_string .='</a>';
+				$return_string .='<figcaption>';
+				$return_string .='<h3 class="pro_title">';
+				if (strlen($post->post_title) > 20) {
+					$return_string .= substr(the_title($before = '', $after = '', FALSE), 0, wpb_ez_get_option( 'wpb_title_mx_ch', 'wpb_wps_style', 10 )) . '...';
+				}else{
+					$return_string .= get_the_title();
+				}
+				$return_string .='</h3>';
+				if( $price_html = $product->get_price_html() ){
+					$return_string .='<div class="pro_price_area">'. $price_html .'</div>';
+				}
+				$return_string .= '<div class="wpb_wps_cart_button"><a href="'.esc_url( $product->add_to_cart_url() ).'" rel="nofollow" data-product_id="'.esc_attr( $product_id ).'" data-product_sku="'.esc_attr( $product->get_sku() ).'" data-quantity="'.esc_attr( isset( $quantity ) ? $quantity : 1 ).'" class="button '. ($product->is_purchasable() && $product->is_in_stock() ? 'add_to_cart_button' : '') .' product_type_'.esc_attr( $product_type ).'">'.esc_html( $product->add_to_cart_text()).'</a></div>';
+				$return_string .='</figcaption>';
+				$return_string .= '</figure>';
+				$return_string .= '</div>';
+	    	endwhile;
 		} else {
-			printf( '<div class="wpb-alert alert alert-danger"><b>%s</b></div>', esc_html__( 'No Products Found', WPB_WPS_TEXTDOMAIN ) );
+			echo __( 'No products found','wpb-wps' );
 		}
+		wp_reset_postdata();
+	    $return_string .= '</div>';
+	    $return_string .= '</div>';
+	    wp_reset_query();
+	    return $return_string;   
+	}
+endif;
 
-	    return ob_get_clean();   
+
+/**
+ * Feature products Slider
+ */
+
+if( !function_exists('wpb_wps_feature_shortcode') ):
+	function wpb_wps_feature_shortcode($atts){
+		extract(shortcode_atts(array(
+			'title' => __( 'Feature Products','wpb-wps' )
+		), $atts));
+
+		$return_string = '<div class="wpb_slider_area wpb_fix_cart">';
+		$return_string .= '<h3 class="wpb_area_title">'.$title.'</h3>';
+	    $return_string .= '<div id="wpb-wps-feature" class="wpb-wps-wrapper owl-carousel '.wpb_ez_get_option( 'wpb_slider_type_gen_fea', 'wpb_wps_style', 'grid cs-style-3' ).'">';
+		
+	    $args = array(
+			'post_type' 		=> 'product',
+			'meta_key' 			=> '_featured',
+			'meta_value' 		=> 'yes', 
+			'posts_per_page' 	=> wpb_ez_get_option( 'wpb_num_pro', 'wpb_wps_general', 12 )
+		);
+						
+		$loop = new WP_Query( $args );
+		
+		if ( $loop->have_posts() ) {
+			while ( $loop->have_posts() ) : $loop->the_post();
+
+				global $woocommerce, $post, $product;
+
+				if ( $woocommerce->version >= '3.0' ){
+					$product_id = $product->get_id();
+					$product_type = $product->get_type();
+				}else{
+					$product_id = $product->id;
+					$product_type = $product_type;
+				}
+
+		        $return_string .= '<div class="item">';
+				$return_string .= '<figure>';			
+				$return_string .= '<a href="'.get_permalink().'" class="wpb_pro_img_url">';
+				if (has_post_thumbnail( $loop->post->ID )){
+					$return_string .= get_the_post_thumbnail($loop->post->ID, 'shop_catalog', array('class' => "wpb_pro_img"));
+				}else{
+				    $return_string .= '<img id="place_holder_thm" src="'.woocommerce_placeholder_img_src().'" alt="Placeholder" />';
+				}
+				$return_string .='</a>';
+				$return_string .='<figcaption>';
+				$return_string .='<h3 class="pro_title">';
+				if (strlen($post->post_title) > 20) {
+					$return_string .= substr(the_title($before = '', $after = '', FALSE), 0, wpb_ez_get_option( 'wpb_title_mx_ch', 'wpb_wps_style', 10 )) . '...';
+				}else{
+					$return_string .= get_the_title();
+				}
+				$return_string .='</h3>';
+				if( $price_html = $product->get_price_html() ){
+					$return_string .='<div class="pro_price_area">'. $price_html .'</div>';
+				}
+				$return_string .= '<div class="wpb_wps_cart_button"><a href="'.esc_url( $product->add_to_cart_url() ).'" rel="nofollow" data-product_id="'.esc_attr( $product_id ).'" data-product_sku="'.esc_attr( $product->get_sku() ).'" data-quantity="'.esc_attr( isset( $quantity ) ? $quantity : 1 ).'" class="button '. ($product->is_purchasable() && $product->is_in_stock() ? 'add_to_cart_button' : '') .' product_type_'.esc_attr( $product_type ).'">'.esc_html( $product->add_to_cart_text()).'</a></div>';
+				$return_string .='</figcaption>';
+				$return_string .= '</figure>';
+				$return_string .= '</div>';
+	    	endwhile;
+		} else {
+			echo __( 'No products found','wpb-wps' );
+		}
+		wp_reset_postdata();
+	    $return_string .= '</div>';
+	    $return_string .= '</div>';
+	    wp_reset_query();
+	    return $return_string;
+	}
+endif;
+
+
+/**
+ * Sidebar latest product Slider
+ */
+
+if( !function_exists('wpb_wps_sideber_shortcode') ):
+	function wpb_wps_sideber_shortcode($atts){
+		extract(shortcode_atts(array(
+			'posts' => 5,
+		), $atts));
+
+		$return_string = '<div class="wpb_slider_area wpb_sidebar_slider wpb_fix_cart">';
+	    $return_string .= '<div id="wpb-wps-latest-sidebar" class="wpb-wps-wrapper owl-carousel '.wpb_ez_get_option( 'wpb_slider_type_sid_lat', 'wpb_wps_style', 'grid cs-style-3' ).'">';
+		
+	    $args = array(
+			'post_type' 		=> 'product',
+			'posts_per_page' 	=> $posts
+		);
+						
+		$loop = new WP_Query( $args );
+		
+		if ( $loop->have_posts() ) {
+			while ( $loop->have_posts() ) : $loop->the_post();
+				global $woocommerce, $product, $post;
+
+				if ( $woocommerce->version >= '3.0' ){
+					$product_id = $product->get_id();
+					$product_type = $product->get_type();
+				}else{
+					$product_id = $product->id;
+					$product_type = $product_type;
+				}
+
+		        $return_string .= '<div class="item">';
+				$return_string .= '<figure>';
+				$return_string .= '<a href="'.get_permalink().'" class="wpb_pro_img_url">';
+				if ( has_post_thumbnail( $loop->post->ID ) ){
+					$return_string .= get_the_post_thumbnail($loop->post->ID, 'shop_catalog', array('class' => "wpb_pro_img"));
+				}else{
+				    $return_string .= '<img id="place_holder_thm" src="'.woocommerce_placeholder_img_src().'" alt="Placeholder" />';
+				}
+				$return_string .='</a>';
+				$return_string .='<figcaption>';
+				$return_string .='<h3 class="pro_title">';
+				if (strlen($post->post_title) > 20) {
+					$return_string .= substr(the_title($before = '', $after = '', FALSE), 0, wpb_ez_get_option( 'wpb_title_mx_ch', 'wpb_wps_style', 10 )) . '...';
+				}else{
+					$return_string .= get_the_title();
+				}
+				$return_string .='</h3>';
+				if( $price_html = $product->get_price_html() ){
+					$return_string .='<div class="pro_price_area">'. $price_html .'</div>';
+				}
+				$return_string .= '<div class="wpb_wps_cart_button"><a href="'.esc_url( $product->add_to_cart_url() ).'" rel="nofollow" data-product_id="'.esc_attr( $product_id ).'" data-product_sku="'.esc_attr( $product->get_sku() ).'" data-quantity="'.esc_attr( isset( $quantity ) ? $quantity : 1 ).'" class="button '. ($product->is_purchasable() && $product->is_in_stock() ? 'add_to_cart_button' : '') .' product_type_'.esc_attr( $product_type ).'">'.esc_html( $product->add_to_cart_text()).'</a></div>';
+				$return_string .='</figcaption>';
+				$return_string .= '</figure>';
+				$return_string .= '</div>';
+	    	endwhile;
+		} else {
+			echo __( 'No products found','wpb-wps' );
+		}
+		wp_reset_postdata();
+				
+	    $return_string .= '</div>';
+	    $return_string .= '</div>';
+
+	    wp_reset_query();
+	    return $return_string;
+	}
+endif;
+
+
+
+/**
+ * Sidebar Feature Product Slider
+ */
+
+if( !function_exists('wpb_wps_sideber_feature_shortcode') ):
+	function wpb_wps_sideber_feature_shortcode($atts){
+		extract(shortcode_atts(array(
+			  'posts' => 5,
+		   ), $atts));
+
+		$return_string = '<div class="wpb_slider_area wpb_sidebar_slider wpb_fix_cart">';
+	    $return_string .= '<div id="wpb-wps-latest-sidebar-feature" class="wpb-wps-wrapper owl-carousel '.wpb_ez_get_option( 'wpb_slider_type_sid_fea', 'wpb_wps_style', 'grid cs-style-3' ).'">';
+		
+	    $args = array(
+			'post_type' 		=> 'product',
+			'meta_key' 			=> '_featured',
+			'meta_value' 		=> 'yes', 
+			'posts_per_page' 	=> $posts
+		);
+		
+
+		$loop = new WP_Query( $args );
+		
+		if ( $loop->have_posts() ) {
+			while ( $loop->have_posts() ) : $loop->the_post();
+				global $woocommerce, $post, $product;
+
+				if ( $woocommerce->version >= '3.0' ){
+					$product_id = $product->get_id();
+					$product_type = $product->get_type();
+				}else{
+					$product_id = $product->id;
+					$product_type = $product_type;
+				}
+
+		        $return_string .= '<div class="item">';
+				$return_string .= '<figure>';			
+				$return_string .= '<a href="'.get_permalink().'" class="wpb_pro_img_url">';
+				if (has_post_thumbnail( $loop->post->ID )){
+					$return_string .= get_the_post_thumbnail($loop->post->ID, 'shop_catalog', array('class' => "wpb_pro_img"));
+				}else{
+				    $return_string .= '<img id="place_holder_thm" src="'.woocommerce_placeholder_img_src().'" alt="Placeholder" />';
+				}
+				$return_string .='</a>';
+				$return_string .='<figcaption>';
+				$return_string .='<h3 class="pro_title">';
+				if (strlen($post->post_title) > 20) {
+					$return_string .= substr(the_title($before = '', $after = '', FALSE), 0, wpb_ez_get_option( 'wpb_title_mx_ch', 'wpb_wps_style', 10 )) . '...';
+				}else{
+					$return_string .= get_the_title();
+				}
+				$return_string .='</h3>';
+				if( $price_html = $product->get_price_html() ){
+					$return_string .='<div class="pro_price_area">'. $price_html .'</div>';
+				}
+				$return_string .= '<div class="wpb_wps_cart_button"><a href="'.esc_url( $product->add_to_cart_url() ).'" rel="nofollow" data-product_id="'.esc_attr( $product_id ).'" data-product_sku="'.esc_attr( $product->get_sku() ).'" data-quantity="'.esc_attr( isset( $quantity ) ? $quantity : 1 ).'" class="button '. ($product->is_purchasable() && $product->is_in_stock() ? 'add_to_cart_button' : '') .' product_type_'.esc_attr( $product_type ).'">'.esc_html( $product->add_to_cart_text()).'</a></div>';
+				$return_string .='</figcaption>';
+				$return_string .= '</figure>';
+				$return_string .= '</div>';
+	    	endwhile;
+		} else {
+			echo __( 'No products found','wpb-wps' );
+		}
+		wp_reset_postdata();
+	    $return_string .= '</div>';
+	    $return_string .= '</div>';
+	    wp_reset_query();
+	    return $return_string;   
 	}
 endif;
