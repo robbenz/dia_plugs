@@ -27,7 +27,7 @@ function dia_woo_notice(){
 }
 
 // include the respective php files after successful activation
-add_action( 'admin_init', 'dia_woo_include_files' );
+add_action( 'init', 'dia_woo_include_files' );
 function dia_woo_include_files() {
   $mypluginrequires = array(
     'dia-tabs-admin.php',

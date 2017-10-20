@@ -42,7 +42,8 @@ function dia_user_roles_include_files() {
 add_action( 'admin_enqueue_scripts', 'dia_user_roles_admin_js_script' );
 function dia_user_roles_admin_js_script() {
   global $pagenow;
-  if( $pagenow == 'post.php' ) {
+  $screen = get_current_screen();
+  if( $pagenow == 'post.php' && $screen->post_type === 'product' ) {
     wp_enqueue_script('dia-user-roles-admin-js', plugins_url( '/js/dia-user-roles-admin-js.js', __FILE__ ), array('jquery'));
     wp_register_style( 'custom_wp_admin_css', plugins_url('/css/admin-style.css', __FILE__) );
     wp_enqueue_style( 'custom_wp_admin_css' );

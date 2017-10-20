@@ -111,14 +111,7 @@ function dia_cust_fav_CUSTOM_box_markup($post) {
   );
 
   echo '<hr><div id=""><h3 style="color:#00426a;">Product Slider Options</h3>';
-  woocommerce_wp_checkbox(
-  array(
-    'id'            => 'ns_sale_slider',
-    'name'          => 'ns_sale_slider',
-    'class'         => 'ns_sale_slider checkbox',
-    'label'         => __('Nursing School Sale Slider?  ', 'woocommerce' )
-    )
-  );
+
   woocommerce_wp_checkbox(
   array(
     'id'            => 'ns_featured_slider',
@@ -128,7 +121,16 @@ function dia_cust_fav_CUSTOM_box_markup($post) {
     )
   );
 
-echo '</div>';
+  woocommerce_wp_checkbox(
+  array(
+    'id'            => 'ns_sale_slider',
+    'name'          => 'ns_sale_slider',
+    'class'         => 'ns_sale_slider checkbox',
+    'label'         => __('Nursing School Sale Slider?  ', 'woocommerce' )
+    )
+  );
+
+  echo '</div>';
 
 }
 // dia_meta_box_markup
