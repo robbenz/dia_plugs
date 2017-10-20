@@ -26,7 +26,7 @@ function dia_user_roles_woo_fail_notice(){
 }
 
 // include the respective php files after successful activation
-register_activation_hook( __FILE__, 'dia_user_roles_include_files' );
+add_action( 'init', 'dia_user_roles_include_files' );
 function dia_user_roles_include_files() {
     $mypluginrequires = array(
       'dia-user-roles-admin.php',

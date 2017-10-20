@@ -27,7 +27,7 @@ function dia_cust_fav_woo_fail_notice(){
 }
 
 // include the respective php files after successful activation
-register_activation_hook( __FILE__, 'dia_cust_fav_include_files' );
+add_action( 'init', 'dia_cust_fav_include_files' );
 function dia_cust_fav_include_files() {
     $mypluginrequires = array(
       'dia-customer-favorite-admin.php',

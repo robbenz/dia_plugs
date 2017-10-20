@@ -109,6 +109,27 @@ function dia_cust_fav_CUSTOM_box_markup($post) {
     'description'   => __( 'Check this box if the main product image is full height, and has no whitespace at the top', 'woocommerce' )
     )
   );
+
+  echo '<hr><div id=""><h3 style="color:#00426a;">Product Slider Options</h3>';
+  woocommerce_wp_checkbox(
+  array(
+    'id'            => 'ns_sale_slider',
+    'name'          => 'ns_sale_slider',
+    'class'         => 'ns_sale_slider checkbox',
+    'label'         => __('Nursing School Sale Slider?  ', 'woocommerce' )
+    )
+  );
+  woocommerce_wp_checkbox(
+  array(
+    'id'            => 'ns_featured_slider',
+    'name'          => 'ns_featured_slider',
+    'class'         => 'ns_featured_slider checkbox',
+    'label'         => __('Nursing School Featured Slider?  ', 'woocommerce' )
+    )
+  );
+
+echo '</div>';
+
 }
 // dia_meta_box_markup
 /*** END ***/
@@ -140,6 +161,12 @@ function dia_cust_fav_save_custom_stuff($post_id, $post, $update) {
         // dia_customer_favorite
         $dia_cust_fav_cust_fav_checkbox = isset( $_POST['dia_customer_favorite'] ) ? 'yes' : 'no';
         update_post_meta( $post_id, 'dia_customer_favorite', $dia_cust_fav_cust_fav_checkbox );
+
+        // sliders
+        $dia_ns_feat = isset( $_POST['ns_featured_slider'] ) ? 'yes' : 'no';
+        update_post_meta( $post_id, 'ns_featured_slider', $dia_ns_feat );
+        $dia_ns_sale = isset( $_POST['ns_sale_slider'] ) ? 'yes' : 'no';
+        update_post_meta( $post_id, 'ns_sale_slider', $dia_ns_sale );
 
         // dia_customer_favorite_position
         $dia_cust_fav_cust_fav_check_position = $_POST['dia_customer_favorite_position'];
