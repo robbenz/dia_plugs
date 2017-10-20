@@ -4,7 +4,7 @@
  */
 
 /**
- * icons 
+ * icons
  */
 
 @font-face {
@@ -110,11 +110,11 @@ body {
 	color: #fff;
 	margin: 0;
 }
-.woocommerce-page .grid figcaption a:active, 
+.woocommerce-page .grid figcaption a:active,
 .woocommerce-page .grid_no_animation figcaption a:active {
 	top:inherit;
 }
-.woocommerce-page .grid figcaption a, 
+.woocommerce-page .grid figcaption a,
 .woocommerce-page .grid_no_animation figcaption a {
 	box-shadow: none;
 	border: none;
@@ -179,7 +179,7 @@ img.wpb_pro_img {
 }
 /*replace the content value with the
 corresponding value from the list below*/
- 
+
 .customNavigation .btn:before {
 	font-family: FontAwesome;
 	font-style: normal;
