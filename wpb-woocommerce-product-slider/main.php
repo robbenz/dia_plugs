@@ -2,9 +2,9 @@
 /**
  * Plugin Name: WPB WooCommerce Product slider
  * Plugin URI: https://wpbean.com/wpb-woocommarce-product-slider/
- * Description: WPB WooCommerce Product slider is a nice and cool carousel product slider. It has lots of cool feature like shortcode control, widget,custom settings etc. Shortcodes: For latest product slider &nbsp;&nbsp;&nbsp;&nbsp;[wpb-latest-product title="Latest Product"]&nbsp;&nbsp;&nbsp;&nbsp; & &nbsp;&nbsp; For feature product slider &nbsp;&nbsp;&nbsp;&nbsp; [wpb-feature-product title="Feature Products"]
+ * Description: WPB WooCommerce product slider comes with two different themes for different style product slider for your WooCommerce shop. It can show latest, featured, category, tags and selected products slider.
  * Author: wpbean
- * Version: 2.0.2
+ * Version: 2.0.6
  * Author URI: https://wpbean.com
  * Text Domain: wpb-wps
  * Domain Path: /languages
@@ -12,17 +12,30 @@
 
 
 /**
+ * Checking If PRO version active
+ */
+
+if ( defined( 'WPB_WOOCOMMERCE_PRODUCTS_SLIDER_PRO' ) ) {
+	return false;
+}
+
+/**
  * Define Path 
  */
 
 define( 'WPB_WPS_URI', WP_CONTENT_URL. '/plugins/wpb-woocommerce-product-slider' );
+define( 'WPB_WPS_PLUGIN_DIR', plugin_dir_path(__FILE__) );
+define( 'WPB_WPS_PLUGIN_DIR_FILE', __FILE__ );
+define( 'WPB_WPS_TEXTDOMAIN', 'wpb-wps' );
 
 /**
  * Localization
  */
 
-function wpb_wps_localization() {
-	load_plugin_textdomain( 'wpb-wps', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+if( !function_exists( 'wpb_wps_localization' ) ){
+	function wpb_wps_localization() {
+		load_plugin_textdomain( 'wpb-wps', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+	}
 }
 add_action( 'init', 'wpb_wps_localization' );
 
@@ -34,7 +47,7 @@ add_action( 'init', 'wpb_wps_localization' );
 if( !function_exists( 'wpb_wps_activation_redirect' ) ){
 	function wpb_wps_activation_redirect( $plugin ) {
 	    if( $plugin == plugin_basename( __FILE__ ) ) {
-	        exit( wp_redirect( admin_url( 'options-general.php?page=wpb_woocommerce_product_slider' ) ) );
+	        exit( wp_redirect( admin_url( 'admin.php?page=wpb-wps-about' ) ) );
 	    }
 	}
 }
@@ -47,12 +60,15 @@ add_action( 'activated_plugin', 'wpb_wps_activation_redirect' );
  */
 
 add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), 'wpb_wps_add_action_links' );
-function wpb_wps_add_action_links ( $links ) {
 
-	$links[] = '<a href="'. esc_url( get_admin_url(null, 'options-general.php?page=wpb_woocommerce_product_slider') ) .'">'. __( 'Settings', 'wpb-wps' ) .'</a>';
-	$links[] = '<a style="color: red; font-weight: bold" href="'. esc_url( 'http://bit.ly/1PAAzv6' ) .'">'. __( 'Go PRO!', 'wpb-wps' ) .'</a>';
+if( !function_exists( 'wpb_wps_add_action_links' ) ){
+	function wpb_wps_add_action_links ( $links ) {
 
-	return $links;
+		$links[] = '<a href="'. esc_url( get_admin_url(null, 'options-general.php?page=wpb_woocommerce_product_slider') ) .'">'. __( 'Settings', 'wpb-wps' ) .'</a>';
+		$links[] = '<a style="color: red; font-weight: bold" href="'. esc_url( 'http://bit.ly/1PAAzv6' ) .'">'. __( 'Go PRO!', 'wpb-wps' ) .'</a>';
+
+		return $links;
+	}
 }
 
 
@@ -63,6 +79,6 @@ function wpb_wps_add_action_links ( $links ) {
 require_once dirname( __FILE__ ) . '/inc/wpb-scripts.php';
 require_once dirname( __FILE__ ) . '/inc/wpb-wps-widgets.php';
 require_once dirname( __FILE__ ) . '/inc/wpb-wps-shortcodes.php';
-require_once dirname( __FILE__ ) . '/inc/class.settings-api.php';
-require_once dirname( __FILE__ ) . '/inc/wpb-wps-settings.php';
 require_once dirname( __FILE__ ) . '/inc/wpb-wps-functions.php';
+require_once dirname( __FILE__ ) . '/admin/settings/class.settings-api.php';
+require_once dirname( __FILE__ ) . '/admin/settings/wpb-wps-settings.php';
