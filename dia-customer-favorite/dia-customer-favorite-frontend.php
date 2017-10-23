@@ -2,7 +2,7 @@
 // gall page hook
 add_action( 'woocommerce_before_shop_loop_item', 'dia_cust_fav_admin_galpage' );
 
-// product page hook
+// gal page hook
 add_action( 'woocommerce_product_thumbnails', 'dia_cust_fav_admin_galpage' );
 function dia_cust_fav_admin_galpage() {
   global $product;
