@@ -42,6 +42,11 @@ function dia_cust_fav_include_files() {
 add_action( 'admin_enqueue_scripts', 'dia_cust_fav_admin_js_script' );
 function dia_cust_fav_admin_js_script() {
     wp_enqueue_script('dia-cust-fav-admin-js', plugins_url( '/js/dia-customer-fav-admin-js.js', __FILE__ ), array('jquery'));
+}
+
+add_action( 'wp_enqueue_scripts', 'dia_cust_fav_admin_css' );
+function dia_cust_fav_admin_css() {
     wp_register_style( 'dia-cust-fav-admin-css', plugins_url('/css/dia-customer-fav-admin-css.css', __FILE__) );
     wp_enqueue_style( 'dia-cust-fav-admin-css' );
+
 }
