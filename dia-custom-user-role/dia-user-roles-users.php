@@ -152,8 +152,13 @@ function dia_users_remove_menu_pages() {
     }
   }
 
+  if ($user_ID == '3626' || $user_ID == '11' || $user_ID == '33' || $user_ID == '2877') {
+    add_menu_page( 'New Customer Forms', 'New Customer Froms', 'manage_woocommerce', 'edit.php?post_status=all&post_type=vfb_entry&form-id=9&submit=Select&mode=list', '', 'dashicons-media-document', 'low' );
+  }
+
+
   if ( current_user_can( 'shop_manager' ) ) {
-    remove_menu_page('edit.php');
+    if ( ! $user_ID == '2877' ) { remove_menu_page('edit.php'); }
     add_menu_page( 'Profile', 'Profile', 'manage_woocommerce', 'profile.php', '', 'dashicons-admin-users', 100 );
     add_menu_page( 'Quote Requests', 'Quote Requests', 'manage_woocommerce', 'edit.php?post_status=wc-ywraq-new&post_type=shop_order', '', 'dashicons-palmtree', 200 );
 
