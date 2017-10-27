@@ -23,7 +23,8 @@ function dia_user_roles_box_markup($object) {
     foreach ($dia_stuff_array as $key => $value ) {
       woocommerce_wp_text_input( array(
           'id'    => $key,
-          'label' => __( $value, 'woocommerce' )
+          'label' => __( $value, 'woocommerce' ),
+          'type'  => 'text'
           ) );
     } // end foreach $dia_stuff_array
     $dia_supplier_array = array (
