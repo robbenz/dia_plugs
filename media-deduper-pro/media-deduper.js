@@ -1,4 +1,4 @@
-/* global ajaxurl, mdd_indexer_status, mdd_l10n */
+/* global ajaxurl, mdd_indexer_status, mdd_indexer_stop_nonce, mdd_l10n */
 
 /**
  * Initialize on load
@@ -11,6 +11,10 @@ jQuery(document).ready(function() {
 
 	if ( typeof mdd_indexer_status === 'object' ) {
 		MDD_Indexer( jQuery );
+	}
+
+	if ( typeof mdd_async_test_key === 'string' ) {
+		MDD_Async_Test( jQuery );
 	}
 });
 
@@ -210,27 +214,38 @@ function MDD_SmartDeleteWarning( $ ) {
  * Indexer handler
  */
 function MDD_Indexer( $ ) {
-	var heartbeat,
-		status = mdd_indexer_status,
+	var heartbeat, // Timeout ID for a repeated AJAX call that retrieves indexer status data.
+		heartbeat_request, // jqXHR for the above AJAX call.
+		status = mdd_indexer_status, // Status data as returned by the above AJAX call.
 
 		// Update debug information and the progress bar.
 		update_progress = function() {
 
-			// If the indexing task is no longe running, stop making heartbeat requests and show results.
+			// If the indexing task is no longer running...
 			if ( 'processing' !== status.state ) {
+				// Stop any future heartbeat requests.
 				clearInterval( heartbeat );
+				// If a heartbeat XHR is currently running, cancel it.
+				if ( heartbeat_request ) {
+					heartbeat_request.abort();
+				}
+				// Show results.
 				display_results();
 			}
 
 			// Calculate user-relevant things based on latest status data.
-			var percent = Math.max( 0, Math.min( 100, status.processed / status.total ) ),
+			var percent = Math.max( 0, Math.min( 1, status.processed / status.total ) ),
 				errors = _.where( status.messages, {
 					success: false
 				});
 
 			// Update the progress bar.
-			$('#mdd-bar-percent').html( (percent * 100).toFixed(1) + '%' );
 			$('#mdd-meter').css( 'width', (percent * 100) + '%' );
+			if ( 'stopped' === status.state ) {
+				$('#mdd-bar-percent').html( mdd_l10n.stopped );
+			} else {
+				$('#mdd-bar-percent').html( (percent * 100).toFixed(1) + '%' );
+			}
 
 			// Display error messages, if any.
 			if ( errors.length ) {
@@ -247,7 +262,7 @@ function MDD_Indexer( $ ) {
 			$('#mdd-stop').hide();
 			$('#mdd-manage').css( 'display', 'inline-block' );
 
-			if ( 'aborted' === status.state ) {
+			if ( 'stopped' === status.state ) {
 				$('#mdd-message').html( mdd_l10n.index_complete.aborted );
 			} else if ( status.failed > 0 ) {
 				$('#mdd-message').html( mdd_l10n.index_complete.issues.replace('{NUM}', status.failed ) );
@@ -268,7 +283,7 @@ function MDD_Indexer( $ ) {
 	// Check for indexer status updates every second.
 	heartbeat = setInterval( function() {
 
-		$.get( ajaxurl, {
+		heartbeat_request = $.get( ajaxurl, {
 			action: 'mdd_index_status'
 		}, function( response ) {
 			status = response;
@@ -276,4 +291,72 @@ function MDD_Indexer( $ ) {
 		});
 
 	}, 1000 );
+
+	// Add click handler for Stop button.
+	$('#mdd-stop').on( 'click', function() {
+
+		// Disable the Stop button and indicate that we're in the process of stopping.
+		$('#mdd-stop').prop( 'disabled', true ).html( mdd_l10n.stopping );
+
+		$.post( ajaxurl, {
+			action: 'mdd_index_stop',
+			nonce: mdd_indexer_stop_nonce
+		}, function( response ) {
+			status = response;
+			update_progress();
+		});
+	});
+}
+
+
+function MDD_Async_Test( $ ) {
+
+	var $message = $( '#mdd-async-test-message' ).html( mdd_l10n.async_test_running ).show(),
+		test_count = 0, // The number of times we've run test().
+		test = function() {
+
+			test_count++;
+
+			// Add a '.' to the 'testing' message.
+			$message.removeClass( 'notice-error notice-success' ).addClass( 'notice-info' )
+				.find( '> p:first-child' ).append( '.' );
+
+			var test_request = $.get( ajaxurl, {
+				action: 'mdd_async_test',
+				key: mdd_async_test_key
+			}, function( data ) {
+
+				// If the mdd_async_test AJAX request is successful, then async processing is working.
+				if ( data.success ) {
+
+					// Show a success message.
+					$message.removeClass( 'notice-info notice-error' ).addClass( 'notice-success' )
+						.html( mdd_l10n.async_test_successful );
+
+					// Hide the message in 10 seconds.
+					setTimeout( function() {
+						$message.fadeOut();
+					}, 10000 );
+
+					return;
+				}
+
+				// If test() has run 10 times and the async task still isn't complete, something's up. Show
+				// an error message.
+				if ( test_count > 10 ) {
+
+					// Show an error message.
+					$( '#mdd-async-test-message' )
+						.removeClass( 'notice-info notice-success' ).addClass( 'notice-error' )
+						.html( mdd_l10n.async_test_failed ).show();
+
+					return;
+				}
+
+				// Run test() again.
+				setTimeout( test, 200 );
+			});
+		};
+
+	test();
 }

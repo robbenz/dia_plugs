@@ -1,6 +1,6 @@
 {
   "name": "media-deduper-pro",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "WordPress plugin for managing duplicate Media Library files",
   "main": "gulpfile.js",
   "directories": {

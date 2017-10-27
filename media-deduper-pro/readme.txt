@@ -57,6 +57,11 @@ At this time, Media Deduper Pro only identifies and blocks duplicate media files
 Check out our Media Deduper knowledge base at https://cornershop-creative.groovehq.com/knowledge_base/categories/media-deduper. If you can't find your answer there, please email us at support@cornershopcreative.com.
 
 == Changelog ==
+= 1.0.2 =
+* Add a button to the Index tab that allows users to stop the indexer if it's running
+* Add a setting to the License Key tab that allows users to opt in to receive beta updates
+* Fix a bug that could cause the indexer to display progress incorrectly in some edge cases
+
 = 1.0.1 =
 * Fix a bug that caused the count of indexed/un-indexed items to be calculated incorrectly on some WP installs
 * Calculate count of indexed/un-indexed items more frequently, to reduce the chance of inaccurate counts being displayed

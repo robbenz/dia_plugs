@@ -16,7 +16,7 @@ class Media_Deduper_Pro {
 	/**
 	 * Plugin version.
 	 */
-	const VERSION = '1.0.1';
+	const VERSION = '1.0.2';
 
 	/**
 	 * Special hash value used to mark an attachment if its file can't be found.
@@ -86,6 +86,10 @@ class Media_Deduper_Pro {
 		require_once( MDD_PRO_INCLUDES_DIR . 'class-mdd-reference-handler.php' );
 		$this->reference_handler = new MDD_Reference_Handler();
 
+		// Class for testing async functionality (as used by the indexer).
+		require_once( MDD_PRO_INCLUDES_DIR . 'class-mdd-async-test.php' );
+		$this->async_test = new MDD_Async_Test();
+
 		// Class for processing the index task in the background.
 		require_once( MDD_PRO_INCLUDES_DIR . 'class-mdd-indexer.php' );
 		$this->indexer = new MDD_Indexer();
@@ -97,6 +101,9 @@ class Media_Deduper_Pro {
 		$this->capability = apply_filters( 'media_deduper_cap', 'manage_options' );
 
 		add_action( 'wp_ajax_mdd_index_status',   array( $this, 'ajax_index_status' ) );
+		add_action( 'wp_ajax_mdd_index_stop',     array( $this, 'ajax_index_stop' ) );
+
+		add_action( 'wp_ajax_mdd_async_test',     array( $this, 'ajax_async_test' ) );
 
 		add_action( 'admin_menu',                 array( $this, 'add_admin_menu' ) );
 		add_action( 'admin_enqueue_scripts',      array( $this, 'enqueue_scripts' ) );
@@ -157,6 +164,7 @@ class Media_Deduper_Pro {
 			wp_localize_script( 'media-deduper-js', 'mdd_l10n', array(
 				'warning_delete' => __( "Warning: This will modify your files and content!!!!!!! (Lots of exclamation points because it’s seriously that big of a deal.)\n\nWe strongly recommend that you BACK UP YOUR UPLOADS AND DATABASE before performing this operation.\n\nClick 'Cancel' to stop, 'OK' to delete.", 'media-deduper' ),
 				'stopping'       => esc_html__( 'Stopping...', 'media-deduper' ),
+				'stopped'        => esc_html__( 'Stopped', 'media-deduper' ),
 				'index_errors'   => __( 'Errors:', 'media-deduper' ),
 				'index_complete' => array(
 					'issues' => '<p>'
@@ -170,6 +178,9 @@ class Media_Deduper_Pro {
 					'perfect' => '<p>' . esc_html__( 'Indexing complete;', 'media-deduper' ) . ' <strong>' . esc_html__( 'All media and posts successfully indexed.', 'media-deduper' ) . '</strong></p>',
 					'aborted' => '<p>' . esc_html__( 'Indexing aborted; only some items indexed.', 'media-deduper' ) . '</p>',
 				),
+				'async_test_running' => '<p>' . __( 'Testing asynchronous task execution...', 'media-deduper' ) . '</p>',
+				'async_test_successful' => '<p>' . __( 'Asynchronous task execution is working.', 'media-deduper' ) . '</p>',
+				'async_test_failed' => '<p>' . __( 'Asynchronous task execution is not functioning correctly, which may cause problems with the Media Deduper indexing process.', 'media-deduper' ) . '</p>',
 			) );
 		}
 
@@ -199,19 +210,7 @@ class Media_Deduper_Pro {
 		$screen = get_current_screen();
 		$html = '';
 
-		if ( get_option( 'mdd-pro-updated', false ) ) {
-
-			// Update was just performed, not initial activation.
-			$html = '<div class="updated notice is-dismissible"><p>';
-			$html .= sprintf(
-				// translators: %s: Link URL.
-				__( 'Thanks for updating Media Deduper Pro. Due to recent enhancements you’ll need to <a href="%s">regenerate the index</a>. Sorry for the inconvenience!', 'media-deduper' ),
-				admin_url( 'upload.php?page=media-deduper&tab=index' )
-			);
-			$html .= '</p></div>';
-			delete_option( 'mdd-pro-updated' );
-
-		} elseif ( ! get_option( 'mdd-pro-activated', false ) && $this->get_count( 'indexed' ) < $this->get_count() ) {
+		if ( ! get_option( 'mdd-pro-activated', false ) && $this->get_count( 'indexed' ) < $this->get_count() ) {
 
 			// On initial plugin activation, point to the indexing page.
 			add_option( 'mdd-pro-activated', true, '', 'no' );
@@ -617,6 +616,26 @@ class Media_Deduper_Pro {
 	}
 
 	/**
+	 * Stop the indexer and return the indexer status.
+	 */
+	public function ajax_index_stop() {
+		check_admin_referer( 'mdd_index_stop', 'nonce' );
+		$status = $this->indexer->stop()->get_status();
+		wp_send_json( $status );
+	}
+
+	/**
+	 * Check whether an async test task has been executed.
+	 */
+	public function ajax_async_test() {
+		if ( $this->async_test->check( sanitize_key( $_GET['key'] ) ) ) {
+			wp_send_json_success();
+		} else {
+			wp_send_json_error();
+		}
+	}
+
+	/**
 	 * Calculate the size for a given file.
 	 *
 	 * @param string $file The path to the file for which to calculate size.
@@ -858,6 +877,7 @@ class Media_Deduper_Pro {
 		}
 
 		?>
+		<div id="mdd-async-test-message" class="notice notice-info" style="display:none"></div>
 		<div id="mdd-message" class="updated fade" style="display:none"></div>
 		<div class="wrap deduper">
 			<h1><?php esc_html_e( 'Media Deduper Pro', 'media-deduper' ); ?></h1>
@@ -952,6 +972,13 @@ class Media_Deduper_Pro {
 	 */
 	private function show_index_screen() {
 
+		if ( isset( $_GET['async_test'] ) ) {
+			// Spawn an async task to check whether async processing is working.
+			$async_test_key = uniqid();
+			$this->async_test->run( $async_test_key );
+			wp_localize_script( 'media-deduper-js', 'mdd_async_test_key', $async_test_key );
+		}
+
 		// If the indexer isn't running...
 		if ( ! $this->indexer->is_indexing() ) {
 
@@ -1012,6 +1039,9 @@ class Media_Deduper_Pro {
 		</div>
 
 		<p>
+			<button class="button hide-if-no-js" id="mdd-stop">
+				<?php esc_attr_e( 'Stop', 'media-deduper' ) ?>
+			</button>
 			<a class="button" id="mdd-manage" href="<?php echo esc_url( admin_url( 'upload.php?page=media-deduper' ) ); ?>"><?php esc_attr_e( 'Manage Duplicates Now', 'media-deduper' ) ?></a>
 		</p>
 
@@ -1022,6 +1052,7 @@ class Media_Deduper_Pro {
 		<?php
 
 		wp_localize_script( 'media-deduper-js', 'mdd_indexer_status', $this->indexer->get_status() );
+		wp_localize_script( 'media-deduper-js', 'mdd_indexer_stop_nonce', wp_create_nonce( 'mdd_index_stop' ) );
 	}
 
 	/**
@@ -1071,6 +1102,17 @@ class Media_Deduper_Pro {
 
 		}
 
+		// Show the button, if ether the index isn't comprehensive or we were asked to always show it.
+		if ( $always || $index_incomplete ) {
+			?>
+			<form method="post" action="<?php echo esc_url( admin_url( 'upload.php?page=media-deduper&tab=index' ) ); ?>">
+				<?php wp_nonce_field( 'media-deduper-index' ); ?>
+				<p><input type="submit" class="button hide-if-no-js" name="<?php echo esc_attr( $button_name ); ?>" value="<?php echo esc_attr( $button_text ); ?>" /></p>
+				<noscript><p><em><?php esc_html_e( 'You must enable Javascript in order to proceed!', 'media-deduper' ) ?></em></p></noscript>
+			</form><br>
+			<?php
+		}
+
 		if ( $always && $show_info ) {
 
 			// Get and display errors from the last indexer run, if any.
@@ -1081,9 +1123,16 @@ class Media_Deduper_Pro {
 
 			if ( ! empty( $errors ) ) {
 
-				echo '<h4>' . esc_html( sprintf(
+				if ( 'stopped' === $last_index_status['state'] ) {
 					// translators: %d: The number of errors.
-					__( 'The last indexer process resulted in %d errors:', 'media-deduper' ),
+					$error_heading = __( 'The last indexer process, which was stopped manually, resulted in %d errors:', 'media-deduper' );
+				} else {
+					// translators: %d: The number of errors.
+					$error_heading = __( 'The last indexer process resulted in %d errors:', 'media-deduper' );
+				}
+
+				echo '<h4>' . esc_html( sprintf(
+					$error_heading,
 					count( $errors )
 				) ) . '</h4>';
 
@@ -1102,17 +1151,6 @@ class Media_Deduper_Pro {
 				</div>
 				<?php
 			}
-		}
-
-		// Show the button, if ether the index isn't comprehensive or we were asked to always show it.
-		if ( $always || $index_incomplete ) {
-			?>
-			<form method="post" action="<?php echo esc_url( admin_url( 'upload.php?page=media-deduper&tab=index' ) ); ?>">
-				<?php wp_nonce_field( 'media-deduper-index' ); ?>
-				<p><input type="submit" class="button hide-if-no-js" name="<?php echo esc_attr( $button_name ); ?>" value="<?php echo esc_attr( $button_text ); ?>" /></p>
-				<noscript><p><em><?php esc_html_e( 'You must enable Javascript in order to proceed!', 'media-deduper' ) ?></em></p></noscript>
-			</form><br>
-			<?php
 		}
 	}
 

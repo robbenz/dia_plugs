@@ -53,6 +53,12 @@ class MDD_License_Manager {
 	const OPTION_STATUS = 'media_deduper_license_status';
 
 	/**
+	 * The name of the option whose presence indicates that the user has opted in to receive beta
+	 * versions of the plugin.
+	 */
+	const OPTION_BETA = 'media_deduper_beta_optin';
+
+	/**
 	 * True if sanitize_license() has been run.
 	 *
 	 * @var bool
@@ -78,7 +84,7 @@ class MDD_License_Manager {
 				'license'   => $this->license_key,
 				'item_name' => static::ITEM_NAME,
 				'author'    => 'Cornershop Creative',
-				'beta'      => false,
+				'beta'      => (bool) get_option( static::OPTION_BETA ),
 			)
 		);
 
@@ -106,28 +112,41 @@ class MDD_License_Manager {
 			settings_fields( static::SETTINGS_GROUP );
 			?>
 
-			<p>
-				<label for="media_deduper_license_key">
-					<?php esc_html_e( 'Enter your Media Deduper Pro license key here.', 'media-deduper' ); ?>
-				</label>
-			</p>
-			<p>
-				<input id="media_deduper_license_key" name="<?php echo esc_attr( static::OPTION_KEY ); ?>" type="text" class="regular-text" value="<?php echo esc_attr( $this->license_key ); ?>" <?php disabled( ! empty( $this->license_key ) && 'valid' === $this->license_status ); ?> />
-			</p>
 			<?php if ( ! empty( $this->license_key ) && 'valid' === $this->license_status ) { ?>
-				<p>
-					<label class="howto" for="media_deduper_license_key">
-						<?php esc_html_e( 'This license key is currently active on this site.', 'media-deduper' ); ?>
-					</label>
-				</p>
+				<p><?php esc_html_e( 'Thank you for purchasing Media Deduper Pro!', 'media-deduper' ); ?></p>
+				<p><?php esc_html_e( 'If you would like to deactivate your license key on this site it in order to use it on a different site, click the "Deactivate License" button below.', 'media-deduper' ); ?></p>
 				<p>
 					<input type="submit" class="button-secondary" name="mdd_license_deactivate" value="<?php esc_attr_e( 'Deactivate License', 'media-deduper' ); ?>"/>
 				</p>
+				<input id="media_deduper_license_key" name="<?php echo esc_attr( static::OPTION_KEY ); ?>" type="hidden" value="<?php echo esc_attr( $this->license_key ); ?>" />
 			<?php } else { ?>
+				<p>
+					<label for="media_deduper_license_key">
+						<?php esc_html_e( 'Enter your Media Deduper Pro license key here.', 'media-deduper' ); ?>
+					</label>
+				</p>
+				<p>
+					<input id="media_deduper_license_key" name="<?php echo esc_attr( static::OPTION_KEY ); ?>" type="text" class="regular-text" value="<?php echo esc_attr( $this->license_key ); ?>" />
+				</p>
 				<p>
 					<input type="submit" class="button-secondary" name="mdd_license_activate" value="<?php esc_attr_e( 'Activate License', 'media-deduper' ); ?>"/>
 				</p>
 			<?php } ?>
+
+			<h2 style="margin-top: 2em;"><?php esc_html_e( 'Beta Opt-in', 'media-deduper' ); ?></h2>
+			<?php if ( get_option( static::OPTION_BETA ) ) { ?>
+				<p><?php esc_html_e( 'You have opted in to receive beta releases of Media Deduper Pro.', 'media-deduper' ); ?></p>
+				<p><?php esc_html_e( 'If you would like to only receive update notices when there is a new official, fully tested version of the plugin available, click the button below.', 'media-deduper' ); ?></p>
+				<p>
+					<input type="submit" class="button-secondary" name="mdd_beta_disable" value="<?php esc_html_e( 'Stop receiving beta updates', 'media-deduper' ); ?>" />
+				</p>
+			<?php } else { ?>
+				<p><?php esc_html_e( 'Occasionally, as we develop new features for Media Deduper Pro, we will release beta versions of the plugin for user testing. If you would like to receive update notices when a new beta release is available, click the button below. Note that beta versions will not have gone through the same testing process as full, public releases, so you should make extra sure to back up your data regularly when using a beta version of the plugin.', 'media-deduper' ); ?></p>
+				<p>
+					<input type="submit" class="button-secondary" name="mdd_beta_enable" value="<?php esc_html_e( 'Opt In to receive beta updates', 'media-deduper' ); ?>" />
+				</p>
+			<?php } ?>
+			<input type="hidden" name="<?php echo esc_attr( static::OPTION_BETA ); ?>" value="<?php echo esc_attr( get_option( static::OPTION_BETA ) ); ?>" />
 
 		</form>
 
@@ -138,14 +157,22 @@ class MDD_License_Manager {
 	 * Register a setting & sanitization callback for the plugin license key.
 	 */
 	function register_option() {
-		// Register the setting (with sanitization/validation callback).
+		// Register the license key setting (with sanitization/validation callback).
 		register_setting( static::SETTINGS_GROUP, static::OPTION_KEY, array(
 			'sanitize_callback' => array( $this, 'sanitize_license' ),
+		) );
+		// Register the beta opt-in setting.
+		register_setting( static::SETTINGS_GROUP, static::OPTION_BETA, array(
+			'sanitize_callback' => array( $this, 'sanitize_beta_optin' ),
 		) );
 	}
 
 	/**
 	 * Sanitization callback for the plugin license key.
+	 *
+	 * This only modifies the value if the user clicks the 'Deactivate License' or 'Activate License'
+	 * button. If a different submit button is clicked, we'll keep the current value of the license
+	 * key setting.
 	 *
 	 * @param string $new_key The new license key to sanitize.
 	 */
@@ -159,30 +186,68 @@ class MDD_License_Manager {
 		}
 		$this->has_sanitized_key = true;
 
-		// Any time the user attempts to deactivate a license key or enter a new license key, clear out
-		// the license status option so it reflects the status of the new license key.
-		delete_option( 'media_deduper_license_status' );
-
 		// If the user asked to deactivate this license key, try deactivating it now, _before_ we set
 		// $this->license_key.
 		if ( isset( $_POST['mdd_license_deactivate'] ) ) {
+			// Deactivate the license key. Note: this may alter tha value of the license_key property.
+			// We'll return the altered value in order to prevent wp-admin/options.php from trying to set
+			// the option and calling this sanitize callback again.
 			$this->deactivate_license();
-			// deactivate_license() may have altered the value of the license_key property. Return the
-			// altered value to prevent wp-admin/options.php from trying to set the option and calling
-			// this sanitize callback again.
-			return $this->license_key;
 		}
-
-		// Set property on $this, which will be used by the activate function.
-		$this->license_key = trim( $new_key );
 
 		// If the user asked to activate this license key, try activating it.
 		if ( isset( $_POST['mdd_license_activate'] ) ) {
+			// Set property on $this, which will be used by the activate function.
+			$this->license_key = trim( $new_key );
+			// Activate the license key.
 			$this->activate_license();
 		}
 
-		// Return key to be stored in the database (WP will call set_option() for us).
-		return $new_key;
+		// Return the license key (which may or may not have been modified above, depending on whether
+		// the user clicked either the Activate License or Deactivate License buttons).
+		return $this->license_key;
+	}
+
+	/**
+	 * Sanitization callback for the beta opt-in option.
+	 *
+	 * This is a slightly weird hack: it doesn't exactly sanitize a value, so much as it checks for
+	 * certain POST data (i.e. checks whether the user clicked the 'Stop receiving beta updates' or
+	 * 'Opt In' button) and changes the value to be saved based on that.
+	 *
+	 * @param string $value The value of the opt-in option as submitted by a form. Usually this will
+	 *                      be the *old* value, because the settings form has a hidden field
+	 *                      containing the current value.
+	 */
+	function sanitize_beta_optin( $value ) {
+
+		// If the user clicked the 'Opt In' button, set the option to 1.
+		if ( isset( $_POST['mdd_beta_enable'] ) ) {
+			$value = '1';
+			// Show the user a message on the next pageload.
+			add_settings_error( static::OPTION_BETA,
+				'updated',
+				sprintf(
+					// translators: link to the Plugins admin screen, showing only plugins for which updates are available.
+					__( 'You will now receive update notifications for beta versions of Media Deduper Pro. When a new beta version is available, it will be available on the %s.', 'media-deduper' ),
+					'<a href="' . esc_url( admin_url( 'plugins.php?plugin_status=upgrade' ) ) . '">' . __( 'Plugins screen', 'media-deduper' ) . '</a>'
+				),
+				'updated'
+			);
+		}
+
+		// If the user clicked the 'Stop receiving beta updates' button, clear the option's value.
+		if ( isset( $_POST['mdd_beta_disable'] ) ) {
+			$value = '';
+			// Show the user a message on the next pageload.
+			add_settings_error( static::OPTION_BETA,
+				'updated',
+				__( 'You will no longer receive update notifications for beta versions of Media Deduper Pro.', 'media-deduper' ),
+				'updated'
+			);
+		}
+
+		return $value;
 	}
 
 	/**
