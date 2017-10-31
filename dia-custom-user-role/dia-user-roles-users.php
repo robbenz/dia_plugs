@@ -172,8 +172,9 @@ function dia_users_remove_metaboxes() {
     remove_meta_box( 'postexcerpt' , 'product' , 'normal' );
     remove_meta_box( 'commentsdiv' , 'product' , 'normal' );
     remove_meta_box( 'tagsdiv-product_tag' , 'product' , 'side' );
-  //  remove_meta_box( 'product_catdiv' , 'product' , 'side' );
+  //remove_meta_box( 'product_catdiv' , 'product' , 'side' );
     remove_meta_box( 'yith-ywraq-metabox-order' , 'product' , 'normal' );
+    remove_meta_box( 'easy-modal' , 'product' , 'normal' );
     remove_meta_box( 'yith-ywraq-metabox-order' , 'order' , 'normal' );
   } elseif ( current_user_can( 'seo_specialist' ) ) {
     remove_meta_box( 'dia-user-roles-meta-box' , 'product' , 'normal' );
@@ -188,6 +189,7 @@ function dia_users_remove_metaboxes() {
     remove_meta_box( 'commentsdiv' , 'post' , 'normal' );
     remove_meta_box( 'easy-modal' , 'post' , 'low' );
     remove_meta_box( 'tagsdiv-post_tag' , 'post' , 'side' );
+    remove_meta_box( 'easy-modal' , 'product' , 'normal' );
     remove_meta_box( 'wc_predictive_search_metabox' , 'post' , 'side' );
   }
 }
