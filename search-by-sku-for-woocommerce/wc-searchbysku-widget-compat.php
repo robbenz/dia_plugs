@@ -35,8 +35,9 @@ function product_search_sku($where) {
         //Search for a regular product that matches the sku.
         $sku_to_id = $wpdb->get_col($wpdb->prepare("SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key='_sku' AND meta_value LIKE '%%%s%%';", wc_clean($term)));
         $dia_specs_to_id = $wpdb->get_col($wpdb->prepare("SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key='dia_search_extra_terms' AND meta_value LIKE '%%%s%%';", wc_clean($term)));
+        $dia_specsmft_to_id = $wpdb->get_col($wpdb->prepare("SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key='dia_product_mft_part_number' AND meta_value LIKE '%%%s%%';", wc_clean($term)));
 
-        $search_ids = array_merge($search_ids, $sku_to_id, $sku_to_parent_id, $dia_specs_to_id);
+        $search_ids = array_merge($search_ids, $sku_to_id, $sku_to_parent_id, $dia_specs_to_id, $dia_specsmft_to_id);
     }
 
     $search_ids = array_filter(array_map('absint', $search_ids));
