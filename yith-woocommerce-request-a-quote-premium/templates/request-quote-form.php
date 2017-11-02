@@ -106,6 +106,8 @@ $force_user_to_register              = ( get_option( 'ywraq_force_user_to_regist
         <h3 style="margin-top:5em; display:block;clear:both;">Additional Products</h3>
         <!-- <a href="javascript:;" id="addRow">Add Row</a><br /> -->
 
+        <?php $partnumber='';$partdesc='';$partqty='';$partnumber1='';$partdesc1='';$partqty1='';$partnumber2='';$partdesc2='';$partqty2=''; ?>
+
         <p style="clear:both;" class="form-row form-row-wide" id="add_pro_PN">
           <label for="rqa-part" class="">Part Number</label>
           <input type="text" class="input-text " name="rqa_part" value="<?php echo $partnumber ?>" placeholder="" id="rqa-part">
