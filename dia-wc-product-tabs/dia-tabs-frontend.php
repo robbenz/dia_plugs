@@ -33,6 +33,12 @@ function dia_new_product_tab_content($param, $args) {
   if(isset($GLOBALS['wp_embed'])) {
     $dia_tab_content = $GLOBALS['wp_embed']->autoembed($dia_tab_content);
   }
-  print_r ($dia_tab_content);
+
+  if (0 === strpos($dia_tab_content, '<h2>')) {
+    print_r ($dia_tab_content);
+  } else {
+    echo '<h2>'.$param.'</h2>';
+    print_r ($dia_tab_content);
+  }
 }
 /*** END ***/
