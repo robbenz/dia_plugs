@@ -6,7 +6,8 @@ add_filter( 'woocommerce_product_tabs', 'dia_new_product_tabs' );
 function dia_new_product_tabs( $tabs ) {
   global $post;
   $dia_tab_count = get_post_meta( $post->ID, '_dia_tabs_local_total_number', true );
-  for ( $x = 1; $x < $dia_tab_count; $x++ ) {
+  for ( $x = 1; $x <= $dia_tab_count; $x++ ) {
+
     $dia_tab_title = get_post_meta( $post->ID, "_dia_tabs_title_local_$x", true );
     $dia_tab_title_clean = preg_replace('/\s+/', '-', $dia_tab_title);
     $dia_tab_content = get_post_meta( $post->ID, "_dia_tabs_content_local_$x", true );
