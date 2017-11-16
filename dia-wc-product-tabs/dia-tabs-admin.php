@@ -16,30 +16,30 @@ function dia_meta_box_markup($object) {
   ?>
 
   <label for="_dia_tabs_local_total_number"><?php echo __( 'How Many Tabs', 'woocommerce' ); ?></label>
-  <input name="_dia_tabs_local_total_number" class="" type="number" name=" " value="<?php echo $dia_tab_count; ?>" step="any" min="0" max="5" style="width: 50px;" />
+  <input name="_dia_tabs_local_total_number" type="number" value="<?php echo $dia_tab_count; ?>" step="any" min="0" max="10" style="width: 50px;" />
   <br />
 
-<?php for ( $x = 0; $x < $dia_tab_count; $x++ ) {
-  $y=$x+1;
-  $dia_tab_title = get_post_meta( $post->ID, "_dia_tabs_title_local_$y", true );
-  $dia_tab_content = get_post_meta( $post->ID, "_dia_tabs_content_local_$y", true );
+<?php for ( $x = 1; $x <= $dia_tab_count; $x++ ) {
+
+  $dia_tab_title = get_post_meta( $post->ID, "_dia_tabs_title_local_$x", true );
+  $dia_tab_content = get_post_meta( $post->ID, "_dia_tabs_content_local_$x", true );
 ?>
   <div>
-    <label for="_dia_tabs_title_local_<?php echo $y; ?>">Tab <?php echo $y ;?> Heading: </label>
-    <input name="_dia_tabs_title_local_<?php echo $y; ?>" type="text" value="<?php echo $dia_tab_title; ?>">
+    <label for="_dia_tabs_title_local_<?php echo $x; ?>">Tab <?php echo $x ;?> Heading: </label>
+    <input name="_dia_tabs_title_local_<?php echo $x; ?>" type="text" value="<?php echo $dia_tab_title; ?>">
     <br>
     <?php
-        $dia_tab_content = get_post_meta( $post->ID, "_dia_tabs_content_local_$y", true );
+        $dia_tab_content = get_post_meta( $post->ID, "_dia_tabs_content_local_$x", true );
         	if ( ! $dia_tab_content ) {
         		$dia_tab_content = '';
         	}
-        	$settings = array( 'textarea_name' => "dia-product-tabs-details_$y" );
+        	$settings = array( 'textarea_name' => "dia-product-tabs-details_$x" );
         	?>
         	<tr class="form-field">
-        		<th scope="row" valign="top"><label for="dia-product-tabs-details_<?php echo $y ;?>">Tab <?php echo $y ;?> Content: </label></th>
+        		<th scope="row" valign="top"><label for="dia-product-tabs-details_<?php echo $x ;?>">Tab <?php echo $x ;?> Content: </label></th>
         		<td>
-        			<?php wp_nonce_field( basename( __FILE__ ), "dia_product_tabs_details_nonce_$y" ); ?>
-        			<?php wp_editor( wp_kses_post( $dia_tab_content ), "dia_tab_content_$y", $settings ); ?>
+        			<?php wp_nonce_field( basename( __FILE__ ), "dia_product_tabs_details_nonce_$x" ); ?>
+        			<?php wp_editor( wp_kses_post( $dia_tab_content ), "dia_tab_content_$x", $settings ); ?>
         		</td>
         	</tr>
           <br><hr><br></div>
@@ -73,26 +73,25 @@ function save_custom_meta_box($post_id, $post, $update) {
 
     global $post;
     $dia_tab_count = get_post_meta( $post->ID, '_dia_tabs_local_total_number', true );
-    for ( $x = 0; $x < $dia_tab_count; $x++ ) {
-      $y=$x+1;
+    for ( $x = 1; $x <= $dia_tab_count; $x++ ) {
 
       // DYNAMICALLY SAVE TAB TITLES - PER TAB COUNT
       $meta_box_tab_tab_value = "";
-      if(isset($_POST["_dia_tabs_title_local_$y"])) {
-        $meta_box_tab_tab_value = $_POST["_dia_tabs_title_local_$y"];
+      if(isset($_POST["_dia_tabs_title_local_$x"])) {
+        $meta_box_tab_tab_value = $_POST["_dia_tabs_title_local_$x"];
       }
-      update_post_meta($post_id, "_dia_tabs_title_local_$y", $meta_box_tab_tab_value);
+      update_post_meta($post_id, "_dia_tabs_title_local_$x", $meta_box_tab_tab_value);
 
       // DYNAMICALLY SAVE THE STUFF IN THE TAB CONTENTS BOX
-      if ( ! isset( $_POST["dia_product_tabs_details_nonce_$y"] ) || ! wp_verify_nonce( $_POST["dia_product_tabs_details_nonce_$y"], basename( __FILE__ ) ) ) {
+      if ( ! isset( $_POST["dia_product_tabs_details_nonce_$x"] ) || ! wp_verify_nonce( $_POST["dia_product_tabs_details_nonce_$x"], basename( __FILE__ ) ) ) {
         return;
       }
       $old_details = get_post_meta( $post->ID, "_dia_tabs_content_local_1", true );
-      $new_details = isset( $_POST["dia-product-tabs-details_$y"] ) ? $_POST["dia-product-tabs-details_$y"] : '';
+      $new_details = isset( $_POST["dia-product-tabs-details_$x"] ) ? $_POST["dia-product-tabs-details_$x"] : '';
       if ( $old_details && '' === $new_details ) {
-        delete_post_meta( $post_id, "_dia_tabs_content_local_$y" );
+        delete_post_meta( $post_id, "_dia_tabs_content_local_$x" );
       } else if ( $old_details !== $new_details ) {
-        update_post_meta( $post_id, "_dia_tabs_content_local_$y", wp_kses_post( $new_details ) );
+        update_post_meta( $post_id, "_dia_tabs_content_local_$x", wp_kses_post( $new_details ) );
       }
     } // end for loop
 
