@@ -1,4 +1,4 @@
-                                    <br><br>
+                                    
                                     <p style="margin:0 0 10px; color:#000000; font-size:14px;">
                                       We will continue to email the status of your order as each item is shipped.
                                       You can always review the status of your order at
