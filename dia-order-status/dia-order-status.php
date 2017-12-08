@@ -247,7 +247,6 @@ function dia_track_process_order_meta_box_action( $order ) {
 function dia_add_trackem_to_my_orders_actions( $actions, $order ) {
 	if ( $order->has_status( 'shipped' ) ) {
 		$actions['trackem'] = array(
-		  // 'url'  => wp_nonce_url( add_query_arg( 'order_again', $order->id ) , 'woocommerce-order_again' ),
 		  'url'  => '#',
       'name' => __( 'Track Items', 'woocommerce' )
 		);
@@ -255,7 +254,6 @@ function dia_add_trackem_to_my_orders_actions( $actions, $order ) {
 	return $actions;
 }
 add_filter( 'woocommerce_my_account_my_orders_actions', 'dia_add_trackem_to_my_orders_actions', 100, 2 );
-
 
 // Adding Meta container
 // add_action( 'add_meta_boxes', 'dia_shipping_admin_add_meta_boxes' );
