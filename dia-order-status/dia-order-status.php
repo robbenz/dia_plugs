@@ -41,8 +41,9 @@ function dia_shipped_icon() {
 /*** Add custom column headers ***/
 add_action('woocommerce_admin_order_item_headers', 'dia_shipping_woocommerce_admin_order_item_headers');
 function dia_shipping_woocommerce_admin_order_item_headers($order) {
+    echo '<th>Number of<br>Shipments</th>';
     echo '<th>Item Shippped</th>';
-    echo '<th>Qty Shipped</th>';
+    echo '<th>Quantity<br>Shipped</th>';
     echo '<th>Tracking Number</th>';
     echo '<th>Freight Provider</th>';
 }
@@ -51,7 +52,11 @@ function dia_shipping_woocommerce_admin_order_item_headers($order) {
 /*** Add custom column values ***/
 add_action('woocommerce_admin_order_item_values', 'dia_shipping_admin_order_item_values', 10, 3);
 function dia_shipping_admin_order_item_values($_product, $item, $item_id = null) {
-  $_z = 6;
+
+  $shippcount = wc_get_order_item_meta( $item_id, "number_of_shipments_$item_id", true );
+  echo '<td><input type="number" style="width:38px;" step="any" min="0" max="1000" class="number_of_shipments" name="number_of_shipments_'.$item_id.'" value="'.$shippcount.'"></td>';
+
+  $_z = intval($shippcount) + 1;
 
   for ($x=1 ; $x < $_z; $x++) {
     ${"value_item$x"}    = wc_get_order_item_meta( $item_id, "tracking_item_shipped$x", true );
@@ -64,7 +69,7 @@ function dia_shipping_admin_order_item_values($_product, $item, $item_id = null)
     <?php for ($x=1 ; $x < $_z; $x++) echo '<input type="text" class="tracking_item_shipped" name="tracking_item_shipped'.$x.'_'.$item_id.'" value="'.${"value_item$x"}.'"><br>'; ?>
   </td>
   <td>
-    <?php for ($x=1 ; $x < $_z; $x++) echo '<input type="number" style="width:45px;" step="any" min="0" max="1000" class="tracking_item_qty" name="tracking_item_qty'.$x.'_'.$item_id.'" value="'.${"value_qty$x"}.'"><br>'; ?>
+    <?php for ($x=1 ; $x < $_z; $x++) echo '<input type="number" style="width:38px;" step="any" min="0" max="1000" class="tracking_item_qty" name="tracking_item_qty'.$x.'_'.$item_id.'" value="'.${"value_qty$x"}.'"><br>'; ?>
   </td>
   <td>
     <?php for ($x=1 ; $x < $_z; $x++) echo '<input type="text" class="tracking_item_number" name="tracking_item_number'.$x.'_'.$item_id.'" value="'.${"value_num$x"}.'"><br>'; ?>
@@ -80,14 +85,23 @@ function dia_shipping_admin_order_item_values($_product, $item, $item_id = null)
 /*** save that shit ***/
 add_action( 'save_post', 'dia_shipping_save_after_order_details', 10, 1 );
 function dia_shipping_save_after_order_details( $post_id ) {
-  $_z = 6;
   $order = wc_get_order( $post_id );
 
   if ( !current_user_can( "edit_post", $post_id ) )    return $post_id;
   if ( defined( "DOING_AUTOSAVE" ) && DOING_AUTOSAVE ) return $post_id;
+
   if ( 'shop_order' == $_POST[ 'post_type' ] ) {
     $items = $order->get_items();
     foreach ($items as $item_id => $item_data){
+
+      $_z = intval(wc_get_order_item_meta( $item_id, "number_of_shipments_$item_id", true )) + 1;
+
+      $shippcount = $_POST['number_of_shipments_'.$item_id];
+      if (! empty($shippcount) ) {
+        wc_update_order_item_meta ($item_id, "number_of_shipments_$item_id", $shippcount);
+      } else {
+        wc_update_order_item_meta ($item_id, "number_of_shipments_$item_id", $shippcount);
+      }
 
       for ($x=1 ; $x < $_z; $x++) {
         ${"item_update_shipped$x"} = $_POST['tracking_item_shipped'.$x.'_'.$item_id];
@@ -177,39 +191,47 @@ function dia_track_process_order_meta_box_action( $order ) {
   $message .= '<p style="margin:0;color:#000000; font-size:14px;">'.$customer_ship_city.', '.$customer_ship_st.' '.$customer_ship_zip.'</p><br>';
 
   foreach ($items as $item_id => $item_data) {
-    if (strlen($item_data['tracking_item_number']) > 0 && strlen($item_data['tracking_item_freight_provider']) > 0) {
-      $lineprice = $item_data['line_subtotal'] / $item_data['qty'];
+    $shippcount = wc_get_order_item_meta( $item_id, "number_of_shipments_$item_id", true );
+  	$_z = intval($shippcount) + 1;
+
+    $image = wp_get_attachment_image_src( get_post_thumbnail_id( $item_data['product_id'] ), 'single-post-thumbnail' );
+
+    $message .= '
+    <table cellspacing="0" cellpadding="6" style="width:100%; color:#737373; border:1px solid #e4e4e4;">
+      <thead>
+        <tr>
+          <th colspan="3" scope="col" style="text-align:left;color:#737373;border:1px solid #e4e4e4;padding:12px">Product</th>
+          <th colspan="1" scope="col" style="text-align:left;color:#737373;border:1px solid #e4e4e4;padding:12px">Quantity Ordered</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="1" style="text-align:left;vertical-align:middle;border:1px solid #eee;word-wrap:break-word;color:#737373;padding:12px"><img width="50" height="50" src="'.$image[0].'" /></td>
+          <td colspan="2" style="text-align:left;vertical-align:middle;border:1px solid #eee;word-wrap:break-word;color:#737373;padding:12px">'.$item_data['name'].'</td>
+          <td colspan="1" style="text-align:left;vertical-align:middle;border:1px solid #eee;color:#737373;padding:12px">'.$item_data['qty'].'</td>
+        </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <th scope="row" colspan="1" style="text-align:left;border-top-width:4px;color:#737373;border:1px solid #e4e4e4;padding:12px">Item Shipped</th>
+            <th scope="row" colspan="1" style="text-align:left;border-top-width:4px;color:#737373;border:1px solid #e4e4e4;padding:12px">Quantity Shipped</th>
+            <th scope="row" colspan="1" style="text-align:left;border-top-width:4px;color:#737373;border:1px solid #e4e4e4;padding:12px">Freight Provider</th>
+            <th scope="row" colspan="1" style="text-align:left;border-top-width:4px;color:#737373;border:1px solid #e4e4e4;padding:12px">Tracking Number</th>
+          </tr>';
+
+      for ($x=1 ; $x < $_z; $x++) {
+        $message .= '
+            <tr>
+              <td scope="row" colspan="1" style="text-align:left;color:#737373;border:1px solid #e4e4e4;padding:12px">'.$item_data["tracking_item_shipped$x"].'</td>
+              <td scope="row" colspan="1" style="text-align:left;color:#737373;border:1px solid #e4e4e4;padding:12px">'.$item_data["tracking_item_qty$x"].'</td>
+              <td scope="row" colspan="1" style="text-align:left;color:#737373;border:1px solid #e4e4e4;padding:12px">'.$item_data["tracking_item_freight_provider$x"].'</td>
+              <td scope="row" colspan="1" style="text-align:left;color:#737373;border:1px solid #e4e4e4;padding:12px">'.$item_data["tracking_item_number$x"].'</td>
+            </tr>';
+          }
       $message .= '
-      <table cellspacing="0" cellpadding="6" style="width:100%; color:#737373; border:1px solid #e4e4e4;">
-        <thead>
-          <tr>
-            <th scope="col" style="text-align:left;color:#737373;border:1px solid #e4e4e4;padding:12px">Product</th>
-            <th scope="col" style="text-align:left;color:#737373;border:1px solid #e4e4e4;padding:12px">Quantity</th>
-            <th scope="col" style="text-align:left;color:#737373;border:1px solid #e4e4e4;padding:12px">Unit Price</th>
-            <th scope="col" style="text-align:left;color:#737373;border:1px solid #e4e4e4;padding:12px">Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td style="text-align:left;vertical-align:middle;border:1px solid #eee;word-wrap:break-word;color:#737373;padding:12px">'.$item_data['name'].'</td>
-            <td style="text-align:left;vertical-align:middle;border:1px solid #eee;color:#737373;padding:12px">'.$item_data['qty'].'</td>
-            <td style="text-align:left;vertical-align:middle;border:1px solid #eee;padding:12px"><span>$'.number_format($lineprice, 2).'</span></td>
-            <td style="text-align:left;vertical-align:middle;border:1px solid #eee;padding:12px">$'.number_format($item_data['line_subtotal'], 2).'</span></td>
-          </tr>
-          </tbody>
-          <tfoot>
-            <tr>
-              <th scope="row" colspan="2" style="text-align:left;border-top-width:4px;color:#737373;border:1px solid #e4e4e4;padding:12px">Freight Provider:</th>
-              <td colspan="2" style="text-align:left;border-top-width:4px;color:#737373;border:1px solid #e4e4e4;padding:12px">'.$item_data['tracking_item_freight_provider'].'</td>
-            </tr>
-            <tr>
-              <th scope="row" colspan="2" style="text-align:left;color:#737373;border:1px solid #e4e4e4;padding:12px">Tracking Number:</th>
-              <td colspan="2" style="text-align:left;color:#737373;border:1px solid #e4e4e4;padding:12px">'.$item_data['tracking_item_number'].'</td>
-            </tr>
           </tfoot>
         </table><br>
         ';
-      }
     }
 
     $message .= file_get_contents( plugin_dir_path( __FILE__ ).'email-track-send-foot.php' ); // footer
@@ -219,7 +241,7 @@ function dia_track_process_order_meta_box_action( $order ) {
 
     $headers[] = "From: DiaMedical USA <orders@diamedicalusa.com>"."\r\n";
     // $headers[] = "Bcc: Gillian Peralta <gperalta@diamedicalusa.com>"."\r\n";
-    $headers[] = "Bcc: Rob Benz <rbenz@diamedicalusa.com>"."\r\n";
+    // $headers[] = "Bcc: Rob Benz <rbenz@diamedicalusa.com>"."\r\n";
 
   if ( wp_mail( $to, $subject, $message, $headers ) ) {
     $message = sprintf( __( 'Tracking Email Sent By %s', 'woocommerce' ), wp_get_current_user()->display_name );
@@ -255,7 +277,7 @@ function dia_add_trackem_to_my_orders_actions( $actions, $order ) {
 }
 add_filter( 'woocommerce_my_account_my_orders_actions', 'dia_add_trackem_to_my_orders_actions', 100, 2 );
 
-// Adding Meta container
+// // Adding Meta container
 // add_action( 'add_meta_boxes', 'dia_shipping_admin_add_meta_boxes' );
 // function dia_shipping_admin_add_meta_boxes() {
 //   add_meta_box( 'send_some_tracking_info', __('Send Tracking Button','woocommerce'), 'dia_shipping_send_button_box', 'shop_order', 'normal', 'high', NULL );
@@ -263,7 +285,11 @@ add_filter( 'woocommerce_my_account_my_orders_actions', 'dia_add_trackem_to_my_o
 // function dia_shipping_send_button_box() {
 //   global $theorder;
 //   $items = $theorder->get_items();
-//   foreach ($items as $item_id => $item_data) {
-//     _pre($item_data);
+//    foreach ($items as $item_id => $item_data) {
+//     echo $item_data['product_id'];
+//
+//     $image = wp_get_attachment_image_src( get_post_thumbnail_id( $item_data['product_id'] ), 'single-post-thumbnail' );
+//
+// echo '<img width="50" height="50" src="'.$image[0].'"';
 //   }
 // }
