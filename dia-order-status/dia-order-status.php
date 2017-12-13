@@ -161,6 +161,11 @@ function dia_track_process_order_meta_box_action( $order ) {
 
   $items = $order->get_items();
 
+  $user = get_user_by( 'id', get_post_meta($order->id, '_customer_user', true) ) ;
+
+
+
+
   $customer_ship_name = get_post_meta ($order->id, '_shipping_first_name', true).'&nbsp;'.get_post_meta ($order->id, '_shipping_last_name', true);
   $customer_ship_co   = get_post_meta ($order->id, '_shipping_company', true);
   $customer_ship_add1 = get_post_meta ($order->id, '_shipping_address_1', true);
@@ -237,11 +242,12 @@ function dia_track_process_order_meta_box_action( $order ) {
     $message .= file_get_contents( plugin_dir_path( __FILE__ ).'email-track-send-foot.php' ); // footer
 
     $subject = "[DiaMedical USA] Shipping Confirmation - (EC-$order->id)";
-    $to      = 'rbenz@diamedicalusa.com';
+    $to      = $user->user_email;
 
     $headers[] = "From: DiaMedical USA <orders@diamedicalusa.com>"."\r\n";
-    // $headers[] = "Bcc: Gillian Peralta <gperalta@diamedicalusa.com>"."\r\n";
-    // $headers[] = "Bcc: Rob Benz <rbenz@diamedicalusa.com>"."\r\n";
+    $headers[] = "Bcc: Gillian Peralta <gperalta@diamedicalusa.com>"."\r\n";
+    $headers[] = "Bcc: Rob Benz <rbenz@diamedicalusa.com>"."\r\n";
+    // $headers[] = "Bcc: Stella Lo <stellalo@diamedicalusa.com>"."\r\n";
 
   if ( wp_mail( $to, $subject, $message, $headers ) ) {
     $message = sprintf( __( 'Tracking Email Sent By %s', 'woocommerce' ), wp_get_current_user()->display_name );
