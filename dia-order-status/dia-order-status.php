@@ -163,9 +163,6 @@ function dia_track_process_order_meta_box_action( $order ) {
 
   $user = get_user_by( 'id', get_post_meta($order->id, '_customer_user', true) ) ;
 
-
-
-
   $customer_ship_name = get_post_meta ($order->id, '_shipping_first_name', true).'&nbsp;'.get_post_meta ($order->id, '_shipping_last_name', true);
   $customer_ship_co   = get_post_meta ($order->id, '_shipping_company', true);
   $customer_ship_add1 = get_post_meta ($order->id, '_shipping_address_1', true);
