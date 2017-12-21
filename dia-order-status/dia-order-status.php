@@ -90,7 +90,7 @@ function dia_shipping_save_after_order_details( $post_id ) {
   if ( !current_user_can( "edit_post", $post_id ) )    return $post_id;
   if ( defined( "DOING_AUTOSAVE" ) && DOING_AUTOSAVE ) return $post_id;
 
-  if ( 'shop_order' == $_POST[ 'post_type' ] ) {
+  if ( is_admin() && 'shop_order' == $_POST[ 'post_type' ] ) {
     $items = $order->get_items();
     foreach ($items as $item_id => $item_data){
 
@@ -242,7 +242,8 @@ function dia_track_process_order_meta_box_action( $order ) {
     $to      = $user->user_email;
 
     $headers[] = "From: DiaMedical USA <orders@diamedicalusa.com>"."\r\n";
-    $headers[] = "Bcc: Gillian Peralta <gperalta@diamedicalusa.com>"."\r\n";
+    // $headers[] = "Bcc: Gillian Peralta <gperalta@diamedicalusa.com>"."\r\n";
+    // $headers[] = "Bcc: Jeff Ambrose <jambrose@diamedicalusa.com>"."\r\n";
     $headers[] = "Bcc: Rob Benz <rbenz@diamedicalusa.com>"."\r\n";
     // $headers[] = "Bcc: Stella Lo <stellalo@diamedicalusa.com>"."\r\n";
 
