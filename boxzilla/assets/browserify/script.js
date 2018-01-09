@@ -66,6 +66,10 @@
             // create box
             var box = Boxzilla.create(boxOpts.id, boxOpts);
 
+            // remove <script> from box content and append them to the document body
+            var scripts = box.element.querySelectorAll('script');
+            handleScriptElements(scripts);
+
             // add box slug to box element as classname
             box.element.className = box.element.className + ' boxzilla-' + boxOpts.post.slug;
 
@@ -74,6 +78,11 @@
 
             box.element.firstChild.firstChild.className += " first-child";
             box.element.firstChild.lastChild.className += " last-child";
+
+            // maybe show box right away
+            if( box.fits() && locationHashRefersBox(box) ) {
+              window.addEventListener('load', box.show.bind(box));
+            }
         }
 
         // set flag to prevent initialising twice
@@ -83,20 +92,68 @@
         Boxzilla.trigger('done');
     }
 
+    function locationHashRefersBox(box) {
+        if( ! window.location.hash || 0 === window.location.hash.length ) {
+          return false;
+        }
+
+        var elementId = window.location.hash.substring(1);
+
+        // only attempt on strings looking like an ID 
+        var regex = /^[a-zA-Z\-\_0-9]+$/;
+        if( ! regex.test(elementId) ) {
+          return false;
+        }
+
+        if( elementId === box.element.id ) {
+          return true;
+        } else if( box.element.querySelector('#' + elementId) ) {
+          return true;
+        }
+
+        return false;
+    }
+
+    function handleScriptElements(scripts) {
+        let handle = function() {
+            const script = document.createElement('script');
+
+            if(this.src) {
+              script.src = this.src;
+            }
+            script.appendChild(document.createTextNode(this.text));
+            this.parentNode.removeChild(this);
+            document.body.appendChild(script);
+
+            if( scripts.length ) {
+                script.addEventListener('load', handle.bind(scripts.shift()));
+            }
+        }
+
+        scripts = Array.from(scripts);
+        if(scripts.length) { 
+            window.setTimeout(handle.bind(scripts.shift()), 1); 
+        }
+    }
+
     function openMailChimpForWordPressBox() {
-        if( typeof(window.mc4wp_forms_config) === "object" && window.mc4wp_forms_config.submitted_form ) {
-            var selector = '#' + window.mc4wp_forms_config.submitted_form.element_id;
-            var boxes = Boxzilla.boxes;
-            for( var boxId in boxes ) {
-                if(!boxes.hasOwnProperty(boxId)) { continue; }
-                var box = boxes[boxId];
-                if( box.element.querySelector(selector)) {
-                    box.show();
-                    return;
-                }
+        if( typeof(window.mc4wp_forms_config) !== "object" || ! window.mc4wp_forms_config.submitted_form ) {
+            return;
+        }
+
+        var selector = '#' + window.mc4wp_forms_config.submitted_form.element_id;
+        var boxes = Boxzilla.boxes;
+        for( var boxId in boxes ) {
+            if(!boxes.hasOwnProperty(boxId)) { continue; }
+            var box = boxes[boxId];
+            if( box.element.querySelector(selector)) {
+                box.show();
+                return;
             }
         }
     }
+
+
 
     window.addEventListener('load', openMailChimpForWordPressBox);
     window.setTimeout(createBoxesFromConfig, 1);
