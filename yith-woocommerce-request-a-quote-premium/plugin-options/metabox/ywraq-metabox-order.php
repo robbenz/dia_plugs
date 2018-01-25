@@ -42,6 +42,7 @@ if ( isset( $_REQUEST['post'] ) ) {
     $additional_field_2       = get_post_meta( $_REQUEST['post'], 'ywraq_customer_additional_field_2', true );
     $additional_field_3       = get_post_meta( $_REQUEST['post'], 'ywraq_customer_additional_field_3', true );
     $customer_attachment      = get_post_meta( $_REQUEST['post'], 'ywraq_customer_attachment', true );
+
     $additional_email_content = get_post_meta( $_REQUEST['post'], 'ywraq_other_email_content', true );
     $billing_address          = get_post_meta( $_REQUEST['post'], 'ywraq_billing_address', true );
     $billing_phone            = get_post_meta( $_REQUEST['post'], 'ywraq_billing_phone', true );
@@ -102,6 +103,9 @@ if ( isset( $_REQUEST['post'] ) ) {
             $pdf_file = YITH_Request_Quote_Premium()->get_pdf_file_url( $order->id );
         }
     }
+
+
+
 }
 
 $order_meta = array(
@@ -185,11 +189,11 @@ $order_meta = array(
                         'desc'  => __( 'Use this field to add additional attachment to the email', 'yith-woocommerce-request-a-quote' ),
                         'std'   => '' ),
 
-                    'ywcm_request_expire' => array(
-                        'label' => __( 'Expire date (optional)', 'yith-woocommerce-request-a-quote' ),
-                        'desc'  => __( 'Set an expiration date for this quote', 'yith-woocommerce-request-a-quote' ),
-                        'type'  => 'datepicker',
-                        'std'   => '' ),
+                    // 'ywcm_request_expire' => array(
+                    //     'label' => __( 'Expire date (optional)', 'yith-woocommerce-request-a-quote' ),
+                    //     'desc'  => __( 'Set an expiration date for this quote', 'yith-woocommerce-request-a-quote' ),
+                    //     'type'  => 'datepicker',
+                    //     'std'   => '' ),
 
                     'ywraq_safe_submit_field' => array(
                         'desc'  => __( 'Set an expiration date for this quote', 'yith-woocommerce-request-a-quote' ),

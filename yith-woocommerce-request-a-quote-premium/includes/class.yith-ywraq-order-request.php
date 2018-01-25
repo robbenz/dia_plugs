@@ -708,7 +708,8 @@ class YITH_YWRAQ_Order_Request {
         $post = isset( $_REQUEST['post'] ) ? $_REQUEST['post'] : ( isset( $_REQUEST['post_ID'] ) ? $_REQUEST['post_ID'] : 0 );
         $post = get_post( $post );
 
-        if ( $post  && $post->post_type == 'shop_order' && $this->is_quote( $post->ID ) ) {
+        //if ( $post && $post->post_type == 'shop_order' && $this->is_quote( $post->ID ) ) {
+        if ( $post && $post->post_type == 'shop_order' && $post->post_status == 'wc-ywraq-new' ) {
             $args = require_once( YITH_YWRAQ_DIR . 'plugin-options/metabox/ywraq-metabox-order.php' );
             if ( ! function_exists( 'YIT_Metabox' ) ) {
                 require_once( YITH_YWRAQ_DIR . 'plugin-fw/yit-plugin.php' );

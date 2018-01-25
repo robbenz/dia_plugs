@@ -90,7 +90,7 @@ printf(__('Request a Quote #EC-%s', 'yith-woocommerce-request-a-quote'), $raq_da
                     <td scope="col" style="text-align:left;border: 1px solid #eee;"><?php echo $item['quantity'] ?></td>
                     <td scope="col" style="text-align:left; border: 1px solid #eee;">
                       <?php
-                      $send_benzy_price = WC()->cart->get_product_price( $_product, $raq['price'] );
+                      $send_benzy_price = WC()->cart->get_product_price( $_product, $raq_data['price'] );
                       echo str_replace("&#36;0.00", "Preparing Quote", $send_benzy_price);
                       ?>
                     </td>

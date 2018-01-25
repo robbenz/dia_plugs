@@ -84,10 +84,12 @@ if ( !defined( 'ABSPATH' ) ) exit;
 										$item_meta = new WC_Order_Item_Meta( $item['item_meta'], $product );
 
 										$item_id = $item['product_id'];
+
 										$_supplier_1 = get_post_meta( $item_id, 'dia_product_supplier_1', true );
 										$_vendor_pn_1 = get_post_meta( $item_id, 'dia_product_vendor_pn_1', true );
 										$_cost_1 = get_post_meta( $item_id, 'dia_product_cost_1', true );
 										$_price_check_1 = get_post_meta( $item_id, 'dia_product_price_check_1', true );
+
 									?>
 
 									<tr>
@@ -117,19 +119,27 @@ if ( !defined( 'ABSPATH' ) ) exit;
 												<?php endforeach; ?>
 
 												<?php if ( current_user_can('shop_manager') || current_user_can('administrator') ): ?>
-													<dt><strong>Vendor: </strong></dt>
-													<dd><?php echo $_supplier_1; ?></dd>
+													<?php
+													 if( $product->product_type == 'simple' ):
+													?>
 
-													<dt><strong>Cost: </strong></dt>
-													<dd><?php echo '$'.number_format($_cost_1, 2); ?></dd>
+														<dt><strong>Vendor: </strong></dt>
+														<dd><?php echo $_supplier_1; ?></dd>
 
-													<dt><strong>Verified on: </strong></dt>
-													<dd><?php echo $_price_check_1; ?></dd>
+														<dt><strong>Cost: </strong></dt>
+														<dd><?php echo '$'.number_format($_cost_1, 2); ?></dd>
 
-													<dt><strong>Vendor Part Number: </strong></dt>
-													<dd><?php echo $_vendor_pn_1; ?></dd>
+														<dt><strong>Verified on: </strong></dt>
+														<dd><?php echo $_price_check_1; ?></dd>
 
-												<?php endif ;?>
+														<dt><strong>Vendor Part Number: </strong></dt>
+														<dd><?php echo $_vendor_pn_1; ?></dd>
+
+													<?php else : ?>
+														<dt>This product has a drop down menu. Please confirm cost & vendor part number before placing the order.</dt>
+														<dd></dd>
+													<?php endif; ?>
+												<?php endif; ?>
 											</dl>
 										</td>
 										<td class="product-item-price">

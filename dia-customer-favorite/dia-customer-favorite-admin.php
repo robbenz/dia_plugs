@@ -126,7 +126,7 @@ function dia_cust_fav_CUSTOM_box_markup($post) {
     'id'            => 'ns_sale_slider',
     'name'          => 'ns_sale_slider',
     'class'         => 'ns_sale_slider checkbox',
-    'label'         => __('Nursing School Sale Slider?  ', 'woocommerce' )
+    'label'         => __('Nursing School Free Shipping Slider?  ', 'woocommerce' )
     )
   );
 

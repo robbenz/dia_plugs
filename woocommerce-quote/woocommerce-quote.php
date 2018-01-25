@@ -745,15 +745,15 @@ if (!class_exists('WooCommerce_Quote')) {
             $pdf->CreateQuote();
             $pdf->Output($this->opt['woo_quote_title_filename_prefix'] . $current_quote_number.'.pdf', 'D');
 
-            $_user = wp_get_current_user();
-            $_name = esc_html( $_user->user_firstname );
+            $_user  = wp_get_current_user();
+            $_name  = esc_html( $_user->user_firstname );
             $_name2 = esc_html( $_user->user_lastname );
             $_email = esc_html( $_user->user_email );
-            $_add1 = esc_html( $_user->shipping_address_1 );
-            $_add2 = esc_html( $_user->shipping_address_2 );
-            $_city = esc_html( $_user->shipping_city);
+            $_add1  = esc_html( $_user->shipping_address_1 );
+            $_add2  = esc_html( $_user->shipping_address_2 );
+            $_city  = esc_html( $_user->shipping_city);
             $_state = esc_html( $_user->shipping_state );
-            $_zip = esc_html( $_user->shipping_postcode );
+            $_zip   = esc_html( $_user->shipping_postcode );
 
             $to = 'jambrose@diamedicalusa.com';
 
