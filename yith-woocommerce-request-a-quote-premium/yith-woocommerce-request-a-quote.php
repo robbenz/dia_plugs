@@ -1,13 +1,9 @@
 <?php
 /*
 Plugin Name: YITH Woocommerce Request A Quote Premium
-Description: The YITH Woocommerce Request A Quote plugin lets your customers ask for an estimate of a list of products they are interested into.
-Version: 1.4.8
-Author: YITHEMES
-Author URI: http://yithemes.com/
-Text Domain: yith-woocommerce-request-a-quote
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Description: The YITH Woocommerce Request A Quote plugin lets your customers ask for an estimate of a list of products they are interested into. <strong>This plugin should never be updated, becuase I hacked the shit out of it.</strong>
+Version: 4.2.0
+Author: YITHEMES &amp; RobBenz
 */
 
 /*
