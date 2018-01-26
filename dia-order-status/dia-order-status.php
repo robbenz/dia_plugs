@@ -209,7 +209,7 @@ function dia_track_process_order_meta_box_action( $order ) {
       <tbody>
         <tr>
           <td colspan="1" style="text-align:left;vertical-align:middle;border:1px solid #eee;word-wrap:break-word;color:#737373;padding:12px"><img width="50" height="50" src="'.$image[0].'" /></td>
-          <td colspan="2" style="text-align:left;vertical-align:middle;border:1px solid #eee;word-wrap:break-word;color:#737373;padding:12px">'.$item_data['name'].'</td>
+          <td colspan="2" style="text-align:left;vertical-align:middle;border:1px solid #eee;word-wrap:break-word;color:#737373;padding:12px"><a href="'.get_permalink($item_data['product_id']).'">'.$item_data['name'].'</a></td>
           <td colspan="1" style="text-align:left;vertical-align:middle;border:1px solid #eee;color:#737373;padding:12px">'.$item_data['qty'].'</td>
         </tr>
         </tbody>
@@ -238,21 +238,19 @@ function dia_track_process_order_meta_box_action( $order ) {
 
     $message .= file_get_contents( plugin_dir_path( __FILE__ ).'email-track-send-foot.php' ); // footer
 
-    $subject = "[DiaMedical USA] Shipping Confirmation - (EC-$order->id)";
-    $to      = $user->user_email;
-
+    $subject   = "[DiaMedical USA] Shipping Confirmation - (EC-$order->id)";
+    $to        = $user->user_email;
     $headers[] = "From: DiaMedical USA <orders@diamedicalusa.com>"."\r\n";
-    // $headers[] = "Bcc: Gillian Peralta <gperalta@diamedicalusa.com>"."\r\n";
-    // $headers[] = "Bcc: Jeff Ambrose <jambrose@diamedicalusa.com>"."\r\n";
+    $headers[] = "Bcc: Gillian Peralta <gperalta@diamedicalusa.com>"."\r\n";
+    $headers[] = "Bcc: Jeff Ambrose <jambrose@diamedicalusa.com>"."\r\n";
     $headers[] = "Bcc: Rob Benz <rbenz@diamedicalusa.com>"."\r\n";
-    // $headers[] = "Bcc: Stella Lo <stellalo@diamedicalusa.com>"."\r\n";
+    $headers[] = "Bcc: Stella Lo <stellalo@diamedicalusa.com>"."\r\n";
 
   if ( wp_mail( $to, $subject, $message, $headers ) ) {
     $message = sprintf( __( 'Tracking Email Sent By %s', 'woocommerce' ), wp_get_current_user()->display_name );
     $order->add_order_note( $message );
     update_post_meta( $order->id, '_sent_tracking_email', 'yes' );
     $order->update_status( 'wc-shipped' );
-
   } else {
     $message = sprintf( __( 'Tracking Email Failed', 'woocommerce' ) );
     $order->add_order_note( $message );
