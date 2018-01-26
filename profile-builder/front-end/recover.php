@@ -77,6 +77,7 @@ function wppb_create_recover_password_form( $user, $post_data ){
 			<li class="wppb-form-field passw1">
 				<label for="passw1">'. $password_label .'</label>
 				<input class="password" name="passw1" type="password" id="passw1" value="" autocomplete="off" title="'. wppb_password_length_text() .'" '. apply_filters( 'wppb_recover_password_extra_attr', '', $password_label, 'password' ) .' />
+				<span class="wppb-description-delimiter">'. wppb_password_length_text() .' '. wppb_password_strength_description() .'</span>
 			</li><!-- .passw1 -->
 			<input type="hidden" name="userData" value="'.$user->ID.'"/>
 			<li class="wppb-form-field passw2">
@@ -238,9 +239,12 @@ function wppb_front_end_password_recovery(){
                 $recoveruserMailMessageTitle1 = sprintf(__('Password Reset from "%1$s"', 'profile-builder'), $blogname = get_option('blogname') );
                 $recoveruserMailMessageTitle1 = apply_filters('wppb_recover_password_message_title_sent_to_user1', $recoveruserMailMessageTitle1, $requestedUserLogin);
 
+				$recoveruserMailFrom = apply_filters ( 'wppb_recover_password_notification_email_from_field', get_bloginfo( 'name' ) );
+				$recoveruserMailContext = 'email_user_recover';
+
                 //send mail to the user notifying him of the reset request
                 if (trim($recoveruserMailMessageTitle1) != ''){
-                    $sent = wppb_mail($requestedUserEmail, $recoveruserMailMessageTitle1, $recoveruserMailMessage1);
+                    $sent = wppb_mail($requestedUserEmail, $recoveruserMailMessageTitle1, $recoveruserMailMessage1, $recoveruserMailFrom, $recoveruserMailContext);
                     if ($sent === false){
                         $message = '<b>'. __( 'ERROR', 'profile-builder' ) .': </b>' . sprintf( __( 'There was an error while trying to send the activation link to %1$s!', 'profile-builder' ), $postedData );
                         $message = apply_filters( 'wppb_recover_password_sent_message_error_sending', $message );
@@ -295,9 +299,12 @@ function wppb_front_end_password_recovery(){
                 $recoveruserMailMessageTitle2 = sprintf( __('Password Successfully Reset for %1$s on "%2$s"', 'profile-builder' ), $display_username_email, $blogname = get_option('blogname') );
                 $recoveruserMailMessageTitle2 = apply_filters( 'wppb_recover_password_message_title_sent_to_user2', $recoveruserMailMessageTitle2, $display_username_email );
 
+				$recoveruserMailFrom2 = apply_filters ( 'wppb_recover_password_success_notification_email_from_field', get_bloginfo( 'name' ) );
+				$recoveruserMailContext2 = 'email_user_recover_success';
+
                 //send mail to the user notifying him of the reset request
                 if ( trim( $recoveruserMailMessageTitle2 ) != '' )
-                    wppb_mail( $user_info->user_email, $recoveruserMailMessageTitle2, $recoveruserMailMessage2 );
+                    wppb_mail( $user_info->user_email, $recoveruserMailMessageTitle2, $recoveruserMailMessage2, $recoveruserMailFrom2, $recoveruserMailContext2 );
 
                 //send email to admin
                 $recoveradminMailMessage = sprintf( __( '%1$s has requested a password change via the password reset feature.<br/>His/her new password is:%2$s', 'profile-builder' ), $display_username_email, $_POST['passw1'] );
@@ -311,9 +318,11 @@ function wppb_front_end_password_recovery(){
                 $recoveradminMailMessageTitle = '';
                 $recoveradminMailMessageTitle = apply_filters( 'wppb_recover_password_message_title_sent_to_admin', $recoveradminMailMessageTitle, $display_username_email );
 
+				$recoveradminMailContext = 'email_admin_recover_success';
+
                 //send mail to the admin notifying him of of a user with a password reset request
                 if (trim($recoveradminMailMessageTitle) != '')
-                    wppb_mail(get_option('admin_email'), $recoveradminMailMessageTitle, $recoveradminMailMessage);
+                    wppb_mail(get_option('admin_email'), $recoveradminMailMessageTitle, $recoveradminMailMessage, $recoveruserMailFrom2, $recoveradminMailContext);
             }
 		}
         else{

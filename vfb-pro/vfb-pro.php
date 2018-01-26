@@ -3,7 +3,7 @@
 Plugin Name:	VFB Pro
 Plugin URI:		http://vfbpro.com
 Description:	VFB Pro is the easiest form builder on the market.
-Version:		3.2.5
+Version:		3.2.8
 Author:			Matthew Muro
 Author URI:		http://matthewmuro.com
 Text Domain:	vfb-pro
@@ -32,7 +32,7 @@ class VFB_Pro {
 	 * @access   protected
 	 * @var      string    $version    The current version of the plugin.
 	 */
-	protected $version = '3.2.5';
+	protected $version = '3.2.8';
 
 	/**
 	 * The current DB version. Used if we need to update the DB later.

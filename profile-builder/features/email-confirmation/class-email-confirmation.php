@@ -73,8 +73,9 @@ class wpp_list_unfonfirmed_email_table extends PB_WP_List_Table {
     function column_default($item, $column_name){
         switch($column_name){
             case 'email':
-            case 'registered':
                 return $item[$column_name];
+            case 'registered':
+                return date_i18n( "Y-m-d G:i:s", wppb_add_gmt_offset( strtotime( $item[$column_name] ) ) );
             case 'user-meta':
                 global $wpdb;
                 $sql_result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . $wpdb->base_prefix . "signups WHERE user_email = %s", $item['email'] ), ARRAY_A );

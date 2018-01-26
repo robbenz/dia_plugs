@@ -15,8 +15,11 @@ function wppb_login_form_bottom( $form_part, $args ){
         $form_part .= '<input type="hidden" name="wppb_lostpassword_url" value="'.esc_url( $args['lostpassword_url'] ).'"/>';
 		$form_part .= '<input type="hidden" name="wppb_redirect_priority" value="'. esc_attr( isset( $args['redirect_priority'] ) ? $args['redirect_priority'] : '' ) .'"/>';
 		$form_part .= '<input type="hidden" name="wppb_referer_url" value="'.esc_url( isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : '' ).'"/>';
+		$form_part .= wp_nonce_field( 'wppb_login', 'CSRFToken', true, false );
 	}
-	
+
+    $form_part .= '<input type="hidden" name="wppb_redirect_check" value="true"/>';
+
 	return $form_part;
 }
 add_filter( 'login_form_bottom', 'wppb_login_form_bottom', 10, 2 );
@@ -111,6 +114,16 @@ if( isset( $wppb_generalSettings['loginWith'] ) && ( $wppb_generalSettings['logi
 
 // login redirect filter. used to redirect from wp-login.php if it errors out
 function wppb_login_redirect( $redirect_to, $requested_redirect_to, $user ){
+    // custom redirect after login on default wp login form
+    if( ! isset( $_POST['wppb_login'] ) && ! is_wp_error( $user ) ) {
+        // we don't have an error make sure to remove the error from the query arg
+        $redirect_to = remove_query_arg( 'loginerror', $redirect_to );
+
+        // CHECK FOR REDIRECT
+        $redirect_to = wppb_get_redirect_url( 'normal', 'after_login', $redirect_to, $user );
+        $redirect_to = apply_filters( 'wppb_after_login_redirect_url', $redirect_to );
+    }
+
 	// if login action initialized by our form
     if( isset( $_POST['wppb_login'] ) ){
 		if( is_wp_error( $user ) ) {
@@ -227,7 +240,7 @@ function wppb_front_end_login( $atts ){
 		// display our login errors
 		if( isset( $_GET['loginerror'] ) || isset( $_POST['loginerror'] ) ){
             $loginerror = isset( $_GET['loginerror'] ) ? $_GET['loginerror'] : $_POST['loginerror'];
-            $loginerror = '<p class="wppb-error">'. preg_replace('#<(.*?)script(.*?)>(.*?)</(.*?)script(.*?)>#is', '', urldecode( base64_decode( $loginerror ) ) ) .'</p><!-- .error -->';
+            $loginerror = '<p class="wppb-error">'. wp_kses_post( urldecode( base64_decode( $loginerror ) ) ) .'</p><!-- .error -->';
             if( isset( $_GET['request_form_location'] ) ){
                 if( $_GET['request_form_location'] == 'widget' && !in_the_loop() ){
                     $login_form .= $loginerror;
@@ -300,3 +313,18 @@ function wppb_front_end_login( $atts ){
 		return apply_filters( 'wppb_login_message', $logged_in_message, $wppb_user->ID, $display_name );
 	}
 }
+
+function wppb_login_security_check( $user, $password ) {
+
+    if( isset( $_POST['wppb_login'] ) ) {
+        if( ! isset( $_POST['CSRFToken'] ) || ! wp_verify_nonce( $_POST['CSRFToken'], 'wppb_login' ) ) {
+            $errorMessage = __( 'You are not allowed to do this.', 'profile-builder' );
+
+            return new WP_Error( 'wppb_login_csrf_token_error', $errorMessage );
+        }
+    }
+
+    return $user;
+
+}
+add_filter( 'wp_authenticate_user', 'wppb_login_security_check', 10, 2 );

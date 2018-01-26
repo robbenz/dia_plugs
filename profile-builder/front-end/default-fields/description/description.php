@@ -4,8 +4,10 @@ function wppb_description_handler( $output, $form_location, $field, $user_id, $f
 	$item_title = apply_filters( 'wppb_'.$form_location.'_description_item_title', wppb_icl_t( 'plugin profile-builder-pro', 'default_field_'.$field['id'].'_title_translation', $field['field-title'] ) );
 	$item_description = wppb_icl_t( 'plugin profile-builder-pro', 'default_field_'.$field['id'].'_description_translation', $field['description'] );
 	$input_value = '';
-	if( $form_location == 'edit_profile' )
-		$input_value = get_the_author_meta( 'description', $user_id );
+	if( $form_location == 'edit_profile' ) {
+		$profileuser = get_userdata( $user_id );
+		$input_value =	$profileuser->description;
+	}
 	
 	if ( trim( $input_value ) == '' )
 		$input_value = $field['default-value'];

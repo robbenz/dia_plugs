@@ -46,7 +46,11 @@ class VFB_Pro_Entries {
 		// Save our metabox values
 		add_action( 'save_post', array( $this, 'save_entry' ), 10, 2 );
 
+		// Save Screen Options for form columns
 		add_action( 'wp_ajax_vfbp-entry-columns', array( $this, 'save_columns' ) );
+
+		// Update Screen Options to use custom save data
+		add_filter( 'hidden_columns', array( $this, 'get_hidden_columns' ), 10, 2 );
 
 		// Add prev/next button navigation to entry detail pages
 		add_action( 'edit_form_top', array( $this, 'navigation_links' ) );
@@ -471,6 +475,33 @@ class VFB_Pro_Entries {
 		update_user_option( $user->ID, 'manageedit-vfb_entrycolumnshidden-form-' . $form_id, $columns, true );
 
 		die(1);
+	}
+
+	/**
+	 * Make sure Screen Options use our custom option from the DB
+	 * @param  [type] $hidden [description]
+	 * @param  [type] $screen [description]
+	 * @return [type]         [description]
+	 */
+	public function get_hidden_columns( $hidden, $screen ) {
+		global $typenow;
+
+		if ( 'vfb_entry' !== $typenow )
+			return $hidden;
+
+		$form_id = isset( $_GET['form-id'] ) ? absint( $_GET['form-id'] ) : 0;
+
+		// Only grab hidden columns if a form is selected
+		if ( !empty( $form_id ) ) {
+			$hidden_columns = get_user_option( 'manageedit-vfb_entrycolumnshidden-form-' . $form_id );
+
+			// Hidden columns should be an array, so only return those
+			if ( is_array( $hidden_columns ) ) {
+				return $hidden_columns;
+			}
+		}
+
+		return $hidden;
 	}
 
 	/**

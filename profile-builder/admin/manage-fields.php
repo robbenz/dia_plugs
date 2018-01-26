@@ -112,12 +112,20 @@ function wppb_manage_fields_submenu(){
 	//cpt select
 	$post_types = get_post_types( array( 'public'   => true ), 'names' );
 
+
+	if( apply_filters( 'wppb_update_field_meta_key_in_db', false ) ) {
+		$meta_key_description = __( 'Use this in conjunction with WordPress functions to display the value in the page of your choosing<br/>Auto-completed but in some cases editable (in which case it must be unique)<br/>Changing this might take long in case of a very big user-count', 'profile-builder' );
+	}
+	else{
+		$meta_key_description = __( 'Use this in conjunction with WordPress functions to display the value in the page of your choosing<br/>Auto-completed but in some cases editable (in which case it must be unique)<br/>Changing this will only affect subsequent entries', 'profile-builder' );
+	}
+
 	// set up the fields array
 	$fields = apply_filters( 'wppb_manage_fields', array(
 
         array( 'type' => 'text', 'slug' => 'field-title', 'title' => __( 'Field Title', 'profile-builder' ), 'description' => __( 'Title of the field', 'profile-builder' ) ),
         array( 'type' => 'select', 'slug' => 'field', 'title' => __( 'Field', 'profile-builder' ), 'options' => apply_filters( 'wppb_manage_fields_types', $manage_field_types ), 'default-option' => true, 'description' => $field_description ),
-        array( 'type' => 'text', 'slug' => 'meta-name', 'title' => __( 'Meta-name', 'profile-builder' ), 'default' => wppb_get_meta_name(), 'description' => __( 'Use this in conjunction with WordPress functions to display the value in the page of your choosing<br/>Auto-completed but in some cases editable (in which case it must be unique)<br/>Changing this might take long in case of a very big user-count', 'profile-builder' ) ),
+        array( 'type' => 'text', 'slug' => 'meta-name', 'title' => __( 'Meta-name', 'profile-builder' ), 'default' => wppb_get_meta_name(), 'description' => $meta_key_description ),
         array( 'type' => 'text', 'slug' => 'id', 'title' => __( 'ID', 'profile-builder' ), 'default' => wppb_get_unique_id(), 'description' => __( "A unique, auto-generated ID for this particular field<br/>You can use this in conjuction with filters to target this element if needed<br/>Can't be edited", 'profile-builder' ), 'readonly' => true ),
         array( 'type' => 'textarea', 'slug' => 'description', 'title' => __( 'Description', 'profile-builder' ), 'description' => __( 'Enter a (detailed) description of the option for end users to read<br/>Optional', 'profile-builder') ),
         array( 'type' => 'text', 'slug' => 'row-count', 'title' => __( 'Row Count', 'profile-builder' ), 'default' => 5, 'description' => __( "Specify the number of rows for a 'Textarea' field<br/>If not specified, defaults to 5", 'profile-builder' ) ),
@@ -187,7 +195,7 @@ function wppb_manage_fields_submenu(){
     );
     new Wordpress_Creation_Kit_PB( $args );
 }
-add_action( 'init', 'wppb_manage_fields_submenu', 10 );
+add_action( 'init', 'wppb_manage_fields_submenu', 11 );
 
 /**
  * Function that prepopulates the manage fields list with the default fields of WP
@@ -1378,4 +1386,27 @@ function wppb_redisable_the_add_button(){
 	?>
 	<script>wppb_disable_add_entry_button ( '#wppb_manage_fields' );</script>
 	<?php
+}
+
+
+/**
+ * Function that updates the meta_key of a field in the usertmeta table when it was changed for a field. It is turned off by default
+ */
+add_action( 'wck_before_update_meta', 'wppb_change_field_meta_key', 10, 4 );
+function wppb_change_field_meta_key( $meta, $id, $values, $element_id ){
+	if( apply_filters( 'wppb_update_field_meta_key_in_db', false ) ) {		
+		if ($meta == 'wppb_manage_fields') {
+			global $wpdb;
+			$wppb_manage_fields = get_option('wppb_manage_fields');
+			if (!empty($wppb_manage_fields)) {
+				if (!empty($values['meta-name']) && $wppb_manage_fields[$element_id]['meta-name'] != $values['meta-name']) {
+					$wpdb->update(
+						$wpdb->usermeta,
+						array('meta_key' => sanitize_text_field($values['meta-name'])),
+						array('meta_key' => sanitize_text_field($wppb_manage_fields[$element_id]['meta-name']))
+					);
+				}
+			}
+		}
+	}
 }

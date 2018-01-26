@@ -1,9 +1,18 @@
+{#
+    Responsive Menu Jinja template file.
+    NOT Safe to Copy
+
+    Do Not Copy
+#}
+
 {% macro percentage_units(name, value) %}
     <select id='responsive-menu-{{ name|replace({'_': '-'}) }}' class='selectpicker show-tick is-unit' name='menu[{{ name }}]'>
         <option value='%' selected='selected'>%</option>
         <option value='px' disabled data-subtext='[PRO]'>px -</option>
         <option value='em' disabled data-subtext='[PRO]'>em -</option>
         <option value='rem' disabled data-subtext='[PRO]'>rem -</option>
+        <option value='vw' disabled data-subtext='[PRO]'>vw -</option>
+        <option value='vh' disabled data-subtext='[PRO]'>vh -</option>
     </select>
 {% endmacro %}
 
@@ -13,6 +22,8 @@
         <option value='%'  disabled data-subtext='[PRO]'>% -</option>
         <option value='em' disabled data-subtext='[PRO]'>em -</option>
         <option value='rem' disabled data-subtext='[PRO]'>rem -</option>
+        <option value='vw' disabled data-subtext='[PRO]'>vw -</option>
+        <option value='vh' disabled data-subtext='[PRO]'>vh -</option>
     </select>
 {% endmacro %}
 
@@ -65,6 +76,7 @@
         <option value='elastic-r' disabled data-subtext='[PRO]'>Elastic Reverse -</option>
         <option value='emphatic' disabled data-subtext='[PRO]'>Emphatic -</option>
         <option value='emphatic-r' disabled data-subtext='[PRO]'>Emphatic Reverse -</option>
+        <option value='minus' disabled data-subtext='[PRO]'>Minus -</option>
         <option value='slider' disabled data-subtext='[PRO]'>Slider -</option>
         <option value='slider-r' disabled data-subtext='[PRO]'>Slider Reverse -</option>
         <option value='spin' disabled data-subtext='[PRO]'>Spin -</option>
@@ -102,7 +114,7 @@
     <div class='input-group'>
         <input type='text' class='form-control' id='responsive-menu-{{ name|replace({'_': '-'}) }}' name='menu[{{ name }}]' value='{{ value }}' />
         <span class='input-group-btn'>
-            <button type='button' class='image_button btn btn-primary' for='responsive-menu-{{ name|replace({'_': '-'}) }}'>Upload Image</button>
+            <button type='button' class='image_button btn btn-primary btn-rm' for='responsive-menu-{{ name|replace({'_': '-'}) }}'>Upload Image</button>
         </span>
     </div>
 {% endmacro %}
@@ -113,8 +125,8 @@
 
 {% macro row(name, title, type, options, errors, class='', pro='', select_type='', unit_type='', sub_title='', unit='', choices=[], sub_sub_title='') %}
     {% import _self as macros %}
-    <tr{% if errors[name] %} class='danger'{% endif %}>
-        <td class='well col-md-3'>
+    <tr class="{% if errors[name] %} danger {% endif %} {% if pro == 'pro' %} pro-row {% endif %}" >
+        <td class='col-left col-md-3'>
             {{ macros.label(name, title) }}
             {% if sub_title %}
                 <div class='sub-text'>{{ sub_title|raw }}</div>
@@ -123,11 +135,11 @@
                 <div class='sub_sub_title'><br />{{ sub_sub_title|raw }}</div>
             {% endif %}
         </td>
-        <td{% if pro %} class='{{ pro }}'{% endif %}>
+        <td class='col-right {% if pro %} {{ pro }}{% endif %}'>
             {% if pro == 'pro' %}
-                <div class='responsive-menu-pro-overlay'>
-                    <a href='https://responsive.menu/pricing/?utm_source=free-plugin&utm_medium=option&utm_campaign=free-plugin-option-upgrade'
-                    target='_blank'>Click to upgrade now to use</a>
+                <div class="responsive-menu-pro-overlay">
+                    <a href="https://responsive.menu?utm_source=free-plugin&utm_medium=option&utm_campaign=free-plugin-option-upgrade#pricing"
+                       target="_blank">Click to upgrade now to use</a>
                 </div>
             {% endif %}
             {% if type == 'checkbox' %}
@@ -162,13 +174,27 @@
                         'right': 'Right'
                     } %}
                     {{ macros.select(name, options[name], choices) }}
-                {% elseif select_type == 'position' %}
+                {% elseif select_type == 'left_right_with_none' %}
                     {% set choices = {
-                        'fixed': 'Fixed',
-                        'absolute': 'Absolute',
-                        'relative': 'Relative'
+                        '': 'None',
+                        'left': 'Left',
+                        'right': 'Right'
                     } %}
                     {{ macros.select(name, options[name], choices) }}
+                {% elseif select_type == 'left_right_centre_with_none' %}
+                    {% set choices = {
+                        '': 'None',
+                        'left': 'Left',
+                        'right': 'Right',
+                        'centre': 'Centre'
+                    } %}
+                    {{ macros.select(name, options[name], choices) }}
+                {% elseif select_type == 'position' %}
+                    <select id='responsive-menu-{{ name|replace({'_': '-'}) }}' class='selectpicker show-tick' name='menu[{{ name }}]'>
+                        <option data-subtext='Will stay in position as you scroll down the page.' value='fixed' {% if options[name] == 'fixed' %}selected='selected'{% endif %}>Fixed</option>
+                        <option data-subtext='Will disappear as you scroll down the page.' value='absolute' {% if options[name] == 'absolute' %}selected='selected'{% endif %}>Absolute</option>
+                        <option data-subtext='Will stay in a specific position on your page.' value='relative' {% if options[name] == 'relative' %}selected='selected'{% endif %} >Relative</option>
+                    </select>
                 {% elseif select_type == 'animation' %}
                     {{ macros.animation_select(name, options[name]) }}
                 {% elseif select_type == 'depth' %}
@@ -196,6 +222,12 @@
                         '_top': 'Full Window Body'
                     } %}
                     {{ macros.select(name, options[name], choices) }}
+                {% elseif select_type == 'theme' %}
+                    {% set choices = {
+                        'dark': 'Dark',
+                        'light': 'Light'
+                    } %}
+                    {{ macros.select(name, options[name], choices) }}
                 {% elseif select_type == 'custom' %}
                     {{ macros.select(name, options[name], choices) }}
                 {% elseif select_type == 'button_animation' %}
@@ -211,4 +243,14 @@
             {% endif %}
         </td>
     </tr>
+{% endmacro %}
+
+{% macro header(title, section, url=false) %}
+    <div class='panel-body'>
+        {{ title }}
+        {% if url %}
+            <a class="docs" href="https://responsive.menu/docs/{{ url }}" target="_blank">Docs</a>
+        {% endif %}
+        <small>{{ section }}</small>
+    </div>
 {% endmacro %}

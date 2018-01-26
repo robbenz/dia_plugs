@@ -6,7 +6,6 @@ add_action('init', function() {
     $plugin_data = get_file_data(dirname(__FILE__) . '/responsive-menu.php', ['version']);
     $new_version = $plugin_data[0];
 
-    // TODO: Remove and just use new version number in April 2018
     $old_version = get_option('responsive_menu_version') ? get_option('responsive_menu_version') : get_option('RMVer');
 
     $migration = new ResponsiveMenu\Database\Migration(
@@ -23,7 +22,7 @@ add_action('init', function() {
             $wpdb->prefix . 'responsive_menu',
             "CREATE TABLE " . $wpdb->prefix . "responsive_menu (
               name varchar(50) NOT NULL,
-              value varchar(5000) DEFAULT NULL,
+              value LONGTEXT DEFAULT NULL,
               PRIMARY KEY (name)
            ) " . $wpdb->get_charset_collate() . ";"
         );

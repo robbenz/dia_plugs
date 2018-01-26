@@ -13,7 +13,7 @@ add_action( 'admin_menu', 'wppb_register_general_settings_submenu_page', 3 );
 
 
 function wppb_generate_default_settings_defaults(){
-	add_option( 'wppb_general_settings', array( 'extraFieldsLayout' => 'default', 'emailConfirmation' => 'no', 'activationLandingPage' => '', 'adminApproval' => 'no', 'loginWith' => 'usernameemail', 'rolesEditor' => 'no' ) );
+	add_option( 'wppb_general_settings', array( 'extraFieldsLayout' => 'default', 'emailConfirmation' => 'no', 'activationLandingPage' => '', 'adminApproval' => 'no', 'loginWith' => 'usernameemail', 'rolesEditor' => 'no', 'contentRestriction' => 'no' ) );
 }
 
 
@@ -156,6 +156,25 @@ function wppb_general_settings_content() {
 				</td>
 			</tr>
 	<?php } ?>
+
+    <?php
+        if( file_exists( WPPB_PLUGIN_DIR.'/features/content-restriction/content-restriction.php' ) ) {
+            ?>
+            <tr>
+                <th scope="row">
+                    <?php _e( '"Content Restriction" Activated:', 'profile-builder' ); ?>
+                </th>
+                <td>
+                    <select id="contentRestrictionSelect" name="wppb_general_settings[contentRestriction]" class="wppb-select" onchange="wppb_display_page_select_cr(this.value)">
+                        <option value="no" <?php if( !empty( $wppb_generalSettings['contentRestriction'] ) && $wppb_generalSettings['contentRestriction'] == 'no' ) echo 'selected'; ?>><?php _e( 'No', 'profile-builder' ); ?></option>
+                        <option value="yes" <?php if( !empty( $wppb_generalSettings['contentRestriction'] ) && $wppb_generalSettings['contentRestriction'] == 'yes' ) echo 'selected'; ?>><?php _e( 'Yes', 'profile-builder' ); ?></option>
+                    </select>
+                    <ul>
+                        <li class="description dynamic4"><?php printf( __( 'Set your settings at %1$sProfile Builder > Content Restriction%2$s and use each page / post / custom post type individual meta-box to restrict content.', 'profile-builder' ), '<a href="'.get_bloginfo( 'url' ).'/wp-admin/admin.php?page=profile-builder-content_restriction">', '</a>' )?></li>
+                    <ul>
+                </td>
+            </tr>
+    <?php } ?>
 
 	<?php
 	if ( PROFILE_BUILDER == 'Profile Builder Free' ) {

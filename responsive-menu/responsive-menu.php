@@ -4,7 +4,7 @@
 Plugin Name: Responsive Menu
 Plugin URI: https://responsive.menu
 Description: Highly Customisable Responsive Menu Plugin for WordPress
-Version: 3.1.7
+Version: 3.1.13
 Author: Peter Featherstone
 Text Domain: responsive-menu
 Author URI: https://peterfeatherstone.com
@@ -21,7 +21,12 @@ function check_responsive_menu_php_version() {
 }
 
 function responsive_menu_deactivation_text() {
-    echo '<div class="error"><p>' . sprintf('Responsive Menu requires PHP 5.4 or higher to function and has therefore been automatically disabled. You are still on %s.%sPlease speak to your webhost about upgrading your PHP version. For more information please visit %s', PHP_VERSION, '<br /><br />', '<a target="_blank" href="https://responsive.menu/why-php-5-4/">this page</a>.') . '</p></div>';
+    echo '<div class="error"><p>' . sprintf(
+            'Responsive Menu requires PHP 5.4 or higher to function and has therefore been automatically disabled. 
+            You are still on %s.%sPlease speak to your web host about upgrading your PHP version.',
+            PHP_VERSION,
+            '<br /><br />'
+        ) . '</p></div>';
 }
 
 if(version_compare(PHP_VERSION, '5.4', '<'))

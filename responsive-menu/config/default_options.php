@@ -77,6 +77,7 @@ function get_responsive_menu_default_options() {
         'page_wrapper' => null,
         'animation_speed' => 0.5,
         'transition_speed' => 0.5,
+        'sub_menu_speed' => 0.2,
 
         // Menu Settings
         'active_arrow_shape' => '▲',
@@ -184,7 +185,12 @@ function get_responsive_menu_default_options() {
         'custom_walker' => null,
         'custom_css' => null,
 
-        'use_single_menu' => 'off',
+        'use_desktop_menu' => false,
+        'desktop_menu_options' => '{}',
+        'desktop_menu_positioning' => 'fixed',
+        'desktop_menu_width' => '',
+        'desktop_menu_width_unit' => 'px',
+        'desktop_menu_side' => '',
 
         'single_menu_height' => '80',
         'single_menu_height_unit' => 'px',
@@ -209,8 +215,13 @@ function get_responsive_menu_default_options() {
         'single_menu_item_submenu_background_colour_hover' => '#ffffff',
 
         'use_header_bar' => 'off',
+        'header_bar_adjust_page' => null,
         'header_bar_breakpoint' => '800',
         'header_bar_logo' => null,
+        'header_bar_logo_height' => null,
+        'header_bar_logo_height_unit' => '%',
+        'header_bar_logo_width' => null,
+        'header_bar_logo_width_unit' => '%',
         'header_bar_logo_alt' => '',
         'header_bar_logo_link' => null,
         'header_bar_title' => null,
@@ -233,7 +244,10 @@ function get_responsive_menu_default_options() {
         'fade_submenus_speed' => 500,
 
         'use_slide_effect' => 'off',
-        'slide_effect_back_to_text' => 'Back'
+        'slide_effect_back_to_text' => 'Back',
+
+        'admin_theme' => 'dark'
+
     ];
 
 };

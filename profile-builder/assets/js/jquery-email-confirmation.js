@@ -26,6 +26,14 @@ function wppb_display_page_select_re( value ){
 		jQuery ( '.dynamic3' ).hide();
 }
 
+function wppb_display_page_select_cr( value ){
+	if ( value == 'yes' )
+		jQuery ( '.dynamic4' ).show();
+
+	else
+		jQuery ( '.dynamic4' ).hide();
+}
+
 
 jQuery(function() {
 	if ( ( jQuery( '#wppb_settings_email_confirmation' ).val() == 'yes' ) || ( jQuery( '#wppb_general_settings_hidden' ).val() == 'multisite' ) ){
@@ -50,4 +58,10 @@ jQuery(function() {
 
 	else
 		jQuery ( '.dynamic3' ).hide();
+
+	if ( jQuery( '#contentRestrictionSelect' ).val() == 'yes' )
+		jQuery ( '.dynamic4' ).show();
+
+	else
+		jQuery ( '.dynamic4' ).hide();
 });

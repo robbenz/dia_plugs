@@ -602,7 +602,7 @@ class Profile_Builder_Form_Creator{
             $userdata = wp_unslash( $userdata );
 
             // change User Registered date and time according to timezone selected in WordPress settings
-            $wppb_get_date = wppb_get_date_by_timezone();
+            $wppb_get_date = wppb_get_register_date();
 
             if( isset( $wppb_get_date ) ) {
                 $userdata['user_registered'] = $wppb_get_date;
@@ -706,7 +706,7 @@ class Profile_Builder_Form_Creator{
             $html = ob_get_clean();
             return "{$html}";
         } catch (Exception $exception) {
-            return '';
+            return __( 'Something went wrong. Please try again!', 'profile-builder');
         }
     }
 }

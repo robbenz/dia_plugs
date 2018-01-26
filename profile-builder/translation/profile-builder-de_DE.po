@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Profile Builder package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2017-08-01 13:42:38+0000\n"
+"PO-Revision-Date: 2017-11-13 12:34:03+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12,92 +12,92 @@ msgstr ""
 
 #: profile-builder-2.0/admin/general-settings.php:154
 msgid "You can add / edit user roles at %1$sUsers > Roles Editor%2$s."
-msgstr ""
+msgstr "Du kannst über %1$Benutzer > Rollen Editor %2$s Benutzerrollen hinzufügen/bearbeiten."
 
 #: profile-builder-2.0/admin/general-settings.php:146
 msgid "\"Roles Editor\" Activated:"
-msgstr ""
+msgstr "\"Rollen Editor\" aktiviert:"
 
 #: profile-builder-2.0/features/roles-editor/roles-editor.php:300
 msgid "M j, Y @ G:i"
-msgstr ""
+msgstr "M j, Y @ G:i"
 
 #: profile-builder-2.0/front-end/recover.php:117
 msgid "Please enter your email address."
-msgstr ""
+msgstr "Bitte gib deine Emailadresse ein."
 
 #: profile-builder-2.0/admin/manage-fields.php:127
 msgid "Specify the format of the date when using Datepicker<br/>Valid options: mm/dd/yy, mm/yy/dd, dd/yy/mm, dd/mm/yy, yy/dd/mm, yy/mm/dd, mm-dd-yy, yy-mm-dd, D, dd M yy, D, d M y, DD, dd-M-y, D, d M yy, @<br/>If not specified, defaults to mm/dd/yy"
-msgstr ""
+msgstr "Gib das Format an, das in der Datumsauswahl angezeigt werden soll. Gültige Optionen: mm/dd/yy, mm/yy/dd, dd/yy/mm, dd/mm/yy, yy/dd/mm, yy/mm/dd, mm-dd-yy, yy-mm-dd, D, dd M yy, D, d M y, DD, dd-M-y, D, d M yy, @<br/>Vorgabe, wenn nicht anders gewählt: mm/dd/yy"
 
 #: profile-builder-2.0/modules/custom-redirects/custom_redirects_admin.php:244
 msgid "Individual redirects defined in shortcodes; <strong><em>redirect_priority=\"top\"</em></strong> parameter can be added in any shortcode, then that shortcode redirect will have priority over all other redirects."
-msgstr ""
+msgstr "Einzelne Umleitungen in Shortcodes definiert; der <strong><em>Redirect_priority = \"top\"</em></strong> Parameter kann in jedem Shortcode hinzugefügt werden, dann haben die Shortcode Umleitungen Vorrang vor allen anderen Umleitungen."
 
 #: profile-builder-2.0/admin/manage-fields.php:1217
 msgid "If you're interested in displaying different fields in the registration and edit profile forms, please use the Multiple Registration & Edit Profile Forms Modules."
-msgstr ""
+msgstr "Wenn du verschiedene Felder in den Anmelde- und Profilbearbeitungs-Formularen verwenden möchtest, benutze bitte die Mehrfach-Registrierungs und Profilbearbeitungsformular Module,"
 
 #: profile-builder-2.0/modules/custom-redirects/custom_redirects_admin.php:240
 msgid "Multiple Registration and Edit Profile form settings Redirects"
-msgstr ""
+msgstr "Umleitungseinstellungen für Mehrfache Anmelde- und Profilbearbeitungsformulare"
 
 #: profile-builder-2.0/admin/register-version.php:251
 msgid "<p>Your <strong>Profile Builder</strong> license is about to expire on %5$s. <br/>Please %1$sRenew Your Licence%2$s to continue receiving access to product downloads, automatic updates and support. %3$sRenew now and get 40&#37; off %4$s %6$sDismiss%7$s</p>"
-msgstr ""
+msgstr "<p>Deine <strong>Profil-Builder</strong> -Lizenz läuft am %5$s ab.<br>Bitte %1$serneuere deine Lizenz %2$s um Zugriff auf Produkt-Downloads, automatische Updates und Support zu erhalten. %3$sJetzt erneuern und  40% Rabatt erhalten! %4$s %6$sAusblenden%7$s</p>"
 
 #: profile-builder-2.0/admin/register-version.php:246
 msgid "<p>Your <strong>Profile Builder</strong> license has expired. <br/>Please %1$sRenew Your Licence%2$s to continue receiving access to product downloads, automatic updates and support. %3$sRenew now and get 40&#37; off %4$s %5$sDismiss%6$s</p>"
-msgstr ""
+msgstr "<p>Deine <strong>Profil-Builder</strong> -Lizenz ist abgelaufen.<br>Bitte %1$serneuere deine Lizenz %2$s um Zugriff auf Produkt-Downloads, automatische Updates und Support zu erhalten. %3$sJetzt erneuern und  40% Rabatt erhalten! %4$s %6$sAusblenden%7$s</p>"
 
 #: profile-builder-2.0/front-end/recover.php:159
 msgid "You are already logged in. You can change your password on the edit profile form."
-msgstr ""
+msgstr "Du bist bereits angemeldet. Du kannst das Kennwort in dem \"Profil bearbeiten\"  Formular ändern."
 
 #: profile-builder-2.0/front-end/default-fields/blog-details/blog-details.php:70
 msgid "Your site url will look like this:<br>"
-msgstr ""
+msgstr "Dein Seiten URL wird so aussehen:<br />"
 
 #: profile-builder-2.0/features/functions.php:909
 msgid "<br><br>You can visit your site at "
-msgstr ""
+msgstr "<br><br>Du kannst seine Webseite hier anschauen: "
 
 #: profile-builder-2.0/features/functions.php:896
 msgid "<br><br>Also, you will be able to visit your site at "
-msgstr ""
+msgstr "<br><br>Du kannst deine Webseite hier anschauen:"
 
 #: profile-builder-2.0/front-end/default-fields/blog-details/blog-details.php:138
 msgid "Privacy: I would like my site to appear in search engines, and in public listings around this network."
-msgstr ""
+msgstr "Datenschutz: Ich möchte, dass meine Website in Suchmaschinen und in öffentlichen Verzeichnissen rund um dieses Netzwerk angezeigt wird."
 
 #: profile-builder-2.0/front-end/default-fields/blog-details/blog-details.php:116
 msgid "Site Title"
-msgstr ""
+msgstr "Webseiten Titel"
 
 #: profile-builder-2.0/front-end/default-fields/blog-details/blog-details.php:93
 msgid "Site URL slug"
-msgstr ""
+msgstr "Webseiten URL Slug"
 
 #: profile-builder-2.0/front-end/default-fields/blog-details/blog-details.php:63
 msgid "Yes, I'd like to create a new site"
-msgstr ""
+msgstr "Ja, ich möchte eine neue Seite erstellen"
 
 #: profile-builder-2.0/modules/email-customizer/email-customizer.php:36
 #: profile-builder-2.0/modules/user-listing/userlisting.php:118
 msgid "Blog URL"
-msgstr ""
+msgstr "Blog URL"
 
 #: profile-builder-2.0/admin/admin-functions.php:44
 msgid "Blog Details - only appears on the Registration page!"
-msgstr ""
+msgstr "Blog Details - wird ausschließlich auf der Registrierungseite angezeigt!"
 
 #: profile-builder-2.0/admin/manage-fields.php:222
 msgid "Blog Details"
-msgstr ""
+msgstr "Blog Details"
 
 #: profile-builder-2.0/admin/pms-cross-promotion.php:239
 msgid "Allow your users to have <strong>paid accounts with Profile Builder</strong>. %1$sFind out how >%2$s %3$sDismiss%4$s"
-msgstr ""
+msgstr "Erlaube deinen Benutzern, <strong>bezahlte Konten mit Profil Builder /strong> zu haben. %1$sFinde heraus, wie>%2$s %3$sAusblenden %4$s"
 
 #: profile-builder-2.0/features/email-confirmation/email-confirmation.php:579
 msgid "Welcome to %1$s!<br/><br/><br/>Your username is:%2$s"
@@ -111,83 +111,83 @@ msgstr "Karte ansehen"
 #: pb-add-on-woocommerce/index.php:364 pb-add-on-woocommerce/index.php:367
 #: pb-add-on-woocommerce/index.php:493
 msgid "Address line 2"
-msgstr ""
+msgstr "Adresse Linie 2"
 
 #: pb-add-on-woocommerce/index.php:256
 msgid "Billing Fields"
-msgstr ""
+msgstr "Rechnungsfelder"
 
 #: pb-add-on-woocommerce/index.php:256
 msgid "Select which WooCommerce Billing fields to display to the user ( drag and drop to re-order ) and which should be required"
-msgstr ""
+msgstr "Wählen Sie, welche WooCommerce Rechnungs-Felder für den Benutzer (Drag & Drop für eine neue Reihenfolge) anzuzeigen und erforderlich sein sollten"
 
 #: pb-add-on-woocommerce/index.php:257
 msgid "Billing Fields Order"
-msgstr ""
+msgstr "Rechnungsfelder-Sortierung"
 
 #: pb-add-on-woocommerce/index.php:257
 msgid "Save the billing fields order from the billing fields checkboxes"
-msgstr ""
+msgstr "Sichere die Rechnungsfelder-Reihenfolge von den Rechnungsfelder-Checkboxen"
 
 #: pb-add-on-woocommerce/index.php:258
 msgid "Billing Fields Name"
-msgstr ""
+msgstr "Rechnungsfelder-Name"
 
 #: pb-add-on-woocommerce/index.php:258
 msgid "Save the billing fields names"
-msgstr ""
+msgstr "Die Rechnungsfelder-Namen sichern"
 
 #: pb-add-on-woocommerce/index.php:275
 msgid "Shipping Fields"
-msgstr ""
+msgstr "Versand Felder"
 
 #: pb-add-on-woocommerce/index.php:275
 msgid "Select which WooCommerce Shipping fields to display to the user ( drag and drop to re-order ) and which should be required"
-msgstr ""
+msgstr "Wählen Sie, welche WooCommerce Versand-Felder für den Benutzer (Drag & Drop für eine neue Reihenfolge) anzuzeigen und erforderlich sein sollten"
 
 #: pb-add-on-woocommerce/index.php:276
 msgid "Shipping Fields Order"
-msgstr ""
+msgstr "Versandfelder-Sortierung"
 
 #: pb-add-on-woocommerce/index.php:276
 msgid "Save the shipping fields order from the billing fields checkboxes"
-msgstr ""
+msgstr "Sichere die Versandfelder-Reihenfolge von den Rechnungsfelder-Checkboxen"
 
 #: pb-add-on-woocommerce/index.php:277
 msgid "Shipping Fields Name"
-msgstr ""
+msgstr "Versandfelder-Name"
 
 #: pb-add-on-woocommerce/index.php:277
 msgid "Save the shipping fields names"
-msgstr ""
+msgstr "DIe Verrsandfelder-Namen sichern"
 
 #: pb-add-on-woocommerce/index.php:305
 msgid "Field Name"
-msgstr ""
+msgstr "Feldname"
 
 #: pb-add-on-woocommerce/index.php:369
 msgid "Click to edit "
-msgstr ""
+msgstr "Bearbeiten..."
 
 #: pb-add-on-woocommerce/woo-checkout-field-support.php:368
 msgid "is not a valid phone number."
-msgstr ""
+msgstr "ist keine gültige Telefonnummer"
 
 #: pb-add-on-woocommerce/woo-checkout-field-support.php:377
 msgid "is not a number."
-msgstr ""
+msgstr "ist keine Zahl"
 
 #: pb-add-on-woocommerce/woo-checkout-field-support.php:382
 msgid "must be a multiplier of "
-msgstr ""
+msgstr "muss eine Vielzahl sein von"
 
 #: pb-add-on-woocommerce/woo-checkout-field-support.php:387
 msgid "must be a greater than or equal to "
-msgstr ""
+msgstr "Muss größer oder gleich sein als"
 
 #: pb-add-on-woocommerce/woo-checkout-field-support.php:392
 msgid "must be less than or equal to "
-msgstr ""
+msgstr "muss weniger oder gleich sein als"
 
 #: profile-builder-2.0/admin/add-ons.php:103
 msgid "Available in Hobbyist and Pro Versions"
@@ -232,19 +232,19 @@ msgstr "HTML"
 #: profile-builder-2.0/admin/basic-info.php:162
 #: profile-builder-2.0/modules/modules.php:117
 msgid "Repeater Fields"
-msgstr ""
+msgstr "Wiederholungsfelder"
 
 #: profile-builder-2.0/admin/basic-info.php:163
 msgid "Set up a repeating group of fields on register and edit profile forms. Limit the number of repeated groups for each user role."
-msgstr ""
+msgstr "Erstelle eine sich wiederholende Gruppe von Feldern in Registrier- und Profil-Formularen. Beschränke die Anzahl der Gruppen für jede Benutzerrolle."
 
 #: profile-builder-2.0/admin/general-settings.php:59
 msgid "This works with front-end forms only. Recommended to redirect WP default registration to a Profile Builder one using \"Custom Redirects\" module."
-msgstr ""
+msgstr "Das funktioniert nur mit Front-end Formularen. Wird empfohlen, um Standard Wordpress Registrierungen mittels des \"Custom Redirects\" zu einer Profile Builder Registrierung umzuleiten."
 
 #: profile-builder-2.0/admin/manage-fields.php:120
 msgid "Use this in conjunction with WordPress functions to display the value in the page of your choosing<br/>Auto-completed but in some cases editable (in which case it must be unique)<br/>Changing this might take long in case of a very big user-count"
-msgstr ""
+msgstr "Benutze dieses in Verbindung mit WordPress Funktionen, um den Wert auf der von dir gewählten Seite anzuzeigen.<br/>. Automatisch ausgefüllt, aber in einigen Fällen bearbeitbar (dann muss es einzigartig sein)<br/>Das Ändern kann bei großen Benutzerzahlen sehr lange dauern."
 
 #: profile-builder-2.0/admin/manage-fields.php:143
 msgid "Show Currency Symbol"
@@ -252,7 +252,7 @@ msgstr "Währungssymbol anzeigen"
 
 #: profile-builder-2.0/admin/manage-fields.php:143
 msgid "Whether the currency symbol should be displayed after the currency name in the select option."
-msgstr ""
+msgstr "Ob das Währungssymbol nach dem Währungsnamen in der select-Option angezeigt werden soll."
 
 #: profile-builder-2.0/admin/manage-fields.php:144
 msgid "Show Post Type"
@@ -316,23 +316,23 @@ msgstr "Standard Zoomstufe"
 
 #: profile-builder-2.0/admin/manage-fields.php:151
 msgid "Add a number from 0 to 19. The higher the number the higher the zoom."
-msgstr ""
+msgstr "Fügen Sie eine Zahl von 0 bis 19 hinzu. Je höher die Zahl, desto höher der Vergrößerung."
 
 #: profile-builder-2.0/admin/manage-fields.php:152
 msgid "Map Height"
-msgstr ""
+msgstr "Kartenhöhe"
 
 #: profile-builder-2.0/admin/manage-fields.php:152
 msgid "The height of the map."
-msgstr ""
+msgstr "Die Höhe der anzuzeigenden Karte"
 
 #: profile-builder-2.0/admin/manage-fields.php:154
 msgid "HTML Content"
-msgstr ""
+msgstr "HTML Inhalt"
 
 #: profile-builder-2.0/admin/manage-fields.php:154
 msgid "Add your HTML (or text) content"
-msgstr ""
+msgstr "Füge Deinen HTML (oder Text) Inhalt hinzu"
 
 #: profile-builder-2.0/admin/manage-fields.php:155
 msgid "Phone Format"
@@ -348,195 +348,195 @@ msgstr "z.B. (###) ####-####"
 
 #: profile-builder-2.0/admin/manage-fields.php:155
 msgid "Empty field won't check for correct phone number."
-msgstr ""
+msgstr "Leeres Feld kann nicht auf eine richtige Telefonnummer geprüft werden."
 
 #: profile-builder-2.0/admin/manage-fields.php:156
 msgid "Heading Tag"
-msgstr ""
+msgstr "Überschriften Tag"
 
 #: profile-builder-2.0/admin/manage-fields.php:156
 msgid "Change heading field size on front-end forms"
-msgstr ""
+msgstr "Ändern der Überschrift Feldgröße auf Front-End-Formularen"
 
 #: profile-builder-2.0/admin/manage-fields.php:157
 msgid "Min Number Value"
-msgstr ""
+msgstr "Minimaler Zahlenwert"
 
 #: profile-builder-2.0/admin/manage-fields.php:157
 msgid "Min allowed number value (0 to allow only positive numbers)"
-msgstr ""
+msgstr "Minimal erlaubter Zahlenwert (0, um nur positive Zahlen zu erlauben)"
 
 #: profile-builder-2.0/admin/manage-fields.php:157
 msgid "Leave it empty for no min value"
-msgstr ""
+msgstr "Leer lassen für keinen minimalen Wert"
 
 #: profile-builder-2.0/admin/manage-fields.php:158
 msgid "Max Number Value"
-msgstr ""
+msgstr "Maximal erlaubter Zahlenwert"
 
 #: profile-builder-2.0/admin/manage-fields.php:158
 msgid "Max allowed number value (0 to allow only negative numbers)"
-msgstr ""
+msgstr "Maximal erlaubter Zahlenwert (0, um nur negative Zahlen zu erlauben)"
 
 #: profile-builder-2.0/admin/manage-fields.php:158
 msgid "Leave it empty for no max value"
-msgstr ""
+msgstr "Leer lassen für keinen maximalen Wert"
 
 #: profile-builder-2.0/admin/manage-fields.php:159
 msgid "Number Step Value"
-msgstr ""
+msgstr "Zahlenschrittwert"
 
 #: profile-builder-2.0/admin/manage-fields.php:159
 msgid "Step value 1 to allow only integers, 0.1 to allow integers and numbers with 1 decimal"
-msgstr ""
+msgstr "Schrittwert 1 erlaubt nur ganze Zahlen, 0.1 erlaubt Zahlen und Nummern mit einer Dezimalstelle"
 
 #: profile-builder-2.0/admin/manage-fields.php:159
 msgid "To allow multiple decimals use for eg. 0.01 (for 2 deciamls) and so on"
-msgstr ""
+msgstr "Um mehrere Dezimalstellen zu erlauben, benutze z.B. 0.01 (für 2 Dezimalstellen) usw."
 
 #: profile-builder-2.0/admin/manage-fields.php:159
 msgid "You can also use step value to specify the legal number intervals (eg. step value 2 will allow only -4, -2, 0, 2 and so on)"
-msgstr ""
+msgstr "Du kannst auch den Schrittwert benutzen, um die Intervalle der erlaubten Zahlen festzulegen (z.B.  Schrittwert 2 wird nur -4, -2, 0, 2 usw erlauben)"
 
 #: profile-builder-2.0/admin/manage-fields.php:159
 msgid "Leave it empty for no restriction"
-msgstr ""
+msgstr "Leer lassen für keine Beschränkungen"
 
 #: profile-builder-2.0/admin/manage-fields.php:564
 msgid "Albania Lek"
-msgstr ""
+msgstr "Albania Lek"
 
 #: profile-builder-2.0/admin/manage-fields.php:565
 msgid "Afghanistan Afghani"
-msgstr ""
+msgstr "Afghanistan Afghani"
 
 #: profile-builder-2.0/admin/manage-fields.php:566
 msgid "Argentina Peso"
-msgstr ""
+msgstr "Argentina Peso"
 
 #: profile-builder-2.0/admin/manage-fields.php:567
 msgid "Aruba Guilder"
-msgstr ""
+msgstr "Aruba Guilder"
 
 #: profile-builder-2.0/admin/manage-fields.php:568
 msgid "Australia Dollar"
-msgstr ""
+msgstr "Australia Dollar"
 
 #: profile-builder-2.0/admin/manage-fields.php:569
 msgid "Azerbaijan New Manat"
-msgstr ""
+msgstr "Azerbaijan New Manat"
 
 #: profile-builder-2.0/admin/manage-fields.php:570
 msgid "Bahamas Dollar"
-msgstr ""
+msgstr "Bahamas Dollar"
 
 #: profile-builder-2.0/admin/manage-fields.php:571
 msgid "Barbados Dollar"
-msgstr ""
+msgstr "Barbados Dollar"
 
 #: profile-builder-2.0/admin/manage-fields.php:572
 msgid "Bangladeshi taka"
-msgstr ""
+msgstr "Bangladeshi taka"
 
 #: profile-builder-2.0/admin/manage-fields.php:573
 msgid "Belarus Ruble"
-msgstr ""
+msgstr "Belarus Ruble"
 
 #: profile-builder-2.0/admin/manage-fields.php:574
 msgid "Belize Dollar"
-msgstr ""
+msgstr "Belize Dollar"
 
 #: profile-builder-2.0/admin/manage-fields.php:575
 msgid "Bermuda Dollar"
-msgstr ""
+msgstr "Bermuda Dollar"
 
 #: profile-builder-2.0/admin/manage-fields.php:576
 msgid "Bolivia Boliviano"
-msgstr ""
+msgstr "Bolivien Boliviano"
 
 #: profile-builder-2.0/admin/manage-fields.php:577
 msgid "Bosnia and Herzegovina Convertible Marka"
-msgstr ""
+msgstr "Bosnisch-Herzegowinische Konvertible Mark"
 
 #: profile-builder-2.0/admin/manage-fields.php:578
 msgid "Botswana Pula"
-msgstr ""
+msgstr "Botswana Pula"
 
 #: profile-builder-2.0/admin/manage-fields.php:579
 msgid "Bulgaria Lev"
-msgstr ""
+msgstr "Bulgaria Lev"
 
 #: profile-builder-2.0/admin/manage-fields.php:580
 msgid "Brazil Real"
-msgstr ""
+msgstr "Brazil Real"
 
 #: profile-builder-2.0/admin/manage-fields.php:581
 msgid "Brunei Darussalam Dollar"
-msgstr ""
+msgstr "Brunei Darussalam Dollar"
 
 #: profile-builder-2.0/admin/manage-fields.php:582
 msgid "Cambodia Riel"
-msgstr ""
+msgstr "Cambodia Riel"
 
 #: profile-builder-2.0/admin/manage-fields.php:583
 msgid "Canada Dollar"
-msgstr ""
+msgstr "Canada Dollar"
 
 #: profile-builder-2.0/admin/manage-fields.php:584
 msgid "Cayman Islands Dollar"
-msgstr ""
+msgstr "Cayman Islands Dollar"
 
 #: profile-builder-2.0/admin/manage-fields.php:585
 msgid "Chile Peso"
-msgstr ""
+msgstr "Chile Peso"
 
 #: profile-builder-2.0/admin/manage-fields.php:586
 msgid "China Yuan Renminbi"
-msgstr ""
+msgstr "China Yuan Renminbi"
 
 #: profile-builder-2.0/admin/manage-fields.php:587
 msgid "Colombia Peso"
-msgstr ""
+msgstr "Colombia Peso"
 
 #: profile-builder-2.0/admin/manage-fields.php:588
 msgid "Costa Rica Colon"
-msgstr ""
+msgstr "Costa Rica Colon"
 
 #: profile-builder-2.0/admin/manage-fields.php:589
 msgid "Croatia Kuna"
-msgstr ""
+msgstr "Croatia Kuna"
 
 #: profile-builder-2.0/admin/manage-fields.php:590
 msgid "Cuba Peso"
-msgstr ""
+msgstr "Cuba Peso"
 
 #: profile-builder-2.0/admin/manage-fields.php:591
 msgid "Czech Republic Koruna"
-msgstr ""
+msgstr "Czech Republic Koruna"
 
 #: profile-builder-2.0/admin/manage-fields.php:592
 msgid "Denmark Krone"
-msgstr ""
+msgstr "Denmark Krone"
 
 #: profile-builder-2.0/admin/manage-fields.php:593
 msgid "Dominican Republic Peso"
-msgstr ""
+msgstr "Dominican Republic Peso"
 
 #: profile-builder-2.0/admin/manage-fields.php:594
 msgid "East Caribbean Dollar"
-msgstr ""
+msgstr "East Caribbean Dollar"
 
 #: profile-builder-2.0/admin/manage-fields.php:595
 msgid "Egypt Pound"
-msgstr ""
+msgstr "Egypt Pound"
 
 #: profile-builder-2.0/admin/manage-fields.php:596
 msgid "El Salvador Colon"
-msgstr ""
+msgstr "El Salvador Colon"
 
 #: profile-builder-2.0/admin/manage-fields.php:597
 msgid "Estonia Kroon"
-msgstr ""
+msgstr "Estonia Kroon"
 
 #: profile-builder-2.0/admin/manage-fields.php:598
 msgid "Euro"
@@ -544,43 +544,43 @@ msgstr "Euro"
 
 #: profile-builder-2.0/admin/manage-fields.php:599
 msgid "Falkland Islands (Malvinas) Pound"
-msgstr ""
+msgstr "Falkland Islands (Malvinas) Pound"
 
 #: profile-builder-2.0/admin/manage-fields.php:600
 msgid "Fiji Dollar"
-msgstr ""
+msgstr "Fiji Dollar"
 
 #: profile-builder-2.0/admin/manage-fields.php:601
 msgid "Ghana Cedis"
-msgstr ""
+msgstr "Ghana Cedis"
 
 #: profile-builder-2.0/admin/manage-fields.php:602
 msgid "Gibraltar Pound"
-msgstr ""
+msgstr "Gibraltar Pound"
 
 #: profile-builder-2.0/admin/manage-fields.php:603
 msgid "Guatemala Quetzal"
-msgstr ""
+msgstr "Guatemala Quetzal"
 
 #: profile-builder-2.0/admin/manage-fields.php:604
 msgid "Guernsey Pound"
-msgstr ""
+msgstr "Guernsey Pound"
 
 #: profile-builder-2.0/admin/manage-fields.php:605
 msgid "Guyana Dollar"
-msgstr ""
+msgstr "Guyana Dollar"
 
 #: profile-builder-2.0/admin/manage-fields.php:606
 msgid "Honduras Lempira"
-msgstr ""
+msgstr "Honduras Lempira"
 
 #: profile-builder-2.0/admin/manage-fields.php:607
 msgid "Hong Kong Dollar"
-msgstr ""
+msgstr "Hong Kong Dollar"
 
 #: profile-builder-2.0/admin/manage-fields.php:608
 msgid "Hungary Forint"
-msgstr ""
+msgstr "Hungary Forint"
 
 #: profile-builder-2.0/admin/manage-fields.php:609
 msgid "Iceland Krona"
@@ -588,305 +588,305 @@ msgstr "Isländische Krone"
 
 #: profile-builder-2.0/admin/manage-fields.php:610
 msgid "India Rupee"
-msgstr ""
+msgstr "India Rupee"
 
 #: profile-builder-2.0/admin/manage-fields.php:611
 msgid "Indonesia Rupiah"
-msgstr ""
+msgstr "Indonesia Rupiah"
 
 #: profile-builder-2.0/admin/manage-fields.php:612
 msgid "Iran Rial"
-msgstr ""
+msgstr "Iran Rial"
 
 #: profile-builder-2.0/admin/manage-fields.php:613
 msgid "Isle of Man Pound"
-msgstr ""
+msgstr "Isle of Man Pound"
 
 #: profile-builder-2.0/admin/manage-fields.php:614
 msgid "Israel Shekel"
-msgstr ""
+msgstr "Israel Shekel"
 
 #: profile-builder-2.0/admin/manage-fields.php:615
 msgid "Jamaica Dollar"
-msgstr ""
+msgstr "Jamaica Dollar"
 
 #: profile-builder-2.0/admin/manage-fields.php:616
 msgid "Japan Yen"
-msgstr ""
+msgstr "Japan Yen"
 
 #: profile-builder-2.0/admin/manage-fields.php:617
 msgid "Jersey Pound"
-msgstr ""
+msgstr "Jersey Pound"
 
 #: profile-builder-2.0/admin/manage-fields.php:618
 msgid "Kazakhstan Tenge"
-msgstr ""
+msgstr "Kazakhstan Tenge"
 
 #: profile-builder-2.0/admin/manage-fields.php:619
 msgid "Korea (North) Won"
-msgstr ""
+msgstr "Korea (North) Won"
 
 #: profile-builder-2.0/admin/manage-fields.php:620
 msgid "Korea (South) Won"
-msgstr ""
+msgstr "Korea (South) Won"
 
 #: profile-builder-2.0/admin/manage-fields.php:621
 msgid "Kyrgyzstan Som"
-msgstr ""
+msgstr "Kyrgyzstan Som"
 
 #: profile-builder-2.0/admin/manage-fields.php:622
 msgid "Laos Kip"
-msgstr ""
+msgstr "Laos Kip"
 
 #: profile-builder-2.0/admin/manage-fields.php:623
 msgid "Latvia Lat"
-msgstr ""
+msgstr "Latvia Lat"
 
 #: profile-builder-2.0/admin/manage-fields.php:624
 msgid "Lebanon Pound"
-msgstr ""
+msgstr "Lebanon Pound"
 
 #: profile-builder-2.0/admin/manage-fields.php:625
 msgid "Liberia Dollar"
-msgstr ""
+msgstr "Liberia Dollar"
 
 #: profile-builder-2.0/admin/manage-fields.php:626
 msgid "Lithuania Litas"
-msgstr ""
+msgstr "Lithuania Litas"
 
 #: profile-builder-2.0/admin/manage-fields.php:627
 msgid "Macedonia Denar"
-msgstr ""
+msgstr "Macedonia Denar"
 
 #: profile-builder-2.0/admin/manage-fields.php:628
 msgid "Malaysia Ringgit"
-msgstr ""
+msgstr "Malaysia Ringgit"
 
 #: profile-builder-2.0/admin/manage-fields.php:629
 msgid "Mauritius Rupee"
-msgstr ""
+msgstr "Mauritius Rupee"
 
 #: profile-builder-2.0/admin/manage-fields.php:630
 msgid "Mexico Peso"
-msgstr ""
+msgstr "Mexico Peso"
 
 #: profile-builder-2.0/admin/manage-fields.php:631
 msgid "Mongolia Tughrik"
-msgstr ""
+msgstr "Mongolia Tughrik"
 
 #: profile-builder-2.0/admin/manage-fields.php:632
 msgid "Mozambique Metical"
-msgstr ""
+msgstr "Mozambique Metical"
 
 #: profile-builder-2.0/admin/manage-fields.php:633
 msgid "Namibia Dollar"
-msgstr ""
+msgstr "Namibia Dollar"
 
 #: profile-builder-2.0/admin/manage-fields.php:634
 msgid "Nepal Rupee"
-msgstr ""
+msgstr "Nepal Rupee"
 
 #: profile-builder-2.0/admin/manage-fields.php:635
 msgid "Netherlands Antilles Guilder"
-msgstr ""
+msgstr "Netherlands Antilles Guilder"
 
 #: profile-builder-2.0/admin/manage-fields.php:636
 msgid "New Zealand Dollar"
-msgstr ""
+msgstr "New Zealand Dollar"
 
 #: profile-builder-2.0/admin/manage-fields.php:637
 msgid "Nicaragua Cordoba"
-msgstr ""
+msgstr "Nicaragua Cordoba"
 
 #: profile-builder-2.0/admin/manage-fields.php:638
 msgid "Nigeria Naira"
-msgstr ""
+msgstr "Nigeria Naira"
 
 #: profile-builder-2.0/admin/manage-fields.php:639
 msgid "Norway Krone"
-msgstr ""
+msgstr "Norway Krone"
 
 #: profile-builder-2.0/admin/manage-fields.php:640
 msgid "Oman Rial"
-msgstr ""
+msgstr "Oman Rial"
 
 #: profile-builder-2.0/admin/manage-fields.php:641
 msgid "Pakistan Rupee"
-msgstr ""
+msgstr "Pakistan Rupee"
 
 #: profile-builder-2.0/admin/manage-fields.php:642
 msgid "Panama Balboa"
-msgstr ""
+msgstr "Panama Balboa"
 
 #: profile-builder-2.0/admin/manage-fields.php:643
 msgid "Paraguay Guarani"
-msgstr ""
+msgstr "Paraguay Guarani"
 
 #: profile-builder-2.0/admin/manage-fields.php:644
 msgid "Peru Nuevo Sol"
-msgstr ""
+msgstr "Peru Nuevo Sol"
 
 #: profile-builder-2.0/admin/manage-fields.php:645
 msgid "Philippines Peso"
-msgstr ""
+msgstr "Philippines Peso"
 
 #: profile-builder-2.0/admin/manage-fields.php:646
 msgid "Poland Zloty"
-msgstr ""
+msgstr "Poland Zloty"
 
 #: profile-builder-2.0/admin/manage-fields.php:647
 msgid "Qatar Riyal"
-msgstr ""
+msgstr "Qatar Riyal"
 
 #: profile-builder-2.0/admin/manage-fields.php:648
 msgid "Romania New Leu"
-msgstr ""
+msgstr "Romania New Leu"
 
 #: profile-builder-2.0/admin/manage-fields.php:649
 msgid "Russia Ruble"
-msgstr ""
+msgstr "Russia Ruble"
 
 #: profile-builder-2.0/admin/manage-fields.php:650
 msgid "Saint Helena Pound"
-msgstr ""
+msgstr "Saint Helena Pound"
 
 #: profile-builder-2.0/admin/manage-fields.php:651
 msgid "Saudi Arabia Riyal"
-msgstr ""
+msgstr "Saudi Arabia Riyal"
 
 #: profile-builder-2.0/admin/manage-fields.php:652
 msgid "Serbia Dinar"
-msgstr ""
+msgstr "Serbia Dinar"
 
 #: profile-builder-2.0/admin/manage-fields.php:653
 msgid "Seychelles Rupee"
-msgstr ""
+msgstr "Seychelles Rupee"
 
 #: profile-builder-2.0/admin/manage-fields.php:654
 msgid "Singapore Dollar"
-msgstr ""
+msgstr "Singapore Dollar"
 
 #: profile-builder-2.0/admin/manage-fields.php:655
 msgid "Solomon Islands Dollar"
-msgstr ""
+msgstr "Solomon Islands Dollar"
 
 #: profile-builder-2.0/admin/manage-fields.php:656
 msgid "Somalia Shilling"
-msgstr ""
+msgstr "Somalia Shilling"
 
 #: profile-builder-2.0/admin/manage-fields.php:657
 msgid "South Africa Rand"
-msgstr ""
+msgstr "South Africa Rand"
 
 #: profile-builder-2.0/admin/manage-fields.php:658
 msgid "Sri Lanka Rupee"
-msgstr ""
+msgstr "Sri Lanka Rupee"
 
 #: profile-builder-2.0/admin/manage-fields.php:659
 msgid "Sweden Krona"
-msgstr ""
+msgstr "Sweden Krona"
 
 #: profile-builder-2.0/admin/manage-fields.php:660
 msgid "Switzerland Franc"
-msgstr ""
+msgstr "Switzerland Franc"
 
 #: profile-builder-2.0/admin/manage-fields.php:661
 msgid "Suriname Dollar"
-msgstr ""
+msgstr "Suriname Dollar"
 
 #: profile-builder-2.0/admin/manage-fields.php:662
 msgid "Syria Pound"
-msgstr ""
+msgstr "Syria Pound"
 
 #: profile-builder-2.0/admin/manage-fields.php:663
 msgid "Taiwan New Dollar"
-msgstr ""
+msgstr "Taiwan New Dollar"
 
 #: profile-builder-2.0/admin/manage-fields.php:664
 msgid "Thailand Baht"
-msgstr ""
+msgstr "Thailand Baht"
 
 #: profile-builder-2.0/admin/manage-fields.php:665
 msgid "Trinidad and Tobago Dollar"
-msgstr ""
+msgstr "Trinidad and Tobago Dollar"
 
 #: profile-builder-2.0/admin/manage-fields.php:666
 #: profile-builder-2.0/admin/manage-fields.php:667
 msgid "Turkey Lira"
-msgstr ""
+msgstr "Turkey Lira"
 
 #: profile-builder-2.0/admin/manage-fields.php:668
 msgid "Tuvalu Dollar"
-msgstr ""
+msgstr "Tuvalu Dollar"
 
 #: profile-builder-2.0/admin/manage-fields.php:669
 msgid "Ukraine Hryvna"
-msgstr ""
+msgstr "Ukraine Hryvna"
 
 #: profile-builder-2.0/admin/manage-fields.php:670
 msgid "United Kingdom Pound"
-msgstr ""
+msgstr "United Kingdom Pound"
 
 #: profile-builder-2.0/admin/manage-fields.php:671
 msgid "Uganda Shilling"
-msgstr ""
+msgstr "Uganda Shilling"
 
 #: profile-builder-2.0/admin/manage-fields.php:672
 msgid "US Dollar"
-msgstr ""
+msgstr "US Dollar"
 
 #: profile-builder-2.0/admin/manage-fields.php:673
 msgid "Uruguay Peso"
-msgstr ""
+msgstr "Uruguay Peso"
 
 #: profile-builder-2.0/admin/manage-fields.php:674
 msgid "Uzbekistan Som"
-msgstr ""
+msgstr "Uzbekistan Som"
 
 #: profile-builder-2.0/admin/manage-fields.php:675
 msgid "Venezuela Bolivar"
-msgstr ""
+msgstr "Venezuela Bolivar"
 
 #: profile-builder-2.0/admin/manage-fields.php:676
 msgid "Viet Nam Dong"
-msgstr ""
+msgstr "Viet Nam Dong"
 
 #: profile-builder-2.0/admin/manage-fields.php:677
 msgid "Yemen Rial"
-msgstr ""
+msgstr "Yemen Rial"
 
 #: profile-builder-2.0/admin/manage-fields.php:678
 msgid "Zimbabwe Dollar"
-msgstr ""
+msgstr "Zimbabwe Dollar"
 
 #: profile-builder-2.0/admin/manage-fields.php:1097
 msgid "The meta-name can only contain lowercase letters, numbers, _ , - and no spaces.\n"
-msgstr ""
+msgstr "Der Meta-Name kann nur Kleinbuchstaben, Zahlen, _ , - und keine Leerzeichen beinhalten.\n"
 
 #: profile-builder-2.0/admin/manage-fields.php:1314
 msgid "Search Location"
-msgstr ""
+msgstr "Orte suchen"
 
 #: profile-builder-2.0/assets/lib/wck-api/wordpress-creation-kit.php:754
 msgid "You are not allowed to do this."
-msgstr ""
+msgstr "Du hast keine Berechtigung, das zu tun."
 
 #: profile-builder-2.0/features/admin-approval/class-admin-approval.php:461
 #: profile-builder-2.0/features/email-confirmation/class-email-confirmation.php:460
 msgid "Search Users"
-msgstr ""
+msgstr "Benutzer suchen"
 
 #: profile-builder-2.0/features/conditional-fields/conditional-fields.php:78
 msgid "Conditional Logic"
-msgstr ""
+msgstr "Bedingungslogik"
 
 #: profile-builder-2.0/features/conditional-fields/conditional-fields.php:79
 msgid "Conditional Rules"
-msgstr ""
+msgstr "Bedingungsregeln"
 
 #: profile-builder-2.0/features/conditional-fields/conditional-fields.php:448
 msgid "This field has conditional logic enabled."
-msgstr ""
+msgstr "Dieses Feld hat eine bedingte Logik aktiviert"
 
 #: profile-builder-2.0/features/functions.php:685
 msgid "Incorrect phone number"
@@ -894,12 +894,12 @@ msgstr "Fehlerhafte Telefonnummer"
 
 #: profile-builder-2.0/front-end/class-formbuilder.php:124
 msgid "The role of the created user set to the default role. Only an administrator can register a user with the role assigned to this form."
-msgstr ""
+msgstr "Die Rolle des erstellten Benutzers ist auf die Vorgabe gesetzt. Nur ein Admin kann einen Benutzer mit der diesem Formular zugeordneten Rolle registrieren."
 
 #: profile-builder-2.0/front-end/extra-fields/map/map.php:46
 #: profile-builder-2.0/front-end/extra-fields/map/map.php:69
 msgid "Please add the Google Maps API key for this field."
-msgstr ""
+msgstr "Bitte füge den Google Maps API Schlüssel für dieses Feld hinzu."
 
 #: profile-builder-2.0/front-end/extra-fields/map/map.php:134
 msgid "Something went wrong. Please try again."
@@ -907,234 +907,234 @@ msgstr "Irgendetwas ging schief. Bitte probieren Sie es erneut."
 
 #: profile-builder-2.0/front-end/extra-fields/number/number.php:69
 msgid "Please enter numbers only"
-msgstr "Bitte geben Sie nur Zahlen ein"
+msgstr "Bitte gib nur Zahlen ein"
 
 #: profile-builder-2.0/front-end/extra-fields/number/number.php:73
 msgid "Value must be a multiplier of %1$s"
-msgstr ""
+msgstr "Wert muss ein Vielfaches von %1$s sein"
 
 #: profile-builder-2.0/front-end/extra-fields/number/number.php:77
 msgid "Value must be greater than or equal to %1$s"
-msgstr ""
+msgstr "Wert muss größer oder gleich %1$s sein"
 
 #: profile-builder-2.0/front-end/extra-fields/number/number.php:81
 msgid "Value must be less than or equal to %1$s"
-msgstr ""
+msgstr "Wert muss kleiner oder gleich %1$s sein"
 
 #: profile-builder-2.0/front-end/extra-fields/phone/phone.php:22
 msgid "Required phone number format: "
-msgstr ""
+msgstr "Erforderliches Telefonnummernformat:"
 
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Bolivia, __( Plurinational State of"
-msgstr ""
+msgstr "Bolivia, __( Plurinational State of"
 
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Bonaire, __( Sint Eustatius and Saba"
-msgstr ""
+msgstr "Bonaire, __( Sint Eustatius and Saba"
 
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Brunei Darussalam"
-msgstr ""
+msgstr "Brunei Darussalam"
 
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Cabo Verde"
-msgstr ""
+msgstr "Cabo Verde"
 
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Cocos (Keeling) Islands"
-msgstr ""
+msgstr "Cocos (Keeling) Islands"
 
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Congo"
-msgstr ""
+msgstr "Kongo"
 
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Congo, __( the Democratic Republic of the"
-msgstr ""
+msgstr "Congo, __( the Democratic Republic of the"
 
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Cote dIvoire"
-msgstr ""
+msgstr "Elfenbeinküste"
 
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Falkland Islands (Malvinas)"
-msgstr ""
+msgstr "Falkland Islands (Malvinas)"
 
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Holy See (Vatican City State)"
-msgstr ""
+msgstr "Holy See (Vatican City State)"
 
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Iran, __( Islamic Republic of"
-msgstr ""
+msgstr "Iran, __( Islamic Republic of"
 
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Korea, __( Democratic Peoples Republic of"
-msgstr ""
+msgstr "Korea, __( Democratic Peoples Republic of"
 
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Korea, __( Republic of"
-msgstr ""
+msgstr "Korea, __( Republic of"
 
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Lao Peoples Democratic Republic"
-msgstr ""
+msgstr "Lao Peoples Democratic Republic"
 
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Macedonia, __( the former Yugoslav Republic of"
-msgstr ""
+msgstr "Macedonia, __( the former Yugoslav Republic of"
 
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Micronesia, __( Federated States of"
-msgstr ""
+msgstr "Micronesia, __( Federated States of"
 
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Moldova, __( Republic of"
-msgstr ""
+msgstr "Moldova, __( Republic of"
 
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Palestine, __( State of"
-msgstr ""
+msgstr "Palestine, __( State of"
 
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Russian Federation"
-msgstr ""
+msgstr "Russland"
 
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Saint Helena, __( Ascension and Tristan da Cunha"
-msgstr ""
+msgstr "Saint Helena, __( Ascension and Tristan da Cunha"
 
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Saint Martin (French part)"
-msgstr ""
+msgstr "Saint Martin (französisch)"
 
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Sint Maarten (Dutch part)"
-msgstr ""
+msgstr "St. Martin (Niederländischer Teil)"
 
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Syrian Arab Republic"
-msgstr ""
+msgstr "Syrien"
 
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Taiwan, __( Province of China"
-msgstr ""
+msgstr "Taiwan, __( Province of China"
 
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Tanzania, __( United Republic of"
-msgstr ""
+msgstr "Tanzania, __( United Republic of"
 
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Timor-Leste"
-msgstr ""
+msgstr "Timor-Leste"
 
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Venezuela, __( Bolivarian Republic of"
-msgstr ""
+msgstr "Venezuela, __( Bolivarian Republic of"
 
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Viet Nam"
-msgstr ""
+msgstr "Viet Nam"
 
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Virgin Islands, __( British"
-msgstr ""
+msgstr "Virgin Islands, __( British"
 
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Virgin Islands, __( U.S."
-msgstr ""
+msgstr "Virgin Islands, __( U.S."
 
 #: profile-builder-2.0/modules/email-customizer/email-customizer.php:11
 #: profile-builder-2.0/modules/user-listing/userlisting.php:186
 msgid "User Fields Tags"
-msgstr ""
+msgstr "Benutzerfelder-Schlagwörter"
 
 #: profile-builder-2.0/modules/email-customizer/email-customizer.php:479
 msgid "The users selected password at signup"
-msgstr ""
+msgstr "Das vom Benutzer bei der Registrierung gewählte Kennwort"
 
 #: profile-builder-2.0/modules/email-customizer/user-email-customizer.php:278
 msgid "[{{site_name}}] Notice of Email Change"
-msgstr ""
+msgstr "[{{Site_name}}] Benachrichtigung über die Änderung der eMail Adresse"
 
 #: profile-builder-2.0/modules/email-customizer/user-email-customizer.php:289
 msgid "Changed Email Address Notification"
-msgstr ""
+msgstr "Geänderte E-Mail-Adresse Benachrichtigung"
 
 #: profile-builder-2.0/modules/repeater-field/admin/repeater-manage-fields.php:190
 msgid "Limit"
-msgstr ""
+msgstr "Limit"
 
 #: profile-builder-2.0/modules/repeater-field/admin/repeater-manage-fields.php:190
 msgid "Enable limit to the number of fields to be generated by users in front end forms "
-msgstr ""
+msgstr "Eine Beschränkung für von Benutzern in Frontend-Formularen generierten Feldern aktivieren"
 
 #: profile-builder-2.0/modules/repeater-field/admin/repeater-manage-fields.php:191
 msgid "General Limit"
-msgstr ""
+msgstr "Allgemeine Grenze"
 
 #: profile-builder-2.0/modules/repeater-field/admin/repeater-manage-fields.php:191
 msgid "Default limit for this repeater group. <br>Leave 0 for unlimited."
-msgstr ""
+msgstr "Vorgabe-Beschränkung für diese Repeater-Gruppe.<br>Für unbegrenzt bitte auf 0 lassen."
 
 #: profile-builder-2.0/modules/repeater-field/admin/repeater-manage-fields.php:192
 msgid "Limit reached message"
-msgstr ""
+msgstr "\"Limit erreicht\" Nachricht"
 
 #: profile-builder-2.0/modules/repeater-field/admin/repeater-manage-fields.php:192
 msgid "The maximum number of fields has been reached."
-msgstr ""
+msgstr "Die maximale Anzahl von Feldern wurde erreicht."
 
 #: profile-builder-2.0/modules/repeater-field/admin/repeater-manage-fields.php:192
 msgid "The popup message to display when the limit of repeater groups is reached."
-msgstr ""
+msgstr "Die Popup-Nachricht, die beim Erreichen der Grenze für Repeater Gruppen angezeigt wird."
 
 #: profile-builder-2.0/modules/repeater-field/admin/repeater-manage-fields.php:193
 msgid "Limit per Role"
-msgstr ""
+msgstr "Limit pro Rolle"
 
 #: profile-builder-2.0/modules/repeater-field/admin/repeater-manage-fields.php:193
 msgid "Leave 0 for unlimited."
-msgstr ""
+msgstr "Für unbeschränkt auf 0 stehen lassen"
 
 #: profile-builder-2.0/modules/repeater-field/admin/repeater-manage-fields.php:194
 msgid "Repeated field group"
-msgstr ""
+msgstr "Wiederholte Feldgruppe"
 
 #: profile-builder-2.0/modules/repeater-field/admin/repeater-manage-fields.php:194
 msgid "Manage field or group of fields that will be repeatable."
-msgstr ""
+msgstr "Verwalte ein Feld oder eine Gruppe von Feldern, die wiederholbar sein wird."
 
 #: profile-builder-2.0/modules/repeater-field/admin/repeater-manage-fields.php:259
 msgid "Edit field group"
-msgstr ""
+msgstr "Feldgruppe bearbeiten"
 
 #: profile-builder-2.0/modules/repeater-field/admin/repeater-manage-fields.php:260
 msgid "Repeatable fields saved!"
-msgstr ""
+msgstr "Wiederholbare Felder gespeichert!"
 
 #: profile-builder-2.0/modules/repeater-field/admin/repeater-manage-fields.php:277
 #: profile-builder-2.0/modules/repeater-field/admin/repeater-manage-fields.php:326
 msgid "Please enter a unique field title.\n"
-msgstr ""
+msgstr "Bitte gib einen eindeutigen Feldtitel ein.\n"
 
 #: profile-builder-2.0/modules/repeater-field/repeater-field.php:267
 msgid "Are you sure you want to delete this?"
-msgstr ""
+msgstr "Bist du sicher, dass du das löschen möchtest?"
 
 #: profile-builder-2.0/modules/user-listing/userlisting.php:192
 msgid "Sort Tags"
-msgstr ""
+msgstr "Schlagwörter-Sortierung"
 
 #: profile-builder-2.0/modules/user-listing/userlisting.php:201
 #: profile-builder-2.0/modules/user-listing/userlisting.php:2308
 msgid "Faceted Menus"
-msgstr ""
+msgstr "Facettierte Menüs"
 
 #: profile-builder-2.0/modules/user-listing/userlisting.php:202
 msgid "User Count"
-msgstr ""
+msgstr "Benutzeranzahl"
 
 #: profile-builder-2.0/modules/user-listing/userlisting.php:1553
 msgid "Show All"
@@ -1146,67 +1146,67 @@ msgstr "Keine Einstellungen verfügbar"
 
 #: profile-builder-2.0/modules/user-listing/userlisting.php:1861
 msgid "Remove All Filters"
-msgstr ""
+msgstr "Alle Filter entfernen"
 
 #: profile-builder-2.0/modules/user-listing/userlisting.php:2298
 msgid "Label"
-msgstr ""
+msgstr "Beschriftung"
 
 #: profile-builder-2.0/modules/user-listing/userlisting.php:2298
 msgid "Choose the facet name that appears on the frontend"
-msgstr ""
+msgstr "Wähle einen Facet Namen, der auf dem Frontend erscheint"
 
 #: profile-builder-2.0/modules/user-listing/userlisting.php:2299
 msgid "Facet Type"
-msgstr ""
+msgstr "Facet Typ"
 
 #: profile-builder-2.0/modules/user-listing/userlisting.php:2299
 msgid "Choose the facet menu type"
-msgstr ""
+msgstr "Wähle den Facet Menütyp"
 
 #: profile-builder-2.0/modules/user-listing/userlisting.php:2300
 msgid "Facet Meta"
-msgstr ""
+msgstr "Facette Meta"
 
 #: profile-builder-2.0/modules/user-listing/userlisting.php:2300
 msgid "Choose the meta field for the facet menu"
-msgstr ""
+msgstr "Wähle das Meta-Feld für das Facet Menü"
 
 #: profile-builder-2.0/modules/user-listing/userlisting.php:2301
 msgid "Behaviour"
-msgstr ""
+msgstr "Verhalten"
 
 #: profile-builder-2.0/modules/user-listing/userlisting.php:2301
 msgid "Narrow the results"
-msgstr ""
+msgstr "Ergebnisse eingrenzen"
 
 #: profile-builder-2.0/modules/user-listing/userlisting.php:2301
 msgid "Expand the results"
-msgstr ""
+msgstr "Ergebnisse ausdehnen"
 
 #: profile-builder-2.0/modules/user-listing/userlisting.php:2301
 msgid "Choose how multiple selections affect the results"
-msgstr ""
+msgstr "Wähle, wie Mehrfachauswahlen die Resultate beeinflussen"
 
 #: profile-builder-2.0/modules/user-listing/userlisting.php:2302
 msgid "Visible choices"
-msgstr ""
+msgstr "Sichtbare Auswahl"
 
 #: profile-builder-2.0/modules/user-listing/userlisting.php:2302
 msgid "Show a toggle link after this many choices. Leave blank for all"
-msgstr ""
+msgstr "Zeige einen Umschalt-Link nach x Auswahlmöglichkeiten. Lasse es leer, um alle anzuzeigen"
 
 #: profile-builder-2.0/modules/user-listing/userlisting.php:2325
 msgid "Search Fields"
-msgstr ""
+msgstr "Felder suchen"
 
 #: profile-builder-2.0/modules/user-listing/userlisting.php:2325
 msgid "Choose the fields in which the Search Field will look in"
-msgstr ""
+msgstr "Wählen Sie die Felder, in denen das Suchfeld nachschauen wird"
 
 #: profile-builder-2.0/modules/user-listing/userlisting.php:2330
 msgid "Search Settings"
-msgstr ""
+msgstr "Sucheinstellungen"
 
 #: pb-add-on-woocommerce/billing-fields.php:8
 #: pb-add-on-woocommerce/shipping-fields.php:8
@@ -1248,7 +1248,7 @@ msgstr "Telefon"
 
 #: pb-add-on-woocommerce/billing-fields.php:278
 msgid "Ship to a different address?"
-msgstr "An andere Adresse liefern?"
+msgstr "An eine andere Adresse liefern?"
 
 #: pb-add-on-woocommerce/index.php:169 pb-add-on-woocommerce/index.php:437
 msgid "Billing Address"
@@ -1346,7 +1346,7 @@ msgstr "Die Erweiterung konnte nicht installiert werden. Versuchen Sie es noch e
 
 #: profile-builder-2.0/admin/pms-cross-promotion.php:10
 msgid "Paid Accounts"
-msgstr "Paid Accounts"
+msgstr "Bezahlte Konten"
 
 #: profile-builder-2.0/admin/pms-cross-promotion.php:33
 msgid "Paid Member Subscriptions - a free WordPress plugin"
@@ -1354,7 +1354,7 @@ msgstr "Paid Member Subscriptions - eine kostenloses WordPress Erweiterung"
 
 #: profile-builder-2.0/admin/pms-cross-promotion.php:37
 msgid "With the new Subscriptions Field in Profile Builder, your registration forms will allow your users to sign up for paid accounts."
-msgstr ""
+msgstr "Mit dem neuen Abonnement-Feld im Profile Builder, können sich Benutzer im Registrierungsformular für bezahlte Konten anmelden."
 
 #: profile-builder-2.0/admin/pms-cross-promotion.php:40
 msgid "Paid & Free Subscriptions"
@@ -1378,7 +1378,7 @@ msgstr "Account Management"
 
 #: profile-builder-2.0/admin/pms-cross-promotion.php:45
 msgid "Subscription Management"
-msgstr "Subscription Management"
+msgstr "Mitgliederverwaltung"
 
 #: profile-builder-2.0/admin/pms-cross-promotion.php:46
 msgid "Payment Management"
@@ -1450,14 +1450,14 @@ msgstr "Benutzer ID / Benutzername"
 
 #: profile-builder-2.0/modules/custom-redirects/custom_redirects_admin.php:62
 msgid "Please select and enter the ID or username of your user."
-msgstr "Bitte geben Sie Ihre Benutzer ID oder Ihren Benutzernamen an."
+msgstr "Bitte gib deine Benutzer ID oder deinen Benutzernamen an."
 
 #: profile-builder-2.0/modules/custom-redirects/custom_redirects_admin.php:63
 #: profile-builder-2.0/modules/custom-redirects/custom_redirects_admin.php:93
 #: profile-builder-2.0/modules/custom-redirects/custom_redirects_admin.php:112
 #: profile-builder-2.0/modules/custom-redirects/custom_redirects_admin.php:131
 msgid "Redirect Type"
-msgstr "Umleitungy Typ"
+msgstr "Umleitungs Typ"
 
 #: profile-builder-2.0/modules/custom-redirects/custom_redirects_admin.php:64
 #: profile-builder-2.0/modules/custom-redirects/custom_redirects_admin.php:94
@@ -1547,7 +1547,7 @@ msgstr "Standard WordPress Formulare und Seiten umleiten"
 
 #: profile-builder-2.0/modules/custom-redirects/custom_redirects_admin.php:248
 msgid "With these you can redirect various WordPress forms and pages to pages created with profile builder."
-msgstr "Damit können Sie verschiedene WordPress Formulare und Seiten zu den Profile Builder Äquivalenten umleiten."
+msgstr "Damit kannst du verschiedene WordPress Formulare und Seiten zu den Profile Builder Äquivalenten umleiten."
 
 #: profile-builder-2.0/modules/custom-redirects/custom_redirects_admin.php:250
 msgid "Available tags for dynamic URLs"
@@ -1589,7 +1589,7 @@ msgstr "Den Namen öffentlich anzeigen - erscheint nur auf der Edit Profile Seit
 
 #: profile-builder-2.0/admin/basic-info.php:37
 msgid "Friction-less login using %s shortcode or a widget."
-msgstr "Reibungsloser Login indem man %s oder ein Widget benutzt."
+msgstr "Reibungsloser Login, indem man %s oder ein Widget benutzt."
 
 #: profile-builder-2.0/admin/basic-info.php:41
 msgid "Beautiful registration forms fully customizable using the %s shortcode."
@@ -1597,7 +1597,7 @@ msgstr "Wunderschöne und voll anpassbare Registrierformulare mit der Nutzung vo
 
 #: profile-builder-2.0/admin/basic-info.php:45
 msgid "Straight forward edit profile forms using %s shortcode."
-msgstr ""
+msgstr "Direktes Profilbearbeitungsformular mit dem folgenden Shortcode: %s ."
 
 #: profile-builder-2.0/admin/basic-info.php:58
 msgid "Allow users to recover their password in the front-end using the %s."
@@ -1605,7 +1605,7 @@ msgstr "Ermöglicht dem User, sein Passwort im Front-End-Bereich unter Anwendung
 
 #: profile-builder-2.0/admin/basic-info.php:140
 msgid "To create a page containing the users registered to this current site/blog, insert the following shortcode in a page of your chosing: %s."
-msgstr ""
+msgstr "Um eine Seite mit auf diesem Blog registrierten Benutzern zu erstellen, füge den folgenden Shortcodein in eine von dir gewählte Seite ein: %s."
 
 #: profile-builder-2.0/admin/general-settings.php:115
 msgid "\"Admin Approval\" on User Role:"
@@ -1645,7 +1645,7 @@ msgstr "Standardmäßige WP Anmeldung"
 
 #: profile-builder-2.0/admin/manage-fields.php:134
 msgid "Default WP Register"
-msgstr "Standardmäßiges WP Register"
+msgstr "Standardmäßige WP Registrierung"
 
 #: profile-builder-2.0/admin/manage-fields.php:134
 msgid "Default WP Recover Password"
@@ -1659,7 +1659,7 @@ msgstr "Wählen Sie die Standard WordPress Formulare, auf denen ein reCAPTCHA an
 #: profile-builder-2.0/admin/manage-fields.php:141
 #: profile-builder-2.0/admin/manage-fields.php:142
 msgid "Default option of the field"
-msgstr "Voreinstellung des Felds"
+msgstr "Voreinstellung des Feldes"
 
 #: profile-builder-2.0/admin/manage-fields.php:282
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -1674,12 +1674,12 @@ msgstr "Aland Islands"
 #: profile-builder-2.0/admin/manage-fields.php:284
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Albania"
-msgstr "Albania"
+msgstr "Albanien"
 
 #: profile-builder-2.0/admin/manage-fields.php:285
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Algeria"
-msgstr "Algeria"
+msgstr "Algerien"
 
 #: profile-builder-2.0/admin/manage-fields.php:286
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -1704,17 +1704,17 @@ msgstr "Anguilla"
 #: profile-builder-2.0/admin/manage-fields.php:290
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Antarctica"
-msgstr "Antarctica"
+msgstr "Antarktis"
 
 #: profile-builder-2.0/admin/manage-fields.php:291
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Antigua and Barbuda"
-msgstr "Antigua and Barbuda"
+msgstr "Antigua und Barbuda"
 
 #: profile-builder-2.0/admin/manage-fields.php:292
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Argentina"
-msgstr "Argentina"
+msgstr "Argentinien"
 
 #: profile-builder-2.0/admin/manage-fields.php:293
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -1729,17 +1729,17 @@ msgstr "Aruba"
 #: profile-builder-2.0/admin/manage-fields.php:295
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Australia"
-msgstr "Australia"
+msgstr "Australien"
 
 #: profile-builder-2.0/admin/manage-fields.php:296
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Austria"
-msgstr "Austria"
+msgstr "Österreich"
 
 #: profile-builder-2.0/admin/manage-fields.php:297
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Azerbaijan"
-msgstr "Azerbaijan"
+msgstr "Aserbaidschan"
 
 #: profile-builder-2.0/admin/manage-fields.php:298
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -1764,12 +1764,12 @@ msgstr "Barbados"
 #: profile-builder-2.0/admin/manage-fields.php:302
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Belarus"
-msgstr "Belarus"
+msgstr "Weissrussland"
 
 #: profile-builder-2.0/admin/manage-fields.php:303
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Belgium"
-msgstr "Belgium"
+msgstr "Belgien"
 
 #: profile-builder-2.0/admin/manage-fields.php:304
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -1793,7 +1793,7 @@ msgstr "Bhutan"
 
 #: profile-builder-2.0/admin/manage-fields.php:308
 msgid "Bolivia"
-msgstr "Bolivia"
+msgstr "Bolivien"
 
 #: profile-builder-2.0/admin/manage-fields.php:309
 msgid "Bonaire, Saint Eustatius and Saba"
@@ -1802,7 +1802,7 @@ msgstr "Bonaire, Saint Eustatius and Saba"
 #: profile-builder-2.0/admin/manage-fields.php:310
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Bosnia and Herzegovina"
-msgstr "Bosnia and Herzegovina"
+msgstr "Bosnien und Herzegowina"
 
 #: profile-builder-2.0/admin/manage-fields.php:311
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -1812,12 +1812,12 @@ msgstr "Botswana"
 #: profile-builder-2.0/admin/manage-fields.php:312
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Bouvet Island"
-msgstr "Bouvet Island"
+msgstr "Bouvet Insel"
 
 #: profile-builder-2.0/admin/manage-fields.php:313
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Brazil"
-msgstr "Brazil"
+msgstr "Brasilien"
 
 #: profile-builder-2.0/admin/manage-fields.php:314
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -1835,7 +1835,7 @@ msgstr "Brunei"
 #: profile-builder-2.0/admin/manage-fields.php:317
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Bulgaria"
-msgstr "Bulgaria"
+msgstr "Bulgarien"
 
 #: profile-builder-2.0/admin/manage-fields.php:318
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -1850,17 +1850,17 @@ msgstr "Burundi"
 #: profile-builder-2.0/admin/manage-fields.php:320
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Cambodia"
-msgstr "Cambodia"
+msgstr "Kambodscha"
 
 #: profile-builder-2.0/admin/manage-fields.php:321
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Cameroon"
-msgstr "Cameroon"
+msgstr "Kamerun"
 
 #: profile-builder-2.0/admin/manage-fields.php:322
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Canada"
-msgstr "Canada"
+msgstr "Kanada"
 
 #: profile-builder-2.0/admin/manage-fields.php:323
 msgid "Cape Verde"
@@ -1869,17 +1869,17 @@ msgstr "Cape Verde"
 #: profile-builder-2.0/admin/manage-fields.php:324
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Cayman Islands"
-msgstr "Cayman Islands"
+msgstr "Kaimaninseln"
 
 #: profile-builder-2.0/admin/manage-fields.php:325
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Central African Republic"
-msgstr "Central African Republic"
+msgstr "Zentralafrikanische Republik"
 
 #: profile-builder-2.0/admin/manage-fields.php:326
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Chad"
-msgstr "Chad"
+msgstr "Tschad"
 
 #: profile-builder-2.0/admin/manage-fields.php:327
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -1894,7 +1894,7 @@ msgstr "China"
 #: profile-builder-2.0/admin/manage-fields.php:329
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Christmas Island"
-msgstr "Christmas Island"
+msgstr "Weihnachtsinsel"
 
 #: profile-builder-2.0/admin/manage-fields.php:330
 msgid "Cocos Islands"
@@ -1903,7 +1903,7 @@ msgstr "Cocos Islands"
 #: profile-builder-2.0/admin/manage-fields.php:331
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Colombia"
-msgstr "Colombia"
+msgstr "Kolumbien"
 
 #: profile-builder-2.0/admin/manage-fields.php:332
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -1923,36 +1923,36 @@ msgstr "Costa Rica"
 #: profile-builder-2.0/admin/manage-fields.php:335
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Croatia"
-msgstr "Croatia"
+msgstr "Kroatien"
 
 #: profile-builder-2.0/admin/manage-fields.php:336
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Cuba"
-msgstr "Cuba"
+msgstr "Kuba"
 
 #: profile-builder-2.0/admin/manage-fields.php:337
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Curacao"
-msgstr "Curacao"
+msgstr "Curaçao"
 
 #: profile-builder-2.0/admin/manage-fields.php:338
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Cyprus"
-msgstr "Cyprus"
+msgstr "Zypern"
 
 #: profile-builder-2.0/admin/manage-fields.php:339
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Czech Republic"
-msgstr "Czech Republic"
+msgstr "Tschechien"
 
 #: profile-builder-2.0/admin/manage-fields.php:340
 msgid "Democratic Republic of the Congo"
-msgstr "Democratic Republic of the Congo"
+msgstr "Demokratische Republik Kongo"
 
 #: profile-builder-2.0/admin/manage-fields.php:341
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Denmark"
-msgstr "Denmark"
+msgstr "Dänemark"
 
 #: profile-builder-2.0/admin/manage-fields.php:342
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -1967,7 +1967,7 @@ msgstr "Dominica"
 #: profile-builder-2.0/admin/manage-fields.php:344
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Dominican Republic"
-msgstr "Dominican Republic"
+msgstr "Dominikanische Republik"
 
 #: profile-builder-2.0/admin/manage-fields.php:345
 msgid "East Timor"
@@ -1981,7 +1981,7 @@ msgstr "Ecuador"
 #: profile-builder-2.0/admin/manage-fields.php:347
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Egypt"
-msgstr "Egypt"
+msgstr "Ägypten"
 
 #: profile-builder-2.0/admin/manage-fields.php:348
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -2001,16 +2001,16 @@ msgstr "Eritrea"
 #: profile-builder-2.0/admin/manage-fields.php:351
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Estonia"
-msgstr "Estonia"
+msgstr "Estland"
 
 #: profile-builder-2.0/admin/manage-fields.php:352
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Ethiopia"
-msgstr "Ethiopia"
+msgstr "Äthiopien"
 
 #: profile-builder-2.0/admin/manage-fields.php:353
 msgid "Falkland Islands"
-msgstr "Falkland Islands"
+msgstr "Falklandinseln"
 
 #: profile-builder-2.0/admin/manage-fields.php:354
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -2025,12 +2025,12 @@ msgstr "Fiji"
 #: profile-builder-2.0/admin/manage-fields.php:356
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Finland"
-msgstr "Finland"
+msgstr "Finnland"
 
 #: profile-builder-2.0/admin/manage-fields.php:357
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "France"
-msgstr "France"
+msgstr "Frankreich"
 
 #: profile-builder-2.0/admin/manage-fields.php:358
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -2060,12 +2060,12 @@ msgstr "Gambia"
 #: profile-builder-2.0/admin/manage-fields.php:363
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Georgia"
-msgstr "Georgia"
+msgstr "Georgien"
 
 #: profile-builder-2.0/admin/manage-fields.php:364
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Germany"
-msgstr "Germany"
+msgstr "Deutschland"
 
 #: profile-builder-2.0/admin/manage-fields.php:365
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -2080,12 +2080,12 @@ msgstr "Gibraltar"
 #: profile-builder-2.0/admin/manage-fields.php:367
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Greece"
-msgstr "Greece"
+msgstr "Griechenland"
 
 #: profile-builder-2.0/admin/manage-fields.php:368
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Greenland"
-msgstr "Greenland"
+msgstr "Grönland"
 
 #: profile-builder-2.0/admin/manage-fields.php:369
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -2150,22 +2150,22 @@ msgstr "Hong Kong"
 #: profile-builder-2.0/admin/manage-fields.php:381
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Hungary"
-msgstr "Hungary"
+msgstr "Ungarn"
 
 #: profile-builder-2.0/admin/manage-fields.php:382
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Iceland"
-msgstr "Iceland"
+msgstr "Island"
 
 #: profile-builder-2.0/admin/manage-fields.php:383
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "India"
-msgstr "India"
+msgstr "Indien"
 
 #: profile-builder-2.0/admin/manage-fields.php:384
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Indonesia"
-msgstr "Indonesia"
+msgstr "Indonesien"
 
 #: profile-builder-2.0/admin/manage-fields.php:385
 msgid "Iran"
@@ -2174,12 +2174,12 @@ msgstr "Iran"
 #: profile-builder-2.0/admin/manage-fields.php:386
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Iraq"
-msgstr "Iraq"
+msgstr "Irak"
 
 #: profile-builder-2.0/admin/manage-fields.php:387
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Ireland"
-msgstr "Ireland"
+msgstr "Irland"
 
 #: profile-builder-2.0/admin/manage-fields.php:388
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -2194,11 +2194,11 @@ msgstr "Israel"
 #: profile-builder-2.0/admin/manage-fields.php:390
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Italy"
-msgstr "Italy"
+msgstr "Italien"
 
 #: profile-builder-2.0/admin/manage-fields.php:391
 msgid "Ivory Coast"
-msgstr "Ivory Coast"
+msgstr "Elfenbeinküste"
 
 #: profile-builder-2.0/admin/manage-fields.php:392
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -2218,17 +2218,17 @@ msgstr "Jersey"
 #: profile-builder-2.0/admin/manage-fields.php:395
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Jordan"
-msgstr "Jordan"
+msgstr "Jordanien"
 
 #: profile-builder-2.0/admin/manage-fields.php:396
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Kazakhstan"
-msgstr "Kazakhstan"
+msgstr "Kasachstan"
 
 #: profile-builder-2.0/admin/manage-fields.php:397
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Kenya"
-msgstr "Kenya"
+msgstr "Kenia"
 
 #: profile-builder-2.0/admin/manage-fields.php:398
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -2247,7 +2247,7 @@ msgstr "Kuwait"
 #: profile-builder-2.0/admin/manage-fields.php:401
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Kyrgyzstan"
-msgstr "Kyrgyzstan"
+msgstr "Kirgisistan"
 
 #: profile-builder-2.0/admin/manage-fields.php:402
 msgid "Laos"
@@ -2256,12 +2256,12 @@ msgstr "Laos"
 #: profile-builder-2.0/admin/manage-fields.php:403
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Latvia"
-msgstr "Latvia"
+msgstr "Lettland"
 
 #: profile-builder-2.0/admin/manage-fields.php:404
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Lebanon"
-msgstr "Lebanon"
+msgstr "Libanon"
 
 #: profile-builder-2.0/admin/manage-fields.php:405
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -2286,12 +2286,12 @@ msgstr "Liechtenstein"
 #: profile-builder-2.0/admin/manage-fields.php:409
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Lithuania"
-msgstr "Lithuania"
+msgstr "Litauen"
 
 #: profile-builder-2.0/admin/manage-fields.php:410
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Luxembourg"
-msgstr "Luxembourg"
+msgstr "Luxemburg"
 
 #: profile-builder-2.0/admin/manage-fields.php:411
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -2305,7 +2305,7 @@ msgstr "Macedonia"
 #: profile-builder-2.0/admin/manage-fields.php:413
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Madagascar"
-msgstr "Madagascar"
+msgstr "Madagaskar"
 
 #: profile-builder-2.0/admin/manage-fields.php:414
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -2360,7 +2360,7 @@ msgstr "Mayotte"
 #: profile-builder-2.0/admin/manage-fields.php:424
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Mexico"
-msgstr "Mexico"
+msgstr "Mexiko"
 
 #: profile-builder-2.0/admin/manage-fields.php:425
 msgid "Micronesia"
@@ -2368,7 +2368,7 @@ msgstr "Micronesia"
 
 #: profile-builder-2.0/admin/manage-fields.php:426
 msgid "Moldova"
-msgstr "Moldova"
+msgstr "Moldawien"
 
 #: profile-builder-2.0/admin/manage-fields.php:427
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -2378,7 +2378,7 @@ msgstr "Monaco"
 #: profile-builder-2.0/admin/manage-fields.php:428
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Mongolia"
-msgstr "Mongolia"
+msgstr "Mongolei"
 
 #: profile-builder-2.0/admin/manage-fields.php:429
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -2393,7 +2393,7 @@ msgstr "Montserrat"
 #: profile-builder-2.0/admin/manage-fields.php:431
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Morocco"
-msgstr "Morocco"
+msgstr "Marokko"
 
 #: profile-builder-2.0/admin/manage-fields.php:432
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -2423,17 +2423,17 @@ msgstr "Nepal"
 #: profile-builder-2.0/admin/manage-fields.php:437
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Netherlands"
-msgstr "Netherlands"
+msgstr "Niederlande"
 
 #: profile-builder-2.0/admin/manage-fields.php:438
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "New Caledonia"
-msgstr "New Caledonia"
+msgstr "Neukaledonien"
 
 #: profile-builder-2.0/admin/manage-fields.php:439
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "New Zealand"
-msgstr "New Zealand"
+msgstr "Neuseeland"
 
 #: profile-builder-2.0/admin/manage-fields.php:440
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -2462,7 +2462,7 @@ msgstr "Norfolk Island"
 
 #: profile-builder-2.0/admin/manage-fields.php:445
 msgid "North Korea"
-msgstr "North Korea"
+msgstr "Nordkorea"
 
 #: profile-builder-2.0/admin/manage-fields.php:446
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -2472,7 +2472,7 @@ msgstr "Northern Mariana Islands"
 #: profile-builder-2.0/admin/manage-fields.php:447
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Norway"
-msgstr "Norway"
+msgstr "Norwegen"
 
 #: profile-builder-2.0/admin/manage-fields.php:448
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -2491,7 +2491,7 @@ msgstr "Palau"
 
 #: profile-builder-2.0/admin/manage-fields.php:451
 msgid "Palestinian Territory"
-msgstr "Palestinian Territory"
+msgstr "Palästinensisches Territorium"
 
 #: profile-builder-2.0/admin/manage-fields.php:452
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -2516,7 +2516,7 @@ msgstr "Peru"
 #: profile-builder-2.0/admin/manage-fields.php:456
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Philippines"
-msgstr "Philippines"
+msgstr "Philippinen"
 
 #: profile-builder-2.0/admin/manage-fields.php:457
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -2526,7 +2526,7 @@ msgstr "Pitcairn"
 #: profile-builder-2.0/admin/manage-fields.php:458
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Poland"
-msgstr "Poland"
+msgstr "Polen"
 
 #: profile-builder-2.0/admin/manage-fields.php:459
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -2541,11 +2541,11 @@ msgstr "Puerto Rico"
 #: profile-builder-2.0/admin/manage-fields.php:461
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Qatar"
-msgstr "Qatar"
+msgstr "Katar"
 
 #: profile-builder-2.0/admin/manage-fields.php:462
 msgid "Republic of the Congo"
-msgstr "Republic of the Congo"
+msgstr "Kongo"
 
 #: profile-builder-2.0/admin/manage-fields.php:463
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -2555,7 +2555,7 @@ msgstr "Reunion"
 #: profile-builder-2.0/admin/manage-fields.php:464
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Romania"
-msgstr "Romania"
+msgstr "Rumänien"
 
 #: profile-builder-2.0/admin/manage-fields.php:465
 msgid "Russia"
@@ -2597,7 +2597,7 @@ msgstr "Saint Pierre and Miquelon"
 #: profile-builder-2.0/admin/manage-fields.php:473
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Saint Vincent and the Grenadines"
-msgstr "Saint Vincent and the Grenadines"
+msgstr "St. Vincent und die Grenadinen"
 
 #: profile-builder-2.0/admin/manage-fields.php:474
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -2632,7 +2632,7 @@ msgstr "Serbia"
 #: profile-builder-2.0/admin/manage-fields.php:480
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Seychelles"
-msgstr "Seychelles"
+msgstr "Seychellen"
 
 #: profile-builder-2.0/admin/manage-fields.php:481
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -2651,12 +2651,12 @@ msgstr "Sint Maarten"
 #: profile-builder-2.0/admin/manage-fields.php:484
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Slovakia"
-msgstr "Slovakia"
+msgstr "Slowakei"
 
 #: profile-builder-2.0/admin/manage-fields.php:485
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Slovenia"
-msgstr "Slovenia"
+msgstr "Slowenien"
 
 #: profile-builder-2.0/admin/manage-fields.php:486
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -2671,7 +2671,7 @@ msgstr "Somalia"
 #: profile-builder-2.0/admin/manage-fields.php:488
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "South Africa"
-msgstr "South Africa"
+msgstr "Südafrika"
 
 #: profile-builder-2.0/admin/manage-fields.php:489
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -2680,17 +2680,17 @@ msgstr "South Georgia and the South Sandwich Islands"
 
 #: profile-builder-2.0/admin/manage-fields.php:490
 msgid "South Korea"
-msgstr "South Korea"
+msgstr "Südkorea"
 
 #: profile-builder-2.0/admin/manage-fields.php:491
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "South Sudan"
-msgstr "South Sudan"
+msgstr "Südsudan"
 
 #: profile-builder-2.0/admin/manage-fields.php:492
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Spain"
-msgstr "Spain"
+msgstr "Spanien"
 
 #: profile-builder-2.0/admin/manage-fields.php:493
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -2720,16 +2720,16 @@ msgstr "Swaziland"
 #: profile-builder-2.0/admin/manage-fields.php:498
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Sweden"
-msgstr "Sweden"
+msgstr "Schweden"
 
 #: profile-builder-2.0/admin/manage-fields.php:499
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Switzerland"
-msgstr "Switzerland"
+msgstr "Schweiz"
 
 #: profile-builder-2.0/admin/manage-fields.php:500
 msgid "Syria"
-msgstr "Syria"
+msgstr "Syrien"
 
 #: profile-builder-2.0/admin/manage-fields.php:501
 msgid "Taiwan"
@@ -2738,7 +2738,7 @@ msgstr "Taiwan"
 #: profile-builder-2.0/admin/manage-fields.php:502
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Tajikistan"
-msgstr "Tajikistan"
+msgstr "Tadschikistan"
 
 #: profile-builder-2.0/admin/manage-fields.php:503
 msgid "Tanzania"
@@ -2767,17 +2767,17 @@ msgstr "Tonga"
 #: profile-builder-2.0/admin/manage-fields.php:508
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Trinidad and Tobago"
-msgstr "Trinidad and Tobago"
+msgstr "Trinidad und Tobago"
 
 #: profile-builder-2.0/admin/manage-fields.php:509
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Tunisia"
-msgstr "Tunisia"
+msgstr "Tunesien"
 
 #: profile-builder-2.0/admin/manage-fields.php:510
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Turkey"
-msgstr "Turkey"
+msgstr "Türkei"
 
 #: profile-builder-2.0/admin/manage-fields.php:511
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -2796,7 +2796,7 @@ msgstr "Tuvalu"
 
 #: profile-builder-2.0/admin/manage-fields.php:514
 msgid "U.S. Virgin Islands"
-msgstr "U.S. Virgin Islands"
+msgstr "Amerikanische Jungferninseln"
 
 #: profile-builder-2.0/admin/manage-fields.php:515
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -2811,17 +2811,17 @@ msgstr "Ukraine"
 #: profile-builder-2.0/admin/manage-fields.php:517
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "United Arab Emirates"
-msgstr "United Arab Emirates"
+msgstr "Vereinigte Arabische Emirate"
 
 #: profile-builder-2.0/admin/manage-fields.php:518
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "United Kingdom"
-msgstr "United Kingdom"
+msgstr "Grossbritannien (Vereinigtes Königreich)"
 
 #: profile-builder-2.0/admin/manage-fields.php:519
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "United States"
-msgstr "United States"
+msgstr "USA"
 
 #: profile-builder-2.0/admin/manage-fields.php:520
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
@@ -2845,7 +2845,7 @@ msgstr "Vanuatu"
 
 #: profile-builder-2.0/admin/manage-fields.php:524
 msgid "Vatican"
-msgstr "Vatican"
+msgstr "Vatikan"
 
 #: profile-builder-2.0/admin/manage-fields.php:525
 msgid "Venezuela"
@@ -2858,27 +2858,27 @@ msgstr "Vietnam"
 #: profile-builder-2.0/admin/manage-fields.php:527
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Wallis and Futuna"
-msgstr "Wallis and Futuna"
+msgstr "Wallis und Futuna"
 
 #: profile-builder-2.0/admin/manage-fields.php:528
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Western Sahara"
-msgstr "Western Sahara"
+msgstr "Westsahara"
 
 #: profile-builder-2.0/admin/manage-fields.php:529
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Yemen"
-msgstr "Yemen"
+msgstr "Jemen"
 
 #: profile-builder-2.0/admin/manage-fields.php:530
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Zambia"
-msgstr "Zambia"
+msgstr "Sambia"
 
 #: profile-builder-2.0/admin/manage-fields.php:531
 #: profile-builder-2.0/front-end/extra-fields/select-country/select-country.php:10
 msgid "Zimbabwe"
-msgstr "Zimbabwe"
+msgstr "Simbabwe"
 
 #: profile-builder-2.0/admin/manage-fields.php:1219
 msgid "With Profile Builder Pro v2 you can display different fields in the registration and edit profile forms, using the Multiple Registration & Edit Profile Forms module."
@@ -2898,11 +2898,11 @@ msgstr "Ihr Benutzerkonto wurde erfolgreich angelegt!"
 #: profile-builder-2.0/front-end/default-fields/recaptcha/recaptcha.php:421
 #: profile-builder-2.0/front-end/default-fields/recaptcha/recaptcha.php:458
 msgid "Please enter a (valid) reCAPTCHA value"
-msgstr "Bitte geben Sie das reCAPTCHA (korrekt) ein."
+msgstr "Bitte gib das reCAPTCHA (korrekt) ein."
 
 #: profile-builder-2.0/front-end/default-fields/recaptcha/recaptcha.php:421
 msgid "Click the BACK button on your browser, and try again."
-msgstr "Bitte klicken Sie den \"Zurück\"-Button in Ihrem Browser und versuchen Sie es erneut."
+msgstr "Bitte klicke auf den \"Zurück\"-Button in einem Browser und versuche es erneut."
 
 #: profile-builder-2.0/front-end/extra-fields/upload/upload_helper_functions.php:78
 #: profile-builder-2.0/front-end/extra-fields/upload/upload_helper_functions.php:87
@@ -3084,7 +3084,7 @@ msgstr "Der Benutzername ist ungültig, da dieser ungültige Zeichen enthält."
 #: profile-builder-2.0/front-end/default-fields/username/username.php:52
 #: profile-builder-2.0/front-end/default-fields/username/username.php:60
 msgid "Please enter a valid username."
-msgstr "Bitte gebe einen gültigen Benutzernamen ein."
+msgstr "Bitte gib einen gültigen Benutzernamen ein."
 
 #: profile-builder-2.0/front-end/default-fields/user-role/user-role.php:72
 #: profile-builder-2.0/front-end/default-fields/user-role/user-role.php:85
@@ -3132,6 +3132,12 @@ msgid ""
 "<p>To reset your password, visit the following address:<br/>\n"
 "{{{reset_link}}}</p>\n"
 msgstr ""
+"\n"
+"<p>Jemand hat für das folgende Konto ein neues Kennwort angefordert: {{site_name}}<br/>\n"
+"Benutzername: {{username}}</p>\n"
+"<p>Wenn das ein Fehler war, wird nichts passieren</p>\n"
+"<p>Gehe auf folgende Seite, um das Kennwort zu erneuern:<br/>\n"
+"{{{reset_link}}}</p>\n"
 
 #: profile-builder-2.0/modules/email-customizer/user-email-customizer.php:218
 msgid "[{{site_name}}] Password Reset"
@@ -3145,7 +3151,9 @@ msgstr "E-Mail für die Passwortzurücksetzung"
 msgid ""
 "\n"
 "<p>You have successfully reset your password to: {{password}}</p>\n"
-msgstr "<p>Du hast dein Passwort erfolgreich zurückgesetzt: {{password}}</p>"
+msgstr ""
+"\n"
+"<p>Du hast dein Passwort erfolgreich zurückgesetzt: {{password}}</p>\n"
 
 #: profile-builder-2.0/modules/email-customizer/user-email-customizer.php:245
 msgid "[{{site_name}}] Password Reset Successfully"
@@ -3343,7 +3351,7 @@ msgstr "<p> Deine <strong>Profil Builder</strong> Seriennummer ist ungültig ode
 #: profile-builder-2.0/front-end/extra-fields/select-cpt/select-cpt.php:36
 #: profile-builder-2.0/front-end/extra-fields/select-cpt/select-cpt.php:60
 msgid "...Choose"
-msgstr "...wähle"
+msgstr "...Wähle"
 
 #: profile-builder-2.0/features/class-list-table.php:526
 #: profile-builder-2.0/features/class-list-table.php:942
@@ -3352,7 +3360,7 @@ msgstr "1 Artikel"
 
 #: profile-builder-2.0/features/functions.php:552
 msgid "Very Weak"
-msgstr "sehr schwach"
+msgstr "Sehr schwach"
 
 #: profile-builder-2.0/features/functions.php:640
 msgid "This field is required"
@@ -3416,11 +3424,11 @@ msgstr "Lösche alle Einträge"
 
 #: profile-builder-2.0/modules/multiple-forms/multiple-forms.php:406
 msgid "Delete all"
-msgstr "alles löschen"
+msgstr "Alles löschen"
 
 #: profile-builder-2.0/modules/user-listing/userlisting.php:1621
 msgid "Choose..."
-msgstr "Wähle..."
+msgstr "Auswählen..."
 
 #: profile-builder-2.0/modules/user-listing/userlisting.php:2263
 msgid "Set the number of users to be displayed on every paginated part of the all-userlisting"
@@ -3447,7 +3455,7 @@ msgstr "Sichtbarkeit"
 #: profile-builder-2.0/modules/multiple-forms/edit-profile-forms.php:206
 #: profile-builder-2.0/modules/multiple-forms/register-forms.php:230
 msgid "Default"
-msgstr "Default"
+msgstr "Vorgabe"
 
 #: profile-builder-2.0/admin/admin-bar.php:74
 msgid "Show"
@@ -3480,19 +3488,19 @@ msgstr "Allgemeine Einstellungen"
 #: profile-builder-2.0/admin/admin-functions.php:137
 #: profile-builder-2.0/admin/general-settings.php:210
 msgid "Very weak"
-msgstr "sehr unsicher"
+msgstr "Sehr unsicher"
 
 #: profile-builder-2.0/admin/admin-functions.php:137
 #: profile-builder-2.0/admin/general-settings.php:211
 #: profile-builder-2.0/features/functions.php:552
 msgid "Weak"
-msgstr "unsicher"
+msgstr "Unsicher"
 
 #: profile-builder-2.0/admin/admin-functions.php:137
 #: profile-builder-2.0/admin/general-settings.php:212
 #: profile-builder-2.0/features/functions.php:552
 msgid "Medium"
-msgstr "geht so"
+msgstr "Durchschnittlich"
 
 #: profile-builder-2.0/admin/admin-functions.php:137
 #: profile-builder-2.0/admin/general-settings.php:213
@@ -3523,7 +3531,7 @@ msgstr "<strong>Profil Builder</strong>"
 
 #: profile-builder-2.0/admin/basic-info.php:31
 msgid "The best way to add front-end registration, edit profile and login forms."
-msgstr "Der beste Weg, um Front-End-Registrierung hinzuzufügen ist die Profil und Login-Formulare zu bearbeiten."
+msgstr "Der beste Weg, um Front-End-Registrierung hinzuzufügen, ist der, die Profil und Login-Formulare zu bearbeiten."
 
 #: profile-builder-2.0/admin/basic-info.php:33
 msgid "For Modern User Interaction"
@@ -3621,7 +3629,7 @@ msgstr "AGB-Checkbox"
 
 #: profile-builder-2.0/admin/basic-info.php:98
 msgid "Datepicker"
-msgstr "Datepicker"
+msgstr "Datumsauswahl"
 
 #: profile-builder-2.0/admin/basic-info.php:101
 msgid "reCAPTCHA"
@@ -3653,7 +3661,7 @@ msgstr "Optionsfelder"
 
 #: profile-builder-2.0/admin/basic-info.php:113
 msgid "Textarea"
-msgstr "Text-bereich"
+msgstr "Textbereich"
 
 #: profile-builder-2.0/admin/basic-info.php:125
 msgid "Powerful Modules (**)"
@@ -3690,7 +3698,7 @@ msgstr "E-Mail Anpassungen"
 
 #: profile-builder-2.0/admin/basic-info.php:145
 msgid "Personalize all emails sent to your users or admins. On registration, email confirmation, admin approval / un-approval."
-msgstr "Personalisiere alle E-Mails die an Benutzer oder Administratoren gesendet werden. Bei der Registrierung, E-Mail-Bestätigung, Admin Genehmigung / un-Zulassung."
+msgstr "Personalisiere alle E-Mails, die an Benutzer oder Administratoren gesendet werden. Bei der Registrierung, E-Mail-Bestätigung, Admin Genehmigung / un-Zulassung."
 
 #: profile-builder-2.0/admin/basic-info.php:148
 #: profile-builder-2.0/modules/custom-redirects/custom_redirects_admin.php:32
@@ -3706,7 +3714,7 @@ msgstr "Sperre deine Benutzer aus dem WordPress-Dashboard aus und leite sie nach
 #: profile-builder-2.0/admin/basic-info.php:154
 #: profile-builder-2.0/modules/modules.php:75
 msgid "Multiple Registration Forms"
-msgstr "Mehrere Anmeldeformulare"
+msgstr "Mehrfache Anmeldeformulare"
 
 #: profile-builder-2.0/admin/basic-info.php:155
 msgid "Set up multiple registration forms with different fields for certain user roles. Capture different information from different types of users."
@@ -3715,7 +3723,7 @@ msgstr "Richten Sie mehrere Anmeldeformulare mit verschiedenen Feldern für best
 #: profile-builder-2.0/admin/basic-info.php:158
 #: profile-builder-2.0/modules/modules.php:82
 msgid "Multiple Edit-profile Forms"
-msgstr "Mehrere Profilbearbeitungs-Formulare"
+msgstr "Mehrfache Profilbearbeitungs-Formulare"
 
 #: profile-builder-2.0/admin/basic-info.php:159
 msgid "Allow different user roles to edit their specific information. Set up multiple edit-profile forms with different fields for certain user roles."
@@ -4089,7 +4097,7 @@ msgstr "Kennwort wiederholen"
 
 #: profile-builder-2.0/admin/manage-fields.php:220
 msgid "Type your password again. "
-msgstr "Bitte geben Sie Ihr Kennwort erneut ein."
+msgstr "Bitte gib dein Kennwort erneut ein."
 
 #: profile-builder-2.0/admin/manage-fields.php:980
 #: profile-builder-2.0/admin/manage-fields.php:1137
@@ -4098,7 +4106,7 @@ msgstr "Sie müssen ein Feld auswählen.\n"
 
 #: profile-builder-2.0/admin/manage-fields.php:990
 msgid "Please choose a different field type as this one already exists in your form (must be unique)\n"
-msgstr "Bitte wählen Sie ein anderes Feld aus. Dieses ist bereits im Formular vorhanden (muss einzigartig sein)."
+msgstr "Bitte wählen Sie ein anderes Feld aus. Dieses ist bereits im Formular vorhanden (muss einzigartig) sein.\n"
 
 #: profile-builder-2.0/admin/manage-fields.php:1001
 msgid "The entered avatar size is not between 20 and 200\n"
@@ -4391,7 +4399,7 @@ msgstr "Benutzer ablehnen?"
 #: profile-builder-2.0/features/admin-approval/class-admin-approval.php:116
 #: profile-builder-2.0/features/admin-approval/class-admin-approval.php:223
 msgid "Unapprove"
-msgstr "ablehnen"
+msgstr "Ablehnen"
 
 #: profile-builder-2.0/features/admin-approval/class-admin-approval.php:118
 msgid "approve this user?"
@@ -4828,7 +4836,7 @@ msgstr "Diese E-Mail ist bereits reserviert worden, um bald verwendet zu werden.
 #: profile-builder-2.0/front-end/default-fields/username/username.php:49
 #: profile-builder-2.0/front-end/default-fields/username/username.php:65
 msgid "Please try a different one!"
-msgstr "Bitte versuchen Sie es mit einer anderen!"
+msgstr "Bitte versuche es mit einer anderen!"
 
 #: profile-builder-2.0/front-end/default-fields/email/email.php:77
 #: profile-builder-2.0/front-end/default-fields/email/email.php:95
@@ -5006,6 +5014,7 @@ msgid ""
 "<p>The Admin Approval feature was activated at the time of registration,\n"
 "so please remember that you need to approve this user before he/she can log in!</p>\n"
 msgstr ""
+"\n"
 "<p>Neue Abonnenten für {{site_name}}.</p>\n"
 "<p>Benutzername: {{username}}</p> \n"
 "<p>E-Mail :{{user_email}}</p> \n"
@@ -5130,7 +5139,7 @@ msgid ""
 msgstr ""
 "\n"
 "<h3>Lieber Benutzer,</h3>\n"
-"<p>leider hat der Administrator Ihr Konto nicht freigeschaltet.</p>\n"
+"<p>leider hat der Administrator Ihrem Konto soeben die Freigabe entzogen:  {{username}} auf {{site_name}}.</p>\n"
 
 #: profile-builder-2.0/modules/email-customizer/user-email-customizer.php:187
 msgid "Your account on {{site_name}} has been unapproved!"
@@ -5170,7 +5179,7 @@ msgstr "Profil-Bearbeiten Formular"
 
 #: profile-builder-2.0/modules/multiple-forms/edit-profile-forms.php:18
 msgid "View the Edit-profile Form"
-msgstr "Ansicht vom Profil-Bearbeiten Formular"
+msgstr "Das Profil-Bearbeiten Formular anzeigen"
 
 #: profile-builder-2.0/modules/multiple-forms/edit-profile-forms.php:19
 msgid "Search the Edit-profile Forms"
@@ -5395,7 +5404,7 @@ msgstr "Zusatzfunktionen"
 
 #: profile-builder-2.0/modules/user-listing/userlisting.php:199
 msgid "Pagination"
-msgstr "Pagination"
+msgstr "Seitennummerierung"
 
 #: profile-builder-2.0/modules/user-listing/userlisting.php:200
 msgid "Search all Fields"
@@ -5511,11 +5520,11 @@ msgstr "Beispiel:"
 
 #: profile-builder-2.0/modules/user-listing/userlisting.php:2175
 msgid "Remember though, that the field-value combination must exist in the database."
-msgstr "Denken Sie daran, dass die Feld-Wert Kombination in der Datenbank vorhanden sein muss."
+msgstr "Denke daran, dass die Feld-Wert Kombination in der Datenbank vorhanden sein muss."
 
 #: profile-builder-2.0/modules/user-listing/userlisting.php:2250
 msgid "Random (very slow on large databases > 10K user)"
-msgstr "Random (sehr langsam auf große Datenbanken > 10K Benutzer)"
+msgstr "Zufällig (sehr langsam bei großen Datenbanken > 10K Benutzer)"
 
 #: profile-builder-2.0/modules/user-listing/userlisting.php:2262
 msgid "Roles to Display"

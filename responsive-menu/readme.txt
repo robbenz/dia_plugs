@@ -1,10 +1,10 @@
 === Responsive Menu ===
 Contributors: ResponsiveMenu, peterfeatherstone
-Donate link: https://responsive.menu/donate
 Tags: responsive, menu, responsive menu, mobile menu, wordpress responsive menu, wp responsive menu, tablet menu, hamburger menu, hamburger, mobile, tablet, 3 lines, 3 line, three line, three lines
 Requires at least: 3.6
-Tested up to: 4.8
-Stable tag: 3.1.7
+Tested up to: 4.9
+Stable tag: 3.1.13
+Requires PHP: 5.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,66 +12,63 @@ Highly customisable Responsive Menu plugin with 150+ options. No coding knowledg
 
 == Description ==
 **Description:**
-<br /><br />
+
 Highly customisable Responsive Menu Plugin for WordPress. With over 150 customisable options you get a combination of 22,500 options! No coding experience or knowledge is needed with an easy to use interface you can get it looking exactly as you want with minimal fuss.
-<br /><br />
+
 **See it in action:**
-<br /><br />
-<a href="https://responsive.menu">https://responsive.menu</a>
-<br /><br />
-<a href="https://demo.responsive.menu">https://demo.responsive.menu</a>
-<br /><br />
+
+[https://responsive.menu](https://responsive.menu)
+[https://demo.responsive.menu](https://demo.responsive.menu)
+
 **Requirements:**
-<br /><br />
+
 PHP 5.4+
-<br /><br />
+
 **Fully documented:**
-<br /><br />
-<a href="https://responsive.menu/docs/">https://responsive.menu/docs/</a>
-<br /><br />
+
+[https://responsive.menu/docs/](https://responsive.menu/docs/)
+
 **Fully unit tested:**
-<br /><br />
+
 100% unit test coverage with tests included in the plugin so you can run them yourself for peace of mind
-<br /><br />
+
 **Basic Functionality:**
-<ul>
-<li>Change every text, background and border colour</li>
-<li>Set the fonts, font sizes and text alignment you want to use</li>
-<li>Set which side and where you want the button to show</li>
-<li>Set which side the menu appears from (left, right, top or bottom)</li>
-<li>Use background image for the menu</li>
-<li>Choice of menu animations (slide over the top or push the content)</li>
-<li>Choice of which Menu to use</li>
-<li>Choice of screen size at which the menu will be shown</li>
-<li>Choice of CSS elements to hide when menu is showing</li>
-<li>Choice of Sub-menu depth to display down to</li>
-<li>Choice of Animation Types & Speeds for the Menu & Button</li>
-<li>Integrated search (fully customisable)</li>
-<li>Ability to disable and re-order the different components</li>
-<li>Ability to fix the button to the top or to let it scroll with the page</li>
-<li>Ability to upload logos, sub-arrow images etc.</li>
-<li>Ability to include Scripts externally, minified and in footer</li>
-<li>Ability to import and export options in a click of a button</li>
-<li>Ability to add custom HTML components</li>
-<li>Ability to choose custom menu triggers</li>
-<li>WPML/Polylang Support</li>
-<li>RTL Support</li>
-<li>Plus much, much more!</li>
-</ul>
+
+* Change every text, background and border colour
+* Set the fonts, font sizes and text alignment you want to use
+* Set which side and where you want the button to show
+* Set which side the menu appears from (left, right, top or bottom)
+* Use background image for the menu
+* Choice of menu animations (slide over the top or push the content)
+* Choice of which Menu to use
+* Choice of screen size at which the menu will be shown
+* Choice of CSS elements to hide when menu is showing
+* Choice of Sub-menu depth to display down to
+* Choice of Animation Types & Speeds for the Menu & Button
+* Integrated search (fully customisable)
+* Ability to disable and re-order the different components
+* Ability to fix the button to the top or to let it scroll with the page
+* Ability to upload logos, sub-arrow images etc.
+* Ability to include Scripts externally, minified and in footer
+* Ability to import and export options in a click of a button
+* Ability to add custom HTML components
+* Ability to choose custom menu triggers
+* WPML/Polylang Support
+* RTL Support
+* Plus much, much more!
 
 **Advanced & Pro Functionality:**
-<ul>
-<li>Preview your changes before implementing</li>
-<li>Animate the menu items when menu is opened</li>
-<li>FontIcon Support for individual menu items</li>
-<li>15 button animation effects</li>
-<li>Colour opacity for all colours</li>
-<li>Custom overlay colour and opacity</li>
-<li>Integrated header bar</li>
-<li>Let the plugin provide and style your main menu as well as hamburger menu</li>
-</ul>
 
-For more reasons to go Pro, please visit <a target="_blank" href="https://responsive.menu/why-go-pro/">this page</a>.
+* Preview your changes before implementing
+* Animate the menu items when menu is opened
+* FontIcon Support for individual menu items
+* 15 button animation effects
+* Colour opacity for all colours
+* Custom overlay colour and opacity
+* Integrated header bar
+* Let the plugin provide and style your main menu as well as hamburger menu
+
+For more reasons to go Pro, please visit [this page](https://responsive.menu#why-go-pro).
 
 [youtube https://www.youtube.com/watch?v=aj6ba0tGKPg]
 
@@ -91,25 +88,66 @@ Alternatively:
 
 == Frequently Asked Questions ==
 
-To view our FAQ, please go to <a href="https://responsive.menu/faq">https://responsive.menu/faq</a>
+To view our FAQ, please go to [https://responsive.menu/faq/](https://responsive.menu/faq/).
 
 == Screenshots ==
 
 1. Animated Screencast
-
 2. Example Front End Menu Button
-
 3. Front End Expanded Menu with Background Image
-
 4. Alternative Example Front End Expanded Menu with Background Image
-
 5. Alternative Example Front End Expanded Menu with Background Image
-
 6. Alternative Example Front End Expanded Menu with Background Image
-
-7. Fully customisable Admin Screen
+7. Admin Initial Setup Section
+8. Admin Container Section
+9. Admin Menu Section
+10. Admin Sub Menus Section
+11. Admin Button Section
+12. Admin Technical Section
+13. Admin Advanced Section
+14. Admin Header Bar Section
+15. Admin Desktop Menu Section
 
 == Changelog ==
+
+= 3.1.13 (19th January 2018) =
+* Move custom data to the uploads folder.
+
+= 3.1.12 (17th January 2018) =
+* Added option to control sub-menu speed.
+* Added "Minus" button animation.
+* Added option to adjust the page to account for the Header Bar.
+* Added image height options for Header Bar.
+* Updated FontAwesome version to get latest icons.
+* Fix for Slide effect on Desktop Menu.
+
+= 3.1.11 (28th November 2017) =
+* Hotfix to remove annoying pro overlay
+
+= 3.1.10 (28th November 2017) =
+* **Requires PHP 5.4**
+* Remove annoying pro overlay
+* Fix for double scrollbars on disable background scrolling - Pro
+
+= 3.1.9 (17th November 2017) =
+* **Requires PHP 5.4**
+* Fix for drop-downs not saving their information.
+* Fix for Desktop Menu with 3rd level drop-down items.
+* Fix for Touch Gestures stopping the Search box being selectable.
+* Fix for Touch Gestures stopping menu scrolling.
+* Center Desktop Menu option added. - Pro
+
+= 3.1.8 (26th October 2017) =
+* **Requires PHP 5.4**
+* Added a new dark admin theme
+* Updated the old light admin theme
+* Added a "hide pro options" button to remove some of the clutter
+* Improved UI interface
+* Made the Word Wrap option a free feature
+* Change database option value type to LONGTEXT to accept longer values
+* Fixed bug with Enable Gestures option - Pro
+* Complete overhaul of the Desktop Menu options including Mega Menus and more - Pro
+* Added vw and vh sizing units - Pro
 
 = 3.1.7 (22nd September 2017) =
 * **Requires PHP 5.4**
@@ -441,7 +479,7 @@ To view our FAQ, please go to <a href="https://responsive.menu/faq">https://resp
 
 * Complete overhaul of the codebase
 * Increased menu depth to 5
-* Added Spanish Translation - Massive thanks to Andrew @ <a href="http://www.webhostinghub.com">WebHostingHub</a> for this!
+* Added Spanish Translation - Massive thanks to Andrew @ WebHostingHub for this!
 * 'Double Click' menu bug fixed
 * Various bug fixes
 * Added Choice to Auto Expand Parent Links
@@ -466,7 +504,7 @@ To view our FAQ, please go to <a href="https://responsive.menu/faq">https://resp
 * Remove title section if title and image are empty
 * Added ability to change 3 lines to an x when clicked
 * Added ability to set the minimum width of the menu
-* Added Croatian Translation - Massive thanks to <a href="https://www.facebook.com/pages/Neverone-design/490262371018076">Neverone Design</a> for this!
+* Added Croatian Translation - Massive thanks to Neverone Design for this!
 
 = 1.8 (26th Mar 2014) =
 

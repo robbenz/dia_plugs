@@ -194,3 +194,15 @@ function wppb_maybe_remove_register_shortcode( $content ){
 
     return $content;
 }
+
+/* custom redirect after registration on wp default register form */
+function wppb_default_registration_redirect( $user_id ) {
+
+    $user_data = get_userdata( $user_id );
+
+    // CHECK FOR REDIRECT
+    $_POST['redirect_to'] = wppb_get_redirect_url( 'normal', 'after_registration', $_POST['redirect_to'], $user_data );
+    $_POST['redirect_to'] = apply_filters( 'wppb_after_registration_redirect_url', $_POST['redirect_to'] );
+
+}
+add_action( 'register_new_user', 'wppb_default_registration_redirect' );

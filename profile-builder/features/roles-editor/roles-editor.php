@@ -837,9 +837,9 @@ class WPPB_Roles_Editor {
 
     }
 
-    function remove_filter_by_month_dropdown( $months, $post_type ) {
+    function remove_filter_by_month_dropdown( $months, $post_type = NULL ) {
 
-        if( $post_type == 'wppb-roles-editor' ) {
+        if( isset( $post_type ) && $post_type == 'wppb-roles-editor' ) {
             return __return_empty_array();
         } else {
             return $months;

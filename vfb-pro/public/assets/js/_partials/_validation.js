@@ -8,7 +8,7 @@ jQuery(document).ready(function($) {
 		        return ParsleyField.$element.parents( 'div[id*="vfbField"]' );
 		    },
 		    errorsContainer: function(ParsleyField) {
-			    return ParsleyField.$element.parents( 'div[id*="vfbField"]' );
+			    return ParsleyField.$element.closest( 'div[id*="vfbField"]' );
 		    },
 		    errorsWrapper: '<span class="vfb-help-block">',
 			errorTemplate: '<div></div>',

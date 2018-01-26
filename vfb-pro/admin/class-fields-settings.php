@@ -231,7 +231,7 @@ class VFB_Pro_Admin_Fields_Settings {
 				<?php esc_html_e( 'Input mask', 'vfb-pro' ); ?>
 			</label>
 
-			<span class="vfb-tooltip vfb-pull-right" data-title="<?php esc_attr_e( 'About Input Mask', 'vfb-pro' ); ?>" data-content="<?php esc_attr_e( "Force user input to conform to a specific format.", 'vfb-pro' ); ?> <?php echo '&lt;a href=&quot;https://support.vfbpro.com/support/solutions/articles/4000043826&quot; target=&quot;_blank&quot;&gt;Input Mask Documentation&lt;/a&gt;'; ?>."><i class="vfb-icon-question"></i></span>
+			<span class="vfb-tooltip vfb-pull-right" data-title="<?php esc_attr_e( 'About Input Mask', 'vfb-pro' ); ?>" data-content="<?php esc_attr_e( "Force user input to conform to a specific format.", 'vfb-pro' ); ?> <?php echo '&lt;a href=&quot;http://support.vfbpro.com/support/solutions/articles/4000043826&quot; target=&quot;_blank&quot;&gt;Input Mask Documentation&lt;/a&gt;'; ?>."><i class="vfb-icon-question"></i></span>
 
 			<input type="text" value="<?php esc_attr_e( $value ); ?>" name="vfb-field-<?php echo $id; ?>[input-mask]" class="vfb-form-control" id="vfb-edit-input-mask-<?php echo $id; ?>" maxlength="255" />
 
@@ -345,7 +345,7 @@ class VFB_Pro_Admin_Fields_Settings {
 						</td>
 
 						<td>
-							<input type="text" value="<?php esc_attr_e( $label ); ?>" name="vfb-field-<?php echo $id; ?>[options][<?php echo $count;?>][label]" class="vfb-form-control" id="vfb-edit-options-<?php echo "{$id}-{$count}"; ?>" maxlength="150" />
+							<input type="text" value="<?php esc_attr_e( $label ); ?>" name="vfb-field-<?php echo $id; ?>[options][<?php echo $count;?>][label]" class="vfb-form-control" id="vfb-edit-options-<?php echo "{$id}-{$count}"; ?>" maxlength="255" />
 						</td>
 
 						<td class="vfb-options-table-actions">
@@ -368,7 +368,7 @@ class VFB_Pro_Admin_Fields_Settings {
 						</td>
 
 						<td>
-							<input type="text" value="" name="vfb-field-<?php echo $id; ?>[options][0][label]" class="vfb-form-control" id="vfb-edit-options-<?php echo "{$id}-0"; ?>" maxlength="150" />
+							<input type="text" value="" name="vfb-field-<?php echo $id; ?>[options][0][label]" class="vfb-form-control" id="vfb-edit-options-<?php echo "{$id}-0"; ?>" maxlength="255" />
 						</td>
 
 						<td class="vfb-options-table-actions">
@@ -514,7 +514,7 @@ class VFB_Pro_Admin_Fields_Settings {
 			<span class="vfb-tooltip vfb-pull-right" data-title="<?php esc_attr_e( 'About Allow Other', 'vfb-pro' ); ?>" data-content="<?php esc_attr_e( "Check this option if you would like the last choice in your multiple choice field to have a text field for additional input.", 'vfb-pro' ); ?>"><i class="vfb-icon-question"></i></span>
 
 
-			<input type="text" value="<?php esc_attr_e( $other ); ?>" name="vfb-field-<?php echo $id; ?>[allow-other-input]" placeholder="<?php esc_attr_e( 'Other', 'vfb-pro' ); ?>" class="vfb-form-control vfb-allow-other-input<?php echo 1 == $value ? ' active' : ''; ?>" maxlength="150" />
+			<input type="text" value="<?php esc_attr_e( $other ); ?>" name="vfb-field-<?php echo $id; ?>[allow-other-input]" placeholder="<?php esc_attr_e( 'Other', 'vfb-pro' ); ?>" class="vfb-form-control vfb-allow-other-input<?php echo 1 == $value ? ' active' : ''; ?>" maxlength="255" />
 		</div> <!-- .vfb-form-group -->
 	<?php
 	}

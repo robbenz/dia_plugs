@@ -350,7 +350,6 @@ class VFB_Pro_Export {
 			}
 		}
 		$headers['entry_date'] = __( 'Entry Date', 'vfb-pro' );
-		$headers = array_unique( $headers );
 
 		fputcsv( $file, $headers, $this->delimiter );
 
@@ -410,7 +409,6 @@ class VFB_Pro_Export {
 			}
 		}
 		$headers['entry_date'] = __( 'Entry Date', 'vfb-pro' );
-		$headers = array_unique( $headers );
 
 		$output .= '<?xml version="1.0" encoding="' . get_bloginfo('charset') . "\" ?>\n";
 

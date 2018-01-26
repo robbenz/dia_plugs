@@ -3,7 +3,7 @@
 Plugin Name: Profile Builder
 Plugin URI: https://www.cozmoslabs.com/wordpress-profile-builder/
 Description: Login, registration and edit profile shortcodes for the front-end. Also you can chose what fields should be displayed or add new (custom) ones both in the front-end and in the dashboard.
-Version: 2.6.8
+Version: 2.7.4
 Author: Cozmoslabs, Madalin Ungureanu, Antohe Cristian, Barina Gabriel, Mihai Iova
 Author URI: https://www.cozmoslabs.com/
 License: GPL2
@@ -73,7 +73,7 @@ function wppb_free_plugin_init() {
          *
          *
          */
-        define('PROFILE_BUILDER_VERSION', '2.6.8' );
+        define('PROFILE_BUILDER_VERSION', '2.7.4' );
         define('WPPB_PLUGIN_DIR', plugin_dir_path(__FILE__));
         define('WPPB_PLUGIN_URL', plugin_dir_url(__FILE__));
         define('WPPB_SERVER_MAX_UPLOAD_SIZE_BYTE', apply_filters('wppb_server_max_upload_size_byte_constant', wppb_return_bytes(ini_get('upload_max_filesize'))));
@@ -138,6 +138,7 @@ function wppb_free_plugin_init() {
         }
         include_once(WPPB_PLUGIN_DIR . '/features/login-widget/login-widget.php');
         include_once(WPPB_PLUGIN_DIR . '/features/roles-editor/roles-editor.php');
+        include_once(WPPB_PLUGIN_DIR . '/features/content-restriction/content-restriction.php');
 
         if (file_exists(WPPB_PLUGIN_DIR . '/update/update-checker.php')) {
             include_once(WPPB_PLUGIN_DIR . '/update/update-checker.php');

@@ -663,3 +663,7 @@ p .wppb-button-free {
     display: inline-block;
     margin-left:7px;
 }
+
+.mb-table-container .wck-state-highlight{
+    height:45px;
+}

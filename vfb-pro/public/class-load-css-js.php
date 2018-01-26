@@ -26,7 +26,7 @@ class VFB_Pro_Scripts_Loader {
 	 * @return void
 	 */
 	public function add_js() {
-		wp_register_script( 'vfbp-js', VFB_PLUGIN_URL . "public/assets/js/vfb-js.min.js", array( 'jquery' ), '2017.10.01', true );
+		wp_register_script( 'vfbp-js', VFB_PLUGIN_URL . "public/assets/js/vfb-js.min.js", array( 'jquery' ), '2018.01.01', true );
 		wp_register_script( 'parsley-js', VFB_PLUGIN_URL . "public/assets/js/vendors/parsley.min.js", array( 'jquery' ), '2.0.5', true );
 		wp_register_script( 'parsley-js-custom', VFB_PLUGIN_URL . "public/assets/js/vendors/parsley-custom.min.js", array( 'parsley-js' ), '1.0', true );
 		wp_register_script( 'jquery-phoenix', VFB_PLUGIN_URL . "public/assets/js/vendors/jquery.phoenix.min.js", array( 'jquery' ), '1.2.1', true );

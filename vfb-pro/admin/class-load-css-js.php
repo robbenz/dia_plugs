@@ -20,7 +20,7 @@ class VFB_Pro_Admin_Scripts_Loader {
 	public function add_css() {
 		wp_enqueue_style( 'thickbox' );
 		wp_enqueue_style( 'wp-color-picker' );
-		wp_enqueue_style( 'vfb-admin', VFB_PLUGIN_URL . "admin/assets/css/vfb-admin.min.css", array(), '2015.07.22' );
+		wp_enqueue_style( 'vfb-admin', VFB_PLUGIN_URL . "admin/assets/css/vfb-admin.min.css", array(), '2018.01.18' );
 	}
 
 	/**

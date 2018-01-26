@@ -331,7 +331,7 @@ function wppb_signup_user( $username, $user_email, $meta = '' ) {
 	$meta = serialize( $meta );
 
 	// change User Registered date and time according to timezone selected in WordPress settings
-	$wppb_get_date = wppb_get_date_by_timezone();
+	$wppb_get_date = wppb_get_register_date();
 
 	if( isset( $wppb_get_date ) ) {
 		$wppb_user_registered = $wppb_get_date;
