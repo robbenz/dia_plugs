@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: WooCommerce Authorize.net CIM Gateway
+ * Plugin Name: WooCommerce Authorize.net CIM Gateway | HACKED
  * Plugin URI: http://www.woothemes.com/products/authorize-net-cim/
  * Description: Adds the Authorize.net CIM Payment Gateway to your WooCommerce site, allowing customers to securely save their credit card to their account for use with single purchases, pre-orders, subscriptions, and more!
  * Author: SkyVerge
