@@ -85,15 +85,17 @@ if ( !class_exists( 'YITH_YWRAQ_Send_Quote' ) ) {
                 $this->find['quote-number']    = '{quote_number}';
                 $this->replace['quote-number'] = $order_id;
 
-                $this->new_cool_subject         =  get_post_meta( $this->order->id, 'dia_order_quote_subject_line', true );
+                $this->new_cool_subject =  get_post_meta( $this->order->id, 'dia_order_quote_subject_line', true );
                 if ($this->new_cool_subject == 'subject1') {
-                  $this->new_cool_subject = "Shipping Calculated - Order Quote #EC-{quote_number} Now";
+                  $this->new_cool_subject = 'Shipping Calculated - Order Quote #EC-'.$order_id.' Now';
                 } else {
-                  $this->new_cool_subject = 'sup dawg - Order Quote #EC-'.$order_id;
+                  $this->new_cool_subject = 'Your DiaMedicalUSA.com Quote #EC-'.$order_id.' Is Attached';
                 }
 
-              //  $this->send( $this->recipient, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments( ) );
                 $this->send( $this->recipient, $this->new_cool_subject, $this->get_content(), $this->get_headers(), $this->get_attachments( ) );
+
+                // commented this out to hack the subject line with select #dia_order_quote_subject_line in functions.php
+                // $this->send( $this->recipient, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments( ) );
 
             }
 

@@ -30,8 +30,11 @@ if( isset( $raq_data['lang']) ){
 <h2><?php printf( __( 'Click Accept to Order Quote #EC-%s Instantly', 'yith-woocommerce-request-a-quote' ), $order->id ) ?></h2>
 <span style="font-size:14px; font-weight:bolder;">Please Note: </span>
 <span style="font-size:14px;">Shipping has been calculated and added to your total. Shipping will be applied at checkout. </span>
+<br />
+<span style="font-size:14px; font-weight:bolder;">Please Note: </span>
+<span style="font-size:14px;">You must be logged in to your DiaMedicalUSA.com account for this link to work.</span>
 
-    <p><?php // echo $email_description; ?></p>
+    <!-- <p> // echo $email_description; </p> -->
 
 <?php if( get_option('ywraq_hide_table_is_pdf_attachment') == 'no'): ?>
     <p><strong><?php _e( 'Request date', 'yith-woocommerce-request-a-quote' ) ?></strong>: <?php echo $raq_data['order-date'] ?></p>

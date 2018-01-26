@@ -39,6 +39,7 @@ $order_date          = date_i18n( wc_date_format(), strtotime( $order->order_dat
 <div style="width:45%; float:left; margin-top:11px">
   <img width="350" style="margin-top:-25px;" src="<?php echo site_url(); ?>/wp-content/imgs/logo/DiaMedical_USA_Logo.png" />
   <ul style="list-style-type:none; line-height:18px;">
+    <li style="list-style-type:none;"><strong>Remit To:</strong></li>
     <li style="list-style-type:none;">7013 Orchard Lake Rd, Suite #110</li>
     <li style="list-style-type:none;">West Bloomfield, MI 48322</li>
     <li style="list-style-type:none;">P. (248) 855-3966</li>
@@ -99,9 +100,14 @@ $order_date          = date_i18n( wc_date_format(), strtotime( $order->order_dat
 <div class="clear"></div>
 
 <?php if( get_option( 'ywraq_pdf_link' ) == 'yes'): ?>
-<div style="height:26px; width:100%; margin-top:12px;text-align:center; background-color:#78be20; padding-top: 5.5px;">
+<div style="height:26px; width:100%; margin-top:12px;text-align:center;background-color:#78be20; padding-top: 5.5px;">
   <?php if ( get_option( 'ywraq_show_accept_link' ) != 'no' ): ?>
-    <a style="background-color:#78be20; color:#fff; margin-bottom:10px; text-decoration:none; font-weight:700;" href="<?php echo esc_url( add_query_arg( array( 'request_quote' => $order->id, 'status' => 'accepted', 'raq_nonce' => ywraq_get_token( 'accept-request-quote', $order->id, get_post_meta( $order->id, 'ywraq_customer_email', true ) ) ), YITH_Request_Quote()->get_raq_page_url() ) ) ?>" class="pdf-button"><?php ywraq_get_label('accept', true) ?></a></td>
+    <a
+    style="color:#fff; margin-bottom:10px; text-decoration:none; font-weight:700;"
+    href="<?php echo esc_url( add_query_arg( array( 'request_quote' => $order->id, 'status' => 'accepted', 'raq_nonce' => ywraq_get_token( 'accept-request-quote', $order->id, get_post_meta( $order->id, 'ywraq_customer_email', true ) ) ), YITH_Request_Quote()->get_raq_page_url() ) ) ?>"
+    class="pdf-button">
+    <?php ywraq_get_label('accept', true) ?>
+  </a>
   <?php endif; ?>
 </div>
 <?php endif ?>
