@@ -82,26 +82,18 @@ if( isset( $raq_data['lang']) ){
     <p><strong><?php _e( 'Email:', 'yith-woocommerce-request-a-quote' ); ?></strong>
       <a href="mailto:<?php echo $raq_data['user_email']; ?>"><?php echo $raq_data['user_email']; ?></a></p>
 
-
 <?php
-
-/* this didnt work
-$billing_phone   = get_post_meta( $order->id, 'ywraq_billing_phone', true );
-$billing_vat     = get_post_meta( $order->id, 'ywraq_billing_vat', true );
-But This Did */
-
-$billing_first_name =  get_post_meta($order->id, '_billing_first_name',true);
-$billing_last_name = get_post_meta($order->id, '_billing_last_name',true);
-$billing_company = get_post_meta($order->id, '_billing_company',true);
-$billing_address = get_post_meta( $order->id, '_billing_address_1', true );
-$billing_address2 = get_post_meta($order->id, '_billing_address_2',true);
-$billing_city = get_post_meta($order->id, '_billing_city',true);
-$billing_postcode = get_post_meta($order->id, '_billing_postcode',true);
-$billing_country = get_post_meta($order->id, '_billing_country',true);
-$billing_state = get_post_meta($order->id, '_billing_state',true);
-$billing_email = get_post_meta($order->id, '_billing_email',true);
-$billing_phone = get_post_meta($order->id, '_billing_phone',true);
-// $billing_paymethod = get_post_meta($order->id, '_payment_method',true);
+$billing_first_name  = get_post_meta($order->id, '_billing_first_name',true);
+$billing_last_name   = get_post_meta($order->id, '_billing_last_name',true);
+$billing_company     = get_post_meta($order->id, '_billing_company',true);
+$billing_address     = get_post_meta( $order->id, '_billing_address_1', true );
+$billing_address2    = get_post_meta($order->id, '_billing_address_2',true);
+$billing_city        = get_post_meta($order->id, '_billing_city',true);
+$billing_postcode    = get_post_meta($order->id, '_billing_postcode',true);
+$billing_country     = get_post_meta($order->id, '_billing_country',true);
+$billing_state       = get_post_meta($order->id, '_billing_state',true);
+$billing_email       = get_post_meta($order->id, '_billing_email',true);
+$billing_phone       = get_post_meta($order->id, '_billing_phone',true);
 
 if( $billing_company != ''): ?>
     <p><strong><?php _e( 'Company:', 'yith-woocommerce-request-a-quote' ); ?></strong> <?php echo $billing_company; ?></p>
