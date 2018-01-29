@@ -1,26 +1,23 @@
 ﻿=== User registration & user profile - Profile Builder ===
 Contributors: cozmoslabs, reflectionmedia, sareiodata, adispiac, madalin.ungureanu, iova.mihai, barinagabriel
 Donate link: http://www.cozmoslabs.com/wordpress-profile-builder/
-Tags: user registration, user profile, user registration form, user fields, extra user fields, edit profile, user custom fields, front-end login, front-end edit profile, front-end user registration, email confirmation, login form, content restriction, restrict content
+Tags: user registration, user profile, user registration form, user fields, extra user fields, edit profile, user custom fields, front-end login, front-end edit profile, front-end user registration, email confirmation, login form
 Requires at least: 3.1
-Tested up to: 4.9.2
-Stable tag: 2.7.4
+Tested up to: 4.8.1
+Stable tag: 2.6.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Simple to use profile plugin allowing front-end login, user registration and edit profile by using shortcodes. Built in Role Editor grants you control over user roles and capabilities on your site. Add Content Restriction based on user role.
+Simple to use profile plugin allowing front-end login, user registration and edit profile by using shortcodes. Also has built in Role Editor which grants you control over roles and capabilities on your site.
  
 == Description ==
 
 **Profile Builder is WordPress user registration done right.**
 
-Easy to use profile plugin allowing front-end login, user registration and edit profile by using shortcodes.
-
-Restrict Content based on user role or logged in status & manage user roles and capabilities using the built in Role Editor.
-
 **Like this plugin?** Consider leaving a [5 star review](https://wordpress.org/support/view/plugin-reviews/profile-builder?filter=5).
 
-It lets you customize your website by adding a front-end menu for all your users, giving them a more flexible way to modify their user profile or register users (front-end user registration).
+It lets you customize your website by adding a front-end menu for all your users, 
+giving them a more flexible way to modify their user profile or register users (front-end user registration).
 Users with administrator rights can customize basic user fields or add custom user fields to the front-end forms.
 
 To achieve this, simply create a new page and give it an intuitive name(i.e. Edit Profile).
@@ -35,7 +32,6 @@ You can use the following shortcode list:
 * **[wppb-logout]** - to add logout functionality.
 * **[wppb-register]** - register users via a front-end register form.
 * **[wppb-recover-password]** - to add a password recovery form.
-* **[wppb-restrict]**Content to restrict**[/wppb-restrict]** - to restrict blocks of content
 
 Users with administrator rights have access to the following features:
 
@@ -54,7 +50,6 @@ Users with administrator rights have access to the following features:
 * role editor: add, remove, clone and edit roles and also capabilities for these roles.
 * reacaptcha for Profile Builder forms and WordPress default forms
 * user role select field on register and edit profile forms
-* content restriction - restrict content based on user role or logged in status
 
 **PROFILE BUILDER PRO**
 
@@ -163,43 +158,6 @@ This plugin adds/removes user fields in the front-end. Both default and extra pr
 12. Role Editor
 
 == Changelog ==
-= 2.7.4 =
-* Improved admin interface speed in most cases by up to 100% by reducing the number of ajax calls
-* Improved the admin interface with small visual tweaks and bug-fixes
-* Fixed bug with email not showing up for unconfirmed users table listing in backend
-
-= 2.7.3 =
-* Now we save the registration date only in GMT time to avoid confusions. We have a filter to be able to save to local time: wppb_return_local_time_for_register
-* Added functionality to update meta name for existing fields in the database if they change. It is off by default but can be activated with the filter wppb_update_field_meta_key_in_db
-* Added a mention to Roles Editor in the Basic Info Page
-
-= 2.7.2 =
-* Updated translation file.
-* Fixed issue with login token generating duplicated ID validation error
-
-= 2.7.1 =
-* Fixed an issue with the Biographical Info field that was showing html tags
-* Fixed Content Restriction preview post before more-tag issue
-* Fixed Roles Editor conflict with Dokan plugin
-* Fixed redirect_priority='top' not working after login
-* Fixed back-end login with after login redirect set to http_referer
-
-= 2.7.0 = 
-* Added [wppb-restrict] shortcode for Content Restriction
-* Password Strength Indicator improvements
-* Added an extra filter (wppb_mail) to wppb_mail function that gives the possibility to also send headers
-* Updated German translation files.
-* Added context to the 3 wppb_mail calls so we can identify the recover password emails being sent using the filters/actions from wppb_mail.
-* Fixed content restriction meta-box for attachments
-
-= 2.6.9 =
-* Implemented Content Restriction feature
-* Added nonce field on Profile Builder login form for security check
-* Security improvements on login form
-* Fixed an issue with po file-names that was causing random issues with different environments/FTP clients.
-* Fixed a redirect loop when we log in from Paid Member Subscribtions and we had a redirect for default WordPress login
-* Changed the locale for the Slovenian translation files. It was using the locale for Sierra Leone.
-
 = 2.6.8 =
 * Edit other users dropdown on the frontend Edit Profile form is now a select2
 * Fixed a potential error when submitting the Register form

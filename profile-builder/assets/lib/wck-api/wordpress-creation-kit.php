@@ -92,6 +92,8 @@ class Wordpress_Creation_Kit_PB{
 		add_action("wp_ajax_wck_update_meta".$this->args['meta_name'], array( &$this, 'wck_update_meta') );
 		add_action("wp_ajax_wck_show_update".$this->args['meta_name'], array( &$this, 'wck_show_update_form') );
 		add_action("wp_ajax_wck_refresh_list".$this->args['meta_name'], array( &$this, 'wck_refresh_list') );
+		add_action("wp_ajax_wck_refresh_entry".$this->args['meta_name'], array( &$this, 'wck_refresh_entry') );
+		add_action("wp_ajax_wck_add_form".$this->args['meta_name'], array( &$this, 'wck_add_form') );
 		add_action("wp_ajax_wck_remove_meta".$this->args['meta_name'], array( &$this, 'wck_remove_meta') );
 		add_action("wp_ajax_wck_reorder_meta".$this->args['meta_name'], array( &$this, 'wck_reorder_meta') );
 
@@ -660,8 +662,8 @@ class Wordpress_Creation_Kit_PB{
 			wp_enqueue_style( 'thickbox' );
 		}
 		
-		wp_enqueue_script('wordpress-creation-kit', plugins_url('/wordpress-creation-kit.js', __FILE__), array('jquery', 'jquery-ui-draggable', 'jquery-ui-droppable', 'jquery-ui-sortable' ), PROFILE_BUILDER_VERSION );
-		wp_register_style('wordpress-creation-kit-css', plugins_url('/wordpress-creation-kit.css', __FILE__), array(), PROFILE_BUILDER_VERSION );
+		wp_enqueue_script('wordpress-creation-kit', plugins_url('/wordpress-creation-kit.js', __FILE__), array('jquery', 'jquery-ui-draggable', 'jquery-ui-droppable', 'jquery-ui-sortable' ) );
+		wp_register_style('wordpress-creation-kit-css', plugins_url('/wordpress-creation-kit.css', __FILE__));
 		wp_enqueue_style('wordpress-creation-kit-css');
 
 		// wysiwyg		
@@ -800,14 +802,8 @@ class Wordpress_Creation_Kit_PB{
             $results = array( $values );
         else
             $results[] = $values;
-
-		/* make sure this does not output anything so it won't break the json response below
-		will keep it do_action for compatibility reasons
-		 */
-		ob_start();
-			do_action( 'wck_before_add_meta', $meta, $id, $values );
-		$wck_before_add_meta = ob_get_clean(); //don't output it
-
+		
+		do_action( 'wck_before_add_meta', $meta, $id, $values );
 		
 		if( $this->args['context'] == 'post_meta' )
 			update_post_meta($id, $meta, $results);
@@ -824,13 +820,8 @@ class Wordpress_Creation_Kit_PB{
 				}
 			}
 		}
-
-		$entry_list = $this->wck_refresh_list( $meta, $id );
-		$add_form = $this->wck_add_form( $meta, $id );
-
-		header( 'Content-type: application/json' );
-		die( json_encode( array( 'entry_list' => $entry_list, 'add_form' => $add_form ) ) );	
 		
+		exit;
 	}
 
 	/* ajax update a reccord in the meta */
@@ -874,14 +865,8 @@ class Wordpress_Creation_Kit_PB{
 			$results = get_option( apply_filters( 'wck_option_meta' , $meta, $values, $element_id ) );
 		
 		$results[$element_id] = $values;
-
-		/* make sure this does not output anything so it won't break the json response below
-		will keep it do_action for compatibility reasons
-		 */
-		ob_start();
-			do_action( 'wck_before_update_meta', $meta, $id, $values, $element_id );
-		$wck_before_update_meta = ob_get_clean(); //don't output it
 		
+		do_action( 'wck_before_update_meta', $meta, $id, $values, $element_id );
 
 		if( $this->args['context'] == 'post_meta' )
 			update_post_meta($id, $meta, $results);
@@ -898,63 +883,69 @@ class Wordpress_Creation_Kit_PB{
 				}
 			}
 		}
-
-		$entry_content = $this->wck_refresh_entry( $meta, $id, $element_id );		
-
-		header( 'Content-type: application/json' );
-		die( json_encode( array( 'entry_content' => $entry_content ) ) );
+		
+		exit;
 	}
 
-	/* ajax to refresh the meta content | or used in other function to return the */
-	/* this is used in Repeater Fields as an ajax action so we have to keep it dual purpose */
-	function wck_refresh_list( $meta = '', $id = '' ){
+	/* ajax to refresh the meta content */
+	function wck_refresh_list(){
 		if( isset( $_POST['meta'] ) )
 			$meta = sanitize_text_field( $_POST['meta'] );
-		
+		else 
+			$meta = '';
 		if( isset( $_POST['id'] ) )
-			$id = absint($_POST['id']);		
-
-		ob_start();			
-			echo self::wck_output_meta_content($meta, $id, $this->args['meta_array']);
-			do_action( "wck_refresh_list_{$meta}", $id );
-		$entry_list = ob_get_clean();
+			$id = absint($_POST['id']);
+		else 
+			$id = '';
+		echo self::wck_output_meta_content($meta, $id, $this->args['meta_array']);
 		
-		if( strpos( current_filter(), 'wp_ajax_wck_refresh_list') === 0 ){
-			echo $entry_list;			
-			exit;	
-		}
-		else{
-			return $entry_list;
-		}
+		do_action( "wck_refresh_list_{$meta}", $id );
+		
+		exit;
 	}
 	
-	/* function that returns the content of an entry */
-	function wck_refresh_entry( $meta = '', $id = '', $element_id = '' ){
+	/* ajax to refresh an entry content */
+	function wck_refresh_entry(){
+		if( isset( $_POST['meta'] ) )
+			$meta = sanitize_text_field( $_POST['meta'] );
+		else 
+			$meta = '';
+		if( isset( $_POST['id'] ) )
+			$id = absint( $_POST['id'] );
+		else
+			$id = '';
+		if( isset( $_POST['element_id'] ) )
+			$element_id = absint( $_POST['element_id'] );
+		else
+			$element_id = '';
 		
 		if( $this->args['context'] == 'post_meta' )
 			$results = get_post_meta($id, $meta, true);
 		else if ( $this->args['context'] == 'option' )
 			$results = get_option( apply_filters( 'wck_option_meta' , $meta, $element_id ) );
-
-		ob_start();
-			echo self::wck_output_entry_content( $meta, $id, $this->args['meta_array'], $results, $element_id );
-			do_action( "wck_refresh_entry_{$meta}", $id );
-		$entry_content = ob_get_clean();
-
-		return $entry_content;
+		
+		echo self::wck_output_entry_content( $meta, $id, $this->args['meta_array'], $results, $element_id );
+		
+		do_action( "wck_refresh_entry_{$meta}", $id );
+		
+		exit;
 	}
 	
-	/* function that returns the add the form for single */
-	function wck_add_form( $meta = '', $id = '' ){
-		
+	/* ajax to add the form for single */
+	function wck_add_form(){
+		if( !empty( $_POST['meta'] ) )
+			$meta = sanitize_text_field( $_POST['meta'] );
+		else
+			$meta = '';
+		if( !empty( $_POST['id'] ) )
+			$id = absint( $_POST['id'] );
+		else
+			$id = '';
 		$post = get_post($id);
-
-		ob_start();			
-			self::create_add_form($this->args['meta_array'], $meta, $post );
-			do_action( "wck_ajax_add_form_{$meta}", $id );
-		$add_form = ob_get_clean();
+		self::create_add_form($this->args['meta_array'], $meta, $post );
+		do_action( "wck_ajax_add_form_{$meta}", $id );
 		
-		return $add_form;
+		exit;
 	}
 	
 
@@ -1006,13 +997,8 @@ class Wordpress_Creation_Kit_PB{
 		unset($results[$element_id]);
 		/* reset the keys for the array */
 		$results = array_values($results);
-
-		/* make sure this does not output anything so it won't break the json response below
-		will keep it do_action for compatibility reasons
-		 */
-		ob_start();
-			do_action( 'wck_before_remove_meta', $meta, $id, $element_id );
-		$wck_before_remove_meta = ob_get_clean(); //don't output it
+		
+		do_action( 'wck_before_remove_meta', $meta, $id, $element_id );
 		
 		if( $this->args['context'] == 'post_meta' )
 			update_post_meta($id, $meta, $results);
@@ -1049,11 +1035,7 @@ class Wordpress_Creation_Kit_PB{
 			}
 		}
 
-		$entry_list = $this->wck_refresh_list( $meta, $id );
-		$add_form = $this->wck_add_form( $meta, $id );
-
-		header( 'Content-type: application/json' );
-		die( json_encode( array( 'entry_list' => $entry_list, 'add_form' => $add_form ) ) );
+		exit;
 	}
 
 
@@ -1077,13 +1059,8 @@ class Wordpress_Creation_Kit_PB{
 			header( 'Content-type: application/json' );
 			die( json_encode( $error ) );
 		}
-
-		/* make sure this does not output anything so it won't break the json response below
-		will keep it do_action for compatibility reasons
-		 */
-		ob_start();
-			do_action( 'wck_before_reorder_meta', $meta, $id, $elements_id );
-		$wck_before_reorder_meta = ob_get_clean(); //don't output it
+		
+		do_action( 'wck_before_reorder_meta', $meta, $id, $elements_id );
 		
 		if( $this->args['context'] == 'post_meta' )
 			$results = get_post_meta($id, $meta, true);
@@ -1118,11 +1095,9 @@ class Wordpress_Creation_Kit_PB{
 				}
 			}
 			
-		}
-
-		$entry_list = $this->wck_refresh_list( $meta, $id );
-		header( 'Content-type: application/json' );
-		die( json_encode( array( 'entry_list' => $entry_list ) ) );
+		}		
+		
+		exit;
 	}
 
     /**
