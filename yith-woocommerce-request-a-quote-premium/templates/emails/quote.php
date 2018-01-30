@@ -86,7 +86,7 @@ if( isset( $raq_data['lang']) ){
 $billing_first_name  = get_post_meta($order->id, '_billing_first_name',true);
 $billing_last_name   = get_post_meta($order->id, '_billing_last_name',true);
 $billing_company     = get_post_meta($order->id, '_billing_company',true);
-$billing_address     = get_post_meta( $order->id, '_billing_address_1', true );
+$billing_address     = get_post_meta($order->id, '_billing_address_1', true );
 $billing_address2    = get_post_meta($order->id, '_billing_address_2',true);
 $billing_city        = get_post_meta($order->id, '_billing_city',true);
 $billing_postcode    = get_post_meta($order->id, '_billing_postcode',true);
