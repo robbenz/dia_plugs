@@ -77,7 +77,7 @@ $billing_phone       = get_post_meta($order->id, '_billing_phone',true);
 
           if ( get_option( 'ywraq_show_reject_link' ) != 'no' ): ?>
           <a style="margin-top:4px; color:#d6001c;"
-             href="<?php echo site_url(); ?>/quote-rejected/&vfb-field-319-first=<?php echo $billing_first_name; ?>&vfb-field-319-last=<?php echo $billing_last_name; ?>&vfb-field-315=EC-<?php echo $order->id; ?>&vfb-field-318=<?php echo $billing_email; ?>">
+             href="<?php echo site_url(); ?>/quote-rejected/?vfb-field-315=EC-<?php echo $order->id; ?>&vfb-field-318=<?php echo $billing_email; ?>">
             No Thank You
           </a>
           <?php endif; ?>
