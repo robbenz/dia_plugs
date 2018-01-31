@@ -160,6 +160,7 @@ function dia_users_remove_menu_pages() {
     if ( ! $user_ID == '2877' ) { remove_menu_page('edit.php'); }
     add_menu_page( 'Profile', 'Profile', 'manage_woocommerce', 'profile.php', '', 'dashicons-admin-users', 100 );
     add_menu_page( 'Quote Requests', 'Quote Requests', 'manage_woocommerce', 'edit.php?post_status=wc-ywraq-new&post_type=shop_order', '', 'dashicons-palmtree', 200 );
+    add_menu_page( 'Online Orders', 'Online Orders', 'manage_woocommerce', 'edit.php?post_type=shop_order', '', 'dashicons-palmtree', 200 );
   }
 
 }

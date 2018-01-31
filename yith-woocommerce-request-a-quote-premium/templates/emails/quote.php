@@ -57,14 +57,29 @@ if( isset( $raq_data['lang']) ){
 ?>
     <p></p>
     <?php endif ?>
-
+<?php
+$billing_first_name  = get_post_meta($order->id, '_billing_first_name',true);
+$billing_last_name   = get_post_meta($order->id, '_billing_last_name',true);
+$billing_company     = get_post_meta($order->id, '_billing_company',true);
+$billing_address     = get_post_meta($order->id, '_billing_address_1', true );
+$billing_address2    = get_post_meta($order->id, '_billing_address_2',true);
+$billing_city        = get_post_meta($order->id, '_billing_city',true);
+$billing_postcode    = get_post_meta($order->id, '_billing_postcode',true);
+$billing_country     = get_post_meta($order->id, '_billing_country',true);
+$billing_state       = get_post_meta($order->id, '_billing_state',true);
+$billing_email       = get_post_meta($order->id, '_billing_email',true);
+$billing_phone       = get_post_meta($order->id, '_billing_phone',true);
+?>
     <p>
           <?php if ( get_option( 'ywraq_show_accept_link' ) != 'no' ): ?>
               <div style="height:26px; width:100%; background-color:#78be20; text-align:center; "><a style="color:#fff; text-decoration:none; font-weight:700; font-size:15px;" href="<?php echo esc_url( add_query_arg( $args_accept, YITH_Request_Quote()->get_raq_page_url() ) ) ?>"><?php ywraq_get_label( 'accept', true ) ?></a></div>
           <?php endif;
 
           if ( get_option( 'ywraq_show_reject_link' ) != 'no' ): ?>
-              <a style="margin-top:4px; color:#d6001c;" href="<?php echo site_url(); ?>/quote-rejected/">No Thank You</a>
+          <a style="margin-top:4px; color:#d6001c;"
+             href="<?php echo site_url(); ?>/quote-rejected/&vfb-field-319-first=<?php echo $billing_first_name; ?>&vfb-field-319-last=<?php echo $billing_last_name; ?>&vfb-field-315=EC-<?php echo $order->id; ?>&vfb-field-318=<?php echo $billing_email; ?>">
+            No Thank You
+          </a>
           <?php endif; ?>
     </p>
 
@@ -83,17 +98,7 @@ if( isset( $raq_data['lang']) ){
       <a href="mailto:<?php echo $raq_data['user_email']; ?>"><?php echo $raq_data['user_email']; ?></a></p>
 
 <?php
-$billing_first_name  = get_post_meta($order->id, '_billing_first_name',true);
-$billing_last_name   = get_post_meta($order->id, '_billing_last_name',true);
-$billing_company     = get_post_meta($order->id, '_billing_company',true);
-$billing_address     = get_post_meta($order->id, '_billing_address_1', true );
-$billing_address2    = get_post_meta($order->id, '_billing_address_2',true);
-$billing_city        = get_post_meta($order->id, '_billing_city',true);
-$billing_postcode    = get_post_meta($order->id, '_billing_postcode',true);
-$billing_country     = get_post_meta($order->id, '_billing_country',true);
-$billing_state       = get_post_meta($order->id, '_billing_state',true);
-$billing_email       = get_post_meta($order->id, '_billing_email',true);
-$billing_phone       = get_post_meta($order->id, '_billing_phone',true);
+
 
 if( $billing_company != ''): ?>
     <p><strong><?php _e( 'Company:', 'yith-woocommerce-request-a-quote' ); ?></strong> <?php echo $billing_company; ?></p>
