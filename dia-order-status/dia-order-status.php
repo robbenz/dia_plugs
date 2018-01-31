@@ -33,7 +33,7 @@ function dia_shipped_icon() {
   if( ! is_admin() ) return;
   ?>
   <style>
-  .column-order_status mark.shipped { content: url("/parts_online/wp-content/plugins/dia-order-status/assets/shipped-icon.png"); }
+  .column-order_status mark.shipped { content: url("https://diamedicalusa.com/wp-content/plugins/dia-order-status/assets/shipped-icon.png"); }
 </style> <?php
 }
 /*** END ***/
