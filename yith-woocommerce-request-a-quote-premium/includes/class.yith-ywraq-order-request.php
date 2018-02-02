@@ -14,6 +14,7 @@ if ( !defined( 'ABSPATH' ) || !defined( 'YITH_YWRAQ_VERSION' ) ) {
  */
 class YITH_YWRAQ_Order_Request {
 
+
     /**
      * Array with Quote List datas
      */
@@ -214,6 +215,7 @@ class YITH_YWRAQ_Order_Request {
         }
 
         $order_id           = $wp->query_vars[$view_quote];
+        //$post->post_title   = sprintf( __( 'Quote #%s', 'yith-woocommerce-request-a-quote' ), $order_id );
         $post->post_title   = sprintf( __( 'Quote #EC-%s', 'yith-woocommerce-request-a-quote' ), $order_id );
         $post->post_content = WC_Shortcodes::shortcode_wrapper( array( $this, 'view_quote' ) );
 
@@ -708,7 +710,7 @@ class YITH_YWRAQ_Order_Request {
         $post = isset( $_REQUEST['post'] ) ? $_REQUEST['post'] : ( isset( $_REQUEST['post_ID'] ) ? $_REQUEST['post_ID'] : 0 );
         $post = get_post( $post );
 
-        //if ( $post && $post->post_type == 'shop_order' && $this->is_quote( $post->ID ) ) {
+        // if ( $post  && $post->post_type == 'shop_order' && $this->is_quote( $post->ID ) ) {
         if ( $post && $post->post_type == 'shop_order' && $post->post_status == 'wc-ywraq-new' ) {
             $args = require_once( YITH_YWRAQ_DIR . 'plugin-options/metabox/ywraq-metabox-order.php' );
             if ( ! function_exists( 'YIT_Metabox' ) ) {
@@ -758,7 +760,8 @@ class YITH_YWRAQ_Order_Request {
         $order = wc_get_order( $post_id );
 
         if( $order  ){
-            $order->update_status( 'ywraq-pending' );
+            //$order->update_status( 'ywraq-pending' );
+            $order->update_status( 'wc-pending' );
         }
 
         return;
@@ -1225,7 +1228,6 @@ class YITH_YWRAQ_Order_Request {
 
     /**
      * Check if an order is created from a request quote
-      * BENZ MAYBE THIS IS IT
      *
      * @since   1.0.0
      * @author  Emanuela Castorina
@@ -1244,7 +1246,6 @@ class YITH_YWRAQ_Order_Request {
 
     /**
      * Check if an order is created from a request quote
-     * BENZ MAYBE THIS IS IT
      *
      * @since   1.0.0
      * @author  Emanuela Castorina
