@@ -15,6 +15,7 @@ $args_accept = array(
     'raq_nonce'     => ywraq_get_token( 'accept-request-quote', $raq_data['order-id'], $raq_data['user_email'] )
 );
 
+
 $args_reject = array(
     'request_quote' => $raq_data['order-id'],
     'status'        => 'rejected',
@@ -57,19 +58,19 @@ if( isset( $raq_data['lang']) ){
 ?>
     <p></p>
     <?php endif ?>
-<?php
-$billing_first_name  = get_post_meta($order->id, '_billing_first_name',true);
-$billing_last_name   = get_post_meta($order->id, '_billing_last_name',true);
-$billing_company     = get_post_meta($order->id, '_billing_company',true);
-$billing_address     = get_post_meta($order->id, '_billing_address_1', true );
-$billing_address2    = get_post_meta($order->id, '_billing_address_2',true);
-$billing_city        = get_post_meta($order->id, '_billing_city',true);
-$billing_postcode    = get_post_meta($order->id, '_billing_postcode',true);
-$billing_country     = get_post_meta($order->id, '_billing_country',true);
-$billing_state       = get_post_meta($order->id, '_billing_state',true);
-$billing_email       = get_post_meta($order->id, '_billing_email',true);
-$billing_phone       = get_post_meta($order->id, '_billing_phone',true);
-?>
+    <?php
+    $billing_first_name  = get_post_meta($order->id, '_billing_first_name',true);
+    $billing_last_name   = get_post_meta($order->id, '_billing_last_name',true);
+    $billing_company     = get_post_meta($order->id, '_billing_company',true);
+    $billing_address     = get_post_meta($order->id, '_billing_address_1', true );
+    $billing_address2    = get_post_meta($order->id, '_billing_address_2',true);
+    $billing_city        = get_post_meta($order->id, '_billing_city',true);
+    $billing_postcode    = get_post_meta($order->id, '_billing_postcode',true);
+    $billing_country     = get_post_meta($order->id, '_billing_country',true);
+    $billing_state       = get_post_meta($order->id, '_billing_state',true);
+    $billing_email       = get_post_meta($order->id, '_billing_email',true);
+    $billing_phone       = get_post_meta($order->id, '_billing_phone',true);
+    ?>
     <p>
           <?php if ( get_option( 'ywraq_show_accept_link' ) != 'no' ): ?>
               <div style="height:26px; width:100%; background-color:#78be20; text-align:center; "><a style="color:#fff; text-decoration:none; font-weight:700; font-size:15px;" href="<?php echo esc_url( add_query_arg( $args_accept, YITH_Request_Quote()->get_raq_page_url() ) ) ?>"><?php ywraq_get_label( 'accept', true ) ?></a></div>

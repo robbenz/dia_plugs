@@ -12,6 +12,7 @@
 	<p><?php echo apply_filters( 'ywraq_quote_before_list', $before_list, $order->id ) ?></p>
 <?php endif; ?>
 
+
 <?php
 $colspan = 3;
 
@@ -21,7 +22,7 @@ do_action( 'yith_ywraq_email_before_raq_table', $order );
 		<thead>
 		<tr>
 			<?php if ( get_option( 'ywraq_show_preview' ) == 'yes' ): ?>
-				<th scope="col" style="text-align:left; border: 1px solid #eee;"><?php _e( 'Preview', 'yith-woocommerce-request-a-quote' ); ?></th>
+			<th scope="col" style="text-align:left; border: 1px solid #eee;"><?php _e( 'Preview', 'yith-woocommerce-request-a-quote' ); ?></th>
 			<?php endif ?>
 			<th scope="col" style="text-align:left; border: 1px solid #eee;"><?php _e( 'Product', 'yith-woocommerce-request-a-quote' ); ?></th>
 			<th scope="col" style="text-align:left; border: 1px solid #eee;"><?php _e( 'Quantity', 'yith-woocommerce-request-a-quote' ); ?></th>
@@ -77,8 +78,12 @@ do_action( 'yith_ywraq_email_before_raq_table', $order );
 					<td scope="col" style="text-align:left;border: 1px solid #eee;">
 						<a href="<?php echo $_product->get_permalink() ?>"><?php echo $title ?></a>
 						<?php if ( $meta != '' ): ?>
-							<small><?php echo $meta; ?></small><?php endif ?></td>
-							<td scope="col" style="text-align:center;border: 1px solid #eee;"><?php echo $item['qty'] ?></td>
+							<small><?php echo $meta; ?></small><?php endif ?>
+					</td>
+
+					<td scope="col" style="text-align:center;border: 1px solid #eee;">
+						<?php echo $item['qty'] ?>
+					</td>
 
 					<td scope="col" style="text-align:center;border: 1px solid #eee;"><?php
 
@@ -93,6 +98,7 @@ do_action( 'yith_ywraq_email_before_raq_table', $order );
 
 					?>
 				</td>
+
 					<td scope="col" style="text-align:right;border: 1px solid #eee;"><?php
 					// echo apply_filters('ywraq_quote_subtotal_item', $order->get_formatted_line_subtotal( $item ), $item['line_total'], $_product);
 					//	 echo esc_attr( isset( $item['line_total'] ) ? $item['line_total'] : '' );
