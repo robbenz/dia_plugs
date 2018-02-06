@@ -3,7 +3,7 @@
     <tbody>
       <tr>
         <td align="center" valign="top">
-          <img src="http://diamedicalusa.com/wp-content/imgs/logo/DiaMedical_USA_Logo.png" />
+          <img src="http://diamedicalusa.com/wp-content/imgs/emails/diamedical_header.png" />
           <table border="0" cellpadding="0" cellspacing="0" width="600" style="background-color:#fdfdfd;border:1px solid #dcdcdc;">
             <tbody>
               <tr>
