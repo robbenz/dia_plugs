@@ -65,7 +65,7 @@ $force_user_to_register              = ( get_option( 'ywraq_force_user_to_regist
         <input type="text" class="input-text " name="rqa_zip" id="rqa-zip" placeholder="" value="<?php echo $zipcode ?>" required>
       </p>
 
-      <h4 style=" width:35%; margin-top:5px; ">Would You Like A Catalog?</h4>
+      <h4 style="width:35%; margin-top:5px;">Would You Like A Catalog?</h4>
 
   <?php
 // $_POST['taskOption'];  ?>
