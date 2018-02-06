@@ -93,7 +93,7 @@ $force_user_to_register              = ( get_option( 'ywraq_force_user_to_regist
       </div>
 
       <div id="userRows">
-        <h3 style="margin-top:5em;display:block;clear:both;">Additional Products</h3>
+        <h3 style="margin-top:2.25em;display:block;clear:both;">Additional Products</h3>
 
         <?php $partnumber='';$partdesc='';$partqty='';$partnumber1='';$partdesc1='';$partqty1='';$partnumber2='';$partdesc2='';$partqty2=''; ?>
 
