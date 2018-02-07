@@ -76,16 +76,16 @@ if( isset( $raq_data['lang']) ){
     <span style="font-size:14px;">Shipping has been calculated and added to your total. Shipping will be applied at checkout. </span>
     <br />
 
-        <?php if ( get_option( 'ywraq_show_accept_link' ) != 'no' ): ?>
-            <div style="height:26px; width:100%; background-color:#78be20; text-align:center; "><a style="color:#fff; text-decoration:none; font-weight:700; font-size:15px;" href="<?php echo esc_url( add_query_arg( $args_accept, YITH_Request_Quote()->get_raq_page_url() ) ) ?>"><?php ywraq_get_label( 'accept', true ) ?></a></div>
-        <?php endif;
+      <?php if ( get_option( 'ywraq_show_accept_link' ) != 'no' ): ?>
+          <div style="height:26px; width:100%; background-color:#78be20; text-align:center; "><a style="color:#fff; text-decoration:none; font-weight:700; font-size:15px;" href="<?php echo esc_url( add_query_arg( $args_accept, YITH_Request_Quote()->get_raq_page_url() ) ) ?>"><?php ywraq_get_label( 'accept', true ) ?></a></div>
+      <?php endif;
 
-        if ( get_option( 'ywraq_show_reject_link' ) != 'no' ): ?>
-        <a style="margin-top:4px; color:#d6001c;"
-           href="<?php echo site_url(); ?>/quote-rejected/?EC-<?php echo $order->id; ?>">
-          No Thank You
-        </a>
-        <?php endif; ?>
+      if ( get_option( 'ywraq_show_reject_link' ) != 'no' ): ?>
+      <a style="margin-top:4px; color:#d6001c;"
+         href="<?php echo site_url(); ?>/quote-rejected/?EC-<?php echo $order->id; ?>">
+        No Thank You
+      </a>
+      <?php endif; ?>
 
     </p>
 
