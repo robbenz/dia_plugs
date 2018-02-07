@@ -31,7 +31,7 @@ if( isset( $raq_data['lang']) ){
 <h2><?php printf( __( 'Click Accept to Order Quote #EC-%s Instantly', 'yith-woocommerce-request-a-quote' ), $order->id ) ?></h2>
 
 <span style="font-size:14px; font-weight:bolder;">Please Note: </span>
-<span style="font-size:14px;">The pricing on this quote is exclusively for you! <br />Please log in to your <a href="https://diamedicalusa.com/my-account/">DiaMedicalUSA.com</a> before clicking the "Accept" link.</span>
+<span style="font-size:14px;">The pricing on this quote is exclusively for you! <br />Please log in to your <a href="https://diamedicalusa.com/my-account/">DiaMedicalUSA.com</a> account before clicking <strong>Accept</strong>.</span>
 <br /><br />
 
     <!-- <p> // echo $email_description; </p> -->
