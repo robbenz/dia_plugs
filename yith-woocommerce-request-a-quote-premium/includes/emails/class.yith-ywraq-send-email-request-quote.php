@@ -46,14 +46,27 @@ if ( !class_exists( 'YITH_YWRAQ_Send_Email_Request_Quote' ) ) {
             if( $this->enabled == 'no'){
                 return;
             }
-            
+
             // Other settings
-            $this->recipient = $this->get_option( 'recipient' );
 
-            if ( !$this->recipient ) {
+            // benz setting -- so admin/shop emails only go to quote creator
+            if( current_user_can('shop_manager') || current_user_can('administrator') ) {
+
+              $current_user       = wp_get_current_user();
+              $current_user_email = esc_html( $current_user->user_email );
+              $this->recipient    = $current_user_email;
+              $this->subject      = 'Admin Quote';
+
+            } else {
+
+              $this->recipient = $this->get_option( 'recipient' );
+
+              if ( !$this->recipient ) {
                 $this->recipient = get_option( 'admin_email' );
-            }
+              }
 
+            }
+            // end benz
             $this->enable_cc = $this->get_option( 'enable_cc' );
 
             $this->enable_cc = $this->enable_cc == 'yes';
@@ -86,7 +99,7 @@ if ( !class_exists( 'YITH_YWRAQ_Send_Email_Request_Quote' ) ) {
             }
 
             $recipients = implode( ',', $recipients );
-            
+
             if( class_exists('YWRAQ_Multivendor') ){
                 $return = apply_filters( 'ywraq_multivendor_email', false, $args, $this);
             }else{
@@ -99,7 +112,7 @@ if ( !class_exists( 'YITH_YWRAQ_Send_Email_Request_Quote' ) ) {
                 }
 
                 yith_ywraq_add_notice( ywraq_get_message_after_request_quote_sending( $new_order ), 'success' );
-                
+
             }
             else {
                 yith_ywraq_add_notice( __( 'There was a problem sending your request. Please try again.', 'yith-woocommerce-request-a-quote' ), 'error' );

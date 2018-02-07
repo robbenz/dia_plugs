@@ -29,11 +29,10 @@ if( isset( $raq_data['lang']) ){
 ?>
 
 <h2><?php printf( __( 'Click Accept to Order Quote #EC-%s Instantly', 'yith-woocommerce-request-a-quote' ), $order->id ) ?></h2>
+
 <span style="font-size:14px; font-weight:bolder;">Please Note: </span>
-<span style="font-size:14px;">Shipping has been calculated and added to your total. Shipping will be applied at checkout. </span>
-<br />
-<span style="font-size:14px; font-weight:bolder;">Please Note: </span>
-<span style="font-size:14px;">You must be logged in to your DiaMedicalUSA.com account for this link to work.</span>
+<span style="font-size:14px;">The pricing on this quote is exclusively for you! <br />Please log in to your <a href="https://diamedicalusa.com/my-account/">DiaMedicalUSA.com</a> before clicking the "Accept" link.</span>
+<br /><br />
 
     <!-- <p> // echo $email_description; </p> -->
 
@@ -72,16 +71,22 @@ if( isset( $raq_data['lang']) ){
     $billing_phone       = get_post_meta($order->id, '_billing_phone',true);
     ?>
     <p>
-          <?php if ( get_option( 'ywraq_show_accept_link' ) != 'no' ): ?>
-              <div style="height:26px; width:100%; background-color:#78be20; text-align:center; "><a style="color:#fff; text-decoration:none; font-weight:700; font-size:15px;" href="<?php echo esc_url( add_query_arg( $args_accept, YITH_Request_Quote()->get_raq_page_url() ) ) ?>"><?php ywraq_get_label( 'accept', true ) ?></a></div>
-          <?php endif;
 
-          if ( get_option( 'ywraq_show_reject_link' ) != 'no' ): ?>
-          <a style="margin-top:4px; color:#d6001c;"
-             href="<?php echo site_url(); ?>/quote-rejected/?EC-<?php echo $order->id; ?>">
-            No Thank You
-          </a>
-          <?php endif; ?>
+    <span style="font-size:14px; font-weight:bolder;">Please Note: </span>
+    <span style="font-size:14px;">Shipping has been calculated and added to your total. Shipping will be applied at checkout. </span>
+    <br />
+
+        <?php if ( get_option( 'ywraq_show_accept_link' ) != 'no' ): ?>
+            <div style="height:26px; width:100%; background-color:#78be20; text-align:center; "><a style="color:#fff; text-decoration:none; font-weight:700; font-size:15px;" href="<?php echo esc_url( add_query_arg( $args_accept, YITH_Request_Quote()->get_raq_page_url() ) ) ?>"><?php ywraq_get_label( 'accept', true ) ?></a></div>
+        <?php endif;
+
+        if ( get_option( 'ywraq_show_reject_link' ) != 'no' ): ?>
+        <a style="margin-top:4px; color:#d6001c;"
+           href="<?php echo site_url(); ?>/quote-rejected/?EC-<?php echo $order->id; ?>">
+          No Thank You
+        </a>
+        <?php endif; ?>
+
     </p>
 
     <?php if( ( $after_list = get_post_meta( $order->id, '_ywraq_request_response_after', true ) ) != ''): ?>
@@ -99,7 +104,6 @@ if( isset( $raq_data['lang']) ){
       <a href="mailto:<?php echo $raq_data['user_email']; ?>"><?php echo $raq_data['user_email']; ?></a></p>
 
 <?php
-
 
 if( $billing_company != ''): ?>
     <p><strong><?php _e( 'Company:', 'yith-woocommerce-request-a-quote' ); ?></strong> <?php echo $billing_company; ?></p>
