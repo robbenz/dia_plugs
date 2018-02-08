@@ -488,6 +488,11 @@ class YITH_YWRAQ_Order_Request {
             }
         }
 
+
+
+          /// pretty sure this is where the new order happens
+
+
         $order->set_total( $new_cart->shipping_total, 'shipping' );
         $order->set_total( $new_cart->get_cart_discount_total(), 'cart_discount' );
         $order->set_total( $new_cart->get_cart_discount_tax_total(), 'cart_discount_tax' );
@@ -624,10 +629,13 @@ class YITH_YWRAQ_Order_Request {
             }
 
             $pr->adjust_price( $new_price );
-//
-//            $cart_item_data['new_price']  =  $new_price;
-//
-//            $cart_item_data = apply_filters( 'ywraq_add_to_cart', $cart_item_data, $item );
+
+
+
+          // why is this commented ??? 2/9/2018
+          //            $cart_item_data['new_price']  =  $new_price;
+          //
+          //            $cart_item_data = apply_filters( 'ywraq_add_to_cart', $cart_item_data, $item );
 
             foreach ( $item['item_meta'] as $meta_name => $meta_value ) {
                 if ( taxonomy_is_product_attribute( $meta_name ) ) {
@@ -913,6 +921,9 @@ class YITH_YWRAQ_Order_Request {
         if( isset( $_POST['lang'])){
             $args['lang'] =  $_POST['lang'];
         }
+
+
+        // or maybe this is when it happens
 
 
         $new_order = $this->create_order( $args );

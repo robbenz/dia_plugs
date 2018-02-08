@@ -23,7 +23,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<input type="text" placeholder="<?php esc_attr_e( 'Shipping Name', 'woocommerce' ); ?>" name="shipping_method_title[<?php echo $item_id; ?>]" value="<?php echo ( isset( $item['name'] ) ) ? wc_clean( $item['name'] ) : ''; ?>" />
 			<select name="shipping_method[<?php echo $item_id; ?>]">
 				<optgroup label="<?php esc_attr_e( 'Shipping Method', 'woocommerce' ); ?>">
-					<option value=""><?php _e( 'N/A', 'woocommerce' ); ?></option>
+
+					<!-- benz comment pretty important <option value=""><?php// _e( 'N/A', 'woocommerce' ); ?></option> -->
+
 					<?php
 						$found_method = false;
 

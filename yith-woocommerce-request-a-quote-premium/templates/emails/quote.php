@@ -31,20 +31,30 @@ if( isset( $raq_data['lang']) ){
 <h2><?php printf( __( 'Click Accept to Order Quote #EC-%s Instantly', 'yith-woocommerce-request-a-quote' ), $order->id ) ?></h2>
 
 <span style="font-size:14px; font-weight:bolder;">Please Note: </span>
-<span style="font-size:14px;">The pricing on this quote is exclusively for you! <br />Please log in to your <a href="https://diamedicalusa.com/my-account/">DiaMedicalUSA.com</a> account before clicking <strong>Accept</strong>.</span>
+<span style="font-size:14px;">The pricing on this quote is exclusively for you! <br />Please log in to your <a href="<?php echo site_url(); ?>/my-account/">DiaMedicalUSA.com</a> account before clicking <strong>Accept</strong>.</span>
 <br /><br />
 
-    <!-- <p> // echo $email_description; </p> -->
-
 <?php if( get_option('ywraq_hide_table_is_pdf_attachment') == 'no'): ?>
+
     <p><strong><?php _e( 'Request date', 'yith-woocommerce-request-a-quote' ) ?></strong>: <?php echo $raq_data['order-date'] ?></p>
     <?php if ( $raq_data['expiration_data'] != '' ): ?>
         <p><strong><?php _e( 'Expiration date', 'yith-woocommerce-request-a-quote' ) ?></strong>: <?php echo $raq_data['expiration_data'] ?></p>
     <?php endif ?>
 
+
+
+
     <?php if ( get_option( 'ywraq_show_accept_link' ) != 'no' ): ?>
-        <div style="height:26px; width:100%; background-color:#78be20; text-align:center; margin-bottom:8px;"><a style="color:#fff; text-decoration:none; font-weight:700; font-size:15px;" href="<?php echo esc_url( add_query_arg( $args_accept, YITH_Request_Quote()->get_raq_page_url() ) ) ?>"><?php ywraq_get_label( 'accept', true ) ?></a></div>
+        <div style="height:26px; width:100%; background-color:#78be20; text-align:center; margin-bottom:8px;">
+           <a style="color:#fff; text-decoration:none; font-weight:700; font-size:15px;" href="<?php echo esc_url( add_query_arg( $args_accept, YITH_Request_Quote()->get_raq_page_url() ) ) ?>">
+          <!-- <a style="color:#fff; text-decoration:none; font-weight:700; font-size:15px;" href="<?php// echo site_url(); ?>/request-quote/?request_quote=<?php// echo $order->id; ?>&status=accepted&raq_nonce=<?php// echo ywraq_get_token( 'accept-request-quote', $raq_data['order-id'], $raq_data['user_email'] ); ?>"> -->
+            <?php ywraq_get_label( 'accept', true ) ?>
+          </a>
+        </div>
     <?php endif;  ?>
+
+
+
 
     <?php if ( !empty( $raq_data['admin_message'] ) ): ?>
         <p><?php echo $raq_data['admin_message'] ?></p>
@@ -77,7 +87,11 @@ if( isset( $raq_data['lang']) ){
     <br />
 
       <?php if ( get_option( 'ywraq_show_accept_link' ) != 'no' ): ?>
-          <div style="height:26px; width:100%; background-color:#78be20; text-align:center; "><a style="color:#fff; text-decoration:none; font-weight:700; font-size:15px;" href="<?php echo esc_url( add_query_arg( $args_accept, YITH_Request_Quote()->get_raq_page_url() ) ) ?>"><?php ywraq_get_label( 'accept', true ) ?></a></div>
+          <div style="height:26px; width:100%; background-color:#78be20; text-align:center; ">
+            <a style="color:#fff; text-decoration:none; font-weight:700; font-size:15px;" href="<?php echo esc_url( add_query_arg( $args_accept, YITH_Request_Quote()->get_raq_page_url() ) ) ?>">
+              <?php ywraq_get_label( 'accept', true ) ?>
+            </a>
+          </div>
       <?php endif;
 
       if ( get_option( 'ywraq_show_reject_link' ) != 'no' ): ?>
