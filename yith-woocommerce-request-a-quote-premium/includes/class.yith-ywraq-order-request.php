@@ -112,8 +112,8 @@ class YITH_YWRAQ_Order_Request {
         add_filter( 'woocommerce_add_cart_item', array($this, 'change_price') , 10, 2);
         add_filter( 'woocommerce_get_cart_item_from_session', array( $this, 'get_cart_item_from_session' ), 11, 2 );
         add_action( 'woocommerce_cart_calculate_fees', array( $this, 'add_cart_fee' ) );
-        add_action('woocommerce_review_order_before_shipping', array($this,'set_shipping_methods'));
-        add_filter('woocommerce_package_rates', array($this,'set_package_rates'));
+        add_action( 'woocommerce_review_order_before_shipping', array($this,'set_shipping_methods'));
+        add_filter( 'woocommerce_package_rates', array($this,'set_package_rates'));
 
         //add endpoint view-quote
         add_action( 'init', array( $this, 'add_endpoint') );
@@ -124,7 +124,6 @@ class YITH_YWRAQ_Order_Request {
 
         // contact form 7
         add_action( 'wpcf7_before_send_mail', array( $this, 'create_order_before_mail_cf7' ) );
-
 
 
      }
@@ -633,9 +632,9 @@ class YITH_YWRAQ_Order_Request {
 
 
           // why is this commented ??? 2/9/2018
-          //            $cart_item_data['new_price']  =  $new_price;
-          //
-          //            $cart_item_data = apply_filters( 'ywraq_add_to_cart', $cart_item_data, $item );
+            $cart_item_data['new_price']  =  $new_price;
+            $cart_item_data = apply_filters( 'ywraq_add_to_cart', $cart_item_data, $item );
+          // end
 
             foreach ( $item['item_meta'] as $meta_name => $meta_value ) {
                 if ( taxonomy_is_product_attribute( $meta_name ) ) {
@@ -762,14 +761,17 @@ class YITH_YWRAQ_Order_Request {
     public function change_status_quote( $post_id ) {
 
         if ( ! isset( $_POST['yit_metaboxes'] ) || ! isset( $_POST['yit_metaboxes']['_ywraq_safe_submit_field'] ) || $_POST['yit_metaboxes']['_ywraq_safe_submit_field'] != 'send_quote' ) {
+          update_post_meta ( $post_id, 'order_quote_failed', '1' );
             return;
         }
 
-        $order = wc_get_order( $post_id );
+         $order = wc_get_order( $post_id );
 
-        if( $order  ){
-            //$order->update_status( 'ywraq-pending' );
-            $order->update_status( 'wc-pending' );
+        if( $order ){
+          $order->update_status( 'ywraq-pending' );
+         // $order->update_status( 'wc-pending' );
+          update_post_meta ( $post_id, 'order_quote_somethingelse', '1' );
+
         }
 
         return;
@@ -1042,6 +1044,11 @@ class YITH_YWRAQ_Order_Request {
      *
      * @param $order_id
      */
+
+
+     //broken orders dont make it this far
+
+
     public function raq_processed( $order_id ) {
         delete_post_meta( $order_id, 'ywraq_raq_status' );
     }

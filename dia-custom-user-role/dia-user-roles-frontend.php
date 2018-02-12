@@ -225,47 +225,62 @@ function dia_product_meta_display_archive() {
              <?php endforeach; ?>
            </select>
 
-           <?php
+             <?php
+             foreach ($available_variations as $_AV ) {
 
-           foreach ($available_variations as $_AV ) {
+               $dia_varlistprice     = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_list_price', true );
+               $dia_varlistprice_fi  = floatval($dia_varlistprice);
+               $dia_var_cost         = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_cost', true );
+               $dia_var_cost_fi      = floatval($dia_var_cost);
+               $var_vend2cost        = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_cost2', true );
+               $wpnonce              = wp_create_nonce( 'add-request-quote-' . $_AV[ 'variation_id' ]);
+               ?>
 
-             $dia_varlistprice     = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_list_price', true );
-             $dia_varlistprice_fi  = floatval($dia_varlistprice);
-             $dia_var_cost         = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_cost', true );
-             $dia_var_cost_fi      = floatval($dia_var_cost);
-             $var_vend2cost        = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_cost2', true );
 
-             echo '<div style="color:#fff;border: 1px solid #fff;" class="var_specs_wrap" id="var_specs_wrap_'. $_AV[ 'variation_id' ] . '">';
-             echo 'Manufacturer: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_mft', true ) .'<br>';
-             echo 'MFT Part #: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_mft_pn', true ) .'<br>';
-             echo 'List Price: <span style="color:#78be20;">$' . number_format($dia_varlistprice_fi, 2) .'</span><br>';
+               <div style="color:#fff;padding:0.05em;" class="var_specs_wrap" id="var_specs_wrap_<?php echo $_AV[ 'variation_id' ]; ?>">
+                 <div style="margin-top: 1px; margin-bottom: 2px;" class="yith-ywraq-add-to-quote add-to-quote-<?php echo $_AV[ 'variation_id' ]; ?>">
+                   <div class="yith-ywraq-add-button show" style="display: block;">
+                     <a href="#" class="add-request-quote-button button" data-product_id="<?php echo $_AV[ 'variation_id' ]; ?>" data-wp_nonce="<?php echo $wpnonce ?>">Add to Quote</a>
+                   </div>
+                   <div class="yith_ywraq_add_item_response-<?php echo $_AV[ 'variation_id' ]; ?> yith_ywraq_add_item_response_message hide" style="display:none">The product is already in quote request list!</div>
+                   <div class="yith_ywraq_add_item_browse-list-<?php echo $_AV[ 'variation_id' ]; ?> yith_ywraq_add_item_browse_message  hide" style="display: none;">
+                     <a href="<?php echo site_url(); ?>/request-quote/">Submit Your Quote Now</a>
+                   </div>
+                   <div class="yith_ywraq_add_item_product-response-<?php echo $_AV[ 'variation_id' ]; ?> yith_ywraq_add_item_product_message hide" style="display: none;"></div>
+                 </div>
 
-             echo 'Vendor 1: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_vendor1', true ) .'<br>';
-             echo 'Vendor PN: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_vendor_pn', true ) .'<br>';
-             echo 'Cost: <span style="color:#78be20;">$' . number_format($dia_var_cost_fi, 2) .'</span><br>';
-             echo 'Date Verified: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_date_check', true ) .'<br>';
-             echo 'Verified by: ' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_date_check_person1', true ) .'<br>';
+                 <?php
+                  echo '<table class="dia_tg" id="imfuckingsweetatcoding"><tbody>';
+                  echo '<tr><td>Manufacturer:</td><td>' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_mft', true ) .'</td></tr>';
+                  echo '<tr><td>MFT Part #:</td><td>' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_mft_pn', true ) .'</td></tr>';
+                  echo '<tr><td>List Price:</td><td><span style="color:#78be20;">$' . number_format($dia_varlistprice_fi, 2) .'</span></td></tr>';
 
-             $var_vend2 = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_vendor2', true );
-             if (strlen($var_vend2) > 0) { echo 'Vendor 2: ' . $var_vend2 .'<br>'; }
+                  echo '<tr><td>Vendor 1:</td><td>' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_vendor1', true ) .'</td></tr>';
+                  echo '<tr><td>Vendor PN:</td><td>' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_vendor_pn', true ) .'</td></tr>';
+                  echo '<tr><td>Cost:</td><td><span style="color:#78be20;">$' . number_format($dia_var_cost_fi, 2) .'</span></td></tr>';
+                  echo '<tr><td>Date Verified:</td><td>' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_date_check', true ) .'</td></tr>';
+                  echo '<tr><td>Verified by:</td><td>' . get_post_meta( $_AV[ 'variation_id' ], 'dia_var_date_check_person1', true ) .'</td></tr>';
 
-             $var_vendpn2 = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_vendor_pn2', true );
-             if (strlen($var_vendpn2) > 0) { echo 'Vender 2 PN: ' . $var_vendpn2 .'<br>'; }
+                  $var_vend2 = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_vendor2', true );
+                  if (strlen($var_vend2) > 0) { echo '<tr><td>Vendor 2:</td><td>' . $var_vend2 .'</td></tr>'; }
 
-             if (strlen($var_vend2cost) > 0) {
-               $var_vend2cost_fi = floatval($var_vend2cost);
-               echo 'Vender 2 Cost: <span style="color:#78be20;">$' . number_format($var_vend2cost_fi, 2) .'</span><br>';
-             }
+                  $var_vendpn2 = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_vendor_pn2', true );
+                  if (strlen($var_vendpn2) > 0) { echo '<tr><td>Vender 2 PN:</td><td>' . $var_vendpn2 .'</td></tr>'; }
 
-             $var_vend2dv = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_date_check2', true );
-             if (strlen($var_vend2dv) > 0) { echo 'Date Verified: ' . $var_vend2dv .'<br>'; }
+                  if (strlen($var_vend2cost) > 0) {
+                    $var_vend2cost_fi = floatval($var_vend2cost);
+                    echo '<tr><td>Vender 2 Cost:</td><td><span style="color:#78be20;">$' . number_format($var_vend2cost_fi, 2) .'</td></tr>';
+                  }
 
-             $var_vend2dvname = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_date_check_person2', true );
-             if (strlen($var_vend2dvname) > 0) { echo 'Verified by: ' . $var_vend2dvname .'<br>'; }
+                  $var_vend2dv = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_date_check2', true );
+                  if (strlen($var_vend2dv) > 0) { echo '<tr><td>Date Verified:</td><td>' . $var_vend2dv .'</td></tr>'; }
 
-             echo '</div>';
-              }
-            ?>
+                  $var_vend2dvname = get_post_meta( $_AV[ 'variation_id' ], 'dia_var_date_check_person2', true );
+                  if (strlen($var_vend2dvname) > 0) { echo '<tr><td>Verified by:</td><td>' . $var_vend2dvname .'</td></tr>'; }
+
+                  echo '</tbody></table></div>';
+                }
+              ?>
 
             <?php foreach ( $available_variations as $attribute_name => $options ) :?>
 
@@ -288,6 +303,18 @@ function dia_product_meta_display_archive() {
           <?php endforeach; ?>
 
         <?php elseif( $product->is_type( 'simple' ) ): ?>
+            <?php
+
+            if( current_user_can('shop_manager') || current_user_can('administrator') ) {
+              if ( !function_exists( 'YITH_YWRAQ_Frontend' ) ) {
+                require_once( YITH_YWRAQ_INC . 'class.yith-request-quote-frontend.php' );
+                YITH_YWRAQ_Frontend();
+              }
+
+              YITH_YWRAQ_Frontend()->print_button( $product );
+            }
+            ?>
+
 
         <table class="dia_tg" id="imfuckingsweetatcoding">
           <tr><td>Manufacturer: </td><td><?php echo $_mft; ?></td></tr>
@@ -300,6 +327,8 @@ function dia_product_meta_display_archive() {
           <tr><td>Cost: </td><td><?php echo '$'.$_cost_2;?></td></tr>
           <tr><td>Verified on: </td><td><?php echo $_price_check_2;?></td></tr>
         </table>
+
+
 
       <?php endif ; ?>
 

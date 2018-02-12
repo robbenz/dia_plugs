@@ -30,6 +30,8 @@ $optional_form_text_field_required_3 = ( get_option( 'ywraq_additional_text_fiel
 $optional_form_upload_field          = ( get_option( 'ywraq_additional_upload_field' ) == 'yes' ) ? true : false;
 $force_user_to_register              = ( get_option( 'ywraq_force_user_to_register' ) == 'yes' ) ? 'required' : '';
 
+// if( current_user_can('shop_manager') || current_user_can('administrator') ) :
+
 ?>
 <div class="yith-ywraq-mail-form-wrapper">
     <h3><?php _e( 'Quick Quote', 'yith-woocommerce-request-a-quote' ) ?></h3>

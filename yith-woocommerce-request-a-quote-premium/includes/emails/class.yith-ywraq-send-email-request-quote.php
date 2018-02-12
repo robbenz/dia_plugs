@@ -49,38 +49,38 @@ if ( !class_exists( 'YITH_YWRAQ_Send_Email_Request_Quote' ) ) {
 
             // Other settings
 
-            $this->recipient = $this->get_option( 'recipient' );
+            // $this->recipient = $this->get_option( 'recipient' );
+            //
+            // if ( !$this->recipient ) {
+            //     $this->recipient = get_option( 'admin_email' );
+            // }
 
-            if ( !$this->recipient ) {
-                $this->recipient = get_option( 'admin_email' );
-            }
+
+            // benz setting -- so admin/shop emails only go to quote creator
+
+        if( current_user_can('shop_manager') || current_user_can('administrator') ) {
+
+          $current_user       = wp_get_current_user();
+          $current_user_email = esc_html( $current_user->user_email );
+          $this->recipient    = $current_user_email;
+          $this->subject      = 'Quote Initiated';
+
+        } else {
+
+          $this->recipient = $this->get_option( 'recipient' );
+
+          if ( !$this->recipient ) {
+            $this->recipient = get_option( 'admin_email' );
+          }
+
+        }
+        // end benz
 
             $this->enable_cc = $this->get_option( 'enable_cc' );
 
             $this->enable_cc = $this->enable_cc == 'yes';
 
         }
-
-
-            // benz setting -- so admin/shop emails only go to quote creator
-            // okay i dont think this is what broke it
-            // if( current_user_can('shop_manager') || current_user_can('administrator') ) {
-            //
-            //   $current_user       = wp_get_current_user();
-            //   $current_user_email = esc_html( $current_user->user_email );
-            //   $this->recipient    = $current_user_email;
-            //   $this->subject      = 'Admin Quote';
-            //
-            // } else {
-            //
-            //   $this->recipient = $this->get_option( 'recipient' );
-            //
-            //   if ( !$this->recipient ) {
-            //     $this->recipient = get_option( 'admin_email' );
-            //   }
-            //
-            // }
-            // end benz
 
         /**
          * Method triggered to send email
