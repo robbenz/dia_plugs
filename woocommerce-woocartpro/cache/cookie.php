@@ -1,1 +1,0 @@
-<?php return 'a:1:{i:0;s:32:"4d9df8e33748aa7b412f1de46972c75e";}';
